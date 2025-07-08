@@ -32,7 +32,7 @@ export default async function Layout(props: {
             cryptocurrencies and execute transactions with any fiat options or
             tokens via cross-chain routing.{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/pay"
+              href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"
               target="_blank"
             >

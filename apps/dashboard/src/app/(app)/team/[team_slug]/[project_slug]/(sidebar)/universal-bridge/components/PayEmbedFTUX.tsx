@@ -56,7 +56,7 @@ export function PayEmbedFTUX(props: {
           <Button asChild size="sm" variant="outline">
             <Link
               className="gap-2"
-              href="https://portal.thirdweb.com/pay"
+              href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"
               target="_blank"
             >

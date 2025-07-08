@@ -436,7 +436,7 @@ function AppHighlightsCard({
       emptyContent: (
         <EmptyStateContent
           description="Onramp, swap, and bridge with thirdweb's Universal Bridge."
-          link="https://portal.thirdweb.com/connect/pay/overview"
+          link="https://portal.thirdweb.com/payments"
           metric="Payments"
         />
       ),

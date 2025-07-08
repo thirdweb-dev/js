@@ -23,13 +23,19 @@ export const metadata = createMetadata({
 
 # Get Started
 
-Learn how to integrate Payments into your application for cross-chain payments, bridging, swapping, and fiat onramps. This guide covers the core SDK modules and practical implementation examples.
+Learn how to integrate Payments into your application for cross-chain payments, bridging, swapping, and fiat onramps.
 
 ---
 
 ## Installation
 
 <Steps>
+<Step title="Get Your Client ID">
+
+Log in to [the thirdweb dashboard](https://thirdweb.com/login) and create a new project. On project creation, you'll be given a **Client ID**. You'll need your Client ID to integrate Payments into your application.
+
+</Step>
+
 <Step title="Install the SDK">
 <InstallTabs
 	npm="npm i thirdweb"
@@ -37,11 +43,7 @@ Learn how to integrate Payments into your application for cross-chain payments, 
 	pnpm="pnpm i thirdweb"
 />
 </Step>
-<Step title="Get Your Client ID">
 
-Log in to [the thirdweb dashboard](https://thirdweb.com/team). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Payments.
-
-</Step>
 <Step title="Initialize the Client">
 
 ```typescript
@@ -293,6 +295,6 @@ try {
 
 - **[API Reference](https://bridge.thirdweb.com/reference)** - Complete REST API documentation
 - **[SDK Reference](/typescript/v5/buy/quote)** - TypeScript SDK function reference  
-- **[Webhooks](/pay/webhooks)** - Set up real-time notifications
-- **[Customization Guides](/pay/customization)** - Advanced configuration options
+- **[Webhooks](/payments/webhooks)** - Set up real-time notifications
+- **[Customization Guides](/payments/customization)** - Advanced configuration options
 - **[Playground](https://playground.thirdweb.com/connect/pay)** - Interactive testing environment

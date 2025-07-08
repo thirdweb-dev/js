@@ -59,7 +59,7 @@ export const sidebar: SideBar = {
           name: "Account Abstraction",
         },
         {
-          href: `${slug}/pay/fund-wallets`,
+          href: `${slug}/payments/fund-wallets`,
           name: "Funding wallets",
         },
       ],
@@ -122,7 +122,7 @@ export const sidebar: SideBar = {
           name: "Sponsored Transactions",
         },
         {
-          href: `${slug}/pay/transaction`,
+          href: `${slug}/payments/transaction`,
           name: "Chain Abstraction",
         },
       ],

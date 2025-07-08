@@ -355,7 +355,7 @@ function AppHighlightsCard({
       emptyContent: (
         <EmptyStateContent
           description="Your apps haven't collected any fees yet."
-          link={"https://portal.thirdweb.com/connect/pay/fees"}
+          link={"https://portal.thirdweb.com/payments/fees"}
           metric="Fees"
         />
       ),

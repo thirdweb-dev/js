@@ -4,22 +4,18 @@ import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: move the following two slugs to walletSlug with updated docs
-const inAppSlug = "/connect/in-app-wallet";
+const inAppSlug = "/wallets/in-app-wallet";
 
-const walletSlug = "/connect/wallet";
-const aAslug = "/connect/account-abstraction";
-const authSlug = "/connect/auth";
+const walletSlug = "/wallets/wallet";
+const aAslug = "/wallets/account-abstraction";
+const authSlug = "/wallets/auth";
 
 export const sidebar: SideBar = {
   links: [
     { separator: true },
     {
-      href: "/connect",
-      name: "Introduction",
-    },
-    {
-      href: "/connect/why-thirdweb",
-      name: "Why thirdweb?",
+      href: "/wallets",
+      name: "Overview",
     },
     {
       href: "https://playground.thirdweb.com/",
@@ -325,5 +321,5 @@ export const sidebar: SideBar = {
       name: "API References",
     },
   ],
-  name: "Connect",
+  name: "Wallets",
 };

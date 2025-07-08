@@ -74,7 +74,7 @@ export default async function RoutesPage(props: {
           </div>
           <a
             className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
-            href="https://portal.thirdweb.com/pay"
+            href="https://portal.thirdweb.com/payments"
             rel="noopener noreferrer"
             target="_blank"
           >

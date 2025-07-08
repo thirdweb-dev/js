@@ -172,7 +172,7 @@ function LearningResourcesSection() {
         />
         <ArticleCardIndex
           description="Bridge and onramp tokens on any chain"
-          href="/pay"
+          href="/payments"
           icon={BridgeIcon}
           title="Payments"
         />

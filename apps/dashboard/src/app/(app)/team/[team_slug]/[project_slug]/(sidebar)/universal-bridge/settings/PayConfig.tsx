@@ -96,7 +96,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
               may set your own developer fee in addition to this fee.{" "}
               <Link
                 className="text-link-foreground hover:text-foreground"
-                href="https://portal.thirdweb.com/connect/pay/fee-sharing"
+                href="https://portal.thirdweb.com/payments/fee-sharing"
                 rel="noopener noreferrer"
                 target="_blank"
               >

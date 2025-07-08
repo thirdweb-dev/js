@@ -42,7 +42,7 @@ const HELP_PRODUCTS = [
     description: "Enable payments on any tokens on any chain",
     icon: PayIcon,
     title: "Payments",
-    viewAllUrl: "https://portal.thirdweb.com/pay/troubleshoot",
+    viewAllUrl: "https://portal.thirdweb.com/payments/troubleshoot",
   },
   {
     description: "Perform read and write transactions onchain",

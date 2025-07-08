@@ -32,11 +32,11 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
-    href: "/connect",
+    href: "/wallets",
     name: "Wallets",
   },
   {
-    href: "/pay",
+    href: "/payments",
     name: "Payments",
   },
   {
@@ -90,7 +90,7 @@ export const connectLinks: Array<{
   icon: React.FC<{ className?: string }>;
 }> = [
   {
-    href: "/connect",
+    href: "/wallets",
     icon: TableOfContentsIcon,
     name: "Overview",
   },

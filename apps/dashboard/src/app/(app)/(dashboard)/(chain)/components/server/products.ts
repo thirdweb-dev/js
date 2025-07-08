@@ -48,7 +48,7 @@ export const products = [
     description: "Enable payments in any token on any chain",
     icon: PayIcon,
     id: "pay",
-    link: "https://portal.thirdweb.com/connect/pay/overview",
+    link: "https://portal.thirdweb.com/payments",
     name: "Payments",
   },
   {

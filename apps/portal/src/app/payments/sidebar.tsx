@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
-const paySlug = "/pay";
+const paySlug = "/payments";
 
 export const sidebar: SideBar = {
   links: [
@@ -83,10 +83,6 @@ export const sidebar: SideBar = {
         {
           href: `${paySlug}/customization/connectbutton`,
           name: "ConnectButton",
-        },
-        {
-          href: `${paySlug}/customization/payembed`,
-          name: "PayEmbed",
         },
         {
           href: `${paySlug}/customization/send-transaction`,

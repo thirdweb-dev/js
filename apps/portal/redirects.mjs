@@ -709,7 +709,7 @@ const walletRedirects = {
   "/wallet/zerion-wallet": "/references/wallets/v2/ZerionWallet",
 };
 
-const paymentRedirects = {
+const _paymentRedirects = {
   "/checkouts": "/payments",
   "/checkouts/api-reference": "/payments/nft-checkout/api-reference",
   "/checkouts/checkout-link": "/payments/nft-checkout/checkout-link",
@@ -732,15 +732,6 @@ const paymentRedirects = {
   "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server":
     "/connect/in-app-wallet/guides/get-user-details",
   "/connect/in-app-wallet/how-it-works": "/connect/in-app-wallet/security",
-  "/connect/pay/build-a-custom-experience":
-    "/connect/pay/guides/build-a-custom-experience",
-  "/connect/pay/buy-with-crypto": "/connect/pay/overview",
-  "/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
-  "/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
-  "/connect/pay/buy-with-fiat": "/connect/pay/overview",
-  "/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
-  "/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
-  "/payments/:match*": "/connect/pay/overview",
 };
 
 const contractRedirects = {
@@ -914,6 +905,8 @@ const glossaryRedirects = {
 
 const otherRedirects = {
   "/api-keys": "/account/api-keys",
+  // wallets > connect redirects
+  "/connect": "/wallets",
   "/connect/account-abstraction": "/connect/account-abstraction/overview",
   // connect
   "/connect/connect": "/connect/sign-in",
@@ -1013,8 +1006,6 @@ const otherRedirects = {
   "/unity/wallets/providers/smart-wallet":
     "/unity/wallets/providers/account-abstraction",
   "/wallet/get-started/overview": "/connect/wallet/overview",
-  // wallets > connect redirects
-  "/wallets": "/connect",
   "/wallets/auth/:path*": "/connect/auth/:path*",
   "/wallets/connect/:path*": "/connect/connect/:path*",
   "/wallets/embedded-wallet/:path*": "/connect/embedded-wallet/:path*",
@@ -1047,24 +1038,31 @@ const v4ToV5Redirects = {
 };
 
 const payRedirects = {
+  "/connect/pay": "/payments",
+  "/connect/pay/:path*": "/payments/:path*",
+
+  // Specific redirects for known paths
   "/connect/pay/customization/connectbutton":
-    "/pay/customization/connectbutton",
-  "/connect/pay/customization/payembed": "/pay/customization/payembed",
+    "/payments/customization/connectbutton",
+  "/connect/pay/customization/payembed": "/payments/customization/payembed",
   "/connect/pay/customization/send-transaction":
-    "/pay/customization/send-transaction",
-  "/connect/pay/faqs": "/pay/faqs",
-  "/connect/pay/fees": "/pay/fees",
-  "/connect/pay/get-started": "/pay/get-started",
+    "/payments/customization/send-transaction",
+  "/connect/pay/faqs": "/payments/faqs",
+  "/connect/pay/fees": "/payments/fees",
+  "/connect/pay/get-started": "/payments/get-started",
   "/connect/pay/guides/accept-direct-payments":
-    "/pay/guides/accept-direct-payments",
+    "/payments/guides/accept-direct-payments",
   "/connect/pay/guides/build-a-custom-experience":
-    "/pay/guides/build-a-custom-experience",
+    "/payments/guides/build-a-custom-experience",
   "/connect/pay/guides/cross-chain-swapping":
-    "/pay/guides/cross-chain-swapping",
-  "/connect/pay/onramp-providers": "/pay/onramp-providers",
-  "/connect/pay/overview": "/pay",
-  "/connect/pay/testing-pay": "/pay/testing-pay",
-  "/connect/pay/webhooks": "/pay/webhooks",
+    "/payments/guides/cross-chain-swapping",
+  "/connect/pay/onramp-providers": "/payments/onramp-providers",
+  "/connect/pay/overview": "/payments",
+  "/connect/pay/testing-pay": "/payments/testing-pay",
+  "/connect/pay/webhooks": "/payments/webhooks",
+  // General redirects for /pay and /connect/pay
+  "/pay": "/payments",
+  "/pay/:path*": "/payments/:path*",
 };
 
 /**
@@ -1079,7 +1077,7 @@ export const redirects = async () => {
     ...createRedirects(reactNativeRedirects),
     ...createRedirects(unityRedirects),
     ...createRedirects(walletRedirects),
-    ...createRedirects(paymentRedirects),
+    // ...createRedirects(paymentRedirects),
     ...createRedirects(infrastructureRedirects),
     ...createRedirects(contractRedirects),
     ...createRedirects(otherRedirects),
