@@ -15,7 +15,7 @@
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@noble/curves": "1.8.2",
-    "@noble/hashes": "1.7.2",
+    "@noble/hashes": "1.8.0",
     "@passwordless-id/webauthn": "^2.1.2",
     "@radix-ui/react-dialog": "1.1.14",
     "@radix-ui/react-focus-scope": "1.1.7",
