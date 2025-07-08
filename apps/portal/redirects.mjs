@@ -369,6 +369,8 @@ const typescriptRedirects = {
   "/typescript/sdk.thirdwebsdk.fromwallet":
     "/references/typescript/v4/ThirdwebSDK#fromWallet",
   "/typescript/sdk.thirdwebsdk.smartcontract": "/typescript/v4/extensions",
+  // v5 deploy redirects
+  "/references/typescript/v5/deploy/deployPackContract": "/contracts",
 };
 
 const reactNativeRedirects = {
