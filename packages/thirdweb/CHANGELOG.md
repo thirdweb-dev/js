@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.105.10
+
+### Patch Changes
+
+- [#7540](https://github.com/thirdweb-dev/js/pull/7540) [`415ad90`](https://github.com/thirdweb-dev/js/commit/415ad909865d9be942771fb428f904e17916127d) Thanks [@Yash094](https://github.com/Yash094)! - add trextestnet to chains package
+
+- [#7551](https://github.com/thirdweb-dev/js/pull/7551) [`c644463`](https://github.com/thirdweb-dev/js/commit/c64446306e7ee41110ca3f5bc6994a69d3f4de20) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use new BuyWidget in wallet details modal
+
+- [#7556](https://github.com/thirdweb-dev/js/pull/7556) [`10c3b6f`](https://github.com/thirdweb-dev/js/commit/10c3b6f27fe4b73f5b1c71c4395ca350e5cd26d9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect fee payer in token payment selection quotes
+
 ## 5.105.9
 
 ### Patch Changes
