@@ -12,12 +12,14 @@ interface UseBridgeQuoteParams {
   destinationAmount: bigint;
   client: ThirdwebClient;
   enabled?: boolean;
+  feePayer?: "sender" | "receiver";
 }
 
 export function useBridgeQuote({
   originToken,
   destinationToken,
   destinationAmount,
+  feePayer,
   client,
   enabled = true,
 }: UseBridgeQuoteParams) {
@@ -35,6 +37,7 @@ export function useBridgeQuote({
           amount: destinationAmount,
           chainId: originToken.chainId,
           client,
+          feePayer,
           receiver: destinationToken.address,
           sender: originToken.address,
           tokenAddress: originToken.address,
@@ -59,6 +62,7 @@ export function useBridgeQuote({
       destinationToken.chainId,
       destinationToken.address,
       destinationAmount.toString(),
+      feePayer,
     ],
     refetchInterval: 60000, // 30 seconds
     retry: 3, // 1 minute
