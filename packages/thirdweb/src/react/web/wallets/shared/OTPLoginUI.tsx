@@ -345,6 +345,7 @@ const LinkButton = /* @__PURE__ */ StyledButton((_) => {
     "&:hover": {
       color: theme.colors.primaryText,
     },
+    all: "unset",
     color: theme.colors.accentText,
     cursor: "pointer",
     fontSize: fontSize.sm,

@@ -48,6 +48,7 @@ export const Link = /* @__PURE__ */ StyledAnchor<LinkProps>((p) => {
       color: theme.colors[p.hoverColor || "primaryText"],
       textDecoration: "none",
     },
+    all: "unset",
     color: theme.colors[p.color || "accentText"],
     cursor: "pointer",
     display: p.inline ? "inline" : "block",
