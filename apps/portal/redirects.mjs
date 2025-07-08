@@ -1067,6 +1067,37 @@ const payRedirects = {
   "/connect/pay/webhooks": "/pay/webhooks",
 };
 
+const nebulaRedirects = {
+  "/nebula": "https://thirdweb.com/nebula",
+  "/nebula/get-started": "https://thirdweb.com/nebula",
+  "/nebula/faqs": "https://thirdweb.com/nebula",
+  "/nebula/troubleshoot": "https://thirdweb.com/nebula",
+  "/nebula/prompt-guide": "https://thirdweb.com/nebula",
+  "/nebula/api-reference": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/chat": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/execute": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/list-session": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/get-session": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/create-session": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/update-session": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/clear-session": "https://thirdweb.com/nebula",
+  "/nebula/api-reference/delete-session": "https://thirdweb.com/nebula",
+  "/nebula/key-concepts/chat-execute": "https://thirdweb.com/nebula",
+  "/nebula/key-concepts/context-filters": "https://thirdweb.com/nebula",
+  "/nebula/key-concepts/execute-configuration": "https://thirdweb.com/nebula",
+  "/nebula/key-concepts/response-handling": "https://thirdweb.com/nebula",
+  "/nebula/key-concepts/sessions": "https://thirdweb.com/nebula",
+  "/nebula/plugins": "https://thirdweb.com/nebula",
+  "/nebula/plugins/openai": "https://thirdweb.com/nebula",
+  "/nebula/plugins/eliza": "https://thirdweb.com/nebula",
+  "/nebula/mcp-server/get-started": "https://thirdweb.com/nebula",
+  "/nebula/mcp-server/integrations/claude-desktop":
+    "https://thirdweb.com/nebula",
+  "/nebula/mcp-server/integrations/mcp-clients": "https://thirdweb.com/nebula",
+  "/nebula/tools": "https://thirdweb.com/nebula",
+  "/nebula/tools/python-sdk/installation": "https://thirdweb.com/nebula",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -1088,6 +1119,7 @@ export const redirects = async () => {
     ...createRedirects(v4ToV5Redirects),
     ...createRedirects(glossaryRedirects),
     ...createRedirects(payRedirects),
+    ...createRedirects(nebulaRedirects),
   ];
 };
 
