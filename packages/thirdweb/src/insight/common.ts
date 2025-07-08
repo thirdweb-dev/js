@@ -14,8 +14,3 @@ export async function assertInsightEnabled(chains: Chain[]) {
     );
   }
 }
-
-export async function isInsightEnabled(chain: Chain) {
-  const chainIds = await getInsightEnabledChainIds();
-  return chainIds.includes(chain.id);
-}

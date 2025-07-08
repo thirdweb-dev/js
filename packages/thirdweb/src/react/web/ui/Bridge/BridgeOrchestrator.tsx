@@ -227,7 +227,10 @@ export function BridgeOrchestrator({
         <ErrorBanner
           client={client}
           error={state.context.currentError}
-          onCancel={onCancel}
+          onCancel={() => {
+            send({ type: "RESET" });
+            onCancel?.();
+          }}
           onRetry={handleRetry}
         />
       )}
