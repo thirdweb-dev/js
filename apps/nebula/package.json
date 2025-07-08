@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@hookform/resolvers": "^3.9.1",
+    "@hookform/resolvers": "^5.1.1",
     "@marsidev/react-turnstile": "^1.1.0",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "1.1.14",
