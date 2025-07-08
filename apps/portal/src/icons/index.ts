@@ -21,5 +21,3 @@ export { ReactIcon } from "./sdks/ReactIcon";
 export { TypeScriptIcon } from "./sdks/TypeScriptIcon";
 export { UnityIcon } from "./sdks/UnityIcon";
 export { UnrealEngineIcon } from "./sdks/UnrealEngineIcon";
-//sidebar
-export { NebulaSideIcon } from "./sidebar/NebulaSideIcon";
