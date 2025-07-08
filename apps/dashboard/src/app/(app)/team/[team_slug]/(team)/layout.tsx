@@ -1,17 +1,18 @@
 import { redirect } from "next/navigation";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
+import { fetchEcosystemList } from "@/api/ecosystems";
 import { getProjects } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
+import { getChainSubscriptions } from "@/api/team-subscription";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getChain } from "../../../(dashboard)/(chain)/utils";
 import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { StaffModeNotice } from "./_components/StaffModeNotice";
-import type { Ecosystem } from "./~/ecosystem/types";
 import { TeamSidebarLayout } from "./TeamSidebarLayout";
 
 export default async function TeamLayout(props: {
@@ -20,31 +21,57 @@ export default async function TeamLayout(props: {
 }) {
   const params = await props.params;
 
-  const [accountAddress, account, teams, authToken, team] = await Promise.all([
+  const [
+    accountAddress,
+    account,
+    teams,
+    authToken,
+    team,
+    ecosystems,
+    chainSubscriptions,
+  ] = await Promise.all([
     getAuthTokenWalletAddress(),
     getValidAccount(`/team/${params.team_slug}`),
     getTeams(),
     getAuthToken(),
     getTeamBySlug(params.team_slug),
+    fetchEcosystemList(params.team_slug),
+    getChainSubscriptions(params.team_slug),
   ]);
 
   if (!teams || !accountAddress || !authToken || !team) {
     redirect("/login");
   }
 
-  const teamsAndProjects = await Promise.all(
-    teams.map(async (team) => ({
-      projects: await getProjects(team.slug),
-      team,
-    })),
-  );
+  const [teamsAndProjects, chainSidebarLinks] = await Promise.all([
+    Promise.all(
+      teams.map(async (team) => ({
+        projects: await getProjects(team.slug),
+        team,
+      })),
+    ),
+    chainSubscriptions
+      ? await Promise.all(
+          chainSubscriptions.map(async (chainSubscription) => {
+            if (!chainSubscription.chainId) {
+              throw new Error("Chain ID is required");
+            }
+            const chain = await getChain(chainSubscription.chainId);
+
+            return {
+              chainId: chain.chainId,
+              chainName: chain.name,
+              slug: chain.slug,
+            };
+          }),
+        ).catch(() => [])
+      : [],
+  ]);
 
   const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
   });
-
-  const ecosystems = await fetchEcosystemList(team.id, authToken);
 
   const isStaffMode = !teams.some((t) => t.slug === team.slug);
 
@@ -65,6 +92,9 @@ export default async function TeamLayout(props: {
         </div>
 
         <TeamSidebarLayout
+          chainSubscriptions={chainSidebarLinks.sort(
+            (a, b) => a.chainId - b.chainId,
+          )}
           ecosystems={ecosystems.map((ecosystem) => ({
             name: ecosystem.name,
             slug: ecosystem.slug,
@@ -89,21 +119,4 @@ export default async function TeamLayout(props: {
       </div>
     </SidebarProvider>
   );
-}
-
-async function fetchEcosystemList(teamId: string, authToken: string) {
-  const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/ecosystem-wallet`,
-    {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    },
-  );
-
-  if (!res.ok) {
-    return [];
-  }
-
-  return (await res.json()).result as Ecosystem[];
 }

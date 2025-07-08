@@ -1,10 +1,10 @@
 import { getEcosystemWalletUsage } from "@/api/analytics";
+import type { Partner } from "@/api/ecosystems";
 import {
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
 import { RangeSelector } from "@/components/analytics/range-selector";
-import type { Partner } from "../../../../types";
 import { EcosystemWalletUsersChartCard } from "./EcosystemWalletUsersChartCard";
 import { EcosystemWalletsSummary } from "./Summary";
 

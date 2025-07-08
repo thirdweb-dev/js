@@ -227,7 +227,10 @@ export function BridgeOrchestrator({
         <ErrorBanner
           client={client}
           error={state.context.currentError}
-          onCancel={onCancel}
+          onCancel={() => {
+            send({ type: "RESET" });
+            onCancel?.();
+          }}
           onRetry={handleRetry}
         />
       )}
@@ -272,6 +275,11 @@ export function BridgeOrchestrator({
             connectOptions={connectOptions}
             destinationAmount={state.context.destinationAmount}
             destinationToken={state.context.destinationToken}
+            feePayer={
+              uiOptions.mode === "direct_payment"
+                ? uiOptions.paymentInfo.feePayer
+                : undefined
+            }
             includeDestinationToken={uiOptions.mode !== "fund_wallet"}
             onBack={() => {
               send({ type: "BACK" });
@@ -292,7 +300,6 @@ export function BridgeOrchestrator({
             amount={state.context.destinationAmount}
             client={client}
             destinationToken={state.context.destinationToken}
-            mode={uiOptions.mode}
             onBack={() => {
               send({ type: "BACK" });
             }}
@@ -302,6 +309,7 @@ export function BridgeOrchestrator({
             paymentMethod={state.context.selectedPaymentMethod}
             purchaseData={purchaseData}
             receiver={state.context.receiverAddress}
+            uiOptions={uiOptions}
           />
         )}
 

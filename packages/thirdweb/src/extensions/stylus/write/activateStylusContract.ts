@@ -12,7 +12,7 @@ import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { activateProgram } from "../__generated__/IArbWasm/write/activateProgram.js";
 
-const ARB_WASM_ADDRESS = "0x0000000000000000000000000000000000000071";
+export const ARB_WASM_ADDRESS = "0x0000000000000000000000000000000000000071";
 
 export type ActivateStylusContractOptions = {
   chain: Chain;

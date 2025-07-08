@@ -7,11 +7,22 @@ import prompts from "prompts";
 import { parse } from "toml";
 import { createThirdwebClient } from "../../../client/client.js";
 import { upload } from "../../../storage/upload.js";
+import { checkPrerequisites } from "./check-prerequisites.js";
 
 const THIRDWEB_URL = "https://thirdweb.com";
 
 export async function publishStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
+
+  checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
+  checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
+  checkPrerequisites(
+    spinner,
+    "solc",
+    ["--version"],
+    "Solidity compiler (solc)",
+  );
+
   const uri = await buildStylus(spinner, secretKey);
 
   const url = getUrl(uri, "publish").toString();
@@ -21,6 +32,16 @@ export async function publishStylus(secretKey?: string) {
 
 export async function deployStylus(secretKey?: string) {
   const spinner = ora("Checking if this is a Stylus project...").start();
+
+  checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
+  checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
+  checkPrerequisites(
+    spinner,
+    "solc",
+    ["--version"],
+    "Solidity compiler (solc)",
+  );
+
   const uri = await buildStylus(spinner, secretKey);
 
   const url = getUrl(uri, "deploy").toString();
@@ -95,6 +116,20 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
     }
     spinner.succeed("ABI generated.");
 
+    // Step 3.5: detect the constructor
+    spinner.start("Detecting constructor…");
+    const constructorResult = spawnSync("cargo", ["stylus", "constructor"], {
+      encoding: "utf-8",
+    });
+
+    if (constructorResult.status !== 0) {
+      spinner.fail("Failed to get constructor signature.");
+      process.exit(1);
+    }
+
+    const constructorSigRaw = constructorResult.stdout.trim(); // e.g. "constructor(address owner)"
+    spinner.succeed(`Constructor found: ${constructorSigRaw || "none"}`);
+
     // Step 4: Process the output
     const parts = abiContent.split(/======= <stdin>:/g).filter(Boolean);
     const contractNames = extractContractNamesFromExportAbi(abiContent);
@@ -150,11 +185,19 @@ async function buildStylus(spinner: Ora, secretKey?: string) {
       process.exit(1);
     }
 
+    // biome-ignore lint/suspicious/noExplicitAny: <>
+    const abiArray: any[] = JSON.parse(cleanedAbi);
+
+    const constructorAbi = constructorSigToAbi(constructorSigRaw);
+    if (constructorAbi && !abiArray.some((e) => e.type === "constructor")) {
+      abiArray.unshift(constructorAbi); // put it at the top for readability
+    }
+
     const metadata = {
       compiler: {},
       language: "rust",
       output: {
-        abi: JSON.parse(cleanedAbi),
+        abi: abiArray,
         devdoc: {},
         userdoc: {},
       },
@@ -233,4 +276,25 @@ function extractBytecode(rawOutput: string): string {
     throw new Error("Could not find start of bytecode");
   }
   return rawOutput.slice(hexStart).trim();
+}
+
+function constructorSigToAbi(sig: string) {
+  if (!sig || !sig.startsWith("constructor")) return undefined;
+
+  const sigClean = sig
+    .replace(/^constructor\s*\(?/, "")
+    .replace(/\)\s*$/, "")
+    .replace(/\s+(payable|nonpayable)\s*$/, "");
+
+  const mutability = sig.includes("payable") ? "payable" : "nonpayable";
+
+  const inputs =
+    sigClean === ""
+      ? []
+      : sigClean.split(",").map((p) => {
+          const [type, name = ""] = p.trim().split(/\s+/);
+          return { internalType: type, name, type };
+        });
+
+  return { inputs, stateMutability: mutability, type: "constructor" };
 }

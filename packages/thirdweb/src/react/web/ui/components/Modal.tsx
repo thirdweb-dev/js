@@ -47,8 +47,8 @@ export const Modal: React.FC<{
       if (contentRef.current) {
         const animationConfig = {
           duration: modalCloseFadeOutDuration,
-          fill: "forwards",
           easing: "ease",
+          fill: "forwards",
         } as const;
 
         contentRef.current.animate([{ opacity: 0 }], {
@@ -70,7 +70,7 @@ export const Modal: React.FC<{
   }, [props.open]);
 
   return (
-    <Dialog.Root open={open} onOpenChange={props.setOpen}>
+    <Dialog.Root onOpenChange={props.setOpen} open={open}>
       {/* Trigger */}
       {props.trigger && (
         <Dialog.Trigger asChild>{props.trigger}</Dialog.Trigger>
@@ -86,12 +86,12 @@ export const Modal: React.FC<{
         )}
 
         <FocusScope trapped={!props.hide}>
-          <Dialog.Content asChild aria-describedby={undefined}>
+          <Dialog.Content aria-describedby={undefined} asChild>
             <DialogContent
               ref={contentRef}
               style={
                 props.hide
-                  ? { width: 0, height: 0, overflow: "hidden", opacity: 0 }
+                  ? { height: 0, opacity: 0, overflow: "hidden", width: 0 }
                   : {
                       height:
                         props.size === "compact" ? "auto" : wideModalMaxHeight,
@@ -105,15 +105,15 @@ export const Modal: React.FC<{
               {/* Mimics Tailwind's sr-only tag */}
               <Dialog.Title
                 style={{
-                  position: "absolute",
-                  width: "1px",
+                  borderWidth: 0,
+                  clip: "rect(0, 0, 0, 0)",
                   height: "1px",
-                  padding: 0,
                   margin: "-1px",
                   overflow: "hidden",
-                  clip: "rect(0, 0, 0, 0)",
+                  padding: 0,
+                  position: "absolute",
                   whiteSpace: "nowrap",
-                  borderWidth: 0,
+                  width: "1px",
                 }}
               >
                 Connect Modal
@@ -130,13 +130,13 @@ export const Modal: React.FC<{
               {!props.hideCloseIcon && (
                 <CrossContainer>
                   <Dialog.Close asChild>
-                    <IconButton autoFocus type="button" aria-label="Close">
+                    <IconButton aria-label="Close" autoFocus type="button">
                       <Cross2Icon
-                        width={iconSize.md}
                         height={iconSize.md}
                         style={{
                           color: "inherit",
                         }}
+                        width={iconSize.md}
                       />
                     </IconButton>
                   </Dialog.Close>
@@ -150,10 +150,10 @@ export const Modal: React.FC<{
   );
 };
 
-export const CrossContainer = /* @__PURE__ */ StyledDiv({
+const CrossContainer = /* @__PURE__ */ StyledDiv({
   position: "absolute",
-  top: spacing.lg,
   right: spacing.lg,
+  top: spacing.lg,
   transform: "translateX(6px)",
 });
 
@@ -183,39 +183,39 @@ const DialogContent = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
 
   return {
-    zIndex: 10000,
-    background: theme.colors.modalBg,
     "--bg": theme.colors.modalBg,
-    color: theme.colors.primaryText,
-    borderRadius: radius.lg,
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "calc(100vw - 40px)",
-    boxSizing: "border-box",
-    animation: `${modalAnimationDesktop} 300ms ease`,
-    boxShadow: shadow.lg,
-    lineHeight: "normal",
-    border: `1px solid ${theme.colors.borderColor}`,
-    outline: "none",
-    overflow: "hidden",
-    fontFamily: theme.fontFamily,
     "& *": {
       boxSizing: "border-box",
     },
+    animation: `${modalAnimationDesktop} 300ms ease`,
+    background: theme.colors.modalBg,
+    border: `1px solid ${theme.colors.borderColor}`,
+    borderRadius: radius.lg,
+    boxShadow: shadow.lg,
+    boxSizing: "border-box",
+    color: theme.colors.primaryText,
+    fontFamily: theme.fontFamily,
+    left: "50%",
+    lineHeight: "normal",
+    outline: "none",
+    overflow: "hidden",
+    position: "fixed",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "calc(100vw - 40px)",
+    zIndex: 10000,
     [media.mobile]: {
-      top: "auto",
+      animation: `${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1)`,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderRadius: radius.xl,
       bottom: 0,
       left: 0,
+      maxWidth: "none !important",
       right: 0,
+      top: "auto",
       transform: "none",
       width: "100vw",
-      animation: `${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1)`,
-      borderRadius: radius.xl,
-      borderBottomRightRadius: 0,
-      borderBottomLeftRadius: 0,
-      maxWidth: "none !important",
     },
     "& *::selection": {
       backgroundColor: theme.colors.selectedTextBg,

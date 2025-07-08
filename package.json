@@ -1,9 +1,9 @@
 {
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "@biomejs/biome": "2.0.4",
+    "@biomejs/biome": "2.0.6",
     "@changesets/changelog-github": "0.5.1",
-    "@changesets/cli": "2.29.4",
+    "@changesets/cli": "2.29.5",
     "@manypkg/get-packages": "2.2.2",
     "@types/node": "22.14.1",
     "turbo": "2.5.4",
@@ -78,6 +78,5 @@
     "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula"
   },
-
   "version": "1.0.0"
 }

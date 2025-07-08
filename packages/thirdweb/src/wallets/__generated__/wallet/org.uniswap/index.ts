@@ -5,7 +5,8 @@ export const wallet = {
   app: {
     android: "https://play.google.com/store/apps/details?id=com.uniswap.mobile",
     browser: null,
-    chrome: null,
+    chrome:
+      "https://chromewebstore.google.com/detail/uniswap-extension/nnpmfplkfogfpmcngplhnbdnnilmcdcg",
     edge: null,
     firefox: null,
     ios: "https://apps.apple.com/us/app/uniswap-wallet/id6443944476",

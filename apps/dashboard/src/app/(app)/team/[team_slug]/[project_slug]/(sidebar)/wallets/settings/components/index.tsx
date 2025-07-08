@@ -14,6 +14,7 @@ import { upload } from "thirdweb/storage";
 import type { Project } from "@/api/projects";
 import type { SMSCountryTiers } from "@/api/sms";
 import type { Team } from "@/api/team";
+import { FileInput } from "@/components/blocks/FileInput";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,6 @@ import {
 } from "@/schema/validations";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { toArrFromList } from "@/utils/string";
-import { FileInput } from "../../../../../../../../../@/components/blocks/FileInput";
 import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {

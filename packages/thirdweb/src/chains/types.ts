@@ -91,14 +91,6 @@ export type ChainMetadata = {
 /**
  * @chain
  */
-export type ChainService = {
-  service: string;
-  enabled: boolean;
-};
-
-/**
- * @chain
- */
 export type LegacyChain = {
   name: string;
   title?: string;

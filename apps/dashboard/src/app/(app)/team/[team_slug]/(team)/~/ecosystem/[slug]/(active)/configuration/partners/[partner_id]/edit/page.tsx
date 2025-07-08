@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
+import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../../../../../../@/api/auth-token";
 import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";
-import { fetchEcosystem } from "../../../hooks/fetchEcosystem";
 import { fetchPartnerDetails } from "../../../hooks/fetchPartnerDetails";
 
 export default async function EditPartnerPage({
@@ -36,11 +36,11 @@ export default async function EditPartnerPage({
   });
 
   try {
-    const ecosystem = await fetchEcosystem({
-      authToken,
-      slug: ecosystemSlug,
-      teamIdOrSlug: teamSlug,
-    });
+    const ecosystem = await fetchEcosystem(ecosystemSlug, teamSlug);
+
+    if (!ecosystem) {
+      throw new Error("Ecosystem not found");
+    }
 
     try {
       const partner = await fetchPartnerDetails({

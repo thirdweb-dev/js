@@ -8,6 +8,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
 } from "thirdweb";
+import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import {
@@ -44,12 +45,11 @@ export function CreateTokenAssetPageUI(props: {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
   );
+  const activeWalletChain = useActiveWalletChain();
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
-    resolver: zodResolver(tokenInfoFormSchema),
-    reValidateMode: "onChange",
-    values: {
-      chain: "1",
+    defaultValues: {
+      chain: activeWalletChain?.id.toString() || "1",
       description: "",
       image: undefined,
       name: "",
@@ -65,6 +65,8 @@ export function CreateTokenAssetPageUI(props: {
       ],
       symbol: "",
     },
+    resolver: zodResolver(tokenInfoFormSchema),
+    reValidateMode: "onChange",
   });
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({

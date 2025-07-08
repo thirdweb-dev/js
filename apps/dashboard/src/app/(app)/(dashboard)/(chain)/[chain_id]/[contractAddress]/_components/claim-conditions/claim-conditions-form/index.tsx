@@ -465,204 +465,198 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   }
 
   return (
-    <>
-      <Flex as="form" direction="column" gap={10} onSubmit={handleFormSubmit}>
-        <Flex direction="column" gap={6}>
-          {/* Show the reason why the form is disabled */}
-          {!isAdmin && (
-            <Text>Connect with admin wallet to edit claim conditions.</Text>
-          )}
-          {controlledFields.map((field, index) => {
-            const dropType: DropType = field.snapshot
-              ? field.maxClaimablePerWallet?.toString() === "0"
-                ? "specific"
-                : "overrides"
-              : "any";
+    <Flex as="form" direction="column" gap={10} onSubmit={handleFormSubmit}>
+      <Flex direction="column" gap={6}>
+        {/* Show the reason why the form is disabled */}
+        {!isAdmin && (
+          <Text>Connect with admin wallet to edit claim conditions.</Text>
+        )}
+        {controlledFields.map((field, index) => {
+          const dropType: DropType = field.snapshot
+            ? field.maxClaimablePerWallet?.toString() === "0"
+              ? "specific"
+              : "overrides"
+            : "any";
 
-            const claimConditionType = getClaimConditionTypeFromPhase(field);
+          const claimConditionType = getClaimConditionTypeFromPhase(field);
 
-            const isActive = activePhaseId === field.id;
+          const isActive = activePhaseId === field.id;
 
-            const snapshotValue = field.snapshot?.map((v) =>
-              typeof v === "string"
-                ? {
-                    address: v,
-                    currencyAddress: ZERO_ADDRESS,
-                    maxClaimable: "unlimited",
-                    price: "unlimited",
-                  }
-                : {
-                    ...v,
-                    currencyAddress: v?.currencyAddress || ZERO_ADDRESS,
-                    maxClaimable: v?.maxClaimable?.toString() || "unlimited",
-                    price: v?.price?.toString() || "unlimited",
-                  },
-            );
+          const snapshotValue = field.snapshot?.map((v) =>
+            typeof v === "string"
+              ? {
+                  address: v,
+                  currencyAddress: ZERO_ADDRESS,
+                  maxClaimable: "unlimited",
+                  price: "unlimited",
+                }
+              : {
+                  ...v,
+                  currencyAddress: v?.currencyAddress || ZERO_ADDRESS,
+                  maxClaimable: v?.maxClaimable?.toString() || "unlimited",
+                  price: v?.price?.toString() || "unlimited",
+                },
+          );
 
-            return (
-              <Fragment key={`snapshot_${field.id}_${index}`}>
-                <SnapshotViewerSheet
-                  client={contract.client}
-                  dropType={dropType}
-                  isDisabled={!canEditForm}
-                  isOpen={openSnapshotIndex === index}
-                  onClose={() => {
-                    setOpenSnapshotIndex(-1);
-                  }}
-                  setSnapshot={(snapshot) =>
-                    form.setValue(`phases.${index}.snapshot`, snapshot)
-                  }
-                  value={snapshotValue}
-                />
+          return (
+            <Fragment key={`snapshot_${field.id}_${index}`}>
+              <SnapshotViewerSheet
+                client={contract.client}
+                dropType={dropType}
+                isDisabled={!canEditForm}
+                isOpen={openSnapshotIndex === index}
+                onClose={() => {
+                  setOpenSnapshotIndex(-1);
+                }}
+                setSnapshot={(snapshot) =>
+                  form.setValue(`phases.${index}.snapshot`, snapshot)
+                }
+                value={snapshotValue}
+              />
 
-                <ClaimsConditionFormContext.Provider
-                  value={{
-                    claimConditionType,
-                    dropType,
-                    field,
-                    form,
-                    formDisabled: !canEditForm,
-                    isActive,
-                    isAdmin,
-                    isColumn,
-                    isErc20,
-                    isMultiPhase,
-                    phaseIndex: index,
-                    setOpenSnapshotIndex,
-                    tokenDecimals: tokenDecimals.data,
-                  }}
-                >
-                  <ClaimConditionsPhase
-                    contract={contract}
-                    isPending={sendTx.isPending}
-                    onRemove={() => {
-                      removePhase(index);
-                    }}
-                  />
-                </ClaimsConditionFormContext.Provider>
-              </Fragment>
-            );
-          })}
-
-          {phases?.length === 0 && (
-            <Alert borderRadius="md" status="warning">
-              <AlertIcon />
-              <div className="flex flex-col">
-                <AlertTitle as={Heading} size="label.lg">
-                  {isMultiPhase
-                    ? "Missing Claim Phases"
-                    : "Missing Claim Conditions"}
-                </AlertTitle>
-                <AlertDescription as={Text}>
-                  {isMultiPhase
-                    ? "You need to set at least one claim phase for people to claim this drop."
-                    : "You need to set claim conditions for people to claim this drop."}
-                </AlertDescription>
-              </div>
-            </Alert>
-          )}
-
-          <Flex
-            flexDir={{ base: "column", md: "row" }}
-            gap={2}
-            justifyContent="space-between"
-          >
-            <div className="flex flex-row gap-2">
-              <AdminOnly contract={contract}>
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    borderRadius="md"
-                    colorScheme="primary"
-                    isDisabled={
-                      sendTx.isPending || (!isMultiPhase && phases?.length > 0)
-                    }
-                    leftIcon={<PlusIcon className="size-5" />}
-                    size="sm"
-                    variant={phases?.length > 0 ? "outline" : "solid"}
-                  >
-                    Add {isMultiPhase ? "Phase" : "Claim Conditions"}
-                  </MenuButton>
-                  <MenuList
-                    borderRadius="lg"
-                    overflow="hidden"
-                    zIndex="overlay"
-                  >
-                    {Object.keys(ClaimConditionTypeData).map((key) => {
-                      const type = key as ClaimConditionType;
-
-                      if (type === "custom") {
-                        return null;
-                      }
-
-                      return (
-                        <MenuItem
-                          key={type}
-                          onClick={() => {
-                            addPhase(type);
-                            // TODO: Automatically start editing the new phase after adding it
-                          }}
-                        >
-                          <div className="flex items-center gap-1">
-                            {ClaimConditionTypeData[type].name}
-                            <TooltipBox
-                              content={
-                                <Text size="body.md">
-                                  {ClaimConditionTypeData[type].description}
-                                </Text>
-                              }
-                            />
-                          </div>
-                        </MenuItem>
-                      );
-                    })}
-                  </MenuList>
-                </Menu>
-              </AdminOnly>
-
-              {controlledFields.some((field) => field.fromSdk) && (
-                <ResetClaimEligibility
+              <ClaimsConditionFormContext.Provider
+                value={{
+                  claimConditionType,
+                  dropType,
+                  field,
+                  form,
+                  formDisabled: !canEditForm,
+                  isActive,
+                  isAdmin,
+                  isColumn,
+                  isErc20,
+                  isMultiPhase,
+                  phaseIndex: index,
+                  setOpenSnapshotIndex,
+                  tokenDecimals: tokenDecimals.data,
+                }}
+              >
+                <ClaimConditionsPhase
                   contract={contract}
-                  isErc20={isErc20}
-                  isLoggedIn={isLoggedIn}
-                  isMultiphase={isMultiPhase}
-                  tokenId={tokenId}
+                  isPending={sendTx.isPending}
+                  onRemove={() => {
+                    removePhase(index);
+                  }}
                 />
-              )}
-            </div>
+              </ClaimsConditionFormContext.Provider>
+            </Fragment>
+          );
+        })}
 
-            <div className="flex flex-row">
-              <AdminOnly contract={contract} fallback={<Box pb={5} />}>
-                <Flex alignItems="center" gap={3} justifyContent="center">
-                  {(hasRemovedPhases || hasAddedPhases) && (
-                    <Text color="red.500" fontWeight="bold">
-                      You have unsaved changes
-                    </Text>
-                  )}
-                  {controlledFields.length > 0 ||
-                  hasRemovedPhases ||
-                  !isMultiPhase ? (
-                    <TransactionButton
-                      client={contract.client}
-                      disabled={claimConditionsQuery.isPending}
-                      isLoggedIn={isLoggedIn}
-                      isPending={sendTx.isPending}
-                      transactionCount={1}
-                      txChainID={contract.chain.id}
-                      type="submit"
-                    >
-                      {claimConditionsQuery.isPending
-                        ? "Saving Phases"
-                        : "Save Phases"}
-                    </TransactionButton>
-                  ) : null}
-                </Flex>
-              </AdminOnly>
+        {phases?.length === 0 && (
+          <Alert borderRadius="md" status="warning">
+            <AlertIcon />
+            <div className="flex flex-col">
+              <AlertTitle as={Heading} size="label.lg">
+                {isMultiPhase
+                  ? "Missing Claim Phases"
+                  : "Missing Claim Conditions"}
+              </AlertTitle>
+              <AlertDescription as={Text}>
+                {isMultiPhase
+                  ? "You need to set at least one claim phase for people to claim this drop."
+                  : "You need to set claim conditions for people to claim this drop."}
+              </AlertDescription>
             </div>
-          </Flex>
+          </Alert>
+        )}
+
+        <Flex
+          flexDir={{ base: "column", md: "row" }}
+          gap={2}
+          justifyContent="space-between"
+        >
+          <div className="flex flex-row gap-2">
+            <AdminOnly contract={contract}>
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  borderRadius="md"
+                  colorScheme="primary"
+                  isDisabled={
+                    sendTx.isPending || (!isMultiPhase && phases?.length > 0)
+                  }
+                  leftIcon={<PlusIcon className="size-5" />}
+                  size="sm"
+                  variant={phases?.length > 0 ? "outline" : "solid"}
+                >
+                  Add {isMultiPhase ? "Phase" : "Claim Conditions"}
+                </MenuButton>
+                <MenuList borderRadius="lg" overflow="hidden" zIndex="overlay">
+                  {Object.keys(ClaimConditionTypeData).map((key) => {
+                    const type = key as ClaimConditionType;
+
+                    if (type === "custom") {
+                      return null;
+                    }
+
+                    return (
+                      <MenuItem
+                        key={type}
+                        onClick={() => {
+                          addPhase(type);
+                          // TODO: Automatically start editing the new phase after adding it
+                        }}
+                      >
+                        <div className="flex items-center gap-1">
+                          {ClaimConditionTypeData[type].name}
+                          <TooltipBox
+                            content={
+                              <Text size="body.md">
+                                {ClaimConditionTypeData[type].description}
+                              </Text>
+                            }
+                          />
+                        </div>
+                      </MenuItem>
+                    );
+                  })}
+                </MenuList>
+              </Menu>
+            </AdminOnly>
+
+            {controlledFields.some((field) => field.fromSdk) && (
+              <ResetClaimEligibility
+                contract={contract}
+                isErc20={isErc20}
+                isLoggedIn={isLoggedIn}
+                isMultiphase={isMultiPhase}
+                tokenId={tokenId}
+              />
+            )}
+          </div>
+
+          <div className="flex flex-row">
+            <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+              <Flex alignItems="center" gap={3} justifyContent="center">
+                {(hasRemovedPhases || hasAddedPhases) && (
+                  <Text color="red.500" fontWeight="bold">
+                    You have unsaved changes
+                  </Text>
+                )}
+                {controlledFields.length > 0 ||
+                hasRemovedPhases ||
+                !isMultiPhase ? (
+                  <TransactionButton
+                    client={contract.client}
+                    disabled={claimConditionsQuery.isPending}
+                    isLoggedIn={isLoggedIn}
+                    isPending={sendTx.isPending}
+                    transactionCount={1}
+                    txChainID={contract.chain.id}
+                    type="submit"
+                  >
+                    {claimConditionsQuery.isPending
+                      ? "Saving Phases"
+                      : "Save Phases"}
+                  </TransactionButton>
+                ) : null}
+              </Flex>
+            </AdminOnly>
+          </div>
         </Flex>
       </Flex>
-    </>
+    </Flex>
   );
 };
 

@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: EXPECTED */
+
 import { CheckIcon, MinusIcon } from "lucide-react";
 import type { SMSCountryTiers } from "@/api/sms";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -149,7 +151,6 @@ export default function CountrySelector({
                     toggleCountry(country);
                   }
                 }}
-                // biome-ignore lint/a11y/useSemanticElements: FIXME
                 role="button"
                 tabIndex={0}
                 title={countryNames[country] || country}

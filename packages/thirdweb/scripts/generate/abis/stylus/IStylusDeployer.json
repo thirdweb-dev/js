@@ -1,0 +1,4 @@
+[
+  "function deploy(bytes calldata bytecode,bytes calldata initData,uint256 initValue,bytes32 salt) public payable returns (address)",
+  "event ContractDeployed(address deployedContract)"
+]

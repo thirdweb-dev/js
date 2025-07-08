@@ -76,14 +76,18 @@ export function getConfiguredThirdwebClient(options: {
     });
   }
 
+  // During build time, provide fallbacks if credentials are missing
+  const clientId = NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "dummy-build-client";
+  const secretKey = options.secretKey || undefined;
+
   return createThirdwebClient({
-    clientId: NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
+    clientId: clientId,
     config: {
       storage: {
         gatewayUrl: NEXT_PUBLIC_IPFS_GATEWAY_URL,
       },
     },
-    secretKey: options.secretKey,
+    secretKey: secretKey,
     teamId: options.teamId,
   });
 }

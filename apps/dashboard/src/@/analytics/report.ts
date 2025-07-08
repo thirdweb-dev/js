@@ -362,7 +362,11 @@ export function reportAssetCreationFailed(
   properties: { contractType: AssetContractType; error: string } & (
     | {
         assetType: "nft";
-        step: "deploy-contract" | "mint-nfts" | "set-claim-conditions";
+        step:
+          | "deploy-contract"
+          | "mint-nfts"
+          | "set-claim-conditions"
+          | "set-admins";
       }
     | {
         assetType: "coin";
