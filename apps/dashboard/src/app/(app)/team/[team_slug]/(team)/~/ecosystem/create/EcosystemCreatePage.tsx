@@ -19,7 +19,7 @@ export async function EcosystemCreatePage(props: {
             <br /> You can control which apps join your ecosystem and how their
             users interact with your wallet.{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/connect/ecosystems/overview"
+              href="https://portal.thirdweb.com/wallets/ecosystem-wallet/overview"
               rel="noopener noreferrer"
               target="_blank"
             >

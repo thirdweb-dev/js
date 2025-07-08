@@ -18,7 +18,7 @@ export function InAppWalletsFooter() {
             label: "Pre-generate wallets for users",
           },
           {
-            href: "https://portal.thirdweb.com/connect/wallet/sign-in-methods/guest",
+            href: "https://portal.thirdweb.com/wallets/wallet/sign-in-methods/guest",
             label: "Sign-in with guest mode",
           },
         ],
@@ -27,7 +27,7 @@ export function InAppWalletsFooter() {
       left={{
         links: [
           {
-            href: "https://portal.thirdweb.com/connect/wallet/overview",
+            href: "https://portal.thirdweb.com/wallets/wallet/overview",
             label: "Overview",
           },
           {

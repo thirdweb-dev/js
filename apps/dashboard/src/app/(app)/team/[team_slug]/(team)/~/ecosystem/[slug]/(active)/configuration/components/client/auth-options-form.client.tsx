@@ -391,7 +391,7 @@ export function AuthOptionsForm({
                       Enter the URL for your own authentication endpoint.{" "}
                       <a
                         className="underline"
-                        href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/configuration#generic-auth"
+                        href="https://portal.thirdweb.com/wallets/in-app-wallet/custom-auth/configuration#generic-auth"
                       >
                         Learn more.
                       </a>

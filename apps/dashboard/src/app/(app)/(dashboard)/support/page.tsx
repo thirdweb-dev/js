@@ -36,7 +36,7 @@ const HELP_PRODUCTS = [
     description: "Create and manage crypto wallets",
     icon: WalletIcon,
     title: "Wallets",
-    viewAllUrl: "https://portal.thirdweb.com/connect",
+    viewAllUrl: "https://portal.thirdweb.com/wallets",
   },
   {
     description: "Enable payments on any tokens on any chain",

@@ -167,7 +167,7 @@ export function CreateEcosystemForm(props: {
                 </FormControl>
                 <FormDescription>
                   <UnderlineLink
-                    href="https://portal.thirdweb.com/connect/wallet/ecosystem/permissions"
+                    href="https://portal.thirdweb.com/wallets/ecosystem-wallet/permissions"
                     rel="noopener noreferrer"
                     target="_blank"
                   >

@@ -23,7 +23,7 @@ export function AAFooter() {
       left={{
         links: [
           {
-            href: "https://portal.thirdweb.com/connect/account-abstraction/overview",
+            href: "https://portal.thirdweb.com/wallets/account-abstraction/overview",
             label: "Overview",
           },
           {

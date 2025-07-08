@@ -81,7 +81,7 @@ function YourFactoriesSection(props: {
           <p className="text-muted-foreground text-sm">
             Deploy your own account factories to create smart wallets.{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/connect/account-abstraction/factories"
+              href="https://portal.thirdweb.com/wallets/account-abstraction/factories"
               rel="noopener noreferrer"
               target="_blank"
             >

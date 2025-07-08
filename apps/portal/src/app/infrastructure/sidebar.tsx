@@ -27,7 +27,7 @@ export const sidebar: SideBar = {
         {
           links: [
             {
-              href: "/connect",
+              href: "/wallets",
               name: "Connect SDK",
             },
             {
