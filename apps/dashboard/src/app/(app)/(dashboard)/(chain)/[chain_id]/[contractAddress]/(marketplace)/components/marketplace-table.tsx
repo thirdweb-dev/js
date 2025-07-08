@@ -1,4 +1,5 @@
 // biome-ignore-all lint/nursery/noNestedComponentDefinitions: TODO
+/** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 
 import {
   IconButton,
@@ -256,7 +257,6 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                   // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                   onClick={() => setTokenRow(row.original)}
-                  // biome-ignore lint/a11y/useSemanticElements: FIXME
                   role="group"
                   style={{ cursor: "pointer" }}
                 >

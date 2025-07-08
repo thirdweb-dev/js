@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: TODO */
 "use client";
 
 import { CheckIcon, ChevronDownIcon, SearchIcon } from "lucide-react";
@@ -193,7 +194,6 @@ export const SelectWithSearch = React.forwardRef<
                       ref={
                         i === optionsToShow.length - 1 ? lastItemRef : undefined
                       }
-                      // biome-ignore lint/a11y/useSemanticElements: TODO
                       role="option"
                       variant="ghost"
                     >

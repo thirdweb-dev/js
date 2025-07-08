@@ -2,8 +2,8 @@
 
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import type { Ecosystem } from "@/api/ecosystems";
 import { Button } from "@/components/ui/button";
-import type { Ecosystem } from "../../../../../types";
 
 export function AddPartnerDialogButton(props: {
   teamSlug: string;

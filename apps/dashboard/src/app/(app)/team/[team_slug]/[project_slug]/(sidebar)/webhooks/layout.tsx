@@ -1,3 +1,5 @@
+import { getValidAccount } from "@app/account/settings/getAccount";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -7,9 +9,11 @@ export default async function WebhooksLayout(props: {
     project_slug: string;
   }>;
 }) {
-  // Enabled on dev or if FF is enabled.
-  // In server components, we default to true since posthog is client-side only
-  const isFeatureEnabled = true;
+  const account = await getValidAccount();
+  const isFeatureEnabled = await isFeatureFlagEnabled(
+    "webhook-analytics-tab",
+    account.email,
+  );
 
   const params = await props.params;
   return (

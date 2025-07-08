@@ -84,7 +84,7 @@ export function getCurrencyMeta(shorthand: string): CurrencyMeta {
   );
 }
 
-export function getFiatIcon(
+function getFiatIcon(
   currency: CurrencyMeta,
   size: keyof typeof iconSize,
 ): React.ReactNode {

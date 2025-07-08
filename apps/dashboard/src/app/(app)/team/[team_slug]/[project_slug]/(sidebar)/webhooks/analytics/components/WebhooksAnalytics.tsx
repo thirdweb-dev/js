@@ -1,5 +1,9 @@
-import { getWebhookConfigs } from "@/api/webhook-configs";
+import type { WebhookConfig } from "@/api/webhook-configs";
 import type { Range } from "@/components/analytics/date-range-selector";
+import type {
+  WebhookLatencyStats,
+  WebhookRequestStats,
+} from "@/types/analytics";
 import { WebhookAnalyticsServer } from "./WebhookAnalyticsServer";
 
 interface WebhooksAnalyticsProps {
@@ -9,42 +13,32 @@ interface WebhooksAnalyticsProps {
   projectSlug: string;
   range: Range;
   interval: "day" | "week";
+  webhookConfigs: WebhookConfig[];
+  requestsData: WebhookRequestStats[];
+  latencyData: WebhookLatencyStats[];
+  selectedWebhookId: string;
 }
 
-export async function WebhooksAnalytics({
+export function WebhooksAnalytics({
   teamId,
-  teamSlug,
   projectId,
-  projectSlug,
   range,
   interval,
+  webhookConfigs,
+  requestsData,
+  latencyData,
+  selectedWebhookId,
 }: WebhooksAnalyticsProps) {
-  const webhookConfigsResponse = await getWebhookConfigs({
-    projectIdOrSlug: projectSlug,
-    teamIdOrSlug: teamSlug,
-  }).catch(() => ({ data: [], error: "Failed to fetch webhook configs" }));
-
-  if (
-    webhookConfigsResponse.error ||
-    !webhookConfigsResponse.data ||
-    webhookConfigsResponse.data.length === 0
-  ) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">
-          No webhook configurations found.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <WebhookAnalyticsServer
       interval={interval}
+      latencyData={latencyData}
       projectId={projectId}
       range={range}
+      requestsData={requestsData}
+      selectedWebhookId={selectedWebhookId}
       teamId={teamId}
-      webhookConfigs={webhookConfigsResponse.data}
+      webhookConfigs={webhookConfigs}
     />
   );
 }

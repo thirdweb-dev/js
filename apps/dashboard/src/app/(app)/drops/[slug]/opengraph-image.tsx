@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { useId } from "react";
 import { download } from "thirdweb/storage";
-import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { fetchChain } from "@/utils/fetchChain";
 import { DROP_PAGES } from "./data";
 
@@ -84,16 +85,29 @@ export default async function Image({ params }: { params: { slug: string } }) {
     fetch(new URL("og-lib/fonts/inter/700.ttf", import.meta.url)).then((res) =>
       res.arrayBuffer(),
     ),
-    // download the chain icon if there is one
-    chain.icon?.url && hasWorkingChainIcon
-      ? download({
-          client: serverThirdwebClient,
-          uri: chain.icon.url,
-        }).then((res) => res.arrayBuffer())
+    // download the chain icon if there is one and secret key is available
+    chain.icon?.url && hasWorkingChainIcon && DASHBOARD_THIRDWEB_SECRET_KEY
+      ? (async () => {
+          try {
+            const client = getConfiguredThirdwebClient({
+              secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+              teamId: undefined,
+            });
+            const response = await download({
+              client,
+              uri: chain.icon?.url || "",
+            });
+            return response.arrayBuffer();
+          } catch (error) {
+            // If download fails, return undefined to fallback to no icon
+            console.warn("Failed to download chain icon:", error);
+            return undefined;
+          }
+        })()
       : undefined,
     // download the background image (based on chain)
     fetch(
-      chain.icon?.url && hasWorkingChainIcon
+      chain.icon?.url && hasWorkingChainIcon && DASHBOARD_THIRDWEB_SECRET_KEY
         ? new URL(
             "og-lib/assets/chain/bg-with-icon.png",
 
@@ -121,7 +135,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
       />
       {/* the actual component starts here */}
 
-      {hasWorkingChainIcon && (
+      {hasWorkingChainIcon && chainIcon && (
         <img
           alt=""
           // @ts-expect-error - TS doesn't know about the ImageResponse component

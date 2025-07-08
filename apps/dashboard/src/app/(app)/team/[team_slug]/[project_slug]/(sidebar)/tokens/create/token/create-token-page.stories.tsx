@@ -45,6 +45,7 @@ export const Default: Story = {
     createTokenFunctions: mockCreateTokenFunctions,
     onLaunchSuccess: () => {},
     projectSlug: "test-project",
+    teamPlan: "free",
     teamSlug: "test-team",
   },
 };
@@ -62,6 +63,27 @@ export const ErrorOnDeploy: Story = {
     },
     onLaunchSuccess: () => {},
     projectSlug: "test-project",
+    teamPlan: "free",
+    teamSlug: "test-team",
+  },
+};
+
+export const StorageErrorOnDeploy: Story = {
+  args: {
+    accountAddress: "0x1234567890123456789012345678901234567890",
+    client: storybookThirdwebClient,
+    createTokenFunctions: {
+      ...mockCreateTokenFunctions,
+      deployContract: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        throw new Error(
+          "You have reached your storage limit. Please add a valid payment method to continue using the service.",
+        );
+      },
+    },
+    onLaunchSuccess: () => {},
+    projectSlug: "test-project",
+    teamPlan: "free",
     teamSlug: "test-team",
   },
 };

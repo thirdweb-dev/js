@@ -121,19 +121,18 @@ export function WriteContractRawPreview() {
       {error ? (
         <div className="mt-4 text-center text-red-600">{error}</div>
       ) : (
-        <>
-          {txHash && sepolia.blockExplorers && (
-            <a
-              className="mt-3 text-center text-green-400"
-              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Tx sent:{" "}
-              <span className="underline">{shortenAddress(txHash, 6)}</span>
-            </a>
-          )}
-        </>
+        txHash &&
+        sepolia.blockExplorers && (
+          <a
+            className="mt-3 text-center text-green-400"
+            href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Tx sent:{" "}
+            <span className="underline">{shortenAddress(txHash, 6)}</span>
+          </a>
+        )
       )}
     </div>
   );

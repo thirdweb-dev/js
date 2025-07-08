@@ -218,7 +218,6 @@ const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
       textDecoration: "none",
     },
     alignItems: "center",
-    all: "unset",
     background: theme.colors.secondaryButtonBg,
     borderRadius: radius.sm,
     boxSizing: "border-box",

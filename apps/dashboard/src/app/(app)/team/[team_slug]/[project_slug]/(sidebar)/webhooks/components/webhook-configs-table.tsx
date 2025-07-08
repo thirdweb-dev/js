@@ -15,8 +15,6 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import type { Topic, WebhookConfig } from "@/api/webhook-configs";
-import { deleteWebhookConfig } from "@/api/webhook-configs";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,6 +35,12 @@ import {
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import type { WebhookSummaryStats } from "@/types/analytics";
+import type {
+  Topic,
+  WebhookConfig,
+} from "../../../../../../../../@/api/webhook-configs";
+import { deleteWebhookConfig } from "../../../../../../../../@/api/webhook-configs";
 import { CreateWebhookConfigModal } from "./create-webhook-config-modal";
 import { DeleteWebhookModal } from "./delete-webhook-modal";
 import { EditWebhookConfigModal } from "./edit-webhook-config-modal";
@@ -51,6 +55,7 @@ export function WebhookConfigsTable(props: {
   projectSlug: string;
   webhookConfigs: WebhookConfig[];
   topics: Topic[];
+  metricsMap: Map<string, WebhookSummaryStats | null>;
 }) {
   const { webhookConfigs } = props;
   const [sortBy, setSortBy] = useState<SortById>("createdAt");
@@ -71,8 +76,8 @@ export function WebhookConfigsTable(props: {
         webhookConfigId: webhookId,
       });
 
-      if (result.error) {
-        throw new Error(result.error);
+      if (result.status === "error") {
+        throw new Error(result.body);
       }
 
       return result.data;
@@ -228,9 +233,7 @@ export function WebhookConfigsTable(props: {
                     <TableCell>
                       <WebhookMetrics
                         isPaused={!!config.pausedAt}
-                        projectId={props.projectId}
-                        teamId={props.teamId}
-                        webhookId={config.id}
+                        metrics={props.metricsMap.get(config.id) || null}
                       />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
@@ -309,6 +312,11 @@ export function WebhookConfigsTable(props: {
 
       <DeleteWebhookModal
         isPending={deleteMutation.isPending}
+        metrics={
+          deletingWebhook
+            ? props.metricsMap.get(deletingWebhook.id) || null
+            : null
+        }
         onConfirm={() => {
           if (deletingWebhook) {
             deleteMutation.mutate(deletingWebhook.id);
@@ -318,8 +326,6 @@ export function WebhookConfigsTable(props: {
           if (!open) setDeletingWebhook(null);
         }}
         open={!!deletingWebhook}
-        projectId={props.projectId}
-        teamId={props.teamId}
         webhookConfig={deletingWebhook}
       />
     </div>

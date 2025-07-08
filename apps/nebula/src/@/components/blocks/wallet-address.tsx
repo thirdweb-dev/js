@@ -59,7 +59,11 @@ export function WalletAddress(props: {
 
   // special case for zero address
   if (address === ZERO_ADDRESS) {
-    return <span className="cursor-pointer font-mono">{shortenedAddress}</span>;
+    return (
+      <span className={cn("cursor-pointer font-mono text-xs", props.className)}>
+        {shortenedAddress}
+      </span>
+    );
   }
 
   return (

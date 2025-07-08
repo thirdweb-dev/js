@@ -91,8 +91,8 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
           webhookConfigId: webhookConfig.id,
         });
 
-        if (result.error) {
-          throw new Error(result.error);
+        if (result.status === "error") {
+          throw new Error(result.body);
         }
 
         return result.data;
@@ -103,8 +103,8 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
           teamIdOrSlug: props.teamSlug,
         });
 
-        if (result.error) {
-          throw new Error(result.error);
+        if (result.status === "error") {
+          throw new Error(result.body);
         }
 
         return result.data;

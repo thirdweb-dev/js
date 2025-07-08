@@ -1,12 +1,12 @@
-import { createMetadata, DocImage, Grid, SDKCard, FeatureCard } from "@doc";
+import { createMetadata, DocImage, Grid, SDKCard, FeatureCard, ArticleIconCard } from "@doc";
 import PayOverviewImage from "./assets/pay-overview.png";
 import SupportedChains from "../_images/supported-chains.png";
-import {RocketIcon, ArrowLeftRightIcon, WalletIcon, PencilIcon, ShieldCheckIcon, PiggyBankIcon, GlobeIcon, ComponentIcon, CodeIcon, ApiIcon, WebhookIcon} from "lucide-react";
+import {ExternalLinkIcon, RocketIcon, ArrowLeftRightIcon, WalletIcon, PencilIcon, ShieldCheckIcon, PiggyBankIcon, GlobeIcon, ComponentIcon, CodeIcon, ApiIcon, WebhookIcon} from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
 		title: "thirdweb Payments",
-		icon: "thirdweb",
+		icon: "payments",
 	},
 	title: "thirdweb Payments Docs: Web3 Payments, On-ramping, bridging & swapping",
 	description:
@@ -17,9 +17,14 @@ export const metadata = createMetadata({
 
 Payments allows you to create both simple and advanced payment flows for bridging, swapping, onramping, and peer-to-peer purchases. It's been used to drive millions in NFT sales, bridge native tokens to brand new chains, send stablecoins between users, and more. 
 
-To get started check out the [SDK functions](https://portal.thirdweb.com/typescript/v5/buy/quote), [API reference](https://bridge.thirdweb.com/reference), or [playground](https://playground.thirdweb.com/connect/pay).
+## Live Playground
 
-<DocImage src={PayOverviewImage} />
+<ArticleIconCard
+	title="Try Payments"
+	icon={ExternalLinkIcon}
+	href="https://playground.thirdweb.com/connect/pay"
+	description="Try out the payment components live in the interactive playground"
+/>
 
 ## Features
 

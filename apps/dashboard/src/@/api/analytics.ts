@@ -6,7 +6,6 @@ import type {
   EcosystemWalletStats,
   EngineCloudStats,
   InAppWalletStats,
-  RpcMethodStats,
   TransactionStats,
   UniversalBridgeStats,
   UniversalBridgeWalletStats,
@@ -19,6 +18,41 @@ import type {
 } from "@/types/analytics";
 import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
+
+export interface InsightChainStats {
+  date: string;
+  chainId: string;
+  totalRequests: number;
+}
+
+export interface InsightStatusCodeStats {
+  date: string;
+  httpStatusCode: number;
+  totalRequests: number;
+}
+
+export interface InsightEndpointStats {
+  date: string;
+  endpoint: string;
+  totalRequests: number;
+}
+
+interface InsightUsageStats {
+  date: string;
+  totalRequests: number;
+}
+
+export interface RpcMethodStats {
+  date: string;
+  evmMethod: string;
+  count: number;
+}
+
+export interface RpcUsageTypeStats {
+  date: string;
+  usageType: string;
+  count: number;
+}
 
 async function fetchAnalytics(
   input: string | URL,
@@ -78,6 +112,9 @@ function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
   }
   if (params.period) {
     searchParams.append("period", params.period);
+  }
+  if (params.limit) {
+    searchParams.append("limit", params.limit.toString());
   }
   return searchParams;
 }
@@ -226,6 +263,26 @@ export async function getRpcMethodUsage(
 
   const json = await res.json();
   return json.data as RpcMethodStats[];
+}
+
+export async function getRpcUsageByType(
+  params: AnalyticsQueryParams,
+): Promise<RpcUsageTypeStats[]> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/rpc/usage-types?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    console.error("Failed to fetch RPC usage");
+    return [];
+  }
+
+  const json = await res.json();
+  return json.data as RpcUsageTypeStats[];
 }
 
 export async function getWalletUsers(
@@ -480,4 +537,92 @@ export async function getWebhookLatency(
   }
 
   return (await res.json()) as { data: WebhookLatencyStats[] };
+}
+
+export async function getInsightChainUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightChainStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-chain?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight chain usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightChainStats[] };
+}
+
+export async function getInsightStatusCodeUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightStatusCodeStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-status-code?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight status code usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightStatusCodeStats[] };
+}
+
+export async function getInsightEndpointUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightEndpointStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage/by-endpoint?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight endpoint usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightEndpointStats[] };
+}
+
+export async function getInsightUsage(
+  params: AnalyticsQueryParams,
+): Promise<{ data: InsightUsageStats[] } | { errorMessage: string }> {
+  const searchParams = buildSearchParams(params);
+  const res = await fetchAnalytics(
+    `v2/insight/usage?${searchParams.toString()}`,
+    {
+      method: "GET",
+    },
+  );
+
+  if (res?.status !== 200) {
+    const reason = await res?.text();
+    const errMsg = `Failed to fetch Insight usage: ${res?.status} - ${res.statusText} - ${reason}`;
+    console.error(errMsg);
+    return { errorMessage: errMsg };
+  }
+
+  const json = await res.json();
+  return { data: json.data as InsightUsageStats[] };
 }

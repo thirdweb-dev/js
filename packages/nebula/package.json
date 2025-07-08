@@ -1,20 +1,20 @@
 {
-  "name": "@thirdweb-dev/nebula",
-  "version": "0.2.4",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thirdweb-dev/js.git#main"
-  },
-  "license": "Apache-2.0",
+  "author": "thirdweb eng <eng@thirdweb.com>",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "author": "thirdweb eng <eng@thirdweb.com>",
-  "type": "module",
-  "main": "./dist/cjs/exports/thirdweb.js",
-  "module": "./dist/esm/exports/thirdweb.js",
-  "types": "./dist/types/exports/thirdweb.d.ts",
-  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "dependencies": {
+    "thirdweb": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@hey-api/openapi-ts": "0.76.0",
+    "rimraf": "6.0.1",
+    "tslib": "^2.8.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "exports": {
     ".": {
       "types": "./dist/types/exports/thirdweb.d.ts",
@@ -27,15 +27,10 @@
     "dist/*",
     "src/*"
   ],
-  "dependencies": {
-    "thirdweb": "workspace:*"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.0.4",
-    "@hey-api/openapi-ts": "0.76.0",
-    "rimraf": "6.0.1",
-    "tslib": "^2.8.1"
-  },
+  "license": "Apache-2.0",
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
+  "name": "@thirdweb-dev/nebula",
   "peerDependencies": {
     "typescript": ">=5.0.4"
   },
@@ -44,18 +39,23 @@
       "optional": true
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
   "scripts": {
-    "format": "biome format ./src --write",
-    "lint": "biome check ./src",
-    "fix": "biome check ./src --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:generate": "openapi-ts && pnpm format",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf dist",
-    "build:generate": "openapi-ts && pnpm format"
+    "fix": "biome check ./src --fix",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src"
   },
-  "engines": {
-    "node": ">=18"
-  }
+  "type": "module",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "version": "0.2.10"
 }

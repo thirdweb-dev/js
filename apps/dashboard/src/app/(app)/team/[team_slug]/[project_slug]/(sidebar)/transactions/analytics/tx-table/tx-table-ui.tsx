@@ -46,7 +46,10 @@ import type {
 
 // TODO - add Status selector dropdown here
 export function TransactionsTableUI(props: {
-  getData: (params: { page: number }) => Promise<TransactionsResponse>;
+  getData: (params: {
+    page: number;
+    status: TransactionStatus | undefined;
+  }) => Promise<TransactionsResponse>;
   project: Project;
   teamSlug: string;
   wallets?: Wallet[];
@@ -63,8 +66,8 @@ export function TransactionsTableUI(props: {
   const transactionsQuery = useQuery({
     enabled: !!props.wallets && props.wallets.length > 0,
     placeholderData: keepPreviousData,
-    queryFn: () => props.getData({ page }),
-    queryKey: ["transactions", props.project.id, page],
+    queryFn: () => props.getData({ page, status }),
+    queryKey: ["transactions", props.project.id, page, status],
     refetchInterval: autoUpdate ? 4_000 : false,
   });
 
@@ -221,10 +224,6 @@ export const statusDetails = {
   QUEUED: {
     name: "Queued",
     type: "warning",
-  },
-  REVERTED: {
-    name: "Reverted",
-    type: "destructive",
   },
   SUBMITTED: {
     name: "Submitted",

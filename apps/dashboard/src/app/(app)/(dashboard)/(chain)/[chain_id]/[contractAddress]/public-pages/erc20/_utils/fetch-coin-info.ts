@@ -7,10 +7,18 @@ export async function fetchTokenInfoFromBridge(params: {
 }) {
   try {
     const res = await fetch(
-      `https://bridge.${isProd ? "thirdweb.com" : "thirdweb-dev.com"}/v1/tokens?chainId=${params.chainId}&tokenAddress=${params.tokenAddress}&clientId=${params.clientId}`,
+      `https://bridge.${isProd ? "thirdweb.com" : "thirdweb-dev.com"}/v1/tokens?chainId=${params.chainId}&tokenAddress=${params.tokenAddress}`,
+      {
+        headers: {
+          "x-client-id": params.clientId,
+        },
+      },
     );
 
     if (!res.ok) {
+      console.error(
+        `Failed to fetch token info from bridge: ${await res.text()}`,
+      );
       return null;
     }
 

@@ -1,5 +1,6 @@
 import { status as onrampStatus } from "../../bridge/OnrampStatus.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { PurchaseData } from "../types.js";
 import type {
   PayOnChainTransactionDetails,
   PayTokenInfo,
@@ -109,7 +110,7 @@ export type BuyWithFiatStatus =
       /**
        * Arbitrary data sent at the time of fetching the quote
        */
-      purchaseData?: object;
+      purchaseData?: PurchaseData;
     };
 
 /**
@@ -202,7 +203,7 @@ function buildPlaceholderStatus(args: {
     | "PENDING_PAYMENT"
     | "PAYMENT_FAILED"
     | "ON_RAMP_TRANSFER_COMPLETED";
-  purchaseData?: unknown;
+  purchaseData?: PurchaseData;
 }): BuyWithFiatStatus {
   const { intentId, status, purchaseData } = args;
 
@@ -253,7 +254,7 @@ function buildPlaceholderStatus(args: {
   const base: Exclude<BuyWithFiatStatus, { status: "NOT_FOUND" }> = {
     fromAddress: "",
     intentId,
-    purchaseData: purchaseData as object | undefined,
+    purchaseData,
     quote,
     status,
     toAddress: "",

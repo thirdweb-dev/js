@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: TODO */
 "use client";
 
 import { ChevronsUpDown } from "lucide-react";
@@ -54,7 +55,6 @@ export function ChainCombobox({ chains }: { chains: ChainMetadata[] }) {
         <Button
           aria-expanded={open}
           className="h-full max-w-[250px] justify-between"
-          // biome-ignore lint/a11y/useSemanticElements: TODO
           role="combobox"
           variant="outline"
         >

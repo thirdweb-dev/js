@@ -22,10 +22,10 @@ export const wallet = {
   },
   homepage: "https://xportal.com",
   id: "com.elrond.maiar.wallet",
-  image_id: "1bc53e49-1e7f-4129-4c87-3f8c7b91cb00",
+  image_id: "22bdb11a-39d3-42bb-f7cb-84b77f5a5200",
   mobile: {
     native: "xportal://",
-    universal: "https://xport.al",
+    universal: "https://xportal.app.link",
   },
   name: "xPortal",
   rdns: "com.elrond.maiar.wallet",

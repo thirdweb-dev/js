@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Fira_Code, Inter } from "next/font/google";
-import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { createMetadata } from "@/components/Document";
@@ -34,15 +33,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script
-          data-api="https://pl.thirdweb.com/api/event"
-          data-domain="portal.thirdweb.com"
-          defer
-          src="https://thirdweb.com/js/pl.js"
-        />
-      </head>
-
       <body
         className={cn(sansFont.variable, monoFont.variable, "font-sans")}
         suppressHydrationWarning

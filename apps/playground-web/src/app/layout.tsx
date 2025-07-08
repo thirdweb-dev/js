@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
-import Script from "next/script";
 import { metadataBase } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { AppSidebar } from "./AppSidebar";
@@ -36,15 +35,6 @@ export default async function RootLayout({
   const sidebarLinks = getSidebarLinks();
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script
-          data-api="https://pl.thirdweb.com/api/event"
-          data-domain="playground.thirdweb.com"
-          defer
-          src="https://thirdweb.com/js/pl.js"
-        />
-      </head>
-
       <body
         className={cn(
           "bg-background font-sans antialiased ",

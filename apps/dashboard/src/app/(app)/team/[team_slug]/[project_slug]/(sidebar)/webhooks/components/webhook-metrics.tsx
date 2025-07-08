@@ -1,31 +1,13 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { useWebhookMetrics } from "../hooks/use-webhook-metrics";
+import type { WebhookSummaryStats } from "@/types/analytics";
 
 interface WebhookMetricsProps {
-  webhookId: string;
-  teamId: string;
-  projectId: string;
+  metrics: WebhookSummaryStats | null;
   isPaused: boolean;
 }
 
-export function WebhookMetrics({
-  webhookId,
-  teamId,
-  projectId,
-  isPaused,
-}: WebhookMetricsProps) {
-  const {
-    data: metrics,
-    isLoading,
-    error,
-  } = useWebhookMetrics({
-    projectId,
-    teamId,
-    webhookId,
-  });
-
+export function WebhookMetrics({ metrics, isPaused }: WebhookMetricsProps) {
   if (isPaused) {
     return (
       <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
@@ -34,25 +16,14 @@ export function WebhookMetrics({
     );
   }
 
-  if (isLoading) {
+  if (!metrics) {
     return (
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Spinner className="size-4" />
-        Loading...
-      </div>
+      <div className="text-sm text-muted-foreground">No metrics available</div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="text-sm text-muted-foreground">
-        Failed to load metrics
-      </div>
-    );
-  }
-
-  const totalRequests = metrics?.totalRequests ?? 0;
-  const errorRequests = metrics?.errorRequests ?? 0;
+  const totalRequests = metrics.totalRequests ?? 0;
+  const errorRequests = metrics.errorRequests ?? 0;
   const errorRate =
     totalRequests > 0 ? (errorRequests / totalRequests) * 100 : 0;
 

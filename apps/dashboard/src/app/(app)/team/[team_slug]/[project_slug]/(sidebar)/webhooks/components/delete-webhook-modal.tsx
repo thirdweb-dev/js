@@ -1,6 +1,5 @@
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { AlertTriangleIcon } from "lucide-react";
-import type { WebhookConfig } from "@/api/webhook-configs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,12 +10,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { useWebhookMetrics } from "../hooks/use-webhook-metrics";
+import type { WebhookSummaryStats } from "@/types/analytics";
+import type { WebhookConfig } from "../../../../../../../../@/api/webhook-configs";
 
 interface DeleteWebhookModalProps {
   webhookConfig: WebhookConfig | null;
-  teamId: string;
-  projectId: string;
+  metrics: WebhookSummaryStats | null;
   onConfirm: () => void;
   isPending: boolean;
   open: boolean;
@@ -24,19 +23,12 @@ interface DeleteWebhookModalProps {
 }
 
 export function DeleteWebhookModal(props: DeleteWebhookModalProps) {
-  const { data: metrics } = useWebhookMetrics({
-    enabled: props.open && !!props.webhookConfig?.id,
-    projectId: props.projectId,
-    teamId: props.teamId,
-    webhookId: props.webhookConfig?.id || "",
-  });
-
   if (!props.webhookConfig) {
     return null;
   }
 
   // Use real metrics data
-  const requests24h = metrics?.totalRequests ?? 0;
+  const requests24h = props.metrics?.totalRequests ?? 0;
   const hasRecentActivity = requests24h > 0;
 
   return (
