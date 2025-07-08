@@ -213,10 +213,6 @@ export const sidebar: SideBar = {
                   name: "Multiwrap",
                 },
                 {
-                  href: `${prebuiltSlug}/pack`,
-                  name: "Pack",
-                },
-                {
                   href: `${prebuiltSlug}/split`,
                   name: "Split",
                 },
@@ -810,6 +806,10 @@ export const sidebar: SideBar = {
     {
       isCollapsible: false,
       links: [
+        {
+          href: "/contracts/faq",
+          name: "FAQs",
+        },
         {
           links: [
             {
