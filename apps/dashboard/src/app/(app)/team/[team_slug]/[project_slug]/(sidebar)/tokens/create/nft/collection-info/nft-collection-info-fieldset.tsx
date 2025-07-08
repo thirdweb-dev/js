@@ -10,6 +10,7 @@ import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AdminAddressesFieldset } from "../../_common/admin-addresses-fieldset";
 import { SocialUrlsFieldset } from "../../_common/SocialUrls";
 import { StepCard } from "../../_common/step-card";
 import type { NFTCollectionInfoFormValues } from "../_common/form";
@@ -126,6 +127,8 @@ export function NFTCollectionInfoFieldset(props: {
           </div>
 
           <SocialUrlsFieldset form={form} />
+
+          <AdminAddressesFieldset form={form} />
         </StepCard>
       </form>
     </Form>

@@ -262,7 +262,7 @@ export function LaunchTokenStatus(props: {
           dialogCloseClassName="hidden"
         >
           <div className="flex flex-col gap-6 p-6">
-            <DialogHeader>
+            <DialogHeader className="space-y-0.5">
               <DialogTitle className="font-semibold text-xl tracking-tight">
                 Status
               </DialogTitle>

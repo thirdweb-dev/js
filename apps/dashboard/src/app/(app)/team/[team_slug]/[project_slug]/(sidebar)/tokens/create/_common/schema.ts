@@ -22,6 +22,22 @@ export const socialUrlsSchema = z.array(
   }),
 );
 
+export const addressArraySchema = z.array(
+  z.object({
+    address: z.string().refine(
+      (value) => {
+        if (isAddress(value)) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message: "Invalid address",
+      },
+    ),
+  }),
+);
+
 export const addressSchema = z.string().refine(
   (value) => {
     if (isAddress(value)) {

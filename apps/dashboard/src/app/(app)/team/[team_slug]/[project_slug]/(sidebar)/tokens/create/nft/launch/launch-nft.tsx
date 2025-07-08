@@ -8,7 +8,12 @@ import {
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { defineChain, type ThirdwebClient } from "thirdweb";
-import { TokenProvider, TokenSymbol, useActiveWallet } from "thirdweb/react";
+import {
+  TokenProvider,
+  TokenSymbol,
+  useActiveAccount,
+  useActiveWallet,
+} from "thirdweb/react";
 import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
@@ -41,6 +46,7 @@ import type {
 const stepIds = {
   "deploy-contract": "deploy-contract",
   "mint-nfts": "mint-nfts",
+  "set-admins": "set-admins",
   "set-claim-conditions": "set-claim-conditions",
 } as const;
 
@@ -61,7 +67,8 @@ export function LaunchNFT(props: {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
-  const [contractLink, setContractLink] = useState<string | null>(null);
+  const account = useActiveAccount();
+  const contractAddressRef = useRef<string | null>(null);
 
   function updateStatus(
     index: number,
@@ -108,6 +115,19 @@ export function LaunchNFT(props: {
       },
     ];
 
+    if (
+      account &&
+      formValues.collectionInfo.admins.some(
+        (admin) => admin.address !== account.address,
+      )
+    ) {
+      initialSteps.push({
+        id: stepIds["set-admins"],
+        label: "Set admins",
+        status: { type: "idle" },
+      });
+    }
+
     setSteps(initialSteps);
     setIsModalOpen(true);
     executeSteps(initialSteps, 0);
@@ -134,13 +154,15 @@ export function LaunchNFT(props: {
     return shouldDeployERC721 ? "erc721" : "erc1155";
   }, [formValues.nfts]);
 
+  const contractLink = contractAddressRef.current
+    ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.collectionInfo.chain}/${contractAddressRef.current}`
+    : null;
+
   async function executeStep(steps: MultiStepState<StepId>[], stepId: StepId) {
     if (stepId === "deploy-contract") {
       const result =
         await props.createNFTFunctions[ercType].deployContract(formValues);
-      setContractLink(
-        `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.collectionInfo.chain}/${result.contractAddress}`,
-      );
+      contractAddressRef.current = result.contractAddress;
     } else if (stepId === "set-claim-conditions") {
       if (ercType === "erc721") {
         await props.createNFTFunctions.erc721.setClaimConditions(formValues);
@@ -185,6 +207,18 @@ export function LaunchNFT(props: {
       }
     } else if (stepId === "mint-nfts") {
       await props.createNFTFunctions[ercType].lazyMintNFTs(formValues);
+    } else if (stepId === "set-admins") {
+      // this is type guard, this can never happen
+      if (!contractAddressRef.current) {
+        throw new Error("Contract address not set");
+      }
+
+      await props.createNFTFunctions.setAdmins({
+        admins: formValues.collectionInfo.admins,
+        chain: formValues.collectionInfo.chain,
+        contractAddress: contractAddressRef.current,
+        contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+      });
     }
   }
 
@@ -304,7 +338,7 @@ export function LaunchNFT(props: {
           dialogCloseClassName="hidden"
         >
           <div className="flex flex-col gap-6 p-6">
-            <DialogHeader>
+            <DialogHeader className="space-y-0.5">
               <DialogTitle className="font-semibold text-xl tracking-tight">
                 Status
               </DialogTitle>
@@ -411,6 +445,24 @@ export function LaunchNFT(props: {
                   formValues.collectionInfo.description || "No Description"
                 }
               />
+            </OverviewField>
+
+            <OverviewField
+              name={
+                formValues.collectionInfo.admins.length > 1 ? "Admins" : "Admin"
+              }
+            >
+              <div className="space-y-0.5">
+                {formValues.collectionInfo.admins.map((admin) => (
+                  <WalletAddress
+                    address={admin.address}
+                    className="text-foreground text-sm h-auto py-1"
+                    client={props.client}
+                    iconClassName="size-3.5"
+                    key={admin.address}
+                  />
+                ))}
+              </div>
             </OverviewField>
           </div>
         </div>

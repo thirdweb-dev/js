@@ -1,23 +1,21 @@
-import { isAddress } from "thirdweb";
 import * as z from "zod";
-import { socialUrlsSchema } from "../../_common/schema";
+import {
+  addressArraySchema,
+  addressSchema,
+  socialUrlsSchema,
+} from "../../_common/schema";
 import type { NFTMetadataWithPrice } from "../upload-nfts/batch-upload/process-files";
 
 export const nftCollectionInfoFormSchema = z.object({
+  admins: addressArraySchema.refine((addresses) => addresses.length > 0, {
+    message: "At least one admin is required",
+  }),
   chain: z.string().min(1, "Chain is required"),
   description: z.string().optional(),
   image: z.instanceof(File).optional(),
   name: z.string().min(1, "Name is required"),
   socialUrls: socialUrlsSchema,
   symbol: z.string(),
-});
-
-const addressSchema = z.string().refine((value) => {
-  if (isAddress(value)) {
-    return true;
-  }
-
-  return false;
 });
 
 export const nftSalesSettingsFormSchema = z.object({
@@ -37,6 +35,14 @@ export type CreateNFTCollectionAllValues = {
 };
 
 export type CreateNFTCollectionFunctions = {
+  setAdmins: (values: {
+    contractAddress: string;
+    contractType: "DropERC721" | "DropERC1155";
+    admins: {
+      address: string;
+    }[];
+    chain: string;
+  }) => Promise<void>;
   erc721: {
     deployContract: (values: CreateNFTCollectionAllValues) => Promise<{
       contractAddress: string;
