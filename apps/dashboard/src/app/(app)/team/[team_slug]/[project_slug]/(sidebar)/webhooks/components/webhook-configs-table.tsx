@@ -7,8 +7,10 @@ import {
   CalendarIcon,
   CheckIcon,
   EditIcon,
+  GlobeIcon,
   LetterTextIcon,
   MoreHorizontalIcon,
+  PauseIcon,
   PlusIcon,
   TrashIcon,
   WebhookIcon,
@@ -335,8 +337,8 @@ export function WebhookConfigsTable(props: {
 const sortByIcon: Record<SortById, React.FC<{ className?: string }>> = {
   createdAt: CalendarIcon,
   description: LetterTextIcon,
-  destinationUrl: WebhookIcon,
-  pausedAt: CheckIcon,
+  destinationUrl: GlobeIcon,
+  pausedAt: PauseIcon,
 };
 
 function SortDropdown(props: {
@@ -354,7 +356,7 @@ function SortDropdown(props: {
     createdAt: "Creation Date",
     description: "Description",
     destinationUrl: "Destination URL",
-    pausedAt: "Requests",
+    pausedAt: "Pause Status",
   };
 
   return (

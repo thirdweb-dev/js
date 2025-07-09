@@ -21,6 +21,11 @@ export async function isFeatureFlagEnabled(
   flagKey: string,
   userEmail?: string,
 ): Promise<boolean> {
+  // For localdev environments where Posthog is not running, enable all feature flags.
+  if (!posthogServer) {
+    return true;
+  }
+
   try {
     const client = getPostHogServer();
     if (client && userEmail) {
