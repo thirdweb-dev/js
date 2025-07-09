@@ -226,6 +226,8 @@ export type ProjectService =
       maskedAdminKey?: string | null;
       managementAccessToken?: string | null;
       rotationCode?: string | null;
+      encryptedAdminKey?: string | null;
+      encryptedWalletAccessToken?: string | null;
     }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;

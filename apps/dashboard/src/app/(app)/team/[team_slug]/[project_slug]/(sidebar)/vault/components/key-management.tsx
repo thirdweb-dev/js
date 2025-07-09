@@ -9,15 +9,17 @@ import RotateAdminKeyButton from "./rotate-admin-key.client";
 export function KeyManagement({
   maskedAdminKey,
   project,
+  isManagedVault,
 }: {
   maskedAdminKey?: string;
   project: Project;
+  isManagedVault: boolean;
 }) {
   return (
     <div className="flex flex-col gap-6">
       {!maskedAdminKey && <CreateVaultAccountAlert project={project} />}
 
-      {maskedAdminKey && (
+      {maskedAdminKey && !isManagedVault && (
         <>
           <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
             <div className="flex flex-col p-6">
@@ -37,12 +39,41 @@ export function KeyManagement({
                     {maskedAdminKey}
                   </p>
                 </div>
-                <RotateAdminKeyButton project={project} />
+                <RotateAdminKeyButton
+                  project={project}
+                  isManagedVault={false}
+                />
               </div>
             </div>
           </div>
           <ListAccessTokens project={project} />
         </>
+      )}
+
+      {isManagedVault && (
+        <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
+          <div className="flex flex-col p-6">
+            <h2 className="font-semibold text-xl tracking-tight">
+              Managed Vault
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Your vault is currently managed by Thirdweb so you can access it
+              via you project secret key. You can eject and manage your own
+              vault keys at any time. Doing so means you'll need to pass your
+              own vault access token to the transactions API additionally to
+              your project secret key.
+            </p>
+            <div className="h-4" />
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <div className="flex min-w-[300px] flex-row items-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm">
+                <p className="text-muted-foreground text-sm">
+                  {maskedAdminKey}
+                </p>
+              </div>
+              <RotateAdminKeyButton project={project} isManagedVault={true} />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
