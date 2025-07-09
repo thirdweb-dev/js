@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.11
+
+### Patch Changes
+
+- [#7567](https://github.com/thirdweb-dev/js/pull/7567) [`692cedf`](https://github.com/thirdweb-dev/js/commit/692cedf9211fb5a6c24406df69155b920f7d2557) Thanks [@MananTank](https://github.com/MananTank)! - Restore CSS resets on react components
+
 ## 5.105.10
 
 ### Patch Changes

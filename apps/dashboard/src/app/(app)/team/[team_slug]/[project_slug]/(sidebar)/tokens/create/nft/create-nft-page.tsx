@@ -18,6 +18,7 @@ import {
   lazyMint as lazyMint1155,
   setClaimConditions as setClaimConditions1155,
 } from "thirdweb/extensions/erc1155";
+import { grantRole } from "thirdweb/extensions/permissions";
 import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
 import { revalidatePathAction } from "@/actions/revalidate";
@@ -332,6 +333,60 @@ export function CreateNFTPage(props: {
     }
   }
 
+  async function handleSetAdmins(params: {
+    contractAddress: string;
+    contractType: "DropERC721" | "DropERC1155";
+    admins: {
+      address: string;
+    }[];
+    chain: string;
+  }) {
+    const { contract, activeAccount } = getContractAndAccount({
+      chain: params.chain,
+    });
+
+    // remove the current account from the list - its already an admin, don't have to add it again
+    const adminsToAdd = params.admins.filter(
+      (admin) => admin.address !== activeAccount.address,
+    );
+
+    const encodedTxs = await Promise.all(
+      adminsToAdd.map((admin) => {
+        const tx = grantRole({
+          contract,
+          role: "admin",
+          targetAccountAddress: admin.address,
+        });
+
+        return encode(tx);
+      }),
+    );
+
+    const tx = multicall({
+      contract,
+      data: encodedTxs,
+    });
+
+    try {
+      await sendAndConfirmTransaction({
+        account: activeAccount,
+        transaction: tx,
+      });
+    } catch (e) {
+      const errorMessage = parseError(e);
+      console.error(errorMessage);
+
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType: params.contractType,
+        error: errorMessage,
+        step: "set-admins",
+      });
+
+      throw e;
+    }
+  }
+
   return (
     <CreateNFTPageUI
       {...props}
@@ -349,7 +404,6 @@ export function CreateNFTPage(props: {
               formValues,
             });
           },
-
           setClaimConditions: async (formValues) => {
             return handleSetClaimConditionsERC721({
               formValues,
@@ -373,6 +427,7 @@ export function CreateNFTPage(props: {
             return handleSetClaimConditionsERC1155(params);
           },
         },
+        setAdmins: handleSetAdmins,
       }}
       onLaunchSuccess={() => {
         revalidatePathAction(

@@ -8,7 +8,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
 } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import {
@@ -163,11 +163,16 @@ export function CreateNFTPageUI(props: {
 }
 
 function useNFTCollectionInfoForm() {
+  const chain = useActiveWalletChain();
+  const account = useActiveAccount();
   return useForm<NFTCollectionInfoFormValues>({
-    resolver: zodResolver(nftCollectionInfoFormSchema),
-    reValidateMode: "onChange",
-    values: {
-      chain: "1",
+    defaultValues: {
+      admins: [
+        {
+          address: account?.address || "",
+        },
+      ],
+      chain: chain?.id.toString() || "1",
       description: "",
       image: undefined,
       name: "",
@@ -183,5 +188,7 @@ function useNFTCollectionInfoForm() {
       ],
       symbol: "",
     },
+    resolver: zodResolver(nftCollectionInfoFormSchema),
+    reValidateMode: "onChange",
   });
 }

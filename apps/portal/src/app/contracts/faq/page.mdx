@@ -1,0 +1,23 @@
+import { createMetadata, Details } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Contracts FAQs",
+	description: "Frequently asked questions about thirdweb contracts",
+	image: {
+		title: "Contracts FAQs",
+		icon: "contract",
+	},
+});
+
+# Contracts FAQs
+
+<Details summary="Why can I no longer deploy a pack contract?">
+Pack contracts were officially deprecated after the Pectra release from Ethereum. The pack contract implementation is incompatible with the Pectra update, which introduced breaking changes to the Ethereum protocol. As a result, support for pack contracts has been removed from thirdweb's deployment tools to ensure compatibility and security.
+
+If you need similar functionality, consider using:
+- **Edition Drop contracts** for distributing multiple quantities of NFTs
+- **Marketplace contracts** for trading and bundle functionality
+- **Custom smart contracts** built with our modular contract framework
+
+For existing pack contracts, they will continue to function on-chain, but new deployments are no longer supported.
+</Details>

@@ -5533,60 +5533,7 @@ let returnType: Promise<string>;
 The deployed contract address.
 ---
 
-## DEPLOY.deployPackContract
 
-Deprecated
-
-\[Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.\]
-
-Deploy a thirdweb Pack contract
-
-### Example
-
-```ts
-import { deployPackContract } from "thirdweb/extensions/deploy";
- 
-const packAddress = await deployPackContract({
-  account,
-  client,
-  chain,
-  params: {
-    name: "Pack contract name",
-    symbol: "PACK1155",
-  },
-});
-```
-
-```ts
-function deployPackContract(options: {
-  account: Account;
-  chain: Readonly;
-  client: ThirdwebClient;
-  params: PackContractParams;
-}): Promise<string>;
-```
-
-### Parameters
-
-params for deploying [Pack contract](https://thirdweb.com/thirdweb.eth/Pack)
-
-#### Type
-
-```ts
-let options: {
-  account: Account;
-  chain: Readonly;
-  client: ThirdwebClient;
-  params: PackContractParams;
-};
-```
-
-### Returns
-
-```ts
-let returnType: Promise<string>;
-```
----
 
 ## DEPLOY.deployPublishedContract
 

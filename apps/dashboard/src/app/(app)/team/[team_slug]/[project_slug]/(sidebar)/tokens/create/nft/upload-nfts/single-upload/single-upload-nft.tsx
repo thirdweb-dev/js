@@ -4,7 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon, ArrowRightIcon, AsteriskIcon } from "lucide-react";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
-import type { ThirdwebClient } from "thirdweb";
+import {
+  getAddress,
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+} from "thirdweb";
 import { FileInput } from "@/components/blocks/FileInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
@@ -32,6 +36,8 @@ import type { NFTMetadataWithPrice } from "../batch-upload/process-files";
 import { nftWithPriceSchema } from "../schema";
 import { AttributesFieldset } from "./attributes";
 
+const nativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
+
 export function SingleUploadNFT(props: {
   client: ThirdwebClient;
   onNext: () => void;
@@ -46,6 +52,9 @@ export function SingleUploadNFT(props: {
       description: "",
       image: undefined,
       name: "",
+      price_amount: "1",
+      price_currency: nativeTokenAddress,
+      supply: "1",
     },
     resolver: zodResolver(nftWithPriceSchema),
     reValidateMode: "onChange",

@@ -50,7 +50,7 @@ export default async function WebhooksLayout(props: {
             path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
           },
           {
-            name: "Universal Bridge",
+            name: "Payments",
             path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
           },
         ]}

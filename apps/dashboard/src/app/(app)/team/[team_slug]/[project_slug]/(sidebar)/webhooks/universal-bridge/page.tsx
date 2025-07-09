@@ -19,7 +19,7 @@ export default async function Page(props: {
   return (
     <div>
       <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-        Universal Bridge Webhooks
+        Payments Webhooks
       </h2>
       <p className="text-muted-foreground text-sm">
         Get notified for Bridge, Swap and Onramp events.{" "}

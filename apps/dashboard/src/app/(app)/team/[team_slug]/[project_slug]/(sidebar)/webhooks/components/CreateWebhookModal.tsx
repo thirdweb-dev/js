@@ -109,7 +109,9 @@ export function CreateContractWebhookButton({
       await handleSubmit(data);
     } catch (error) {
       toast.error(
-        `Failed to process webhook: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to process webhook: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       );
     }
   };
@@ -142,7 +144,9 @@ export function CreateContractWebhookButton({
       router.refresh();
     } catch (error) {
       toast.error(
-        `Failed to create webhook: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to create webhook: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
       );
     } finally {
       setIsLoading(false);
@@ -173,7 +177,11 @@ export function CreateContractWebhookButton({
         if (filterType === "event") {
           result = await formHook.trigger(["chainIds", "addresses"]);
         } else {
-          result = await formHook.trigger(["chainIds", "toAddresses"]);
+          result = await formHook.trigger([
+            "chainIds",
+            "toAddresses",
+            "fromAddresses",
+          ]);
         }
 
         if (result) {

@@ -25,6 +25,7 @@ export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
       cursor: "not-allowed",
     },
     alignItems: "center",
+    all: "unset",
     backgroundColor: "transparent",
     borderRadius: radius.md,
     // border: `1px solid ${theme.colors.borderColor}`,
