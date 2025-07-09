@@ -39,6 +39,12 @@ export interface DirectPaymentProps {
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function DirectPayment({
@@ -46,6 +52,7 @@ export function DirectPayment({
   client,
   onContinue,
   connectOptions,
+  showThirdwebBranding = true,
 }: DirectPaymentProps) {
   const activeAccount = useActiveAccount();
   const chain = defineChain(uiOptions.paymentInfo.token.chainId);
@@ -226,7 +233,7 @@ export function DirectPayment({
 
         <Spacer y="md" />
 
-        <PoweredByThirdweb />
+        {showThirdwebBranding && <PoweredByThirdweb />}
         <Spacer y="lg" />
       </Container>
     </WithHeader>

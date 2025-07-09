@@ -99,6 +99,12 @@ export type CheckoutWidgetProps = {
   className?: string;
 
   /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+
+  /**
    * The chain the accepted token is on.
    */
   chain: Chain;
@@ -353,6 +359,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={props.seller}
+        showThirdwebBranding={props.showThirdwebBranding}
         uiOptions={bridgeDataQuery.data.data}
       />
     );

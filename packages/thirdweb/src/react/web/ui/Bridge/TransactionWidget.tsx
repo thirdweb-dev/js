@@ -107,6 +107,12 @@ export type TransactionWidgetProps = {
   className?: string;
 
   /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+
+  /**
    * The token address needed to complete this transaction. Leave undefined if no token is required.
    */
   tokenAddress?: Address;
@@ -413,6 +419,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
         purchaseData={props.purchaseData}
         receiverAddress={undefined}
         uiOptions={bridgeDataQuery.data.data}
+        showThirdwebBranding={props.showThirdwebBranding}
       />
     );
   }

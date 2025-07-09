@@ -56,6 +56,12 @@ export interface FundWalletProps {
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function FundWallet({
@@ -65,6 +71,7 @@ export function FundWallet({
   onContinue,
   presetOptions = [5, 10, 20],
   connectOptions,
+  showThirdwebBranding = true,
 }: FundWalletProps) {
   const [amount, setAmount] = useState(uiOptions.initialAmount ?? "");
   const theme = useCustomTheme();
@@ -337,7 +344,7 @@ export function FundWallet({
 
       <Spacer y="md" />
 
-      <PoweredByThirdweb />
+      {showThirdwebBranding && <PoweredByThirdweb />}
       <Spacer y="lg" />
     </WithHeader>
   );
