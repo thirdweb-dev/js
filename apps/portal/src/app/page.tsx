@@ -14,7 +14,6 @@ import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
-import { NebulaIcon } from "../icons/products/NebulaIcon";
 import { PlaygroundIcon } from "../icons/products/PlaygroundIcon";
 import { cn } from "../lib/utils";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
@@ -148,12 +147,6 @@ function ReferenceSection() {
           iconClassName="text-muted-foreground"
           title="Bundler"
         />
-        <SDKCard
-          href="/nebula/api-reference"
-          icon={NebulaIcon} // TODO: actual openAPI docs
-          iconClassName="text-muted-foreground"
-          title="Nebula"
-        />
       </Grid>
     </section>
   );
@@ -195,15 +188,9 @@ function LearningResourcesSection() {
           title="Insight"
         />
         <ArticleCardIndex
-          description="API interface for LLMs"
-          href="/nebula"
-          icon={NebulaIcon}
-          title="Nebula"
-        />
-        <ArticleCardIndex
           description="Non-custodial key management service"
           href="/vault"
-          icon={NebulaIcon}
+          icon={ConnectIcon}
           title="Vault"
         />
       </Grid>
