@@ -22,6 +22,10 @@ import {
   useEmbeddedWallets,
 } from "@/hooks/useEmbeddedWallets";
 import { SearchInput } from "./SearchInput";
+import { AdvancedSearchInput } from "./AdvancedSearchInput";
+import { SearchResults } from "./SearchResults";
+import { searchUsers } from "./searchUsers";
+import type { SearchType, UserSearchResult } from "./types";
 
 const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
@@ -111,6 +115,9 @@ export function InAppWalletUsersPageContent(props: {
 
   const [activePage, setActivePage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearchResults, setHasSearchResults] = useState(false);
   const walletsQuery = useEmbeddedWallets({
     authToken: props.authToken,
     clientId: props.projectClientId,
@@ -147,6 +154,27 @@ export function InAppWalletUsersPageContent(props: {
       authToken: props.authToken,
     });
 
+  const handleSearch = async (searchType: SearchType, query: string) => {
+    setIsSearching(true);
+    try {
+      const results = await searchUsers(props.authToken, searchType, query);
+      setSearchResults(results);
+      setHasSearchResults(true);
+    } catch (error) {
+      console.error("Search failed:", error);
+      setSearchResults([]);
+      setHasSearchResults(true);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchResults([]);
+    setHasSearchResults(false);
+    setSearchValue("");
+  };
+
   const downloadCSV = useCallback(async () => {
     if (wallets.length === 0 || !getAllEmbeddedWallets) {
       return;
@@ -179,58 +207,80 @@ export function InAppWalletUsersPageContent(props: {
     <div>
       <div className="flex flex-col gap-4">
         {/* Top section */}
-        <div className="flex items-center justify-end gap-3">
-          <div className="w-full max-w-xs">
-            <SearchInput
-              onValueChange={setSearchValue}
-              placeholder="Search"
-              value={searchValue}
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-end gap-3">
+            <div className="w-full max-w-lg">
+              <AdvancedSearchInput
+                onSearch={handleSearch}
+                onClear={handleClearSearch}
+                isLoading={isSearching}
+                hasResults={hasSearchResults}
+              />
+            </div>
+            <Button
+              className="gap-2"
+              disabled={wallets.length === 0 || isPending}
+              onClick={downloadCSV}
+              size="sm"
+              variant="outline"
+            >
+              {isPending && <Spinner className="size-4" />}
+              Download as .csv
+            </Button>
           </div>
-          <Button
-            className="gap-2"
-            disabled={wallets.length === 0 || isPending}
-            onClick={downloadCSV}
-            size="sm"
-            variant="outline"
-          >
-            {isPending && <Spinner className="size-4" />}
-            Download as .csv
-          </Button>
+
+          {/* Fallback to old search for table filtering when not using advanced search */}
+          {!hasSearchResults && (
+            <div className="flex items-center justify-end gap-3">
+              <div className="w-full max-w-xs">
+                <SearchInput
+                  onValueChange={setSearchValue}
+                  placeholder="Filter current page"
+                  value={searchValue}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
-          <TWTable
-            columns={columns}
-            data={filteredWallets}
-            isFetched={walletsQuery.isFetched}
-            isPending={walletsQuery.isPending}
-            tableContainerClassName="rounded-b-none"
-            title="in-app wallets"
-          />
+          {hasSearchResults ? (
+            <SearchResults results={searchResults} client={props.client} />
+          ) : (
+            <>
+              <TWTable
+                columns={columns}
+                data={filteredWallets}
+                isFetched={walletsQuery.isFetched}
+                isPending={walletsQuery.isPending}
+                tableContainerClassName="rounded-b-none"
+                title="in-app wallets"
+              />
 
-          <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
-            <Button
-              className="gap-2 bg-background"
-              disabled={activePage === 1 || walletsQuery.isPending}
-              onClick={() => setActivePage((p) => Math.max(1, p - 1))}
-              size="sm"
-              variant="outline"
-            >
-              <ArrowLeftIcon className="size-4" />
-              Previous
-            </Button>
-            <Button
-              className="gap-2 bg-background"
-              disabled={wallets.length === 0 || walletsQuery.isPending}
-              onClick={() => setActivePage((p) => p + 1)}
-              size="sm"
-              variant="outline"
-            >
-              Next
-              <ArrowRightIcon className="size-4" />
-            </Button>
-          </div>
+              <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
+                <Button
+                  className="gap-2 bg-background"
+                  disabled={activePage === 1 || walletsQuery.isPending}
+                  onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+                  size="sm"
+                  variant="outline"
+                >
+                  <ArrowLeftIcon className="size-4" />
+                  Previous
+                </Button>
+                <Button
+                  className="gap-2 bg-background"
+                  disabled={wallets.length === 0 || walletsQuery.isPending}
+                  onClick={() => setActivePage((p) => p + 1)}
+                  size="sm"
+                  variant="outline"
+                >
+                  Next
+                  <ArrowRightIcon className="size-4" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
