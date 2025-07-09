@@ -52,10 +52,6 @@ const links = [
     name: "Insight",
   },
   {
-    href: "/nebula",
-    name: "Nebula",
-  },
-  {
     href: "/vault",
     name: "Vault",
   },
@@ -127,10 +123,6 @@ export const connectLinks: Array<{
 ] as const;
 
 const apisLinks = [
-  {
-    href: "/nebula/api-reference",
-    name: "Nebula",
-  },
   {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
