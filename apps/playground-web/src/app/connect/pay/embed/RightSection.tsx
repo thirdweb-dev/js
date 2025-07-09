@@ -45,11 +45,11 @@ export function RightSection(props: {
   const themeObj =
     props.options.theme.type === "dark"
       ? darkTheme({
-        colors: props.options.theme.darkColorOverrides,
-      })
+          colors: props.options.theme.darkColorOverrides,
+        })
       : lightTheme({
-        colors: props.options.theme.lightColorOverrides,
-      });
+          colors: props.options.theme.lightColorOverrides,
+        });
 
   let embed: React.ReactNode;
   if (props.options.payOptions.widget === "buy") {
