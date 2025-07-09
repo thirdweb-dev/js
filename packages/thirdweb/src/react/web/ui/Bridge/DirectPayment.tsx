@@ -231,9 +231,12 @@ export function DirectPayment({
           />
         )}
 
-        <Spacer y="md" />
-
-        {showThirdwebBranding && <PoweredByThirdweb />}
+        {showThirdwebBranding ? (
+          <div>
+            <Spacer y="md" />
+            <PoweredByThirdweb />
+          </div>
+        ) : null}
         <Spacer y="lg" />
       </Container>
     </WithHeader>

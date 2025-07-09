@@ -128,10 +128,13 @@ export function TransactionPayment({
           }}
         />
 
-        <Spacer y="md" />
-
-        {showThirdwebBranding && <PoweredByThirdweb />}
-        <Spacer y="md" />
+        {showThirdwebBranding ? (
+          <div>
+            <Spacer y="md" />
+            <PoweredByThirdweb />
+            <Spacer y="md" />
+          </div>
+        ) : null}
       </WithHeader>
     );
   }
@@ -349,9 +352,12 @@ export function TransactionPayment({
         />
       )}
 
-      <Spacer y="md" />
-
-      {showThirdwebBranding && <PoweredByThirdweb />}
+      {showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb />
+        </div>
+      ) : null}
       <Spacer y="lg" />
     </WithHeader>
   );

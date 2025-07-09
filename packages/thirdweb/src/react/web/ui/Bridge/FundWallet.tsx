@@ -342,9 +342,12 @@ export function FundWallet({
         />
       )}
 
-      <Spacer y="md" />
-
-      {showThirdwebBranding && <PoweredByThirdweb />}
+      {showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb />
+        </div>
+      ) : null}
       <Spacer y="lg" />
     </WithHeader>
   );
