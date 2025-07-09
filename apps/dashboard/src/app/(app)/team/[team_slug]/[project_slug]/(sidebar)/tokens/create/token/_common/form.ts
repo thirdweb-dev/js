@@ -1,6 +1,7 @@
 import type { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import { addressSchema, socialUrlsSchema } from "../../_common/schema";
+import { getInitialTickValue, isValidTickValue } from "../utils/calculate-tick";
 
 export const tokenInfoFormSchema = z.object({
   chain: z.string().min(1, "Chain is required"),
@@ -34,11 +35,22 @@ export const tokenDistributionFormSchema = z.object({
   ),
   // UI states
   airdropEnabled: z.boolean(),
-  directSale: z.object({
+  market: z.object({
     currencyAddress: addressSchema,
     priceAmount: priceAmountSchema,
   }),
-  publicMarket: z.object({
+  pool: z.object({
+    startingPricePerToken: priceAmountSchema.refine((value) => {
+      const numValue = Number(value);
+      if (numValue === 0) {
+        return false;
+      }
+      const tick = getInitialTickValue({
+        startingPricePerToken: Number(value),
+      });
+
+      return isValidTickValue(tick);
+    }, "Invalid price"),
     tradingFees: z.enum(["0.01", "0.05", "0.3", "1"]),
   }),
   saleAllocationPercentage: z.string().refine(
@@ -53,7 +65,7 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleMode: z.enum(["direct-sale", "public-market", "disabled"]),
+  saleMode: z.enum(["market", "pool", "disabled"]),
   supply: z.string().min(1, "Supply is required"),
 });
 

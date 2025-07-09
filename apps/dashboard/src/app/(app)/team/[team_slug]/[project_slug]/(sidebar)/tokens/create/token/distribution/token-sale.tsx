@@ -30,9 +30,7 @@ export function TokenSaleSection(props: {
   chainId: string;
   client: ThirdwebClient;
 }) {
-  const isEnabled = props.form.watch("saleMode") !== "disabled";
-  const isDirectSale = props.form.watch("saleMode") === "direct-sale";
-  const isPublicMarket = props.form.watch("saleMode") === "public-market";
+  const saleMode = props.form.watch("saleMode");
   const { idToChain } = useAllChainsData();
   const chainMeta = idToChain.get(Number(props.chainId));
 
@@ -46,12 +44,16 @@ export function TokenSaleSection(props: {
     queryKey: ["isRouterEnabled", props.chainId],
   });
 
+  const isSaleEnabled = saleMode !== "disabled";
+
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (isRouterEnabledQuery.data === false && isEnabled) {
-      props.form.setValue("saleMode", "disabled");
+    if (isRouterEnabledQuery.data === false && isSaleEnabled) {
+      props.form.setValue("saleMode", "disabled", {
+        shouldValidate: true,
+      });
     }
-  }, [isRouterEnabledQuery.data, isEnabled, props.form]);
+  }, [isRouterEnabledQuery.data, isSaleEnabled, props.form]);
 
   return (
     <DynamicHeight>
@@ -61,8 +63,6 @@ export function TokenSaleSection(props: {
             <div>
               <h2 className="font-semibold text-lg">Sale</h2>
               <p className="text-muted-foreground text-sm">
-                {/* Make your coin available for purchase via Direct Sale or Public
-              Market */}
                 List and add liquidity for your coin on a decentralized exchange
                 for purchase at fluctuating market price
               </p>
@@ -73,7 +73,7 @@ export function TokenSaleSection(props: {
                 <Skeleton className="h-[24px] w-[44px] rounded-full border" />
               ) : (
                 <Switch
-                  checked={isEnabled}
+                  checked={isSaleEnabled}
                   disabled={isRouterEnabledQuery.data !== true}
                   onCheckedChange={(checked) => {
                     if (isRouterEnabledQuery.data !== true) {
@@ -82,10 +82,12 @@ export function TokenSaleSection(props: {
 
                     props.form.setValue(
                       "saleMode",
-                      checked ? "public-market" : "disabled",
+                      checked ? "pool" : "disabled",
                     );
                     if (!checked) {
-                      props.form.setValue("saleAllocationPercentage", "0");
+                      props.form.setValue("saleAllocationPercentage", "0", {
+                        shouldValidate: true,
+                      });
                     }
                   }}
                 />
@@ -105,67 +107,22 @@ export function TokenSaleSection(props: {
           )}
         </div>
 
-        {isEnabled && isRouterEnabledQuery.data === true && (
+        {isSaleEnabled && isRouterEnabledQuery.data === true && (
           <div className="space-y-5 pt-4">
-            {/* TODO - add this later */}
-            {/* <TabButtons
-              tabClassName="!text-sm"
-              tabIconClassName="size-3.5"
-              bottomLineClassName="bg-background border-b border-dashed"
-              tabs={[
-                {
-                  name: "Direct Sale",
-                  icon: isDirectSale ? CircleDotIcon : CircleIcon,
-                  onClick: () => {
-                    props.form.setValue("saleMode", "direct-sale");
-                  },
-                  isActive: isDirectSale,
-                },
-                {
-                  name: "Public Market",
-                  icon: isPublicMarket ? CircleDotIcon : CircleIcon,
-                  onClick: () => {
-                    props.form.setValue("saleMode", "public-market");
-                  },
-                  isActive: isPublicMarket,
-                },
-              ]}
-            /> */}
-
-            {isDirectSale && (
-              <div className="space-y-4">
-                <div>
-                  <h2 className="font-semibold text-base">Direct Sale</h2>
-                  <p className="text-muted-foreground text-sm">
-                    Make your coin available for purchase by setting a fixed
-                    price
-                  </p>
-                </div>
-
-                <PrimarySaleConfig
-                  chainId={props.chainId}
-                  client={props.client}
-                  form={props.form}
-                />
-              </div>
+            {saleMode === "market" && (
+              <PrimarySaleConfig
+                chainId={props.chainId}
+                client={props.client}
+                form={props.form}
+              />
             )}
 
-            {isPublicMarket && (
-              <div className="space-y-4">
-                {/* <div>
-                  <h2 className="font-semibold text-base">Public Market</h2>
-                  <p className="text-muted-foreground text-sm">
-                    List and add liquidity for your coin on a decentralized
-                    exchange for purchase at fluctuating market price
-                  </p>
-                </div> */}
-
-                <PublicMarketConfig
-                  chainId={props.chainId}
-                  client={props.client}
-                  form={props.form}
-                />
-              </div>
+            {saleMode === "pool" && (
+              <PoolConfig
+                chainId={props.chainId}
+                client={props.client}
+                form={props.form}
+              />
             )}
           </div>
         )}
@@ -199,7 +156,9 @@ function PrimarySaleConfig(props: {
           <DecimalInput
             maxValue={100}
             onChange={(value) => {
-              props.form.setValue("saleAllocationPercentage", value);
+              props.form.setValue("saleAllocationPercentage", value, {
+                shouldValidate: true,
+              });
             }}
             value={props.form.watch("saleAllocationPercentage")}
           />
@@ -212,8 +171,8 @@ function PrimarySaleConfig(props: {
       {/* price  amount + currency*/}
       <FormFieldSetup
         errorMessage={
-          props.form.formState.errors.directSale?.priceAmount?.message ||
-          props.form.formState.errors.directSale?.currencyAddress?.message
+          props.form.formState.errors.market?.priceAmount?.message ||
+          props.form.formState.errors.market?.currencyAddress?.message
         }
         isRequired
         label="Price"
@@ -222,9 +181,11 @@ function PrimarySaleConfig(props: {
           <DecimalInput
             className="rounded-r-none"
             onChange={(value) => {
-              props.form.setValue("directSale.priceAmount", value);
+              props.form.setValue("market.priceAmount", value, {
+                shouldValidate: true,
+              });
             }}
-            value={props.form.watch("directSale.priceAmount")}
+            value={props.form.watch("market.priceAmount")}
           />
 
           <TokenSelector
@@ -234,10 +195,12 @@ function PrimarySaleConfig(props: {
             client={props.client}
             disableAddress={true}
             onChange={(value) => {
-              props.form.setValue("directSale.currencyAddress", value.address);
+              props.form.setValue("market.currencyAddress", value.address, {
+                shouldValidate: true,
+              });
             }}
             selectedToken={{
-              address: props.form.watch("directSale.currencyAddress"),
+              address: props.form.watch("market.currencyAddress"),
               chainId: Number(props.chainId),
             }}
             showCheck={true}
@@ -248,21 +211,24 @@ function PrimarySaleConfig(props: {
   );
 }
 
-type TradingFees = TokenDistributionFormValues["publicMarket"]["tradingFees"];
+type TradingFees = TokenDistributionFormValues["pool"]["tradingFees"];
 const tradingFeesOptions: TradingFees[] = ["0.01", "0.05", "0.3", "1"];
 
-function PublicMarketConfig(props: {
+function PoolConfig(props: {
   form: TokenDistributionForm;
   chainId: string;
   client: ThirdwebClient;
 }) {
+  const { idToChain } = useAllChainsData();
+  const chainMeta = idToChain.get(Number(props.chainId));
+
   const totalSupply = Number(props.form.watch("supply"));
   const sellSupply = Math.floor(
     (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
   );
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <div className="space-y-4">
       {/* supply % */}
       <FormFieldSetup
         errorMessage={
@@ -276,45 +242,72 @@ function PublicMarketConfig(props: {
           <DecimalInput
             maxValue={100}
             onChange={(value) => {
-              props.form.setValue("saleAllocationPercentage", value);
+              props.form.setValue("saleAllocationPercentage", value, {
+                shouldValidate: true,
+              });
             }}
             value={props.form.watch("saleAllocationPercentage")}
           />
-          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-lg text-muted-foreground">
+          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
             %
           </span>
         </div>
       </FormFieldSetup>
 
-      {/* trading fees */}
-      <FormFieldSetup
-        errorMessage={
-          props.form.formState.errors.saleAllocationPercentage?.message
-        }
-        isRequired
-        label="Trading Fees"
-      >
-        <Select
-          onValueChange={(value) => {
-            props.form.setValue(
-              "publicMarket.tradingFees",
-              value as TradingFees,
-            );
-          }}
-          value={props.form.watch("publicMarket.tradingFees")}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* starting price */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.pool?.startingPricePerToken?.message
+          }
+          isRequired
+          label="Starting price per token"
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Select Fees" />
-          </SelectTrigger>
-          <SelectContent>
-            {tradingFeesOptions.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}%
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </FormFieldSetup>
+          <div className="relative">
+            <DecimalInput
+              className="pr-10"
+              onChange={(value) => {
+                props.form.setValue("pool.startingPricePerToken", value, {
+                  shouldValidate: true,
+                });
+              }}
+              value={props.form.watch("pool.startingPricePerToken")}
+            />
+            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+              {chainMeta?.nativeCurrency.symbol || "ETH"}
+            </span>
+          </div>
+        </FormFieldSetup>
+
+        {/* trading fees */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.saleAllocationPercentage?.message
+          }
+          isRequired
+          label="Trading Fees"
+        >
+          <Select
+            onValueChange={(value) => {
+              props.form.setValue("pool.tradingFees", value as TradingFees, {
+                shouldValidate: true,
+              });
+            }}
+            value={props.form.watch("pool.tradingFees")}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Fees" />
+            </SelectTrigger>
+            <SelectContent>
+              {tradingFeesOptions.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}%
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormFieldSetup>
+      </div>
     </div>
   );
 }

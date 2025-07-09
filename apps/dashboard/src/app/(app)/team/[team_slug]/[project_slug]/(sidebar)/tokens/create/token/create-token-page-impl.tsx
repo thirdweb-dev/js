@@ -29,6 +29,7 @@ import { parseError } from "@/utils/errorParser";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
+import { getInitialTickValue } from "./utils/calculate-tick";
 
 export function CreateTokenAssetPage(props: {
   accountAddress: string;
@@ -70,12 +71,16 @@ export function CreateTokenAssetPage(props: {
         chain: defineChain(Number(formValues.chain)),
         client: props.client,
         launchConfig:
-          formValues.saleMode === "public-market" && saleAmount !== 0
+          formValues.saleMode === "pool" && saleAmount !== 0
             ? {
                 config: {
                   amount: BigInt(saleAmount),
-                  fee: Number(formValues.publicMarket.tradingFees) * 10000, // TODO - fix in SDK
-                  // initialTick (floorPrice) : disabled for now
+                  fee: Number(formValues.pool.tradingFees) * 10000, // TODO - fix in SDK
+                  initialTick: getInitialTickValue({
+                    startingPricePerToken: Number(
+                      formValues.pool.startingPricePerToken,
+                    ),
+                  }),
                 }, // public
                 kind: "pool",
               }

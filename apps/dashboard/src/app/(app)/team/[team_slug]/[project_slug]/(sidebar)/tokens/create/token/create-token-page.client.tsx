@@ -75,11 +75,12 @@ export function CreateTokenAssetPageUI(props: {
       airdropAddresses: [],
       // airdrop
       airdropEnabled: false,
-      directSale: {
+      market: {
         currencyAddress: checksummedNativeTokenAddress,
         priceAmount: "0.1",
       },
-      publicMarket: {
+      pool: {
+        startingPricePerToken: "0.01",
         tradingFees: "1",
       },
       // sale fieldset
@@ -87,6 +88,7 @@ export function CreateTokenAssetPageUI(props: {
       saleMode: "disabled",
       supply: "1000000",
     },
+    mode: "onChange",
     resolver: zodResolver(tokenDistributionFormSchema),
     reValidateMode: "onChange",
   });
@@ -100,7 +102,7 @@ export function CreateTokenAssetPageUI(props: {
           onChainUpdated={() => {
             // if the chain is updated, set the sale token address to the native token address
             tokenDistributionForm.setValue(
-              "directSale.currencyAddress",
+              "market.currencyAddress",
               checksummedNativeTokenAddress,
             );
           }}

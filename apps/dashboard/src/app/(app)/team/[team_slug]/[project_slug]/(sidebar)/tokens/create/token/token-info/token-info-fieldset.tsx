@@ -48,7 +48,7 @@ export function TokenInfoFieldset(props: {
                 client={props.client}
                 setValue={(file) =>
                   form.setValue("image", file, {
-                    shouldTouch: true,
+                    shouldValidate: true,
                   })
                 }
                 value={form.watch("image")}
@@ -102,7 +102,9 @@ export function TokenInfoFieldset(props: {
                     client={props.client}
                     disableChainId
                     onChange={(chain) => {
-                      form.setValue("chain", chain.toString());
+                      form.setValue("chain", chain.toString(), {
+                        shouldValidate: true,
+                      });
                       props.onChainUpdated();
                     }}
                   />
