@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.12
+
+### Patch Changes
+
+- [#7575](https://github.com/thirdweb-dev/js/pull/7575) [`bfd728a`](https://github.com/thirdweb-dev/js/commit/bfd728a9d1aab7d0044791b218abf9ac9dbc9bf6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to hide thirdweb branding in the payment widgets with showThirdwebBranding
+
 ## 5.105.11
 
 ### Patch Changes
