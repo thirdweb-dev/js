@@ -103,6 +103,12 @@ export type BuyWidgetProps = {
   className?: string;
 
   /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+
+  /**
    * The chain the accepted token is on.
    */
   chain: Chain;
@@ -391,6 +397,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         purchaseData={props.purchaseData}
         receiverAddress={undefined}
         uiOptions={bridgeDataQuery.data.data}
+        showThirdwebBranding={props.showThirdwebBranding}
       />
     );
   }

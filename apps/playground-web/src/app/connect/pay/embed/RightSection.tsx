@@ -64,6 +64,7 @@ export function RightSection(props: {
         theme={themeObj}
         title={props.options.payOptions.title}
         tokenAddress={props.options.payOptions.buyTokenAddress}
+        showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
       />
     );
   }
@@ -87,6 +88,7 @@ export function RightSection(props: {
         seller={props.options.payOptions.sellerAddress}
         theme={themeObj}
         tokenAddress={props.options.payOptions.buyTokenAddress}
+        showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
       />
     );
   }
@@ -106,6 +108,7 @@ export function RightSection(props: {
           to: account?.address || "",
           tokenId: 2n,
         })}
+        showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
       />
     );
   }

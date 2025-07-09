@@ -120,6 +120,12 @@ export interface BridgeOrchestratorProps {
    * @default ["crypto", "card"]
    */
   paymentMethods?: ("crypto" | "card")[];
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function BridgeOrchestrator({
@@ -135,6 +141,7 @@ export function BridgeOrchestrator({
   paymentLinkId,
   presetOptions,
   paymentMethods = ["crypto", "card"],
+  showThirdwebBranding = true,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -144,6 +151,18 @@ export function BridgeOrchestrator({
     }),
     [],
   );
+
+  // Create modified connect options with branding setting
+  const modifiedConnectOptions = useMemo(() => {
+    if (!connectOptions) return undefined;
+    return {
+      ...connectOptions,
+      connectModal: {
+        ...connectOptions.connectModal,
+        showThirdwebBranding,
+      },
+    };
+  }, [connectOptions, showThirdwebBranding]);
 
   // Use the payment machine hook
   const [state, send] = usePaymentMachine(adapters, uiOptions.mode);
@@ -239,10 +258,11 @@ export function BridgeOrchestrator({
       {state.value === "init" && uiOptions.mode === "fund_wallet" && (
         <FundWallet
           client={client}
-          connectOptions={connectOptions}
+          connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
           presetOptions={presetOptions}
           receiverAddress={receiverAddress}
+          showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />
       )}
@@ -250,8 +270,9 @@ export function BridgeOrchestrator({
       {state.value === "init" && uiOptions.mode === "direct_payment" && (
         <DirectPayment
           client={client}
-          connectOptions={connectOptions}
+          connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
+          showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />
       )}
@@ -259,8 +280,9 @@ export function BridgeOrchestrator({
       {state.value === "init" && uiOptions.mode === "transaction" && (
         <TransactionPayment
           client={client}
-          connectOptions={connectOptions}
+          connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
+          showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />
       )}
@@ -272,7 +294,7 @@ export function BridgeOrchestrator({
           <PaymentSelection
             client={client}
             connectLocale={connectLocale || en}
-            connectOptions={connectOptions}
+            connectOptions={modifiedConnectOptions}
             destinationAmount={state.context.destinationAmount}
             destinationToken={state.context.destinationToken}
             feePayer={

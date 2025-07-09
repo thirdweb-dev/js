@@ -25,5 +25,7 @@ export type BridgeComponentsPlaygroundOptions = {
     transactionData?: string; // Simplified for demo; could be more complex in real implementation
 
     paymentMethods: ("crypto" | "card")[];
+
+    showThirdwebBranding: boolean;
   };
 };

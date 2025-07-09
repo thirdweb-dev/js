@@ -18,6 +18,7 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
     title: "",
     transactionData: "",
     widget: "buy",
+    showThirdwebBranding: true,
   },
   theme: {
     darkColorOverrides: {},

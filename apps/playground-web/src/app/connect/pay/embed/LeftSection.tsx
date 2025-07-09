@@ -464,6 +464,23 @@ export function LeftSection(props: {
           }}
           theme={options.theme}
         />
+
+        <div className="my-4 flex items-center gap-2">
+          <Checkbox
+            checked={payOptions.showThirdwebBranding}
+            id={"branding"}
+            onCheckedChange={(checked) => {
+              setOptions((v) => ({
+                ...v,
+                payOptions: {
+                  ...v.payOptions,
+                  showThirdwebBranding: checked === true,
+                },
+              }));
+            }}
+          />
+          <Label htmlFor={"branding"}>Show Branding</Label>
+        </div>
       </CollapsibleSection>
 
       <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">
