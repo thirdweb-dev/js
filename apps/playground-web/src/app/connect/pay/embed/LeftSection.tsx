@@ -138,35 +138,35 @@ export function LeftSection(props: {
           {(!payOptions.widget ||
             payOptions.widget === "buy" ||
             payOptions.widget === "checkout") && (
-            <div className="space-y-4">
-              {/* Chain selection */}
-              <div className="flex flex-col gap-2">
-                <Label>Chain</Label>
-                <SingleNetworkSelector
-                  chainId={selectedChain}
-                  disableTestnets={true}
-                  onChange={handleChainChange}
-                  placeholder="Select a chain"
-                />
-              </div>
-
-              {/* Token selection - only show if chain is selected */}
-              {selectedChain && (
+              <div className="space-y-4">
+                {/* Chain selection */}
                 <div className="flex flex-col gap-2">
-                  <Label>Token</Label>
-                  <TokenSelector
-                    addNativeTokenIfMissing={true}
+                  <Label>Chain</Label>
+                  <SingleNetworkSelector
                     chainId={selectedChain}
-                    client={THIRDWEB_CLIENT}
-                    enabled={true}
-                    onChange={handleTokenChange}
-                    placeholder="Select a token"
-                    selectedToken={selectedToken}
+                    disableTestnets={true}
+                    onChange={handleChainChange}
+                    placeholder="Select a chain"
                   />
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Token selection - only show if chain is selected */}
+                {selectedChain && (
+                  <div className="flex flex-col gap-2">
+                    <Label>Token</Label>
+                    <TokenSelector
+                      addNativeTokenIfMissing={true}
+                      chainId={selectedChain}
+                      client={THIRDWEB_CLIENT}
+                      enabled={true}
+                      onChange={handleTokenChange}
+                      placeholder="Select a token"
+                      selectedToken={selectedToken}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
 
           {/* Mode-specific form fields */}
           <div className="my-2">
@@ -207,14 +207,14 @@ export function LeftSection(props: {
                               ...v.payOptions,
                               paymentMethods: checked
                                 ? [
-                                    ...v.payOptions.paymentMethods.filter(
-                                      (m) => m !== "crypto",
-                                    ),
-                                    "crypto",
-                                  ]
-                                : v.payOptions.paymentMethods.filter(
+                                  ...v.payOptions.paymentMethods.filter(
                                     (m) => m !== "crypto",
                                   ),
+                                  "crypto",
+                                ]
+                                : v.payOptions.paymentMethods.filter(
+                                  (m) => m !== "crypto",
+                                ),
                             },
                           }));
                         }}
@@ -232,14 +232,14 @@ export function LeftSection(props: {
                               ...v.payOptions,
                               paymentMethods: checked
                                 ? [
-                                    ...v.payOptions.paymentMethods.filter(
-                                      (m) => m !== "card",
-                                    ),
-                                    "card",
-                                  ]
-                                : v.payOptions.paymentMethods.filter(
+                                  ...v.payOptions.paymentMethods.filter(
                                     (m) => m !== "card",
                                   ),
+                                  "card",
+                                ]
+                                : v.payOptions.paymentMethods.filter(
+                                  (m) => m !== "card",
+                                ),
                             },
                           }));
                         }}
@@ -307,14 +307,14 @@ export function LeftSection(props: {
                               ...v.payOptions,
                               paymentMethods: checked
                                 ? [
-                                    ...v.payOptions.paymentMethods.filter(
-                                      (m) => m !== "crypto",
-                                    ),
-                                    "crypto",
-                                  ]
-                                : v.payOptions.paymentMethods.filter(
+                                  ...v.payOptions.paymentMethods.filter(
                                     (m) => m !== "crypto",
                                   ),
+                                  "crypto",
+                                ]
+                                : v.payOptions.paymentMethods.filter(
+                                  (m) => m !== "crypto",
+                                ),
                             },
                           }));
                         }}
@@ -334,14 +334,14 @@ export function LeftSection(props: {
                               ...v.payOptions,
                               paymentMethods: checked
                                 ? [
-                                    ...v.payOptions.paymentMethods.filter(
-                                      (m) => m !== "card",
-                                    ),
-                                    "card",
-                                  ]
-                                : v.payOptions.paymentMethods.filter(
+                                  ...v.payOptions.paymentMethods.filter(
                                     (m) => m !== "card",
                                   ),
+                                  "card",
+                                ]
+                                : v.payOptions.paymentMethods.filter(
+                                  (m) => m !== "card",
+                                ),
                             },
                           }));
                         }}
@@ -464,6 +464,24 @@ export function LeftSection(props: {
           }}
           theme={options.theme}
         />
+
+        <div className="my-4 flex items-center gap-2">
+          <Checkbox
+            checked={payOptions.showThirdwebBranding}
+            id={"branding"}
+            onCheckedChange={(checked) => {
+              setOptions((v) => ({
+                ...v,
+                payOptions: {
+                  ...v.payOptions,
+                  showThirdwebBranding: checked === true,
+                },
+              }));
+            }}
+          />
+          <Label htmlFor={"branding"}>Show Branding</Label>
+        </div>
+
       </CollapsibleSection>
 
       <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">
