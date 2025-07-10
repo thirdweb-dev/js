@@ -1,7 +1,8 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { PayEmbed, type TokenInfo } from "thirdweb/react";
+import type { Address } from "thirdweb";
+import { BuyWidget, type TokenInfo } from "thirdweb/react";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { bridgeAppThirdwebClient } from "../../constants";
@@ -19,19 +20,11 @@ export function UniversalBridgeEmbed({
   const chain = useV5DashboardChain(chainId || 1);
 
   return (
-    <PayEmbed
+    <BuyWidget
       client={bridgeAppThirdwebClient}
-      payOptions={{
-        mode: "fund_wallet",
-        prefillBuy:
-          chainId && token
-            ? {
-                amount,
-                chain,
-                token,
-              }
-            : undefined,
-      }}
+      amount={amount || "0"}
+      chain={chain}
+      tokenAddress={token?.address as Address | undefined}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />
   );
