@@ -141,7 +141,7 @@ export interface SendTransactionOptions {
  * });
  * ```
  *
- * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/transactions)
  * ```ts
  * const { transactionHash } = await sendTransaction({
  *  account,

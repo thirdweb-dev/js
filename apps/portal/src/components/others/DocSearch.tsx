@@ -31,7 +31,7 @@ const suggestedLinks: { title: string; href: string }[] = [
     title: "Contracts",
   },
   {
-    href: "/engine",
+    href: "/transactions",
     title: "Engine",
   },
   {
@@ -359,7 +359,8 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
             >
               Search Docs
               <div className="flex items-center gap-1 rounded-sm border bg-background px-2 py-1 text-muted-foreground text-xs">
-                <CommandIcon className="size-3" />K
+                <CommandIcon className="size-3" />
+                K
               </div>
             </Button>
           </DialogTrigger>
@@ -425,7 +426,7 @@ function getTagsFromHref(href: string): Tag[] | undefined {
   if (href.includes("/connect")) {
     return ["Connect"];
   }
-  if (href.includes("/engine")) {
+  if (href.includes("/transactions")) {
     return ["Engine"];
   }
   if (href.includes("/infrastructure")) {

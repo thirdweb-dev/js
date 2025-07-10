@@ -830,35 +830,47 @@ const contractRedirects = {
   "/sdk/how-it-works": "/contracts",
 };
 
+const engineToTransactionsRedirects = {
+  "/engine": "/transactions/v3",
+  "/engine/v2": "/transactions/v2",
+  "/engine/v3": "/transactions/v3",
+  "/engine/:path*": "/transactions/:path*",
+};
+
 const infrastructureRedirects = {
-  "/engine": "/engine/v3",
-  "/engine/features/permissions": "/engine/features/admins",
-  "/guides/engine/relayer": "/engine/features/relayer",
+  "/engine/features/permissions": "/transactions/features/admins",
+  "/guides/engine/relayer": "/transactions/features/relayer",
   //engine top-level
-  "/infrastructure/engine": "/engine",
-  "/infrastructure/engine/faq": "/engine/faq",
+  "/infrastructure/engine": "/transactions",
+  "/infrastructure/engine/faq": "/transactions/faq",
   "/infrastructure/engine/features/backend-wallets":
-    "/engine/features/backend-wallets",
-  "/infrastructure/engine/features/contracts": "/engine/features/contracts",
+    "/transactions/features/backend-wallets",
+  "/infrastructure/engine/features/contracts":
+    "/transactions/features/contracts",
   "/infrastructure/engine/features/gasless-transactions":
-    "/engine/features/gasless-transactions",
-  "/infrastructure/engine/features/permissions": "/engine/features/permissions",
-  "/infrastructure/engine/features/relayers": "/engine/features/relayers",
+    "/transactions/features/gasless-transactions",
+  "/infrastructure/engine/features/permissions":
+    "/transactions/features/permissions",
+  "/infrastructure/engine/features/relayers": "/transactions/features/relayers",
   "/infrastructure/engine/features/smart-wallets":
-    "/engine/features/smart-wallets",
-  "/infrastructure/engine/features/webhooks": "/engine/features/webhooks",
-  "/infrastructure/engine/get-started": "/engine/get-started",
-  "/infrastructure/engine/guides/airdrop-nfts": "/engine/guides/airdrop-nfts",
-  "/infrastructure/engine/guides/nft-checkout": "/engine/guides/nft-checkout",
-  "/infrastructure/engine/guides/smart-wallets": "/engine/guides/smart-wallets",
-  "/infrastructure/engine/overview": "/engine",
-  "/infrastructure/engine/production-checklist": "/engine/production-checklist",
+    "/transactions/features/smart-wallets",
+  "/infrastructure/engine/features/webhooks": "/transactions/features/webhooks",
+  "/infrastructure/engine/get-started": "/transactions/get-started",
+  "/infrastructure/engine/guides/airdrop-nfts":
+    "/transactions/guides/airdrop-nfts",
+  "/infrastructure/engine/guides/nft-checkout":
+    "/transactions/guides/nft-checkout",
+  "/infrastructure/engine/guides/smart-wallets":
+    "/transactions/guides/smart-wallets",
+  "/infrastructure/engine/overview": "/transactions",
+  "/infrastructure/engine/production-checklist":
+    "/transactions/production-checklist",
   "/infrastructure/engine/references/api-reference":
-    "/engine/references/api-reference",
+    "/transactions/references/api-reference",
   "/infrastructure/engine/references/typescript":
-    "/engine/references/typescript",
-  "/infrastructure/engine/self-host": "/engine/self-host",
-  "/infrastucture/engine/security": "/engine/security",
+    "/transactions/references/typescript",
+  "/infrastructure/engine/self-host": "/transactions/self-host",
+  "/infrastucture/engine/security": "/transactions/security",
   //rpc-edge
   "/rpc-edge": "/infrastructure/rpc-edge/overview",
   "/rpc-edge/faqs": "/infrastructure/rpc-edge/overview",
@@ -949,12 +961,13 @@ const otherRedirects = {
   "/contracts/token": "/contracts/explore/pre-built-contracts/token",
   "/contracts/token-drop": "/contracts/explore/pre-built-contracts/token-drop",
   "/contracts/vote": "/contracts/explore/pre-built-contracts/vote",
-  "/engine/features/smart-wallets": "/engine/features/account-abstraction",
+  "/transactions/features/smart-wallets":
+    "/transactions/features/account-abstraction",
   "/extensions/:path*": "/contracts/build/extensions",
   "/gaming": "/",
   "/gaming-kit/:path*": "/unity",
   "/gamingkit/:path*": "/unity",
-  "/go": "/engine/overview",
+  "/go": "/transactions/overview",
   "/guides": "https://blog.thirdweb.com/guides",
   "/guides/bundle-collection": "https://blog.thirdweb.com/tag/edition",
   "/guides/bundle-drop": "https://blog.thirdweb.com/tag/edition-drop",
@@ -989,7 +1002,7 @@ const otherRedirects = {
   "/pre-built-contracts/:path*": "/contracts",
   "/pre-built-contracts/solana/:match*":
     "https://blog.thirdweb.com/discontinuing-solana-support/",
-  "/python": "/engine/overview",
+  "/python": "/transactions/overview",
   "/react-native/v0/wallets/embedded-wallet":
     "/react-native/v0/wallets/in-app-wallet",
   // in-app wallet
@@ -1024,7 +1037,7 @@ const otherRedirects = {
   "/wallets/embedded-wallet/:path*": "/connect/embedded-wallet/:path*",
   // account abstraction rename
   "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
-  "/web3-api/:path*": "/infrastructure/engine/overview",
+  "/web3-api/:path*": "/transactions/overview",
 };
 
 const v5RestructuredRedirects = {
@@ -1076,6 +1089,8 @@ const payRedirects = {
  */
 export const redirects = async () => {
   return [
+    // Engine to Transactions redirects (highest priority)
+    ...createRedirects(engineToTransactionsRedirects),
     // old portal redirects
     ...createRedirects(reactRedirects),
     ...createRedirects(solidityRedirects),

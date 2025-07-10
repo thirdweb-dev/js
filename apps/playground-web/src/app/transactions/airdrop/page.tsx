@@ -1,4 +1,4 @@
-import { EngineAirdropPreview } from "@/app/engine/airdrop/_components/airdrop-preview";
+import { EngineAirdropPreview } from "@/app/transactions/airdrop/_components/airdrop-preview";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 import { AirdropCode } from "./_components/airdrop-code";

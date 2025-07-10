@@ -17,8 +17,8 @@ export const blueprints: LinkGroup = hrefBuilder("/blueprints", {
       name: "Smart Wallets",
     },
     {
-      href: "/engine",
-      name: "Engine",
+      href: "/transactions",
+      name: "Transactions",
     },
     {
       href: "/utilities",

@@ -1,4 +1,4 @@
-import { EngineMintPreview } from "@/app/engine/minting/_components/mint-preview";
+import { EngineMintPreview } from "@/app/transactions/minting/_components/mint-preview";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 import { MintCode } from "./_components/mint-code";

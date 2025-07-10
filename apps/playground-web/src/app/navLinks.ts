@@ -112,20 +112,20 @@ const universalBridgeSidebarLinks: SidebarLink = {
   name: "Universal Bridge",
 };
 
-const engineSidebarLinks: SidebarLink = {
+const transactionsSidebarLinks: SidebarLink = {
   expanded: false,
   isCollapsible: false,
   links: [
     {
-      href: "/engine/airdrop",
+      href: "/transactions/airdrop",
       name: "Airdrop",
     },
     {
-      href: "/engine/minting",
+      href: "/transactions/minting",
       name: "Mint NFTs",
     },
     {
-      href: "/engine/webhooks",
+      href: "/transactions/webhooks",
       name: "Webhooks",
     },
   ],
@@ -150,7 +150,7 @@ export function getSidebarLinks() {
   const sidebarLinks: SidebarLink[] = [
     ...staticSidebarLinks,
     universalBridgeSidebarLinks,
-    engineSidebarLinks,
+    transactionsSidebarLinks,
     {
       expanded: false,
       isCollapsible: false,

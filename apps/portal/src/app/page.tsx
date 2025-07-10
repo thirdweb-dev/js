@@ -171,7 +171,7 @@ function LearningResourcesSection() {
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
-          href="/engine"
+          href="/transactions"
           icon={EngineIcon}
           title="Transactions"
         />

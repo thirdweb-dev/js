@@ -11,20 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type Version = "v2" | "v3";
-const engineLinks = [
+const transactionLinks = [
   {
-    href: "/engine/v2",
+    href: "/transactions/v2",
     name: "v2",
   },
   {
-    href: "/engine/v3",
+    href: "/transactions/v3",
     name: "v3",
   },
 ];
 
 export function EngineVersionSelector(props: { selected: Version }) {
   // biome-ignore lint/style/noNonNullAssertion: guaranteed
-  const platform = engineLinks.find((p) => p.name === props.selected)!;
+  const platform = transactionLinks.find((p) => p.name === props.selected)!;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,7 +40,7 @@ export function EngineVersionSelector(props: { selected: Version }) {
           minWidth: "150px",
         }}
       >
-        {engineLinks.map((version) => {
+        {transactionLinks.map((version) => {
           return (
             <DropdownMenuItem asChild key={version.name}>
               <div

@@ -13,22 +13,22 @@ import {
 } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
-const engineV3Slug = "/engine/v3";
+const transactionsV3Slug = "/transactions/v3";
 
 export const sidebar: SideBar = {
   links: [
     {
-      href: engineV3Slug,
+      href: transactionsV3Slug,
       icon: <CloudIcon />,
       name: "Overview",
     },
     {
-      href: "https://playground.thirdweb.com/engine/airdrop",
+      href: "https://playground.thirdweb.com/transactions/airdrop",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },
     {
-      href: `${engineV3Slug}/get-started`,
+      href: `${transactionsV3Slug}/get-started`,
       icon: <RocketIcon />,
       name: "Get Started",
     },
@@ -46,7 +46,7 @@ export const sidebar: SideBar = {
       icon: <WalletIcon />,
       links: [
         {
-          href: `${engineV3Slug}/configure-wallets/server-wallets`,
+          href: `${transactionsV3Slug}/configure-wallets/server-wallets`,
           name: "Smart Server Wallet",
         },
       ],
@@ -56,7 +56,7 @@ export const sidebar: SideBar = {
       icon: <BookOpenIcon />,
       links: [
         {
-          href: `${engineV3Slug}/guides/session-keys`,
+          href: `${transactionsV3Slug}/guides/session-keys`,
           name: "Session Keys",
         },
       ],
@@ -78,17 +78,17 @@ export const sidebar: SideBar = {
       name: "Security",
     },
     {
-      href: `${engineV3Slug}/migrate`,
+      href: `${transactionsV3Slug}/migrate`,
       icon: <WrenchIcon />,
       name: "Migrate from v2",
     },
     {
-      href: `${engineV3Slug}/troubleshoot`,
+      href: `${transactionsV3Slug}/troubleshoot`,
       icon: <WrenchIcon />,
       name: "Troubleshoot",
     },
     {
-      href: `${engineV3Slug}/faq`,
+      href: `${transactionsV3Slug}/faq`,
       icon: <MessageCircleQuestionIcon />,
       name: "FAQ",
     },

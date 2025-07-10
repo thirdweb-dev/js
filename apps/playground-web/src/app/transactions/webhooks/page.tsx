@@ -1,4 +1,4 @@
-import { EngineWebhooksPreview } from "@/app/engine/webhooks/_components/webhooks-preview";
+import { EngineWebhooksPreview } from "@/app/transactions/webhooks/_components/webhooks-preview";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 
@@ -12,7 +12,7 @@ export default function Page() {
             transaction or backend wallet events.
           </>
         }
-        docsLink="https://portal.thirdweb.com/engine/features/webhooks?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/transactions/features/webhooks?utm_source=playground"
         title="Webhooks"
       >
         <EngineWebhooksPreview />
