@@ -9,7 +9,7 @@ export function getInitialTickValue(params: { startingPricePerToken: number }) {
   // Round to nearest tick spacing
   const tick = Math.round(calculatedTick / TICK_SPACING) * TICK_SPACING;
 
-  return Math.abs(tick);
+  return tick;
 }
 
 export function isValidTickValue(tick: number) {
