@@ -51,7 +51,7 @@ export function SearchResults(props: {
         const mainDetail = user.linkedAccounts?.[0]?.details;
         const email = mainDetail?.email as string | undefined;
         const phone = mainDetail?.phone as string | undefined;
-        
+
         return (
           <Card key={user.id}>
             <CardHeader>

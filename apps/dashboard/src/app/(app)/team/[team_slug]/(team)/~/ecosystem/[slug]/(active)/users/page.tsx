@@ -17,9 +17,7 @@ export default async function EcosystemUsersPage(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${params.team_slug}/~/ecosystem/${params.slug}/users`,
-    );
+    loginRedirect(`/team/${params.team_slug}/~/ecosystem/${params.slug}/users`);
   }
 
   if (!ecosystem || !team) {

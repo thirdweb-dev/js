@@ -38,14 +38,16 @@ const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
 
 const columnHelper = createColumnHelper<WalletUser>();
 
-export function InAppWalletUsersPageContent(props: {
-  authToken: string;
-  client: ThirdwebClient;
-  teamId: string;
-} & (
-  | { projectClientId: string; ecosystemSlug?: never }
-  | { ecosystemSlug: string; projectClientId?: never }
-)) {
+export function InAppWalletUsersPageContent(
+  props: {
+    authToken: string;
+    client: ThirdwebClient;
+    teamId: string;
+  } & (
+    | { projectClientId: string; ecosystemSlug?: never }
+    | { ecosystemSlug: string; projectClientId?: never }
+  ),
+) {
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("linkedAccounts", {
@@ -141,7 +143,7 @@ export function InAppWalletUsersPageContent(props: {
         props.ecosystemSlug,
         props.teamId,
         searchType,
-        query
+        query,
       );
       setSearchResults(results);
       setHasSearchResults(true);
@@ -187,7 +189,13 @@ export function InAppWalletUsersPageContent(props: {
     tempLink.href = csvUrl;
     tempLink.setAttribute("download", "download.csv");
     tempLink.click();
-  }, [wallets, props.projectClientId, getAllEmbeddedWallets]);
+  }, [
+    wallets,
+    props.projectClientId,
+    getAllEmbeddedWallets,
+    props.teamId,
+    props.ecosystemSlug,
+  ]);
 
   return (
     <div>
@@ -214,8 +222,6 @@ export function InAppWalletUsersPageContent(props: {
               Download as .csv
             </Button>
           </div>
-
-
         </div>
 
         <div>

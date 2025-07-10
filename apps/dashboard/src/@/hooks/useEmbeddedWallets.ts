@@ -19,21 +19,21 @@ const fetchAccountList = ({
 }) => {
   return async () => {
     const url = new URL(`${THIRDWEB_EWS_API_HOST}/api/2024-05-05/account/list`);
-    
+
     // Add clientId or ecosystemSlug parameter
     if (ecosystemSlug) {
       url.searchParams.append("ecosystemSlug", ecosystemSlug);
     } else if (clientId) {
       url.searchParams.append("clientId", clientId);
     }
-    
+
     url.searchParams.append("page", pageNumber.toString());
 
     const res = await fetch(url.href, {
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "x-team-id": teamId,
+        "x-team-id": teamId.replace("team_", ""),
         ...(clientId && { "x-client-id": clientId }),
       },
       method: "GET",
@@ -83,7 +83,15 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
   const address = useActiveAccount()?.address;
 
   return useMutation({
-    mutationFn: async ({ clientId, ecosystemSlug, teamId }: { clientId?: string; ecosystemSlug?: string; teamId: string }) => {
+    mutationFn: async ({
+      clientId,
+      ecosystemSlug,
+      teamId,
+    }: {
+      clientId?: string;
+      ecosystemSlug?: string;
+      teamId: string;
+    }) => {
       const responses: WalletUser[] = [];
       let page = 1;
 
