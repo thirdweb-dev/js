@@ -1,10 +1,12 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { getWebhookLatency, getWebhookRequests } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getWebhookConfigs } from "@/api/webhook-configs";
 import { getFiltersFromSearchParams } from "@/lib/time";
+import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { WebhooksAnalytics } from "./components/WebhooksAnalytics";
 
 export default async function WebhooksAnalyticsPage(props: {
@@ -16,12 +18,33 @@ export default async function WebhooksAnalyticsPage(props: {
     webhook?: string | undefined | string[];
   }>;
 }) {
-  const [authToken, params] = await Promise.all([getAuthToken(), props.params]);
+  const [authToken, params, account] = await Promise.all([
+    getAuthToken(),
+    props.params,
+    getValidAccount(),
+  ]);
 
-  const project = await getProject(params.team_slug, params.project_slug);
-
-  if (!project || !authToken) {
+  if (!account || !authToken) {
     notFound();
+  }
+
+  const [isFeatureEnabled, project] = await Promise.all([
+    isFeatureFlagEnabled({
+      flagKey: "centralized-webhooks",
+      accountId: account.id,
+      email: account.email,
+    }),
+    getProject(params.team_slug, params.project_slug),
+  ]);
+
+  if (!project) {
+    notFound();
+  }
+
+  if (!isFeatureEnabled) {
+    redirect(
+      `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
+    );
   }
 
   const searchParams = await props.searchParams;

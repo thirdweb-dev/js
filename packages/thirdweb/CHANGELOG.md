@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.14
+
+### Patch Changes
+
+- [#7581](https://github.com/thirdweb-dev/js/pull/7581) [`f3234c3`](https://github.com/thirdweb-dev/js/commit/f3234c3c414f2fb4ee41c2394bf52a56fa081f73) Thanks [@d4mr](https://github.com/d4mr)! - fix engine server wallet usage with session keys
+
 ## 5.105.13
 
 ### Patch Changes

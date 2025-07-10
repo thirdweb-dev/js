@@ -1,37 +1,49 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getWebhookSummary } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { getWebhookSummary } from "../../../../../../../@/api/analytics";
-import {
-  getAvailableTopics,
-  getWebhookConfigs,
-} from "../../../../../../../@/api/webhook-configs";
+import { getAvailableTopics, getWebhookConfigs } from "@/api/webhook-configs";
+import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { WebhooksOverview } from "./components/overview";
 
-export default async function WebhooksPage({
-  params,
-}: {
+export default async function WebhooksPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
-  const [authToken, resolvedParams] = await Promise.all([
+  const [authToken, params, account] = await Promise.all([
     getAuthToken(),
-    params,
+    props.params,
+    getValidAccount(),
   ]);
 
-  const project = await getProject(
-    resolvedParams.team_slug,
-    resolvedParams.project_slug,
-  );
+  if (!account || !authToken) {
+    notFound();
+  }
+
+  const [isFeatureEnabled, project] = await Promise.all([
+    isFeatureFlagEnabled({
+      flagKey: "centralized-webhooks",
+      accountId: account.id,
+      email: account.email,
+    }),
+    getProject(params.team_slug, params.project_slug),
+  ]);
 
   if (!project || !authToken) {
     notFound();
   }
 
+  if (!isFeatureEnabled) {
+    redirect(
+      `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
+    );
+  }
+
   // Fetch webhook configs and topics in parallel
   const [webhookConfigsResult, topicsResult] = await Promise.all([
     getWebhookConfigs({
-      projectIdOrSlug: resolvedParams.project_slug,
-      teamIdOrSlug: resolvedParams.team_slug,
+      projectIdOrSlug: params.project_slug,
+      teamIdOrSlug: params.team_slug,
     }),
     getAvailableTopics(),
   ]);
@@ -75,9 +87,9 @@ export default async function WebhooksPage({
     <WebhooksOverview
       metricsMap={metricsMap}
       projectId={project.id}
-      projectSlug={resolvedParams.project_slug}
+      projectSlug={params.project_slug}
       teamId={project.teamId}
-      teamSlug={resolvedParams.team_slug}
+      teamSlug={params.team_slug}
       topics={topics}
       webhookConfigs={webhookConfigs}
     />
