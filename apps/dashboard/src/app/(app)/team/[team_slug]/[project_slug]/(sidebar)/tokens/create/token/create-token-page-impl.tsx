@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
-import { toast } from "sonner";
 import {
+  defineChain,
   getAddress,
   getContract,
   NATIVE_TOKEN_ADDRESS,
@@ -18,6 +18,7 @@ import {
   transferBatch,
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
+import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
@@ -45,18 +46,52 @@ export function CreateTokenAssetPage(props: {
   projectSlug: string;
   teamPlan: Team["billingPlan"];
 }) {
-  const account = useActiveAccount();
+  const activeAccount = useActiveAccount();
   const { idToChain } = useAllChainsData();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
-  async function deployContract(formValues: CreateAssetFormValues) {
-    if (!account) {
-      toast.error("No Connected Wallet");
+  function getAccount(gasless: boolean) {
+    if (!activeAccount) {
       throw new Error("No Connected Wallet");
     }
 
-    const socialUrls = formValues.socialUrls.reduce(
+    if (gasless) {
+      return create7702MinimalAccount({
+        adminAccount: activeAccount,
+        client: props.client,
+        sponsorGas: true,
+      });
+    }
+    return activeAccount;
+  }
+
+  function getDeployedContract(params: { chain: string }) {
+    const contractAddress = contractAddressRef.current;
+
+    if (!contractAddress) {
+      throw new Error("Contract address not set");
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    const chain = defineChain(Number(params.chain));
+
+    return getContract({
+      address: contractAddress,
+      chain,
+      client: props.client,
+    });
+  }
+
+  async function deployContract(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
+
+    const account = getAccount(gasless);
+
+    const socialUrls = values.socialUrls.reduce(
       (acc, url) => {
         if (url.url && url.platform) {
           acc[url.platform] = url.url;
@@ -71,29 +106,31 @@ export function CreateTokenAssetPage(props: {
         account,
         // eslint-disable-next-line no-restricted-syntax
         chain: defineDashboardChain(
-          Number(formValues.chain),
-          idToChain.get(Number(formValues.chain)),
+          Number(values.chain),
+          idToChain.get(Number(values.chain)),
         ),
         client: props.client,
         params: {
-          description: formValues.description,
-          image: formValues.image,
+          description: values.description,
+          image: values.image,
           // metadata
-          name: formValues.name,
+          name: values.name,
           // platform fees
           platformFeeBps: BigInt(DEFAULT_FEE_BPS_NEW),
           platformFeeRecipient: DEFAULT_FEE_RECIPIENT,
           // primary sale
           saleRecipient: account.address,
           social_urls: socialUrls,
-          symbol: formValues.symbol,
+          symbol: values.symbol,
         },
         type: "DropERC20",
       });
 
+      contractAddressRef.current = contractAddress;
+
       // add contract to project in background
       addContractToProject.mutateAsync({
-        chainId: formValues.chain,
+        chainId: values.chain,
         contractAddress: contractAddress,
         contractType: "DropERC20",
         deploymentType: "asset",
@@ -103,18 +140,17 @@ export function CreateTokenAssetPage(props: {
 
       reportContractDeployed({
         address: contractAddress,
-        chainId: Number(formValues.chain),
+        chainId: Number(values.chain),
         contractName: "DropERC20",
         deploymentType: "asset",
         publisher: "deployer.thirdweb.eth",
       });
 
-      contractAddressRef.current = contractAddress;
-
       return {
         contractAddress: contractAddress,
       };
     } catch (e) {
+      console.error(e);
       const parsedError = parseError(e);
       const errorMessage =
         typeof parsedError === "string" ? parsedError : "Unknown error";
@@ -131,32 +167,25 @@ export function CreateTokenAssetPage(props: {
     }
   }
 
-  async function airdropTokens(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
+  async function airdropTokens(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
 
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
+    const contract = getDeployedContract({
+      chain: values.chain,
+    });
+
+    const account = getAccount(gasless);
 
     if (!account) {
       throw new Error("No connected account");
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const contract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
-    });
-
     try {
       const airdropTx = transferBatch({
-        batch: formValues.airdropAddresses.map((recipient) => ({
+        batch: values.airdropAddresses.map((recipient) => ({
           amount: recipient.quantity,
           to: recipient.address,
         })),
@@ -181,27 +210,17 @@ export function CreateTokenAssetPage(props: {
     }
   }
 
-  async function mintTokens(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
+  async function mintTokens(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
 
-    if (!account) {
-      throw new Error("No connected account");
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const contract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
+    const contract = getDeployedContract({
+      chain: values.chain,
     });
+
+    const account = getAccount(gasless);
 
     // poll until claim conditions are set before moving on to minting
     await pollWithTimeout({
@@ -214,9 +233,9 @@ export function CreateTokenAssetPage(props: {
       timeoutMs: 30000,
     });
 
-    const totalSupply = Number(formValues.supply);
-    const salePercent = formValues.saleEnabled
-      ? Number(formValues.saleAllocationPercentage)
+    const totalSupply = Number(values.supply);
+    const salePercent = values.saleEnabled
+      ? Number(values.saleAllocationPercentage)
       : 0;
 
     const ownerAndAirdropPercent = 100 - salePercent;
@@ -248,48 +267,36 @@ export function CreateTokenAssetPage(props: {
     }
   }
 
-  async function setClaimConditions(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
-
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
-
-    if (!account) {
-      throw new Error("No connected account");
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const contract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
+  async function setClaimConditions(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
+    const contract = getDeployedContract({
+      chain: values.chain,
     });
 
-    const salePercent = formValues.saleEnabled
-      ? Number(formValues.saleAllocationPercentage)
+    const account = getAccount(gasless);
+
+    const salePercent = values.saleEnabled
+      ? Number(values.saleAllocationPercentage)
       : 0;
 
-    const totalSupply = Number(formValues.supply);
+    const totalSupply = Number(values.supply);
     const totalSupplyWei = toUnits(totalSupply.toString(), 18);
 
     const phases: ClaimConditionsInput[] = [
       {
         currencyAddress:
-          getAddress(formValues.saleTokenAddress) ===
+          getAddress(values.saleTokenAddress) ===
           getAddress(NATIVE_TOKEN_ADDRESS)
             ? undefined
-            : formValues.saleTokenAddress,
-        maxClaimablePerWallet: formValues.saleEnabled ? undefined : 0n,
+            : values.saleTokenAddress,
+        maxClaimablePerWallet: values.saleEnabled ? undefined : 0n,
         maxClaimableSupply: totalSupplyWei,
         metadata: {
           name:
-            formValues.saleEnabled && salePercent > 0
+            values.saleEnabled && salePercent > 0
               ? "Coin Sale phase"
               : "Only Owner phase",
         },
@@ -300,10 +307,7 @@ export function CreateTokenAssetPage(props: {
             price: "0",
           },
         ],
-        price:
-          formValues.saleEnabled && salePercent > 0
-            ? formValues.salePrice
-            : "0",
+        price: values.saleEnabled && salePercent > 0 ? values.salePrice : "0",
         startTime: new Date(),
       },
     ];

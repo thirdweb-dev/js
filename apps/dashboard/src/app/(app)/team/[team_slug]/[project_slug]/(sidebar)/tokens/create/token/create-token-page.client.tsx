@@ -22,13 +22,18 @@ import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import { LaunchTokenStatus } from "./launch/launch-token";
 import { TokenInfoFieldset } from "./token-info/token-info-fieldset";
 
+type CreateTokenFunctionsParams = {
+  values: CreateAssetFormValues;
+  gasless: boolean;
+};
+
 export type CreateTokenFunctions = {
-  deployContract: (values: CreateAssetFormValues) => Promise<{
+  deployContract: (params: CreateTokenFunctionsParams) => Promise<{
     contractAddress: string;
   }>;
-  setClaimConditions: (values: CreateAssetFormValues) => Promise<void>;
-  mintTokens: (values: CreateAssetFormValues) => Promise<void>;
-  airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
+  setClaimConditions: (params: CreateTokenFunctionsParams) => Promise<void>;
+  mintTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
+  airdropTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
 };
 
 const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
