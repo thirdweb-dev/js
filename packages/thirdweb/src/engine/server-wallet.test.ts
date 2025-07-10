@@ -1,4 +1,5 @@
 import { verifyTypedData } from "src/auth/verify-typed-data.js";
+import { toWei } from "src/utils/units.js";
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
@@ -8,6 +9,9 @@ import { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 import { sepolia } from "../chains/chain-definitions/sepolia.js";
 import { getContract } from "../contract/contract.js";
 import { setContractURI } from "../extensions/common/__generated__/IContractMetadata/write/setContractURI.js";
+import { claimTo as claimToERC20 } from "../extensions/erc20/drops/write/claimTo.js";
+import { getBalance } from "../extensions/erc20/read/getBalance.js";
+import { transfer } from "../extensions/erc20/write/transfer.js";
 import { setApprovalForAll } from "../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
@@ -217,7 +221,7 @@ describe.runIf(
       ).rejects.toThrow();
     });
 
-    it("should send a session key tx", async () => {
+    it("should send a basic session key tx", async () => {
       const sessionKeyAccountAddress = process.env
         .ENGINE_CLOUD_WALLET_ADDRESS_EOA as string;
       const personalAccount = await generateAccount({
@@ -271,6 +275,118 @@ describe.runIf(
         },
       });
       expect(tx).toBeDefined();
+    });
+
+    it("should send a session key tx with ERC20 claiming and transfer", async () => {
+      // The EOA is the session key signer, ie, it has session key permissions on the generated smart account
+      const sessionKeyAccountAddress = process.env
+        .ENGINE_CLOUD_WALLET_ADDRESS_EOA as string;
+      const personalAccount = await generateAccount({
+        client: TEST_CLIENT,
+      });
+      const smart = smartWallet({
+        chain: arbitrumSepolia,
+        sessionKey: {
+          address: sessionKeyAccountAddress,
+          permissions: {
+            approvedTargets: "*",
+          },
+        },
+        sponsorGas: true,
+      });
+      const smartAccount = await smart.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      expect(smartAccount.address).toBeDefined();
+
+      const signers = await getAllActiveSigners({
+        contract: getContract({
+          address: smartAccount.address,
+          chain: arbitrumSepolia,
+          client: TEST_CLIENT,
+        }),
+      });
+      expect(signers.map((s) => s.signer)).toContain(sessionKeyAccountAddress);
+
+      const serverWallet = Engine.serverWallet({
+        address: sessionKeyAccountAddress,
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+        executionOptions: {
+          entrypointVersion: "0.6",
+          signerAddress: sessionKeyAccountAddress,
+          smartAccountAddress: smartAccount.address,
+          type: "ERC4337",
+        },
+        vaultAccessToken: process.env.VAULT_TOKEN as string,
+      });
+
+      // Get the ERC20 contract
+      const erc20Contract = getContract({
+        // this ERC20 on arbitrumSepolia has infinite free public claim phase
+        address: "0xd4d3D9261e2da56c4cC618a06dD5BDcB1A7a21d7",
+        chain: arbitrumSepolia,
+        client: TEST_CLIENT,
+      });
+
+      // Check initial signer balance
+      const initialSignerBalance = await getBalance({
+        address: sessionKeyAccountAddress,
+        contract: erc20Contract,
+      });
+
+      // Claim 10 tokens to the smart account
+      const claimTx = claimToERC20({
+        contract: erc20Contract,
+        to: smartAccount.address,
+        quantity: "10",
+      });
+
+      const claimResult = await sendTransaction({
+        account: serverWallet,
+        transaction: claimTx,
+      });
+      expect(claimResult).toBeDefined();
+
+      // Check balance after claim
+      const balanceAfterClaim = await getBalance({
+        address: smartAccount.address,
+        contract: erc20Contract,
+      });
+
+      // Verify the smart account now has 10 tokens (since it started with 0)
+      expect(balanceAfterClaim.value).toBe(toWei("10"));
+
+      // Transfer tokens from smart account to signer
+      const transferTx = transfer({
+        contract: erc20Contract,
+        to: sessionKeyAccountAddress,
+        amount: "10",
+      });
+
+      const transferResult = await sendTransaction({
+        account: serverWallet,
+        transaction: transferTx,
+      });
+      expect(transferResult).toBeDefined();
+
+      // Check final balances
+      const finalSmartAccountBalance = await getBalance({
+        address: smartAccount.address,
+        contract: erc20Contract,
+      });
+      const finalSignerBalance = await getBalance({
+        address: sessionKeyAccountAddress,
+        contract: erc20Contract,
+      });
+      // Verify the transfer worked correctly
+      // Smart account should be back to 0 balance
+      expect(finalSmartAccountBalance.value).toBe(0n);
+      // Signer should have gained 10 tokens
+      expect(
+        BigInt(finalSignerBalance.value) - BigInt(initialSignerBalance.value),
+      ).toBe(toWei("10"));
     });
   },
 );
