@@ -41,6 +41,7 @@ const columnHelper = createColumnHelper<WalletUser>();
 export function InAppWalletUsersPageContent(props: {
   authToken: string;
   client: ThirdwebClient;
+  teamId: string;
 } & (
   | { projectClientId: string; ecosystemSlug?: never }
   | { ecosystemSlug: string; projectClientId?: never }
@@ -122,6 +123,7 @@ export function InAppWalletUsersPageContent(props: {
     authToken: props.authToken,
     clientId: props.projectClientId,
     ecosystemSlug: props.ecosystemSlug,
+    teamId: props.teamId,
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
@@ -137,6 +139,7 @@ export function InAppWalletUsersPageContent(props: {
         props.authToken,
         props.projectClientId,
         props.ecosystemSlug,
+        props.teamId,
         searchType,
         query
       );
@@ -163,6 +166,7 @@ export function InAppWalletUsersPageContent(props: {
     const usersWallets = await getAllEmbeddedWallets({
       clientId: props.projectClientId,
       ecosystemSlug: props.ecosystemSlug,
+      teamId: props.teamId,
     });
     const csv = Papa.unparse(
       usersWallets.map((row) => {

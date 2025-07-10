@@ -8,11 +8,13 @@ const fetchAccountList = ({
   jwt,
   clientId,
   ecosystemSlug,
+  teamId,
   pageNumber,
 }: {
   jwt: string;
   clientId?: string;
   ecosystemSlug?: string;
+  teamId: string;
   pageNumber: number;
 }) => {
   return async () => {
@@ -31,6 +33,7 @@ const fetchAccountList = ({
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
+        "x-team-id": teamId,
         ...(clientId && { "x-client-id": clientId }),
       },
       method: "GET",
@@ -49,10 +52,11 @@ const fetchAccountList = ({
 export function useEmbeddedWallets(params: {
   clientId?: string;
   ecosystemSlug?: string;
+  teamId: string;
   page: number;
   authToken: string;
 }) {
-  const { clientId, ecosystemSlug, page, authToken } = params;
+  const { clientId, ecosystemSlug, teamId, page, authToken } = params;
   const address = useActiveAccount()?.address;
 
   return useQuery({
@@ -60,6 +64,7 @@ export function useEmbeddedWallets(params: {
     queryFn: fetchAccountList({
       clientId,
       ecosystemSlug,
+      teamId,
       jwt: authToken,
       pageNumber: page,
     }),
@@ -78,7 +83,7 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
   const address = useActiveAccount()?.address;
 
   return useMutation({
-    mutationFn: async ({ clientId, ecosystemSlug }: { clientId?: string; ecosystemSlug?: string }) => {
+    mutationFn: async ({ clientId, ecosystemSlug, teamId }: { clientId?: string; ecosystemSlug?: string; teamId: string }) => {
       const responses: WalletUser[] = [];
       let page = 1;
 
@@ -89,6 +94,7 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
           queryFn: fetchAccountList({
             clientId,
             ecosystemSlug,
+            teamId,
             jwt: authToken,
             pageNumber: page,
           }),

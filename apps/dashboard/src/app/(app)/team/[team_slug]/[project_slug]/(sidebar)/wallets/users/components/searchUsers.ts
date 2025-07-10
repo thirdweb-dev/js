@@ -6,6 +6,7 @@ export async function searchUsers(
   authToken: string,
   clientId: string | undefined,
   ecosystemSlug: string | undefined,
+  teamId: string,
   searchType: SearchType,
   query: string,
 ): Promise<WalletUser[]> {
@@ -38,6 +39,7 @@ export async function searchUsers(
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
+      "x-team-id": teamId,
       ...(clientId && { "x-client-id": clientId }),
     },
     method: "GET",

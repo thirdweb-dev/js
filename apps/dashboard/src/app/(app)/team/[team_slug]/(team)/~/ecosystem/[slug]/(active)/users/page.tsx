@@ -36,6 +36,7 @@ export default async function EcosystemUsersPage(props: {
       authToken={authToken}
       client={client}
       ecosystemSlug={ecosystem.slug}
+      teamId={team.id}
     />
   );
 }
