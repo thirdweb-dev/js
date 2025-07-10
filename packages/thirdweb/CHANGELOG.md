@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.15
+
+### Patch Changes
+
+- [#7570](https://github.com/thirdweb-dev/js/pull/7570) [`585eac2`](https://github.com/thirdweb-dev/js/commit/585eac2a6f49877318cb275f6fff5910ceabdbfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make vault access token optional
+
+- [#7586](https://github.com/thirdweb-dev/js/pull/7586) [`d62e997`](https://github.com/thirdweb-dev/js/commit/d62e9971ee7707211b513509de80a5b0abdaa4d0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix inapp wallets showing up in all wallets list
+
 ## 5.105.14
 
 ### Patch Changes
