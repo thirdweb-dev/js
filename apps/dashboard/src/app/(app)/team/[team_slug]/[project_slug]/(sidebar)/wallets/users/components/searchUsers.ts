@@ -13,12 +13,21 @@ export async function searchUsers(
   // Add clientId parameter
   url.searchParams.append("clientId", clientId);
   
-  // Add filter parameter as JSON string
-  const filter = {
-    field: searchType === "address" ? "walletAddress" : searchType,
-    value: query,
-  };
-  url.searchParams.append("filter", JSON.stringify(filter));
+  // Add search parameter based on search type
+  switch (searchType) {
+    case "email":
+      url.searchParams.append("email", query);
+      break;
+    case "phone":
+      url.searchParams.append("phone", query);
+      break;
+    case "id":
+      url.searchParams.append("id", query);
+      break;
+    case "address":
+      url.searchParams.append("address", query);
+      break;
+  }
 
   const response = await fetch(url.toString(), {
     headers: {
