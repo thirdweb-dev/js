@@ -1,32 +1,46 @@
-# Summary of Changes Made
+# Portal-Only Engine to Transactions Migration Summary
 
-## Directory Structure Changes
-1. Moved /apps/portal/src/app/engine → /apps/portal/src/app/transactions
-2. Moved /apps/playground-web/src/app/engine → /apps/playground-web/src/app/transactions
+## Overview
+Renamed `/engine` slugs to `/transactions` in the **portal app only**, with comprehensive redirects for backward compatibility.
 
-## Portal Changes
-1. Updated navigation in Header.tsx: /engine → /transactions
-2. Updated sidebar files (v2 and v3) to use /transactions paths
-3. Updated layout files to show 'Transactions' instead of 'Engine'
-4. Updated EngineVersionSelector component to use transaction links
-5. Updated main page and DocSearch component references
-6. Updated Unreal Engine references to use /transactions
+## Portal Changes Made
 
-## Redirect Configuration
-1. Added engineToTransactionsRedirects section with comprehensive redirects
-2. Updated infrastructureRedirects to use /transactions paths
-3. Updated otherRedirects to use /transactions paths
-4. Added redirect rules at highest priority for proper URL handling
+### 1. Directory Structure
+- **Moved**: `/apps/portal/src/app/engine` → `/apps/portal/src/app/transactions`
 
-## SDK Documentation Updates
-1. Updated documentation links in TypeScript SDK files
-2. Updated React hook documentation links
-3. Updated playground links in portal sidebars
+### 2. Navigation & UI Updates
+- **Header.tsx**: Updated main navigation `/engine` → `/transactions`
+- **Sidebar files** (v2 & v3): All internal links updated to use `/transactions` paths
+- **Layout files**: Updated to display "Transactions" instead of "Engine"
+- **EngineVersionSelector component**: Updated to use transaction routes
+- **Main page**: Updated article card link
+- **DocSearch component**: Updated search handling
 
-## Files Modified:
-- Portal: Header.tsx, sidebars, layouts, page.tsx, DocSearch.tsx, redirects.mjs
-- Playground: navLinks.ts, page components, webhooks documentation link
-- SDK: transaction action files, React hooks
-- Unreal Engine: sidebar and page updates
+### 3. Comprehensive Redirect Configuration
+Added `engineToTransactionsRedirects` in `redirects.mjs`:
+```javascript
+const engineToTransactionsRedirects = {
+  "/engine": "/transactions/v3",           // Default to latest
+  "/engine/v2": "/transactions/v2",
+  "/engine/v3": "/transactions/v3", 
+  "/engine/:path*": "/transactions/:path*" // Catch-all
+};
+```
 
-All /engine routes now redirect to /transactions equivalents while maintaining backward compatibility.
+### 4. Cross-Reference Updates (Portal Only)
+- **Unreal Engine references**: Updated to use `/transactions`
+- **Infrastructure redirects**: Updated to point to `/transactions`
+- **Other redirects**: Updated various legacy redirects
+
+## What Was NOT Changed
+- **Dashboard app**: No changes made (still uses `/engine`)
+- **Playground app**: No changes made (still uses `/engine`)
+- **Packages/SDK**: No documentation link changes made
+- **External links**: Only portal-internal links updated
+
+## Result
+- ✅ Portal now uses `/transactions` URLs consistently
+- ✅ All old `/engine` URLs redirect to `/transactions` 
+- ✅ Backward compatibility maintained
+- ✅ Other apps remain unchanged as requested
+- ✅ External playground/API links still work correctly

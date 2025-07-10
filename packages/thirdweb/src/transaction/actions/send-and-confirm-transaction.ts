@@ -23,7 +23,7 @@ import { waitForReceipt } from "./wait-for-tx-receipt.js";
  * });
  * ```
  *
- * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/transactions)
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
  * ```ts
  * const transactionReceipt = await sendAndConfirmTransaction({
  *  account,

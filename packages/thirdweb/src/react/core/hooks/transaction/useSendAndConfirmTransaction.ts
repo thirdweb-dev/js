@@ -29,7 +29,7 @@ type SendAndConfirmTransactionConfig = {
  * ```
  *
  *
- * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/transactions)
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
  * ```tsx
  * import { useSendAndConfirmTransaction } from "thirdweb/react";
  * const mutation = useSendAndConfirmTransaction({

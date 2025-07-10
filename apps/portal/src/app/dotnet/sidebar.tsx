@@ -23,7 +23,7 @@ const walletProviders: SidebarLink = (() => {
         name: "Private Key Wallet",
       },
       {
-        href: `${parentSlug}/transactions-wallet`,
+        href: `${parentSlug}/engine-wallet`,
         name: "Engine Wallet",
       },
     ],
