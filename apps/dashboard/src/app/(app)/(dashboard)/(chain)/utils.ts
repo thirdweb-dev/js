@@ -2,11 +2,7 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 import type { ChainMetadata } from "thirdweb/chains";
-import {
-  getChainServices,
-  getChains,
-  getGasSponsoredChains,
-} from "@/api/chain";
+import { getChainServices, getChains } from "@/api/chain";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { ChainMetadataWithServices, ChainServices } from "@/types/chain";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
@@ -25,7 +21,6 @@ import cotiBanner from "./temp-assets/COTI_Banner.jpg";
 import cotiCTA from "./temp-assets/COTI_CTA.jpg";
 import creatorBanner from "./temp-assets/creatorBanner.png";
 import creatorCTA from "./temp-assets/creatorCTA.png";
-import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
 import cyberChainBanner from "./temp-assets/cyberChainBanner.png";
@@ -134,17 +129,6 @@ type ExtraChainMetadata = Partial<{
   about: string;
   cta: ChainCTAProps;
 }>;
-
-// TEMPORARY
-
-const OP_CTA = {
-  backgroundImageUrl: superchainCTABG.src,
-  buttonLink: "/team/~/~/settings/credits",
-  buttonText: "Apply now",
-  description:
-    "Successful applicants receive gas grants for use across all supported Optimism Superchain networks. These grants can sponsor gas fees for any onchain activity using our Account Abstraction tools.",
-  title: "Optimism Superchain App Accelerator",
-} satisfies ChainCTAProps;
 
 const chainMetaRecord = {
   // Flare
@@ -933,21 +917,11 @@ const chainMetaRecord = {
 export async function getChainMetadata(
   chainId: number,
 ): Promise<(ExtraChainMetadata & { gasSponsored?: true }) | null> {
-  const gasSponsoredChains = await getGasSponsoredChains();
-
-  const isGasSponsored = gasSponsoredChains.includes(chainId);
-
   // TODO: fetch this from the API
   if (chainId in chainMetaRecord) {
     return {
-      ...(isGasSponsored ? { cta: OP_CTA, gasSponsored: true } : {}),
       // this will OVERRIDE the op CTA if there is a custom one configured
       ...chainMetaRecord[chainId as keyof typeof chainMetaRecord],
-    };
-  } else if (isGasSponsored) {
-    return {
-      cta: OP_CTA,
-      gasSponsored: true,
     };
   }
   return null;
