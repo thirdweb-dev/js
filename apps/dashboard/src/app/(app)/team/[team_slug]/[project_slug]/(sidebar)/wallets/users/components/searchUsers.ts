@@ -14,7 +14,7 @@ export async function searchUsers(
 
   // Add clientId or ecosystemSlug parameter
   if (ecosystemSlug) {
-    url.searchParams.append("ecosystemSlug", ecosystemSlug);
+    url.searchParams.append("ecosystemSlug", `ecosystem.${ecosystemSlug}`);
   } else if (clientId) {
     url.searchParams.append("clientId", clientId);
   }
