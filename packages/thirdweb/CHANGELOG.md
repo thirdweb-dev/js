@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.13
+
+### Patch Changes
+
+- [#7578](https://github.com/thirdweb-dev/js/pull/7578) [`772eb0c`](https://github.com/thirdweb-dev/js/commit/772eb0cc53982951dc6b6baed1c4411bd3e39934) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle different fiat currencies in payment widgets
+
+- [#7580](https://github.com/thirdweb-dev/js/pull/7580) [`446a69b`](https://github.com/thirdweb-dev/js/commit/446a69b1d18b8711324b24377abecdbda10b8a1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update wallet definitions
+
 ## 5.105.12
 
 ### Patch Changes
