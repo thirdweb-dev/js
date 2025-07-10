@@ -1153,6 +1153,7 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
       transition: "background 250ms ease",
     },
     alignItems: "center",
+    all: "unset",
     animation: `${fadeInAnimation} 300ms ease`,
     background: theme.colors.connectedButtonBg,
     border: `1px solid ${theme.colors.borderColor}`,

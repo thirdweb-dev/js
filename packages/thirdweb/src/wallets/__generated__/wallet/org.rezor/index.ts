@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.rezor",
+  name: "Rezor",
+  homepage: "https://www.rezor.org/",
+  image_id: "0239b3e4-2c96-4045-d7f1-390a1ffc7e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.rezor&hl=en_IN",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.rezor&hl=en_IN",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "rezor://app",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.rezor.org/",
-  id: "org.rezor",
-  image_id: "0239b3e4-2c96-4045-d7f1-390a1ffc7e00",
-  mobile: {
-    native: "rezor://app",
-    universal: null,
-  },
-  name: "Rezor",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.icewal",
+  name: "icewal",
+  homepage: "https://icewal.com",
+  image_id: "bbfa8e6a-984d-4955-c919-8181e8bc9e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.icecorp.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/uk/app/icewal/id1629607532",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.icecorp.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "icewal://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://icewal.com",
-  id: "com.icewal",
-  image_id: "bbfa8e6a-984d-4955-c919-8181e8bc9e00",
-  mobile: {
-    native: "icewal://",
-    universal: null,
-  },
-  name: "icewal",
-  rdns: null,
 } as const;

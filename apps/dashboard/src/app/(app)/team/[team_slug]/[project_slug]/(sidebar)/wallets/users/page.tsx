@@ -34,6 +34,7 @@ export default async function Page(props: {
       authToken={authToken}
       client={client}
       projectClientId={project.publishableKey}
+      teamId={project.teamId}
     />
   );
 }

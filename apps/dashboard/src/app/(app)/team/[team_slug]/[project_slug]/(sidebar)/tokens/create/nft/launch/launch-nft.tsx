@@ -19,6 +19,7 @@ import {
   reportAssetCreationSuccessful,
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
+import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";
 import { MultiStepStatus } from "@/components/blocks/multi-step-status/multi-step-status";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -154,18 +155,28 @@ export function LaunchNFT(props: {
     return shouldDeployERC721 ? "erc721" : "erc1155";
   }, [formValues.nfts]);
 
+  const canEnableGasless =
+    props.teamPlan !== "free" && activeWallet?.id === "inApp";
+  const [isGasless, setIsGasless] = useState(canEnableGasless);
+  const showGaslessSection = activeWallet?.id === "inApp";
+
   const contractLink = contractAddressRef.current
     ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.collectionInfo.chain}/${contractAddressRef.current}`
     : null;
 
   async function executeStep(steps: MultiStepState<StepId>[], stepId: StepId) {
     if (stepId === "deploy-contract") {
-      const result =
-        await props.createNFTFunctions[ercType].deployContract(formValues);
+      const result = await props.createNFTFunctions[ercType].deployContract({
+        gasless: isGasless,
+        values: formValues,
+      });
       contractAddressRef.current = result.contractAddress;
     } else if (stepId === "set-claim-conditions") {
       if (ercType === "erc721") {
-        await props.createNFTFunctions.erc721.setClaimConditions(formValues);
+        await props.createNFTFunctions.erc721.setClaimConditions({
+          gasless: isGasless,
+          values: formValues,
+        });
       } else {
         if (batchCount > 1) {
           const batchStartIndex = batchesProcessedRef.current;
@@ -190,6 +201,7 @@ export function LaunchNFT(props: {
                 count: batchSize,
                 startIndex: batchIndex * batchSize,
               },
+              gasless: isGasless,
               values: formValues,
             });
 
@@ -201,12 +213,16 @@ export function LaunchNFT(props: {
               count: formValues.nfts.length,
               startIndex: 0,
             },
+            gasless: isGasless,
             values: formValues,
           });
         }
       }
     } else if (stepId === "mint-nfts") {
-      await props.createNFTFunctions[ercType].lazyMintNFTs(formValues);
+      await props.createNFTFunctions[ercType].lazyMintNFTs({
+        gasless: isGasless,
+        values: formValues,
+      });
     } else if (stepId === "set-admins") {
       // this is type guard, this can never happen
       if (!contractAddressRef.current) {
@@ -218,6 +234,7 @@ export function LaunchNFT(props: {
         chain: formValues.collectionInfo.chain,
         contractAddress: contractAddressRef.current,
         contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+        gasless: isGasless,
       });
     }
   }
@@ -311,6 +328,7 @@ export function LaunchNFT(props: {
         custom: (
           <TransactionButton
             client={props.client}
+            disableNoFundsPopup={isGasless}
             isLoggedIn={true}
             isPending={false}
             onClick={handleSubmitClick}
@@ -319,7 +337,7 @@ export function LaunchNFT(props: {
             variant="default"
           >
             <ArrowUpFromLineIcon className="size-4" />
-            Launch NFT
+            Launch NFT Collection
           </TransactionButton>
         ),
         type: "custom",
@@ -327,7 +345,7 @@ export function LaunchNFT(props: {
       prevButton={{
         onClick: props.onPrevious,
       }}
-      title="Launch NFT"
+      title="Launch NFT Collection"
     >
       <Dialog
         open={isModalOpen}
@@ -468,6 +486,7 @@ export function LaunchNFT(props: {
         </div>
       </div>
 
+      {/* NFTs */}
       <div className="border-b border-dashed px-4 py-6 pb-6 md:px-6">
         <h2 className="font-semibold text-base">NFTs</h2>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:gap-4 lg:[&>*:not(:first-child)]:border-l lg:[&>*:not(:first-child)]:border-dashed lg:[&>*:not(:first-child)]:pl-5">
@@ -509,6 +528,7 @@ export function LaunchNFT(props: {
         </div>
       </div>
 
+      {/* sales and fees */}
       <div className="px-4 py-6 pb-6 md:px-6">
         <h2 className="font-semibold text-base">Sales and Fees</h2>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:gap-4 lg:[&>*:not(:first-child)]:border-l lg:[&>*:not(:first-child)]:border-dashed lg:[&>*:not(:first-child)]:pl-5">
@@ -537,6 +557,31 @@ export function LaunchNFT(props: {
           </OverviewField>
         </div>
       </div>
+
+      {/* gasless */}
+      {showGaslessSection && (
+        <div className="px-4 py-6 pb-6 md:px-6 border-t border-dashed">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-semibold text-base">Sponsor Gas</h2>
+              <p className="text-muted-foreground text-sm">
+                Sponsor gas fees for launching your NFT collection. <br /> This
+                allows you to launch the NFT collection without requiring any
+                balance in your wallet
+              </p>
+            </div>
+            <GatedSwitch
+              currentPlan={props.teamPlan}
+              requiredPlan="starter"
+              switchProps={{
+                checked: isGasless,
+                onCheckedChange: setIsGasless,
+              }}
+              teamSlug={props.teamSlug}
+            />
+          </div>
+        </div>
+      )}
     </StepCard>
   );
 }

@@ -42,16 +42,29 @@ export type CreateNFTCollectionFunctions = {
       address: string;
     }[];
     chain: string;
+    gasless: boolean;
   }) => Promise<void>;
   erc721: {
-    deployContract: (values: CreateNFTCollectionAllValues) => Promise<{
+    deployContract: (params: {
+      values: CreateNFTCollectionAllValues;
+      gasless: boolean;
+    }) => Promise<{
       contractAddress: string;
     }>;
-    setClaimConditions: (values: CreateNFTCollectionAllValues) => Promise<void>;
-    lazyMintNFTs: (values: CreateNFTCollectionAllValues) => Promise<void>;
+    setClaimConditions: (params: {
+      values: CreateNFTCollectionAllValues;
+      gasless: boolean;
+    }) => Promise<void>;
+    lazyMintNFTs: (params: {
+      values: CreateNFTCollectionAllValues;
+      gasless: boolean;
+    }) => Promise<void>;
   };
   erc1155: {
-    deployContract: (values: CreateNFTCollectionAllValues) => Promise<{
+    deployContract: (params: {
+      values: CreateNFTCollectionAllValues;
+      gasless: boolean;
+    }) => Promise<{
       contractAddress: string;
     }>;
     setClaimConditions: (params: {
@@ -60,8 +73,12 @@ export type CreateNFTCollectionFunctions = {
         startIndex: number;
         count: number;
       };
+      gasless: boolean;
     }) => Promise<void>;
-    lazyMintNFTs: (values: CreateNFTCollectionAllValues) => Promise<void>;
+    lazyMintNFTs: (params: {
+      values: CreateNFTCollectionAllValues;
+      gasless: boolean;
+    }) => Promise<void>;
   };
 };
 

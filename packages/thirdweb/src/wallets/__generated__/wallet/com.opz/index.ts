@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.opz",
+  name: "OPZ Wallet",
+  homepage: "https://www.opz.com/",
+  image_id: "bb347024-46c1-4be1-dd1f-98e6c51f8600",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.opz.dev&pli=1",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/opz-crypto-btc-wallet/id6463236757",
-    linux: "https://www.opz.com/apps/",
+    android: "https://play.google.com/store/apps/details?id=com.opz.dev&pli=1",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: "https://www.opz.com/apps/",
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "opz-wallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.opz.com/",
-  id: "com.opz",
-  image_id: "bb347024-46c1-4be1-dd1f-98e6c51f8600",
-  mobile: {
-    native: "opz-wallet://",
-    universal: null,
-  },
-  name: "OPZ Wallet",
-  rdns: null,
 } as const;

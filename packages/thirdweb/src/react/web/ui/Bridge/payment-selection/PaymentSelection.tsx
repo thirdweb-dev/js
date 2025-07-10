@@ -5,6 +5,7 @@ import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import type { Address } from "../../../../../utils/address.js";
 import { toUnits } from "../../../../../utils/units.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -82,6 +83,12 @@ export interface PaymentSelectionProps {
    * Fee payer
    */
   feePayer?: "sender" | "receiver";
+
+  /**
+   * The currency to use for the payment.
+   * @default "USD"
+   */
+  currency?: SupportedFiatCurrency;
 }
 
 type Step =
@@ -103,6 +110,7 @@ export function PaymentSelection({
   includeDestinationToken,
   paymentMethods = ["crypto", "card"],
   feePayer,
+  currency,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -290,6 +298,7 @@ export function PaymentSelection({
             toAmount={destinationAmount}
             toChainId={destinationToken.chainId}
             toTokenAddress={destinationToken.address}
+            currency={currency}
           />
         )}
       </Container>

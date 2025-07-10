@@ -17,6 +17,7 @@ import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { OutlineWalletIcon } from "../ConnectWallet/icons/OutlineWalletIcon.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { WalletRow } from "../ConnectWallet/screens/Buy/swap/WalletRow.js";
+import { formatCurrencyAmount } from "../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { Input } from "../components/formElements.js";
@@ -56,6 +57,12 @@ export interface FundWalletProps {
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function FundWallet({
@@ -65,6 +72,7 @@ export function FundWallet({
   onContinue,
   presetOptions = [5, 10, 20],
   connectOptions,
+  showThirdwebBranding = true,
 }: FundWalletProps) {
   const [amount, setAmount] = useState(uiOptions.initialAmount ?? "");
   const theme = useCustomTheme();
@@ -108,11 +116,13 @@ export function FundWallet({
   };
 
   const handleQuickAmount = (usdAmount: number) => {
-    if (uiOptions.destinationToken.priceUsd === 0) {
+    const price =
+      uiOptions.destinationToken.prices[uiOptions.currency || "USD"] || 0;
+    if (price === 0) {
       return;
     }
     // Convert USD amount to token amount using token price
-    const tokenAmount = usdAmount / uiOptions.destinationToken.priceUsd;
+    const tokenAmount = usdAmount / price;
     // Format to reasonable decimal places (up to 6 decimals, remove trailing zeros)
     const formattedAmount = numberToPlainString(
       Number.parseFloat(tokenAmount.toFixed(6)),
@@ -221,9 +231,13 @@ export function FundWallet({
                 size="md"
                 style={{ textWrap: "nowrap" }}
               >
-                ≈ $
-                {(Number(amount) * uiOptions.destinationToken.priceUsd).toFixed(
-                  2,
+                ≈{" "}
+                {formatCurrencyAmount(
+                  uiOptions.currency || "USD",
+                  Number(amount) *
+                    (uiOptions.destinationToken.prices[
+                      uiOptions.currency || "USD"
+                    ] || 0),
                 )}
               </Text>
             </Container>
@@ -335,9 +349,12 @@ export function FundWallet({
         />
       )}
 
-      <Spacer y="md" />
-
-      <PoweredByThirdweb />
+      {showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb />
+        </div>
+      ) : null}
       <Spacer y="lg" />
     </WithHeader>
   );

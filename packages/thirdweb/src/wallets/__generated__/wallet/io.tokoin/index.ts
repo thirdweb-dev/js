@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.tokoin",
+  name: "Tokoin | My-T Wallet",
+  homepage: "https://tokoin.io",
+  image_id: "88a2518c-16c2-4ee3-4699-1a1c6903bc00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.tokoin.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/my/app/tokow/id1489276175",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.tokoin.wallet",
     mac: "",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "mtwallet://app",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://tokoin.io",
-  id: "io.tokoin",
-  image_id: "88a2518c-16c2-4ee3-4699-1a1c6903bc00",
-  mobile: {
-    native: "mtwallet://app",
-    universal: null,
-  },
-  name: "Tokoin | My-T Wallet",
-  rdns: null,
 } as const;

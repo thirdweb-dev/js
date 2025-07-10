@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.trusteeglobal",
+  name: "Trustee Wallet",
+  homepage: "https://trusteeglobal.com",
+  image_id: "853e6f0a-ccb6-4b7e-e73b-89171a4e0a00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.trusteewallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/trustee-wallet/id1462924276",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.trusteewallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "tw://",
+    universal: "https://trusteeglobal.com/link/Pxxum8Yt",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://trusteeglobal.com",
-  id: "com.trusteeglobal",
-  image_id: "853e6f0a-ccb6-4b7e-e73b-89171a4e0a00",
-  mobile: {
-    native: "tw://",
-    universal: "https://trusteeglobal.com/link/Pxxum8Yt",
-  },
-  name: "Trustee Wallet",
-  rdns: null,
 } as const;

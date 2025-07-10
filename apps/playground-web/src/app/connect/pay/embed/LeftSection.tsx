@@ -17,6 +17,13 @@ import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TokenSelector } from "@/components/ui/TokenSelector";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { TokenMetadata } from "@/lib/types";
@@ -132,6 +139,51 @@ export function LeftSection(props: {
               ]}
               value={payOptions.widget || "buy"}
             />
+          </section>
+
+          <section className="flex flex-col gap-3">
+            <Label htmlFor="currency">Display Currency</Label>
+            <Select
+              value={payOptions.currency || "USD"}
+              onValueChange={(value) => {
+                setOptions((v) => ({
+                  ...v,
+                  payOptions: {
+                    ...v.payOptions,
+                    currency: value,
+                  },
+                }));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select currency" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USD">USD - US Dollar</SelectItem>
+                <SelectItem value="EUR">EUR - Euro</SelectItem>
+                <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                <SelectItem value="KRW">KRW - Korean Won</SelectItem>
+                <SelectItem value="CNY">CNY - Chinese Yuan</SelectItem>
+                <SelectItem value="INR">INR - Indian Rupee</SelectItem>
+                <SelectItem value="NOK">NOK - Norwegian Krone</SelectItem>
+                <SelectItem value="SEK">SEK - Swedish Krona</SelectItem>
+                <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
+                <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                <SelectItem value="NZD">NZD - New Zealand Dollar</SelectItem>
+                <SelectItem value="MXN">MXN - Mexican Peso</SelectItem>
+                <SelectItem value="BRL">BRL - Brazilian Real</SelectItem>
+                <SelectItem value="CLP">CLP - Chilean Peso</SelectItem>
+                <SelectItem value="CZK">CZK - Czech Koruna</SelectItem>
+                <SelectItem value="DKK">DKK - Danish Krone</SelectItem>
+                <SelectItem value="HKD">HKD - Hong Kong Dollar</SelectItem>
+                <SelectItem value="HUF">HUF - Hungarian Forint</SelectItem>
+                <SelectItem value="IDR">IDR - Indonesian Rupiah</SelectItem>
+                <SelectItem value="ILS">ILS - Israeli Shekel</SelectItem>
+                <SelectItem value="ISK">ISK - Icelandic Krona</SelectItem>
+              </SelectContent>
+            </Select>
           </section>
 
           {/* Shared Chain and Token Selection - Always visible for Buy and Checkout modes */}
@@ -464,6 +516,23 @@ export function LeftSection(props: {
           }}
           theme={options.theme}
         />
+
+        <div className="my-4 flex items-center gap-2">
+          <Checkbox
+            checked={payOptions.showThirdwebBranding}
+            id={"branding"}
+            onCheckedChange={(checked) => {
+              setOptions((v) => ({
+                ...v,
+                payOptions: {
+                  ...v.payOptions,
+                  showThirdwebBranding: checked === true,
+                },
+              }));
+            }}
+          />
+          <Label htmlFor={"branding"}>Show Branding</Label>
+        </div>
       </CollapsibleSection>
 
       <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">

@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.flowfoundation.wallet",
+  name: "Flow Wallet",
+  homepage: "https://wallet.flow.com/",
+  image_id: "f67a1db8-5704-4353-ead8-bd85c02a8700",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/ca/app/flow-wallet-nfts-and-crypto/id6478996750",
     android:
       "https://play.google.com/store/apps/details?id=com.flowfoundation.wallet",
-    browser: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/flow-reference/hpclkefagolihohboafpheddmmgdffjm",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/ca/app/flow-wallet-nfts-and-crypto/id6478996750",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.flowfoundation.wallet",
+  mobile: {
+    native: "frw://",
+    universal: "https://frw-link.lilico.app",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://wallet.flow.com/",
-  id: "com.flowfoundation.wallet",
-  image_id: "f67a1db8-5704-4353-ead8-bd85c02a8700",
-  mobile: {
-    native: "frw://",
-    universal: "https://frw-link.lilico.app",
-  },
-  name: "Flow Wallet",
-  rdns: "com.flowfoundation.wallet",
 } as const;

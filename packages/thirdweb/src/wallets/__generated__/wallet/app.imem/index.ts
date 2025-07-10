@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.imem",
+  name: "iMe",
+  homepage: "https://imem.app/",
+  image_id: "25aa3abf-901b-4d82-bb89-c5ade54c0c00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.iMe.android",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/ime-messenger/id1450480822",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.iMe.android",
     mac: "",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "wc://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://imem.app/",
-  id: "app.imem",
-  image_id: "25aa3abf-901b-4d82-bb89-c5ade54c0c00",
-  mobile: {
-    native: "wc://",
-    universal: null,
-  },
-  name: "iMe",
-  rdns: null,
 } as const;

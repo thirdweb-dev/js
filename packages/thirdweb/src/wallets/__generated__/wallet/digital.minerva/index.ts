@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "digital.minerva",
+  name: "Minerva Wallet",
+  homepage: "https://minerva.digital/",
+  image_id: "b57b2163-1bd8-4f6b-3311-470767e6d200",
   app: {
-    android: "https://play.google.com/store/apps/details?id=digital.minerva",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=digital.minerva",
     mac: "",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "minerva://",
+    universal: "https://minerva.digital",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://minerva.digital/",
-  id: "digital.minerva",
-  image_id: "b57b2163-1bd8-4f6b-3311-470767e6d200",
-  mobile: {
-    native: "minerva://",
-    universal: "https://minerva.digital",
-  },
-  name: "Minerva Wallet",
-  rdns: null,
 } as const;

@@ -75,7 +75,7 @@ export function ProjectSidebarLayout(props: {
             {
               href: `${layoutPath}/universal-bridge`,
               icon: PayIcon,
-              label: "Universal Bridge",
+              label: "Payments",
             },
             {
               href: `${layoutPath}/tokens`,

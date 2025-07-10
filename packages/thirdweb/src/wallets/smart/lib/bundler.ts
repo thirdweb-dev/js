@@ -423,6 +423,7 @@ async function sendBundlerRequest(args: {
   const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
+    useAuthToken: true,
     body: stringify({
       id: 1,
       jsonrpc: "2.0",

@@ -2,34 +2,34 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.scramble",
+  name: "Scramble",
+  homepage: "https://scramble-wallet.com",
+  image_id: "c00ef3da-aacb-4c27-66ae-3cb9537a4800",
   app: {
-    android: null,
     browser: null,
+    ios: null,
+    android: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/scramble-evm-btc-polkadot/dfkkefmblkgnecepjogenokjpagglfhj",
-    edge: "https://chrome.google.com/webstore/detail/scramble-evm-btc-polkadot/dfkkefmblkgnecepjogenokjpagglfhj",
     firefox:
       "https://addons.mozilla.org/en-US/firefox/addon/scramble-multichain-wallet/",
-    ios: null,
-    linux: null,
-    mac: null,
-    opera:
-      "https://chrome.google.com/webstore/detail/scramble-evm-btc-polkadot/dfkkefmblkgnecepjogenokjpagglfhj",
     safari:
       "https://apps.apple.com/at/app/scramble-multichain-wallet/id6463812878?mt=12",
-    windows: null,
+    edge: "https://chrome.google.com/webstore/detail/scramble-evm-btc-polkadot/dfkkefmblkgnecepjogenokjpagglfhj",
+    opera:
+      "https://chrome.google.com/webstore/detail/scramble-evm-btc-polkadot/dfkkefmblkgnecepjogenokjpagglfhj",
+  },
+  rdns: "com.scramble",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://scramble-wallet.com",
-  id: "com.scramble",
-  image_id: "c00ef3da-aacb-4c27-66ae-3cb9537a4800",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "Scramble",
-  rdns: "com.scramble",
 } as const;

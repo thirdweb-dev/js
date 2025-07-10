@@ -106,7 +106,9 @@ export function usePaymentMethods(options: {
               decimals: b.decimals,
               iconUri: "",
               name: b.name,
-              priceUsd: 0,
+              prices: {
+                USD: 0,
+              },
               symbol: b.symbol,
             } as Token,
           }));
@@ -183,10 +185,10 @@ export function usePaymentMethods(options: {
       validOwnedTokens.sort((a, b) => {
         const aDollarBalance =
           Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
-          a.originToken.priceUsd;
+          (a.originToken.prices["USD"] || 0);
         const bDollarBalance =
           Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-          b.originToken.priceUsd;
+          (b.originToken.prices["USD"] || 0);
         return bDollarBalance - aDollarBalance;
       });
 

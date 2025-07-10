@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.coolbitx.cwsapp",
+  name: "CoolWallet",
+  homepage: "https://coolwallet.io/",
+  image_id: "f581365d-e844-4d21-8e35-44a755a32d00",
   app: {
+    browser: null,
+    ios: "https://itunes.apple.com/us/app/coolwallet-s-2018/id1328764142",
     android:
       "https://play.google.com/store/apps/details?id=com.coolbitx.cwsapp",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://itunes.apple.com/us/app/coolwallet-s-2018/id1328764142",
-    linux: null,
     mac: "https://itunes.apple.com/us/app/coolwallet-s-2018/id1328764142",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.coolbitx.cwsapp",
+  mobile: {
+    native: "coolwallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://coolwallet.io/",
-  id: "com.coolbitx.cwsapp",
-  image_id: "f581365d-e844-4d21-8e35-44a755a32d00",
-  mobile: {
-    native: "coolwallet://",
-    universal: null,
-  },
-  name: "CoolWallet",
-  rdns: "com.coolbitx.cwsapp",
 } as const;

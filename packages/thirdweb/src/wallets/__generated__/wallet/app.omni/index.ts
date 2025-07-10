@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.omni",
+  name: "Omni",
+  homepage: "https://omni.app",
+  image_id: "2cd67b4c-282b-4809-e7c0-a88cd5116f00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=fi.steakwallet.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/de/app/steakwallet/id1569375204?l=en",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=fi.steakwallet.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "omni://",
+    universal: "https://links.omni.app",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://omni.app",
-  id: "app.omni",
-  image_id: "2cd67b4c-282b-4809-e7c0-a88cd5116f00",
-  mobile: {
-    native: "omni://",
-    universal: "https://links.omni.app",
-  },
-  name: "Omni",
-  rdns: null,
 } as const;

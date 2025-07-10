@@ -1,3 +1,5 @@
+import { getValidAccount } from "@app/account/settings/getAccount";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -7,6 +9,12 @@ export default async function WebhooksLayout(props: {
     project_slug: string;
   }>;
 }) {
+  const account = await getValidAccount();
+  const isFeatureEnabled = await isFeatureFlagEnabled(
+    "webhook-analytics-tab",
+    account.email,
+  );
+
   const params = await props.params;
   return (
     <div className="flex grow flex-col">
@@ -23,13 +31,26 @@ export default async function WebhooksLayout(props: {
 
       <TabPathLinks
         links={[
+          ...(isFeatureEnabled
+            ? [
+                {
+                  exactMatch: true,
+                  name: "Overview",
+                  path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+                },
+                {
+                  exactMatch: true,
+                  name: "Analytics",
+                  path: `/team/${params.team_slug}/${params.project_slug}/webhooks/analytics`,
+                },
+              ]
+            : []),
           {
-            exactMatch: true,
             name: "Contracts",
-            path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+            path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
           },
           {
-            name: "Universal Bridge",
+            name: "Payments",
             path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
           },
         ]}

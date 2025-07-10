@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "net.gateweb3",
+  name: "GateWallet",
+  homepage: "https://www.gateweb3.net/web3",
+  image_id: "6e528abf-7a7d-47bd-d84d-481f169b1200",
   app: {
-    android: "https://www.gate.io/mobileapp",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://www.gate.io/mobileapp",
-    linux: null,
+    android: "https://www.gate.io/mobileapp",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "gtweb3wallet://",
+    universal: null,
   },
   desktop: {
     native: "gtweb3wallet://",
     universal: "https://www.gateweb3.net/web3",
   },
-  homepage: "https://www.gateweb3.net/web3",
-  id: "net.gateweb3",
-  image_id: "6e528abf-7a7d-47bd-d84d-481f169b1200",
-  mobile: {
-    native: "gtweb3wallet://",
-    universal: null,
-  },
-  name: "GateWallet",
-  rdns: null,
 } as const;

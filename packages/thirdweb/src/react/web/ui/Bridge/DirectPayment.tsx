@@ -2,10 +2,9 @@
 import type { Token } from "../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { type Address, shortenAddress } from "../../../../utils/address.js";
+import type { Address } from "../../../../utils/address.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
-import { useEnsName } from "../../../core/utils/wallet.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
@@ -39,6 +38,12 @@ export interface DirectPaymentProps {
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function DirectPayment({
@@ -46,6 +51,7 @@ export function DirectPayment({
   client,
   onContinue,
   connectOptions,
+  showThirdwebBranding = true,
 }: DirectPaymentProps) {
   const activeAccount = useActiveAccount();
   const chain = defineChain(uiOptions.paymentInfo.token.chainId);
@@ -57,12 +63,6 @@ export function DirectPayment({
       uiOptions.paymentInfo.sellerAddress,
     );
   };
-  const ensName = useEnsName({
-    address: uiOptions.paymentInfo.sellerAddress,
-    client,
-  });
-  const sellerAddress =
-    ensName.data || shortenAddress(uiOptions.paymentInfo.sellerAddress);
 
   const buyNow = (
     <Container flex="row" gap="3xs">
@@ -70,6 +70,7 @@ export function DirectPayment({
         Buy Now ·
       </Text>
       <FiatValue
+        currency={uiOptions.currency}
         chain={chain}
         client={client}
         color="primaryButtonText"
@@ -96,6 +97,7 @@ export function DirectPayment({
         }}
       >
         <FiatValue
+          currency={uiOptions.currency}
           chain={chain}
           client={client}
           color="primaryText"
@@ -124,30 +126,6 @@ export function DirectPayment({
       <Line />
 
       <Spacer y="md" />
-
-      {/* Seller section */}
-      <Container
-        flex="row"
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text color="secondaryText" size="sm">
-          Sold by
-        </Text>
-        <Text
-          color="primaryText"
-          size="sm"
-          style={{
-            fontFamily: "monospace",
-          }}
-        >
-          {sellerAddress}
-        </Text>
-      </Container>
-
-      <Spacer y="xs" />
 
       <Container
         flex="row"
@@ -224,9 +202,12 @@ export function DirectPayment({
           />
         )}
 
-        <Spacer y="md" />
-
-        <PoweredByThirdweb />
+        {showThirdwebBranding ? (
+          <div>
+            <Spacer y="md" />
+            <PoweredByThirdweb />
+          </div>
+        ) : null}
         <Spacer y="lg" />
       </Container>
     </WithHeader>

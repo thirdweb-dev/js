@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "co.lifedefi",
+  name: "Life DeFi",
+  homepage: "https://lifedefi.co",
+  image_id: "d249af4f-e9b8-498d-cbc3-9eab04568700",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/ca/app/life-the-defi-wallet/id1591427970",
     android:
       "https://play.google.com/store/apps/details?id=life.lifecrypto.app&hl=en_US&gl=US",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/ca/app/life-the-defi-wallet/id1591427970",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "w3akvrn:/",
+    universal: null,
   },
   desktop: {
     native: "w3akvrn:/",
     universal: null,
   },
-  homepage: "https://lifedefi.co",
-  id: "co.lifedefi",
-  image_id: "d249af4f-e9b8-498d-cbc3-9eab04568700",
-  mobile: {
-    native: "w3akvrn:/",
-    universal: null,
-  },
-  name: "Life DeFi",
-  rdns: null,
 } as const;

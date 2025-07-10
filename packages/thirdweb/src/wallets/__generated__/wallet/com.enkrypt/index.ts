@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.enkrypt",
+  name: "Enkrypt",
+  homepage: "https://www.enkrypt.com",
+  image_id: "5aafd680-95a8-41e6-6df0-632ea23f4700",
   app: {
-    android: null,
     browser: "https://google.com",
+    ios: null,
+    android: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chromewebstore.google.com/detail/enkrypt-multichain-crypto/kkpllkodjeloidieedojogacfhpaihoh",
-    edge: "https://microsoftedge.microsoft.com/addons/detail/gfenajajnjjmmdojhdjmnngomkhlnfjl",
     firefox: "https://addons.mozilla.org/en-US/firefox/addon/enkrypt/",
-    ios: null,
-    linux: null,
-    mac: null,
-    opera: "https://addons.opera.com/en/extensions/details/enkrypt/",
     safari:
       "https://apps.apple.com/us/app/enkrypt-web3-wallet/id1640164309?mt=12",
-    windows: null,
+    edge: "https://microsoftedge.microsoft.com/addons/detail/gfenajajnjjmmdojhdjmnngomkhlnfjl",
+    opera: "https://addons.opera.com/en/extensions/details/enkrypt/",
+  },
+  rdns: "com.enkrypt",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://google.com",
   },
-  homepage: "https://www.enkrypt.com",
-  id: "com.enkrypt",
-  image_id: "5aafd680-95a8-41e6-6df0-632ea23f4700",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "Enkrypt",
-  rdns: "com.enkrypt",
 } as const;

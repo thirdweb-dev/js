@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "cc.dropp",
+  name: "Dropp",
+  homepage: "https://dropp.cc/",
+  image_id: "526fb7ea-d0da-482a-ac84-7e38afea1700",
   app: {
-    android: "https://play.google.com/store/apps/details?id=cc.dropp.wallet",
     browser: null,
+    ios: "https://apps.apple.com/us/app/dropp-cc/id1544894404",
+    android: "https://play.google.com/store/apps/details?id=cc.dropp.wallet",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/dropp-extension/hgfpnmhnmmneldokmpncjmeijkapgbbf?hl=en-US",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/us/app/dropp-cc/id1544894404",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "dropp://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://dropp.cc/",
-  id: "cc.dropp",
-  image_id: "526fb7ea-d0da-482a-ac84-7e38afea1700",
-  mobile: {
-    native: "dropp://",
-    universal: null,
-  },
-  name: "Dropp",
-  rdns: null,
 } as const;

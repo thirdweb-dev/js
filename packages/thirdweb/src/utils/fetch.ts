@@ -57,13 +57,22 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
           : undefined;
       const clientId = client.clientId;
 
+      if (authToken && isBundlerUrl(urlString)) {
+        headers.set("authorization", `Bearer ${authToken}`);
+        if (client.teamId) {
+          headers.set("x-team-id", client.teamId);
+        }
+
+        if (clientId) {
+          headers.set("x-client-id", clientId);
+        }
+      }
       // if we have an auth token set, use that (thirdweb dashboard sets this for the user)
       // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
-      if (
+      else if (
         authToken &&
         !isPayUrl(urlString) &&
-        !isInAppWalletUrl(urlString) &&
-        !isBundlerUrl(urlString)
+        !isInAppWalletUrl(urlString)
       ) {
         headers.set("authorization", `Bearer ${authToken}`);
         // if we have a specific teamId set, add it to the request headers

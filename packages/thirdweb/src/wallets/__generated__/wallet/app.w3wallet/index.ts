@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.w3wallet",
+  name: "W3 Wallet",
+  homepage: "https://w3wallet.app",
+  image_id: "2f2d1309-de72-468b-3c04-77d0b9cd8500",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/ge/app/w3-wallet-manage-crypto/id6670211780",
     android:
       "https://play.google.com/store/apps/details?id=app.w3wallet.w3wallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/ge/app/w3-wallet-manage-crypto/id6670211780",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "w3wallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://w3wallet.app",
-  id: "app.w3wallet",
-  image_id: "2f2d1309-de72-468b-3c04-77d0b9cd8500",
-  mobile: {
-    native: "w3wallet://",
-    universal: null,
-  },
-  name: "W3 Wallet",
-  rdns: null,
 } as const;

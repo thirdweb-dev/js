@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.kelp",
+  name: "Kelp",
+  homepage: "https://kelp.org",
+  image_id: "1854e47d-3804-4e92-e455-06829b64b100",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.app.kelpa",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/kelp/id1632857274",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.app.kelpa",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "link.kelp.finance://walletconnect",
+    universal: "https://link.kelp.finance/walletconnect",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://kelp.org",
-  id: "org.kelp",
-  image_id: "1854e47d-3804-4e92-e455-06829b64b100",
-  mobile: {
-    native: "link.kelp.finance://walletconnect",
-    universal: "https://link.kelp.finance/walletconnect",
-  },
-  name: "Kelp",
-  rdns: null,
 } as const;

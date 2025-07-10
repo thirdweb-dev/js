@@ -367,12 +367,12 @@ export async function getBuyWithFiatQuote(
       decimals: number;
       symbol: string;
       name: string;
-      priceUsd: number;
+      prices: Record<string, number>;
     }): PayTokenInfo => ({
       chainId: token.chainId,
       decimals: token.decimals,
       name: token.name,
-      priceUSDCents: Math.round(token.priceUsd * 100),
+      priceUSDCents: Math.round((token.prices["USD"] || 0) * 100),
       symbol: token.symbol,
       tokenAddress: token.address,
     });
@@ -408,7 +408,7 @@ export async function getBuyWithFiatQuote(
     const onRampTokenObject = {
       amount: onRampTokenAmount,
       amountUSDCents: Math.round(
-        Number(onRampTokenAmount) * onRampTokenRaw.priceUsd * 100,
+        Number(onRampTokenAmount) * (onRampTokenRaw.prices["USD"] || 0) * 100,
       ),
       amountWei: onRampTokenAmountWei.toString(),
       token: tokenToPayTokenInfo(onRampTokenRaw),
@@ -434,7 +434,7 @@ export async function getBuyWithFiatQuote(
       routingTokenObject = {
         amount: routingAmount,
         amountUSDCents: Math.round(
-          Number(routingAmount) * routingTokenRaw.priceUsd * 100,
+          Number(routingAmount) * (routingTokenRaw.prices["USD"] || 0) * 100,
         ),
         amountWei: routingAmountWei.toString(),
         token: tokenToPayTokenInfo(routingTokenRaw),

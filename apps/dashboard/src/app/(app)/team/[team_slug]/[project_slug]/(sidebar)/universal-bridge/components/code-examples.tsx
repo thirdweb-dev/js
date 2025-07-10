@@ -1,13 +1,20 @@
 export const embedCode = (clientId: string) => `\
 import { createThirdwebClient } from "thirdweb";
-import { PayEmbed } from "thirdweb/react";
+import { BuyWidget } from "thirdweb/react";
+import { ethereum } from "thirdweb/chains";
 
 const client = createThirdwebClient({
   clientId: "${clientId}",
 });
 
 export default function App() {
-  return <PayEmbed client={client} />;
+  return (
+    <BuyWidget
+      client={client}
+      chain={ethereum}
+      amount="0.1"
+    />
+  );
 }`;
 
 export const sdkCode = (clientId: string) => `\

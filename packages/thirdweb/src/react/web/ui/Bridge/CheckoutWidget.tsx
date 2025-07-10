@@ -7,6 +7,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import { type Address, checksumAddress } from "../../../../utils/address.js";
 import { stringify } from "../../../../utils/json.js";
@@ -99,6 +100,12 @@ export type CheckoutWidgetProps = {
   className?: string;
 
   /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+
+  /**
    * The chain the accepted token is on.
    */
   chain: Chain;
@@ -173,6 +180,12 @@ export type CheckoutWidgetProps = {
    * @default ["crypto", "card"]
    */
   paymentMethods?: ("crypto" | "card")[];
+
+  /**
+   * The currency to use for the payment.
+   * @default "USD"
+   */
+  currency?: SupportedFiatCurrency;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -296,6 +309,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
             title: props.name,
           },
           mode: "direct_payment",
+          currency: props.currency || "USD",
           paymentInfo: {
             amount: props.amount,
             feePayer: props.feePayer === "seller" ? "receiver" : "sender",
@@ -353,6 +367,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
         receiverAddress={props.seller}
+        showThirdwebBranding={props.showThirdwebBranding}
         uiOptions={bridgeDataQuery.data.data}
       />
     );

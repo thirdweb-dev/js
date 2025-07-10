@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.passwallet.app",
+  name: "Pass App",
+  homepage: "https://pass.app/",
+  image_id: "d098fb77-70ae-4230-3059-3623ba048100",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/il/app/pass-app-web3-smart-wallet/id6670792141",
     android:
       "https://play.google.com/store/apps/details?id=com.passwallet.app&hl=en",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/il/app/pass-app-web3-smart-wallet/id6670792141",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.passwallet.app",
+  mobile: {
+    native: "passwallet://",
+    universal: "https://pass.app/connect",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://pass.app/",
-  id: "com.passwallet.app",
-  image_id: "d098fb77-70ae-4230-3059-3623ba048100",
-  mobile: {
-    native: "passwallet://",
-    universal: "https://pass.app/connect",
-  },
-  name: "Pass App",
-  rdns: "com.passwallet.app",
 } as const;

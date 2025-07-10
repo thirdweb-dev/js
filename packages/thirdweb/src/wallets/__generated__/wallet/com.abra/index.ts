@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.abra",
+  name: "Abra Wallet",
+  homepage: "https://abra.com",
+  image_id: "2219db01-e0c9-471c-5def-fd3b4e7a7a00",
   app: {
-    android: "https://abra.com",
     browser: "https://abra.com",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://abra.com",
-    linux: null,
+    android: "https://abra.com",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "abra://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://abra.com",
   },
-  homepage: "https://abra.com",
-  id: "com.abra",
-  image_id: "2219db01-e0c9-471c-5def-fd3b4e7a7a00",
-  mobile: {
-    native: "abra://",
-    universal: null,
-  },
-  name: "Abra Wallet",
-  rdns: null,
 } as const;

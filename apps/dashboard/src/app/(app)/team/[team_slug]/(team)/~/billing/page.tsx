@@ -1,12 +1,10 @@
 import { redirect } from "next/navigation";
 import { getStripeBalance } from "@/actions/stripe-actions";
-import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug, type Team } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getTeamSubscriptions } from "@/api/team-subscription";
 import { CreditsInfoCard } from "@/components/billing/PlanCard";
 import { Coupons } from "@/components/billing/SubscriptionCoupons/Coupons";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { CreditBalanceSection } from "./components/credit-balance-section.client";
 import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
@@ -28,9 +26,8 @@ export default async function Page(props: {
 
   const account = await getValidAccount(pagePath);
 
-  const [team, authToken, teamMember] = await Promise.all([
+  const [team, teamMember] = await Promise.all([
     getTeamBySlug(params.team_slug),
-    getAuthToken(),
     getMemberByAccountId(params.team_slug, account.id),
   ]);
 
@@ -49,11 +46,6 @@ export default async function Page(props: {
       </div>
     );
   }
-
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: team.id,
-  });
 
   const highlightPlan =
     typeof searchParams.highlight === "string"
@@ -84,11 +76,7 @@ export default async function Page(props: {
         />
       )}
 
-      <CreditsInfoCard
-        client={client}
-        teamSlug={team.slug}
-        twAccount={account}
-      />
+      <CreditsInfoCard />
       <Coupons isPaymentSetup={validPayment} teamId={team.id} />
     </div>
   );

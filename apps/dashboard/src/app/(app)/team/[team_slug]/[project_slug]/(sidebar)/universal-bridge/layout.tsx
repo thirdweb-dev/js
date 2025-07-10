@@ -25,10 +25,10 @@ export default async function Layout(props: {
       <div className="pt-4 lg:pt-6">
         <div className="container max-w-7xl">
           <h1 className="mb-1 font-semibold text-2xl tracking-tight lg:text-3xl">
-            Universal Bridge
+            Payments
           </h1>
           <p className="max-w-3xl text-muted-foreground text-sm leading-relaxed">
-            Universal Bridge allows your users to bridge, swap, and purchase
+            Payments allows your users to bridge, swap, and purchase
             cryptocurrencies and execute transactions with any fiat options or
             tokens via cross-chain routing.{" "}
             <UnderlineLink

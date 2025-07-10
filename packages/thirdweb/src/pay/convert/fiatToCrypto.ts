@@ -13,7 +13,6 @@ export type ConvertFiatToCryptoParams = {
   client: ThirdwebClient;
   /**
    * The fiat symbol. e.g: "USD"
-   * Currently only USD is supported.
    */
   from: SupportedFiatCurrency;
   /**
@@ -57,7 +56,7 @@ export type ConvertFiatToCryptoParams = {
 export async function convertFiatToCrypto(
   options: ConvertFiatToCryptoParams,
 ): Promise<{ result: number }> {
-  const { client, to, chain, fromAmount } = options;
+  const { client, to, chain, fromAmount, from } = options;
   if (Number(fromAmount) === 0) {
     return { result: 0 };
   }
@@ -73,10 +72,11 @@ export async function convertFiatToCrypto(
     throw new Error("Invalid `to`. Expected a valid EVM contract address");
   }
   const token = await getToken(client, to, chain.id);
-  if (!token || token.priceUsd === 0) {
+  const price = token?.prices[from] || 0;
+  if (!token || price === 0) {
     throw new Error(
       `Error: Failed to fetch price for token ${to} on chainId: ${chain.id}`,
     );
   }
-  return { result: fromAmount / token.priceUsd };
+  return { result: fromAmount / price };
 }
