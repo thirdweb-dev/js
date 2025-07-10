@@ -35,10 +35,6 @@ export const tokenDistributionFormSchema = z.object({
   ),
   // UI states
   airdropEnabled: z.boolean(),
-  market: z.object({
-    currencyAddress: addressSchema,
-    priceAmount: priceAmountSchema,
-  }),
   pool: z.object({
     startingPricePerToken: priceAmountSchema.refine((value) => {
       const numValue = Number(value);
@@ -64,7 +60,8 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleMode: z.enum(["market", "pool", "disabled"]),
+
+  saleMode: z.enum(["pool", "disabled"]),
   supply: z.string().min(1, "Supply is required"),
 });
 

@@ -7,7 +7,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
 import { isRouterEnabled } from "thirdweb/assets";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -102,107 +101,17 @@ export function TokenSaleSection(props: {
           )}
         </div>
 
-        {isSaleEnabled && isRouterEnabledQuery.data === true && (
-          <div className="space-y-5 pt-4">
-            {saleMode === "market" && (
-              <PrimarySaleConfig
-                chainId={props.chainId}
-                client={props.client}
-                form={props.form}
-              />
-            )}
-
-            {saleMode === "pool" && (
-              <PoolConfig
-                chainId={props.chainId}
-                client={props.client}
-                form={props.form}
-              />
-            )}
+        {saleMode === "pool" && isRouterEnabledQuery.data === true && (
+          <div className="pt-4">
+            <PoolConfig
+              chainId={props.chainId}
+              client={props.client}
+              form={props.form}
+            />
           </div>
         )}
       </div>
     </DynamicHeight>
-  );
-}
-
-function PrimarySaleConfig(props: {
-  form: TokenDistributionForm;
-  chainId: string;
-  client: ThirdwebClient;
-}) {
-  const totalSupply = Number(props.form.watch("supply"));
-  const sellSupply = Math.floor(
-    (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
-  );
-
-  return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      {/* supply % */}
-      <FormFieldSetup
-        errorMessage={
-          props.form.formState.errors.saleAllocationPercentage?.message
-        }
-        helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
-        isRequired
-        label="Sell % of Total Supply"
-      >
-        <div className="relative">
-          <DecimalInput
-            maxValue={100}
-            onChange={(value) => {
-              props.form.setValue("saleAllocationPercentage", value, {
-                shouldValidate: true,
-              });
-            }}
-            value={props.form.watch("saleAllocationPercentage")}
-          />
-          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-lg text-muted-foreground">
-            %
-          </span>
-        </div>
-      </FormFieldSetup>
-
-      {/* price  amount + currency*/}
-      <FormFieldSetup
-        errorMessage={
-          props.form.formState.errors.market?.priceAmount?.message ||
-          props.form.formState.errors.market?.currencyAddress?.message
-        }
-        isRequired
-        label="Price"
-      >
-        <div className="relative flex items-center">
-          <DecimalInput
-            className="rounded-r-none"
-            onChange={(value) => {
-              props.form.setValue("market.priceAmount", value, {
-                shouldValidate: true,
-              });
-            }}
-            value={props.form.watch("market.priceAmount")}
-          />
-
-          <TokenSelector
-            addNativeTokenIfMissing={true}
-            chainId={Number(props.chainId)}
-            className="rounded-l-none border-l-0 bg-background"
-            client={props.client}
-            disableAddress={true}
-            onChange={(value) => {
-              props.form.setValue("market.currencyAddress", value.address, {
-                shouldValidate: true,
-              });
-            }}
-            selectedToken={{
-              address: props.form.watch("market.currencyAddress"),
-              chainId: Number(props.chainId),
-            }}
-            showCheck={true}
-          />
-        </div>
-      </FormFieldSetup>
-    </div>
   );
 }
 

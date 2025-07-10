@@ -3,11 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  getAddress,
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
-} from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team";
@@ -33,8 +29,6 @@ export type CreateTokenFunctions = {
   }>;
   airdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
 };
-
-const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
 
 export function CreateTokenAssetPageUI(props: {
   accountAddress: string;
@@ -80,10 +74,6 @@ export function CreateTokenAssetPageUI(props: {
       airdropAddresses: [],
       // airdrop
       airdropEnabled: false,
-      market: {
-        currencyAddress: checksummedNativeTokenAddress,
-        priceAmount: "0.1",
-      },
       pool: {
         startingPricePerToken: "0.01",
       },
@@ -104,11 +94,7 @@ export function CreateTokenAssetPageUI(props: {
           client={props.client}
           form={tokenInfoForm}
           onChainUpdated={() => {
-            // if the chain is updated, set the sale token address to the native token address
-            tokenDistributionForm.setValue(
-              "market.currencyAddress",
-              checksummedNativeTokenAddress,
-            );
+            // no op
           }}
           onNext={() => {
             reportAssetCreationStepConfigured({

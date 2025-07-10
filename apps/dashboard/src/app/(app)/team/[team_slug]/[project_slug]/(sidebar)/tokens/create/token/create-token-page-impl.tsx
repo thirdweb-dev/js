@@ -105,6 +105,7 @@ export function CreateTokenAssetPage(props: {
         launchConfig:
           params.values.saleMode === "pool" && saleAmount !== 0
             ? {
+                kind: "pool",
                 config: {
                   amount: BigInt(saleAmount),
                   initialTick: getInitialTickValue({
@@ -113,8 +114,7 @@ export function CreateTokenAssetPage(props: {
                     ),
                   }),
                   referrerRewardBps: 5000, // 50%
-                }, // public
-                kind: "pool",
+                },
               }
             : undefined,
         params: {
