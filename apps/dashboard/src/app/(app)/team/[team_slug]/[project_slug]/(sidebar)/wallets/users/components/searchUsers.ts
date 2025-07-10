@@ -39,7 +39,7 @@ export async function searchUsers(
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
-      "x-team-id": teamId,
+      "x-thirdweb-team-id": teamId,
       ...(clientId && { "x-client-id": clientId }),
     },
     method: "GET",
