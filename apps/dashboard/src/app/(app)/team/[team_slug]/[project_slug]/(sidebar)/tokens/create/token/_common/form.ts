@@ -51,7 +51,6 @@ export const tokenDistributionFormSchema = z.object({
 
       return isValidTickValue(tick);
     }, "Invalid price"),
-    tradingFees: z.enum(["0.01", "0.05", "0.3", "1"]),
   }),
   saleAllocationPercentage: z.string().refine(
     (value) => {

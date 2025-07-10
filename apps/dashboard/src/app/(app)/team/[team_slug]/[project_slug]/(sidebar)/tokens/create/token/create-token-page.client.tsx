@@ -81,7 +81,6 @@ export function CreateTokenAssetPageUI(props: {
       },
       pool: {
         startingPricePerToken: "0.01",
-        tradingFees: "1",
       },
       // sale fieldset
       saleAllocationPercentage: "0",

@@ -10,20 +10,10 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { useAllChainsData } from "@/hooks/chains/allChains";
-import type {
-  TokenDistributionForm,
-  TokenDistributionFormValues,
-} from "../_common/form";
+import type { TokenDistributionForm } from "../_common/form";
 
 export function TokenSaleSection(props: {
   form: TokenDistributionForm;
@@ -84,7 +74,12 @@ export function TokenSaleSection(props: {
                       "saleMode",
                       checked ? "pool" : "disabled",
                     );
-                    if (!checked) {
+
+                    if (checked && !props.form.getValues("airdropEnabled")) {
+                      props.form.setValue("saleAllocationPercentage", "100", {
+                        shouldValidate: true,
+                      });
+                    } else {
                       props.form.setValue("saleAllocationPercentage", "0", {
                         shouldValidate: true,
                       });
@@ -211,9 +206,6 @@ function PrimarySaleConfig(props: {
   );
 }
 
-type TradingFees = TokenDistributionFormValues["pool"]["tradingFees"];
-const tradingFeesOptions: TradingFees[] = ["0.01", "0.05", "0.3", "1"];
-
 function PoolConfig(props: {
   form: TokenDistributionForm;
   chainId: string;
@@ -228,7 +220,7 @@ function PoolConfig(props: {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* supply % */}
       <FormFieldSetup
         errorMessage={
@@ -254,60 +246,29 @@ function PoolConfig(props: {
         </div>
       </FormFieldSetup>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* starting price */}
-        <FormFieldSetup
-          errorMessage={
-            props.form.formState.errors.pool?.startingPricePerToken?.message
-          }
-          isRequired
-          label="Starting price per token"
-        >
-          <div className="relative">
-            <DecimalInput
-              className="pr-10"
-              onChange={(value) => {
-                props.form.setValue("pool.startingPricePerToken", value, {
-                  shouldValidate: true,
-                });
-              }}
-              value={props.form.watch("pool.startingPricePerToken")}
-            />
-            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
-              {chainMeta?.nativeCurrency.symbol || "ETH"}
-            </span>
-          </div>
-        </FormFieldSetup>
-
-        {/* trading fees */}
-        <FormFieldSetup
-          errorMessage={
-            props.form.formState.errors.saleAllocationPercentage?.message
-          }
-          isRequired
-          label="Trading Fees"
-        >
-          <Select
-            onValueChange={(value) => {
-              props.form.setValue("pool.tradingFees", value as TradingFees, {
+      {/* starting price */}
+      <FormFieldSetup
+        errorMessage={
+          props.form.formState.errors.pool?.startingPricePerToken?.message
+        }
+        isRequired
+        label="Starting price per token"
+      >
+        <div className="relative">
+          <DecimalInput
+            className="pr-10"
+            onChange={(value) => {
+              props.form.setValue("pool.startingPricePerToken", value, {
                 shouldValidate: true,
               });
             }}
-            value={props.form.watch("pool.tradingFees")}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Fees" />
-            </SelectTrigger>
-            <SelectContent>
-              {tradingFeesOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}%
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </FormFieldSetup>
-      </div>
+            value={props.form.watch("pool.startingPricePerToken")}
+          />
+          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+            {chainMeta?.nativeCurrency.symbol || "ETH"}
+          </span>
+        </div>
+      </FormFieldSetup>
     </div>
   );
 }

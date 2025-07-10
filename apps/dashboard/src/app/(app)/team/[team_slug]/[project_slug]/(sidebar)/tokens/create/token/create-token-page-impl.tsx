@@ -62,7 +62,11 @@ export function CreateTokenAssetPage(props: {
     );
 
     try {
-      const salePercent = Number(formValues.saleAllocationPercentage);
+      const salePercent =
+        formValues.saleMode === "pool"
+          ? Number(formValues.saleAllocationPercentage)
+          : 0;
+
       const saleAmount = Number(formValues.supply) * (salePercent / 100);
 
       const contractAddress = await createToken({
@@ -75,12 +79,12 @@ export function CreateTokenAssetPage(props: {
             ? {
                 config: {
                   amount: BigInt(saleAmount),
-                  fee: Number(formValues.pool.tradingFees) * 10000, // TODO - fix in SDK
                   initialTick: getInitialTickValue({
                     startingPricePerToken: Number(
                       formValues.pool.startingPricePerToken,
                     ),
                   }),
+                  referrerRewardBps: 5000, // 50%
                 }, // public
                 kind: "pool",
               }
@@ -93,6 +97,7 @@ export function CreateTokenAssetPage(props: {
           social_urls: socialUrls,
           symbol: formValues.symbol,
         },
+        referrerAddress: "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94",
       });
 
       // add contract to project in background
