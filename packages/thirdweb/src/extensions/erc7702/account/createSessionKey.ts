@@ -3,7 +3,10 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { createSessionWithSig } from "../__generated__/MinimalAccount/write/createSessionWithSig.js";
+import {
+  createSessionWithSig,
+  isCreateSessionWithSigSupported,
+} from "../__generated__/MinimalAccount/write/createSessionWithSig.js";
 import { MINIMAL_ACCOUNT_ABI } from "../__generated__/MinimalAccount/abi.js";
 import { type CallSpecInput, type TransferSpecInput } from "./types.js";
 
@@ -106,4 +109,20 @@ export function createSessionKey(options: CreateSessionKeyOptions) {
     sessionSpec,
     signature: "0x",
   });
+}
+
+/**
+ * Checks if the `createSessionKey` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `createSessionKey` method is supported.
+ * @extension ERC7702
+ * @example
+ * ```ts
+ * import { isCreateSessionKeySupported } from "thirdweb/extensions/erc7702/account";
+ *
+ * const supported = isCreateSessionKeySupported(["0x..."]);
+ * ```
+ */
+export function isCreateSessionKeySupported(availableSelectors: string[]) {
+  return isCreateSessionWithSigSupported(availableSelectors);
 }
