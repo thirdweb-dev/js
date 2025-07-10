@@ -21,7 +21,6 @@ import {
   useAllEmbeddedWallets,
   useEmbeddedWallets,
 } from "@/hooks/useEmbeddedWallets";
-import { SearchInput } from "./SearchInput";
 import { AdvancedSearchInput } from "./AdvancedSearchInput";
 import { SearchResults } from "./SearchResults";
 import { searchUsers } from "./searchUsers";
@@ -114,7 +113,6 @@ export function InAppWalletUsersPageContent(props: {
   }, [props.client]);
 
   const [activePage, setActivePage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<WalletUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearchResults, setHasSearchResults] = useState(false);
@@ -124,31 +122,6 @@ export function InAppWalletUsersPageContent(props: {
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
-  const filteredWallets = searchValue
-    ? wallets.filter((wallet) => {
-        const term = searchValue.toLowerCase();
-        if (wallet.id.toLowerCase().includes(term)) {
-          return true;
-        }
-        if (
-          wallet.wallets?.some((w) => w.address?.toLowerCase().includes(term))
-        ) {
-          return true;
-        }
-        if (
-          wallet.linkedAccounts?.some((acc) => {
-            return Object.values(acc.details).some(
-              (detail) =>
-                typeof detail === "string" &&
-                detail.toLowerCase().includes(term),
-            );
-          })
-        ) {
-          return true;
-        }
-        return false;
-      })
-    : wallets;
   const { mutateAsync: getAllEmbeddedWallets, isPending } =
     useAllEmbeddedWallets({
       authToken: props.authToken,
@@ -172,7 +145,6 @@ export function InAppWalletUsersPageContent(props: {
   const handleClearSearch = () => {
     setSearchResults([]);
     setHasSearchResults(false);
-    setSearchValue("");
   };
 
   const downloadCSV = useCallback(async () => {
@@ -229,18 +201,7 @@ export function InAppWalletUsersPageContent(props: {
             </Button>
           </div>
 
-          {/* Fallback to old search for table filtering when not using advanced search */}
-          {!hasSearchResults && (
-            <div className="flex items-center justify-end gap-3">
-              <div className="w-full max-w-xs">
-                <SearchInput
-                  onValueChange={setSearchValue}
-                  placeholder="Filter current page"
-                  value={searchValue}
-                />
-              </div>
-            </div>
-          )}
+
         </div>
 
         <div>
@@ -250,7 +211,7 @@ export function InAppWalletUsersPageContent(props: {
             <>
               <TWTable
                 columns={columns}
-                data={filteredWallets}
+                data={wallets}
                 isFetched={walletsQuery.isFetched}
                 isPending={walletsQuery.isPending}
                 tableContainerClassName="rounded-b-none"
