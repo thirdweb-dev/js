@@ -35,13 +35,21 @@ export async function createToken(options: CreateTokenOptions) {
     ...options,
   });
   const blockNumber = await eth_blockNumber(rpcRequest);
-  const salt = options.salt
-    ? options.salt.startsWith("0x") && options.salt.length === 66
-      ? (options.salt as `0x${string}`)
-      : keccakId(options.salt)
-    : toHex(blockNumber, {
+
+  let salt: Hex = "0x";
+  if (!options.salt) {
+    salt =
+      "0x1f" +
+      toHex(blockNumber, {
         size: 32,
-      });
+      }).substring(4);
+  } else {
+    if (options.salt.startsWith("0x") && options.salt.length === 66) {
+      salt = options.salt as `0x${string}`;
+    } else {
+      salt = "0x1f" + keccakId(options.salt).substring(4);
+    }
+  }
 
   const entrypoint = await getOrDeployEntrypointERC20(options);
 
@@ -87,7 +95,7 @@ export async function createToken(options: CreateTokenOptions) {
       amount,
       data: encodedInitData,
       hookData,
-      referrer: ZERO_ADDRESS,
+      referrer: options.referrerAddress || ZERO_ADDRESS,
       salt,
     },
     creator,

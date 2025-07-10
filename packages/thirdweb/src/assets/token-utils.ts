@@ -7,8 +7,8 @@ import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 import { toUnits } from "../utils/units.js";
 import {
   DEFAULT_MAX_SUPPLY_ERC20,
-  DEFAULT_POOL_FEE,
   DEFAULT_POOL_INITIAL_TICK,
+  DEFAULT_REFERRER_REWARD_BPS,
 } from "./constants.js";
 import type { MarketConfig, PoolConfig, TokenParams } from "./types.js";
 
@@ -51,28 +51,28 @@ export async function encodeInitParams(options: {
 export function encodePoolConfig(poolConfig: PoolConfig): Hex {
   const POOL_PARAMS = [
     {
-      name: "currency",
-      type: "address",
-    },
-    {
       name: "amount",
       type: "uint256",
     },
     {
-      name: "fee",
-      type: "uint24",
+      name: "currency",
+      type: "address",
     },
     {
       name: "initialTick",
-      type: "uint24",
+      type: "int24",
+    },
+    {
+      name: "referrerRewardBps",
+      type: "uint16",
     },
   ] as const;
 
   return encodeAbiParameters(POOL_PARAMS, [
-    poolConfig.currency || NATIVE_TOKEN_ADDRESS,
     toUnits(poolConfig.amount.toString(), 18),
-    poolConfig.fee || DEFAULT_POOL_FEE,
+    poolConfig.currency || NATIVE_TOKEN_ADDRESS,
     poolConfig.initialTick || DEFAULT_POOL_INITIAL_TICK,
+    poolConfig.referrerRewardBps || DEFAULT_REFERRER_REWARD_BPS,
   ]);
 }
 

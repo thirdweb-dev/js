@@ -1,21 +1,21 @@
 export const DEFAULT_MAX_SUPPLY_ERC20 = 10_000_000_000n;
-export const DEFAULT_POOL_FEE = 10000;
 export const DEFAULT_POOL_INITIAL_TICK = 230200;
+export const DEFAULT_REFERRER_REWARD_BPS = 5000; // 50%
 export const DEFAULT_INFRA_ADMIN = "0x1a472863cf21d5aa27f417df9140400324c48f22";
 export const DEFAULT_FEE_RECIPIENT =
-  "0x1af20c6b23373350ad464700b5965ce4b0d2ad94";
+  "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
 export const DEFAULT_FEE_BPS = 50n;
 export const DEFAULT_SALT = "thirdweb";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   8453: {
-    AssetEntrypointERC20: "0x7FF679bFb89ee0F88645CAb8Ab0844ea485a3434",
+    AssetEntrypointERC20: "0x556688D4d192FC59b27E239ff6e06D28786aAdbE",
     ERC20AssetImpl: "",
     V3PositionManager: "",
     V4PositionManager: "",
   },
   84532: {
-    AssetEntrypointERC20: "0x79C1236cFe59f1f088A15Da08b0D8667387d9703",
+    AssetEntrypointERC20: "0xf0ED90ea4df819017ee1dfDADf26d65a678b31b7",
     ERC20AssetImpl: "",
     V3PositionManager: "",
     V4PositionManager: "",

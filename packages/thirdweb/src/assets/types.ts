@@ -16,8 +16,8 @@ export type TokenParams = {
 export type PoolConfig = {
   amount: bigint;
   currency?: string;
-  fee?: number;
   initialTick?: number;
+  referrerRewardBps?: number;
 };
 
 export type MarketConfig = {
@@ -48,4 +48,5 @@ export type CreateTokenOptions = ClientAndChainAndAccount & {
   salt?: string;
   params: TokenParams;
   launchConfig?: LaunchConfig;
+  referrerAddress?: string;
 };
