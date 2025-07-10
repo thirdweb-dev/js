@@ -62,9 +62,8 @@ function IntegrateAPIKeySection({
           <ClientIDSection clientId={clientId} />
           {secretKeyMasked && (
             <SecretKeySection
-              projectId={project.id}
+              project={project}
               secretKeyMasked={secretKeyMasked}
-              teamId={project.teamId}
             />
           )}
         </div>

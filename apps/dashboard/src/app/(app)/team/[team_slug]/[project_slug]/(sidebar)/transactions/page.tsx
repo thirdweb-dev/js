@@ -7,10 +7,7 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { EngineChecklist } from "./analytics/ftux.client";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
-import {
-  getTransactionAnalyticsSummary,
-  type TransactionSummaryData,
-} from "./lib/analytics";
+import { getTransactionAnalyticsSummary } from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 
 export default async function TransactionsAnalyticsPage(props: {
@@ -53,6 +50,7 @@ export default async function TransactionsAnalyticsPage(props: {
 
   const managementAccessToken =
     projectEngineCloudService?.managementAccessToken;
+  const isManagedVault = !!projectEngineCloudService?.encryptedAdminKey;
 
   const eoas = managementAccessToken
     ? await listEoas({
@@ -68,14 +66,10 @@ export default async function TransactionsAnalyticsPage(props: {
 
   const wallets = eoas.data?.items as Wallet[] | undefined;
 
-  let initialData: TransactionSummaryData | undefined;
-  if (wallets && wallets.length > 0) {
-    const summary = await getTransactionAnalyticsSummary({
-      clientId: project.publishableKey,
-      teamId: project.teamId,
-    }).catch(() => undefined);
-    initialData = summary;
-  }
+  const initialData = await getTransactionAnalyticsSummary({
+    clientId: project.publishableKey,
+    teamId: project.teamId,
+  }).catch(() => undefined);
   const hasTransactions = initialData ? initialData.totalCount > 0 : false;
 
   const client = getClientThirdwebClient({
@@ -86,6 +80,7 @@ export default async function TransactionsAnalyticsPage(props: {
   return (
     <div className="flex grow flex-col">
       <EngineChecklist
+        isManagedVault={isManagedVault}
         client={client}
         hasTransactions={hasTransactions}
         managementAccessToken={managementAccessToken ?? undefined}

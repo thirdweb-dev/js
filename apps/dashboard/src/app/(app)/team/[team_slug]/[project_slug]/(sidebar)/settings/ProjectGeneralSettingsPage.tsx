@@ -135,8 +135,7 @@ export function ProjectGeneralSettingsPage(props: {
       project={props.project}
       rotateSecretKey={async () => {
         return rotateSecretKeyClient({
-          projectId: props.project.id,
-          teamId: props.project.teamId,
+          project: props.project,
         });
       }}
       showNebulaSettings={props.showNebulaSettings}

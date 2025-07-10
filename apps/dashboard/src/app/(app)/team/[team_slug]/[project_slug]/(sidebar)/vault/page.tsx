@@ -22,11 +22,13 @@ export default async function VaultPage(props: {
   );
 
   const maskedAdminKey = projectEngineCloudService?.maskedAdminKey;
+  const isManagedVault = !!projectEngineCloudService?.encryptedAdminKey;
 
   return (
     <div className="flex flex-col gap-8">
       <KeyManagement
         maskedAdminKey={maskedAdminKey ?? undefined}
+        isManagedVault={isManagedVault}
         project={project}
       />
     </div>

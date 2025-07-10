@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
+import { createVaultAccountAndAccessToken } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 import { accountKeys, authorizedWallets } from "../query-keys/cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
@@ -311,24 +312,33 @@ export type RotateSecretKeyAPIReturnType = {
   data: {
     secret: string;
     secretMasked: string;
+    secretHash: string;
   };
 };
 
-export async function rotateSecretKeyClient(params: {
-  teamId: string;
-  projectId: string;
-}) {
+export async function rotateSecretKeyClient(params: { project: Project }) {
   const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
     body: JSON.stringify({}),
     headers: {
       "Content-Type": "application/json",
     },
     method: "POST",
-    pathname: `/v1/teams/${params.teamId}/projects/${params.projectId}/rotate-secret-key`,
+    pathname: `/v1/teams/${params.project.teamId}/projects/${params.project.id}/rotate-secret-key`,
   });
 
   if (!res.ok) {
     throw new Error(res.error);
+  }
+
+  try {
+    // if the project has a vault admin key, rotate it as well
+    await createVaultAccountAndAccessToken({
+      project: params.project,
+      projectSecretKey: res.data.data.secret,
+      projectSecretHash: res.data.data.secretHash,
+    });
+  } catch (error) {
+    console.error("Failed to rotate vault admin key", error);
   }
 
   return res.data;

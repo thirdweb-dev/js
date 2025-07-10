@@ -1,12 +1,12 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { rotateServiceAccount } from "@thirdweb-dev/vault-sdk";
 import {
   CheckIcon,
   CircleAlertIcon,
   DownloadIcon,
   Loader2Icon,
+  LogOutIcon,
   RefreshCcwIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -27,13 +27,14 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
-  createManagementAccessToken,
-  createWalletAccessToken,
-  initVaultClient,
+  createVaultAccountAndAccessToken,
   maskSecret,
 } from "../../transactions/lib/vault.client";
 
-export default function RotateAdminKeyButton(props: { project: Project }) {
+export default function RotateAdminKeyButton(props: {
+  project: Project;
+  isManagedVault: boolean;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
@@ -41,55 +42,15 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      const vaultClient = await initVaultClient();
-      const rotationCode = props.project.services.find(
-        (service) => service.name === "engineCloud",
-      )?.rotationCode;
-
-      if (!rotationCode) {
-        throw new Error("Rotation code not found");
-      }
-
-      const rotateServiceAccountRes = await rotateServiceAccount({
-        client: vaultClient,
-        request: {
-          auth: {
-            rotationCode,
-          },
-        },
-      });
-
-      if (rotateServiceAccountRes.error) {
-        throw new Error(rotateServiceAccountRes.error.message);
-      }
-
-      // need to recreate the management access token with the new admin key
-      const managementAccessTokenPromise = createManagementAccessToken({
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
+      // passing no secret key means we're rotating the admin key and deleting any stored keys
+      const result = await createVaultAccountAndAccessToken({
         project: props.project,
-        rotationCode: rotateServiceAccountRes.data.newRotationCode,
-        vaultClient,
       });
-
-      const userAccesTokenPromise = createWalletAccessToken({
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
-        project: props.project,
-        vaultClient,
-      });
-
-      const [userAccessTokenRes, managementAccessTokenRes] = await Promise.all([
-        userAccesTokenPromise,
-        managementAccessTokenPromise,
-      ]);
-
-      if (!managementAccessTokenRes.success || !userAccessTokenRes.success) {
-        throw new Error("Failed to create access token");
-      }
 
       return {
-        adminKey: rotateServiceAccountRes.data.newAdminKey,
+        adminKey: result.adminKey,
         success: true,
-        userAccessToken: userAccessTokenRes.data,
+        userAccessToken: result.walletToken,
       };
     },
     onError: (error) => {
@@ -144,8 +105,12 @@ export default function RotateAdminKeyButton(props: { project: Project }) {
         variant="outline"
       >
         {isLoading && <Loader2Icon className="size-4 animate-spin" />}
-        {!isLoading && <RefreshCcwIcon className="size-4" />}
-        Rotate Admin Key
+        {!isLoading && props.isManagedVault ? (
+          <LogOutIcon className="size-4" />
+        ) : (
+          <RefreshCcwIcon className="size-4" />
+        )}
+        {props.isManagedVault ? "Eject From Managed Vault" : "Rotate Admin Key"}
       </Button>
 
       <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>

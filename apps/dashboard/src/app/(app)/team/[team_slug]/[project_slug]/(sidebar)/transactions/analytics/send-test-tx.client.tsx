@@ -11,7 +11,6 @@ import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/projects";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,10 +23,9 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SmartAccountCell } from "../server-wallets/wallet-table/wallet-table-ui.client";
-import { deleteUserAccessToken, getUserAccessToken } from "./utils";
 
 const formSchema = z.object({
-  accessToken: z.string().min(1, "Access token is required"),
+  secretKey: z.string().min(1, "Secret key is required"),
   chainId: z.number(),
   walletIndex: z.string(),
 });
@@ -38,9 +36,9 @@ export function SendTestTransaction(props: {
   wallets?: Wallet[];
   project: Project;
   teamSlug: string;
-  userAccessToken?: string;
   expanded?: boolean;
   walletId?: string;
+  isManagedVault: boolean;
   client: ThirdwebClient;
 }) {
   const queryClient = useQueryClient();
@@ -49,12 +47,9 @@ export function SendTestTransaction(props: {
 
   const chainsQuery = useAllChainsData();
 
-  const userAccessToken =
-    props.userAccessToken ?? getUserAccessToken(props.project.id) ?? "";
-
   const form = useForm<FormValues>({
     defaultValues: {
-      accessToken: userAccessToken,
+      secretKey: "",
       chainId: 84532,
       walletIndex:
         props.wallets && props.walletId
@@ -73,7 +68,7 @@ export function SendTestTransaction(props: {
   const sendDummyTxMutation = useMutation({
     mutationFn: async (args: {
       walletAddress: string;
-      accessToken: string;
+      secretKey: string;
       chainId: number;
     }) => {
       const response = await engineCloudProxy({
@@ -93,7 +88,9 @@ export function SendTestTransaction(props: {
           "Content-Type": "application/json",
           "x-client-id": props.project.publishableKey,
           "x-team-id": props.project.teamId,
-          "x-vault-access-token": args.accessToken,
+          ...(props.isManagedVault
+            ? { "x-secret-key": args.secretKey }
+            : { "x-vault-access-token": args.secretKey }),
         },
         method: "POST",
         pathname: "/v1/write/transaction",
@@ -123,7 +120,7 @@ export function SendTestTransaction(props: {
 
   const onSubmit = async (data: FormValues) => {
     await sendDummyTxMutation.mutateAsync({
-      accessToken: data.accessToken,
+      secretKey: data.secretKey,
       chainId: data.chainId,
       walletAddress: selectedWallet.address,
     });
@@ -141,44 +138,39 @@ export function SendTestTransaction(props: {
         )}
         <p className="flex items-center gap-2 text-sm text-warning-text">
           <LockIcon className="h-4 w-4" />
-          {userAccessToken
-            ? "Copy your Vault access token, you'll need it for every HTTP call to Engine."
-            : "Every wallet action requires your Vault access token."}
+          Every server wallet action requires your{" "}
+          {props.isManagedVault ? "project secret key" : "vault access token"}.
         </p>
         <div className="h-4" />
         {/* Responsive container */}
         <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
           <div className="flex-grow">
             <div className="flex flex-col gap-2">
-              <p className="text-sm">Vault Access Token</p>
-              {userAccessToken ? (
-                <div className="flex flex-col gap-2 ">
-                  <CopyTextButton
-                    className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                    copyIconPosition="right"
-                    textToCopy={userAccessToken}
-                    textToShow={userAccessToken}
-                    tooltip="Copy Vault Access Token"
-                  />
-                  <p className="text-muted-foreground text-xs">
-                    This is a project-wide access token to access your server
-                    wallets. You can create more access tokens using your admin
-                    key, with granular scopes and permissions.
-                  </p>
-                </div>
-              ) : (
-                <Input
-                  placeholder="vt_act_1234....ABCD"
-                  type={userAccessToken ? "text" : "password"}
-                  {...form.register("accessToken")}
-                  className="text-xs"
-                  disabled={isLoading}
-                />
-              )}
+              <p className="text-sm">
+                {props.isManagedVault
+                  ? "Project Secret Key"
+                  : "Vault Access Token"}
+              </p>
+              <Input
+                placeholder={
+                  props.isManagedVault
+                    ? "Enter your project secret key"
+                    : "Enter your vault access token"
+                }
+                type={"password"}
+                {...form.register("secretKey")}
+                className="text-xs"
+                disabled={isLoading}
+              />
+              <p className="text-muted-foreground text-xs">
+                {props.isManagedVault
+                  ? "Your project secret key was generated when you created your project. If you lost it, you can regenerate one in the project settings."
+                  : "Your vault access token was generated when you created your vault. If you lost it, you can regenerate one in the vault settings."}
+              </p>
             </div>
           </div>
         </div>
-        <div className="h-4" />
+        <div className="h-6" />
         {/* Wallet Selector */}
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-2">
@@ -268,8 +260,6 @@ export function SendTestTransaction(props: {
                 } else {
                   router.refresh();
                 }
-                // clear token from local storage after FTUX is complete
-                deleteUserAccessToken(props.project.id);
               }}
               variant="primary"
             >
