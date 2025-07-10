@@ -64,8 +64,9 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const receipt = await sendAndConfirmTransaction({
         account: account,
         transaction: createSessionKey({
+          client: TEST_CLIENT,
+          chain: defineChain(chainId),
           account: account,
-          contract: accountContract,
           durationInSeconds: 86400,
           grantFullPermissions: true, // 1 day
           sessionKeyAddress: TEST_ACCOUNT_A.address,
@@ -82,6 +83,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const receipt = await sendAndConfirmTransaction({
         account: account,
         transaction: createSessionKey({
+          client: TEST_CLIENT,
+          chain: defineChain(chainId),
           account: account,
           callPolicies: [
             {
@@ -103,7 +106,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
               },
             },
           ],
-          contract: accountContract,
           durationInSeconds: 86400, // 1 day
           grantFullPermissions: false,
           sessionKeyAddress: TEST_ACCOUNT_A.address,

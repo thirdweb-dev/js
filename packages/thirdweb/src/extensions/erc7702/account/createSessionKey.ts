@@ -1,6 +1,8 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import type { Chain } from "../../../chains/types.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { getContract } from "../../../contract/contract.js";
 import {
   createSessionWithSig,
   isCreateSessionWithSigSupported,
@@ -15,10 +17,47 @@ import {
   UsageLimitRequest,
 } from "./types.js";
 
+// MinimalAccount ABI - using the ABI definition from the JSON file
+const MinimalAccountAbi = [
+  "error AllowanceExceeded(uint256 allowanceUsage, uint256 limit, uint64 period)",
+  "error CallPolicyViolated(address target, bytes4 selector)",
+  "error CallReverted()",
+  "error ConditionFailed(bytes32 param, bytes32 refValue, uint8 condition)",
+  "error InvalidDataLength(uint256 actualLength, uint256 expectedLength)",
+  "error InvalidSignature(address msgSender, address thisAddress)",
+  "error LifetimeUsageExceeded(uint256 lifetimeUsage, uint256 limit)",
+  "error MaxValueExceeded(uint256 value, uint256 maxValuePerUse)",
+  "error NoCallsToExecute()",
+  "error SessionExpired()",
+  "error SessionExpiresTooSoon()",
+  "error SessionZeroSigner()",
+  "error TransferPolicyViolated(address target)",
+  "error UIDAlreadyProcessed()",
+  "event Executed(address indexed to, uint256 value, bytes data)",
+  "event SessionCreated(address indexed signer, (address signer, bool isWildcard, uint256 expiresAt, (address target, bytes4 selector, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit, (uint8 condition, uint64 index, bytes32 refValue, (uint8 limitType, uint256 limit, uint256 period) limit)[] constraints)[] callPolicies, (address target, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit)[] transferPolicies, bytes32 uid) sessionSpec)",
+  "function createSessionWithSig((address signer, bool isWildcard, uint256 expiresAt, (address target, bytes4 selector, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit, (uint8 condition, uint64 index, bytes32 refValue, (uint8 limitType, uint256 limit, uint256 period) limit)[] constraints)[] callPolicies, (address target, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit)[] transferPolicies, bytes32 uid) sessionSpec, bytes signature)",
+  "function eip712Domain() view returns (bytes1 fields, string name, string version, uint256 chainId, address verifyingContract, bytes32 salt, uint256[] extensions)",
+  "function execute((address target, uint256 value, bytes data)[] calls) payable",
+  "function executeWithSig(((address target, uint256 value, bytes data)[] calls, bytes32 uid) wrappedCalls, bytes signature) payable",
+  "function getCallPoliciesForSigner(address signer) view returns ((address target, bytes4 selector, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit, (uint8 condition, uint64 index, bytes32 refValue, (uint8 limitType, uint256 limit, uint256 period) limit)[] constraints)[])",
+  "function getSessionExpirationForSigner(address signer) view returns (uint256)",
+  "function getSessionStateForSigner(address signer) view returns (((uint256 remaining, address target, bytes4 selector, uint256 index)[] transferValue, (uint256 remaining, address target, bytes4 selector, uint256 index)[] callValue, (uint256 remaining, address target, bytes4 selector, uint256 index)[] callParams))",
+  "function getTransferPoliciesForSigner(address signer) view returns ((address target, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit)[])",
+  "function isWildcardSigner(address signer) view returns (bool)",
+] as const;
+
 /**
  * @extension ERC7702
  */
 export type CreateSessionKeyOptions = {
+  /**
+   * The Thirdweb client
+   */
+  client: ThirdwebClient;
+  /**
+   * The chain to create the session key on
+   */
+  chain: Chain;
   /**
    * The admin account that will perform the operation.
    */
@@ -48,7 +87,6 @@ export type CreateSessionKeyOptions = {
 /**
  * Creates  session key permissions for a specified address.
  * @param options - The options for the createSessionKey function.
- * @param {Contract} options.contract - The EIP-7702 smart EOA contract to create the session key from
  * @returns The transaction object to be sent.
  * @example
  * ```ts
@@ -56,8 +94,9 @@ export type CreateSessionKeyOptions = {
  * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = createSessionKey({
+ *  client,
+ *  chain,
  *  account: account,
- *  contract: accountContract,
  *  sessionKeyAddress: TEST_ACCOUNT_A.address,
  *  durationInSeconds: 86400, // 1 day
  *  grantFullPermissions: true
@@ -67,11 +106,10 @@ export type CreateSessionKeyOptions = {
  * ```
  * @extension ERC7702
  */
-export function createSessionKey(
-  options: BaseTransactionOptions<CreateSessionKeyOptions>,
-) {
+export function createSessionKey(options: CreateSessionKeyOptions) {
   const {
-    contract,
+    client,
+    chain,
     account,
     sessionKeyAddress,
     durationInSeconds,
@@ -83,6 +121,14 @@ export function createSessionKey(
   if (durationInSeconds <= 0) {
     throw new Error("durationInSeconds must be positive");
   }
+
+  // Create contract from account.address with MinimalAccount ABI
+  const contract = getContract({
+    address: account.address,
+    chain,
+    client,
+    abi: MinimalAccountAbi,
+  });
 
   return createSessionWithSig({
     async asyncParams() {
