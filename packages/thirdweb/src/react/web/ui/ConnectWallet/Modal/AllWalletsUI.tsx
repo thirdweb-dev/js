@@ -39,9 +39,16 @@ function AllWalletsUI(props: {
   const setSelectionData = useSetSelectionData();
 
   const walletList = useMemo(() => {
-    return walletInfos.filter((wallet) => {
-      return props.specifiedWallets.findIndex((x) => x.id === wallet.id) === -1;
-    });
+    return walletInfos
+      .filter((wallet) => {
+        return (
+          props.specifiedWallets.findIndex((x) => x.id === wallet.id) === -1
+        );
+      })
+      .filter(
+        (info) =>
+          info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
+      );
   }, [props.specifiedWallets]);
 
   const fuseInstance = useMemo(() => {
