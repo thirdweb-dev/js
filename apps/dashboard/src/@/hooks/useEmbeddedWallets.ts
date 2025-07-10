@@ -33,7 +33,7 @@ const fetchAccountList = ({
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "x-team-id": teamId.replace("team_", ""),
+        "x-team-id": teamId,
         ...(clientId && { "x-client-id": clientId }),
       },
       method: "GET",
