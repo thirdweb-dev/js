@@ -50,7 +50,7 @@ describe.runIf(
       });
     });
 
-    it.skip("should create a server wallet", async () => {
+    it("should create a server wallet", async () => {
       const serverWallet = await Engine.createServerWallet({
         client: TEST_CLIENT,
         label: "My Server Wallet",
