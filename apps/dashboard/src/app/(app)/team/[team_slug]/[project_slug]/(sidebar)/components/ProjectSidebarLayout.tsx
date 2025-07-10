@@ -22,8 +22,14 @@ export function ProjectSidebarLayout(props: {
   layoutPath: string;
   engineLinkType: "cloud" | "dedicated";
   children: React.ReactNode;
+  isCentralizedWebhooksFeatureFlagEnabled: boolean;
 }) {
-  const { layoutPath, engineLinkType, children } = props;
+  const {
+    layoutPath,
+    engineLinkType,
+    children,
+    isCentralizedWebhooksFeatureFlagEnabled,
+  } = props;
 
   return (
     <FullWidthSidebarLayout
@@ -119,8 +125,13 @@ export function ProjectSidebarLayout(props: {
       ]}
       footerSidebarLinks={[
         {
-          href: `${layoutPath}/webhooks`,
+          href: isCentralizedWebhooksFeatureFlagEnabled
+            ? `${layoutPath}/webhooks`
+            : `${layoutPath}/webhooks/contracts`,
           icon: BellIcon,
+          isActive: (pathname) => {
+            return pathname.startsWith(`${layoutPath}/webhooks`);
+          },
           label: (
             <span className="flex items-center gap-2">
               Webhooks <Badge>New</Badge>
