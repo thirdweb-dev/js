@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "nl.greenhood.wallet",
+  name: "Greenhood",
+  homepage: "https://www.greenhood.nl",
+  image_id: "7b6aaa4d-fa17-4cc6-71e1-79f2e68c0900",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/greenhood-wallet/id1661248135",
     android:
       "https://play.google.com/store/apps/details?id=com.greehood.wallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/greenhood-wallet/id1661248135",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "nl.greenhood.wallet",
+  mobile: {
+    native: "greenhood://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.greenhood.nl",
-  id: "nl.greenhood.wallet",
-  image_id: "7b6aaa4d-fa17-4cc6-71e1-79f2e68c0900",
-  mobile: {
-    native: "greenhood://",
-    universal: null,
-  },
-  name: "Greenhood",
-  rdns: "nl.greenhood.wallet",
 } as const;

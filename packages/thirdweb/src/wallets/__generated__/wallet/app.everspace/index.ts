@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.everspace",
+  name: "Everspace",
+  homepage: "https://everspace.app",
+  image_id: "80eaa630-6392-4b0a-a604-0a0f808e4d00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.oberton.app",
     browser: "https://everspace.app/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/ru/app/everspace/id1585434994?l=en",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.oberton.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "everspace://",
+    universal: "https://everspace.app/deeplink",
   },
   desktop: {
     native: null,
     universal: "https://everspace.app/",
   },
-  homepage: "https://everspace.app",
-  id: "app.everspace",
-  image_id: "80eaa630-6392-4b0a-a604-0a0f808e4d00",
-  mobile: {
-    native: "everspace://",
-    universal: "https://everspace.app/deeplink",
-  },
-  name: "Everspace",
-  rdns: null,
 } as const;

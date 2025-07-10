@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "world.qoin",
+  name: "Qoin Wallet",
+  homepage: "https://qoin.world",
+  image_id: "0490da30-b59c-4365-fef8-33a3e0aa4700",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.qoin.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/au/app/qoin-wallet/id1483718254",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.qoin.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "wcqoin://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://qoin.world",
-  id: "world.qoin",
-  image_id: "0490da30-b59c-4365-fef8-33a3e0aa4700",
-  mobile: {
-    native: "wcqoin://",
-    universal: null,
-  },
-  name: "Qoin Wallet",
-  rdns: null,
 } as const;

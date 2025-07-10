@@ -131,7 +131,9 @@ export function FilterDetailsStep({
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <div className="flex items-center justify-between text-xs">
-                  <FormLabel>Contract Addresses</FormLabel>
+                  <FormLabel>
+                    Contract Addresses <span className="text-red-500">*</span>
+                  </FormLabel>
                   <p className="text-muted-foreground">
                     Enter a contract address
                   </p>
@@ -196,7 +198,9 @@ export function FilterDetailsStep({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <div className="flex items-center justify-between text-xs">
-                    <FormLabel>From Address</FormLabel>
+                    <FormLabel>
+                      From Address <span className="text-red-500">*</span>
+                    </FormLabel>
                     <p className="text-muted-foreground">
                       Enter a from address
                     </p>

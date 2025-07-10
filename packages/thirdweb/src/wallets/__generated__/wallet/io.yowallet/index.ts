@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.yowallet",
+  name: "YoWallet",
+  homepage: "https://yowallet.io",
+  image_id: "750079a0-6372-4e32-d1af-fe8ec2bbe400",
   app: {
+    browser: "https://yowallet.io",
+    ios: "https://apps.apple.com/us/app/yowallet/id6474118944",
     android:
       "https://play.google.com/store/apps/details?id=com.yowallet.app&hl=en",
-    browser: "https://yowallet.io",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/yowallet/id6474118944",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "yo-wallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://yowallet.io",
   },
-  homepage: "https://yowallet.io",
-  id: "io.yowallet",
-  image_id: "750079a0-6372-4e32-d1af-fe8ec2bbe400",
-  mobile: {
-    native: "yo-wallet://",
-    universal: null,
-  },
-  name: "YoWallet",
-  rdns: null,
 } as const;

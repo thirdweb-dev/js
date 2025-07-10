@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.cypherhq",
+  name: "Cypher Wallet",
+  homepage: "https://cypherhq.io",
+  image_id: "7bce0965-a4cc-4aad-6217-009d51017500",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/cypherd-wallet/id1604120414",
     android:
       "https://play.google.com/store/apps/details?id=com.cypherd.androidwallet",
-    browser: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/cypher-wallet/niiaamnmgebpeejeemoifgdndgeaekhe",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/us/app/cypherd-wallet/id1604120414",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "cypherwallet://",
+    universal: null,
   },
   desktop: {
     native: "cypherwallet://",
     universal: null,
   },
-  homepage: "https://cypherhq.io",
-  id: "io.cypherhq",
-  image_id: "7bce0965-a4cc-4aad-6217-009d51017500",
-  mobile: {
-    native: "cypherwallet://",
-    universal: null,
-  },
-  name: "Cypher Wallet",
-  rdns: null,
 } as const;

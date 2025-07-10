@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.qubetics",
+  name: "QubeticsWallet",
+  homepage: "https://www.qubetics.com/",
+  image_id: "f6afe67c-41e9-44fc-075a-3e7eda291000",
   app: {
+    browser: null,
+    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.qubetics.wallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: null,
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "qubetics://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.qubetics.com/",
-  id: "com.qubetics",
-  image_id: "f6afe67c-41e9-44fc-075a-3e7eda291000",
-  mobile: {
-    native: "qubetics://",
-    universal: null,
-  },
-  name: "QubeticsWallet",
-  rdns: null,
 } as const;

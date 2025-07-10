@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.xucre",
+  name: "Xucre",
+  homepage: "https://www.xucre.io",
+  image_id: "6a560c0d-817d-4f62-ef21-b91636b30f00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=xucre.expo.client",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=xucre.expo.client",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "xucre.expo.client://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.xucre.io",
-  id: "io.xucre",
-  image_id: "6a560c0d-817d-4f62-ef21-b91636b30f00",
-  mobile: {
-    native: "xucre.expo.client://",
-    universal: null,
-  },
-  name: "Xucre",
-  rdns: null,
 } as const;

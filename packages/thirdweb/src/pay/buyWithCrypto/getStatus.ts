@@ -84,11 +84,6 @@ export type BuyWithCryptoStatus =
       purchaseData?: PurchaseData;
     };
 
-export type ValidBuyWithCryptoStatus = Exclude<
-  BuyWithCryptoStatus,
-  { status: "NOT_FOUND" }
->;
-
 /**
  * Gets the status of a buy with crypto transaction
  * @param buyWithCryptoTransaction - Object of type [`BuyWithCryptoTransaction`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransaction)

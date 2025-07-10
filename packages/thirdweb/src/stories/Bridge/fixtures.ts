@@ -26,7 +26,9 @@ export const ETH: Token = {
   iconUri:
     "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png",
   name: "Ethereum",
-  priceUsd: 1000,
+  prices: {
+    USD: 1000,
+  },
   symbol: "ETH",
 };
 
@@ -37,7 +39,9 @@ export const USDC: Token = {
   iconUri:
     "https://coin-images.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
   name: "USD Coin",
-  priceUsd: 1,
+  prices: {
+    USD: 1,
+  },
   symbol: "USDC",
 };
 
@@ -48,7 +52,9 @@ export const UNI: Token = {
   iconUri:
     "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-uni.png",
   name: "Uniswap",
-  priceUsd: 1000,
+  prices: {
+    USD: 1000,
+  },
   symbol: "UNI",
 };
 
@@ -93,7 +99,9 @@ export const simpleOnrampQuote: BridgePrepareResult = JSON.parse(
       iconUri:
         "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
       name: "USD Coin (PoS)",
-      priceUsd: 1.0,
+      prices: {
+        USD: 1.0,
+      },
       symbol: "USDC",
     },
     id: "onramp-simple-123",
@@ -122,7 +130,9 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
       chainId: 1,
       decimals: 18,
       name: "Ethereum",
-      priceUsd: 2500.0,
+      prices: {
+        USD: 2500.0,
+      },
       symbol: "ETH",
     },
     id: "onramp-swaps-456",
@@ -143,7 +153,9 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
           chainId: 137,
           decimals: 18,
           name: "Wrapped Ether",
-          priceUsd: 2500.0,
+          prices: {
+            USD: 2500.0,
+          },
           symbol: "WETH",
         },
         estimatedExecutionTimeMs: 30000, // 110 USDC
@@ -155,7 +167,9 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
           iconUri:
             "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
           name: "USD Coin (PoS)",
-          priceUsd: 1.0,
+          prices: {
+            USD: 1.0,
+          },
           symbol: "USDC",
         },
         transactions: [
@@ -186,7 +200,9 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
           chainId: 1,
           decimals: 18,
           name: "Ethereum",
-          priceUsd: 2500.0,
+          prices: {
+            USD: 2500.0,
+          },
           symbol: "ETH",
         },
         estimatedExecutionTimeMs: 180000, // 0.044 WETH
@@ -196,7 +212,9 @@ export const onrampWithSwapsQuote: BridgePrepareResult = JSON.parse(
           chainId: 137,
           decimals: 18,
           name: "Wrapped Ether",
-          priceUsd: 2500.0,
+          prices: {
+            USD: 2500.0,
+          },
           symbol: "WETH",
         },
         transactions: [
@@ -251,7 +269,9 @@ export const simpleBuyQuote: BridgePrepareResult = JSON.parse(
           iconUri:
             "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
           name: "USD Coin",
-          priceUsd: 1.0,
+          prices: {
+            USD: 1.0,
+          },
           symbol: "USDC",
         },
         estimatedExecutionTimeMs: 60000,
@@ -263,7 +283,9 @@ export const simpleBuyQuote: BridgePrepareResult = JSON.parse(
           iconUri:
             "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
           name: "Ethereum",
-          priceUsd: 2500.0,
+          prices: {
+            USD: 2500.0,
+          },
           symbol: "ETH",
         },
         transactions: [
@@ -309,7 +331,9 @@ export const longTextBuyQuote: BridgePrepareResult = JSON.parse(
           iconUri:
             "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
           name: "USD Coin (USDC.e on Etherlink)",
-          priceUsd: 1.0,
+          prices: {
+            USD: 1.0,
+          },
           symbol: "USDC.e",
         },
         estimatedExecutionTimeMs: 60000,

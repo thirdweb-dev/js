@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.gayawallet",
+  name: "Gaya Wallet",
+  homepage: "https://gayawallet.com",
+  image_id: "67e7c918-8cf2-4781-0a10-e7e6f4c48900",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/pk/app/gaya-wallet/id6741714278",
     android:
       "https://play.google.com/store/apps/details?id=com.gayawalletmobapp&pcampaignid=web_share&pli=1",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/pk/app/gaya-wallet/id6741714278",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://gayawallet.com",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://gayawallet.com",
-  id: "com.gayawallet",
-  image_id: "67e7c918-8cf2-4781-0a10-e7e6f4c48900",
-  mobile: {
-    native: null,
-    universal: "https://gayawallet.com",
-  },
-  name: "Gaya Wallet",
-  rdns: null,
 } as const;

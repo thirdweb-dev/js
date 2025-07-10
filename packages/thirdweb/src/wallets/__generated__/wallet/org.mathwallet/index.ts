@@ -2,34 +2,34 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.mathwallet",
+  name: "MathWallet",
+  homepage: "https://mathwallet.org/",
+  image_id: "26a8f588-3231-4411-60ce-5bb6b805a700",
   app: {
-    android:
-      "https://play.google.com/store/apps/details?id=com.mathwallet.android",
     browser:
       "https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc",
+    ios: "https://apps.apple.com/us/app/mathwallet5/id1582612388",
+    android:
+      "https://play.google.com/store/apps/details?id=com.mathwallet.android",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc",
-    edge: "https://microsoftedge.microsoft.com/addons/detail/math-wallet/dfeccadlilpndjjohbjdblepmjeahlmm",
     firefox: null,
-    ios: "https://apps.apple.com/us/app/mathwallet5/id1582612388",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: "https://microsoftedge.microsoft.com/addons/detail/math-wallet/dfeccadlilpndjjohbjdblepmjeahlmm",
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "mathwallet://",
+    universal: "https://www.mathwallet.org",
   },
   desktop: {
     native: null,
     universal:
       "https://chrome.google.com/webstore/detail/math-wallet/afbcbjpbpfadlkmhmclhkeeodmamcflc",
   },
-  homepage: "https://mathwallet.org/",
-  id: "org.mathwallet",
-  image_id: "26a8f588-3231-4411-60ce-5bb6b805a700",
-  mobile: {
-    native: "mathwallet://",
-    universal: "https://www.mathwallet.org",
-  },
-  name: "MathWallet",
-  rdns: null,
 } as const;

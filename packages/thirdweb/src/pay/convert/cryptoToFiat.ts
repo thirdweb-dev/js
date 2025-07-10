@@ -26,7 +26,6 @@ export type ConvertCryptoToFiatParams = {
   chain: Chain;
   /**
    * The fiat symbol. e.g "USD"
-   * Only USD is supported at the moment.
    */
   to: SupportedFiatCurrency;
 };
@@ -56,7 +55,7 @@ export type ConvertCryptoToFiatParams = {
 export async function convertCryptoToFiat(
   options: ConvertCryptoToFiatParams,
 ): Promise<{ result: number }> {
-  const { client, fromTokenAddress, chain, fromAmount } = options;
+  const { client, fromTokenAddress, chain, fromAmount, to } = options;
   if (Number(fromAmount) === 0) {
     return { result: 0 };
   }
@@ -74,10 +73,11 @@ export async function convertCryptoToFiat(
     );
   }
   const token = await getToken(client, fromTokenAddress, chain.id);
-  if (token.priceUsd === 0) {
+  const price = token?.prices[to] || 0;
+  if (!token || price === 0) {
     throw new Error(
       `Error: Failed to fetch price for token ${fromTokenAddress} on chainId: ${chain.id}`,
     );
   }
-  return { result: token.priceUsd * fromAmount };
+  return { result: price * fromAmount };
 }

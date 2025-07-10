@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "xyz.joeywallet",
+  name: "Joey Wallet",
+  homepage: "https://joeywallet.xyz/",
+  image_id: "eefe45e8-0a5e-421c-29d0-fd8191e7e600",
   app: {
-    android: "https://play.google.com/store/apps/details?id=xyz.joeywallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/joey-wallet/id6745415911",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=xyz.joeywallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "joey://settings",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://joeywallet.xyz/",
-  id: "xyz.joeywallet",
-  image_id: "eefe45e8-0a5e-421c-29d0-fd8191e7e600",
-  mobile: {
-    native: "joey://settings",
-    universal: null,
-  },
-  name: "Joey Wallet",
-  rdns: null,
 } as const;

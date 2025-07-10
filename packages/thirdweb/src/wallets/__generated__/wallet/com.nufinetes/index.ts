@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.nufinetes",
+  name: "Nufinetes",
+  homepage: "https://www.nufinetes.com",
+  image_id: "4bb6c1ca-4196-4ba3-ece2-c3d335e1f800",
   app: {
+    browser: "https://www.nufinetes.com",
+    ios: "https://apps.apple.com/us/app/nufinetes/id1609562349",
     android:
       "https://play.google.com/store/apps/details?id=com.vimworld.wallet",
-    browser: "https://www.nufinetes.com",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/nufinetes/id1609562349",
-    linux: null,
     mac: "https://apps.apple.com/us/app/nufinetes-desktop/id1629768725",
-    opera: null,
-    safari: null,
     windows:
       "https://d3va9f6jgm4z2y.cloudfront.net/nufinetes-prod/Nufinetes_Windows_latest.exe",
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "vimwallet://",
+    universal: "https://apple.vimworld.org",
   },
   desktop: {
     native: "vimwallet://",
     universal: "https://www.nufinetes.com",
   },
-  homepage: "https://www.nufinetes.com",
-  id: "com.nufinetes",
-  image_id: "4bb6c1ca-4196-4ba3-ece2-c3d335e1f800",
-  mobile: {
-    native: "vimwallet://",
-    universal: "https://apple.vimworld.org",
-  },
-  name: "Nufinetes",
-  rdns: null,
 } as const;

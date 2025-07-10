@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.getcogni",
+  name: "Cogni ",
+  homepage: "https://www.getcogni.com/",
+  image_id: "b650cd08-21eb-4769-8ef9-96feb6e38e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.getcogni.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/cogni-mobile-banking/id1483957512",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.getcogni.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "getcogni://web3/",
+    universal: "https://getcogni.com/web3_wc_connect",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.getcogni.com/",
-  id: "com.getcogni",
-  image_id: "b650cd08-21eb-4769-8ef9-96feb6e38e00",
-  mobile: {
-    native: "getcogni://web3/",
-    universal: "https://getcogni.com/web3_wc_connect",
-  },
-  name: "Cogni ",
-  rdns: null,
 } as const;

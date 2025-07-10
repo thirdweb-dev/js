@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.buzz-up",
+  name: "BUZZUP",
+  homepage: "https://buzz-up.io",
+  image_id: "fb24f0a3-83f5-43e7-2204-25c6348f0000",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.chainon.lsyim",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/6479512180",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.chainon.lsyim",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "buzzup://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://buzz-up.io",
-  id: "io.buzz-up",
-  image_id: "fb24f0a3-83f5-43e7-2204-25c6348f0000",
-  mobile: {
-    native: "buzzup://",
-    universal: null,
-  },
-  name: "BUZZUP",
-  rdns: null,
 } as const;

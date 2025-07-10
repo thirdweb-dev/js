@@ -72,6 +72,25 @@ describe("getClientFetch", () => {
     expect(headers.get("authorization")).toBe(null);
   });
 
+  it("should send clientId, teamId and jwt for bundler requests", () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(new Response());
+    const clientFetch = getClientFetch({
+      clientId: "test-client-id",
+      secretKey: "foo.bar.baz",
+      teamId: "test-team-id",
+    });
+
+    clientFetch("https://84532.bundler.thirdweb-dev.com/v2", {
+      useAuthToken: true, // bundler requests have useAuthToken set to true
+    });
+
+    // biome-ignore lint/suspicious/noExplicitAny: `any` type ok for tests
+    const headers = (global.fetch as any).mock.calls[0][1].headers;
+    expect(headers.get("x-client-id")).toBe("test-client-id");
+    expect(headers.get("x-team-id")).toBe("test-team-id");
+    expect(headers.get("authorization")).toBe("Bearer foo.bar.baz");
+  });
+
   it("should send a bearer token if secret key is a JWT and useAuthToken is true", () => {
     vi.spyOn(global, "fetch").mockResolvedValue(new Response());
     const clientFetch = getClientFetch({

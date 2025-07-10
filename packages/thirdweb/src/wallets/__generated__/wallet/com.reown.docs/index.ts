@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.reown.docs",
+  name: "Kotlin Sample Internal Wallet",
+  homepage: "https://docs.reown.com/walletkit/android/installation",
+  image_id: "2e3866ec-a700-48a2-2db8-7c6af6481900",
   app: {
-    android: "https://github.com/reown-com/reown-kotlin",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://github.com/reown-com/reown-kotlin",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "kotlin-web3wallet://",
+    universal: "https://appkit-lab.reown.com/wallet_internal",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://docs.reown.com/walletkit/android/installation",
-  id: "com.reown.docs",
-  image_id: "2e3866ec-a700-48a2-2db8-7c6af6481900",
-  mobile: {
-    native: "kotlin-web3wallet://",
-    universal: "https://appkit-lab.reown.com/wallet_internal",
-  },
-  name: "Kotlin Sample Internal Wallet",
-  rdns: null,
 } as const;

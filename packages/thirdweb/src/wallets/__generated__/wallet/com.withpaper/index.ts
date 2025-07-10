@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.withpaper",
+  name: "Paper",
+  homepage: "https://withpaper.com",
+  image_id: "37d7a10f-d94d-4a56-c30e-267e8afbd500",
   app: {
-    android: null,
     browser: "https://withpaper.com",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: null,
     mac: "",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://withpaper.com",
   },
   desktop: {
     native: null,
     universal: "https://withpaper.com",
   },
-  homepage: "https://withpaper.com",
-  id: "com.withpaper",
-  image_id: "37d7a10f-d94d-4a56-c30e-267e8afbd500",
-  mobile: {
-    native: null,
-    universal: "https://withpaper.com",
-  },
-  name: "Paper",
-  rdns: null,
 } as const;

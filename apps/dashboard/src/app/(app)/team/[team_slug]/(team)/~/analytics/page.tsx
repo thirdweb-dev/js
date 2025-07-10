@@ -367,7 +367,7 @@ function AppHighlightsCard({
       color: "hsl(var(--chart-2))",
       emptyContent: (
         <EmptyStateContent
-          description="Onramp, swap, and bridge with thirdweb's Universal Bridge."
+          description="Onramp, swap, and bridge with thirdweb's Payments."
           link="https://portal.thirdweb.com/connect/pay/overview"
           metric="Payments"
         />

@@ -63,9 +63,7 @@ export default async function Page(props: {
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
           <div className="relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-1">
-              <h3 className="font-medium text-lg">
-                Get Started with Universal Bridge
-              </h3>
+              <h3 className="font-medium text-lg">Get Started with Payments</h3>
               <p className="text-muted-foreground text-sm">
                 Simple, instant, and secure payments across any token and chain.
               </p>

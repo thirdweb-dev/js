@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.coinex.wallet",
+  name: "CoinEx Wallet",
+  homepage: "https://wallet.coinex.com/en/",
+  image_id: "67650667-cc52-4e7f-2d4b-26fcdb160100",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.viabtc.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/coinex-wallet-crypto-defi/id1462031389",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.viabtc.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "myApp://https://wallet.coinex.com",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://wallet.coinex.com/en/",
-  id: "com.coinex.wallet",
-  image_id: "67650667-cc52-4e7f-2d4b-26fcdb160100",
-  mobile: {
-    native: "myApp://https://wallet.coinex.com",
-    universal: null,
-  },
-  name: "CoinEx Wallet",
-  rdns: null,
 } as const;

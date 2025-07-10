@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.hashpack.wallet",
+  name: "HashPack",
+  homepage: "https://hashpack.app",
+  image_id: "8d55dd5a-7c9f-4929-d2d1-00564e41ac00",
   app: {
+    browser: "https://wallet.hashpack.app/",
+    ios: "https://apps.apple.com/app/id6444389849",
     android:
       "https://play.google.com/store/apps/details?id=app.hashpack.wallet.twa",
-    browser: "https://wallet.hashpack.app/",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/hashpack/gjagmgiddbbciopjhllkdnddhcglnemk",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/app/id6444389849",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.hashpack.wallet",
+  mobile: {
+    native: "hashpack://",
+    universal: "https://link.hashpack.app",
   },
   desktop: {
     native: null,
     universal: "https://link.hashpack.app",
   },
-  homepage: "https://hashpack.app",
-  id: "com.hashpack.wallet",
-  image_id: "8d55dd5a-7c9f-4929-d2d1-00564e41ac00",
-  mobile: {
-    native: "hashpack://",
-    universal: "https://link.hashpack.app",
-  },
-  name: "HashPack",
-  rdns: "com.hashpack.wallet",
 } as const;

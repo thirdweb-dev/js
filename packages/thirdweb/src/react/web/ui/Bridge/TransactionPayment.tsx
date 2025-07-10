@@ -48,6 +48,12 @@ export interface TransactionPaymentProps {
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
 }
 
 export function TransactionPayment({
@@ -55,6 +61,7 @@ export function TransactionPayment({
   client,
   onContinue,
   connectOptions,
+  showThirdwebBranding = true,
 }: TransactionPaymentProps) {
   const theme = useCustomTheme();
   const activeAccount = useActiveAccount();
@@ -121,10 +128,13 @@ export function TransactionPayment({
           }}
         />
 
-        <Spacer y="md" />
-
-        <PoweredByThirdweb />
-        <Spacer y="md" />
+        {showThirdwebBranding ? (
+          <div>
+            <Spacer y="md" />
+            <PoweredByThirdweb />
+            <Spacer y="md" />
+          </div>
+        ) : null}
       </WithHeader>
     );
   }
@@ -342,9 +352,12 @@ export function TransactionPayment({
         />
       )}
 
-      <Spacer y="md" />
-
-      <PoweredByThirdweb />
+      {showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb />
+        </div>
+      ) : null}
       <Spacer y="lg" />
     </WithHeader>
   );

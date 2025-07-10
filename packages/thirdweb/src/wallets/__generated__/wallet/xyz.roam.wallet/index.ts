@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "xyz.roam.wallet",
+  name: "Roam",
+  homepage: "https://roam.xyz",
+  image_id: "a4500b0c-47e3-4c4a-207e-d72a57f1ca00",
   app: {
-    android: "https://google.com",
     browser: null,
-    chrome: "Roam.xyz",
-    edge: "https://google.com",
-    firefox: "https://google.com",
     ios: "https://testflight.apple.com/join/hM8Ba1Qd",
-    linux: "https://google.com",
+    android: "https://google.com",
     mac: "https://google.com",
-    opera: "https://google.com",
-    safari: "https://google.com",
     windows: "https://google.com",
+    linux: "https://google.com",
+    chrome: "Roam.xyz",
+    firefox: "https://google.com",
+    safari: "https://google.com",
+    edge: "https://google.com",
+    opera: "https://google.com",
+  },
+  rdns: "xyz.roam.wallet",
+  mobile: {
+    native: "roam://",
+    universal: null,
   },
   desktop: {
     native: "roam://",
     universal: null,
   },
-  homepage: "https://roam.xyz",
-  id: "xyz.roam.wallet",
-  image_id: "a4500b0c-47e3-4c4a-207e-d72a57f1ca00",
-  mobile: {
-    native: "roam://",
-    universal: null,
-  },
-  name: "Roam",
-  rdns: "xyz.roam.wallet",
 } as const;

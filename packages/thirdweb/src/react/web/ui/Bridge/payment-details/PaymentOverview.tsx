@@ -63,6 +63,7 @@ export function PaymentOverview(props: {
         )}
         {props.paymentMethod.type === "wallet" && (
           <TokenBalanceRow
+            currency={props.uiOptions.currency}
             amount={props.fromAmount}
             client={props.client}
             onClick={() => {}}
@@ -158,6 +159,7 @@ export function PaymentOverview(props: {
               style={{ alignItems: "flex-end" }}
             >
               <FiatValue
+                currency={props.uiOptions.currency}
                 chain={defineChain(props.toToken.chainId)}
                 client={props.client}
                 color="primaryText"
@@ -174,6 +176,7 @@ export function PaymentOverview(props: {
         )}
         {props.uiOptions.mode === "fund_wallet" && (
           <TokenBalanceRow
+            currency={props.uiOptions.currency}
             amount={props.toAmount}
             client={props.client}
             onClick={() => {}}

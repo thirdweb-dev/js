@@ -8,6 +8,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
 } from "thirdweb";
+import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import {
@@ -21,13 +22,18 @@ import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import { LaunchTokenStatus } from "./launch/launch-token";
 import { TokenInfoFieldset } from "./token-info/token-info-fieldset";
 
+type CreateTokenFunctionsParams = {
+  values: CreateAssetFormValues;
+  gasless: boolean;
+};
+
 export type CreateTokenFunctions = {
-  deployContract: (values: CreateAssetFormValues) => Promise<{
+  deployContract: (params: CreateTokenFunctionsParams) => Promise<{
     contractAddress: string;
   }>;
-  setClaimConditions: (values: CreateAssetFormValues) => Promise<void>;
-  mintTokens: (values: CreateAssetFormValues) => Promise<void>;
-  airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
+  setClaimConditions: (params: CreateTokenFunctionsParams) => Promise<void>;
+  mintTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
+  airdropTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
 };
 
 const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
@@ -44,12 +50,11 @@ export function CreateTokenAssetPageUI(props: {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
   );
+  const activeWalletChain = useActiveWalletChain();
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
-    resolver: zodResolver(tokenInfoFormSchema),
-    reValidateMode: "onChange",
-    values: {
-      chain: "1",
+    defaultValues: {
+      chain: activeWalletChain?.id.toString() || "1",
       description: "",
       image: undefined,
       name: "",
@@ -65,6 +70,8 @@ export function CreateTokenAssetPageUI(props: {
       ],
       symbol: "",
     },
+    resolver: zodResolver(tokenInfoFormSchema),
+    reValidateMode: "onChange",
   });
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({

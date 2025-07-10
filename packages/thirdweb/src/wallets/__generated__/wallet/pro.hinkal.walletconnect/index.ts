@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "pro.hinkal.walletconnect",
+  name: "Hinkal Wallet",
+  homepage: "https://hinkal.pro",
+  image_id: "9618af59-f333-4e56-09f1-dd1e24cca800",
   app: {
-    android: null,
     browser: "https://hinkal.pro",
+    ios: null,
+    android: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chromewebstore.google.com/detail/hinkal-wallet/khfjgapjfcdoffmklchibpepboholpbe",
-    edge: null,
     firefox: null,
-    ios: null,
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "pro.hinkal.walletconnect",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://hinkal.pro",
-  id: "pro.hinkal.walletconnect",
-  image_id: "9618af59-f333-4e56-09f1-dd1e24cca800",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "Hinkal Wallet",
-  rdns: "pro.hinkal.walletconnect",
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.bitnovo",
+  name: "Bitnovo Wallet",
+  homepage: "https://bitnovo.com",
+  image_id: "c22b2af0-15a0-4e35-3417-1378b8239100",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.bitnovo.Wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/es/app/bitnovo-compra-bitcoin/id1553430666",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.bitnovo.Wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "bitnovowallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://bitnovo.com",
-  id: "com.bitnovo",
-  image_id: "c22b2af0-15a0-4e35-3417-1378b8239100",
-  mobile: {
-    native: "bitnovowallet://",
-    universal: null,
-  },
-  name: "Bitnovo Wallet",
-  rdns: null,
 } as const;

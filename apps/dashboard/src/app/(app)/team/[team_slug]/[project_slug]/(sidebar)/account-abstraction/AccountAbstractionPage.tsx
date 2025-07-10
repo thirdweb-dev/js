@@ -1,10 +1,6 @@
 "use client";
 
 import { SmartWalletsBillingAlert } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/Alerts";
-import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
-import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
-import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { AAFooter } from "./AAFooterSection";
@@ -44,10 +40,6 @@ export function AccountAbstractionLayout(props: {
           {props.hasSmartWalletsWithoutBilling && (
             <SmartWalletsBillingAlert teamSlug={props.teamSlug} />
           )}
-          <GasCreditAlert
-            projectId={props.projectId}
-            teamSlug={props.teamSlug}
-          />
         </div>
 
         <div className="h-4" />
@@ -87,42 +79,5 @@ export function AccountAbstractionLayout(props: {
         </div>
       </div>
     </div>
-  );
-}
-
-function GasCreditAlert(props: { teamSlug: string; projectId: string }) {
-  return (
-    <DismissibleAlert
-      description={
-        <>
-          Redeem credits towards gas Sponsorship. <br className="lg:hidden" />
-          <UnderlineLink
-            href="https://thirdweb.com/superchain"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn More
-          </UnderlineLink>
-          <div className="mt-4 flex items-center gap-4">
-            <Button
-              asChild
-              className="bg-background"
-              size="sm"
-              variant="outline"
-            >
-              <Link
-                className="gap-2"
-                href={`/team/${props.teamSlug}/~/settings/credits`}
-                target="_blank"
-              >
-                Claim your credits <ArrowRightIcon className="size-4" />
-              </Link>
-            </Button>
-          </div>
-        </>
-      }
-      localStorageId={`${props.projectId}-gas-credit-alert`}
-      title="OP Gas Credit Program"
-    />
   );
 }

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import type { Token } from "../../../../../bridge/index.js";
 import { getCachedChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { spacing } from "../../../../core/design-system/index.js";
 import { FiatValue } from "../../ConnectWallet/screens/Buy/swap/FiatValue.js";
@@ -16,12 +17,14 @@ export function TokenBalanceRow({
   amount,
   onClick,
   style,
+  currency,
 }: {
   client: ThirdwebClient;
   token: Token;
   amount: string;
   onClick: (token: Token) => void;
   style?: React.CSSProperties;
+  currency?: SupportedFiatCurrency;
 }) {
   const chain = getCachedChain(token.chainId);
   return (
@@ -66,6 +69,7 @@ export function TokenBalanceRow({
           }}
         >
           <FiatValue
+            currency={currency}
             chain={chain}
             client={client}
             color="primaryText"

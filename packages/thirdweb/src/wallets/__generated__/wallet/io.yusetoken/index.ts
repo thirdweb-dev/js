@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.yusetoken",
+  name: "Yuse Wallet",
+  homepage: "https://yusetoken.io/",
+  image_id: "2cd61458-59c2-4208-c8ee-98b5e0076b00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.yuse.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/yuse-wallet/id6449364813",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.yuse.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "yuse://wallet://",
+    universal: "https://yusewallet.page.link/tobR",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://yusetoken.io/",
-  id: "io.yusetoken",
-  image_id: "2cd61458-59c2-4208-c8ee-98b5e0076b00",
-  mobile: {
-    native: "yuse://wallet://",
-    universal: "https://yusewallet.page.link/tobR",
-  },
-  name: "Yuse Wallet",
-  rdns: null,
 } as const;
