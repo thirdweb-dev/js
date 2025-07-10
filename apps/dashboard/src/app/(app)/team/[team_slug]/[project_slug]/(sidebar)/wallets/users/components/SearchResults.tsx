@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import type { ThirdwebClient } from "thirdweb";
+import type { WalletUser } from "thirdweb/wallets";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,14 +12,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { UserSearchResult } from "./types";
 
-const getUserIdentifier = (user: UserSearchResult) => {
-  return user.email ?? user.phone ?? user.walletAddress ?? user.userId;
+const getUserIdentifier = (user: WalletUser) => {
+  const mainDetail = user.linkedAccounts[0]?.details;
+  return (
+    mainDetail?.email ??
+    mainDetail?.phone ??
+    mainDetail?.address ??
+    mainDetail?.id ??
+    user.id
+  );
 };
 
 export function SearchResults(props: {
-  results: UserSearchResult[];
+  results: WalletUser[];
   client: ThirdwebClient;
 }) {
   if (props.results.length === 0) {
@@ -38,93 +45,105 @@ export function SearchResults(props: {
 
   return (
     <div className="space-y-4">
-      {props.results.map((user) => (
-        <Card key={user.userId}>
-          <CardHeader>
-            <CardTitle className="text-lg">User Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  User Identifier
-                </p>
-                <p className="text-sm">{getUserIdentifier(user)}</p>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Wallet Address
-                </p>
-                <WalletAddress
-                  address={user.walletAddress}
-                  client={props.client}
-                />
-              </div>
-
-              {user.email && (
+      {props.results.map((user) => {
+        const walletAddress = user.wallets?.[0]?.address;
+        const createdAt = user.wallets?.[0]?.createdAt;
+        const mainDetail = user.linkedAccounts?.[0]?.details;
+        const email = mainDetail?.email as string | undefined;
+        const phone = mainDetail?.phone as string | undefined;
+        
+        return (
+          <Card key={user.id}>
+            <CardHeader>
+              <CardTitle className="text-lg">User Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Email
+                    User Identifier
                   </p>
-                  <p className="text-sm">{user.email}</p>
+                  <p className="text-sm">{getUserIdentifier(user)}</p>
                 </div>
-              )}
 
-              {user.phone && (
+                {walletAddress && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Wallet Address
+                    </p>
+                    <WalletAddress
+                      address={walletAddress}
+                      client={props.client}
+                    />
+                  </div>
+                )}
+
+                {email && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Email
+                    </p>
+                    <p className="text-sm">{email}</p>
+                  </div>
+                )}
+
+                {phone && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Phone
+                    </p>
+                    <p className="text-sm">{phone}</p>
+                  </div>
+                )}
+
+                {createdAt && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Created
+                    </p>
+                    <p className="text-sm">
+                      {format(new Date(createdAt), "MMM dd, yyyy")}
+                    </p>
+                  </div>
+                )}
+
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Phone
+                    Login Methods
                   </p>
-                  <p className="text-sm">{user.phone}</p>
-                </div>
-              )}
-
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Created
-                </p>
-                <p className="text-sm">
-                  {format(new Date(user.createdAt), "MMM dd, yyyy")}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Login Methods
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {user.linkedAccounts.map((account, index) => (
-                    <TooltipProvider
-                      key={`${user.userId}-${account.type}-${index}`}
-                    >
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Badge variant="secondary" className="text-xs">
-                            {account.type}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="text-sm space-y-1">
-                            {Object.entries(account.details).map(
-                              ([key, value]) => (
-                                <div key={key}>
-                                  <span className="font-medium">{key}:</span>{" "}
-                                  {String(value)}
-                                </div>
-                              ),
-                            )}
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
+                  <div className="flex flex-wrap gap-1">
+                    {user.linkedAccounts?.map((account, index) => (
+                      <TooltipProvider
+                        key={`${user.id}-${account.type}-${index}`}
+                      >
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Badge variant="secondary" className="text-xs">
+                              {account.type}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className="text-sm space-y-1">
+                              {Object.entries(account.details).map(
+                                ([key, value]) => (
+                                  <div key={key}>
+                                    <span className="font-medium">{key}:</span>{" "}
+                                    {String(value)}
+                                  </div>
+                                ),
+                              )}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

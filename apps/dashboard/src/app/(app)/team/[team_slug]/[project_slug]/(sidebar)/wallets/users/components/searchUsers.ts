@@ -1,30 +1,30 @@
-import type { SearchParams, SearchType, UserSearchResult } from "./types";
+import type { WalletUser } from "thirdweb/wallets";
+import { THIRDWEB_EWS_API_HOST } from "@/constants/urls";
+import type { SearchType } from "./types";
 
 export async function searchUsers(
   authToken: string,
+  clientId: string,
   searchType: SearchType,
   query: string,
-): Promise<UserSearchResult[]> {
-  const url = new URL(
-    "https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details",
-  );
-
-  // Map search type to query parameter
-  const queryByMap: Record<SearchType, string> = {
-    email: "email",
-    phone: "phone",
-    id: "id",
-    address: "walletAddress",
+): Promise<WalletUser[]> {
+  const url = new URL(`${THIRDWEB_EWS_API_HOST}/api/2024-05-05/account/list`);
+  
+  // Add clientId parameter
+  url.searchParams.append("clientId", clientId);
+  
+  // Add filter parameter as JSON string
+  const filter = {
+    field: searchType === "address" ? "walletAddress" : searchType,
+    value: query,
   };
-
-  const queryBy = queryByMap[searchType];
-  url.searchParams.append("queryBy", queryBy);
-  url.searchParams.append(queryBy, query);
+  url.searchParams.append("filter", JSON.stringify(filter));
 
   const response = await fetch(url.toString(), {
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
+      "x-client-id": clientId,
     },
     method: "GET",
   });
@@ -36,5 +36,5 @@ export async function searchUsers(
   }
 
   const data = await response.json();
-  return data as UserSearchResult[];
+  return data.users as WalletUser[];
 }

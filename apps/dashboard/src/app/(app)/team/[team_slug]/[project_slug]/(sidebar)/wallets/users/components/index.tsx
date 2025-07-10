@@ -25,7 +25,7 @@ import { SearchInput } from "./SearchInput";
 import { AdvancedSearchInput } from "./AdvancedSearchInput";
 import { SearchResults } from "./SearchResults";
 import { searchUsers } from "./searchUsers";
-import type { SearchType, UserSearchResult } from "./types";
+import type { SearchType } from "./types";
 
 const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
@@ -115,7 +115,7 @@ export function InAppWalletUsersPageContent(props: {
 
   const [activePage, setActivePage] = useState(1);
   const [searchValue, setSearchValue] = useState("");
-  const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<WalletUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearchResults, setHasSearchResults] = useState(false);
   const walletsQuery = useEmbeddedWallets({
@@ -157,7 +157,7 @@ export function InAppWalletUsersPageContent(props: {
   const handleSearch = async (searchType: SearchType, query: string) => {
     setIsSearching(true);
     try {
-      const results = await searchUsers(props.authToken, searchType, query);
+      const results = await searchUsers(props.authToken, props.projectClientId, searchType, query);
       setSearchResults(results);
       setHasSearchResults(true);
     } catch (error) {
