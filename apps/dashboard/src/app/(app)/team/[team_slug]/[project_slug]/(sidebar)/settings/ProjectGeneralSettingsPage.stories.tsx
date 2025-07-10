@@ -47,6 +47,7 @@ function Story(props: { isOwnerAccount: boolean }) {
             data: {
               secret: `sk_${new Array(86).fill("x").join("")}`,
               secretMasked: "sk_123...4567",
+              secretHash: "sk_123...4567",
             },
           };
         }}

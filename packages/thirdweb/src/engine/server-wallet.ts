@@ -35,9 +35,10 @@ export type ServerWalletOptions = {
    */
   client: ThirdwebClient;
   /**
-   * The vault access token to use your server wallet.
+   * Optional vault access token to use your server wallet.
+   * If not provided, the server wallet will use the project secret key to authenticate.
    */
-  vaultAccessToken: string;
+  vaultAccessToken?: string;
   /**
    * The server wallet address to use for sending transactions inside engine.
    */
@@ -152,9 +153,11 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
   const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
 
-  const headers: HeadersInit = {
-    "x-vault-access-token": vaultAccessToken,
-  };
+  const headers: HeadersInit = vaultAccessToken
+    ? {
+        "x-vault-access-token": vaultAccessToken,
+      }
+    : {};
 
   const getExecutionOptionsWithChainId = (
     chainId: number,

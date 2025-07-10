@@ -203,7 +203,6 @@ const client = createThirdwebClient({
 const serverWallet = Engine.serverWallet({
   client,
   address: "<your-server-wallet-address>",
-  vaultAccessToken: "<your-vault-access-token>",
 });
 
 // Prepare the transaction
@@ -241,7 +240,6 @@ const curlExample = () => `\
 curl -X POST "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract" \\
   -H "Content-Type: application/json" \\
   -H "x-secret-key: <your-project-secret-key>" \\
-  -H "x-vault-access-token: <your-vault-access-token>" \\
   -d '{
     "executionOptions": {
       "from": "<your-server-wallet-address>",
@@ -264,7 +262,6 @@ const response = await fetch(
     headers: {
       "Content-Type": "application/json",
       "x-secret-key": "<your-project-secret-key>",
-      "x-vault-access-token": "<your-vault-access-token>"
     },
     body: JSON.stringify({
       "executionOptions": {
@@ -290,7 +287,6 @@ url = "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract"
 headers = {
     "Content-Type": "application/json",
     "x-secret-key": "<your-project-secret-key>",
-    "x-vault-access-token": "<your-vault-access-token>"
 }
 payload = {
     "executionOptions": {
@@ -355,7 +351,6 @@ func main() {
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-secret-key", "<your-project-secret-key>")
-	req.Header.Set("x-vault-access-token", "<your-vault-access-token>")
 
 	// Send the request
 	client := &http.Client{}
@@ -408,7 +403,6 @@ class Program
 
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-secret-key", "<your-project-secret-key>");
-        httpClient.DefaultRequestHeaders.Add("x-vault-access-token", "<your-vault-access-token>");
 
         var response = await httpClient.PostAsync(url, content);
         var responseContent = await response.Content.ReadAsStringAsync();
