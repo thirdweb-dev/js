@@ -1,6 +1,5 @@
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../utils/units.js";
-import { getCurrencyMeta } from "./Buy/fiat/currencies.js";
 
 /**
  * @internal
@@ -34,11 +33,17 @@ export function formatTokenAmount(
   ).toString();
 }
 
-export function formatCurrencyAmount(
-  currency: string,
-  amount: number,
-  decimals = 2,
-) {
-  const symbol = getCurrencyMeta(currency).symbol;
-  return `${symbol}${formatNumber(amount, decimals).toFixed(decimals)}`;
+export function formatCurrencyAmount(currency: string, amount: number) {
+  return formatMoney(amount, "en-US", currency);
+}
+
+function formatMoney(
+  value: number,
+  locale: string,
+  currencyCode: string,
+): string {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currencyCode,
+  }).format(value);
 }
