@@ -6,10 +6,6 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
-import {
-  getContract,
-  type ThirdwebContract,
-} from "../../../contract/contract.js";
 import { parseEventLogs } from "../../../event/actions/parse-logs.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { sessionCreatedEvent } from "../__generated__/MinimalAccount/events/SessionCreated.js";
@@ -25,7 +21,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   () => {
     const chainId = 11155111;
     let account: Account;
-    let accountContract: ThirdwebContract;
 
     beforeAll(async () => {
       // Create 7702 Smart EOA
@@ -50,13 +45,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           to: account.address,
           value: 0n,
         }),
-      });
-
-      // Will auto resolve abi since it's deployed
-      accountContract = getContract({
-        address: account.address,
-        chain: defineChain(chainId),
-        client: TEST_CLIENT,
       });
     }, 120_000);
 

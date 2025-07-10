@@ -1,8 +1,8 @@
-import type { ThirdwebClient } from "../../../client/client.js";
 import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { getContract } from "../../../contract/contract.js";
 import {
   createSessionWithSig,
   isCreateSessionWithSigSupported,
