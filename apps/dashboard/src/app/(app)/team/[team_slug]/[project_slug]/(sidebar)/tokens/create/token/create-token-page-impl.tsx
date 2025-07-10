@@ -1,6 +1,5 @@
 "use client";
 import { useRef } from "react";
-import { toast } from "sonner";
 import {
   defineChain,
   getContract,
@@ -15,16 +14,14 @@ import {
 } from "thirdweb/assets";
 import { approve } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
+import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
-
-import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useAddContractToProject } from "@/hooks/project-contracts";
-import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { parseError } from "@/utils/errorParser";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
 import type { CreateAssetFormValues } from "./_common/form";
@@ -40,18 +37,49 @@ export function CreateTokenAssetPage(props: {
   projectSlug: string;
   teamPlan: Team["billingPlan"];
 }) {
-  const account = useActiveAccount();
-  const { idToChain } = useAllChainsData();
+  const activeAccount = useActiveAccount();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
-  async function deployContract(formValues: CreateAssetFormValues) {
-    if (!account) {
-      toast.error("No Connected Wallet");
+  function getAccount(gasless: boolean) {
+    if (!activeAccount) {
       throw new Error("No Connected Wallet");
     }
 
-    const socialUrls = formValues.socialUrls.reduce(
+    if (gasless) {
+      return create7702MinimalAccount({
+        adminAccount: activeAccount,
+        client: props.client,
+        sponsorGas: true,
+      });
+    }
+    return activeAccount;
+  }
+
+  function getDeployedContract(params: { chain: string }) {
+    const contractAddress = contractAddressRef.current;
+
+    if (!contractAddress) {
+      throw new Error("Contract address not set");
+    }
+
+    // eslint-disable-next-line no-restricted-syntax
+    const chain = defineChain(Number(params.chain));
+
+    return getContract({
+      address: contractAddress,
+      chain,
+      client: props.client,
+    });
+  }
+
+  async function deployContract(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const account = getAccount(params.gasless);
+
+    const socialUrls = params.values.socialUrls.reduce(
       (acc, url) => {
         if (url.url && url.platform) {
           acc[url.platform] = url.url;
@@ -63,25 +91,25 @@ export function CreateTokenAssetPage(props: {
 
     try {
       const salePercent =
-        formValues.saleMode === "pool"
-          ? Number(formValues.saleAllocationPercentage)
+        params.values.saleMode === "pool"
+          ? Number(params.values.saleAllocationPercentage)
           : 0;
 
-      const saleAmount = Number(formValues.supply) * (salePercent / 100);
+      const saleAmount = Number(params.values.supply) * (salePercent / 100);
 
       const contractAddress = await createToken({
         account,
         // eslint-disable-next-line no-restricted-syntax
-        chain: defineChain(Number(formValues.chain)),
+        chain: defineChain(Number(params.values.chain)),
         client: props.client,
         launchConfig:
-          formValues.saleMode === "pool" && saleAmount !== 0
+          params.values.saleMode === "pool" && saleAmount !== 0
             ? {
                 config: {
                   amount: BigInt(saleAmount),
                   initialTick: getInitialTickValue({
                     startingPricePerToken: Number(
-                      formValues.pool.startingPricePerToken,
+                      params.values.pool.startingPricePerToken,
                     ),
                   }),
                   referrerRewardBps: 5000, // 50%
@@ -90,19 +118,19 @@ export function CreateTokenAssetPage(props: {
               }
             : undefined,
         params: {
-          description: formValues.description,
-          image: formValues.image,
-          maxSupply: BigInt(formValues.supply),
-          name: formValues.name,
+          description: params.values.description,
+          image: params.values.image,
+          maxSupply: BigInt(params.values.supply),
+          name: params.values.name,
           social_urls: socialUrls,
-          symbol: formValues.symbol,
+          symbol: params.values.symbol,
         },
         referrerAddress: "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94",
       });
 
       // add contract to project in background
       addContractToProject.mutateAsync({
-        chainId: formValues.chain,
+        chainId: params.values.chain,
         contractAddress: contractAddress,
         contractType: "ERC20Asset",
         deploymentType: "asset",
@@ -112,7 +140,7 @@ export function CreateTokenAssetPage(props: {
 
       reportContractDeployed({
         address: contractAddress,
-        chainId: Number(formValues.chain),
+        chainId: Number(params.values.chain),
         contractName: "DropERC20",
         deploymentType: "asset",
         publisher: account.address,
@@ -140,30 +168,15 @@ export function CreateTokenAssetPage(props: {
     }
   }
 
-  async function airdropTokens(formValues: CreateAssetFormValues) {
-    const contractAddress = contractAddressRef.current;
+  async function airdropTokens(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
+    const account = getAccount(gasless);
+    const contract = getDeployedContract({ chain: values.chain });
 
-    if (!contractAddress) {
-      throw new Error("No contract address");
-    }
-
-    if (!account) {
-      throw new Error("No connected account");
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineDashboardChain(
-      Number(formValues.chain),
-      idToChain.get(Number(formValues.chain)),
-    );
-
-    const tokenContract = getContract({
-      address: contractAddress,
-      chain,
-      client: props.client,
-    });
-
-    const totalAmountToAirdrop = formValues.airdropAddresses.reduce(
+    const totalAmountToAirdrop = values.airdropAddresses.reduce(
       (acc, recipient) => acc + BigInt(recipient.quantity),
       0n,
     );
@@ -172,7 +185,7 @@ export function CreateTokenAssetPage(props: {
 
     try {
       const entrypoint = await getDeployedEntrypointERC20({
-        chain,
+        chain: contract.chain,
         client: props.client,
       });
 
@@ -182,7 +195,7 @@ export function CreateTokenAssetPage(props: {
 
       const approvalTx = approve({
         amountWei: toWei(totalAmountToAirdrop.toString()),
-        contract: tokenContract,
+        contract: contract,
         spender: entrypoint.address,
       });
 
@@ -205,14 +218,13 @@ export function CreateTokenAssetPage(props: {
 
     try {
       const airdropTx = await distributeToken({
-        // eslint-disable-next-line no-restricted-syntax
-        chain,
+        chain: contract.chain,
         client: props.client,
-        contents: formValues.airdropAddresses.map((recipient) => ({
+        contents: values.airdropAddresses.map((recipient) => ({
           amount: BigInt(recipient.quantity),
           recipient: recipient.address,
         })),
-        tokenAddress: contractAddress,
+        tokenAddress: contract.address,
       });
 
       await sendAndConfirmTransaction({

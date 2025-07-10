@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "co.cyber.wallet",
+  name: "CyberWallet",
+  homepage: "https://wallet.cyber.co",
+  image_id: "24887576-8e74-4518-36b3-3c5e13f11a00",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://wallet.cyber.co",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://wallet.cyber.co",
   },
   desktop: {
     native: null,
     universal: "https://wallet.cyber.co",
   },
-  homepage: "https://wallet.cyber.co",
-  id: "co.cyber.wallet",
-  image_id: "24887576-8e74-4518-36b3-3c5e13f11a00",
-  mobile: {
-    native: null,
-    universal: "https://wallet.cyber.co",
-  },
-  name: "CyberWallet",
-  rdns: null,
 } as const;

@@ -45,6 +45,7 @@ export function ErrorBanner({
         error: error.message,
         event: "ub:ui:error",
       });
+      return true;
     },
     queryKey: ["error_banner", userMessage],
   });

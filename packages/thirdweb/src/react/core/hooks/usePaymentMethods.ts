@@ -106,7 +106,9 @@ export function usePaymentMethods(options: {
               decimals: b.decimals,
               iconUri: "",
               name: b.name,
-              priceUsd: 0,
+              prices: {
+                USD: 0,
+              },
               symbol: b.symbol,
             } as Token,
           }));
@@ -141,11 +143,18 @@ export function usePaymentMethods(options: {
               limit: 100,
               maxSteps: 3,
               originChainId: chainId,
-              sortBy: "popularity",
             });
 
             // Add all origin tokens from this chain's routes
             for (const route of routesForChain) {
+              // Skip if the origin token is the same as the destination token, will be added later only if includeDestinationToken is true
+              if (
+                route.originToken.chainId === destinationToken.chainId &&
+                route.originToken.address.toLowerCase() ===
+                  destinationToken.address.toLowerCase()
+              ) {
+                continue;
+              }
               const tokenKey = `${route.originToken.chainId}-${route.originToken.address.toLowerCase()}`;
               allValidOriginTokens.set(tokenKey, route.originToken);
             }
@@ -176,10 +185,10 @@ export function usePaymentMethods(options: {
       validOwnedTokens.sort((a, b) => {
         const aDollarBalance =
           Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
-          a.originToken.priceUsd;
+          (a.originToken.prices["USD"] || 0);
         const bDollarBalance =
           Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-          b.originToken.priceUsd;
+          (b.originToken.prices["USD"] || 0);
         return bDollarBalance - aDollarBalance;
       });
 

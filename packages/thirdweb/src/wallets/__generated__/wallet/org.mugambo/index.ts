@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.mugambo",
+  name: "rss wallet",
+  homepage: "https://mugambo.org",
+  image_id: "920c743d-950f-4d53-64ec-d342e272e500",
   app: {
-    android: "https://bo.centapey.com/rsswallet_2.0.2.3.apk",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: "https://bo.centapey.com/rsswallet_2.0.2.3.apk",
+    android: "https://bo.centapey.com/rsswallet_2.0.2.3.apk",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: "https://bo.centapey.com/rsswallet_2.0.2.3.apk",
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "rsswallet://rss.app.link",
+    universal: "https://rss.app.link/rsswallet",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://mugambo.org",
-  id: "org.mugambo",
-  image_id: "920c743d-950f-4d53-64ec-d342e272e500",
-  mobile: {
-    native: "rsswallet://rss.app.link",
-    universal: "https://rss.app.link/rsswallet",
-  },
-  name: "rss wallet",
-  rdns: null,
 } as const;

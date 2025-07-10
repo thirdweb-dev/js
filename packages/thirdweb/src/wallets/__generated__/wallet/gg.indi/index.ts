@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "gg.indi",
+  name: "IndiGG",
+  homepage: "https://indi.gg",
+  image_id: "8e90a32f-130d-4317-7294-4884510aa300",
   app: {
+    browser: "https://indi.gg/",
+    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.indiggcommunity&hl=en_US",
-    browser: "https://indi.gg/",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: null,
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "indigg://walletconnect",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://indi.gg/",
   },
-  homepage: "https://indi.gg",
-  id: "gg.indi",
-  image_id: "8e90a32f-130d-4317-7294-4884510aa300",
-  mobile: {
-    native: "indigg://walletconnect",
-    universal: null,
-  },
-  name: "IndiGG",
-  rdns: null,
 } as const;

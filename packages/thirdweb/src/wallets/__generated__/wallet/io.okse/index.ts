@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.okse",
+  name: "Okse Wallet",
+  homepage: "https://okse.io",
+  image_id: "8a1b36d5-7f40-403a-7000-5d30f9181200",
   app: {
-    android: "https://play.google.com/store/apps/details?id=wallet.okse.io",
     browser: "https://okse.io",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/okse-wallet-card/id1555914591",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=wallet.okse.io",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "oksewallet://",
+    universal: "https://okse.io/",
   },
   desktop: {
     native: null,
     universal: "https://okse.io",
   },
-  homepage: "https://okse.io",
-  id: "io.okse",
-  image_id: "8a1b36d5-7f40-403a-7000-5d30f9181200",
-  mobile: {
-    native: "oksewallet://",
-    universal: "https://okse.io/",
-  },
-  name: "Okse Wallet",
-  rdns: null,
 } as const;

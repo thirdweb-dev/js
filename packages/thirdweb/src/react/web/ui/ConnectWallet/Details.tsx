@@ -20,6 +20,7 @@ import {
 } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
+import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
@@ -61,7 +62,10 @@ import type {
   ConnectButtonProps,
   PayUIOptions,
 } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainFaucets } from "../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainFaucets,
+  useChainMetadata,
+} from "../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
@@ -80,6 +84,7 @@ import type {
 } from "../../../core/utils/defaultTokens.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
+import { BuyWidget } from "../Bridge/BuyWidget.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { ChainActiveDot } from "../components/ChainActiveDot.js";
@@ -116,7 +121,6 @@ import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
-import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
 import { LinkedProfilesScreen } from "./screens/LinkedProfilesScreen.js";
 import { LinkProfileScreen } from "./screens/LinkProfileScreen.js";
@@ -390,6 +394,7 @@ export function DetailsModal(props: {
 
   const activeWallet = useActiveWallet();
   const chainFaucetsQuery = useChainFaucets(walletChain);
+  const chainMetadataQuery = useChainMetadata(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
 
@@ -622,33 +627,35 @@ export function DetailsModal(props: {
                 </Button>
               )}
 
-              {!hideBuyFunds && (
-                <Button
-                  onClick={() => {
-                    trackPayEvent({
-                      client: client,
-                      event: "details_modal_buy_click",
-                      walletAddress: activeAccount?.address,
-                      walletType: activeWallet?.id,
-                    });
-                    setScreen("buy");
-                  }}
-                  style={{
-                    alignItems: "center",
-                    display: "flex",
-                    flex: 1,
-                    fontSize: fontSize.sm,
-                    gap: spacing.xs,
-                    padding: spacing.sm,
-                  }}
-                  variant="outline"
-                >
-                  <Container center="both" color="secondaryText" flex="row">
-                    <PlusIcon height={iconSize.sm} width={iconSize.sm} />
-                  </Container>
-                  {locale.buy}
-                </Button>
-              )}
+              {!hideBuyFunds &&
+                chainMetadataQuery.data &&
+                !chainMetadataQuery.data.testnet && (
+                  <Button
+                    onClick={() => {
+                      trackPayEvent({
+                        client: client,
+                        event: "details_modal_buy_click",
+                        walletAddress: activeAccount?.address,
+                        walletType: activeWallet?.id,
+                      });
+                      setScreen("buy");
+                    }}
+                    style={{
+                      alignItems: "center",
+                      display: "flex",
+                      flex: 1,
+                      fontSize: fontSize.sm,
+                      gap: spacing.xs,
+                      padding: spacing.sm,
+                    }}
+                    variant="outline"
+                  >
+                    <Container center="both" color="secondaryText" flex="row">
+                      <PlusIcon height={iconSize.sm} width={iconSize.sm} />
+                    </Container>
+                    {locale.buy}
+                  </Button>
+                )}
             </Container>
           </Container>
 
@@ -956,23 +963,26 @@ export function DetailsModal(props: {
 
   // thirdweb pay
   else if (screen === "buy") {
+    const requestedChainId =
+      props.detailsModal?.payOptions?.prefillBuy?.chain?.id ||
+      walletChain?.id ||
+      props.chains[0]?.id ||
+      1;
     content = (
-      <LazyBuyScreen
+      <BuyWidget
+        amount={props.detailsModal?.payOptions?.prefillBuy?.amount || "0.01"}
+        chain={getCachedChain(requestedChainId)}
         client={client}
-        connectLocale={locale}
-        connectOptions={undefined}
         hiddenWallets={props.detailsModal?.hiddenWallets}
-        isEmbed={false}
-        onBack={() => setScreen("main")}
-        onDone={closeModal}
-        payOptions={
-          props.detailsModal?.payOptions || {
-            mode: "fund_wallet",
-          }
-        }
+        locale={locale.id}
+        onCancel={() => setScreen("main")}
+        onSuccess={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        title={locale.buy}
+        tokenAddress={
+          props.displayBalanceToken?.[Number(requestedChainId)] as
+            | `0x${string}`
+            | undefined
+        }
       />
     );
   }

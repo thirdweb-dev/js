@@ -18,8 +18,10 @@ import {
   lazyMint as lazyMint1155,
   setClaimConditions as setClaimConditions1155,
 } from "thirdweb/extensions/erc1155";
+import { grantRole } from "thirdweb/extensions/permissions";
 import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
+import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {
   reportAssetCreationFailed,
@@ -41,15 +43,26 @@ export function CreateNFTPage(props: {
   teamPlan: Team["billingPlan"];
 }) {
   const activeAccount = useActiveAccount();
-
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
 
-  function getContractAndAccount(params: { chain: string }) {
+  function getAccount(params: { gasless: boolean }) {
     if (!activeAccount) {
       throw new Error("Wallet is not connected");
     }
 
+    if (params.gasless) {
+      return create7702MinimalAccount({
+        adminAccount: activeAccount,
+        client: props.client,
+        sponsorGas: true,
+      });
+    }
+
+    return activeAccount;
+  }
+
+  function getDeployedContract(params: { chain: string }) {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(params.chain));
 
@@ -59,30 +72,26 @@ export function CreateNFTPage(props: {
       throw new Error("Contract not found");
     }
 
-    const contract = getContract({
+    return getContract({
       address: contractAddress,
       chain,
       client: props.client,
     });
-
-    return {
-      activeAccount,
-      contract,
-    };
   }
 
   async function handleContractDeploy(params: {
     values: CreateNFTCollectionAllValues;
     ercType: "erc721" | "erc1155";
+    gasless: boolean;
   }) {
     const { values: formValues, ercType } = params;
     const { collectionInfo, sales } = formValues;
     const contractType =
       ercType === "erc721" ? ("DropERC721" as const) : ("DropERC1155" as const);
 
-    if (!activeAccount) {
-      throw new Error("Wallet is not connected");
-    }
+    const account = getAccount({
+      gasless: params.gasless,
+    });
 
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(collectionInfo.chain));
@@ -92,7 +101,7 @@ export function CreateNFTPage(props: {
 
       if (ercType === "erc721") {
         contractAddress = await deployERC721Contract({
-          account: activeAccount,
+          account,
           chain: chain,
           client: props.client,
           params: {
@@ -109,7 +118,7 @@ export function CreateNFTPage(props: {
         });
       } else {
         contractAddress = await deployERC1155Contract({
-          account: activeAccount,
+          account,
           chain: chain,
           client: props.client,
           params: {
@@ -165,27 +174,32 @@ export function CreateNFTPage(props: {
   }
 
   async function handleLazyMintNFTs(params: {
-    formValues: CreateNFTCollectionAllValues;
+    values: CreateNFTCollectionAllValues;
     ercType: "erc721" | "erc1155";
+    gasless: boolean;
   }) {
-    const { formValues, ercType } = params;
+    const { values, ercType } = params;
     const contractType =
       ercType === "erc721" ? ("DropERC721" as const) : ("DropERC1155" as const);
 
-    const { contract, activeAccount } = getContractAndAccount({
-      chain: formValues.collectionInfo.chain,
+    const contract = getDeployedContract({
+      chain: values.collectionInfo.chain,
+    });
+
+    const account = getAccount({
+      gasless: params.gasless,
     });
 
     const lazyMintFn = ercType === "erc721" ? lazyMint721 : lazyMint1155;
 
     const transaction = lazyMintFn({
       contract,
-      nfts: formValues.nfts,
+      nfts: values.nfts,
     });
 
     try {
       await sendAndConfirmTransaction({
-        account: activeAccount,
+        account,
         transaction,
       });
     } catch (error) {
@@ -204,14 +218,19 @@ export function CreateNFTPage(props: {
   }
 
   async function handleSetClaimConditionsERC721(params: {
-    formValues: CreateNFTCollectionAllValues;
+    values: CreateNFTCollectionAllValues;
+    gasless: boolean;
   }) {
-    const { formValues } = params;
-    const { contract, activeAccount } = getContractAndAccount({
-      chain: formValues.collectionInfo.chain,
+    const { values } = params;
+    const contract = getDeployedContract({
+      chain: values.collectionInfo.chain,
     });
 
-    const firstNFT = formValues.nfts[0];
+    const account = getAccount({
+      gasless: params.gasless,
+    });
+
+    const firstNFT = values.nfts[0];
     if (!firstNFT) {
       throw new Error("No NFTs found");
     }
@@ -234,7 +253,7 @@ export function CreateNFTPage(props: {
 
     try {
       await sendAndConfirmTransaction({
-        account: activeAccount,
+        account,
         transaction,
       });
     } catch (error) {
@@ -258,10 +277,15 @@ export function CreateNFTPage(props: {
       startIndex: number;
       count: number;
     };
+    gasless: boolean;
   }) {
     const { values, batch } = params;
-    const { contract, activeAccount } = getContractAndAccount({
+    const contract = getDeployedContract({
       chain: values.collectionInfo.chain,
+    });
+
+    const account = getAccount({
+      gasless: params.gasless,
     });
 
     const endIndexExclusive = batch.startIndex + batch.count;
@@ -314,7 +338,7 @@ export function CreateNFTPage(props: {
 
     try {
       await sendAndConfirmTransaction({
-        account: activeAccount,
+        account,
         transaction: tx,
       });
     } catch (error) {
@@ -332,47 +356,106 @@ export function CreateNFTPage(props: {
     }
   }
 
+  async function handleSetAdmins(params: {
+    contractAddress: string;
+    contractType: "DropERC721" | "DropERC1155";
+    admins: {
+      address: string;
+    }[];
+    gasless: boolean;
+    chain: string;
+  }) {
+    const contract = getDeployedContract({
+      chain: params.chain,
+    });
+
+    const account = getAccount({
+      gasless: params.gasless,
+    });
+
+    // remove the current account from the list - its already an admin, don't have to add it again
+    const adminsToAdd = params.admins.filter(
+      (admin) => admin.address !== account.address,
+    );
+
+    const encodedTxs = await Promise.all(
+      adminsToAdd.map((admin) => {
+        const tx = grantRole({
+          contract,
+          role: "admin",
+          targetAccountAddress: admin.address,
+        });
+
+        return encode(tx);
+      }),
+    );
+
+    const tx = multicall({
+      contract,
+      data: encodedTxs,
+    });
+
+    try {
+      await sendAndConfirmTransaction({
+        account,
+        transaction: tx,
+      });
+    } catch (e) {
+      const errorMessage = parseError(e);
+      console.error(errorMessage);
+
+      reportAssetCreationFailed({
+        assetType: "nft",
+        contractType: params.contractType,
+        error: errorMessage,
+        step: "set-admins",
+      });
+
+      throw e;
+    }
+  }
+
   return (
     <CreateNFTPageUI
       {...props}
       createNFTFunctions={{
         erc721: {
-          deployContract: (formValues) => {
+          deployContract: (params) => {
             return handleContractDeploy({
               ercType: "erc721",
-              values: formValues,
+              ...params,
             });
           },
-          lazyMintNFTs: (formValues) => {
+          lazyMintNFTs: (params) => {
             return handleLazyMintNFTs({
               ercType: "erc721",
-              formValues,
+              ...params,
             });
           },
-
-          setClaimConditions: async (formValues) => {
+          setClaimConditions: async (params) => {
             return handleSetClaimConditionsERC721({
-              formValues,
+              ...params,
             });
           },
         },
         erc1155: {
-          deployContract: (formValues) => {
+          deployContract: (params) => {
             return handleContractDeploy({
               ercType: "erc1155",
-              values: formValues,
+              ...params,
             });
           },
-          lazyMintNFTs: (formValues) => {
+          lazyMintNFTs: (params) => {
             return handleLazyMintNFTs({
               ercType: "erc1155",
-              formValues,
+              ...params,
             });
           },
           setClaimConditions: async (params) => {
             return handleSetClaimConditionsERC1155(params);
           },
         },
+        setAdmins: handleSetAdmins,
       }}
       onLaunchSuccess={() => {
         revalidatePathAction(

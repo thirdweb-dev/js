@@ -13,6 +13,7 @@ import {
   reportAssetCreationSuccessful,
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
+import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import {
   type MultiStepState,
   MultiStepStatus,
@@ -26,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 import { parseError } from "@/utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { FilePreview } from "../../_common/file-preview";
@@ -65,6 +67,13 @@ export function LaunchTokenStatus(props: {
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
+  const canEnableGasless =
+    props.teamPlan !== "free" && activeWallet?.id === "inApp";
+  const [isGasless, setIsGasless] = useState(canEnableGasless);
+  const showGaslessSection = activeWallet?.id === "inApp";
+  const { idToChain } = useAllChainsData();
+  const chainMetadata = idToChain.get(Number(formValues.chain));
+
   function updateStatus(
     index: number,
     newStatus: MultiStepState<StepId>["status"],
@@ -97,24 +106,30 @@ export function LaunchTokenStatus(props: {
 
     setSteps(initialSteps);
     setIsModalOpen(true);
-    executeSteps(initialSteps, 0);
+    executeSteps(initialSteps, 0, isGasless);
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
   const isPending = steps.some((step) => step.status.type === "pending");
 
-  async function executeStep(stepId: StepId) {
+  async function executeStep(stepId: StepId, gasless: boolean) {
+    const params = {
+      gasless,
+      values: formValues,
+    };
+
     if (stepId === "deploy-contract") {
-      const result = await createTokenFunctions.deployContract(formValues);
+      const result = await createTokenFunctions.deployContract(params);
       setContractAddress(result.contractAddress);
     } else if (stepId === "airdrop-tokens") {
-      await createTokenFunctions.airdropTokens(formValues);
+      await createTokenFunctions.airdropTokens(params);
     }
   }
 
   async function executeSteps(
     steps: MultiStepState<StepId>[],
     startIndex: number,
+    gasless: boolean,
   ) {
     for (let i = startIndex; i < steps.length; i++) {
       const currentStep = steps[i];
@@ -127,7 +142,7 @@ export function LaunchTokenStatus(props: {
           type: "pending",
         });
 
-        await executeStep(currentStep.id);
+        await executeStep(currentStep.id, gasless);
 
         updateStatus(i, {
           type: "completed",
@@ -164,13 +179,13 @@ export function LaunchTokenStatus(props: {
     }
   }
 
-  async function handleRetry(step: MultiStepState<StepId>) {
+  async function handleRetry(step: MultiStepState<StepId>, gasless: boolean) {
     const startIndex = steps.findIndex((s) => s.id === step.id);
     if (startIndex === -1) {
       return;
     }
 
-    await executeSteps(steps, startIndex);
+    await executeSteps(steps, startIndex, gasless);
   }
 
   const contractLink = contractAddress
@@ -183,6 +198,7 @@ export function LaunchTokenStatus(props: {
         custom: (
           <TransactionButton
             client={props.client}
+            disableNoFundsPopup={isGasless}
             isLoggedIn={true}
             isPending={false}
             onClick={handleSubmitClick}
@@ -250,6 +266,30 @@ export function LaunchTokenStatus(props: {
         <TokenDistributionBarChart distributionFormValues={formValues} />
       </div>
 
+      {/* gasless */}
+      {showGaslessSection && (
+        <div className="px-4 py-6 pb-6 md:px-6 border-t border-dashed">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-semibold text-base">Sponsor Gas</h2>
+              <p className="text-muted-foreground text-sm">
+                Sponsor gas fees for launching your coin. <br /> This allows you
+                to launch the coin without requiring any balance in your wallet
+              </p>
+            </div>
+            <GatedSwitch
+              currentPlan={props.teamPlan}
+              requiredPlan="starter"
+              switchProps={{
+                checked: isGasless,
+                onCheckedChange: setIsGasless,
+              }}
+              teamSlug={props.teamSlug}
+            />
+          </div>
+        </div>
+      )}
+
       <Dialog
         open={isModalOpen}
         // do not set onOpenChange
@@ -259,7 +299,7 @@ export function LaunchTokenStatus(props: {
           dialogCloseClassName="hidden"
         >
           <div className="flex flex-col gap-6 p-6">
-            <DialogHeader>
+            <DialogHeader className="space-y-0.5">
               <DialogTitle className="font-semibold text-xl tracking-tight">
                 Status
               </DialogTitle>
@@ -271,7 +311,7 @@ export function LaunchTokenStatus(props: {
             </DialogHeader>
 
             <MultiStepStatus
-              onRetry={handleRetry}
+              onRetry={(step) => handleRetry(step, isGasless)}
               renderError={(step, errorMessage) => {
                 if (
                   props.teamPlan === "free" &&
@@ -279,10 +319,37 @@ export function LaunchTokenStatus(props: {
                 ) {
                   return (
                     <StorageErrorPlanUpsell
-                      onRetry={() => handleRetry(step)}
+                      onRetry={() => handleRetry(step, isGasless)}
                       teamSlug={props.teamSlug}
                       trackingCampaign="create-coin"
                     />
+                  );
+                }
+
+                if (
+                  errorMessage
+                    .toLowerCase()
+                    .includes("does not support eip-7702")
+                ) {
+                  return (
+                    <div>
+                      <p className="text-red-500 text-sm mb-2">
+                        Gas Sponsorship is not supported on{" "}
+                        {chainMetadata?.name || "selected chain"}
+                      </p>
+
+                      <Button
+                        size="sm"
+                        className="gap-2"
+                        onClick={() => {
+                          setIsGasless(false);
+                          handleRetry(step, false);
+                        }}
+                      >
+                        Continue without gas sponsorship
+                        <ArrowRightIcon className="size-4" />
+                      </Button>
+                    </div>
                   );
                 }
 

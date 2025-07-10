@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.valoraapp",
+  name: "Valora",
+  homepage: "https://valoraapp.com",
+  image_id: "a03bfa44-ce98-4883-9b2a-75e2b68f5700",
   app: {
-    android: "https://play.google.com/store/apps/details?id=co.clabs.valora",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/id1520414263",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=co.clabs.valora",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "celo://wallet",
+    universal: "https://valoraapp.com",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://valoraapp.com",
-  id: "com.valoraapp",
-  image_id: "a03bfa44-ce98-4883-9b2a-75e2b68f5700",
-  mobile: {
-    native: "celo://wallet",
-    universal: "https://valoraapp.com",
-  },
-  name: "Valora",
-  rdns: null,
 } as const;

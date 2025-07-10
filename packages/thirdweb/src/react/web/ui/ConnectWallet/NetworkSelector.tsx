@@ -690,12 +690,10 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           )}
         </Container>
         {confirming || switchingFailed ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: spacing.xs,
-            }}
+          <Container
+            flex="column"
+            gap="3xs"
+            style={{ alignItems: "flex-start", width: "100%" }}
           >
             <ChainName
               loadingComponent={<Skeleton height="20px" width="150px" />}
@@ -718,7 +716,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
                 </Container>
               )}
             </Container>
-          </div>
+          </Container>
         ) : (
           <ChainName
             className="tw-chain-icon-none-confirming"

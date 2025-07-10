@@ -300,14 +300,14 @@ export async function getBuyWithCryptoQuote(
             Number(
               Value.format(quote.originAmount, firstStep.originToken.decimals),
             ) *
-            firstStep.originToken.priceUsd *
+            (firstStep.originToken.prices["USD"] || 0) *
             100,
           amountWei: quote.originAmount.toString(),
           token: {
             chainId: firstStep.originToken.chainId,
             decimals: firstStep.originToken.decimals,
             name: firstStep.originToken.name,
-            priceUSDCents: firstStep.originToken.priceUsd * 100,
+            priceUSDCents: (firstStep.originToken.prices["USD"] || 0) * 100,
             symbol: firstStep.originToken.symbol,
             tokenAddress: firstStep.originToken.address,
           },
@@ -323,7 +323,7 @@ export async function getBuyWithCryptoQuote(
             chainId: firstStep.originToken.chainId,
             decimals: firstStep.originToken.decimals,
             name: firstStep.originToken.name,
-            priceUSDCents: firstStep.originToken.priceUsd * 100,
+            priceUSDCents: (firstStep.originToken.prices["USD"] || 0) * 100,
             symbol: firstStep.originToken.symbol,
             tokenAddress: firstStep.originToken.address,
           },
@@ -337,7 +337,7 @@ export async function getBuyWithCryptoQuote(
             Number(
               Value.format(quote.originAmount, firstStep.originToken.decimals),
             ) *
-            firstStep.originToken.priceUsd *
+            (firstStep.originToken.prices["USD"] || 0) *
             100,
           gasCostUSDCents: 0,
           slippageBPS: 0,
@@ -348,7 +348,7 @@ export async function getBuyWithCryptoQuote(
                 firstStep.destinationToken.decimals,
               ),
             ) *
-            firstStep.destinationToken.priceUsd *
+            (firstStep.destinationToken.prices["USD"] || 0) *
             100,
           toAmountUSDCents:
             Number(
@@ -357,7 +357,7 @@ export async function getBuyWithCryptoQuote(
                 firstStep.destinationToken.decimals,
               ),
             ) *
-            firstStep.destinationToken.priceUsd *
+            (firstStep.destinationToken.prices["USD"] || 0) *
             100,
         },
         fromAddress: quote.intent.sender,
@@ -372,7 +372,7 @@ export async function getBuyWithCryptoQuote(
           chainId: firstStep.originToken.chainId,
           decimals: firstStep.originToken.decimals,
           name: firstStep.originToken.name,
-          priceUSDCents: firstStep.originToken.priceUsd * 100,
+          priceUSDCents: (firstStep.originToken.prices["USD"] || 0) * 100,
           symbol: firstStep.originToken.symbol,
           tokenAddress: firstStep.originToken.address,
         },
@@ -395,7 +395,7 @@ export async function getBuyWithCryptoQuote(
           chainId: firstStep.destinationToken.chainId,
           decimals: firstStep.destinationToken.decimals,
           name: firstStep.destinationToken.name,
-          priceUSDCents: firstStep.destinationToken.priceUsd * 100,
+          priceUSDCents: (firstStep.destinationToken.prices["USD"] || 0) * 100,
           symbol: firstStep.destinationToken.symbol,
           tokenAddress: firstStep.destinationToken.address,
         },

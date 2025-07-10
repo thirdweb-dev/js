@@ -22,11 +22,16 @@ import { TokenDistributionFieldset } from "./distribution/token-distribution";
 import { LaunchTokenStatus } from "./launch/launch-token";
 import { TokenInfoFieldset } from "./token-info/token-info-fieldset";
 
+type CreateTokenFunctionsParams = {
+  values: CreateAssetFormValues;
+  gasless: boolean;
+};
+
 export type CreateTokenFunctions = {
-  deployContract: (values: CreateAssetFormValues) => Promise<{
+  deployContract: (params: CreateTokenFunctionsParams) => Promise<{
     contractAddress: string;
   }>;
-  airdropTokens: (values: CreateAssetFormValues) => Promise<void>;
+  airdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
 };
 
 const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
@@ -50,7 +55,7 @@ export function CreateTokenAssetPageUI(props: {
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
     defaultValues: {
-      chain: activeChain?.id.toString() || "",
+      chain: activeChain?.id.toString() || "1",
       description: "",
       image: undefined,
       name: "",

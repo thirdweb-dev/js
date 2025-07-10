@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.fizen",
+  name: "Fizen Wallet",
+  homepage: "https://fizen.io",
+  image_id: "1160bfa2-b669-42ba-b224-13edcd40c700",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/fizen-wallet/id1621269508",
     android:
       "https://play.google.com/store/apps/details?id=com.fizen.io.wallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/fizen-wallet/id1621269508",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "fw://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://fizen.io",
-  id: "io.fizen",
-  image_id: "1160bfa2-b669-42ba-b224-13edcd40c700",
-  mobile: {
-    native: "fw://",
-    universal: null,
-  },
-  name: "Fizen Wallet",
-  rdns: null,
 } as const;

@@ -7,6 +7,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { getToken } from "../../../../pay/convert/get-token.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import {
   type PreparedTransaction,
@@ -107,6 +108,12 @@ export type TransactionWidgetProps = {
   className?: string;
 
   /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+
+  /**
    * The token address needed to complete this transaction. Leave undefined if no token is required.
    */
   tokenAddress?: Address;
@@ -176,6 +183,12 @@ export type TransactionWidgetProps = {
    * @default ["crypto", "card"]
    */
   paymentMethods?: ("crypto" | "card")[];
+
+  /**
+   * The currency to use for the payment.
+   * @default "USD"
+   */
+  currency?: SupportedFiatCurrency;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -335,6 +348,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
 
       return {
         data: {
+          currency: props.currency || "USD",
           metadata: {
             description: props.description,
             image: props.image,
@@ -413,6 +427,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
         purchaseData={props.purchaseData}
         receiverAddress={undefined}
         uiOptions={bridgeDataQuery.data.data}
+        showThirdwebBranding={props.showThirdwebBranding}
       />
     );
   }

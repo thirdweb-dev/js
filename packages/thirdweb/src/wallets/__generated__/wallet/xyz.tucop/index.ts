@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "xyz.tucop",
+  name: "TuCOP Wallet",
+  homepage: "https://tucop.xyz/",
+  image_id: "2d38bfd6-85dc-41b5-a125-a0eca4100200",
   app: {
-    android: "https://play.google.com/store/apps/details?id=org.tucop",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=org.tucop",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "myapp://tucop",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://tucop.xyz/",
-  id: "xyz.tucop",
-  image_id: "2d38bfd6-85dc-41b5-a125-a0eca4100200",
-  mobile: {
-    native: "myapp://tucop",
-    universal: null,
-  },
-  name: "TuCOP Wallet",
-  rdns: null,
 } as const;

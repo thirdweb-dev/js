@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.shefi",
+  name: "SheFi",
+  homepage: "https://www.shefi.org",
+  image_id: "a1a909e8-526b-4452-8788-5bb21e2b9e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=org.shefi.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://testflight.apple.com/join/CEmx1nCa",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=org.shefi.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "shefi://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.shefi.org",
-  id: "org.shefi",
-  image_id: "a1a909e8-526b-4452-8788-5bb21e2b9e00",
-  mobile: {
-    native: "shefi://",
-    universal: null,
-  },
-  name: "SheFi",
-  rdns: null,
 } as const;

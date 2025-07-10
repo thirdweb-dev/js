@@ -1,6 +1,7 @@
 "use client";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { checksumAddress } from "../../../../../utils/address.js";
 import { toTokens } from "../../../../../utils/units.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -24,6 +25,7 @@ interface FiatProviderSelectionProps {
   toTokenAddress: string;
   toAddress: string;
   toAmount?: string;
+  currency?: SupportedFiatCurrency;
 }
 
 const PROVIDERS = [
@@ -54,6 +56,7 @@ export function FiatProviderSelection({
   toTokenAddress,
   toAddress,
   toAmount,
+  currency,
 }: FiatProviderSelectionProps) {
   const theme = useCustomTheme();
 
@@ -62,7 +65,7 @@ export function FiatProviderSelection({
     amount: toAmount || "0",
     chainId: toChainId,
     client,
-    currency: "USD",
+    currency: currency || "USD",
     receiver: checksumAddress(toAddress),
     tokenAddress: checksumAddress(toTokenAddress),
   });

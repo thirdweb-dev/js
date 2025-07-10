@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.kriptomat",
+  name: "Kriptomat",
+  homepage: "https://kriptomat.io/web3/",
+  image_id: "774110aa-70f6-4d0c-210f-ab434838fa00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.kriptomat.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/id1440135740",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.kriptomat.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "kriptomatapp://wallet-connect",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://kriptomat.io/web3/",
-  id: "io.kriptomat",
-  image_id: "774110aa-70f6-4d0c-210f-ab434838fa00",
-  mobile: {
-    native: "kriptomatapp://wallet-connect",
-    universal: null,
-  },
-  name: "Kriptomat",
-  rdns: null,
 } as const;

@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.revelator.wallet",
+  name: "Revelator Wallet",
+  homepage: "https://wallet.revelator.com/",
+  image_id: "2027dfea-316d-474a-1c7d-08dead7b4200",
   app: {
+    browser: "",
+    ios: "https://apps.apple.com/app/id1484642420?platform=iphone",
     android:
       "https://play.google.com/store/apps/details?id=com.revelator.originalworks",
-    browser: "",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/app/id1484642420?platform=iphone",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "revelatorwallet://",
+    universal: "",
   },
   desktop: {
     native: "",
     universal: "",
   },
-  homepage: "https://wallet.revelator.com/",
-  id: "com.revelator.wallet",
-  image_id: "2027dfea-316d-474a-1c7d-08dead7b4200",
-  mobile: {
-    native: "revelatorwallet://",
-    universal: "",
-  },
-  name: "Revelator Wallet",
-  rdns: null,
 } as const;

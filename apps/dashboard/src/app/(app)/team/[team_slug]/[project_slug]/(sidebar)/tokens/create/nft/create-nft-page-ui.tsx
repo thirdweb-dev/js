@@ -163,10 +163,16 @@ export function CreateNFTPageUI(props: {
 }
 
 function useNFTCollectionInfoForm() {
-  const activeChain = useActiveWalletChain();
+  const chain = useActiveWalletChain();
+  const account = useActiveAccount();
   return useForm<NFTCollectionInfoFormValues>({
     defaultValues: {
-      chain: activeChain?.id.toString() || "1",
+      admins: [
+        {
+          address: account?.address || "",
+        },
+      ],
+      chain: chain?.id.toString() || "1",
       description: "",
       image: undefined,
       name: "",

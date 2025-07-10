@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "eu.flashsoft.clear-wallet",
+  name: "clear-wallet",
+  homepage: "https://clear-wallet.flashsoft.eu",
+  image_id: "a6d4c2de-1bd9-404f-f3d2-3d2ed9bf5000",
   app: {
-    android: null,
     browser: null,
+    ios: null,
+    android: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chromewebstore.google.com/detail/clear-evm-wallet-clw/djlahdpfkflehaepgohnnodmaajabdlg?hl=en&authuser=0",
-    edge: null,
     firefox: null,
-    ios: null,
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "eu.flashsoft.clear-wallet",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://clear-wallet.flashsoft.eu",
-  id: "eu.flashsoft.clear-wallet",
-  image_id: "a6d4c2de-1bd9-404f-f3d2-3d2ed9bf5000",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "clear-wallet",
-  rdns: "eu.flashsoft.clear-wallet",
 } as const;

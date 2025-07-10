@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.bitget.web3",
+  name: "Bitget Wallet",
+  homepage: "https://web3.bitget.com",
+  image_id: "f6ff957e-7e74-4f43-a3ae-a643bf18a200",
   app: {
-    android: "https://web3.bitget.com/en/wallet-download?type=0",
     browser: "https://bitkeep.com",
+    ios: "https://web3.bitget.com/en/wallet-download?type=0",
+    android: "https://web3.bitget.com/en/wallet-download?type=0",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/bitkeep-crypto-nft-wallet/jiidiaalihmmhddjgbnbgdfflelocpak",
-    edge: null,
     firefox: null,
-    ios: "https://web3.bitget.com/en/wallet-download?type=0",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.bitget.web3",
+  mobile: {
+    native: "bitkeep://",
+    universal: "https://bkapp.vip",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://web3.bitget.com",
-  id: "com.bitget.web3",
-  image_id: "f6ff957e-7e74-4f43-a3ae-a643bf18a200",
-  mobile: {
-    native: "bitkeep://",
-    universal: "https://bkapp.vip",
-  },
-  name: "Bitget Wallet",
-  rdns: null,
 } as const;

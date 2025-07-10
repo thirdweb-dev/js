@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.meld.app",
+  name: "MELDapp",
+  homepage: "https://app.meld.com",
+  image_id: "7946da4c-c8b7-4037-f044-8c3f7f1cb200",
   app: {
-    android: null,
     browser: "https://app.meld.com",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.meld.app",
+  mobile: {
+    native: "meld://walletconnect",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://app.meld.com",
   },
-  homepage: "https://app.meld.com",
-  id: "com.meld.app",
-  image_id: "7946da4c-c8b7-4037-f044-8c3f7f1cb200",
-  mobile: {
-    native: "meld://walletconnect",
-    universal: null,
-  },
-  name: "MELDapp",
-  rdns: "com.meld.app",
 } as const;

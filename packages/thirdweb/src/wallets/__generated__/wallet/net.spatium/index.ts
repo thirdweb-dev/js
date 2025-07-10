@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "net.spatium",
+  name: "Spatium",
+  homepage: "https://spatium.net",
+  image_id: "51867bee-2963-4071-d67a-1fdcaa451f00",
   app: {
+    browser: "https://spatium.net",
+    ios: "https://apps.apple.com/ru/app/spatium/id1404844195",
     android:
       "https://play.google.com/store/apps/details?id=capital.spatium.wallet",
-    browser: "https://spatium.net",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/ru/app/spatium/id1404844195",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "spatium://",
+    universal: "https://link.spatium.net",
   },
   desktop: {
     native: null,
     universal: "https://spatium.net",
   },
-  homepage: "https://spatium.net",
-  id: "net.spatium",
-  image_id: "51867bee-2963-4071-d67a-1fdcaa451f00",
-  mobile: {
-    native: "spatium://",
-    universal: "https://link.spatium.net",
-  },
-  name: "Spatium",
-  rdns: null,
 } as const;

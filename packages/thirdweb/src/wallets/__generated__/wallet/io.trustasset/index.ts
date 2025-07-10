@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.trustasset",
+  name: "Trust Asset Wallet",
+  homepage: "https://trustasset.io/",
+  image_id: "f64fabc5-1e3f-4ad4-7362-747abd1bc000",
   app: {
+    browser: null,
+    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=com.trustassetapp&hl=en_IN&gl=US",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: null,
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "trustassetapp://walletconnect",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://trustasset.io/",
-  id: "io.trustasset",
-  image_id: "f64fabc5-1e3f-4ad4-7362-747abd1bc000",
-  mobile: {
-    native: "trustassetapp://walletconnect",
-    universal: null,
-  },
-  name: "Trust Asset Wallet",
-  rdns: null,
 } as const;

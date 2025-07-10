@@ -1,5 +1,4 @@
 import { getAddress } from "../../utils/address.js";
-import type { PayTokenInfo } from "../utils/commonTypes.js";
 import type { BuyWithFiatQuote } from "./getQuote.js";
 
 /**
@@ -28,58 +27,3 @@ export function isSwapRequiredPostOnramp(
 
   return !(sameChain && sameToken);
 }
-
-export function getOnRampSteps(
-  buyWithFiatQuote: BuyWithFiatQuote,
-): OnRampStep[] {
-  const isSwapRequired = isSwapRequiredPostOnramp(buyWithFiatQuote);
-
-  if (!isSwapRequired) {
-    return [
-      {
-        action: "buy",
-        amount: buyWithFiatQuote.estimatedToAmountMin,
-        token: buyWithFiatQuote.toToken,
-      },
-    ];
-  }
-
-  if (buyWithFiatQuote.routingToken) {
-    return [
-      {
-        action: "buy",
-        amount: buyWithFiatQuote.onRampToken.amount,
-        token: buyWithFiatQuote.onRampToken.token,
-      },
-      {
-        action: "swap",
-        amount: buyWithFiatQuote.routingToken.amount,
-        token: buyWithFiatQuote.routingToken.token,
-      },
-      {
-        action: "bridge",
-        amount: buyWithFiatQuote.estimatedToAmountMin,
-        token: buyWithFiatQuote.toToken,
-      },
-    ];
-  }
-
-  return [
-    {
-      action: "buy",
-      amount: buyWithFiatQuote.onRampToken.amount,
-      token: buyWithFiatQuote.onRampToken.token,
-    },
-    {
-      action: "swap",
-      amount: buyWithFiatQuote.estimatedToAmountMin,
-      token: buyWithFiatQuote.toToken,
-    },
-  ];
-}
-
-export type OnRampStep = {
-  action: "buy" | "swap" | "bridge";
-  token: PayTokenInfo;
-  amount: string;
-};

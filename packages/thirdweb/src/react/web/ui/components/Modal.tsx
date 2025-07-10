@@ -150,7 +150,7 @@ export const Modal: React.FC<{
   );
 };
 
-export const CrossContainer = /* @__PURE__ */ StyledDiv({
+const CrossContainer = /* @__PURE__ */ StyledDiv({
   position: "absolute",
   right: spacing.lg,
   top: spacing.lg,

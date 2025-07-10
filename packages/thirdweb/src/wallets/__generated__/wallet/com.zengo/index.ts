@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.zengo",
+  name: "Zengo Wallet",
+  homepage: "https://zengo.com/",
+  image_id: "6133c399-ae32-4eba-0c5a-0fb84492bf00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.zengo.wallet",
     browser: "https://web.zengo.com/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/zengo-crypto-bitcoin-wallet/id1440147115",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.zengo.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "zengo://get.zengo.com/",
+    universal: "https://get.zengo.com/",
   },
   desktop: {
     native: null,
     universal: "https://web.zengo.com/",
   },
-  homepage: "https://zengo.com/",
-  id: "com.zengo",
-  image_id: "6133c399-ae32-4eba-0c5a-0fb84492bf00",
-  mobile: {
-    native: "zengo://get.zengo.com/",
-    universal: "https://get.zengo.com/",
-  },
-  name: "Zengo Wallet",
-  rdns: null,
 } as const;

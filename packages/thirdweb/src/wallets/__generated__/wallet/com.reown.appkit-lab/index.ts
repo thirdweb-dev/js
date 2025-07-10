@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.reown.appkit-lab",
+  name: "Flutter Sample Wallet",
+  homepage: "https://appkit-lab.reown.com/flutter_walletkit",
+  image_id: "db10ede4-39c3-48ff-f85b-de9b5f17d000",
   app: {
-    android: "https://appdistribution.firebase.dev/i/86311d3c1caf8ea9",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://testflight.apple.com/join/ABbjL9Yu",
-    linux: null,
+    android: "https://appdistribution.firebase.dev/i/86311d3c1caf8ea9",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "wcflutterwallet-internal://",
+    universal: "https://appkit-lab.reown.com/flutter_walletkit_internal",
   },
   desktop: {
     native: "wcflutterwallet://",
     universal: "https://lab.web3modal.com/walletkit_flutter",
   },
-  homepage: "https://appkit-lab.reown.com/flutter_walletkit",
-  id: "com.reown.appkit-lab",
-  image_id: "db10ede4-39c3-48ff-f85b-de9b5f17d000",
-  mobile: {
-    native: "wcflutterwallet-internal://",
-    universal: "https://appkit-lab.reown.com/flutter_walletkit_internal",
-  },
-  name: "Flutter Sample Wallet",
-  rdns: null,
 } as const;

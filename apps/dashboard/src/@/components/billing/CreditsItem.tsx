@@ -1,45 +1,18 @@
 import { formatDistance } from "date-fns";
-import { CircleAlertIcon } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import type { Account, BillingCredit } from "@/hooks/useApi";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { ChainIconClient } from "@/icons/ChainIcon";
+import type { BillingCredit } from "@/hooks/useApi";
 import { formatToDollars } from "./formatToDollars";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
-  isOpCreditDefault?: boolean;
-  onClickApply?: () => void;
-  twAccount: Account;
-  client: ThirdwebClient;
-  teamSlug: string;
 }
 
-export const CreditsItem: React.FC<CreditsItemProps> = ({
-  credit,
-  isOpCreditDefault,
-  onClickApply,
-  twAccount,
-  client,
-  teamSlug,
-}) => {
-  const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${twAccount.id}`,
-    false,
-  );
-
-  const isOpCredit = credit?.name.startsWith("OP -") || isOpCreditDefault;
+export const CreditsItem: React.FC<CreditsItemProps> = ({ credit }) => {
   const isTwCredit = credit?.name.startsWith("TW -");
   const isStartupCredit = credit?.name.startsWith("SU -");
 
   let creditTitle = credit?.name ?? "thirdweb credits";
-  if (isOpCredit) {
-    creditTitle = "Optimism sponsorship credits";
-  } else if (isTwCredit) {
+  if (isTwCredit) {
     creditTitle = "thirdweb credits";
   } else if (isStartupCredit) {
     creditTitle = "Startup grant credits";
@@ -50,13 +23,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
       <div className="flex flex-col gap-3 p-4 lg:p-6">
         <div className="relative">
           <div className="absolute top-0 right-0">
-            {isOpCredit ? (
-              <ChainIconClient
-                className="size-6"
-                client={client}
-                src="ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
-              />
-            ) : isTwCredit ? (
+            {isTwCredit ? (
               <Image
                 alt="tw-credit"
                 className="size-6"
@@ -112,35 +79,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
             </div>
           )}
         </div>
-
-        {hasAppliedForOpGrant && !credit && isOpCredit && (
-          <Alert variant="info">
-            <CircleAlertIcon className="size-5" />
-            <AlertTitle>Grant application pending approval</AlertTitle>
-            <AlertDescription>
-              You will receive an email once your application&apos;s status
-              changes.
-            </AlertDescription>
-          </Alert>
-        )}
       </div>
-
-      {!hasAppliedForOpGrant && isOpCredit && (
-        <div className="mt-2 flex justify-end border-t px-4 py-4 lg:px-6">
-          <Button asChild size="sm" variant="outline">
-            <Link
-              href={`/team/${teamSlug}/~/settings/credits`}
-              onClick={() => {
-                if (onClickApply) {
-                  onClickApply();
-                }
-              }}
-            >
-              Apply Now
-            </Link>
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

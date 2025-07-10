@@ -369,6 +369,8 @@ const typescriptRedirects = {
   "/typescript/sdk.thirdwebsdk.fromwallet":
     "/references/typescript/v4/ThirdwebSDK#fromWallet",
   "/typescript/sdk.thirdwebsdk.smartcontract": "/typescript/v4/extensions",
+  // v5 deploy redirects
+  "/references/typescript/v5/deploy/deployPackContract": "/contracts",
 };
 
 const reactNativeRedirects = {
@@ -803,7 +805,7 @@ const contractRedirects = {
     "/contracts/explore/pre-built-contracts/nft-drop",
   "/pre-built-contracts/open-edition-erc721":
     "/contracts/explore/pre-built-contracts/open-edition",
-  "/pre-built-contracts/pack": "/contracts/explore/pre-built-contracts/pack",
+  "/pre-built-contracts/pack": "/contracts",
   "/pre-built-contracts/signature-drop": "/contracts",
   "/pre-built-contracts/split": "/contracts/explore/pre-built-contracts/split",
   "/pre-built-contracts/stake-erc20":
@@ -816,6 +818,8 @@ const contractRedirects = {
   "/pre-built-contracts/token-drop":
     "/contracts/explore/pre-built-contracts/token-drop",
   "/pre-built-contracts/vote": "/contracts/explore/pre-built-contracts/vote",
+  // pack contract deprecation redirect
+  "/contracts/explore/pre-built-contracts/pack": "/contracts",
   //publish
   "/publish": "/contracts/publish/overview",
   "/publish/deployment-options": "/contracts/publish/publish-options",
@@ -940,7 +944,7 @@ const otherRedirects = {
   // solidity sdk
   "/contracts/nft-drop": "/contracts/explore/pre-built-contracts/nft-drop",
   "/contracts/nfts-and-tokens": "/contracts",
-  "/contracts/pack": "/contracts/explore/pre-built-contracts/pack",
+  "/contracts/pack": "/contracts",
   "/contracts/split": "/contracts/explore/pre-built-contracts/split",
   "/contracts/token": "/contracts/explore/pre-built-contracts/token",
   "/contracts/token-drop": "/contracts/explore/pre-built-contracts/token-drop",

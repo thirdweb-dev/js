@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.banksocial",
+  name: "BankSocial ",
+  homepage: "https://www.banksocial.io/",
+  image_id: "159ae656-ae24-4717-f78f-f84eb2b2e700",
   app: {
+    browser: null,
+    ios: null,
     android:
       "https://play.google.com/store/apps/details?id=app.banksocial.io&hl=en_US",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: null,
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://banksocial.app.link/download",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.banksocial.io/",
-  id: "io.banksocial",
-  image_id: "159ae656-ae24-4717-f78f-f84eb2b2e700",
-  mobile: {
-    native: null,
-    universal: "https://banksocial.app.link/download",
-  },
-  name: "BankSocial ",
-  rdns: null,
 } as const;

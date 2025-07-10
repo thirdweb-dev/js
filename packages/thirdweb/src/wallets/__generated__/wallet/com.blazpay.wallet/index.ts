@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.blazpay.wallet",
+  name: "Blazpay",
+  homepage: "https://blazpay.com/download",
+  image_id: "ba0ed3d1-e94c-408d-c8f5-a384edcba700",
   app: {
-    android: null,
     browser: null,
+    ios: null,
+    android: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chromewebstore.google.com/detail/blazpay/cecndeddohekaklkfehmcnhejflmclhc",
-    edge: null,
     firefox: null,
-    ios: null,
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.blazpay.wallet",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://blazpay.com/download",
-  id: "com.blazpay.wallet",
-  image_id: "ba0ed3d1-e94c-408d-c8f5-a384edcba700",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "Blazpay",
-  rdns: "com.blazpay.wallet",
 } as const;

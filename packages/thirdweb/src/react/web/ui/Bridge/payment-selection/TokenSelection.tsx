@@ -21,6 +21,7 @@ interface TokenSelectionProps {
   onBack: () => void;
   destinationToken: Token;
   destinationAmount: bigint;
+  feePayer?: "sender" | "receiver";
 }
 
 // Individual payment method token row component
@@ -30,6 +31,7 @@ interface PaymentMethodTokenRowProps {
   destinationAmount: bigint;
   client: ThirdwebClient;
   onPaymentMethodSelected: (paymentMethod: PaymentMethod) => void;
+  feePayer?: "sender" | "receiver";
 }
 
 function PaymentMethodTokenRow({
@@ -38,6 +40,7 @@ function PaymentMethodTokenRow({
   destinationAmount,
   client,
   onPaymentMethodSelected,
+  feePayer,
 }: PaymentMethodTokenRowProps) {
   const theme = useCustomTheme();
 
@@ -50,6 +53,7 @@ function PaymentMethodTokenRow({
     client,
     destinationAmount,
     destinationToken,
+    feePayer,
     originToken: paymentMethod.originToken,
   });
 
@@ -158,6 +162,7 @@ export function TokenSelection({
   onBack,
   destinationToken,
   destinationAmount,
+  feePayer,
 }: TokenSelectionProps) {
   const theme = useCustomTheme();
 
@@ -271,6 +276,7 @@ export function TokenSelection({
               client={client}
               destinationAmount={destinationAmount}
               destinationToken={destinationToken}
+              feePayer={feePayer}
               key={`${method.originToken.address}-${method.originToken.chainId}`}
               onPaymentMethodSelected={onPaymentMethodSelected}
               paymentMethod={method}

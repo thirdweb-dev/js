@@ -102,6 +102,7 @@ export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
     '&[data-active="true"]': {
       backgroundColor: theme.colors.tertiaryBg,
     },
+    all: "unset",
     alignItems: "center",
     borderRadius: radius.md,
     boxSizing: "border-box",

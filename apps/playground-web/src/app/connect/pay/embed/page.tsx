@@ -18,6 +18,8 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
     title: "",
     transactionData: "",
     widget: "buy",
+    currency: "USD",
+    showThirdwebBranding: true,
   },
   theme: {
     darkColorOverrides: {},

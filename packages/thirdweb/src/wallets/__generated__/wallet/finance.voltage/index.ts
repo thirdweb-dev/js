@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "finance.voltage",
+  name: "Volt Wallet",
+  homepage: "https://voltage.finance",
+  image_id: "ffddf01a-337f-45c1-61c9-f6d3dd3d3c00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/volt-wallet/id6444159237",
     android:
       "https://play.google.com/store/apps/details?id=finance.voltage.app",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/volt-wallet/id6444159237",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "volt://",
+    universal: "https://get.voltage.finance",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://voltage.finance",
-  id: "finance.voltage",
-  image_id: "ffddf01a-337f-45c1-61c9-f6d3dd3d3c00",
-  mobile: {
-    native: "volt://",
-    universal: "https://get.voltage.finance",
-  },
-  name: "Volt Wallet",
-  rdns: null,
 } as const;
