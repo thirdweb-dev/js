@@ -266,8 +266,18 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     return data.transactions.map((t) => t.id);
   };
 
+  const getAddress = () => {
+    if (
+      executionOptions?.type === "ERC4337" &&
+      executionOptions.smartAccountAddress
+    ) {
+      return executionOptions.smartAccountAddress;
+    }
+    return address;
+  };
+
   return {
-    address,
+    address: getAddress(),
     enqueueBatchTransaction: async (args: {
       transactions: PreparedTransaction[];
     }) => {
