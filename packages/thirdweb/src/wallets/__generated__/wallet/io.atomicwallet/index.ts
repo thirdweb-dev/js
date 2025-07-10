@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.atomicwallet",
+  name: "Atomic Wallet",
+  homepage: "https://atomicwallet.io",
+  image_id: "7eca0311-abf5-4902-43e9-51858403e200",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.atomicwallet",
     browser: "https://atomicwallet.io",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/atomic-wallet/id1478257827",
-    linux: "https://atomicwallet.io/downloads",
+    android: "https://play.google.com/store/apps/details?id=io.atomicwallet",
     mac: "https://atomicwallet.io/downloads",
-    opera: null,
-    safari: null,
     windows: "https://atomicwallet.io/downloads",
+    linux: "https://atomicwallet.io/downloads",
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "atomicwallet://",
+    universal: null,
   },
   desktop: {
     native: "atomicwallet://",
     universal:
       "https://chromewebstore.google.com/detail/atomic-wallet/gjnckgkfmgmibbkoficdidcljeaaaheg",
   },
-  homepage: "https://atomicwallet.io",
-  id: "io.atomicwallet",
-  image_id: "7eca0311-abf5-4902-43e9-51858403e200",
-  mobile: {
-    native: "atomicwallet://",
-    universal: null,
-  },
-  name: "Atomic Wallet",
-  rdns: null,
 } as const;

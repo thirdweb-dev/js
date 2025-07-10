@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.krystal",
+  name: "Krystal",
+  homepage: "https://krystal.app/",
+  image_id: "d2b59965-4eb8-4828-d3d4-fbc0b3379e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.kyrd.krystal",
     browser: "https://defi.krystal.app/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/krystal-one-platform-all-defi/id1558105691",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.kyrd.krystal",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "krystalwallet://",
+    universal: "https://wallet.krystal.app/",
   },
   desktop: {
     native: null,
     universal: "https://defi.krystal.app/",
   },
-  homepage: "https://krystal.app/",
-  id: "app.krystal",
-  image_id: "d2b59965-4eb8-4828-d3d4-fbc0b3379e00",
-  mobile: {
-    native: "krystalwallet://",
-    universal: "https://wallet.krystal.app/",
-  },
-  name: "Krystal",
-  rdns: null,
 } as const;

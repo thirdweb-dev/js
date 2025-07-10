@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.bytebank",
+  name: "ByteBank",
+  homepage: "https://www.bytebank.org/",
+  image_id: "bc7aacd6-b2e2-4146-7d21-06e0c5d44f00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.hideout.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/sg/app/hideout-wallet/id1620315192?l=zh",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.hideout.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "hideoutWallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.bytebank.org/",
-  id: "org.bytebank",
-  image_id: "bc7aacd6-b2e2-4146-7d21-06e0c5d44f00",
-  mobile: {
-    native: "hideoutWallet://",
-    universal: null,
-  },
-  name: "ByteBank",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.optowallet",
+  name: "Opto Wallet",
+  homepage: "https://optowallet.com/",
+  image_id: "3df102e4-e435-49dd-d4b1-5ea74ebed500",
   app: {
-    android: "https://play.google.com/store/apps/details?id=app.opto.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/opto-wallet/id6443854537",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=app.opto.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "opto://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://optowallet.com/",
-  id: "com.optowallet",
-  image_id: "3df102e4-e435-49dd-d4b1-5ea74ebed500",
-  mobile: {
-    native: "opto://",
-    universal: null,
-  },
-  name: "Opto Wallet",
-  rdns: null,
 } as const;

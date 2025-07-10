@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "me.haha",
+  name: "HaHa",
+  homepage: "https://www.haha.me",
+  image_id: "79285c9f-2630-451e-0680-c71b42fb7400",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.permutize.haha",
     browser: "https://www.haha.me",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/haha-crypto-portfolio-tracker/id1591158244",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.permutize.haha",
     mac: "https://apps.apple.com/us/app/haha-crypto-portfolio-tracker/id1591158244",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "haha://",
+    universal: "https://haha.me",
   },
   desktop: {
     native: null,
     universal: "https://www.haha.me",
   },
-  homepage: "https://www.haha.me",
-  id: "me.haha",
-  image_id: "79285c9f-2630-451e-0680-c71b42fb7400",
-  mobile: {
-    native: "haha://",
-    universal: "https://haha.me",
-  },
-  name: "HaHa",
-  rdns: null,
 } as const;

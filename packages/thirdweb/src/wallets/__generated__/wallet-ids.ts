@@ -434,12 +434,13 @@ export type WCSupportedWalletIds =
   | "io.walletverse"
   | "com.berasig";
 
-// 70 wallets
+// 71 wallets
 export type InjectedSupportedWalletIds =
   | "com.trustwallet.app"
   | "io.metamask"
   | "com.binance.wallet"
   | "com.okex.wallet"
+  | "com.bitget.web3"
   | "pro.tokenpocket"
   | "com.bybit"
   | "io.zerion.wallet"

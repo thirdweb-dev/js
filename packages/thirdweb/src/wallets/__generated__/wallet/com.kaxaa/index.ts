@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.kaxaa",
+  name: "KAXAA Wallet",
+  homepage: "https://kaxaa.com/",
+  image_id: "2a7981aa-14f4-400d-86ae-ffa3ea866900",
   app: {
-    android: null,
     browser: "https://ewallet.kaxaa.com/",
+    ios: "https://ewallet.kaxaa.com",
+    android: null,
+    mac: null,
+    windows: null,
+    linux: "https://ewallet.kaxaa.com",
     chrome:
       "https://chromewebstore.google.com/detail/kaxaa/njlpbnllmbgdjcmjogmlheldgkcdjnol",
-    edge: null,
     firefox: null,
-    ios: "https://ewallet.kaxaa.com",
-    linux: "https://ewallet.kaxaa.com",
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://link.kaxaa.com/",
   },
   desktop: {
     native: null,
     universal: "https://link.kaxaa.com/",
   },
-  homepage: "https://kaxaa.com/",
-  id: "com.kaxaa",
-  image_id: "2a7981aa-14f4-400d-86ae-ffa3ea866900",
-  mobile: {
-    native: null,
-    universal: "https://link.kaxaa.com/",
-  },
-  name: "KAXAA Wallet",
-  rdns: null,
 } as const;

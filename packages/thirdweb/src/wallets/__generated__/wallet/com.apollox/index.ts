@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.apollox",
+  name: "ApolloX",
+  homepage: "https://www.apollox.com/en",
+  image_id: "80ab63a2-1b32-4140-3577-9fbc8ea82e00",
   app: {
+    browser: "https://www.apollox.com/en",
+    ios: "https://apps.apple.com/us/app/apx-apollox/id1589405398",
     android:
       "https://play.google.com/store/apps/details?id=com.apollox.android",
-    browser: "https://www.apollox.com/en",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/apx-apollox/id1589405398",
-    linux: null,
     mac: "https://www.apollox.com/en",
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://app.apollox.finance",
   },
   desktop: {
     native: null,
     universal: "https://app.apollox.finance",
   },
-  homepage: "https://www.apollox.com/en",
-  id: "com.apollox",
-  image_id: "80ab63a2-1b32-4140-3577-9fbc8ea82e00",
-  mobile: {
-    native: null,
-    universal: "https://app.apollox.finance",
-  },
-  name: "ApolloX",
-  rdns: null,
 } as const;

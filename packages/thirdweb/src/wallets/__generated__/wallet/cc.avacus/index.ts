@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "cc.avacus",
+  name: "Avacus",
+  homepage: "https://avacus.cc",
+  image_id: "a7106965-91cc-4a73-4688-c5c72ae0ed00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.sowaka.avacus",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/id6449657442",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.sowaka.avacus",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "avacus://",
+    universal: "https://avacus.app.link",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://avacus.cc",
-  id: "cc.avacus",
-  image_id: "a7106965-91cc-4a73-4688-c5c72ae0ed00",
-  mobile: {
-    native: "avacus://",
-    universal: "https://avacus.app.link",
-  },
-  name: "Avacus",
-  rdns: null,
 } as const;

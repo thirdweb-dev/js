@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.passpay",
+  name: "PassPay Wallet",
+  homepage: "https://www.passpay.io/",
+  image_id: "a1c337f5-c156-4ce8-763b-b4cc65f1c200",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/US/app/passpay-wallet-nft-%E4%BB%AE%E6%83%B3%E9%80%9A%E8%B2%A8-%E3%82%A6%E3%82%A9%E3%83%AC%E3%83%83%E3%83%88/id1645009398",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "com.wallet.passpay://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.passpay.io/",
-  id: "io.passpay",
-  image_id: "a1c337f5-c156-4ce8-763b-b4cc65f1c200",
-  mobile: {
-    native: "com.wallet.passpay://",
-    universal: null,
-  },
-  name: "PassPay Wallet",
-  rdns: null,
 } as const;

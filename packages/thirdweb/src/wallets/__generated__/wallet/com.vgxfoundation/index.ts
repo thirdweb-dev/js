@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.vgxfoundation",
+  name: "VGX Wallet",
+  homepage: "https://vgxfoundation.com/",
+  image_id: "91035734-c365-4341-6835-c056a22cc200",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/safemoon/id1579735495",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "safemoon://",
+    universal: "https://safemoon.com/wc/wc",
   },
   desktop: {
     native: "safemoon://",
     universal: "https://safemoon.com/wc/wc",
   },
-  homepage: "https://vgxfoundation.com/",
-  id: "com.vgxfoundation",
-  image_id: "91035734-c365-4341-6835-c056a22cc200",
-  mobile: {
-    native: "safemoon://",
-    universal: "https://safemoon.com/wc/wc",
-  },
-  name: "VGX Wallet",
-  rdns: null,
 } as const;

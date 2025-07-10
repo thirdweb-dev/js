@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "org.dota168",
+  name: "MetaWallet",
+  homepage: "http://www.dota168.org/",
+  image_id: "a18337ad-433f-47c0-ea57-8a6199835e00",
   app: {
-    android: "http://www.dota168.org/",
     browser: null,
-    chrome: "http://www.dota168.org/",
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "http://www.dota168.org/",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: "http://www.dota168.org/",
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "metawallet://com.metawallet.client",
+    universal: "http://www.dota168.org/",
   },
   desktop: {
     native: "metawallet://",
     universal: "http://www.dota168.org/",
   },
-  homepage: "http://www.dota168.org/",
-  id: "org.dota168",
-  image_id: "a18337ad-433f-47c0-ea57-8a6199835e00",
-  mobile: {
-    native: "metawallet://com.metawallet.client",
-    universal: "http://www.dota168.org/",
-  },
-  name: "MetaWallet",
-  rdns: null,
 } as const;

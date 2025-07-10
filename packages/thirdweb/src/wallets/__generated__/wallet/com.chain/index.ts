@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.chain",
+  name: "Chain",
+  homepage: "https://chain.com",
+  image_id: "f9f3d8da-e791-47d2-98c2-031712617e00",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/id6444779277",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "chainapp://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://chain.com",
-  id: "com.chain",
-  image_id: "f9f3d8da-e791-47d2-98c2-031712617e00",
-  mobile: {
-    native: "chainapp://",
-    universal: null,
-  },
-  name: "Chain",
-  rdns: null,
 } as const;

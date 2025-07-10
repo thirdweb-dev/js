@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.pionewallet",
+  name: "PioneWallet",
+  homepage: "https://pionewallet.com/",
+  image_id: "d3ab5013-f497-4857-d169-4e666db89a00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/pione-wallet/id6738914833",
     android:
       "https://play.google.com/store/apps/details?id=com.companyname.swaptobe&hl=vi",
-    browser: null,
-    chrome: "https://",
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/pione-wallet/id6738914833",
-    linux: "",
     mac: "https://apps.apple.com/us/app/pione-wallet/id6738914833",
-    opera: null,
-    safari: null,
     windows: "",
+    linux: "",
+    chrome: "https://",
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.pionewallet",
+  mobile: {
+    native: "pionewallet://",
+    universal: "",
   },
   desktop: {
     native: "",
     universal: "",
   },
-  homepage: "https://pionewallet.com/",
-  id: "com.pionewallet",
-  image_id: "d3ab5013-f497-4857-d169-4e666db89a00",
-  mobile: {
-    native: "pionewallet://",
-    universal: "",
-  },
-  name: "PioneWallet",
-  rdns: "com.pionewallet",
 } as const;

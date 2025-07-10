@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "co.arculus",
+  name: "Arculus Wallet",
+  homepage: "https://www.arculus.co",
+  image_id: "3882c5aa-61f8-4ef6-a628-97cdc4494000",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/arculus-wallet/id1575425801",
     android:
       "https://play.google.com/store/apps/details?id=co.arculus.wallet.android&hl=en_US&gl=US",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/arculus-wallet/id1575425801",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "arculuswc://",
+    universal: "https://gw.arculus.co/app/wc",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.arculus.co",
-  id: "co.arculus",
-  image_id: "3882c5aa-61f8-4ef6-a628-97cdc4494000",
-  mobile: {
-    native: "arculuswc://",
-    universal: "https://gw.arculus.co/app/wc",
-  },
-  name: "Arculus Wallet",
-  rdns: null,
 } as const;

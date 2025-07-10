@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.gemspocket",
+  name: "Gems Pocket",
+  homepage: "https://gemspocket.com/",
+  image_id: "085ac257-f026-469d-4f6b-e947b6aa4a00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.ancryptoWallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/in/app/ancrypto/id1660898349",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.ancryptoWallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "ancrypto://app",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://gemspocket.com/",
-  id: "com.gemspocket",
-  image_id: "085ac257-f026-469d-4f6b-e947b6aa4a00",
-  mobile: {
-    native: "ancrypto://app",
-    universal: null,
-  },
-  name: "Gems Pocket",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.ibvm",
+  name: "IBVM Wallet",
+  homepage: "https://ibvm.io/",
+  image_id: "a9b8d4c4-b6e1-4b2e-15c3-81331511c400",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.ibvm.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/ibvm-wallet/id6744966630",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.ibvm.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "ibvm://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://ibvm.io/",
-  id: "io.ibvm",
-  image_id: "a9b8d4c4-b6e1-4b2e-15c3-81331511c400",
-  mobile: {
-    native: "ibvm://",
-    universal: null,
-  },
-  name: "IBVM Wallet",
-  rdns: null,
 } as const;

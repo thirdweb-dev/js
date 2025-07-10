@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "xyz.ctrl",
+  name: "Ctrl Wallet",
+  homepage: "https://ctrl.xyz/",
+  image_id: "55e59c54-43bf-434a-e966-547514f21500",
   app: {
-    android: "https://play.google.com/store/apps/details?id=xyz.ctrl.wallet",
     browser: "https://ctrl.xyz/",
+    ios: "https://apps.apple.com/us/app/ctrl-wallet/id6630386336",
+    android: "https://play.google.com/store/apps/details?id=xyz.ctrl.wallet",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/ctrl-wallet/hmeobnfnfcmdkdcmlblgagmfpfboieaf?hl=en",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/us/app/ctrl-wallet/id6630386336",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "xyz.ctrl",
+  mobile: {
+    native: "ctrl-mobile://",
+    universal: "https://ctrl.xyz/deeplink/wallet",
   },
   desktop: {
     native: "",
     universal: "https://ctrl.xyz/",
   },
-  homepage: "https://ctrl.xyz/",
-  id: "xyz.ctrl",
-  image_id: "55e59c54-43bf-434a-e966-547514f21500",
-  mobile: {
-    native: "ctrl-mobile://",
-    universal: "https://ctrl.xyz/deeplink/wallet",
-  },
-  name: "Ctrl Wallet",
-  rdns: "xyz.ctrl",
 } as const;

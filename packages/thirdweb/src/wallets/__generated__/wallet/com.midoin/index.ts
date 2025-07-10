@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.midoin",
+  name: "midoin",
+  homepage: "https://midoin.com",
+  image_id: "9728246c-9504-4b0f-9881-ed848c9fa000",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.midoin",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/midoin/id1374974523",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.midoin",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "midoin://",
+    universal: "https://midoin.app.link",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://midoin.com",
-  id: "com.midoin",
-  image_id: "9728246c-9504-4b0f-9881-ed848c9fa000",
-  mobile: {
-    native: "midoin://",
-    universal: "https://midoin.app.link",
-  },
-  name: "midoin",
-  rdns: null,
 } as const;

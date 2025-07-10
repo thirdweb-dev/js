@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.nicegram",
+  name: "Nicegram Wallet",
+  homepage: "https://nicegram.app",
+  image_id: "929745a4-5830-480b-f6ab-bb3a854bc700",
   app: {
-    android: "https://play.google.com/store/apps/details?id=app.nicegram",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/app/apple-store/id1608870673",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=app.nicegram",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "ncg://wallet/home",
+    universal: "https://nicegram.app/",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://nicegram.app",
-  id: "app.nicegram",
-  image_id: "929745a4-5830-480b-f6ab-bb3a854bc700",
-  mobile: {
-    native: "ncg://wallet/home",
-    universal: "https://nicegram.app/",
-  },
-  name: "Nicegram Wallet",
-  rdns: null,
 } as const;

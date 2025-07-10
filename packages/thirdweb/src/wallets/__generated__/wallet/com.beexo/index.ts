@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.beexo",
+  name: "Beexo",
+  homepage: "https://beexo.com/",
+  image_id: "7074bf0c-d0f7-4d86-2dc4-28430d629d00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.beexo",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/ar/app/beexo-wallet/id1533311061",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.beexo",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "beexo://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://app.beexo.com/",
   },
-  homepage: "https://beexo.com/",
-  id: "com.beexo",
-  image_id: "7074bf0c-d0f7-4d86-2dc4-28430d629d00",
-  mobile: {
-    native: "beexo://",
-    universal: null,
-  },
-  name: "Beexo",
-  rdns: null,
 } as const;

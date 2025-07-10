@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.monarchwallet",
+  name: "Monarch Wallet",
+  homepage: "https://monarchwallet.com",
+  image_id: "c664d955-8a1e-4460-3917-4cfcf198f000",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/monarch-wallet/id1386397997",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://monarchwallet.com",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://monarchwallet.com",
-  id: "com.monarchwallet",
-  image_id: "c664d955-8a1e-4460-3917-4cfcf198f000",
-  mobile: {
-    native: null,
-    universal: "https://monarchwallet.com",
-  },
-  name: "Monarch Wallet",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.nash",
+  name: "Nash",
+  homepage: "https://nash.io",
+  image_id: "65c53de2-05fd-4a62-5f9c-979dcb406c00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.nash.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/nl/app/nash-spend-save-invest/id1475759236",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.nash.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "nash://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://nash.io",
-  id: "io.nash",
-  image_id: "65c53de2-05fd-4a62-5f9c-979dcb406c00",
-  mobile: {
-    native: "nash://",
-    universal: null,
-  },
-  name: "Nash",
-  rdns: null,
 } as const;

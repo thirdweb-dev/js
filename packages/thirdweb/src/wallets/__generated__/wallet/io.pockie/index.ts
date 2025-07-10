@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.pockie",
+  name: "pockie",
+  homepage: "https://www.pockie.io/ko",
+  image_id: "a761beae-1e7e-4402-bcc5-a896a92bfb00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/kr/app/pockie/id6448715234",
     android:
       "https://play.google.com/store/apps/details?id=com.pilab.pockie&hl=en-KR",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/kr/app/pockie/id6448715234",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "pockie://",
+    universal: "https://pockie.app.link",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.pockie.io/ko",
-  id: "io.pockie",
-  image_id: "a761beae-1e7e-4402-bcc5-a896a92bfb00",
-  mobile: {
-    native: "pockie://",
-    universal: "https://pockie.app.link",
-  },
-  name: "pockie",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.klipwallet",
+  name: "Klip",
+  homepage: "https://klipwallet.com/",
+  image_id: "f7b6b2a6-ebe7-4779-6ad1-79a3142e6b00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.klipwallet.app",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/kr/app/클립-klip/id1627665524",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.klipwallet.app",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "klipwallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://klipwallet.com/",
-  id: "com.klipwallet",
-  image_id: "f7b6b2a6-ebe7-4779-6ad1-79a3142e6b00",
-  mobile: {
-    native: "klipwallet://",
-    universal: null,
-  },
-  name: "Klip",
-  rdns: null,
 } as const;

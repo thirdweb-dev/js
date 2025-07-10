@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.uptn.dapp-web",
+  name: "UPTN",
+  homepage: "https://dapp-web.uptn.io",
+  image_id: "5e656c3e-96ae-484f-c0c6-37bc908daa00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.uptn.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/kr/app/id6444606758",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.uptn.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "uptn://dapp-web.uptn.io/",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://dapp-web.uptn.io",
-  id: "io.uptn.dapp-web",
-  image_id: "5e656c3e-96ae-484f-c0c6-37bc908daa00",
-  mobile: {
-    native: "uptn://dapp-web.uptn.io/",
-    universal: null,
-  },
-  name: "UPTN",
-  rdns: null,
 } as const;

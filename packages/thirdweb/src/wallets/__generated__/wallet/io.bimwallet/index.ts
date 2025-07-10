@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.bimwallet",
+  name: "BIM Wallet",
+  homepage: "https://www.bimwallet.io/",
+  image_id: "dae5a6bb-ac44-4d75-8c25-a361801d3b00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.bimwallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.bimwallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "bimwallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.bimwallet.io/",
-  id: "io.bimwallet",
-  image_id: "dae5a6bb-ac44-4d75-8c25-a361801d3b00",
-  mobile: {
-    native: "bimwallet://",
-    universal: null,
-  },
-  name: "BIM Wallet",
-  rdns: null,
 } as const;
