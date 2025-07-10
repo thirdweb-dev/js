@@ -1,16 +1,30 @@
-const SUPPORTED_FIAT_CURRENCIES = [
+const CURRENCIES = [
   "USD",
-  "CAD",
-  "GBP",
   "EUR",
+  "GBP",
   "JPY",
+  "KRW",
+  "CNY",
+  "INR",
+  "NOK",
+  "SEK",
+  "CHF",
   "AUD",
+  "CAD",
   "NZD",
+  "MXN",
+  "BRL",
+  "CLP",
+  "CZK",
+  "DKK",
+  "HKD",
+  "HUF",
+  "IDR",
+  "ILS",
+  "ISK",
 ] as const;
-/**
- * @internal
- */
-export type SupportedFiatCurrency = (typeof SUPPORTED_FIAT_CURRENCIES)[number];
+
+export type SupportedFiatCurrency = (typeof CURRENCIES)[number] | (string & {});
 
 export function getFiatSymbol(showBalanceInFiat: SupportedFiatCurrency) {
   switch (showBalanceInFiat) {

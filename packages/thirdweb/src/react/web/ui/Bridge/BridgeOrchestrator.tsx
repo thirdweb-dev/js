@@ -2,6 +2,7 @@
 import { useCallback, useMemo } from "react";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../utils/address.js";
@@ -39,6 +40,7 @@ export type UIOptions = Prettify<
       description?: string;
       image?: string;
     };
+    currency?: SupportedFiatCurrency;
   } & (
     | {
         mode: "fund_wallet";
@@ -310,6 +312,7 @@ export function BridgeOrchestrator({
             onPaymentMethodSelected={handlePaymentMethodSelected}
             paymentMethods={paymentMethods}
             receiverAddress={state.context.receiverAddress}
+            currency={uiOptions.currency}
           />
         )}
 
