@@ -4,14 +4,19 @@ import type { SearchType } from "./types";
 
 export async function searchUsers(
   authToken: string,
-  clientId: string,
+  clientId: string | undefined,
+  ecosystemSlug: string | undefined,
   searchType: SearchType,
   query: string,
 ): Promise<WalletUser[]> {
   const url = new URL(`${THIRDWEB_EWS_API_HOST}/api/2024-05-05/account/list`);
   
-  // Add clientId parameter
-  url.searchParams.append("clientId", clientId);
+  // Add clientId or ecosystemSlug parameter
+  if (ecosystemSlug) {
+    url.searchParams.append("ecosystemSlug", ecosystemSlug);
+  } else if (clientId) {
+    url.searchParams.append("clientId", clientId);
+  }
   
   // Add search parameter based on search type
   switch (searchType) {
@@ -33,7 +38,7 @@ export async function searchUsers(
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
-      "x-client-id": clientId,
+      ...(clientId && { "x-client-id": clientId }),
     },
     method: "GET",
   });

@@ -7,22 +7,31 @@ import { embeddedWalletsKeys } from "../query-keys/cache-keys";
 const fetchAccountList = ({
   jwt,
   clientId,
+  ecosystemSlug,
   pageNumber,
 }: {
   jwt: string;
-  clientId: string;
+  clientId?: string;
+  ecosystemSlug?: string;
   pageNumber: number;
 }) => {
   return async () => {
     const url = new URL(`${THIRDWEB_EWS_API_HOST}/api/2024-05-05/account/list`);
-    url.searchParams.append("clientId", clientId);
+    
+    // Add clientId or ecosystemSlug parameter
+    if (ecosystemSlug) {
+      url.searchParams.append("ecosystemSlug", ecosystemSlug);
+    } else if (clientId) {
+      url.searchParams.append("clientId", clientId);
+    }
+    
     url.searchParams.append("page", pageNumber.toString());
 
     const res = await fetch(url.href, {
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
-        "x-client-id": clientId,
+        ...(clientId && { "x-client-id": clientId }),
       },
       method: "GET",
     });
@@ -38,23 +47,25 @@ const fetchAccountList = ({
 };
 
 export function useEmbeddedWallets(params: {
-  clientId: string;
+  clientId?: string;
+  ecosystemSlug?: string;
   page: number;
   authToken: string;
 }) {
-  const { clientId, page, authToken } = params;
+  const { clientId, ecosystemSlug, page, authToken } = params;
   const address = useActiveAccount()?.address;
 
   return useQuery({
-    enabled: !!address && !!clientId,
+    enabled: !!address && !!(clientId || ecosystemSlug),
     queryFn: fetchAccountList({
       clientId,
+      ecosystemSlug,
       jwt: authToken,
       pageNumber: page,
     }),
     queryKey: embeddedWalletsKeys.embeddedWallets(
       address || "",
-      clientId,
+      clientId || ecosystemSlug || "",
       page,
     ),
   });
@@ -67,7 +78,7 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
   const address = useActiveAccount()?.address;
 
   return useMutation({
-    mutationFn: async ({ clientId }: { clientId: string }) => {
+    mutationFn: async ({ clientId, ecosystemSlug }: { clientId?: string; ecosystemSlug?: string }) => {
       const responses: WalletUser[] = [];
       let page = 1;
 
@@ -77,12 +88,13 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
         }>({
           queryFn: fetchAccountList({
             clientId,
+            ecosystemSlug,
             jwt: authToken,
             pageNumber: page,
           }),
           queryKey: embeddedWalletsKeys.embeddedWallets(
             address || "",
-            clientId,
+            clientId || ecosystemSlug || "",
             page,
           ),
         });

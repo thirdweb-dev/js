@@ -40,9 +40,11 @@ const columnHelper = createColumnHelper<WalletUser>();
 
 export function InAppWalletUsersPageContent(props: {
   authToken: string;
-  projectClientId: string;
   client: ThirdwebClient;
-}) {
+} & (
+  | { projectClientId: string; ecosystemSlug?: never }
+  | { ecosystemSlug: string; projectClientId?: never }
+)) {
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("linkedAccounts", {
@@ -119,6 +121,7 @@ export function InAppWalletUsersPageContent(props: {
   const walletsQuery = useEmbeddedWallets({
     authToken: props.authToken,
     clientId: props.projectClientId,
+    ecosystemSlug: props.ecosystemSlug,
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
@@ -130,7 +133,13 @@ export function InAppWalletUsersPageContent(props: {
   const handleSearch = async (searchType: SearchType, query: string) => {
     setIsSearching(true);
     try {
-      const results = await searchUsers(props.authToken, props.projectClientId, searchType, query);
+      const results = await searchUsers(
+        props.authToken,
+        props.projectClientId,
+        props.ecosystemSlug,
+        searchType,
+        query
+      );
       setSearchResults(results);
       setHasSearchResults(true);
     } catch (error) {
@@ -153,6 +162,7 @@ export function InAppWalletUsersPageContent(props: {
     }
     const usersWallets = await getAllEmbeddedWallets({
       clientId: props.projectClientId,
+      ecosystemSlug: props.ecosystemSlug,
     });
     const csv = Papa.unparse(
       usersWallets.map((row) => {
