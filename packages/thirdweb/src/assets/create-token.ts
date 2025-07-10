@@ -38,16 +38,14 @@ export async function createToken(options: CreateTokenOptions) {
 
   let salt: Hex = "0x";
   if (!options.salt) {
-    salt =
-      "0x1f" +
-      toHex(blockNumber, {
-        size: 32,
-      }).substring(4);
+    salt = `0x1f${toHex(blockNumber, {
+      size: 32,
+    }).substring(4)}`;
   } else {
     if (options.salt.startsWith("0x") && options.salt.length === 66) {
-      salt = options.salt as `0x${string}`;
+      salt = options.salt;
     } else {
-      salt = "0x1f" + keccakId(options.salt).substring(4);
+      salt = `0x1f${keccakId(options.salt).substring(4)}`;
     }
   }
 

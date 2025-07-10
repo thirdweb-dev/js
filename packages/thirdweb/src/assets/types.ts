@@ -1,3 +1,4 @@
+import type { Hex } from "viem";
 import type { FileOrBufferOrString } from "../storage/upload/types.js";
 import type { ClientAndChainAndAccount } from "../utils/types.js";
 
@@ -45,7 +46,7 @@ type LaunchConfig =
   | { kind: "distribute"; config: DistributeConfig };
 
 export type CreateTokenOptions = ClientAndChainAndAccount & {
-  salt?: string;
+  salt?: Hex;
   params: TokenParams;
   launchConfig?: LaunchConfig;
   referrerAddress?: string;
