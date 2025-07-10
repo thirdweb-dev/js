@@ -2,32 +2,32 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.tomi",
+  name: "tomi Wallet",
+  homepage: "https://tomi.com/wallet",
+  image_id: "e0592a0e-1909-4a73-7955-2dbf9caac200",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/tomipay-digital-payment-system/id1643501440",
     android:
       "https://play.google.com/store/apps/details?id=com.tomiapp.production",
-    browser: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/tomipay/feoojlbclclaoifjiedeeenhldlenopl",
-    edge: null,
     firefox: null,
-    ios: "https://apps.apple.com/us/app/tomipay-digital-payment-system/id1643501440",
-    linux: null,
-    mac: null,
-    opera: null,
     safari: null,
-    windows: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "tomiwallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://tomi.com/wallet",
-  id: "com.tomi",
-  image_id: "e0592a0e-1909-4a73-7955-2dbf9caac200",
-  mobile: {
-    native: "tomiwallet://",
-    universal: null,
-  },
-  name: "tomi Wallet",
-  rdns: null,
 } as const;

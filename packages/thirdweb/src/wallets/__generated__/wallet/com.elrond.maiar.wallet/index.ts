@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.elrond.maiar.wallet",
+  name: "xPortal",
+  homepage: "https://xportal.com",
+  image_id: "22bdb11a-39d3-42bb-f7cb-84b77f5a5200",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/ro/app/xportal/id1519405832",
     android:
       "https://play.google.com/store/apps/details?id=com.elrond.maiar.wallet",
-    browser: null,
-    chrome: "-",
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/ro/app/xportal/id1519405832",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: "-",
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.elrond.maiar.wallet",
+  mobile: {
+    native: "xportal://",
+    universal: "https://xportal.app.link",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://xportal.com",
-  id: "com.elrond.maiar.wallet",
-  image_id: "22bdb11a-39d3-42bb-f7cb-84b77f5a5200",
-  mobile: {
-    native: "xportal://",
-    universal: "https://xportal.app.link",
-  },
-  name: "xPortal",
-  rdns: "com.elrond.maiar.wallet",
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.binance.wallet",
+  name: "Binance Wallet",
+  homepage: "https://www.binance.com/en/web3wallet",
+  image_id: "3d7eb880-7654-431f-ed84-a25712b45200",
   app: {
-    android: "https://www.binance.com/en/download",
     browser: "https://www.binance.com/en/web3wallet",
-    chrome: "https://www.binance.com/en/download",
-    edge: null,
-    firefox: null,
     ios: "https://www.binance.com/en/download",
-    linux: null,
+    android: "https://www.binance.com/en/download",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: "https://www.binance.com/en/download",
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.binance.wallet",
+  mobile: {
+    native: "bnc://app.binance.com/cedefi/",
+    universal: "https://app.binance.com/cedefi",
   },
   desktop: {
     native: null,
     universal: "https://www.binance.com/en/web3wallet",
   },
-  homepage: "https://www.binance.com/en/web3wallet",
-  id: "com.binance.wallet",
-  image_id: "3d7eb880-7654-431f-ed84-a25712b45200",
-  mobile: {
-    native: "bnc://app.binance.com/cedefi/",
-    universal: "https://app.binance.com/cedefi",
-  },
-  name: "Binance Wallet",
-  rdns: "com.binance.wallet",
 } as const;

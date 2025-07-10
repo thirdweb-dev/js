@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.bitcoin",
+  name: "Bitcoin.com Wallet",
+  homepage: "https://www.bitcoin.com/",
+  image_id: "8c575dec-0401-495f-d217-db965b48bf00",
   app: {
+    browser: "https://wallet.bitcoin.com/",
+    ios: "https://apps.apple.com/us/app/bitcoin-wallet-by-bitcoin-com/id1252903728",
     android:
       "https://play.google.com/store/apps/details?id=com.bitcoin.mwallet",
-    browser: "https://wallet.bitcoin.com/",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/bitcoin-wallet-by-bitcoin-com/id1252903728",
-    linux: "https://wallet.bitcoin.com/",
     mac: "https://apps.apple.com/us/app/bitcoin-wallet-by-bitcoin-com/id1252903728",
-    opera: null,
-    safari: null,
     windows: "https://wallet.bitcoin.com/",
+    linux: "https://wallet.bitcoin.com/",
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "bitcoincom://",
+    universal: "https://wallet.bitcoin.com/",
   },
   desktop: {
     native: null,
     universal: "https://wallet.bitcoin.com/",
   },
-  homepage: "https://www.bitcoin.com/",
-  id: "com.bitcoin",
-  image_id: "8c575dec-0401-495f-d217-db965b48bf00",
-  mobile: {
-    native: "bitcoincom://",
-    universal: "https://wallet.bitcoin.com/",
-  },
-  name: "Bitcoin.com Wallet",
-  rdns: null,
 } as const;

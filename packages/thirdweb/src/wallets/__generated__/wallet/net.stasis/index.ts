@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "net.stasis",
+  name: "Stasis Wallet",
+  homepage: "https://stasis.net/",
+  image_id: "d83223cf-f29a-4757-a21e-8913b12f9f00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/app/stasis-wallet/id1371949230",
     android:
       "https://play.google.com/store/apps/details?id=com.stasis.stasiswallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/app/stasis-wallet/id1371949230",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "stasis://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://stasis.net/",
-  id: "net.stasis",
-  image_id: "d83223cf-f29a-4757-a21e-8913b12f9f00",
-  mobile: {
-    native: "stasis://",
-    universal: null,
-  },
-  name: "Stasis Wallet",
-  rdns: null,
 } as const;

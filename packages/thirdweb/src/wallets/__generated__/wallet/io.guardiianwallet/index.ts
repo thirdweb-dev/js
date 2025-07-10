@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.guardiianwallet",
+  name: "GUARDIIAN Wallet",
+  homepage: "https://guardiianwallet.io/",
+  image_id: "4f095c1d-8a31-4af8-ab58-57e82a398e00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.gardianwallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/pk/app/guardiian-wallet/id6478384338",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.gardianwallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "guardiianwallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://guardiianwallet.io/",
-  id: "io.guardiianwallet",
-  image_id: "4f095c1d-8a31-4af8-ab58-57e82a398e00",
-  mobile: {
-    native: "guardiianwallet://",
-    universal: null,
-  },
-  name: "GUARDIIAN Wallet",
-  rdns: null,
 } as const;

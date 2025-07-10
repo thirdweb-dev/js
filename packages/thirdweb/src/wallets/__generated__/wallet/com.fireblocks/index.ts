@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.fireblocks",
+  name: "Fireblocks",
+  homepage: "https://www.fireblocks.com/",
+  image_id: "94e7efd8-001d-40c0-e490-61e6b85e1b00",
   app: {
+    browser: "https://console.fireblocks.io/",
+    ios: "https://apps.apple.com/us/app/fireblocks/id1439296596",
     android:
       "https://play.google.com/store/apps/details?id=com.fireblocks.client&gl=IL",
-    browser: "https://console.fireblocks.io/",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/fireblocks/id1439296596",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "fireblocks-wc://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://console.fireblocks.io/v2/",
   },
-  homepage: "https://www.fireblocks.com/",
-  id: "com.fireblocks",
-  image_id: "94e7efd8-001d-40c0-e490-61e6b85e1b00",
-  mobile: {
-    native: "fireblocks-wc://",
-    universal: null,
-  },
-  name: "Fireblocks",
-  rdns: null,
 } as const;

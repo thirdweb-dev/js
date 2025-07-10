@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.neftipedia",
+  name: "NeftiWallet",
+  homepage: "https://neftipedia.com/",
+  image_id: "1f812dec-be3d-446c-52f7-a79eb0dd5400",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.NEFTiPEDiA.mp",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.NEFTiPEDiA.mp",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "nefti://nefti.id/asset/",
+    universal: "https://nefti.id/asset/",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://neftipedia.com/",
-  id: "com.neftipedia",
-  image_id: "1f812dec-be3d-446c-52f7-a79eb0dd5400",
-  mobile: {
-    native: "nefti://nefti.id/asset/",
-    universal: "https://nefti.id/asset/",
-  },
-  name: "NeftiWallet",
-  rdns: null,
 } as const;

@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "co.family.wallet",
+  name: "Family",
+  homepage: "https://family.co",
+  image_id: "18ba1b99-6268-4d7e-bead-260e978b1a00",
   app: {
-    android: null,
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/family-ethereum-wallet/id1606779267",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "co.family.wallet",
+  mobile: {
+    native: "familywallet://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://family.co",
-  id: "co.family.wallet",
-  image_id: "18ba1b99-6268-4d7e-bead-260e978b1a00",
-  mobile: {
-    native: "familywallet://",
-    universal: null,
-  },
-  name: "Family",
-  rdns: "co.family.wallet",
 } as const;

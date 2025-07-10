@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.bifrostwallet",
+  name: "Bifrost Wallet",
+  homepage: "https://bifrostwallet.com",
+  image_id: "c1ab3987-7e3c-43fa-0b27-c746f6135a00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/bifrost-wallet/id1577198351",
     android:
       "https://play.google.com/store/apps/details?id=com.bifrostwallet.app",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/bifrost-wallet/id1577198351",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "com.bifrostwallet",
+  mobile: {
+    native: "bifrostwallet://",
+    universal: "https://app.bifrostwallet.com/",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://bifrostwallet.com",
-  id: "com.bifrostwallet",
-  image_id: "c1ab3987-7e3c-43fa-0b27-c746f6135a00",
-  mobile: {
-    native: "bifrostwallet://",
-    universal: "https://app.bifrostwallet.com/",
-  },
-  name: "Bifrost Wallet",
-  rdns: "com.bifrostwallet",
 } as const;

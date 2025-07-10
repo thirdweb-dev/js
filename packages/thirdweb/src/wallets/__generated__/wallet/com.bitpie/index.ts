@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.bitpie",
+  name: "Bitpie",
+  homepage: "https://bitpie.com",
+  image_id: "e6dce4ec-a1a8-49e6-d8e1-8329fdd5c700",
   app: {
-    android: "https://bitpie.com/android/",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/bitpie-universal-crypto-wallet/id1481314229",
-    linux: null,
+    android: "https://bitpie.com/android/",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "bitpiewc://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://bitpie.com",
-  id: "com.bitpie",
-  image_id: "e6dce4ec-a1a8-49e6-d8e1-8329fdd5c700",
-  mobile: {
-    native: "bitpiewc://",
-    universal: null,
-  },
-  name: "Bitpie",
-  rdns: null,
 } as const;

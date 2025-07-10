@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.coinomi",
+  name: "Coinomi",
+  homepage: "https://www.coinomi.com",
+  image_id: "3b446d16-a908-40c8-5835-9a6efe90dd00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.coinomi.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://itunes.apple.com/app/coinomi-wallet/id1333588809",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.coinomi.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "coinomi://",
+    universal: "https://coinomi.page.link",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.coinomi.com",
-  id: "com.coinomi",
-  image_id: "3b446d16-a908-40c8-5835-9a6efe90dd00",
-  mobile: {
-    native: "coinomi://",
-    universal: "https://coinomi.page.link",
-  },
-  name: "Coinomi",
-  rdns: null,
 } as const;

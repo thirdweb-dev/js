@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.purechain",
+  name: "PureWallet",
+  homepage: "https://purechain.com",
+  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
     android:
       "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "purewalletp://",
+    universal: "https://purewallet.ai/api",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://purechain.com",
-  id: "com.purechain",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
-  mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
-  },
-  name: "PureWallet",
-  rdns: null,
 } as const;

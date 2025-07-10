@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.webauth",
+  name: "WebAuth",
+  homepage: "https://webauth.com",
+  image_id: "93fcd24e-431d-421f-32c2-9563d725c800",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/webauth/id1594500069",
     android:
       "https://play.google.com/store/apps/details?id=com.metallicus.webauth&hl=en_US",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/webauth/id1594500069",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "proton://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://webauth.com",
-  id: "com.webauth",
-  image_id: "93fcd24e-431d-421f-32c2-9563d725c800",
-  mobile: {
-    native: "proton://",
-    universal: null,
-  },
-  name: "WebAuth",
-  rdns: null,
 } as const;

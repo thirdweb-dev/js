@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.armana.portal",
+  name: "Armana Portal",
+  homepage: "https://portal.armana.io",
+  image_id: "fe3c264d-b595-437d-e5f9-5e5833dd4300",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.armana.portal",
     browser: "https://arman.io/mint",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/armana-portal/id6448726023",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.armana.portal",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "armanaportal://",
+    universal: "https://portal.armana.io/wc?uri=",
   },
   desktop: {
     native: null,
     universal: "https://arman.io/mint",
   },
-  homepage: "https://portal.armana.io",
-  id: "io.armana.portal",
-  image_id: "fe3c264d-b595-437d-e5f9-5e5833dd4300",
-  mobile: {
-    native: "armanaportal://",
-    universal: "https://portal.armana.io/wc?uri=",
-  },
-  name: "Armana Portal",
-  rdns: null,
 } as const;

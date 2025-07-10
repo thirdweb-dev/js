@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.get-verso",
+  name: "Verso",
+  homepage: "https://get-verso.com",
+  image_id: "109d7c90-86ed-4ee0-e17d-3c87624ddf00",
   app: {
+    browser: "https://get-verso.com",
+    ios: "https://apps.apple.com/app/btu-protocol/id1539304605",
     android:
       "https://play.google.com/store/apps/details?id=com.btuprotocol.btu_wallet",
-    browser: "https://get-verso.com",
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/app/btu-protocol/id1539304605",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "verso://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://get-verso.com",
   },
-  homepage: "https://get-verso.com",
-  id: "com.get-verso",
-  image_id: "109d7c90-86ed-4ee0-e17d-3c87624ddf00",
-  mobile: {
-    native: "verso://",
-    universal: null,
-  },
-  name: "Verso",
-  rdns: null,
 } as const;

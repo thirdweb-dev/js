@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.up",
+  name: "UP.io",
+  homepage: "https://up.io",
+  image_id: "f1a3f4d4-871f-42db-89ab-bb36b5c01f00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=io.up.wallet&hl=en",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=io.up.wallet&hl=en",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "up-io://",
+    universal: "https://up.io/app/",
   },
   desktop: {
     native: "",
     universal: "",
   },
-  homepage: "https://up.io",
-  id: "io.up",
-  image_id: "f1a3f4d4-871f-42db-89ab-bb36b5c01f00",
-  mobile: {
-    native: "up-io://",
-    universal: "https://up.io/app/",
-  },
-  name: "UP.io",
-  rdns: null,
 } as const;

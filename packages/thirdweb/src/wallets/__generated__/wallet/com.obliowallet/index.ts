@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.obliowallet",
+  name: "Oblio Wallet",
+  homepage: "https://obliowallet.com",
+  image_id: "a0ff2932-e049-4622-a9c8-fa41278cff00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.oblio.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://play.google.com/store/apps/details?id=com.oblio.wallet",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.oblio.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "oblio://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://obliowallet.com",
-  id: "com.obliowallet",
-  image_id: "a0ff2932-e049-4622-a9c8-fa41278cff00",
-  mobile: {
-    native: "oblio://",
-    universal: null,
-  },
-  name: "Oblio Wallet",
-  rdns: null,
 } as const;

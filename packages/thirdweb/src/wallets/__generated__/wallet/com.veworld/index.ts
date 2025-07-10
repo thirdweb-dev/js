@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.veworld",
+  name: "VeWorld Mobile",
+  homepage: "https://veworld.com",
+  image_id: "afa5084b-02da-4dd4-418b-9f6410e34e00",
   app: {
-    android: "https://www.veworld.com/",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://www.veworld.com/",
-    linux: null,
+    android: "https://www.veworld.com/",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "veworld://org.vechain.veworld.app/",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://veworld.com",
-  id: "com.veworld",
-  image_id: "afa5084b-02da-4dd4-418b-9f6410e34e00",
-  mobile: {
-    native: "veworld://org.vechain.veworld.app/",
-    universal: null,
-  },
-  name: "VeWorld Mobile",
-  rdns: null,
 } as const;

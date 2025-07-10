@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.adftechnology",
+  name: "ADF Wallet",
+  homepage: "https://www.adftechnology.com/",
+  image_id: "28acc8ed-a0e7-4004-1968-c54869fa2100",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.adf.wallet",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.adf.wallet",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "adf://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://www.adftechnology.com/",
-  id: "com.adftechnology",
-  image_id: "28acc8ed-a0e7-4004-1968-c54869fa2100",
-  mobile: {
-    native: "adf://",
-    universal: null,
-  },
-  name: "ADF Wallet",
-  rdns: null,
 } as const;

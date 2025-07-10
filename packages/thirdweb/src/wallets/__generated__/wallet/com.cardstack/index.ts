@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.cardstack",
+  name: "Card Wallet",
+  homepage: "https://cardstack.com/earn-together",
+  image_id: "325428cf-c212-4d83-a434-7f48902d2c00",
   app: {
-    android: "https://cardstack.com/android",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://cardstack.com/ios",
-    linux: null,
+    android: "https://cardstack.com/android",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "cardwallet://",
+    universal: "https://wallet.cardstack.com",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://cardstack.com/earn-together",
-  id: "com.cardstack",
-  image_id: "325428cf-c212-4d83-a434-7f48902d2c00",
-  mobile: {
-    native: "cardwallet://",
-    universal: "https://wallet.cardstack.com",
-  },
-  name: "Card Wallet",
-  rdns: null,
 } as const;

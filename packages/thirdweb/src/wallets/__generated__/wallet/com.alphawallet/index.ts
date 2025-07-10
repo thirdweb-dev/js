@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.alphawallet",
+  name: "AlphaWallet",
+  homepage: "https://alphawallet.com/",
+  image_id: "5b1cddfb-056e-4e78-029a-54de5d70c500",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/alphawallet-eth-wallet/id1358230430",
     android:
       "https://play.google.com/store/apps/details?id=io.stormbird.wallet",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/alphawallet-eth-wallet/id1358230430",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "awallet://",
+    universal: "https://aw.app",
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://alphawallet.com/",
-  id: "com.alphawallet",
-  image_id: "5b1cddfb-056e-4e78-029a-54de5d70c500",
-  mobile: {
-    native: "awallet://",
-    universal: "https://aw.app",
-  },
-  name: "AlphaWallet",
-  rdns: null,
 } as const;

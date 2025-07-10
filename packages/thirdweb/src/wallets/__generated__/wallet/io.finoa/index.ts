@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.finoa",
+  name: "FinoaConnect",
+  homepage: "https://app.finoa.io/",
+  image_id: "b7a0c6fe-10bd-423c-6aa5-0637bd2b9900",
   app: {
-    android: null,
     browser: "https://app.finoa.io/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/finoa-2fa/id1484058524",
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: "io.finoa",
+  mobile: {
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,
     universal: "https://app.finoa.io/",
   },
-  homepage: "https://app.finoa.io/",
-  id: "io.finoa",
-  image_id: "b7a0c6fe-10bd-423c-6aa5-0637bd2b9900",
-  mobile: {
-    native: null,
-    universal: null,
-  },
-  name: "FinoaConnect",
-  rdns: "io.finoa",
 } as const;

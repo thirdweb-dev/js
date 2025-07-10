@@ -2,33 +2,33 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.nightly",
+  name: "Nightly",
+  homepage: "https://nightly.app",
+  image_id: "7fb6e288-6d7e-4f29-d934-8b3f229c2d00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/pl/app/nightly-multichain-wallet/id6444768157",
     android:
       "https://play.google.com/store/apps/details?id=com.nightlymobile&pli=1",
-    browser: null,
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chromewebstore.google.com/detail/nightly/fiikommddbeccaoicoejoniammnalkfa",
-    edge: "https://chromewebstore.google.com/detail/nightly/fiikommddbeccaoicoejoniammnalkfa",
     firefox: null,
-    ios: "https://apps.apple.com/pl/app/nightly-multichain-wallet/id6444768157",
-    linux: null,
-    mac: null,
+    safari: null,
+    edge: "https://chromewebstore.google.com/detail/nightly/fiikommddbeccaoicoejoniammnalkfa",
     opera:
       "https://chromewebstore.google.com/detail/nightly/fiikommddbeccaoicoejoniammnalkfa",
-    safari: null,
-    windows: null,
+  },
+  rdns: "app.nightly",
+  mobile: {
+    native: "nightly://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://nightly.app",
-  id: "app.nightly",
-  image_id: "7fb6e288-6d7e-4f29-d934-8b3f229c2d00",
-  mobile: {
-    native: "nightly://",
-    universal: null,
-  },
-  name: "Nightly",
-  rdns: "app.nightly",
 } as const;

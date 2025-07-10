@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "app.keyring",
+  name: "KEYRING PRO",
+  homepage: "https://keyring.app/",
+  image_id: "dda0f0fb-34e8-4a57-dcea-b008e7d1ff00",
   app: {
-    android: "https://play.google.com/store/apps/details?id=co.bacoor.keyring",
     browser: "https://keyring.app/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/keyring-pro-wallet-management/id1546824976",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=co.bacoor.keyring",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "keyring://",
+    universal: "https://keyring.app/",
   },
   desktop: {
     native: null,
     universal: "https://keyring.app/",
   },
-  homepage: "https://keyring.app/",
-  id: "app.keyring",
-  image_id: "dda0f0fb-34e8-4a57-dcea-b008e7d1ff00",
-  mobile: {
-    native: "keyring://",
-    universal: "https://keyring.app/",
-  },
-  name: "KEYRING PRO",
-  rdns: null,
 } as const;

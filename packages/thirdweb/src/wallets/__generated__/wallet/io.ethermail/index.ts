@@ -2,31 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "io.ethermail",
+  name: "EtherMail",
+  homepage: "https://ethermail.io",
+  image_id: "7f3205c6-6051-4cdb-8ef8-84334a7c7f00",
   app: {
+    browser: null,
+    ios: "https://apps.apple.com/us/app/ethermail/id6451305966",
     android:
       "https://play.google.com/store/apps/details?id=com.ethermail.ethermail_android",
-    browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
-    ios: "https://apps.apple.com/us/app/ethermail/id6451305966",
-    linux: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "ethermail://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://ethermail.io",
-  id: "io.ethermail",
-  image_id: "7f3205c6-6051-4cdb-8ef8-84334a7c7f00",
-  mobile: {
-    native: "ethermail://",
-    universal: null,
-  },
-  name: "EtherMail",
-  rdns: null,
 } as const;

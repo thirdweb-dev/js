@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "money.keychain",
+  name: "Keychain",
+  homepage: "http://keychain.money/",
+  image_id: "2b6e9e4b-7dca-45dd-45d5-d96f45010200",
   app: {
-    android: null,
     browser: "https://app.keychain.money/",
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: null,
-    linux: null,
+    android: null,
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: null,
+    universal: "https://app.keychain.money/",
   },
   desktop: {
     native: null,
     universal: "https://app.keychain.money/",
   },
-  homepage: "http://keychain.money/",
-  id: "money.keychain",
-  image_id: "2b6e9e4b-7dca-45dd-45d5-d96f45010200",
-  mobile: {
-    native: null,
-    universal: "https://app.keychain.money/",
-  },
-  name: "Keychain",
-  rdns: null,
 } as const;

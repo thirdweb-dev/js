@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
+  id: "com.unitywallet",
+  name: "Unity Wallet",
+  homepage: "https://unitywallet.com",
+  image_id: "09b4aad3-c007-40e7-ec8f-6a62585e6900",
   app: {
-    android: "https://play.google.com/store/apps/details?id=com.savl",
     browser: null,
-    chrome: null,
-    edge: null,
-    firefox: null,
     ios: "https://apps.apple.com/us/app/savl-wallet-bitcoin-solana/id1369912925",
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.savl",
     mac: null,
-    opera: null,
-    safari: null,
     windows: null,
+    linux: null,
+    chrome: null,
+    firefox: null,
+    safari: null,
+    edge: null,
+    opera: null,
+  },
+  rdns: null,
+  mobile: {
+    native: "savl://",
+    universal: null,
   },
   desktop: {
     native: null,
     universal: null,
   },
-  homepage: "https://unitywallet.com",
-  id: "com.unitywallet",
-  image_id: "09b4aad3-c007-40e7-ec8f-6a62585e6900",
-  mobile: {
-    native: "savl://",
-    universal: null,
-  },
-  name: "Unity Wallet",
-  rdns: null,
 } as const;
