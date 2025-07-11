@@ -10,6 +10,7 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getOwnedTokens } from "../../../insight/get-tokens.js";
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import type { PaymentMethod } from "../machines/paymentMachine.js";
 import { useActiveWallet } from "./wallets/useActiveWallet.js";
 
@@ -80,16 +81,42 @@ export function usePaymentMethods(options: {
       const limit = 500;
 
       while (true) {
-        const batch = await getOwnedTokens({
-          chains: insightEnabledChains.map((c) => getCachedChain(c.chainId)),
-          client,
-          ownerAddress: wallet.getAccount()?.address || "",
-          queryOptions: {
-            limit,
-            metadata: "false",
-            page,
-          },
-        });
+        let batch;
+        try {
+          batch = await getOwnedTokens({
+            chains: insightEnabledChains.map((c) => getCachedChain(c.chainId)),
+            client,
+            ownerAddress: wallet.getAccount()?.address || "",
+            queryOptions: {
+              limit,
+              metadata: "false",
+              page,
+            },
+          });
+        } catch (error) {
+          // If the batch fails, fall back to getting native balance for each chain
+          console.warn(`Failed to get owned tokens for batch ${page}:`, error);
+
+          const chainsInBatch = insightEnabledChains.map((c) =>
+            getCachedChain(c.chainId),
+          );
+          const nativeBalances = await Promise.allSettled(
+            chainsInBatch.map(async (chain) => {
+              const balance = await getWalletBalance({
+                address: wallet.getAccount()?.address || "",
+                chain,
+                client,
+              });
+              return balance;
+            }),
+          );
+
+          // Transform successful native balances into the same format as getOwnedTokens results
+          batch = nativeBalances
+            .filter((result) => result.status === "fulfilled")
+            .map((result) => result.value)
+            .filter((balance) => balance.value > 0n);
+        }
 
         if (batch.length === 0) {
           break;
@@ -126,7 +153,9 @@ export function usePaymentMethods(options: {
 
       // Add destination token if included
       if (includeDestinationToken) {
-        const tokenKey = `${destinationToken.chainId}-${destinationToken.address.toLowerCase()}`;
+        const tokenKey = `${
+          destinationToken.chainId
+        }-${destinationToken.address.toLowerCase()}`;
         allValidOriginTokens.set(tokenKey, destinationToken);
       }
 
@@ -155,7 +184,9 @@ export function usePaymentMethods(options: {
               ) {
                 continue;
               }
-              const tokenKey = `${route.originToken.chainId}-${route.originToken.address.toLowerCase()}`;
+              const tokenKey = `${
+                route.originToken.chainId
+              }-${route.originToken.address.toLowerCase()}`;
               allValidOriginTokens.set(tokenKey, route.originToken);
             }
           } catch (error) {
@@ -169,7 +200,9 @@ export function usePaymentMethods(options: {
       const validOwnedTokens: OwnedTokenWithQuote[] = [];
 
       for (const ownedToken of allOwnedTokens) {
-        const tokenKey = `${ownedToken.originToken.chainId}-${ownedToken.originToken.address.toLowerCase()}`;
+        const tokenKey = `${
+          ownedToken.originToken.chainId
+        }-${ownedToken.originToken.address.toLowerCase()}`;
         const validOriginToken = allValidOriginTokens.get(tokenKey);
 
         if (validOriginToken) {
