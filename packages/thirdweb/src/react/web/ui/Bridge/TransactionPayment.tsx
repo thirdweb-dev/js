@@ -27,6 +27,13 @@ import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
+import { useQuery } from "@tanstack/react-query";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { decimals } from "../../../../extensions/erc20/read/decimals.js";
+import { getContract } from "../../../../contract/contract.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { toTokens } from "../../../../utils/units.js";
 
 export interface TransactionPaymentProps {
   /**
@@ -75,6 +82,35 @@ export function TransactionPayment({
     client,
     transaction: uiOptions.transaction,
     wallet,
+  });
+
+  // We can't use useWalletBalance here because erc20Value is a possibly async value
+  const { data: userBalance } = useQuery({
+    enabled: !!activeAccount?.address,
+    queryFn: async (): Promise<string> => {
+      if (!activeAccount?.address) {
+        return "0";
+      }
+      const erc20Value = await resolvePromisedValue(uiOptions.transaction.erc20Value);
+      const tokenDecimals = erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS && erc20Value
+        ? await decimals({
+          contract: getContract({
+            address: erc20Value.tokenAddress,
+            chain: uiOptions.transaction.chain,
+            client,
+          }),
+        })
+        : 18;
+      const walletBalance = await getWalletBalance({
+        address: activeAccount?.address,
+        chain: uiOptions.transaction.chain,
+        tokenAddress: erc20Value?.tokenAddress,
+        client,
+      });
+
+      return toTokens(walletBalance.value, tokenDecimals);
+    },
+    queryKey: ["active-account-address"],
   });
 
   const contractName =
@@ -330,7 +366,7 @@ export function TransactionPayment({
                 Math.max(
                   0,
                   Number(transactionDataQuery.data.totalCost) -
-                    Number(transactionDataQuery.data.userBalance),
+                  Number(userBalance),
                 ).toString(),
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
