@@ -10,7 +10,10 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import { getOwnedTokens } from "../../../insight/get-tokens.js";
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
+import {
+  type GetWalletBalanceResult,
+  getWalletBalance,
+} from "../../../wallets/utils/getWalletBalance.js";
 import type { PaymentMethod } from "../machines/paymentMachine.js";
 import { useActiveWallet } from "./wallets/useActiveWallet.js";
 
@@ -81,7 +84,7 @@ export function usePaymentMethods(options: {
       const limit = 500;
 
       while (true) {
-        let batch;
+        let batch: GetWalletBalanceResult[];
         try {
           batch = await getOwnedTokens({
             chains: insightEnabledChains.map((c) => getCachedChain(c.chainId)),
