@@ -8,6 +8,7 @@ import type { CompilerMetadata } from "../../../contract/actions/compiler-metada
 import { getCompilerMetadata } from "../../../contract/actions/get-compiler-metadata.js";
 import { getContract } from "../../../contract/contract.js";
 import { decimals } from "../../../extensions/erc20/read/decimals.js";
+import { getBalance } from "../../../extensions/erc20/read/getBalance.js";
 import { getToken } from "../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../pay/convert/type.js";
 import { encode } from "../../../transaction/actions/encode.js";
@@ -17,6 +18,7 @@ import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-va
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { hasSponsoredTransactionsEnabled } from "../../../wallets/smart/is-smart-wallet.js";
+import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
@@ -30,6 +32,8 @@ interface TransactionDetails {
     selector: string;
     description?: string;
   };
+  userBalance: string;
+  userBalanceWei: bigint;
   usdValueDisplay: string | null;
   txCostDisplay: string;
   gasCostDisplay: string | null;
@@ -78,12 +82,33 @@ export function useTransactionDetails({
           encode(transaction).catch(() => "0x"),
         ]);
 
-      const [tokenInfo, gasCostWei] = await Promise.all([
+      const account = wallet?.getAccount();
+      if (!account) {
+        throw new Error("No active account");
+      }
+
+      const [tokenInfo, userBalance, gasCostWei] = await Promise.all([
         getToken(
           client,
           erc20Value ? erc20Value.tokenAddress : NATIVE_TOKEN_ADDRESS,
           transaction.chain.id,
         ).catch(() => null),
+        (async () =>
+          erc20Value &&
+          erc20Value.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+            ? getBalance({
+                contract: getContract({
+                  address: erc20Value.tokenAddress,
+                  chain: transaction.chain,
+                  client,
+                }),
+                address: account.address,
+              })
+            : getWalletBalance({
+                address: account.address,
+                chain: transaction.chain,
+                client,
+              }))().then((result) => result?.value || 0n),
         hasSponsoredTransactions
           ? 0n
           : getTransactionGasCost(transaction).catch(() => null),
@@ -151,9 +176,11 @@ export function useTransactionDetails({
         chainMetadata.data?.nativeCurrency?.symbol || "ETH";
       const tokenSymbol = tokenInfo?.symbol || nativeTokenSymbol;
 
-      const totalCostWei = erc20Value
-        ? erc20Value.amountWei
-        : (value || 0n) + (gasCostWei || 0n);
+      const totalCostWei =
+        erc20Value &&
+        erc20Value.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+          ? erc20Value.amountWei
+          : (value || 0n) + (gasCostWei || 0n);
       const totalCost = toTokens(totalCostWei, decimal);
 
       const price = tokenInfo?.prices[currency || "USD"] || 0;
@@ -163,6 +190,8 @@ export function useTransactionDetails({
         contractMetadata,
         costWei,
         functionInfo,
+        userBalance: toTokens(userBalance, decimal),
+        userBalanceWei: userBalance,
         gasCostDisplay: gasCostWei
           ? `${formatTokenAmount(gasCostWei, 18)} ${nativeTokenSymbol}`
           : null,

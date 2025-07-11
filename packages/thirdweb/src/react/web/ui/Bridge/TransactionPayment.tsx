@@ -327,7 +327,10 @@ export function TransactionPayment({
           onClick={() => {
             if (transactionDataQuery.data?.tokenInfo) {
               onContinue(
-                transactionDataQuery.data.totalCost,
+                (Math.max(0,
+                  Number(transactionDataQuery.data.totalCost) -
+                  Number(transactionDataQuery.data.userBalance)
+                )).toString(),
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
               );
