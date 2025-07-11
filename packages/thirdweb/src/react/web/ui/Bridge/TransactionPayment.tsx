@@ -1,11 +1,15 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import {
   type Address,
   getAddress,
   shortenAddress,
 } from "../../../../utils/address.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -75,6 +79,31 @@ export function TransactionPayment({
     client,
     transaction: uiOptions.transaction,
     wallet,
+  });
+
+  // We can't use useWalletBalance here because erc20Value is a possibly async value
+  const { data: userBalance } = useQuery({
+    enabled: !!activeAccount?.address,
+    queryFn: async (): Promise<string> => {
+      if (!activeAccount?.address) {
+        return "0";
+      }
+      const erc20Value = await resolvePromisedValue(
+        uiOptions.transaction.erc20Value,
+      );
+      const walletBalance = await getWalletBalance({
+        address: activeAccount?.address,
+        chain: uiOptions.transaction.chain,
+        tokenAddress:
+          erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+            ? erc20Value?.tokenAddress
+            : undefined,
+        client,
+      });
+
+      return walletBalance.displayValue;
+    },
+    queryKey: ["user-balance", activeAccount?.address],
   });
 
   const contractName =
@@ -327,7 +356,11 @@ export function TransactionPayment({
           onClick={() => {
             if (transactionDataQuery.data?.tokenInfo) {
               onContinue(
-                transactionDataQuery.data.totalCost,
+                Math.max(
+                  0,
+                  Number(transactionDataQuery.data.totalCost) -
+                    Number(userBalance ?? "0"),
+                ).toString(),
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
               );

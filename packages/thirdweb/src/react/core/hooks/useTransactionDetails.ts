@@ -81,7 +81,7 @@ export function useTransactionDetails({
       const [tokenInfo, gasCostWei] = await Promise.all([
         getToken(
           client,
-          erc20Value ? erc20Value.tokenAddress : NATIVE_TOKEN_ADDRESS,
+          erc20Value?.tokenAddress || NATIVE_TOKEN_ADDRESS,
           transaction.chain.id,
         ).catch(() => null),
         hasSponsoredTransactions
@@ -151,9 +151,11 @@ export function useTransactionDetails({
         chainMetadata.data?.nativeCurrency?.symbol || "ETH";
       const tokenSymbol = tokenInfo?.symbol || nativeTokenSymbol;
 
-      const totalCostWei = erc20Value
-        ? erc20Value.amountWei
-        : (value || 0n) + (gasCostWei || 0n);
+      const totalCostWei =
+        erc20Value &&
+        erc20Value.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+          ? erc20Value.amountWei
+          : (value || 0n) + (gasCostWei || 0n);
       const totalCost = toTokens(totalCostWei, decimal);
 
       const price = tokenInfo?.prices[currency || "USD"] || 0;
