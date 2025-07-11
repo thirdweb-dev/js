@@ -104,7 +104,7 @@ export function TransactionPayment({
       const walletBalance = await getWalletBalance({
         address: activeAccount?.address,
         chain: uiOptions.transaction.chain,
-        tokenAddress: erc20Value?.tokenAddress,
+        tokenAddress: erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS ? erc20Value?.tokenAddress : undefined,
         client,
       });
 
@@ -366,7 +366,7 @@ export function TransactionPayment({
                 Math.max(
                   0,
                   Number(transactionDataQuery.data.totalCost) -
-                  Number(userBalance),
+                  Number(userBalance ?? "0"),
                 ).toString(),
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
