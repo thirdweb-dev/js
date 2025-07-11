@@ -2,9 +2,11 @@ import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
+import { GridPattern } from "@/components/ui/background-patterns";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { getContractCreator } from "../_components/getContractCreator";
 import { PageHeader } from "../_components/PageHeader";
+import { getTokenPriceData } from "./_apis/token-price-data";
 import { ContractHeaderUI } from "./_components/ContractHeader";
 import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
 import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
@@ -25,6 +27,7 @@ export async function ERC20PublicPage(props: {
     tokenDecimals,
     tokenInfo,
     functionSelectors,
+    tokenPriceData,
   ] = await Promise.all([
     getContractMetadata({
       contract: props.serverContract,
@@ -39,6 +42,10 @@ export async function ERC20PublicPage(props: {
       tokenAddress: props.serverContract.address,
     }),
     resolveFunctionSelectors(props.serverContract),
+    getTokenPriceData({
+      chainId: props.serverContract.chain.id,
+      contractAddress: props.serverContract.address,
+    }),
   ]);
 
   if (!contractMetadata.image && tokenInfo) {
@@ -78,62 +85,73 @@ export async function ERC20PublicPage(props: {
 
   return (
     <div className="flex grow flex-col">
-      <PageHeader />
-      <div className="container flex max-w-8xl grow flex-col">
-        <ContractHeaderUI
-          chainMetadata={props.chainMetadata}
-          clientContract={props.clientContract}
-          contractCreator={contractCreator}
-          image={contractMetadata.image}
-          name={contractMetadata.name}
-          socialUrls={
-            typeof contractMetadata.social_urls === "object" &&
-            contractMetadata.social_urls !== null
-              ? contractMetadata.social_urls
-              : {}
-          }
-          symbol={contractMetadata.symbol}
-        />
+      <PageHeader containerClassName="max-w-5xl" />
 
-        <div className="h-6" />
+      <div className="border-b">
+        <div className="container max-w-5xl">
+          <ContractHeaderUI
+            chainMetadata={props.chainMetadata}
+            clientContract={props.clientContract}
+            contractCreator={contractCreator}
+            image={contractMetadata.image}
+            name={contractMetadata.name}
+            socialUrls={
+              typeof contractMetadata.social_urls === "object" &&
+              contractMetadata.social_urls !== null
+                ? contractMetadata.social_urls
+                : {}
+            }
+            symbol={contractMetadata.symbol}
+          />
+        </div>
+      </div>
 
-        <div className="flex flex-col gap-8 pb-20 xl:flex-row">
-          <div className="flex grow flex-col gap-8 overflow-hidden">
-            {activeClaimCondition ? (
-              <div className="border-b border-dashed pb-6">
-                <ContractAnalyticsOverview
-                  chainId={props.chainMetadata.chainId}
-                  chainSlug={props.chainMetadata.slug}
-                  contractAddress={props.clientContract.address}
-                />
-              </div>
-            ) : (
+      <div className="container flex max-w-5xl grow flex-col pt-8 pb-10">
+        <div className="flex grow flex-col gap-8">
+          <div className="sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-lg overflow-hidden relative">
+            <GridPattern
+              width={30}
+              height={30}
+              x={-1}
+              y={-1}
+              strokeDasharray={"4 2"}
+              className="text-border dark:text-border/70"
+              style={{
+                maskImage:
+                  "linear-gradient(to bottom right,white,transparent,transparent)",
+              }}
+            />
+            <div className="sm:w-[420px] z-10">{buyEmbed}</div>
+          </div>
+
+          {tokenPriceData ? (
+            <>
               <TokenStats
                 chainId={props.chainMetadata.chainId}
                 contractAddress={props.clientContract.address}
+                tokenPriceData={tokenPriceData}
               />
-            )}
 
-            <div className="xl:hidden">{buyEmbed}</div>
-
-            <RecentTransfers
-              chainMetadata={props.chainMetadata}
-              clientContract={props.clientContract}
-              decimals={tokenDecimals}
-              tokenSymbol={contractMetadata.symbol}
-            />
-
-            {!activeClaimCondition && (
               <ContractAnalyticsOverview
                 chainId={props.chainMetadata.chainId}
                 chainSlug={props.chainMetadata.slug}
                 contractAddress={props.clientContract.address}
               />
-            )}
-          </div>
-          <div className="hidden xl:block xl:w-96">
-            <div className="-mt-6 sticky top-0 pt-6">{buyEmbed}</div>
-          </div>
+            </>
+          ) : (
+            <ContractAnalyticsOverview
+              chainId={props.chainMetadata.chainId}
+              chainSlug={props.chainMetadata.slug}
+              contractAddress={props.clientContract.address}
+            />
+          )}
+
+          <RecentTransfers
+            chainMetadata={props.chainMetadata}
+            clientContract={props.clientContract}
+            decimals={tokenDecimals}
+            tokenSymbol={contractMetadata.symbol}
+          />
         </div>
       </div>
     </div>

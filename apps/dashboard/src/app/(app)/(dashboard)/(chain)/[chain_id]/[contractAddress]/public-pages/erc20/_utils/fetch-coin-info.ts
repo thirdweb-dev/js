@@ -1,4 +1,6 @@
+import "server-only";
 import { isProd } from "@/constants/env-utils";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 
 export async function fetchTokenInfoFromBridge(params: {
   chainId: number;
@@ -10,7 +12,7 @@ export async function fetchTokenInfoFromBridge(params: {
       `https://bridge.${isProd ? "thirdweb.com" : "thirdweb-dev.com"}/v1/tokens?chainId=${params.chainId}&tokenAddress=${params.tokenAddress}`,
       {
         headers: {
-          "x-client-id": params.clientId,
+          "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
         },
       },
     );

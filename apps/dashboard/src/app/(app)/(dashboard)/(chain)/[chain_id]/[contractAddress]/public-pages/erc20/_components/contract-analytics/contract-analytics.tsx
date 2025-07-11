@@ -29,38 +29,38 @@ export function ContractAnalyticsOverview(props: {
   });
 
   return (
-    <div>
-      <div className="flex flex-col">
-        <h2 className="font-semibold text-xl tracking-tight">Analytics</h2>
-        <p className="mb-3 text-muted-foreground text-sm">
-          View trends in unique wallets, transactions, and events over time for
-          this contract
-        </p>
-      </div>
-      <ThirdwebAreaChart
-        cardContentClassName="p-0"
-        chartClassName="aspect-[1.2] lg:aspect-[2.6]"
-        className="border-none bg-background p-0"
-        config={{
-          events: {
-            color: "hsl(var(--chart-3))",
-            label: "Events",
-          },
-          transactions: {
-            color: "hsl(var(--chart-2))",
-            label: "Transactions",
-          },
-          wallets: {
-            color: "hsl(var(--chart-1))",
-            label: "Unique Wallets",
-          },
-        }}
-        data={data || []}
-        hideLabel={false}
-        isPending={isPending}
-        showLegend
-        toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
-      />
-    </div>
+    <ThirdwebAreaChart
+      chartClassName="aspect-[1.2] lg:aspect-[3]"
+      cardContentClassName="px-0 pb-0"
+      margin={{
+        bottom: 20,
+      }}
+      header={{
+        headerClassName: "p-4 lg:p-6",
+        title: "Analytics",
+        titleClassName: "font-semibold text-2xl mb-0.5 tracking-tight",
+        description:
+          "View trends of transactions, events and unique wallets interacting with this contract over time",
+      }}
+      config={{
+        events: {
+          color: "hsl(var(--chart-5))",
+          label: "Events",
+        },
+        transactions: {
+          color: "hsl(var(--chart-8))",
+          label: "Transactions",
+        },
+        wallets: {
+          color: "hsl(var(--chart-1))",
+          label: "Unique Wallets",
+        },
+      }}
+      data={data || []}
+      hideLabel={false}
+      isPending={isPending}
+      showLegend
+      toolTipLabelFormatter={toolTipLabelFormatterWithPrecision(precision)}
+    />
   );
 }
