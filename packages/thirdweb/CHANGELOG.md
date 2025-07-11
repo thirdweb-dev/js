@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.16
+
+### Patch Changes
+
+- [#7591](https://github.com/thirdweb-dev/js/pull/7591) [`f33e31a`](https://github.com/thirdweb-dev/js/commit/f33e31ad6e045fe751c2d7a51874f8a13e99861f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixed a regression that prompted the user to pay the full amount in the TransactionWidget, rather than the difference from their current balance
+
+- [#7589](https://github.com/thirdweb-dev/js/pull/7589) [`592bf6f`](https://github.com/thirdweb-dev/js/commit/592bf6f1fdd4f1a2babbef94a37b93881d28b6f5) Thanks [@MananTank](https://github.com/MananTank)! - Fix theme in ConnectButton Details Modal Buy screen
+
 ## 5.105.15
 
 ### Patch Changes
