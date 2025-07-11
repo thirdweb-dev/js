@@ -78,11 +78,6 @@ export function useTransactionDetails({
           encode(transaction).catch(() => "0x"),
         ]);
 
-      const account = wallet?.getAccount();
-      if (!account) {
-        throw new Error("No active account");
-      }
-
       const [tokenInfo, gasCostWei] = await Promise.all([
         getToken(
           client,
@@ -158,7 +153,7 @@ export function useTransactionDetails({
 
       const totalCostWei =
         erc20Value &&
-          erc20Value.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+        erc20Value.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
           ? erc20Value.amountWei
           : (value || 0n) + (gasCostWei || 0n);
       const totalCost = toTokens(totalCostWei, decimal);

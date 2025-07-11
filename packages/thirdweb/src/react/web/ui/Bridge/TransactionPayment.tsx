@@ -1,11 +1,15 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import {
   type Address,
   getAddress,
   shortenAddress,
 } from "../../../../utils/address.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -27,13 +31,6 @@ import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
-import { useQuery } from "@tanstack/react-query";
-import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
-import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
-import { decimals } from "../../../../extensions/erc20/read/decimals.js";
-import { getContract } from "../../../../contract/contract.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
-import { toTokens } from "../../../../utils/units.js";
 
 export interface TransactionPaymentProps {
   /**
@@ -91,26 +88,22 @@ export function TransactionPayment({
       if (!activeAccount?.address) {
         return "0";
       }
-      const erc20Value = await resolvePromisedValue(uiOptions.transaction.erc20Value);
-      const tokenDecimals = erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS && erc20Value
-        ? await decimals({
-          contract: getContract({
-            address: erc20Value.tokenAddress,
-            chain: uiOptions.transaction.chain,
-            client,
-          }),
-        })
-        : 18;
+      const erc20Value = await resolvePromisedValue(
+        uiOptions.transaction.erc20Value,
+      );
       const walletBalance = await getWalletBalance({
         address: activeAccount?.address,
         chain: uiOptions.transaction.chain,
-        tokenAddress: erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS ? erc20Value?.tokenAddress : undefined,
+        tokenAddress:
+          erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+            ? erc20Value?.tokenAddress
+            : undefined,
         client,
       });
 
-      return toTokens(walletBalance.value, tokenDecimals);
+      return walletBalance.displayValue;
     },
-    queryKey: ["active-account-address"],
+    queryKey: ["user-balance", activeAccount?.address],
   });
 
   const contractName =
@@ -366,7 +359,7 @@ export function TransactionPayment({
                 Math.max(
                   0,
                   Number(transactionDataQuery.data.totalCost) -
-                  Number(userBalance ?? "0"),
+                    Number(userBalance ?? "0"),
                 ).toString(),
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
