@@ -325,13 +325,13 @@ export function TokenDropClaim(props: {
           <div className="h-4" />
 
           <SupplyClaimedProgress
-            claimedSupply={BigInt(
+            claimedSupplyTokens={Number(
               toTokens(props.claimCondition.supplyClaimed, props.decimals),
             )}
-            totalSupply={
+            totalSupplyTokens={
               props.claimCondition.maxClaimableSupply === maxUint256
                 ? "unlimited"
-                : BigInt(
+                : Number(
                     toTokens(
                       props.claimCondition.maxClaimableSupply,
                       props.decimals,
