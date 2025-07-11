@@ -163,7 +163,6 @@ export async function getSupportTicket(
   if (messagesResponse.ok) {
     const messagesData: { data?: unknown[] } = await messagesResponse.json();
     const rawMessages = messagesData.data || [];
-    console.log("rawMessages", rawMessages);
     // Transform the raw messages to match our interface
     const messages: SupportMessage[] = (rawMessages as RawSupportMessage[])
       .filter((msg) => {

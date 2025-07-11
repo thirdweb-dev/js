@@ -6,6 +6,7 @@ import {
   DatabaseIcon,
   DollarSignIcon,
   FileTextIcon,
+  HelpCircleIcon,
   HomeIcon,
   SettingsIcon,
   WalletCardsIcon,
@@ -63,6 +64,11 @@ export function TeamSidebarLayout(props: {
           href: `${layoutPath}/~/usage`,
           icon: DatabaseIcon,
           label: "Usage",
+        },
+        {
+          href: `${layoutPath}/~/support`,
+          icon: HelpCircleIcon,
+          label: "Support",
         },
         ...(props.chainSubscriptions.length > 0
           ? [
