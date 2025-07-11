@@ -78,7 +78,7 @@ export function CreateVaultAccountButton(props: { project: Project }) {
       await initialiseProjectWithVaultMutation.mutateAsync(
         manageSelfChecked ? undefined : secretKey,
       );
-    } catch (error) {
+    } catch {
       // Error will be handled by the mutation's onError
     }
   };

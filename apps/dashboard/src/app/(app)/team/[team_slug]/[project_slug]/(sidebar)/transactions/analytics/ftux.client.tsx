@@ -1,11 +1,8 @@
 "use client";
-import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { type Step, StepsCard } from "@/components/blocks/StepsCard";
-import { Button } from "@/components/ui/button";
-import { CreateVaultAccountButton } from "../../vault/components/create-vault-account.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SendTestTransaction } from "./send-test-tx.client";
@@ -96,27 +93,6 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     />
   );
 };
-
-function CreateVaultAccountStep(props: {
-  project: Project;
-  teamSlug: string;
-  onUserAccessTokenCreated: (userAccessToken: string) => void;
-}) {
-  return (
-    <div className="mt-4 flex flex-row gap-4">
-      <CreateVaultAccountButton project={props.project} />
-      <Button asChild variant="outline">
-        <Link
-          href="https://portal.thirdweb.com/vault"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn more about Vault
-        </Link>
-      </Button>
-    </div>
-  );
-}
 
 function CreateServerWalletStep(props: {
   project: Project;

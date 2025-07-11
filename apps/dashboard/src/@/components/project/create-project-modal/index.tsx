@@ -67,6 +67,12 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
         await createVaultAccountAndAccessToken({
           project: res.project,
           projectSecretKey: res.secret,
+        }).catch((error) => {
+          console.error(
+            "Failed to create vault account and access token",
+            error,
+          );
+          throw error;
         });
         return {
           project: res.project,

@@ -30,6 +30,51 @@ export async function initVaultClient() {
   return vc;
 }
 
+export async function rotateVaultAccountAndAccessToken(props: {
+  project: Project;
+  projectSecretKey?: string;
+  projectSecretHash?: string;
+}) {
+  const vaultClient = await initVaultClient();
+  const service = props.project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+  const storedRotationCode = service?.rotationCode;
+  if (!storedRotationCode) {
+    throw new Error("No rotation code found");
+  }
+
+  const rotateServiceAccountRes = await rotateServiceAccount({
+    client: vaultClient,
+    request: {
+      auth: {
+        rotationCode: storedRotationCode,
+      },
+    },
+  });
+  if (rotateServiceAccountRes.error) {
+    throw new Error(rotateServiceAccountRes.error.message);
+  }
+  const adminKey = rotateServiceAccountRes.data.newAdminKey;
+  const rotationCode = rotateServiceAccountRes.data.newRotationCode;
+
+  const { managementToken, walletToken } =
+    await createAndEncryptVaultAccessTokens({
+      project: props.project,
+      projectSecretKey: props.projectSecretKey,
+      projectSecretHash: props.projectSecretHash,
+      vaultClient,
+      adminKey,
+      rotationCode,
+    });
+
+  return {
+    adminKey,
+    managementToken,
+    walletToken,
+  };
+}
+
 export async function createVaultAccountAndAccessToken(props: {
   project: Project;
   projectSecretKey?: string;
@@ -38,53 +83,26 @@ export async function createVaultAccountAndAccessToken(props: {
   try {
     const vaultClient = await initVaultClient();
 
-    const service = props.project.services.find(
-      (service) => service.name === "engineCloud",
-    );
-    const storedRotationCode = service?.rotationCode;
-    const storedEncryptedAdminKey = service?.encryptedAdminKey;
-
-    let adminKey: string | null = null;
-    let rotationCode: string | null = null;
-
-    if (storedRotationCode && storedEncryptedAdminKey) {
-      // if the project has a managed vault admin key, rotate it
-      const rotateServiceAccountRes = await rotateServiceAccount({
-        client: vaultClient,
-        request: {
-          auth: {
-            rotationCode: storedRotationCode,
+    const serviceAccountResult = await createServiceAccount({
+      client: vaultClient,
+      request: {
+        options: {
+          metadata: {
+            projectId: props.project.id,
+            purpose: "Thirdweb Project Server Wallet Service Account",
+            teamId: props.project.teamId,
           },
         },
-      });
-      if (rotateServiceAccountRes.error) {
-        throw new Error(rotateServiceAccountRes.error.message);
-      }
-      adminKey = rotateServiceAccountRes.data.newAdminKey;
-      rotationCode = rotateServiceAccountRes.data.newRotationCode;
-    } else {
-      // otherwise create a new service account
-      const serviceAccountResult = await createServiceAccount({
-        client: vaultClient,
-        request: {
-          options: {
-            metadata: {
-              projectId: props.project.id,
-              purpose: "Thirdweb Project Server Wallet Service Account",
-              teamId: props.project.teamId,
-            },
-          },
-        },
-      });
-      if (serviceAccountResult.success === false) {
-        throw new Error(
-          `Failed to create service account: ${serviceAccountResult.error}`,
-        );
-      }
-      const serviceAccount = serviceAccountResult.data;
-      adminKey = serviceAccount.adminKey;
-      rotationCode = serviceAccount.rotationCode;
+      },
+    });
+    if (serviceAccountResult.success === false) {
+      throw new Error(
+        `Failed to create service account: ${serviceAccountResult.error}`,
+      );
     }
+    const serviceAccount = serviceAccountResult.data;
+    const adminKey = serviceAccount.adminKey;
+    const rotationCode = serviceAccount.rotationCode;
 
     const { managementToken, walletToken } =
       await createAndEncryptVaultAccessTokens({
