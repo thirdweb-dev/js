@@ -3,7 +3,6 @@
 import { GlobeIcon } from "lucide-react";
 import Image from "next/image";
 import { getWalletInfo } from "thirdweb/wallets";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   CodeBlock,
@@ -11,7 +10,8 @@ import {
   DocLink,
   Heading,
   Paragraph,
-} from "../../../../../components/Document";
+} from "@/components/Document";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const walletId = "com.coinbase.wallet";
 
@@ -39,11 +39,11 @@ export default async function Page() {
       <Breadcrumb
         crumbs={[
           {
-            href: "/typescript/v5/supported-wallets",
-            name: "Supported Wallets",
+            href: "/connect/external-wallets",
+            name: "External Wallets",
           },
           {
-            href: `/typescript/v5/supported-wallets/${walletId}`,
+            href: `/connect/external-wallets/${walletId}`,
             name: walletMetadata.name,
           },
         ]}

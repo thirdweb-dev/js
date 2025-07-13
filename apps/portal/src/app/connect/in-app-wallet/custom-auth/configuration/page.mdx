@@ -12,19 +12,32 @@ import EWCustomAuthdb2 from "../images/customauthdb2.png";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Configure Authentication for In-App Wallet",
+		title: "Bring your own auth",
 		icon: "wallets",
 	},
-	title: "Configure Authentication In-App Wallet | thirdweb",
+	title: "Bring your own auth | thirdweb",
 	description:
-		"Configure Authentication with OIDC standard, OR a generic option that lets you bring your own auth server",
+		"Configure in-app wallets with OIDC standard, or a generic endpoint that lets you bring your own auth server",
 });
 
-# Configuration
+# Bring your own auth
 
-We offer two options to setup in-app wallets with custom auth, one that is based on the [OIDC (Open ID Connect)](https://openid.net/developers/how-connect-works/) standard, and a generic option that lets you bring your own auth server. You can also use both options together if needed.
+You can attach wallets to your existing users using the `jwt` and `auth_endpoint` strategies.
 
-## OIDC compatible auth
+- The `jwt` strategy is based on the [OIDC (Open ID Connect)](https://openid.net/developers/how-connect-works/) standard
+- The `auth_endpoint` strategy is a generic option that lets you bring your own auth server.
+
+---
+
+<Tabs defaultValue="jwt">
+	<TabsList>
+		<TabsTrigger value="jwt">JWT (OICD)</TabsTrigger>
+		<TabsTrigger value="auth_endpoint">Auth endpoint</TabsTrigger>
+	</TabsList>
+
+<TabsContent value="jwt">
+
+## Strategy `jwt` - OIDC compatible auth
 
 The OIDC auth set-up is a good option if you use an external auth provider like `Auth0`, `firebase`, `cognito` etc. that publishes the JWK for checking the authenticity of the token.
 
@@ -44,12 +57,13 @@ You will be asked to enter the following values
 - The URL of the JWKS file (public key): This is used to verify the token was signed by you.
 - The `aud` value of the idToken: This is used to verify that thirdweb is the intended user of the token
 
-### Authenticating a user via OIDC-compatible auth
+### Usage example
 
-<Tabs defaultValue="react">
+<Tabs defaultValue="typescript">
 <TabsList>
-	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+	<TabsTrigger value="react">React</TabsTrigger>
+	<TabsTrigger value="dotnet">.NET</TabsTrigger>
 </TabsList>
 
 <TabsContent value="react">
@@ -58,18 +72,28 @@ You will be asked to enter the following values
 import { inAppWallet } from "thirdweb/wallets";
 import { useConnect } from "thirdweb/react";
 
-const { connect } = useConnect();
+const client = createThirdwebClient({ clientId: "your-client-id" });
+const wallet = inAppWallet();
 
-const handlePostLogin = async (jwt: string) => {
+const MyComponent = () => {
+	const { connect } = useConnect();
+
+const handlePostLogin = async () => {
 	await connect(() => {
-		const wallet = inAppWallet();
 		wallet.connect({
 			client,
 			strategy: "jwt",
-			jwt,
+			jwt: "<your-jwt-token>",
 		});
 		return wallet;
 	});
+};
+
+return (
+	<button onClick={() => handlePostLogin()}>
+		Login
+	</button>
+);
 };
 ```
 
@@ -85,16 +109,33 @@ const wallet = inAppWallet();
 const account = await wallet.connect({
 	client,
 	strategy: "jwt",
-	jwt,
+	jwt: "<your-jwt-token>",
 });
 
 // use the account to send transactions
 ```
 
 </TabsContent>
+
+<TabsContent value="dotnet">
+
+```csharp
+using Thirdweb;
+
+var client = ThirdwebClient.Create(clientId: "your-client-id");
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
+var address = await wallet.LoginWithCustomAuth(jwt: "<your-jwt-token>");
+```
+
+</TabsContent>
+
 </Tabs>
 
-## Generic auth
+</TabsContent>
+
+<TabsContent value="auth_endpoint">
+
+## Strategy `auth_endpoint` - Generic auth
 
 Generic auth is a lower-level option that can be used when you have your own auth server that you use to authenticate users.
 
@@ -127,35 +168,47 @@ The endpoint should return a JSON body containing the following fields:
 
 You can also pass a list of headers. These headers will be sent with every request to your verification endpoint. You can use these to authenticate the request.
 
-### Authenticating a user via generic auth
+### Usage example
 
 Once you've logged in with your own auth, you can pass the user's JWT to the in-app wallet to authenticate and connect.
 
-<Tabs defaultValue="react">
+<Tabs defaultValue="typescript">
 <TabsList>
-	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+	<TabsTrigger value="react">React</TabsTrigger>
+	<TabsTrigger value="dotnet">.NET</TabsTrigger>
 </TabsList>
 
 <TabsContent value="react">
 
 ```typescript
+import { createThirdwebClient } from "thirdweb";
 import { inAppWallet } from "thirdweb/wallets";
 import { useConnect } from "thirdweb/react";
 
-const { connect } = useConnect();
+const client = createThirdwebClient({ clientId: "your-client-id" });
+const wallet = inAppWallet();
 
-const handlePostLogin = async (jwt: string) => {
-	await connect(async () => {
-		const wallet = inAppWallet();
-		await wallet.connect({
-			client,
-			strategy: "auth_endpoint",
-			// This is the payload that is sent to the auth endpoint
-			payload,
+const MyComponent = () => {
+	const { connect } = useConnect();
+
+	const handlePostLogin = async () => {
+		await connect(async () => {
+			await wallet.connect({
+				client,
+				strategy: "auth_endpoint",
+				// This is the payload that will be sent to your auth endpoint
+				payload: "<your-auth-payload>",
+			});
+			return wallet;
 		});
-		return wallet;
-	});
+	};
+
+	return (
+		<button onClick={() => handlePostLogin()}>
+			Login
+		</button>
+	);
 };
 ```
 
@@ -173,12 +226,29 @@ const wallet = inAppWallet();
 const account = await wallet.connect({
 	client,
 	strategy: "auth_endpoint",
-	// This is the payload that is sent to the auth endpoint
-	payload,
+	// This is the payload that will be sent to your auth endpoint
+	payload: "<your-auth-payload>",
 });
 
 // use the account to send transactions
 ```
 
 </TabsContent>
+
+<TabsContent value="dotnet">
+
+```csharp
+using Thirdweb;
+
+var client = ThirdwebClient.Create(clientId: "your-client-id");
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.AuthEndpoint);
+var address = await wallet.LoginWithAuthEndpoint(payload: "<your-auth-payload>");
+```
+
+</TabsContent>
+
+</Tabs>
+
+</TabsContent>
+
 </Tabs>

@@ -4,7 +4,6 @@ import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { createMetadata } from "@/components/Document";
 import { StickyTopContainer } from "../components/Document/StickyTopContainer";
-import { Banner } from "../components/others/Banner";
 import { EnableSmoothScroll } from "../components/others/SmoothScroll";
 import { cn } from "../lib/utils";
 import { Header } from "./Header";
@@ -53,10 +52,10 @@ export default function RootLayout({
 
           <div className="relative flex min-h-screen flex-col">
             <StickyTopContainer>
-              <Banner
+              {/* <Banner
                 href="https://thirdweb.com/connect/universal-bridge"
                 text="Let users pay with whatever they have without leaving your app"
-              />
+              /> */}
               <Header />
             </StickyTopContainer>
 

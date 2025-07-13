@@ -10,7 +10,7 @@ export type CreateServerWalletArgs = {
 };
 
 /**
- * Create a server wallet.
+ * Create a new server wallet.
  * @param params - The parameters for the server wallet.
  * @param params.client - The thirdweb client to use.
  * @param params.label - The label for the server wallet.

@@ -1,5 +1,6 @@
 import { Callout } from "@doc";
 import { createMetadata, ArticleIconCard, Stack } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
@@ -11,11 +12,23 @@ export const metadata = createMetadata({
 	description: "Learn how to fetch in-app wallet users for your application.",
 });
 
-# Fetch a Single User
+# Fetch Users
 
-From the backend, you are able to get the details of any user within your in app or ecosystem wallet.
+From your backend, you can list all your users and fetch the details of any user within your in app or ecosystem wallet. This includes their address, email, phone number, and more.
 
-To get the user details, you can make a `GET` request to the following endpoint:
+---
+
+<Tabs defaultValue="single">
+	<TabsList>
+		<TabsTrigger value="single">Single User</TabsTrigger>
+		<TabsTrigger value="all">All Users</TabsTrigger>
+	</TabsList>
+
+<TabsContent value="single">
+
+### Endpoint
+
+`GET` request to the following endpoint:
 
 ```
 https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details
@@ -37,11 +50,13 @@ You can then specify the value to query by, matching the queryBy parameter:
 
 ### Authentication
 
-You need to include your ThirdWeb Client Secret in the Authorization header.
+You need to include the following headers:
 
-If you are an ecosystem owner, you have to include the `x-ecosystem-id` header and optionally the `x-ecosystem-partner-id` header if the ecosystem is set to partners only.
+- `x-secret-key`: Your secret key for authentication
+- `x-ecosystem-id` (optional): Your ecosystem ID
+- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-### Example curl Command
+### Example Requests
 
 Here's an example curl command to fetch user details by email:
 
@@ -120,25 +135,38 @@ If you are using the thirdweb SDK, you can use the `getUser` method to retrieve 
 />
 </Stack>
 
-# Fetch All Users
+</TabsContent>
 
-Once you have users connecting to your app through in-app wallets, you can fetch all users through our REST API:
+<TabsContent value="all">
+
+### Endpoint
+
+`GET` request to the following endpoint:
+
 ```
 https://in-app-wallet.thirdweb.com/api/v1/users
 ```
 
-## Headers
+### Query Parameters
+
+- `offset` (optional): Number of users to skip (for pagination)
+- `limit` (optional): Maximum number of users to return per request (defaults to 100)
+
+### Authentication
 
 You need to include the following headers:
 
-- `Content-Type`: Must be set to `application/json`
 - `x-secret-key`: Your secret key for authentication
 - `x-ecosystem-id` (optional): Your ecosystem ID
 - `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-## Example curl Command
+<Callout variant='info' title='Getting ecosystem users'>
+For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner.
+</Callout>
 
-Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
+### Example Requests
+
+Here's an example curl command to fetch all users:
 
 ```bash
 curl -X GET 'https://in-app-wallet.thirdweb.com/api/v1/users?offset=200&limit=100' \
@@ -146,14 +174,7 @@ curl -X GET 'https://in-app-wallet.thirdweb.com/api/v1/users?offset=200&limit=10
   -H 'Content-Type: application/json'
 ```
 
-Limit defaults to 100 users per request.
-
-<Callout variant='info' title='Getting ecosystem users'>
-For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner.
-</Callout>
-
-
-## Response Format
+### Response Format
 
 A successful API call returns an array of user objects in the following format:
 
@@ -177,3 +198,6 @@ A successful API call returns an array of user objects in the following format:
   }
 ]
 ```
+
+</TabsContent>
+</Tabs>

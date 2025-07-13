@@ -7,7 +7,6 @@ import {
   getWalletInfo,
   type WalletId,
 } from "thirdweb/wallets";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Breadcrumb,
   CodeBlock,
@@ -15,7 +14,8 @@ import {
   DocLink,
   Heading,
   Paragraph,
-} from "../../../../../components/Document";
+} from "@/components/Document";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import appStoreSvg from "./assets/appstore.svg";
 import chromeStoreSvg from "./assets/chromestore.svg";
 import playStoreSvg from "./assets/playstore.svg";
@@ -31,7 +31,7 @@ export async function generateMetadata(props: PageProps) {
   const walletMetadata = await getWalletInfo(params.walletId);
 
   return createMetadata({
-    description: `Connect ${walletMetadata.name} with thirdweb Connect SDK`,
+    description: `Connect ${walletMetadata.name} with the thirdweb SDK`,
     image: {
       icon: "wallets",
       title: walletMetadata.name,
@@ -57,11 +57,11 @@ export default async function Page(props: PageProps) {
       <Breadcrumb
         crumbs={[
           {
-            href: "/typescript/v5/supported-wallets",
-            name: "Supported Wallets",
+            href: "/connect/external-wallets",
+            name: "External Wallets",
           },
           {
-            href: `/typescript/v5/supported-wallets/${params.walletId}`,
+            href: `/connect/external-wallets/${params.walletId}`,
             name: walletMetadata.name,
           },
         ]}
