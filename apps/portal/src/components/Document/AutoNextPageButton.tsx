@@ -7,7 +7,9 @@ import { getNextPageFromSidebar } from "./utils/getNextPageFromSidebar";
 
 export function AutoNextPageButton({
   sidebarLinks,
-}: { sidebarLinks: SidebarLink[] }) {
+}: {
+  sidebarLinks: SidebarLink[];
+}) {
   const pathname = usePathname();
 
   // Don't show next button on home page

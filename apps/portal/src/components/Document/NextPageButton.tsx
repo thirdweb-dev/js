@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 
 export function NextPageButton(props: { href: string; name: string }) {
   return (

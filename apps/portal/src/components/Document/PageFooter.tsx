@@ -6,11 +6,11 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Feedback } from "../others/Feedback";
+import type { SidebarLink } from "../others/Sidebar";
 import { Subscribe } from "../others/Subscribe";
 import { DocLink } from ".";
 import { AutoEditPageButton } from "./AutoEditPageButton";
 import { AutoNextPageButton } from "./AutoNextPageButton";
-import type { SidebarLink } from "../others/Sidebar";
 
 export function PageFooter(props: {
   editPageButton?: true;

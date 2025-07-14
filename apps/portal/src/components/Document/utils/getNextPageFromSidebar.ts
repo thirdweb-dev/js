@@ -1,6 +1,6 @@
 import type { SidebarLink } from "@/components/others/Sidebar";
 
-export interface NextPageInfo {
+interface NextPageInfo {
   href: string;
   name: string;
 }
