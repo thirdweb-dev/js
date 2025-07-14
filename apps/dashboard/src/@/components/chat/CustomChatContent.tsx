@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { ChatBar } from "./ChatBar";
@@ -14,7 +15,7 @@ import type { ExamplePrompt, NebulaContext } from "./types";
 
 export default function CustomChatContent(props: {
   authToken: string | undefined;
-  teamId: string | undefined;
+  team: Team;
   clientId: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
@@ -31,14 +32,14 @@ export default function CustomChatContent(props: {
       client={props.client}
       clientId={props.clientId}
       examplePrompts={props.examplePrompts}
-      teamId={props.teamId}
+      team={props.team}
     />
   );
 }
 
 function CustomChatContentLoggedIn(props: {
   authToken: string;
-  teamId: string | undefined;
+  team: Team;
   clientId: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
@@ -54,6 +55,10 @@ function CustomChatContentLoggedIn(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
+
+  // Support form state
+  const [showSupportForm, setShowSupportForm] = useState(false);
+  const [productLabel, setProductLabel] = useState("");
 
   const handleSendMessage = useCallback(
     async (userMessage: UserMessage) => {
@@ -96,7 +101,7 @@ function CustomChatContentLoggedIn(props: {
           headers: {
             Authorization: `Bearer ${props.authToken}`,
             "Content-Type": "application/json",
-            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+            ...(props.team.id ? { "x-team-id": props.team.id } : {}),
             ...(props.clientId ? { "x-client-id": props.clientId } : {}),
           },
           method: "POST",
@@ -132,7 +137,7 @@ function CustomChatContentLoggedIn(props: {
         setEnableAutoScroll(false);
       }
     },
-    [props.authToken, props.clientId, props.teamId, sessionId],
+    [props.authToken, props.clientId, props.team.id, sessionId],
   );
 
   const handleFeedback = useCallback(
@@ -165,7 +170,7 @@ function CustomChatContentLoggedIn(props: {
           headers: {
             Authorization: `Bearer ${props.authToken}`,
             "Content-Type": "application/json",
-            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+            ...(props.team.id ? { "x-team-id": props.team.id } : {}),
           },
           method: "POST",
         });
@@ -188,7 +193,7 @@ function CustomChatContentLoggedIn(props: {
         // Consider implementing retry logic here
       }
     },
-    [sessionId, props.authToken, props.teamId, messages],
+    [sessionId, props.authToken, props.team.id, messages],
   );
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
@@ -212,8 +217,14 @@ function CustomChatContentLoggedIn(props: {
           sessionId={sessionId}
           setEnableAutoScroll={setEnableAutoScroll}
           useSmallText
+          showSupportForm={showSupportForm}
+          setShowSupportForm={setShowSupportForm}
+          productLabel={productLabel}
+          setProductLabel={setProductLabel}
+          team={props.team}
         />
       )}
+      {/* Removed floating support case button and form */}
       <ChatBar
         abortChatStream={() => {
           chatAbortController?.abort();

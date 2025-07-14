@@ -103,19 +103,21 @@ export default async function TeamLayout(props: {
         >
           {props.children}
         </TeamSidebarLayout>
-        <div className="fixed right-6 bottom-6 z-50">
-          <CustomChatButton
-            authToken={authToken}
-            clientId={undefined}
-            examplePrompts={siwaExamplePrompts}
-            isFloating={true}
-            isLoggedIn={true}
-            label="Ask AI Assistant"
-            networks="all"
-            pageType="support"
-            teamId={team.id}
-          />
-        </div>
+        {team && (
+          <div className="fixed right-6 bottom-6 z-50">
+            <CustomChatButton
+              authToken={authToken}
+              clientId={undefined}
+              examplePrompts={siwaExamplePrompts}
+              isFloating={true}
+              isLoggedIn={true}
+              label="Get Help"
+              networks="all"
+              pageType="support"
+              team={team}
+            />
+          </div>
+        )}
       </div>
     </SidebarProvider>
   );

@@ -107,7 +107,7 @@ export default async function ProjectLayout(props: {
           label="Ask AI Assistant"
           networks="all"
           pageType="support"
-          teamId={team.id}
+          team={team}
         />
       </div>
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />

@@ -3,6 +3,7 @@
 import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
+import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,7 @@ export function CustomChatButton(props: {
   label: string;
   examplePrompts: string[];
   authToken: string | undefined;
-  teamId: string | undefined;
+  team: Team; // changed from teamId
   clientId: string | undefined;
   requireLogin?: boolean;
 }) {
@@ -82,7 +83,7 @@ export function CustomChatButton(props: {
               }))}
               networks={props.networks}
               requireLogin={props.requireLogin}
-              teamId={props.teamId}
+              team={props.team} // pass full team object
             />
           )}
         </div>

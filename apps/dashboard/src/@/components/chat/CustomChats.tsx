@@ -1,14 +1,18 @@
 import {
   AlertCircleIcon,
+  ArrowRightIcon,
   MessageCircleIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Team } from "@/api/team";
 import { MarkdownRenderer } from "@/components/blocks/markdown-renderer";
+import { Button } from "@/components/ui/button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "@/lib/utils";
+import { SupportTicketForm } from "../../../app/(app)/team/[team_slug]/(team)/~/support/_components/SupportTicketForm";
 import { Reasoning } from "./Reasoning";
 
 // Define local types
@@ -47,10 +51,18 @@ export function CustomChats(props: {
   useSmallText?: boolean;
   sendMessage: (message: UserMessage) => void;
   onFeedback?: (messageIndex: number, feedback: 1 | -1) => void;
+  // New props for support form
+  showSupportForm: boolean;
+  setShowSupportForm: (v: boolean) => void;
+  productLabel: string;
+  setProductLabel: (v: string) => void;
+  team: Team;
 }) {
   const { messages, setEnableAutoScroll, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  // Add state to track if a support ticket was created
+  const [supportTicketCreated, setSupportTicketCreated] = useState(false);
 
   // auto scroll to bottom when messages change
   // eslint-disable-next-line no-restricted-syntax
@@ -123,6 +135,68 @@ export function CustomChats(props: {
                     sendMessage={props.sendMessage}
                     sessionId={props.sessionId}
                   />
+                  {/* Support Case Button/Form in last assistant message */}
+                  {message.type === "assistant" &&
+                    index === props.messages.length - 1 && (
+                      <>
+                        {/* Only show button/form if ticket not created */}
+                        {!props.showSupportForm && !supportTicketCreated && (
+                          <div className="mt-3 pt-3 border-t border-[#333333]">
+                            <Button
+                              onClick={() => props.setShowSupportForm(true)}
+                              size="sm"
+                              className="bg-[#2663EB] hover:bg-[#2663EB]/80 text-white transition-opacity"
+                            >
+                              Create Support Case
+                              <ArrowRightIcon className="w-4 h-4 ml-2" />
+                            </Button>
+                          </div>
+                        )}
+                        {/* Show form if open and ticket not created */}
+                        {props.showSupportForm && !supportTicketCreated && (
+                          <div className="mt-4 pt-4 border-t border-[#333333]">
+                            <SupportTicketForm
+                              team={props.team}
+                              productLabel={props.productLabel}
+                              setProductLabel={props.setProductLabel}
+                              conversationId={props.sessionId}
+                              onSuccess={() => {
+                                props.setShowSupportForm(false);
+                                props.setProductLabel("");
+                                setSupportTicketCreated(true);
+                              }}
+                            />
+                          </div>
+                        )}
+                        {/* Show success message if ticket created */}
+                        {supportTicketCreated && (
+                          <div className="mt-4 pt-4 border-t border-[#333333]">
+                            <div className="rounded-xl border bg-card px-4 py-2 text-green-500 leading-normal">
+                              Your support ticket has been created! Our team
+                              will get back to you soon.
+                            </div>
+                            <div className="mt-3 flex justify-end">
+                              <a
+                                href={
+                                  props.team?.slug
+                                    ? `/team/${props.team.slug}/~/support`
+                                    : "/support"
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Button
+                                  size="sm"
+                                  className="bg-[#2663EB] hover:bg-[#2663EB]/80 text-white transition-opacity"
+                                >
+                                  Go to Support Portal
+                                </Button>
+                              </a>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
                 </div>
               );
             })}

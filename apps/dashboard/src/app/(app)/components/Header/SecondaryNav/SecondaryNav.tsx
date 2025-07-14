@@ -46,7 +46,7 @@ export function SecondaryNavLinks() {
 
       <Link
         className="text-muted-foreground text-sm hover:text-foreground"
-        href="/support"
+        href="/team/~/~/support"
         rel="noopener noreferrer"
         target="_blank"
       >

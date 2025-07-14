@@ -71,7 +71,7 @@ export default async function SupportPage() {
   ]);
 
   const teams = await getTeams();
-  const teamId = teams?.[0]?.id ?? undefined;
+  const team = teams?.[0];
 
   return (
     <main className="flex flex-col gap-12 pb-12">
@@ -92,17 +92,19 @@ export default async function SupportPage() {
               team.
             </p>
             <div className="mt-6 flex w-full flex-col items-center gap-3">
-              <CustomChatButton
-                authToken={authToken || undefined}
-                clientId={undefined}
-                examplePrompts={siwaExamplePrompts}
-                isFloating={false}
-                isLoggedIn={!!accountAddress}
-                label="Ask AI for support"
-                networks="all"
-                pageType="support"
-                teamId={teamId}
-              />
+              {team && (
+                <CustomChatButton
+                  authToken={authToken || undefined}
+                  clientId={undefined}
+                  examplePrompts={siwaExamplePrompts}
+                  isFloating={false}
+                  isLoggedIn={!!accountAddress}
+                  label="Ask AI for support"
+                  networks="all"
+                  pageType="support"
+                  team={team}
+                />
+              )}
 
               <Link
                 className="text-muted-foreground text-sm hover:underline"
