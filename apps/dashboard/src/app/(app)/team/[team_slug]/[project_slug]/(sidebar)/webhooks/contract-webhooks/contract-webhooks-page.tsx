@@ -5,7 +5,6 @@ import {
 } from "@/api/insight/webhooks";
 import type { Project } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
 import { ContractsWebhooksTable } from "../components/WebhooksTable";
 
 export async function ContractsWebhooksPageContent(props: {
@@ -14,7 +13,7 @@ export async function ContractsWebhooksPageContent(props: {
 }) {
   let webhooks: WebhookResponse[] = [];
   let errorMessage = "";
-  let supportedChainIds: number[] = [];
+  let _supportedChainIds: number[] = [];
 
   const projectClientId = props.project.publishableKey;
 
@@ -28,7 +27,7 @@ export async function ContractsWebhooksPageContent(props: {
 
     const supportedChainsRes = await getSupportedWebhookChains();
     if ("chains" in supportedChainsRes) {
-      supportedChainIds = supportedChainsRes.chains;
+      _supportedChainIds = supportedChainsRes.chains;
     } else {
       errorMessage = supportedChainsRes.error;
     }
@@ -37,7 +36,7 @@ export async function ContractsWebhooksPageContent(props: {
     console.error("Error loading project or webhooks", error);
   }
 
-  const client = getClientThirdwebClient({
+  const _client = getClientThirdwebClient({
     jwt: props.authToken,
     teamId: props.project.teamId,
   });
@@ -54,25 +53,12 @@ export async function ContractsWebhooksPageContent(props: {
           </div>
         </div>
       ) : webhooks.length > 0 ? (
-        <ContractsWebhooksTable
-          client={client}
-          projectClientId={projectClientId}
-          supportedChainIds={supportedChainIds}
-          webhooks={webhooks}
-        />
+        <ContractsWebhooksTable project={props.project} webhooks={webhooks} />
       ) : (
         <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border p-12 text-center">
           <div>
             <h3 className="mb-1 font-medium text-lg">No webhooks found</h3>
-            <p className="text-muted-foreground">
-              Create a webhook to get started.
-            </p>
           </div>
-          <CreateContractWebhookButton
-            client={client}
-            projectClientId={projectClientId}
-            supportedChainIds={supportedChainIds}
-          />
         </div>
       )}
     </div>
