@@ -312,7 +312,18 @@ export function BuyWidget(props: BuyWidgetProps) {
           props.client,
           NATIVE_TOKEN_ADDRESS,
           props.chain.id,
-        );
+        ).catch((err) => {
+          err.message.includes("not supported")
+            ? undefined
+            : Promise.reject(err);
+        });
+        if (!ETH) {
+          return {
+            chain: props.chain,
+            tokenAddress: props.tokenAddress || NATIVE_TOKEN_ADDRESS,
+            type: "unsupported_token",
+          };
+        }
         return {
           data: {
             destinationToken: ETH,

@@ -4,8 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import type { TokenMetadata } from "@/lib/types";
 
 async function fetchTokensFromApi(chainId?: number) {
-  const domain = process.env.NEXT_PUBLIC_BRIDGE_URL;
-  const url = new URL(`https://${domain}/v1/tokens`);
+  const domain = process.env.NEXT_PUBLIC_BRIDGE_URL || "bridge.thirdweb.com";
+  const url = new URL(
+    `${domain.includes("localhost") ? "http" : "https"}://${domain}/v1/tokens`,
+  );
 
   if (chainId) {
     url.searchParams.append("chainId", String(chainId));
