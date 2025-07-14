@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import type { Topic, WebhookConfig } from "@/api/webhook-configs";
+import { deleteWebhookConfig } from "@/api/webhook-configs";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -37,11 +39,6 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { WebhookSummaryStats } from "@/types/analytics";
-import type {
-  Topic,
-  WebhookConfig,
-} from "../../../../../../../../@/api/webhook-configs";
-import { deleteWebhookConfig } from "../../../../../../../../@/api/webhook-configs";
 import { CreateWebhookConfigModal } from "./create-webhook-config-modal";
 import { DeleteWebhookModal } from "./delete-webhook-modal";
 import { EditWebhookConfigModal } from "./edit-webhook-config-modal";

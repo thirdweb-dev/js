@@ -1,10 +1,10 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { InAppWalletUsersPageContent } from "@app/team/[team_slug]/[project_slug]/(sidebar)/wallets/users/components";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 
 export default async function EcosystemUsersPage(props: {
   params: Promise<{ team_slug: string; slug: string }>;

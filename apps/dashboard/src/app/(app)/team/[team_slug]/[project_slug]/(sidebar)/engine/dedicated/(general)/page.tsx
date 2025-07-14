@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
-import { getAuthToken } from "../../../../../../../../../@/api/auth-token";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { getEngineInstances } from "../_utils/getEngineInstances";
 import { EngineInstancesList } from "./overview/engine-list";
 

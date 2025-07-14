@@ -26,7 +26,7 @@ import {
   maxTeamSlugLength,
   teamNameSchema,
   teamSlugSchema,
-} from "../../../team/[team_slug]/(team)/~/settings/general/common";
+} from "../../../(app)/team/[team_slug]/(team)/~/settings/general/common";
 
 type TeamData = {
   name?: string;

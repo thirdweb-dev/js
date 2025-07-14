@@ -4,7 +4,7 @@ import { getUserThirdwebClient } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { CustomContractForm } from "@/components/contract-components/contract-deploy-form/custom-contract";
-import { loginRedirect } from "../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 
 type DeployFormForUriProps = {
   contractMetadata: FetchDeployMetadataResult | null;

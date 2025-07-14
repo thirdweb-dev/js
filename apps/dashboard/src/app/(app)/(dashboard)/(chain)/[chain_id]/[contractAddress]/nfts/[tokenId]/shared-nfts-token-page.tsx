@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { getAuthTokenWalletAddress } from "../../../../../../../../@/api/auth-token";
+import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { redirectToContractLandingPage } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
 import { buildContractPagePath } from "../../_utils/contract-page-path";

@@ -1,4 +1,3 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { ArrowUpRightIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
@@ -6,6 +5,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
+import { loginRedirect } from "@/utils/redirects";
 import { InsightAnalytics } from "./components/InsightAnalytics";
 
 export default async function Page(props: {

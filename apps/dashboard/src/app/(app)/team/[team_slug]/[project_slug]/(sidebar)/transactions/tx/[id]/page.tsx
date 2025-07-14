@@ -1,4 +1,3 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import type { AbiFunction } from "abitype";
 import { notFound, redirect } from "next/navigation";
 import { getContract, toTokens } from "thirdweb";
@@ -13,6 +12,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { loginRedirect } from "@/utils/redirects";
 import type { Transaction } from "../../analytics/tx-table/types";
 import {
   getSingleTransaction,

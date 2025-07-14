@@ -1,10 +1,10 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
+import { loginRedirect } from "@/utils/redirects";
 import { RPCAnalytics } from "./components/RpcAnalytics";
 
 export default async function Page(props: {

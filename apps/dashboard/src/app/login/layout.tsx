@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { AppRouterProviders } from "./providers";
+import { AppRouterProviders } from "../(app)/providers";
 
 const fontSans = Inter({
   display: "swap",
@@ -54,7 +54,7 @@ export default function RootLayout({
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
-        <AppRouterProviders autoConnect={true}>{children}</AppRouterProviders>
+        <AppRouterProviders autoConnect={false}>{children}</AppRouterProviders>
         <DashboardRouterTopProgressBar />
         <NextTopLoader
           color="hsl(var(--foreground))"

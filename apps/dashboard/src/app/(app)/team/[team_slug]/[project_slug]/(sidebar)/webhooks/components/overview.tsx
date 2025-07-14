@@ -1,11 +1,8 @@
 "use client";
 
 import { redirect } from "next/navigation";
+import type { Topic, WebhookConfig } from "@/api/webhook-configs";
 import type { WebhookSummaryStats } from "@/types/analytics";
-import type {
-  Topic,
-  WebhookConfig,
-} from "../../../../../../../../@/api/webhook-configs";
 import { WebhookConfigsTable } from "./webhook-configs-table";
 
 interface WebhooksOverviewProps {

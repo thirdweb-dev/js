@@ -28,7 +28,7 @@ import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import {
   InviteSection,
   type InviteTeamMembersFn,
-} from "../../../team/[team_slug]/(team)/~/settings/members/InviteSection";
+} from "../../../(app)/team/[team_slug]/(team)/~/settings/members/InviteSection";
 
 export function InviteTeamMembersUI(props: {
   team: Team;

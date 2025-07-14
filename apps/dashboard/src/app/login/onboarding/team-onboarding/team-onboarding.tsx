@@ -11,7 +11,7 @@ import {
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { updateTeam } from "../../../team/[team_slug]/(team)/~/settings/general/updateTeam";
+import { updateTeam } from "../../../(app)/team/[team_slug]/(team)/~/settings/general/updateTeam";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
 import { TeamInfoFormUI } from "./TeamInfoForm";
 

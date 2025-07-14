@@ -1,11 +1,11 @@
 import { notFound, redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeams } from "@/api/team";
 import { getMemberByAccountId } from "@/api/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../@/api/auth-token";
+import { loginRedirect } from "@/utils/redirects";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
-import { loginRedirect } from "../../../../../login/loginRedirect";
 import { ProjectGeneralSettingsPage } from "./ProjectGeneralSettingsPage";
 
 export default async function Page(props: {

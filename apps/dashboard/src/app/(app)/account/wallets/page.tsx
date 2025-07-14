@@ -1,7 +1,7 @@
+import { getAuthToken } from "@/api/auth-token";
 import { getLinkedWallets } from "@/api/linked-wallets";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../@/api/auth-token";
-import { loginRedirect } from "../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { getValidAccount } from "../settings/getAccount";
 import { LinkWallet } from "./LinkWalletUI";
 

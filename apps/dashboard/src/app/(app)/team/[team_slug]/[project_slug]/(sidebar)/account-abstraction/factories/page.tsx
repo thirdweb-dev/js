@@ -1,5 +1,4 @@
 import { getSortedDeployedContracts } from "@app/account/contracts/_components/getSortedDeployedContracts";
-import { loginRedirect } from "@app/login/loginRedirect";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -15,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { loginRedirect } from "@/utils/redirects";
 import { DefaultFactoriesSection } from "./AccountFactories";
 import { FactoryContracts } from "./AccountFactories/factory-contracts";
 

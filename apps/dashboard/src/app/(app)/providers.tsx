@@ -1,16 +1,16 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider, useTheme } from "next-themes";
+import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect, useMemo } from "react";
-import { Toaster } from "sonner";
 import {
   ThirdwebProvider,
   useActiveAccount,
   useConnectionManager,
 } from "thirdweb/react";
 import { CustomConnectWallet } from "@/components/connect-wallet";
+import { Toaster } from "@/components/ui/sonner";
 import { isSanctionedAddress } from "@/constants/eth-sanctioned-addresses";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { useAllChainsData } from "@/hooks/chains/allChains";
@@ -20,21 +20,24 @@ import { TWAutoConnect } from "./components/autoconnect";
 const queryClient = new QueryClient();
 const thirdwebClient = getClientThirdwebClient();
 
-export function AppRouterProviders(props: { children: React.ReactNode }) {
+export function AppRouterProviders(props: {
+  children: React.ReactNode;
+  autoConnect: boolean;
+}) {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
         <SyncChainStores />
         <ThirdwebProvider>
           <SyncChainDefinitionsToConnectionManager />
-          <TWAutoConnect client={thirdwebClient} />
+          {props.autoConnect && <TWAutoConnect client={thirdwebClient} />}
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             disableTransitionOnChange
             enableSystem={false}
           >
-            <ToasterSetup />
+            <Toaster richColors />
             <SanctionedAddressesChecker>
               {props.children}
             </SanctionedAddressesChecker>
@@ -43,11 +46,6 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
       </QueryClientProvider>
     </NuqsAdapter>
   );
-}
-
-function ToasterSetup() {
-  const { theme } = useTheme();
-  return <Toaster richColors theme={theme === "light" ? "light" : "dark"} />;
 }
 
 function SyncChainDefinitionsToConnectionManager() {

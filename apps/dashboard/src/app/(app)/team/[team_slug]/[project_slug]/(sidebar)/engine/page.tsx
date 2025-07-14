@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { getAuthToken } from "../../../../../../../@/api/auth-token";
 import { getEngineInstances } from "./dedicated/_utils/getEngineInstances";
 
 export default async function TransactionsAnalyticsPage(props: {

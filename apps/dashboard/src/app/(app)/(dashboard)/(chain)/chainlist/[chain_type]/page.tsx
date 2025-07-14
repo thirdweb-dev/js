@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,7 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getAuthToken } from "../../../../../../@/api/auth-token";
 import {
   AllFilters,
   ChainOptionsFilter,

@@ -1,5 +1,5 @@
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getRawAccount } from "../account/settings/getAccount";
+import { getRawAccount } from "../(app)/account/settings/getAccount";
 import { isValidEncodedRedirectPath } from "./isValidEncodedRedirectPath";
 import { LoginAndOnboardingPage } from "./LoginPage";
 

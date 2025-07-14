@@ -1,7 +1,6 @@
 "use client";
 
 import { Turnstile } from "@marsidev/react-turnstile";
-import { PhoneIcon } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { lazy, Suspense, useEffect, useState } from "react";
@@ -12,27 +11,28 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import {
+  doLogin,
+  doLogout,
+  getLoginPayload,
+  isLoggedIn,
+} from "@/actions/auth-actions";
 import { getRawAccountAction } from "@/actions/getAccount";
 import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookies";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { deleteCookie } from "@/utils/cookie";
+import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { isVercel } from "@/utils/vercel";
-import {
-  LAST_USED_PROJECT_ID,
-  LAST_USED_TEAM_ID,
-} from "../../../@/constants/cookies";
-import { deleteCookie } from "../../../@/utils/cookie";
-import { getSDKTheme } from "../../../@/utils/sdk-component-theme";
-import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
-import { LAST_VISITED_TEAM_PAGE_PATH } from "../team/components/last-visited-page/consts";
-import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
+import { ThirdwebMiniLogo } from "../(app)/components/ThirdwebMiniLogo";
+import { LAST_VISITED_TEAM_PAGE_PATH } from "../(app)/team/components/last-visited-page/consts";
 import { isAccountOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
 const LazyAccountOnboarding = lazy(
@@ -131,7 +131,7 @@ export function LoginAndOnboardingPage(props: {
 function LoginPageContainer(props: { children: React.ReactNode }) {
   return (
     <>
-      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-12">
+      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-24 px-2">
         {props.children}
       </main>
 
@@ -141,6 +141,27 @@ function LoginPageContainer(props: { children: React.ReactNode }) {
         className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
         src="/assets/login/background.svg"
       />
+
+      <footer className="z-20 relative bg-background">
+        <div className="px-4  border-t  p-4 text-center">
+          <div className="text-sm font-medium mb-1">
+            <span>Login with phone number is no longer supported</span>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            <p>
+              You can instead log into your account using your account email
+              address.
+            </p>
+            <p>
+              Please{" "}
+              <UnderlineLink href="/support">
+                reach out to support
+              </UnderlineLink>{" "}
+              if you need help.
+            </p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
@@ -272,7 +293,7 @@ function CustomConnectEmbed(props: {
   const [alwaysShowTurnstile, setAlwaysShowTurnstile] = useState(false);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full">
       <Turnstile
         onSuccess={(token) => setTurnstileToken(token)}
         options={{
@@ -321,36 +342,17 @@ function CustomConnectEmbed(props: {
               return isLoggedInResult;
             },
           }}
-          className="shadow-lg"
+          className="shadow-lg !w-[calc(100vw-2rem)] lg:!w-[728px]"
           client={props.client}
           modalSize="wide"
           privacyPolicyUrl="/privacy-policy"
+          autoConnect={false}
           termsOfServiceUrl="/terms"
           theme={getSDKTheme(theme === "light" ? "light" : "dark")}
           wallets={
             props.loginWithInAppWallet ? inAppWalletLoginOptions : loginOptions
           }
         />
-        {/* alert people who used to log in with phone to instead log in with their account email */}
-        <Alert className="mt-8" variant="info">
-          <PhoneIcon className="size-4" />
-          <AlertTitle>
-            <span>Phone login is no longer supported</span>
-          </AlertTitle>
-          <AlertDescription>
-            <p>
-              You can instead log into your account using your account email
-              address.
-            </p>
-            <p>
-              Please{" "}
-              <UnderlineLink href="/support">
-                reach out to support
-              </UnderlineLink>{" "}
-              if you need help.
-            </p>
-          </AlertDescription>
-        </Alert>
       </ClientOnly>
     </div>
   );
