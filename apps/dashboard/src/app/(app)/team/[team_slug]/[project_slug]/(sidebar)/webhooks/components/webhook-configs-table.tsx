@@ -187,6 +187,7 @@ export function WebhookConfigsTable(props: {
                   <TableHead className="w-[150px]">Destination URL</TableHead>
                   <TableHead>Topics</TableHead>
                   <TableHead>Activity (24h)</TableHead>
+                  <TableHead>Webhook Secret</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -257,6 +258,22 @@ export function WebhookConfigsTable(props: {
                         isPaused={!!config.pausedAt}
                         metrics={props.metricsMap.get(config.id) || null}
                       />
+                    </TableCell>
+                    <TableCell>
+                      {config.webhookSecret ? (
+                        <CopyTextButton
+                          className="max-w-[120px] text-sm text-muted-foreground font-mono justify-start p-0 h-auto"
+                          textToCopy={config.webhookSecret}
+                          textToShow={`...${config.webhookSecret.slice(-4)}`}
+                          variant="ghost"
+                          copyIconPosition="right"
+                          tooltip="Copy webhook secret"
+                        />
+                      ) : (
+                        <span className="text-sm text-muted-foreground">
+                          No secret
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {config.createdAt

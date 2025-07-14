@@ -37,7 +37,7 @@ type WebhookConfigsResponse =
     };
 
 interface CreateWebhookConfigRequest {
-  topics: { id: string; filters: object | null }[];
+  topicIdsWithFilters: { id: string; filters: object | null }[];
   destinationUrl: string;
   description: string;
   isPaused?: boolean;
@@ -76,7 +76,7 @@ type TopicsResponse =
 
 interface UpdateWebhookConfigRequest {
   destinationUrl?: string;
-  topics?: { id: string; filters: object | null }[];
+  topicIdsWithFilters?: { id: string; filters: object | null }[];
   description?: string;
   isPaused?: boolean;
 }
