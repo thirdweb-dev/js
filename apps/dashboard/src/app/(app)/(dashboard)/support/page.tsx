@@ -71,7 +71,7 @@ export default async function SupportPage() {
   ]);
 
   const teams = await getTeams();
-  const team = teams?.[0];
+  const _teamId = teams?.[0]?.id ?? undefined;
 
   return (
     <main className="flex flex-col gap-12 pb-12">
@@ -92,7 +92,7 @@ export default async function SupportPage() {
               team.
             </p>
             <div className="mt-6 flex w-full flex-col items-center gap-3">
-              {team && (
+              {teams?.[0] && (
                 <CustomChatButton
                   authToken={authToken || undefined}
                   clientId={undefined}
@@ -102,7 +102,7 @@ export default async function SupportPage() {
                   label="Ask AI for support"
                   networks="all"
                   pageType="support"
-                  team={team}
+                  team={teams[0]}
                 />
               )}
 
