@@ -1,53 +1,54 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xcceb68f5" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "allProposals",
     components: [
       {
+        type: "uint256",
         name: "proposalId",
-        type: "uint256",
       },
       {
-        name: "proposer",
         type: "address",
+        name: "proposer",
       },
       {
-        name: "targets",
         type: "address[]",
+        name: "targets",
       },
       {
-        name: "values",
         type: "uint256[]",
+        name: "values",
       },
       {
-        name: "signatures",
         type: "string[]",
+        name: "signatures",
       },
       {
-        name: "calldatas",
         type: "bytes[]",
+        name: "calldatas",
       },
       {
+        type: "uint256",
         name: "startBlock",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "endBlock",
-        type: "uint256",
       },
       {
-        name: "description",
         type: "string",
+        name: "description",
       },
     ],
-    name: "allProposals",
-    type: "tuple[]",
   },
 ] as const;
 

@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "claimCondition" function.
@@ -16,42 +16,42 @@ export type ClaimConditionParams = {
 export const FN_SELECTOR = "0xe9703d25" as const;
 const FN_INPUTS = [
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "uint256",
     name: "startTimestamp",
-    type: "uint256",
   },
   {
+    type: "uint256",
     name: "maxClaimableSupply",
-    type: "uint256",
   },
   {
+    type: "uint256",
     name: "supplyClaimed",
-    type: "uint256",
   },
   {
+    type: "uint256",
     name: "quantityLimitPerWallet",
-    type: "uint256",
   },
   {
-    name: "merkleRoot",
     type: "bytes32",
+    name: "merkleRoot",
   },
   {
-    name: "pricePerToken",
     type: "uint256",
+    name: "pricePerToken",
   },
   {
-    name: "currency",
     type: "address",
+    name: "currency",
   },
   {
-    name: "metadata",
     type: "string",
+    name: "metadata",
   },
 ] as const;
 

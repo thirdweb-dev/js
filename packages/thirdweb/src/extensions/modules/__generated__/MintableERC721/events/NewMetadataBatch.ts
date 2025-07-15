@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "NewMetadataBatch" event.
@@ -42,8 +42,8 @@ export function newMetadataBatchEvent(
   filters: NewMetadataBatchEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event NewMetadataBatch(uint256 indexed startTokenIdInclusive, uint256 indexed endTokenIdNonInclusive, string baseURI)",
+    filters,
   });
 }

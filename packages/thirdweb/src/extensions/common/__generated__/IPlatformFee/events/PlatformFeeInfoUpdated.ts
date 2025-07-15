@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "PlatformFeeInfoUpdated" event.
@@ -36,8 +36,8 @@ export function platformFeeInfoUpdatedEvent(
   filters: PlatformFeeInfoUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)",
+    filters,
   });
 }

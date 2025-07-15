@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "BuyerApprovedForListing" event.
@@ -42,8 +42,8 @@ export function buyerApprovedForListingEvent(
   filters: BuyerApprovedForListingEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event BuyerApprovedForListing(uint256 indexed listingId, address indexed buyer, bool approved)",
+    filters,
   });
 }

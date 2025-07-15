@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "TokensMintedWithSignature" event.
@@ -48,8 +48,8 @@ export function tokensMintedWithSignatureEvent(
   filters: TokensMintedWithSignatureEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event TokensMintedWithSignature(address indexed signer, address indexed mintedTo, uint256 indexed tokenIdMinted, (address to, address royaltyRecipient, uint256 royaltyBps, address primarySaleRecipient, uint256 tokenId, string uri, uint256 quantity, uint256 pricePerToken, address currency, uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid) mintRequest)",
+    filters,
   });
 }

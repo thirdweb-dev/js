@@ -1,49 +1,50 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xd637ed59" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
+    name: "condition",
     components: [
       {
+        type: "uint256",
         name: "startTimestamp",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "maxClaimableSupply",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "supplyClaimed",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "quantityLimitPerWallet",
-        type: "uint256",
       },
       {
-        name: "merkleRoot",
         type: "bytes32",
+        name: "merkleRoot",
       },
       {
-        name: "pricePerToken",
         type: "uint256",
+        name: "pricePerToken",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
-        name: "metadata",
         type: "string",
+        name: "metadata",
       },
     ],
-    name: "condition",
-    type: "tuple",
   },
 ] as const;
 

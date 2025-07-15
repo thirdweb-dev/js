@@ -20,22 +20,22 @@ export type EncodeBytesBeforeMintERC1155Params = {
 export const FN_SELECTOR = "0x819ed5a3" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "params",
     components: [
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
-        name: "pricePerUnit",
         type: "uint256",
+        name: "pricePerUnit",
       },
       {
-        name: "recipientAllowlistProof",
         type: "bytes32[]",
+        name: "recipientAllowlistProof",
       },
     ],
-    name: "params",
-    type: "tuple",
   },
 ] as const;
 

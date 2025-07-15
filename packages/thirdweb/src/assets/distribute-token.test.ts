@@ -12,7 +12,7 @@ import {
   TEST_ACCOUNT_C,
   TEST_ACCOUNT_D,
 } from "../../test/src/test-wallets.js";
-import { createTokenByImplConfig } from "./create-token-by-impl-config.js";
+import { createTokenByImplementationConfig } from "./create-token-by-impl-config.js";
 import { distributeToken } from "./distribute-token.js";
 import { getDeployedEntrypointERC20 } from "./get-entrypoint-erc20.js";
 
@@ -25,7 +25,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     let token: ThirdwebContract;
     beforeAll(async () => {
       // create token
-      const tokenAddress = await createTokenByImplConfig({
+      const tokenAddress = await createTokenByImplementationConfig({
         account: TEST_ACCOUNT_A,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
@@ -34,6 +34,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           name: "Test",
         },
         salt: "salt123",
+        implementationAddress: "0x",
       });
 
       token = getContract({

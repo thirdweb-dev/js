@@ -17,16 +17,16 @@ export type VerifyClaimParams = {
 export const FN_SELECTOR = "0x4bbb1abf" as const;
 const FN_INPUTS = [
   {
-    name: "_claimer",
     type: "address",
+    name: "_claimer",
   },
   {
+    type: "uint256",
     name: "_tokenId",
-    type: "uint256",
   },
   {
-    name: "_quantity",
     type: "uint256",
+    name: "_quantity",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

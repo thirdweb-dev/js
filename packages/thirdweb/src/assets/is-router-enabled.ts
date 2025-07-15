@@ -1,5 +1,5 @@
 import { ZERO_ADDRESS } from "../constants/addresses.js";
-import { getRouter } from "../extensions/assets/__generated__/AssetEntrypointERC20/read/getRouter.js";
+import { getRouter } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/read/getRouter.js";
 import type { ClientAndChain } from "../utils/types.js";
 import { getDeployedEntrypointERC20 } from "./get-entrypoint-erc20.js";
 

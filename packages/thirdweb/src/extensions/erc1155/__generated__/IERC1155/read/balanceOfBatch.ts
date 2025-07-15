@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "balanceOfBatch" function.
@@ -20,12 +20,12 @@ export type BalanceOfBatchParams = {
 export const FN_SELECTOR = "0x4e1273f4" as const;
 const FN_INPUTS = [
   {
-    name: "_owners",
     type: "address[]",
+    name: "_owners",
   },
   {
-    name: "tokenIds",
     type: "uint256[]",
+    name: "tokenIds",
   },
 ] as const;
 const FN_OUTPUTS = [

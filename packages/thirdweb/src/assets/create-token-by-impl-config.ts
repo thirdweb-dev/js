@@ -2,8 +2,8 @@ import type { Hex } from "viem";
 import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "../constants/addresses.js";
 import { getContract } from "../contract/contract.js";
 import { parseEventLogs } from "../event/actions/parse-logs.js";
-import { assetCreatedEvent } from "../extensions/assets/__generated__/AssetEntrypointERC20/events/AssetCreated.js";
-import { createAssetByImplementationConfig } from "../extensions/assets/__generated__/AssetEntrypointERC20/write/createAssetByImplementationConfig.js";
+import { assetCreatedEvent } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/events/AssetCreated.js";
+import { createAssetByImplementationConfig } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/write/createAssetByImplementationConfig.js";
 import { decimals } from "../extensions/erc20/read/decimals.js";
 import { eth_blockNumber } from "../rpc/actions/eth_blockNumber.js";
 import { getRpcClient } from "../rpc/rpc.js";
@@ -17,16 +17,15 @@ import {
   ImplementationType,
 } from "./constants.js";
 import { getOrDeployEntrypointERC20 } from "./get-entrypoint-erc20.js";
-import { getOrDeployERC20AssetImpl } from "./get-erc20-asset-impl.js";
 import {
   encodeInitParams,
   encodeMarketConfig,
   encodePoolConfig,
 } from "./token-utils.js";
-import type { CreateTokenOptions } from "./types.js";
+import type { CreateTokenByImplementationConfigOptions } from "./types.js";
 
-export async function createTokenByImplConfig(options: CreateTokenOptions) {
-  const { client, chain, account, params, launchConfig } = options;
+export async function createTokenByImplementationConfig(options: CreateTokenByImplementationConfigOptions) {
+  const { client, chain, account, params, implementationAddress, launchConfig } = options;
 
   const creator = params.owner || account.address;
 
@@ -49,7 +48,6 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
       });
 
   const entrypoint = await getOrDeployEntrypointERC20(options);
-  const tokenImpl = await getOrDeployERC20AssetImpl(options);
 
   let hookData: Hex = "0x";
   let amount = toUnits(
@@ -99,7 +97,7 @@ export async function createTokenByImplConfig(options: CreateTokenOptions) {
               ? CreateHook.DISTRIBUTE
               : CreateHook.NONE,
       createHookData: hookData,
-      implementation: tokenImpl.address,
+      implementation: implementationAddress,
       implementationType: ImplementationType.ERC1967,
     },
     contract: entrypoint,

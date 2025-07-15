@@ -51,3 +51,7 @@ export type CreateTokenOptions = ClientAndChainAndAccount & {
   launchConfig?: LaunchConfig;
   referrerAddress?: string;
 };
+
+export type CreateTokenByImplementationConfigOptions = ClientAndChainAndAccount & CreateTokenOptions & {
+  implementationAddress: string;
+};

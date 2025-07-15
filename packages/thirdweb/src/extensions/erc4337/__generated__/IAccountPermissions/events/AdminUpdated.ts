@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "AdminUpdated" event.
@@ -34,7 +34,7 @@ export type AdminUpdatedEventFilters = Partial<{
  */
 export function adminUpdatedEvent(filters: AdminUpdatedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature: "event AdminUpdated(address indexed signer, bool isAdmin)",
+    filters,
   });
 }

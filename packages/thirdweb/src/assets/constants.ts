@@ -4,21 +4,14 @@ export const DEFAULT_REFERRER_REWARD_BPS = 5000; // 50%
 export const DEFAULT_INFRA_ADMIN = "0x1a472863cf21d5aa27f417df9140400324c48f22";
 export const DEFAULT_FEE_RECIPIENT =
   "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
-export const DEFAULT_FEE_BPS = 50n;
-export const DEFAULT_SALT = "thirdweb";
+export const DEFAULT_SALT = "0x";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   8453: {
-    AssetEntrypointERC20: "0x556688D4d192FC59b27E239ff6e06D28786aAdbE",
-    ERC20AssetImpl: "",
-    V3PositionManager: "",
-    V4PositionManager: "",
+    AssetEntrypointERC20: "0xe7caeE8a2df994cE00b575eE56A3c9DecB95028D",
   },
   84532: {
-    AssetEntrypointERC20: "0xf0ED90ea4df819017ee1dfDADf26d65a678b31b7",
-    ERC20AssetImpl: "",
-    V3PositionManager: "",
-    V4PositionManager: "",
+    AssetEntrypointERC20: "0xa34ed67f2a327D8E87E3dFBcc7b4927df7C418ef",
   },
 };
 

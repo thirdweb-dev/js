@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "tokenOfOwnerByIndex" function.
@@ -17,12 +17,12 @@ export type TokenOfOwnerByIndexParams = {
 export const FN_SELECTOR = "0x2f745c59" as const;
 const FN_INPUTS = [
   {
-    name: "_owner",
     type: "address",
+    name: "_owner",
   },
   {
-    name: "_index",
     type: "uint256",
+    name: "_index",
   },
 ] as const;
 const FN_OUTPUTS = [
