@@ -9,22 +9,22 @@ import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "collectRewards" function.
+ * Represents the parameters for the "collectReward" function.
  */
-export type CollectRewardsParams = WithOverrides<{
-  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "_owner" }>;
-  asset: AbiParameterToPrimitiveType<{ type: "address"; name: "_asset" }>;
+export type CollectRewardParams = WithOverrides<{
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
+  asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
 }>;
 
-export const FN_SELECTOR = "0x195da960" as const;
+export const FN_SELECTOR = "0x7bb87377" as const;
 const FN_INPUTS = [
   {
     type: "address",
-    name: "_owner",
+    name: "owner",
   },
   {
     type: "address",
-    name: "_asset",
+    name: "asset",
   },
 ] as const;
 const FN_OUTPUTS = [
@@ -47,18 +47,18 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
- * Checks if the `collectRewards` method is supported by the given contract.
+ * Checks if the `collectReward` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `collectRewards` method is supported.
+ * @returns A boolean indicating if the `collectReward` method is supported.
  * @extension ASSETS
  * @example
  * ```ts
- * import { isCollectRewardsSupported } from "thirdweb/extensions/assets";
+ * import { isCollectRewardSupported } from "thirdweb/extensions/assets";
  *
- * const supported = isCollectRewardsSupported(["0x..."]);
+ * const supported = isCollectRewardSupported(["0x..."]);
  * ```
  */
-export function isCollectRewardsSupported(availableSelectors: string[]) {
+export function isCollectRewardSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -66,57 +66,57 @@ export function isCollectRewardsSupported(availableSelectors: string[]) {
 }
 
 /**
- * Encodes the parameters for the "collectRewards" function.
- * @param options - The options for the collectRewards function.
+ * Encodes the parameters for the "collectReward" function.
+ * @param options - The options for the collectReward function.
  * @returns The encoded ABI parameters.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeCollectRewardsParams } from "thirdweb/extensions/assets";
- * const result = encodeCollectRewardsParams({
+ * import { encodeCollectRewardParams } from "thirdweb/extensions/assets";
+ * const result = encodeCollectRewardParams({
  *  owner: ...,
  *  asset: ...,
  * });
  * ```
  */
-export function encodeCollectRewardsParams(options: CollectRewardsParams) {
+export function encodeCollectRewardParams(options: CollectRewardParams) {
   return encodeAbiParameters(FN_INPUTS, [options.owner, options.asset]);
 }
 
 /**
- * Encodes the "collectRewards" function into a Hex string with its parameters.
- * @param options - The options for the collectRewards function.
+ * Encodes the "collectReward" function into a Hex string with its parameters.
+ * @param options - The options for the collectReward function.
  * @returns The encoded hexadecimal string.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeCollectRewards } from "thirdweb/extensions/assets";
- * const result = encodeCollectRewards({
+ * import { encodeCollectReward } from "thirdweb/extensions/assets";
+ * const result = encodeCollectReward({
  *  owner: ...,
  *  asset: ...,
  * });
  * ```
  */
-export function encodeCollectRewards(options: CollectRewardsParams) {
+export function encodeCollectReward(options: CollectRewardParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeCollectRewardsParams(options).slice(
+    encodeCollectRewardParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Prepares a transaction to call the "collectRewards" function on the contract.
- * @param options - The options for the "collectRewards" function.
+ * Prepares a transaction to call the "collectReward" function on the contract.
+ * @param options - The options for the "collectReward" function.
  * @returns A prepared transaction object.
  * @extension ASSETS
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";
- * import { collectRewards } from "thirdweb/extensions/assets";
+ * import { collectReward } from "thirdweb/extensions/assets";
  *
- * const transaction = collectRewards({
+ * const transaction = collectReward({
  *  contract,
  *  owner: ...,
  *  asset: ...,
@@ -129,11 +129,11 @@ export function encodeCollectRewards(options: CollectRewardsParams) {
  * await sendTransaction({ transaction, account });
  * ```
  */
-export function collectRewards(
+export function collectReward(
   options: BaseTransactionOptions<
-    | CollectRewardsParams
+    | CollectRewardParams
     | {
-        asyncParams: () => Promise<CollectRewardsParams>;
+        asyncParams: () => Promise<CollectRewardParams>;
       }
   >,
 ) {

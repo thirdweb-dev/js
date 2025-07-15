@@ -7,13 +7,13 @@ import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "getRewardPosition" function.
+ * Represents the parameters for the "getReward" function.
  */
-export type GetRewardPositionParams = {
+export type GetRewardParams = {
   asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
 };
 
-export const FN_SELECTOR = "0x61d74a29" as const;
+export const FN_SELECTOR = "0xc00007b0" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -49,17 +49,17 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
- * Checks if the `getRewardPosition` method is supported by the given contract.
+ * Checks if the `getReward` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `getRewardPosition` method is supported.
+ * @returns A boolean indicating if the `getReward` method is supported.
  * @extension ASSETS
  * @example
  * ```ts
- * import { isGetRewardPositionSupported } from "thirdweb/extensions/assets";
- * const supported = isGetRewardPositionSupported(["0x..."]);
+ * import { isGetRewardSupported } from "thirdweb/extensions/assets";
+ * const supported = isGetRewardSupported(["0x..."]);
  * ```
  */
-export function isGetRewardPositionSupported(availableSelectors: string[]) {
+export function isGetRewardSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -67,79 +67,77 @@ export function isGetRewardPositionSupported(availableSelectors: string[]) {
 }
 
 /**
- * Encodes the parameters for the "getRewardPosition" function.
- * @param options - The options for the getRewardPosition function.
+ * Encodes the parameters for the "getReward" function.
+ * @param options - The options for the getReward function.
  * @returns The encoded ABI parameters.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeGetRewardPositionParams } from "thirdweb/extensions/assets";
- * const result = encodeGetRewardPositionParams({
+ * import { encodeGetRewardParams } from "thirdweb/extensions/assets";
+ * const result = encodeGetRewardParams({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeGetRewardPositionParams(
-  options: GetRewardPositionParams,
-) {
+export function encodeGetRewardParams(options: GetRewardParams) {
   return encodeAbiParameters(FN_INPUTS, [options.asset]);
 }
 
 /**
- * Encodes the "getRewardPosition" function into a Hex string with its parameters.
- * @param options - The options for the getRewardPosition function.
+ * Encodes the "getReward" function into a Hex string with its parameters.
+ * @param options - The options for the getReward function.
  * @returns The encoded hexadecimal string.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeGetRewardPosition } from "thirdweb/extensions/assets";
- * const result = encodeGetRewardPosition({
+ * import { encodeGetReward } from "thirdweb/extensions/assets";
+ * const result = encodeGetReward({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeGetRewardPosition(options: GetRewardPositionParams) {
+export function encodeGetReward(options: GetRewardParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeGetRewardPositionParams(options).slice(
+    encodeGetRewardParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Decodes the result of the getRewardPosition function call.
+ * Decodes the result of the getReward function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension ASSETS
  * @example
  * ```ts
- * import { decodeGetRewardPositionResult } from "thirdweb/extensions/assets";
- * const result = decodeGetRewardPositionResultResult("...");
+ * import { decodeGetRewardResult } from "thirdweb/extensions/assets";
+ * const result = decodeGetRewardResultResult("...");
  * ```
  */
-export function decodeGetRewardPositionResult(result: Hex) {
+export function decodeGetRewardResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "getRewardPosition" function on the contract.
- * @param options - The options for the getRewardPosition function.
+ * Calls the "getReward" function on the contract.
+ * @param options - The options for the getReward function.
  * @returns The parsed result of the function call.
  * @extension ASSETS
  * @example
  * ```ts
- * import { getRewardPosition } from "thirdweb/extensions/assets";
+ * import { getReward } from "thirdweb/extensions/assets";
  *
- * const result = await getRewardPosition({
+ * const result = await getReward({
  *  contract,
  *  asset: ...,
  * });
  *
  * ```
  */
-export async function getRewardPosition(
-  options: BaseTransactionOptions<GetRewardPositionParams>,
+export async function getReward(
+  options: BaseTransactionOptions<GetRewardParams>,
 ) {
   return readContract({
     contract: options.contract,

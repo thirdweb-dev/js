@@ -2,9 +2,9 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
 import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
- * Represents the filters for the "RewardsCollected" event.
+ * Represents the filters for the "RewardCollected" event.
  */
-export type RewardsCollectedEventFilters = Partial<{
+export type RewardCollectedEventFilters = Partial<{
   owner: AbiParameterToPrimitiveType<{
     type: "address";
     name: "owner";
@@ -18,19 +18,19 @@ export type RewardsCollectedEventFilters = Partial<{
 }>;
 
 /**
- * Creates an event object for the RewardsCollected event.
+ * Creates an event object for the RewardCollected event.
  * @param filters - Optional filters to apply to the event.
  * @returns The prepared event object.
  * @extension ASSETS
  * @example
  * ```ts
  * import { getContractEvents } from "thirdweb";
- * import { rewardsCollectedEvent } from "thirdweb/extensions/assets";
+ * import { rewardCollectedEvent } from "thirdweb/extensions/assets";
  *
  * const events = await getContractEvents({
  * contract,
  * events: [
- *  rewardsCollectedEvent({
+ *  rewardCollectedEvent({
  *  owner: ...,
  *  asset: ...,
  * })
@@ -38,12 +38,12 @@ export type RewardsCollectedEventFilters = Partial<{
  * });
  * ```
  */
-export function rewardsCollectedEvent(
-  filters: RewardsCollectedEventFilters = {},
+export function rewardCollectedEvent(
+  filters: RewardCollectedEventFilters = {},
 ) {
   return prepareEvent({
     signature:
-      "event RewardsCollected(address indexed owner, address indexed asset, address positionManager, uint256 tokenId, uint256 amount0, uint256 amount1)",
+      "event RewardCollected(address indexed owner, address indexed asset, address positionManager, uint256 tokenId, uint256 amount0, uint256 amount1)",
     filters,
   });
 }

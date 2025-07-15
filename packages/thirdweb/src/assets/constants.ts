@@ -8,10 +8,10 @@ export const DEFAULT_SALT = "0x";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   8453: {
-    AssetEntrypointERC20: "0xe7caeE8a2df994cE00b575eE56A3c9DecB95028D",
+    AssetEntrypointERC20: "0x412c90c39CbBD6A2fFDbe9bF9Aa6Ad87717f487a",
   },
   84532: {
-    AssetEntrypointERC20: "0xa34ed67f2a327D8E87E3dFBcc7b4927df7C418ef",
+    AssetEntrypointERC20: "0xF4d4dE479533Ee95B2b1EC10B682D4BC363E6A97",
   },
 };
 

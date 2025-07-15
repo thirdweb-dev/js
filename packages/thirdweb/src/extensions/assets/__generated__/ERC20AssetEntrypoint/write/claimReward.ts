@@ -9,13 +9,13 @@ import { once } from "../../../../../utils/promise/once.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "claimRewards" function.
+ * Represents the parameters for the "claimReward" function.
  */
-export type ClaimRewardsParams = WithOverrides<{
+export type ClaimRewardParams = WithOverrides<{
   asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
 }>;
 
-export const FN_SELECTOR = "0xef5cfb8c" as const;
+export const FN_SELECTOR = "0xd279c191" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -25,18 +25,18 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
- * Checks if the `claimRewards` method is supported by the given contract.
+ * Checks if the `claimReward` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `claimRewards` method is supported.
+ * @returns A boolean indicating if the `claimReward` method is supported.
  * @extension ASSETS
  * @example
  * ```ts
- * import { isClaimRewardsSupported } from "thirdweb/extensions/assets";
+ * import { isClaimRewardSupported } from "thirdweb/extensions/assets";
  *
- * const supported = isClaimRewardsSupported(["0x..."]);
+ * const supported = isClaimRewardSupported(["0x..."]);
  * ```
  */
-export function isClaimRewardsSupported(availableSelectors: string[]) {
+export function isClaimRewardSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -44,55 +44,55 @@ export function isClaimRewardsSupported(availableSelectors: string[]) {
 }
 
 /**
- * Encodes the parameters for the "claimRewards" function.
- * @param options - The options for the claimRewards function.
+ * Encodes the parameters for the "claimReward" function.
+ * @param options - The options for the claimReward function.
  * @returns The encoded ABI parameters.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeClaimRewardsParams } from "thirdweb/extensions/assets";
- * const result = encodeClaimRewardsParams({
+ * import { encodeClaimRewardParams } from "thirdweb/extensions/assets";
+ * const result = encodeClaimRewardParams({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeClaimRewardsParams(options: ClaimRewardsParams) {
+export function encodeClaimRewardParams(options: ClaimRewardParams) {
   return encodeAbiParameters(FN_INPUTS, [options.asset]);
 }
 
 /**
- * Encodes the "claimRewards" function into a Hex string with its parameters.
- * @param options - The options for the claimRewards function.
+ * Encodes the "claimReward" function into a Hex string with its parameters.
+ * @param options - The options for the claimReward function.
  * @returns The encoded hexadecimal string.
  * @extension ASSETS
  * @example
  * ```ts
- * import { encodeClaimRewards } from "thirdweb/extensions/assets";
- * const result = encodeClaimRewards({
+ * import { encodeClaimReward } from "thirdweb/extensions/assets";
+ * const result = encodeClaimReward({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeClaimRewards(options: ClaimRewardsParams) {
+export function encodeClaimReward(options: ClaimRewardParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeClaimRewardsParams(options).slice(
+    encodeClaimRewardParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Prepares a transaction to call the "claimRewards" function on the contract.
- * @param options - The options for the "claimRewards" function.
+ * Prepares a transaction to call the "claimReward" function on the contract.
+ * @param options - The options for the "claimReward" function.
  * @returns A prepared transaction object.
  * @extension ASSETS
  * @example
  * ```ts
  * import { sendTransaction } from "thirdweb";
- * import { claimRewards } from "thirdweb/extensions/assets";
+ * import { claimReward } from "thirdweb/extensions/assets";
  *
- * const transaction = claimRewards({
+ * const transaction = claimReward({
  *  contract,
  *  asset: ...,
  *  overrides: {
@@ -104,11 +104,11 @@ export function encodeClaimRewards(options: ClaimRewardsParams) {
  * await sendTransaction({ transaction, account });
  * ```
  */
-export function claimRewards(
+export function claimReward(
   options: BaseTransactionOptions<
-    | ClaimRewardsParams
+    | ClaimRewardParams
     | {
-        asyncParams: () => Promise<ClaimRewardsParams>;
+        asyncParams: () => Promise<ClaimRewardParams>;
       }
   >,
 ) {

@@ -12,20 +12,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "lockPosition" function.
  */
 export type LockPositionParams = WithOverrides<{
-  asset: AbiParameterToPrimitiveType<{ type: "address"; name: "_asset" }>;
+  asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
   positionManager: AbiParameterToPrimitiveType<{
     type: "address";
-    name: "_positionManager";
+    name: "positionManager";
   }>;
-  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
     type: "address";
-    name: "_recipient";
+    name: "recipient";
   }>;
-  referrer: AbiParameterToPrimitiveType<{ type: "address"; name: "_referrer" }>;
+  referrer: AbiParameterToPrimitiveType<{ type: "address"; name: "referrer" }>;
   referrerBps: AbiParameterToPrimitiveType<{
     type: "uint16";
-    name: "_referrerBps";
+    name: "referrerBps";
   }>;
 }>;
 
@@ -33,27 +33,27 @@ export const FN_SELECTOR = "0x2cde40c2" as const;
 const FN_INPUTS = [
   {
     type: "address",
-    name: "_asset",
+    name: "asset",
   },
   {
     type: "address",
-    name: "_positionManager",
+    name: "positionManager",
   },
   {
     type: "uint256",
-    name: "_tokenId",
+    name: "tokenId",
   },
   {
     type: "address",
-    name: "_recipient",
+    name: "recipient",
   },
   {
     type: "address",
-    name: "_referrer",
+    name: "referrer",
   },
   {
     type: "uint16",
-    name: "_referrerBps",
+    name: "referrerBps",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
