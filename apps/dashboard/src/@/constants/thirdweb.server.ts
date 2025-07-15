@@ -25,6 +25,7 @@ import { getVercelEnv } from "@/utils/vercel";
 export function getConfiguredThirdwebClient(options: {
   secretKey: string | undefined;
   teamId: string | undefined;
+  projectClientId: string | undefined;
 }): ThirdwebClient {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
@@ -89,6 +90,7 @@ export function getConfiguredThirdwebClient(options: {
     },
     secretKey: secretKey,
     teamId: options.teamId,
+    projectClientId: options.projectClientId,
   });
 }
 

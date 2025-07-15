@@ -55,6 +55,12 @@ type ClientOptions = Prettify<{
    * @hidden
    */
   teamId?: string;
+
+  /**
+   * The project client ID for thirdweb dashboard usage.
+   * @hidden
+   */
+  projectClientId?: string;
 }>;
 
 export type CreateThirdwebClientOptions = Prettify<

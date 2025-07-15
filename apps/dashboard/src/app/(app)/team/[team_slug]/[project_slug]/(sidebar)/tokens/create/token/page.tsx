@@ -36,7 +36,8 @@ export default async function Page(props: {
   const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: team.id,
-  });
+    projectClientId: project.publishableKey,
+   });
 
   return (
     <div className="flex grow flex-col">
