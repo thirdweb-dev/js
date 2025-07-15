@@ -64,7 +64,7 @@ export type ServerWallet = Account & {
 };
 
 /**
- * Create a server wallet for sending transactions and signing messages via engine (v3+).
+ * Use a server wallet for sending transactions and signing messages via engine (v3+).
  * @param options - The server wallet options.
  * @returns An account object that can be used to send transactions and sign messages.
  * @engine

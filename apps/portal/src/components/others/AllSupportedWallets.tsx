@@ -33,7 +33,7 @@ export async function AllSupportedWallets() {
                 <Td>
                   <DocLink
                     className="flex flex-nowrap items-center gap-4 whitespace-nowrap"
-                    href={`/typescript/v5/supported-wallets/${w.id}`}
+                    href={`/connect/external-wallets/${w.id}`}
                   >
                     <WalletImage id={w.id} />
                     {w.name}

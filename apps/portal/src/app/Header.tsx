@@ -124,6 +124,10 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
+    href: "https://engine.thirdweb.com/reference",
+    name: "Engine",
+  },
+  {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
   },
@@ -135,21 +139,25 @@ const apisLinks = [
     href: "https://bridge.thirdweb.com/reference",
     name: "Universal Bridge",
   },
+  {
+    href: "/connect/account-abstraction/api",
+    name: "Bundler",
+  },
 ];
 
 const sdkLinks = [
   {
-    href: "/typescript/v5",
+    href: "/references/typescript/v5",
     icon: TypeScriptIcon,
     name: "TypeScript",
   },
   {
-    href: "/react/v5",
+    href: "/references/typescript/v5",
     icon: ReactIcon,
     name: "React",
   },
   {
-    href: "/react-native/v5",
+    href: "/references/typescript/v5",
     icon: ReactIcon,
     name: "React Native",
   },

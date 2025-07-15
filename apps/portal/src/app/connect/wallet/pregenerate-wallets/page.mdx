@@ -12,7 +12,7 @@ export const metadata = createMetadata({
 
 # Pregenerate Wallets
 
-## What is Wallet Pregeneration?
+### What is Wallet Pregeneration?
 
 Wallet pregeneration is a technique where you create wallets for users before they actually sign up or authenticate. This allows you to:
 
@@ -21,18 +21,17 @@ Wallet pregeneration is a technique where you create wallets for users before th
 3. Pre-fund wallets with tokens or NFTs before users claim them
 4. Create smoother user experiences for gaming and other applications
 
-## Why Use Wallet Pregeneration?
+### Why Use Wallet Pregeneration?
 
-### Pre-funding Capability
 You can distribute assets to wallets before users claim them, enabling:
 - Pre-loaded game assets
 - Welcome bonus tokens
 - Promotional NFTs
 - Airdrops
 
-### Better User Experience
-- Users don't have to wait for wallet to be created during signup
-- Reduced failed wallet creation due to network issues
+---
+
+## Endpoint
 
 To pregenerate an in-app or ecosystem wallet wallet, you can make a `POST` request to the following endpoint:
 
@@ -79,7 +78,7 @@ You need to include the following headers:
 - `x-ecosystem-id` (optional): Your ecosystem ID
 - `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-## Example curl Command
+## Example Request
 
 Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
 
@@ -115,9 +114,9 @@ A successful API call returns a JSON object in the following format:
 }
 ```
 
-<Callout variant='warning' title='Smart Wallet Address'>
-Use [`predictSmartAccountAddress`](/references/typescript/v5/predictSmartAccountAddress) to generate the corresponding smart wallet address.
-The `address` field always corresponds to the EOA address that has been pregenerated.
+<Callout variant='warning' title='EIP-4337 Smart Wallet Address'>
+Use [`predictSmartAccountAddress`](/references/typescript/v5/predictSmartAccountAddress) to generate the corresponding smart contract wallet address.
+The `address` field always corresponds to the EOA address (admin wallet) that has been pregenerated.
 </Callout>
 
 
@@ -127,4 +126,4 @@ Pre-generating is independent and doesn't change the user's experience.
 
 Your users can continue to login as per usual. When they do, they will be assigned the pregenerated wallet.
 
-For more information on signing in, see [Sign In](/connect/wallet/sign-in-methods/configure).
+For more information on signing in, see the [Connect Wallets](/connect/wallet/sign-in-methods/configure) section.

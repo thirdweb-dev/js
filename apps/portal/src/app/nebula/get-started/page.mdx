@@ -105,7 +105,7 @@ async function handleNebulaResponse(response) {
     secretKey: process.env.THIRDWEB_SECRET_KEY,
   });
 
-  // You can use any wallet- see https://portal.thirdweb.com/typescript/v5/supported-wallets
+  // You can use any wallet- see https://portal.thirdweb.com/connect/external-wallets
   const account = await generateAccount({ client });
 
   if (response.actions && response.actions.length > 0) {

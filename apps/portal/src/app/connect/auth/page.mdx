@@ -17,151 +17,122 @@ import { GraduationCap } from "lucide-react";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Auth",
+		title: "Sign in with Ethereum",
 		icon: "wallets",
 	},
-	title: "thirdweb Auth",
+	title: "Sign in with Ethereum",
 	description:
-		"Auth allows anyone to integrate passwordless web3-native authentication and authorization into their applications.",
+		"Sign in with Ethereum allows anyone to integrate passwordless web3-native authentication and authorization into their applications.",
 });
 
-# Overview
+# Sign in with Ethereum
 
-Auth allows anyone to integrate passwordless web3-native authentication and authorization into their applications. Users can then **login using any thirdweb wallet** (in-app, browser, or smart wallet).
+Sign in with Ethereum (SIWE) allows anyone to integrate passwordless web3-native authentication and authorization into their applications. Users can then **login using any thirdweb wallet** (in-app, browser, or smart wallet).
 
 This allows developers to create a familiar, secure authentication flow that works with traditional backends while leveraging the features of a web3 application.
 
 ---
 
-# Get Started
-
-<InstallTabs
-	npm="npm i thirdweb"
-	yarn="yarn add thirdweb"
-	pnpm="pnpm i thirdweb"
-	bun="bun i thirdweb"
-/>
-
-## Get Your Client ID
-
-To use Auth in your app, you'll need a client ID. You can get one for free on [your thirdweb dashboard](https://thirdweb.com/create-api-key).
-
-## Setting Up Auth
-
-<Tabs defaultValue="react">
+<Tabs defaultValue="client">
 
 <TabsList>
-	<TabsTrigger value="react">React</TabsTrigger>
-	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+	<TabsTrigger value="client">Client</TabsTrigger>
+	<TabsTrigger value="server">Server</TabsTrigger>
 </TabsList>
 
-<TabsContent value="react">
+<TabsContent value="client">
+
+At the root of your React application:
+
 ```tsx
-import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+import { ThirdwebProvider } from "thirdweb/react";
+
+export default function App() {
+	return <ThirdwebProvider>{/* Your app here */}</ThirdwebProvider>;
+}
+```
+
+In your `components` directory:
+
+```tsx
+import { ConnectButton } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({ clientId });
+
+export default function Connect() {
+	<ConnectButton
+		client={client}
+		auth={{
+			getLoginPayload: async (params) => {
+				const address = params.address;
+				// fetch the login payload here using address from your server
+			},
+			doLogin: async (params) => {
+				// send the signed login payload (params) to your server to verify the signature
+			},
+			isLoggedIn: async () => {
+				// fetch the user's login status from your server
+			},
+			doLogout: async () => {
+				// send a logout request to your server
+			},
+		}}
+	/>;
+}
+```
+
+</TabsContent>
+
+<TabsContent value="server">
+
+```ts
 import { createThirdwebClient } from "thirdweb";
 import { createAuth } from "thirdweb/auth";
 
 const client = createThirdwebClient({
-clientId: '1234567890', // get yours by creating a project on https://thirdweb.com/create-api-key
+	secretKey: "<your-secret-key>", // get yours on your thirdweb dashboard
 });
 
 const thirdwebAuth = createAuth({
-domain: 'localhost:3000',
-client,
-adminAccount: privateKeyToAccount({ client, privateKey }),
-});
-
-export default function App() {
-	const [loggedIn, setLoggedIn] = useState(false);
-	return (
-		// The ThirdwebProvider should be at the root of your application, but the ConnectButton can be anywhere
-		<ThirdwebProvider>
-			<ConnectButton
-				client={client}
-				auth={{
-					getLoginPayload: async (params) => {
-						// here you should call your backend, using generatePayload to return
-						// a SIWE compliant login payload to the client
-						return thirdwebAuth.generatePayload(params)
-					},
-					doLogin: async (params) => {
-             					// here you should call your backend to verify the signed payload passed in params
-						// this will verify that the signature matches the intended wallet
-						const verifiedPayload = await thirdwebAuth.verifyPayload(params);
-						setLoggedIn(verifiedPayload.valid)
-					},
-					isLoggedIn: async () => {
-						// here you should ask you backend if the user is logged in
-						// can use cookies, storage, or your method of choice
-						return loggedIn;
-					},
-					doLogout: async () => {
-						// here you should call your backend to logout the user if needed
-						// and delete any local auth tokens
-						setLoggedIn(false);
-					}
-				}}
-			/>
-		</ThirdwebProvider>
-	);
-}
-```
-</TabsContent>
-
-<TabsContent value="typescript">
-
-```ts
-import { createAuth } from "thirdweb/auth";
-
-const client = createThirdwebClient({
-	clientId: "1234567890", // get yours at https://thirdweb.com/create-api-key
-});
-
-const auth = createAuth({
-	domain: "localhost:3000",
-	adminAccount: privateKeyToAccount({ client, privateKey }),
+	domain: "localhost:3000", // your domain
 	client,
 });
 
-// 1. generate a login payload on the server
-const loginPayload = await auth.generatePayload({
-	address: "0x123...",
-	chain: 1,
-});
+// handle the login payload generation on your server
+// example: /api/generate-login-payload
+export async function generateLoginPayload(address: string) {
+	return thirdwebAuth.generatePayload({ address });
+}
 
-// 2. sign the login payload on the client
-const signature = await auth.signPayload({
-	payload: loginPayload,
-	account: userAccount,
-});
+// handle the login payload verification on your server
+// example: /api/verify-login-payload
+export async function verifyLoginPayload(payload: string, signature: string) {
+	// verify the payload and signature
+	const verifiedPayload = await thirdwebAuth.verifyPayload({ payload, signature });
 
-// 3. verify the login payload and signature on the server
-const verifiedPayload = await auth.verifyPayload({
-	payload: loginPayload,
-	signature,
-});
+	// if the payload is invalid, throw an error
+	if(!verifiedPayload.valid) {
+		throw new Error("Invalid signature");
+	}
 
-// 4. generate a JWT for the client
-const jwt = await auth.generateJWT({ payload: verifiedPayload });
+	// Optionally, handle the JWT generation on your server for the client to use for subsequent calls to your server
+	const jwt = await thirdwebAuth.generateJWT({ payload: verifiedPayload });
 
-// 5. set the JWT as a cookie or store it another way
+	return {
+		valid: verifiedPayload.valid,
+		jwt, // can also be stored in a cookie or another way
+	};
+}
 
-// 6. authenticate the client based on the JWT on subsequent calls
-const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
+// handle the JWT verification on your server sent by the client
+// typically in a middleware
+export async function verifyJWT(jwt: string) {
+	return thirdwebAuth.verifyJWT({ jwt });
+}
 ```
 
 </TabsContent>
-
-<Callout variant="warning" title="Deploying to Production">
-	These examples are intended to get up and running quickly, but aren't secure
-	for production. Before deploying your app to real users, checkout out our
-	walkthrough on [Deploying to
-	Production](/connect/auth/deploying-to-production).
-</Callout>
-
-### Auth with Smart Accounts (Account Abstraction)
-
-When using Auth with a smart account, you **must** specify a client (on `createAuth`) and a chain ID (on `generatePayload`). The smart account is deployed on a specific chain and the payload must reflect that, and the client is needed to call the wallet contract to verify the signature.
 
 </Tabs>
 
