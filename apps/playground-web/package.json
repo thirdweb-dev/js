@@ -40,7 +40,7 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "autoprefixer": "^10.4.21",
-    "eslint": "8.57.0",
+    "eslint": "9.31.0",
     "eslint-config-biome": "1.9.4",
     "eslint-config-next": "15.3.5",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",

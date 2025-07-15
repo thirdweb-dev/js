@@ -109,7 +109,7 @@
     "@typescript-eslint/parser": "7.14.1",
     "autoprefixer": "^10.4.21",
     "checkly": "6.0.1",
-    "eslint": "8.57.0",
+    "eslint": "9.31.0",
     "eslint-config-biome": "1.9.4",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-storybook": "9.0.15",
