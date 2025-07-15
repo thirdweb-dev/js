@@ -81,10 +81,27 @@ export async function chains(options: chains.Options): Promise<chains.Result> {
   );
 }
 
+/**
+ * Namespace containing types for the chains function.
+ * @namespace chains
+ * @bridge
+ */
 export declare namespace chains {
+  /**
+   * Options for fetching supported bridge chains.
+   * @interface Options
+   * @bridge
+   */
   type Options = {
+    /** Your thirdweb client */
     client: ThirdwebClient;
   };
 
+  /**
+   * Result returned from fetching supported bridge chains.
+   * Contains an array of supported chains.
+   * @interface Result
+   * @bridge
+   */
   type Result = Chain[];
 }
