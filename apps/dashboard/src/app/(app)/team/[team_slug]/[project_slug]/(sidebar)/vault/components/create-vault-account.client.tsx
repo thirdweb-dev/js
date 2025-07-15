@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { createServiceAccount } from "@thirdweb-dev/vault-sdk";
 import {
   CheckIcon,
   DownloadIcon,
@@ -21,91 +20,74 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import { storeUserAccessToken } from "../../transactions/analytics/utils";
 import {
-  createManagementAccessToken,
-  createWalletAccessToken,
-  initVaultClient,
+  createVaultAccountAndAccessToken,
   maskSecret,
 } from "../../transactions/lib/vault.client";
 
-export function CreateVaultAccountButton(props: {
-  project: Project;
-  onUserAccessTokenCreated?: (userAccessToken: string) => void;
-}) {
+export function CreateVaultAccountButton(props: { project: Project }) {
+  const [secretKeyModalOpen, setSecretKeyModalOpen] = useState(false);
+  const [secretKey, setSecretKey] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [manageSelfChecked, setManageSelfChecked] = useState(false);
   const router = useDashboardRouter();
 
   const initialiseProjectWithVaultMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (projectSecretKey: string | undefined) => {
       setModalOpen(true);
+      setSecretKeyModalOpen(false);
 
-      const vaultClient = await initVaultClient();
-
-      const serviceAccount = await createServiceAccount({
-        client: vaultClient,
-        request: {
-          options: {
-            metadata: {
-              projectId: props.project.id,
-              purpose: "Thirdweb Project Server Wallet Service Account",
-              teamId: props.project.teamId,
-            },
-          },
-        },
-      });
-
-      if (!serviceAccount.success) {
-        throw new Error("Failed to create service account");
-      }
-
-      const managementAccessTokenPromise = createManagementAccessToken({
-        adminKey: serviceAccount.data.adminKey,
+      const result = await createVaultAccountAndAccessToken({
         project: props.project,
-        rotationCode: serviceAccount.data.rotationCode,
-        vaultClient,
+        projectSecretKey,
       });
 
-      const userAccesTokenPromise = createWalletAccessToken({
-        adminKey: serviceAccount.data.adminKey,
-        project: props.project,
-        vaultClient,
-      });
-
-      const [userAccessTokenRes, managementAccessTokenRes] = await Promise.all([
-        userAccesTokenPromise,
-        managementAccessTokenPromise,
-      ]);
-
-      if (!managementAccessTokenRes.success || !userAccessTokenRes.success) {
-        throw new Error("Failed to create access token");
-      }
-
-      // save in local storage in case the user refreshes the page during FTUX
-      storeUserAccessToken(
-        props.project.id,
-        userAccessTokenRes.data.accessToken,
-      );
-      props.onUserAccessTokenCreated?.(userAccessTokenRes.data.accessToken);
-
-      return {
-        serviceAccount: serviceAccount.data,
-        userAccessToken: userAccessTokenRes.data,
-      };
+      return result;
     },
     onError: (error) => {
-      toast.error(error.message);
+      setErrorMessage(error.message);
       setModalOpen(false);
     },
   });
 
-  const handleCreateServerWallet = async () => {
-    await initialiseProjectWithVaultMutation.mutateAsync();
+  const handleInitializeVault = async () => {
+    setSecretKeyModalOpen(true);
+    setErrorMessage("");
+    setSecretKey("");
+    setManageSelfChecked(false);
+  };
+
+  const handleSecretKeySubmit = async () => {
+    if (!manageSelfChecked && !secretKey.trim()) {
+      setErrorMessage(
+        "Please enter your project secret key or check the option to manage keys yourself",
+      );
+      return;
+    }
+
+    try {
+      setErrorMessage("");
+      await initialiseProjectWithVaultMutation.mutateAsync(
+        manageSelfChecked ? undefined : secretKey,
+      );
+    } catch {
+      // Error will be handled by the mutation's onError
+    }
+  };
+
+  const handleCancelSecretKey = () => {
+    setSecretKeyModalOpen(false);
+    setSecretKey("");
+    setErrorMessage("");
+    setManageSelfChecked(false);
   };
 
   const handleDownloadKeys = () => {
@@ -113,7 +95,7 @@ export function CreateVaultAccountButton(props: {
       return;
     }
 
-    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${initialiseProjectWithVaultMutation.data.serviceAccount.adminKey}\n\nVault Access Token:\n${initialiseProjectWithVaultMutation.data.userAccessToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${initialiseProjectWithVaultMutation.data.adminKey}\n\nVault Access Token:\n${initialiseProjectWithVaultMutation.data.walletToken.accessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -147,11 +129,11 @@ export function CreateVaultAccountButton(props: {
   const isLoading = initialiseProjectWithVaultMutation.isPending;
 
   return (
-    <>
+    <div>
       <Button
         className="flex flex-row items-center gap-2"
         disabled={isLoading}
-        onClick={handleCreateServerWallet}
+        onClick={handleInitializeVault}
         variant={"primary"}
       >
         {isLoading ? (
@@ -162,6 +144,93 @@ export function CreateVaultAccountButton(props: {
         {"Create Vault Admin Account"}
       </Button>
 
+      {/* Secret Key Input Modal */}
+      <Dialog
+        modal={true}
+        onOpenChange={handleCancelSecretKey}
+        open={secretKeyModalOpen}
+      >
+        <DialogContent className="overflow-hidden p-0">
+          <DialogHeader className="pt-6 px-6">
+            <DialogTitle>Create Your Vault</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-6 p-6 pt-0">
+            <div className="space-y-3">
+              <Label htmlFor="secretKey">
+                Let thirdweb manage your Vault keys for you
+              </Label>
+              <p className="text-muted-foreground text-sm">
+                Lets you use your project secret key to access your vault like
+                any other thirdweb service (recommended).
+              </p>
+              <Input
+                id="secretKey"
+                type="password"
+                placeholder="Enter your project secret key"
+                value={secretKey}
+                onChange={(e) => setSecretKey(e.target.value)}
+                disabled={
+                  initialiseProjectWithVaultMutation.isPending ||
+                  manageSelfChecked
+                }
+              />
+              <p className="text-muted-foreground text-xs">
+                Your project secret key was generated when you created your
+                project. If you lost it, you can regenerate one in your project
+                settings.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <hr className="mb-4" />
+              <CheckboxWithLabel className="text-foreground">
+                <Checkbox
+                  checked={manageSelfChecked}
+                  onCheckedChange={(v) => setManageSelfChecked(!!v)}
+                  disabled={initialiseProjectWithVaultMutation.isPending}
+                />
+                I want to manage my Vault keys myself (advanced)
+              </CheckboxWithLabel>
+            </div>
+
+            {errorMessage && (
+              <Alert variant="destructive">
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+            <Button
+              onClick={handleCancelSecretKey}
+              variant="outline"
+              disabled={initialiseProjectWithVaultMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSecretKeySubmit}
+              variant="primary"
+              disabled={
+                (!secretKey.trim() && !manageSelfChecked) ||
+                initialiseProjectWithVaultMutation.isPending
+              }
+            >
+              {initialiseProjectWithVaultMutation.isPending ? (
+                <>
+                  <Loader2Icon className="mr-2 size-4 animate-spin" />
+                  Creating vault...
+                </>
+              ) : (
+                "Create vault"
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Keys Display Modal */}
       <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
         <DialogContent
           className="overflow-hidden p-0"
@@ -197,12 +266,10 @@ export function CreateVaultAccountButton(props: {
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
                         textToCopy={
-                          initialiseProjectWithVaultMutation.data.serviceAccount
-                            .adminKey
+                          initialiseProjectWithVaultMutation.data.adminKey
                         }
                         textToShow={maskSecret(
-                          initialiseProjectWithVaultMutation.data.serviceAccount
-                            .adminKey,
+                          initialiseProjectWithVaultMutation.data.adminKey,
                         )}
                         tooltip="Copy Admin Key"
                       />
@@ -212,32 +279,6 @@ export function CreateVaultAccountButton(props: {
                       </p>
                     </div>
                   </div>
-
-                  {/* <div>
-                    <h3 className="mb-2 font-medium text-sm">
-                      Vault Access Token
-                    </h3>
-                    <div className="flex flex-col gap-2 ">
-                      <CopyTextButton
-                        textToCopy={
-                          initialiseProjectWithVaultMutation.data
-                            .userAccessToken.accessToken
-                        }
-                        className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
-                        textToShow={maskSecret(
-                          initialiseProjectWithVaultMutation.data
-                            .userAccessToken.accessToken,
-                        )}
-                        copyIconPosition="right"
-                        tooltip="Copy Vault Access Token"
-                      />
-                      <p className="text-muted-foreground text-xs">
-                        This access token is used to sign transactions and
-                        messages from your backend. Can be revoked and recreated
-                        with your admin key.
-                      </p>
-                    </div>
-                  </div> */}
                 </div>
                 <Alert variant="destructive">
                   <AlertTitle>Secure your admin key</AlertTitle>
@@ -285,6 +326,6 @@ export function CreateVaultAccountButton(props: {
           ) : null}
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

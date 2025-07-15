@@ -1,8 +1,8 @@
+import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";
-import { getAuthToken } from "../../../../@/api/auth-token";
-import { loginRedirect } from "../../login/loginRedirect";
-import { isAccountOnboardingComplete } from "../../login/onboarding/isOnboardingRequired";
+import { loginRedirect } from "@/utils/redirects";
+import { isAccountOnboardingComplete } from "../../../login/onboarding/isOnboardingRequired";
 
 /**
  * Just get the account object without enforcing onboarding.

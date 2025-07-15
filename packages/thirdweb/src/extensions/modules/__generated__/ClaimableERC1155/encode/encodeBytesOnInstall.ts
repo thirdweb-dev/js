@@ -15,8 +15,8 @@ export type EncodeBytesOnInstallParams = {
 export const FN_SELECTOR = "0x5d4c0b89" as const;
 const FN_INPUTS = [
   {
-    name: "primarySaleRecipient",
     type: "address",
+    name: "primarySaleRecipient",
   },
 ] as const;
 

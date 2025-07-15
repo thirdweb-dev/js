@@ -850,7 +850,7 @@ const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
 />;
 ```
 
-[View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+[View all available wallets](https://portal.thirdweb.com/connect/external-wallets)
 
 #### Customizing the default chain to connect to
 
@@ -1133,7 +1133,7 @@ const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
 />;
 ```
 
-[View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+[View all available wallets](https://portal.thirdweb.com/connect/external-wallets)
 
 #### Customizing the default chain to connect to
 
@@ -45137,7 +45137,7 @@ Creates a wallet based on the provided ID and arguments.
 * Supports 500+ wallets
 * Handles both injected browser wallets and WalletConnect sessions
 
-[View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+[View all available wallets](https://portal.thirdweb.com/connect/external-wallets)
 
 ### Example
 

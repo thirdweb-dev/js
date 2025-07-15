@@ -1,12 +1,12 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 import { once } from "../../../../../utils/promise/once.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "setClaimConditions" function.
@@ -35,46 +35,46 @@ export type SetClaimConditionsParams = WithOverrides<{
 export const FN_SELECTOR = "0x74bc7db7" as const;
 const FN_INPUTS = [
   {
+    type: "tuple[]",
+    name: "phases",
     components: [
       {
+        type: "uint256",
         name: "startTimestamp",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "maxClaimableSupply",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "supplyClaimed",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "quantityLimitPerWallet",
-        type: "uint256",
       },
       {
-        name: "merkleRoot",
         type: "bytes32",
+        name: "merkleRoot",
       },
       {
-        name: "pricePerToken",
         type: "uint256",
+        name: "pricePerToken",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
-        name: "metadata",
         type: "string",
+        name: "metadata",
       },
     ],
-    name: "phases",
-    type: "tuple[]",
   },
   {
-    name: "resetClaimEligibility",
     type: "bool",
+    name: "resetClaimEligibility",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -180,19 +180,8 @@ export function setClaimConditions(
   });
 
   return prepareContractCall({
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -201,5 +190,16 @@ export function setClaimConditions(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
   });
 }

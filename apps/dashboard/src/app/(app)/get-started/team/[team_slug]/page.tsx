@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../@/api/auth-token";
-import { loginRedirect } from "../../../login/loginRedirect";
-import { TeamOnboardingLayout } from "../../../login/onboarding/onboarding-layout";
-import { TeamInfoForm } from "../../../login/onboarding/team-onboarding/team-onboarding";
+import { loginRedirect } from "@/utils/redirects";
+import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
+import { TeamInfoForm } from "../../../../login/onboarding/team-onboarding/team-onboarding";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;

@@ -21,7 +21,10 @@ import {
   useAllEmbeddedWallets,
   useEmbeddedWallets,
 } from "@/hooks/useEmbeddedWallets";
-import { SearchInput } from "./SearchInput";
+import { AdvancedSearchInput } from "./AdvancedSearchInput";
+import { SearchResults } from "./SearchResults";
+import { searchUsers } from "./searchUsers";
+import type { SearchType } from "./types";
 
 const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
@@ -35,11 +38,16 @@ const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
 
 const columnHelper = createColumnHelper<WalletUser>();
 
-export function InAppWalletUsersPageContent(props: {
-  authToken: string;
-  projectClientId: string;
-  client: ThirdwebClient;
-}) {
+export function InAppWalletUsersPageContent(
+  props: {
+    authToken: string;
+    client: ThirdwebClient;
+    teamId: string;
+  } & (
+    | { projectClientId: string; ecosystemSlug?: never }
+    | { ecosystemSlug: string; projectClientId?: never }
+  ),
+) {
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("linkedAccounts", {
@@ -110,42 +118,48 @@ export function InAppWalletUsersPageContent(props: {
   }, [props.client]);
 
   const [activePage, setActivePage] = useState(1);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState<WalletUser[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearchResults, setHasSearchResults] = useState(false);
   const walletsQuery = useEmbeddedWallets({
     authToken: props.authToken,
     clientId: props.projectClientId,
+    ecosystemSlug: props.ecosystemSlug,
+    teamId: props.teamId,
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
-  const filteredWallets = searchValue
-    ? wallets.filter((wallet) => {
-        const term = searchValue.toLowerCase();
-        if (wallet.id.toLowerCase().includes(term)) {
-          return true;
-        }
-        if (
-          wallet.wallets?.some((w) => w.address?.toLowerCase().includes(term))
-        ) {
-          return true;
-        }
-        if (
-          wallet.linkedAccounts?.some((acc) => {
-            return Object.values(acc.details).some(
-              (detail) =>
-                typeof detail === "string" &&
-                detail.toLowerCase().includes(term),
-            );
-          })
-        ) {
-          return true;
-        }
-        return false;
-      })
-    : wallets;
   const { mutateAsync: getAllEmbeddedWallets, isPending } =
     useAllEmbeddedWallets({
       authToken: props.authToken,
     });
+
+  const handleSearch = async (searchType: SearchType, query: string) => {
+    setIsSearching(true);
+    try {
+      const results = await searchUsers(
+        props.authToken,
+        props.projectClientId,
+        props.ecosystemSlug,
+        props.teamId,
+        searchType,
+        query,
+      );
+      setSearchResults(results);
+      setHasSearchResults(true);
+    } catch (error) {
+      console.error("Search failed:", error);
+      setSearchResults([]);
+      setHasSearchResults(true);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchResults([]);
+    setHasSearchResults(false);
+  };
 
   const downloadCSV = useCallback(async () => {
     if (wallets.length === 0 || !getAllEmbeddedWallets) {
@@ -153,6 +167,8 @@ export function InAppWalletUsersPageContent(props: {
     }
     const usersWallets = await getAllEmbeddedWallets({
       clientId: props.projectClientId,
+      ecosystemSlug: props.ecosystemSlug,
+      teamId: props.teamId,
     });
     const csv = Papa.unparse(
       usersWallets.map((row) => {
@@ -173,64 +189,79 @@ export function InAppWalletUsersPageContent(props: {
     tempLink.href = csvUrl;
     tempLink.setAttribute("download", "download.csv");
     tempLink.click();
-  }, [wallets, props.projectClientId, getAllEmbeddedWallets]);
+  }, [
+    wallets,
+    props.projectClientId,
+    getAllEmbeddedWallets,
+    props.teamId,
+    props.ecosystemSlug,
+  ]);
 
   return (
     <div>
       <div className="flex flex-col gap-4">
         {/* Top section */}
-        <div className="flex items-center justify-end gap-3">
-          <div className="w-full max-w-xs">
-            <SearchInput
-              onValueChange={setSearchValue}
-              placeholder="Search"
-              value={searchValue}
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-end gap-3">
+            <div className="w-full max-w-lg">
+              <AdvancedSearchInput
+                onSearch={handleSearch}
+                onClear={handleClearSearch}
+                isLoading={isSearching}
+                hasResults={hasSearchResults}
+              />
+            </div>
+            <Button
+              className="gap-2"
+              disabled={wallets.length === 0 || isPending}
+              onClick={downloadCSV}
+              size="sm"
+              variant="outline"
+            >
+              {isPending && <Spinner className="size-4" />}
+              Download as .csv
+            </Button>
           </div>
-          <Button
-            className="gap-2"
-            disabled={wallets.length === 0 || isPending}
-            onClick={downloadCSV}
-            size="sm"
-            variant="outline"
-          >
-            {isPending && <Spinner className="size-4" />}
-            Download as .csv
-          </Button>
         </div>
 
         <div>
-          <TWTable
-            columns={columns}
-            data={filteredWallets}
-            isFetched={walletsQuery.isFetched}
-            isPending={walletsQuery.isPending}
-            tableContainerClassName="rounded-b-none"
-            title="in-app wallets"
-          />
+          {hasSearchResults ? (
+            <SearchResults results={searchResults} client={props.client} />
+          ) : (
+            <>
+              <TWTable
+                columns={columns}
+                data={wallets}
+                isFetched={walletsQuery.isFetched}
+                isPending={walletsQuery.isPending}
+                tableContainerClassName="rounded-b-none"
+                title="in-app wallets"
+              />
 
-          <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
-            <Button
-              className="gap-2 bg-background"
-              disabled={activePage === 1 || walletsQuery.isPending}
-              onClick={() => setActivePage((p) => Math.max(1, p - 1))}
-              size="sm"
-              variant="outline"
-            >
-              <ArrowLeftIcon className="size-4" />
-              Previous
-            </Button>
-            <Button
-              className="gap-2 bg-background"
-              disabled={wallets.length === 0 || walletsQuery.isPending}
-              onClick={() => setActivePage((p) => p + 1)}
-              size="sm"
-              variant="outline"
-            >
-              Next
-              <ArrowRightIcon className="size-4" />
-            </Button>
-          </div>
+              <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
+                <Button
+                  className="gap-2 bg-background"
+                  disabled={activePage === 1 || walletsQuery.isPending}
+                  onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+                  size="sm"
+                  variant="outline"
+                >
+                  <ArrowLeftIcon className="size-4" />
+                  Previous
+                </Button>
+                <Button
+                  className="gap-2 bg-background"
+                  disabled={wallets.length === 0 || walletsQuery.isPending}
+                  onClick={() => setActivePage((p) => p + 1)}
+                  size="sm"
+                  variant="outline"
+                >
+                  Next
+                  <ArrowRightIcon className="size-4" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

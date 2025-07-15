@@ -628,7 +628,6 @@ const walletRedirects = {
     "/connect/wallet/sign-in-methods/configure",
 
   "/connect/sign-in/overview": "/connect/wallet/overview",
-  "/connect/supported-wallets": "/connect/connect",
   "/connect/usage-with-react-native-sdk": "/connect/sign-in",
   "/connect/usage-with-react-sdk": "/connect/sign-in",
   "/connect/usage-with-typescript-sdk": "/connect/sign-in",
@@ -1039,8 +1038,8 @@ const v4ToV5Redirects = {
   "/react-native/v0/:path*": "/react-native/v5",
   "/react/v4": "/react/v5",
   "/react/v4/:path*": "/react/v5",
-  "/references/wallets": "/typescript/v5/supported-wallets",
-  "/references/wallets/:path*": "/typescript/v5/supported-wallets",
+  "/references/wallets": "/connect/external-wallets",
+  "/references/wallets/:path*": "/connect/external-wallets",
   "/storage-sdk/v2": "/typescript/v5/storage",
   "/storage-sdk/v2/:path*": "/typescript/v5/storage",
   "/typescript/v4": "/typescript/v5",
@@ -1071,6 +1070,11 @@ const payRedirects = {
   "/connect/pay/webhooks": "/pay/webhooks",
 };
 
+const walletRefactorRedirects = {
+  "/typescript/v5/supported-wallets": "/connect/external-wallets",
+  "/typescript/v5/supported-wallets/:path*": "/connect/external-wallets/:path*",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -1092,6 +1096,7 @@ export const redirects = async () => {
     ...createRedirects(v4ToV5Redirects),
     ...createRedirects(glossaryRedirects),
     ...createRedirects(payRedirects),
+    ...createRedirects(walletRefactorRedirects),
   ];
 };
 

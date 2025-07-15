@@ -1,4 +1,4 @@
-import { distributeAsset } from "../extensions/assets/__generated__/AssetEntrypointERC20/write/distributeAsset.js";
+import { distributeAsset } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/write/distributeAsset.js";
 import type { ClientAndChain } from "../utils/types.js";
 import { toUnits } from "../utils/units.js";
 import { getDeployedEntrypointERC20 } from "./get-entrypoint-erc20.js";

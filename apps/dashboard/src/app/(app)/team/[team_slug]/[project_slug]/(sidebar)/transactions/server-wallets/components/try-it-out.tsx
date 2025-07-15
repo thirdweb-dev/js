@@ -1,19 +1,17 @@
 "use client";
-import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
 import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
 
 export function TryItOut() {
-  const [activeTab, setActiveTab] = useState<string>("sdk");
+  const [activeTab, setActiveTab] = useState<string>("curl");
 
   return (
-    <div className="flex flex-col gap-4 overflow-hidden rounded-lg border border-border bg-card p-4">
+    <>
       <div className="flex flex-row items-center gap-4">
-        <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between">
+        <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between pb-2">
           <div>
             <h2 className="font-semibold text-xl tracking-tight">
               Usage from your backend
@@ -31,14 +29,14 @@ export function TryItOut() {
           tabClassName="!text-sm"
           tabs={[
             {
-              isActive: activeTab === "sdk",
-              name: "thirdweb SDK",
-              onClick: () => setActiveTab("sdk"),
-            },
-            {
               isActive: activeTab === "curl",
               name: "Curl",
               onClick: () => setActiveTab("curl"),
+            },
+            {
+              isActive: activeTab === "sdk",
+              name: "thirdweb SDK",
+              onClick: () => setActiveTab("sdk"),
             },
             {
               isActive: activeTab === "js",
@@ -63,59 +61,10 @@ export function TryItOut() {
           ]}
         />
 
-        <div className="h-2" />
+        <div className="h-4" />
 
         {activeTab === "sdk" && (
           <div className="flex flex-col gap-6">
-            <Alert className="bg-background" variant="info">
-              <CircleAlertIcon className="size-5" />
-              <AlertTitle>Using the thirdweb SDK on the backend</AlertTitle>
-              <AlertDescription className="leading-loose">
-                <p className="text-foreground text-sm">
-                  You can use the full TypeScript thirdweb SDK in your backend,
-                  allowing you to use:{" "}
-                  <ul className="ml-2 list-disc py-2 pl-4">
-                    <li>
-                      The full catalog of{" "}
-                      <Link
-                        className="text-blue-500"
-                        href="https://portal.thirdweb.com/references/typescript/v5/functions#extensions"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        extension functions
-                      </Link>
-                    </li>
-                    <li>
-                      The{" "}
-                      <Link
-                        className="text-blue-500"
-                        href="https://portal.thirdweb.com/references/typescript/v5/prepareContractCall"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        prepareContractCall
-                      </Link>{" "}
-                      function to encode your transactions
-                    </li>
-                    <li>
-                      The full{" "}
-                      <Link
-                        className="text-blue-500"
-                        href="https://portal.thirdweb.com/references/typescript/v5/Account"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        account
-                      </Link>{" "}
-                      interface, predefined chains, and more
-                    </li>
-                  </ul>
-                  The SDK handles encoding your transactions, signing them to
-                  Engine and polling for status.
-                </p>
-              </AlertDescription>
-            </Alert>
             <div className="space-y-2">
               <h3 className="font-semibold text-lg tracking-tight">
                 Installation
@@ -185,7 +134,7 @@ export function TryItOut() {
           />
         )}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -203,7 +152,6 @@ const client = createThirdwebClient({
 const serverWallet = Engine.serverWallet({
   client,
   address: "<your-server-wallet-address>",
-  vaultAccessToken: "<your-vault-access-token>",
 });
 
 // Prepare the transaction
@@ -241,7 +189,6 @@ const curlExample = () => `\
 curl -X POST "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract" \\
   -H "Content-Type: application/json" \\
   -H "x-secret-key: <your-project-secret-key>" \\
-  -H "x-vault-access-token: <your-vault-access-token>" \\
   -d '{
     "executionOptions": {
       "from": "<your-server-wallet-address>",
@@ -264,7 +211,6 @@ const response = await fetch(
     headers: {
       "Content-Type": "application/json",
       "x-secret-key": "<your-project-secret-key>",
-      "x-vault-access-token": "<your-vault-access-token>"
     },
     body: JSON.stringify({
       "executionOptions": {
@@ -290,7 +236,6 @@ url = "${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/write/contract"
 headers = {
     "Content-Type": "application/json",
     "x-secret-key": "<your-project-secret-key>",
-    "x-vault-access-token": "<your-vault-access-token>"
 }
 payload = {
     "executionOptions": {
@@ -355,7 +300,6 @@ func main() {
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-secret-key", "<your-project-secret-key>")
-	req.Header.Set("x-vault-access-token", "<your-vault-access-token>")
 
 	// Send the request
 	client := &http.Client{}
@@ -408,7 +352,6 @@ class Program
 
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-secret-key", "<your-project-secret-key>");
-        httpClient.DefaultRequestHeaders.Add("x-vault-access-token", "<your-vault-access-token>");
 
         var response = await httpClient.PostAsync(url, content);
         var responseContent = await response.Content.ReadAsStringAsync();

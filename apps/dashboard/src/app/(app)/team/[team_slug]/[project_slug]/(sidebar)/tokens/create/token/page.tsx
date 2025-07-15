@@ -1,9 +1,9 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 import { CreateAssetPageHeader } from "../_common/PageHeader";
 import { CreateTokenAssetPage } from "./create-token-page-impl";
 

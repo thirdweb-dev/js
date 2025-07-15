@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "reverseNameOf" function.
@@ -16,14 +16,14 @@ export type ReverseNameOfParams = {
 export const FN_SELECTOR = "0xbebec6b4" as const;
 const FN_INPUTS = [
   {
-    name: "addr",
     type: "address",
+    name: "addr",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "reverseUri",
     type: "string",
+    name: "reverseUri",
   },
 ] as const;
 

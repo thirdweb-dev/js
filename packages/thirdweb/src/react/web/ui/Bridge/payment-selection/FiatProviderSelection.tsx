@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { checksumAddress } from "../../../../../utils/address.js";
+import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../utils/units.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -171,9 +172,14 @@ export function FiatProviderSelection({
                         {quote.currency}
                       </Text>
                       <Text color="secondaryText" size="xs">
-                        {toTokens(
-                          quote.destinationAmount,
-                          quote.destinationToken.decimals,
+                        {formatNumber(
+                          Number(
+                            toTokens(
+                              quote.destinationAmount,
+                              quote.destinationToken.decimals,
+                            ),
+                          ),
+                          4,
                         )}{" "}
                         {quote.destinationToken.symbol}
                       </Text>

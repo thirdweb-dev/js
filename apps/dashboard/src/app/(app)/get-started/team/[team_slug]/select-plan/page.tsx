@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug, type Team } from "@/api/team";
-import { getAuthToken } from "../../../../../../@/api/auth-token";
-import { TeamOnboardingLayout } from "../../../../login/onboarding/onboarding-layout";
+import { TeamOnboardingLayout } from "../../../../../login/onboarding/onboarding-layout";
 import { PlanSelector } from "./_components/plan-selector";
 
 export default async function Page(props: {

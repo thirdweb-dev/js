@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "RuleCreated" event.
@@ -34,8 +34,8 @@ export type RuleCreatedEventFilters = Partial<{
  */
 export function ruleCreatedEvent(filters: RuleCreatedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event RuleCreated(bytes32 indexed ruleId, (bytes32 ruleId, address token, uint8 tokenType, uint256 tokenId, uint256 balance, uint256 score, uint8 ruleType) rule)",
+    filters,
   });
 }

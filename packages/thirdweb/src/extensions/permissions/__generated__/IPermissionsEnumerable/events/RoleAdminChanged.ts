@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "RoleAdminChanged" event.
@@ -48,8 +48,8 @@ export function roleAdminChangedEvent(
   filters: RoleAdminChangedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)",
+    filters,
   });
 }

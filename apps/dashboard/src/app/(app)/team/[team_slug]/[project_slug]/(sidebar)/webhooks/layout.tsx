@@ -1,3 +1,5 @@
+import { getValidAccount } from "@app/account/settings/getAccount";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -7,6 +9,13 @@ export default async function WebhooksLayout(props: {
     project_slug: string;
   }>;
 }) {
+  const account = await getValidAccount();
+  const isFeatureEnabled = await isFeatureFlagEnabled({
+    flagKey: "centralized-webhooks",
+    accountId: account.id,
+    email: account.email,
+  });
+
   const params = await props.params;
   return (
     <div className="flex grow flex-col">
@@ -21,20 +30,46 @@ export default async function WebhooksLayout(props: {
         </div>
       </div>
 
-      <TabPathLinks
-        links={[
-          {
-            exactMatch: true,
-            name: "Contracts",
-            path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
-          },
-          {
-            name: "Payments",
-            path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
-          },
-        ]}
-        scrollableClassName="container max-w-7xl"
-      />
+      {isFeatureEnabled ? (
+        <TabPathLinks
+          links={[
+            {
+              exactMatch: true,
+              name: "Overview",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks`,
+            },
+            {
+              exactMatch: true,
+              name: "Analytics",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/analytics`,
+            },
+            {
+              name: "Contracts",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
+            },
+            {
+              name: "Payments",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+            },
+          ]}
+          scrollableClassName="container max-w-7xl"
+        />
+      ) : (
+        <TabPathLinks
+          links={[
+            {
+              name: "Contracts",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
+            },
+            {
+              name: "Payments",
+              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+            },
+          ]}
+          scrollableClassName="container max-w-7xl"
+        />
+      )}
+
       <div className="h-6" />
       <div className="container flex max-w-7xl grow flex-col">
         {props.children}

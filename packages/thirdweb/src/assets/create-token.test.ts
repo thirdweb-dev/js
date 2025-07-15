@@ -5,11 +5,11 @@ import { TEST_ACCOUNT_A } from "../../test/src/test-wallets.js";
 import { getContract } from "../contract/contract.js";
 import { name } from "../extensions/common/read/name.js";
 // import { totalSupply } from "../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
-import { createTokenByImplConfig } from "./create-token-by-impl-config.js";
+import { createTokenByImplementationConfig } from "./create-token-by-impl-config.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("create token by impl config", () => {
   it("should create token without pool", async () => {
-    const token = await createTokenByImplConfig({
+    const token = await createTokenByImplementationConfig({
       account: TEST_ACCOUNT_A,
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
@@ -18,6 +18,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("create token by impl config", () => {
         name: "Test",
       },
       salt: "salt123",
+      implementationAddress: "",
     });
 
     expect(token).toBeDefined();

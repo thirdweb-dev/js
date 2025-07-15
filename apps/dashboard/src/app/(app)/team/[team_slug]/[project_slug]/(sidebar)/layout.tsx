@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getProject, getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug, getTeams } from "@/api/team";
@@ -56,10 +57,18 @@ export default async function ProjectLayout(props: {
     teamId: team.id,
   });
 
-  const engineLinkType = await getEngineLinkType({
-    authToken,
-    project,
-  });
+  const [engineLinkType, isCentralizedWebhooksFeatureFlagEnabled] =
+    await Promise.all([
+      getEngineLinkType({
+        authToken,
+        project,
+      }),
+      isFeatureFlagEnabled({
+        flagKey: "centralized-webhooks",
+        accountId: account.id,
+        email: account.email,
+      }),
+    ]);
 
   const isStaffMode = !teams.some((t) => t.slug === team.slug);
 
@@ -81,6 +90,9 @@ export default async function ProjectLayout(props: {
         <ProjectSidebarLayout
           engineLinkType={engineLinkType}
           layoutPath={layoutPath}
+          isCentralizedWebhooksFeatureFlagEnabled={
+            isCentralizedWebhooksFeatureFlagEnabled
+          }
         >
           {props.children}
         </ProjectSidebarLayout>

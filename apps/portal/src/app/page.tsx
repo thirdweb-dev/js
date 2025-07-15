@@ -115,14 +115,14 @@ function ReferenceSection() {
       />
       <Grid>
         <SDKCard
-          href="https://thirdweb-engine.apidocumentation.com/"
+          href="https://engine.thirdweb.com/reference"
           icon={EngineIcon}
           iconClassName="text-muted-foreground"
           isExternal
           title="Engine"
         />
         <SDKCard
-          href="https://insight.thirdweb.com/reference#tag/webhooks"
+          href="https://insight.thirdweb.com/reference"
           icon={InsightIcon}
           iconClassName="text-muted-foreground"
           isExternal

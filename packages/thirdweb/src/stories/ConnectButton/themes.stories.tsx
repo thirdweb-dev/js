@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { darkTheme } from "../../react/core/design-system/index.js";
 import { ConnectButton } from "../../react/web/ui/ConnectWallet/ConnectButton.js";
 import { storyClient } from "../utils.js";
 
@@ -24,6 +25,16 @@ export const Dark: Story = {
 export const Light: Story = {
   args: {
     theme: "light",
+  },
+};
+
+export const CustomBlack: Story = {
+  args: {
+    theme: darkTheme({
+      colors: {
+        modalBg: "black",
+      },
+    }),
   },
 };
 

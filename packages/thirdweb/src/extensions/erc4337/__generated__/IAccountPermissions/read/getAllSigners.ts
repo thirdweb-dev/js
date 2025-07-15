@@ -1,37 +1,38 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xd42f2f35" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "signers",
     components: [
       {
-        name: "signer",
         type: "address",
+        name: "signer",
       },
       {
-        name: "approvedTargets",
         type: "address[]",
+        name: "approvedTargets",
       },
       {
-        name: "nativeTokenLimitPerTransaction",
         type: "uint256",
+        name: "nativeTokenLimitPerTransaction",
       },
       {
+        type: "uint128",
         name: "startTimestamp",
-        type: "uint128",
       },
       {
-        name: "endTimestamp",
         type: "uint128",
+        name: "endTimestamp",
       },
     ],
-    name: "signers",
-    type: "tuple[]",
   },
 ] as const;
 

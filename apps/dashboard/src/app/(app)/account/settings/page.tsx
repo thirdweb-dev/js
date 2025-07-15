@@ -1,7 +1,7 @@
+import { getAuthToken } from "@/api/auth-token";
 import { getDefaultTeam } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../@/api/auth-token";
-import { loginRedirect } from "../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { AccountSettingsPage } from "./AccountSettingsPage";
 import { getValidAccount } from "./getAccount";
 

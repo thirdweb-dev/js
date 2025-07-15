@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { loginRedirect } from "../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { CreateTicket } from "./components/create-ticket.client";
 
 export default async function Page() {

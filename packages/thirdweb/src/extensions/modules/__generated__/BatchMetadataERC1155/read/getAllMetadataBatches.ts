@@ -1,28 +1,29 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xe6c23512" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
     components: [
       {
+        type: "uint256",
         name: "startTokenIdInclusive",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "endTokenIdInclusive",
-        type: "uint256",
       },
       {
-        name: "baseURI",
         type: "string",
+        name: "baseURI",
       },
     ],
-    type: "tuple[]",
   },
 ] as const;
 

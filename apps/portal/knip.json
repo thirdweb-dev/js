@@ -20,7 +20,7 @@
     "src/pages/**/*.{js,jsx,ts,tsx}",
     "scripts/*.ts"
   ],
-  "ignore": ["src/components/ui/**", "src/icons/**"],
+  "ignore": ["src/components/ui/**", "src/icons/**", "src/components/others/Banner.tsx"],
   "ignoreBinaries": ["only-allow"],
   "ignoreDependencies": [
     "@thirdweb-dev/chains",

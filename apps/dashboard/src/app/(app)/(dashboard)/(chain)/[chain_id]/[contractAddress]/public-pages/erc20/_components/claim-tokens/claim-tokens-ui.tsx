@@ -39,8 +39,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
+import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { tryCatch } from "@/utils/try-catch";
-import { getSDKTheme } from "../../../../../../../../../../@/utils/sdk-component-theme";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
 import { TokenPrice } from "../../../_components/token-price";
@@ -325,13 +325,13 @@ export function TokenDropClaim(props: {
           <div className="h-4" />
 
           <SupplyClaimedProgress
-            claimedSupply={BigInt(
+            claimedSupplyTokens={Number(
               toTokens(props.claimCondition.supplyClaimed, props.decimals),
             )}
-            totalSupply={
+            totalSupplyTokens={
               props.claimCondition.maxClaimableSupply === maxUint256
                 ? "unlimited"
-                : BigInt(
+                : Number(
                     toTokens(
                       props.claimCondition.maxClaimableSupply,
                       props.decimals,

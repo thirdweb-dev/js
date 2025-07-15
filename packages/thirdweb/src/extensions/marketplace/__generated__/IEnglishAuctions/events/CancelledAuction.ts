@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "CancelledAuction" event.
@@ -42,8 +42,8 @@ export function cancelledAuctionEvent(
   filters: CancelledAuctionEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event CancelledAuction(address indexed auctionCreator, uint256 indexed auctionId)",
+    filters,
   });
 }

@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
+import { getProjects } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
+import { getTeamSubscriptions } from "@/api/team-subscription";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../@/api/auth-token";
-import { getProjects } from "../../../../../../../../@/api/projects";
-import { getTeamSubscriptions } from "../../../../../../../../@/api/team-subscription";
-import { loginRedirect } from "../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { SponsoredTransactionsTable } from "../overview/components/SponsoredTransactionsTable";
 
 export default async function Page(props: {

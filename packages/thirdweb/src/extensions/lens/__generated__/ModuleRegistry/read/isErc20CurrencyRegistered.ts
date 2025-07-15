@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "isErc20CurrencyRegistered" function.
@@ -19,8 +19,8 @@ export type IsErc20CurrencyRegisteredParams = {
 export const FN_SELECTOR = "0xf21b24d7" as const;
 const FN_INPUTS = [
   {
-    name: "currencyAddress",
     type: "address",
+    name: "currencyAddress",
   },
 ] as const;
 const FN_OUTPUTS = [

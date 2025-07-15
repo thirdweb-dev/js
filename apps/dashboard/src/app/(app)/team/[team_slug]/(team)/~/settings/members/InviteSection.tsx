@@ -37,8 +37,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import { getValidTeamPlan } from "../../../../../../../../@/utils/getValidTeamPlan";
 
 const inviteFormSchema = z.object({
   invites: z

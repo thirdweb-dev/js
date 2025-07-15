@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getFeeInfo" function.
@@ -17,22 +17,22 @@ export type GetFeeInfoParams = {
 export const FN_SELECTOR = "0x85b49ad0" as const;
 const FN_INPUTS = [
   {
-    name: "_proxy",
     type: "address",
+    name: "_proxy",
   },
   {
-    name: "_type",
     type: "uint256",
+    name: "_type",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "recipient",
     type: "address",
+    name: "recipient",
   },
   {
-    name: "bps",
     type: "uint256",
+    name: "bps",
   },
 ] as const;
 

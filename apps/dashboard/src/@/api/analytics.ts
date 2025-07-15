@@ -12,6 +12,9 @@ import type {
   UserOpStats,
   WalletStats,
   WalletUserStats,
+  WebhookLatencyStats,
+  WebhookRequestStats,
+  WebhookSummaryStats,
 } from "@/types/analytics";
 import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
@@ -480,6 +483,60 @@ export async function getEngineCloudMethodUsage(
 
   const json = await res.json();
   return json.data as EngineCloudStats[];
+}
+
+export async function getWebhookSummary(
+  params: AnalyticsQueryParams & { webhookId: string },
+): Promise<{ data: WebhookSummaryStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
+  searchParams.append("webhookId", params.webhookId);
+
+  const res = await fetchAnalytics(
+    `v2/webhook/summary?${searchParams.toString()}`,
+  );
+  if (!res.ok) {
+    const reason = await res.text();
+    return { error: reason };
+  }
+
+  return (await res.json()) as { data: WebhookSummaryStats[] };
+}
+
+export async function getWebhookRequests(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<{ data: WebhookRequestStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+
+  const res = await fetchAnalytics(
+    `v2/webhook/requests?${searchParams.toString()}`,
+  );
+  if (!res.ok) {
+    const reason = await res.text();
+    return { error: reason };
+  }
+
+  return (await res.json()) as { data: WebhookRequestStats[] };
+}
+
+export async function getWebhookLatency(
+  params: AnalyticsQueryParams & { webhookId?: string },
+): Promise<{ data: WebhookLatencyStats[] } | { error: string }> {
+  const searchParams = buildSearchParams(params);
+  if (params.webhookId) {
+    searchParams.append("webhookId", params.webhookId);
+  }
+  const res = await fetchAnalytics(
+    `v2/webhook/latency?${searchParams.toString()}`,
+  );
+  if (!res.ok) {
+    const reason = await res.text();
+    return { error: reason };
+  }
+
+  return (await res.json()) as { data: WebhookLatencyStats[] };
 }
 
 export async function getInsightChainUsage(

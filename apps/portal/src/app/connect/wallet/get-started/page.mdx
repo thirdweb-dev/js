@@ -46,12 +46,30 @@ Before diving into the implementation, check out our playground to see all the v
 
 <Tabs defaultValue="typescript">
   <TabsList>
-    <TabsTrigger value="typescript">TypeScript</TabsTrigger>
-    <TabsTrigger value="react">React</TabsTrigger>
-    <TabsTrigger value="reactnative">React Native</TabsTrigger>
-    <TabsTrigger value="unity">Unity</TabsTrigger>
-    <TabsTrigger value="dotnet">.NET</TabsTrigger>
-    <TabsTrigger value="unreal">Unreal Engine</TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center">
+      <TypeScriptIcon className="w-4 h-4 mr-2 mb-3" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center">
+      <ReactIcon className="w-4 h-4 mr-2 mb-3" />
+      React
+    </TabsTrigger>
+    <TabsTrigger value="reactnative" className="flex items-center">
+      <ReactIcon className="w-4 h-4 mr-2 mb-3" />
+      React Native
+    </TabsTrigger>
+    <TabsTrigger value="unity" className="flex items-center">
+      <UnityIcon className="w-4 h-4 mr-2 mb-3" />
+      Unity
+    </TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center">
+      <DotNetIcon className="w-4 h-4 mr-2 mb-3" />
+      .NET
+    </TabsTrigger>
+    <TabsTrigger value="unreal" className="flex items-center">
+      <UnrealEngineIcon className="w-4 h-4 mr-2 mb-3" />
+      Unreal Engine
+    </TabsTrigger>
   </TabsList>
 
   <TabsContent value="typescript">
@@ -577,26 +595,25 @@ Before diving into the implementation, check out our playground to see all the v
 
 To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
 
-- [Auth strategies](/connect/wallet/sign-in-methods/configure)
+- [Other auth strategies](/connect/wallet/sign-in-methods/configure)
 - [Sponsor Gas](/connect/account-abstraction/overview)
 - [Implement Sign In with Ethereum](/connect/auth)
-- [External Wallets](/connect/wallet/sign-in-methods/external-wallets)
-- [Onramp and Payments](/connect/pay/overview)
+- [External Wallets](/connect/wallet/sign-in-methods/external-wallets) (e.g. MetaMask, WalletConnect, Coinbase Wallet, etc.)
 
-## Explore Full SDK Documentation
+## Explore Full API References
 
 For comprehensive guides on implementing the full thirdweb SDK, explore our language-specific documentation:
 
 <Grid>
 	<SDKCard
 		title="TypeScript"
-		href="/typescript/v5/getting-started"
+		href="/references/typescript/v5"
 		icon={TypeScriptIcon}
 	/>
-	<SDKCard title="React" href="/react/v5/getting-started" icon={ReactIcon} />
+	<SDKCard title="React" href="/references/typescript/v5" icon={ReactIcon} />
 	<SDKCard
 		title="React Native"
-		href="/react-native/v5/getting-started"
+		href="/references/typescript/v5"
 		icon={ReactIcon}
 	/>
 	<SDKCard title="DotNet" href="/dotnet/getting-started" icon={DotNetIcon} />

@@ -1,7 +1,6 @@
 "use client";
 
 import { useFavoriteChainIds } from "@app/(dashboard)/(chain)/components/client/star-button";
-import { doLogout } from "@app/login/auth-actions";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +13,7 @@ import {
   useActiveAccount,
   useConnectModal,
 } from "thirdweb/react";
+import { doLogout } from "@/actions/auth-actions";
 import { resetAnalytics } from "@/analytics/reset";
 import { CustomChainRenderer } from "@/components/misc/CustomChainRenderer";
 import { LazyConfigureNetworkModal } from "@/components/misc/configure-networks/LazyConfigureNetworkModal";

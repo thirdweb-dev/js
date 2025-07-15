@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { getAuthToken } from "../../../../../@/api/auth-token";
+import { getAuthToken } from "@/api/auth-token";
 import {
   AllFilters,
   ChainOptionsFilter,

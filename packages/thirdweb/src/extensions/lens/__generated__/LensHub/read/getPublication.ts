@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getPublication" function.
@@ -20,55 +20,55 @@ export type GetPublicationParams = {
 export const FN_SELECTOR = "0x7385ebc9" as const;
 const FN_INPUTS = [
   {
-    name: "profileId",
     type: "uint256",
+    name: "profileId",
   },
   {
-    name: "pubId",
     type: "uint256",
+    name: "pubId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
     components: [
       {
+        type: "uint256",
         name: "pointedProfileId",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "pointedPubId",
-        type: "uint256",
       },
       {
-        name: "contentURI",
         type: "string",
+        name: "contentURI",
       },
       {
+        type: "address",
         name: "referenceModule",
-        type: "address",
       },
       {
+        type: "address",
         name: "__DEPRECATED__collectModule",
-        type: "address",
       },
       {
+        type: "address",
         name: "__DEPRECATED__collectNFT",
-        type: "address",
       },
       {
-        name: "pubType",
         type: "uint8",
+        name: "pubType",
       },
       {
+        type: "uint256",
         name: "rootProfileId",
-        type: "uint256",
       },
       {
-        name: "rootPubId",
         type: "uint256",
+        name: "rootPubId",
       },
     ],
-    type: "tuple",
   },
 ] as const;
 

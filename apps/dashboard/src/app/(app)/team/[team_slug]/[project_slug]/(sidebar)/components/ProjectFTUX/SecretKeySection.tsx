@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import type { Project } from "@/api/projects";
 import { rotateSecretKeyClient } from "@/hooks/useApi";
 import { RotateSecretKeyButton } from "../../settings/ProjectGeneralSettingsPage";
 
 export function SecretKeySection(props: {
   secretKeyMasked: string;
-  teamId: string;
-  projectId: string;
+  project: Project;
 }) {
   const [secretKeyMasked, setSecretKeyMasked] = useState(props.secretKeyMasked);
 
@@ -31,8 +31,7 @@ export function SecretKeySection(props: {
           }}
           rotateSecretKey={async () => {
             return rotateSecretKeyClient({
-              projectId: props.projectId,
-              teamId: props.teamId,
+              project: props.project,
             });
           }}
         />

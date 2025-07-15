@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getAll" function.
@@ -16,28 +16,28 @@ export type GetAllParams = {
 export const FN_SELECTOR = "0xeb077342" as const;
 const FN_INPUTS = [
   {
-    name: "_deployer",
     type: "address",
+    name: "_deployer",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "allDeployments",
     components: [
       {
-        name: "deploymentAddress",
         type: "address",
+        name: "deploymentAddress",
       },
       {
-        name: "chainId",
         type: "uint256",
+        name: "chainId",
       },
       {
-        name: "metadataURI",
         type: "string",
+        name: "metadataURI",
       },
     ],
-    name: "allDeployments",
-    type: "tuple[]",
   },
 ] as const;
 

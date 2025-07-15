@@ -231,8 +231,10 @@ export function BuyNFTDropUI(props: BuyNFTDropUIProps) {
         )}
 
         <SupplyClaimedProgress
-          claimedSupply={BigInt(props.totalNFTs) - props.totalUnclaimedSupply}
-          totalSupply={BigInt(props.totalNFTs)}
+          claimedSupplyTokens={Number(
+            BigInt(props.totalNFTs) - props.totalUnclaimedSupply,
+          )}
+          totalSupplyTokens={Number(props.totalNFTs)}
         />
 
         <div className="flex flex-col gap-1.5 rounded-lg bg-muted/50 p-3">

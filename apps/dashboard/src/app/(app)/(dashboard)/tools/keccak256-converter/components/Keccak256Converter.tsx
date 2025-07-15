@@ -49,14 +49,14 @@ export const Keccak256Converter = () => {
 
       <Card className="flex flex-col gap-2 p-4">
         <p>
-          Or use the{" "}
+          Convert values using the{" "}
           <a
             className="underline"
             href="https://portal.thirdweb.com/typescript/v5"
             rel="noopener noreferrer"
             target="_blank"
           >
-            Connect SDK
+            thirdweb SDK
           </a>
           :
         </p>

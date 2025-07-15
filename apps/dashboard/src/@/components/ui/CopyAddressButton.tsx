@@ -7,6 +7,7 @@ export function CopyAddressButton(props: {
   address: string;
   className?: string;
   iconClassName?: string;
+  tooltip?: string;
   variant?:
     | "primary"
     | "default"
@@ -24,7 +25,7 @@ export function CopyAddressButton(props: {
       copyIconPosition={props.copyIconPosition}
       textToCopy={props.address}
       textToShow={shortenedAddress}
-      tooltip="Copy Address"
+      tooltip={props.tooltip || "Copy Address"}
       variant={props.variant}
     />
   );

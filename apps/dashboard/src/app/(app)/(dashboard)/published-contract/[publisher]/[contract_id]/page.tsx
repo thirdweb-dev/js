@@ -1,10 +1,10 @@
 import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { PublishedContract } from "@/components/contracts/published-contract";
 import { Separator } from "@/components/ui/separator";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { getAuthToken } from "../../../../../../@/api/auth-token";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";

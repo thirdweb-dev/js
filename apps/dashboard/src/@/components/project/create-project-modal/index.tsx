@@ -38,6 +38,7 @@ import { createProjectClient } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { projectDomainsSchema, projectNameSchema } from "@/schema/validations";
 import { toArrFromList } from "@/utils/string";
+import { createVaultAccountAndAccessToken } from "../../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
   (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
@@ -63,6 +64,16 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
     <CreateProjectDialogUI
       createProject={async (params) => {
         const res = await createProjectClient(props.teamId, params);
+        await createVaultAccountAndAccessToken({
+          project: res.project,
+          projectSecretKey: res.secret,
+        }).catch((error) => {
+          console.error(
+            "Failed to create vault account and access token",
+            error,
+          );
+          throw error;
+        });
         return {
           project: res.project,
           secret: res.secret,

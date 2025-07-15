@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "StakeUnlocked" event.
@@ -34,8 +34,8 @@ export type StakeUnlockedEventFilters = Partial<{
  */
 export function stakeUnlockedEvent(filters: StakeUnlockedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event StakeUnlocked(address indexed account, uint256 withdrawTime)",
+    filters,
   });
 }

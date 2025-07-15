@@ -1,10 +1,10 @@
 "use server";
 import "server-only";
 
+import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getTeamById } from "@/api/team";
-import { getAuthTokenWalletAddress } from "../../../../../../@/api/auth-token";
+import { loginRedirect } from "@/utils/redirects";
 import { getRawAccount } from "../../../../account/settings/getAccount";
-import { loginRedirect } from "../../../../login/loginRedirect";
 
 type State = {
   success: boolean;

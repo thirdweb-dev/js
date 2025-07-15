@@ -1,5 +1,27 @@
 # thirdweb
 
+## 5.105.16
+
+### Patch Changes
+
+- [#7591](https://github.com/thirdweb-dev/js/pull/7591) [`f33e31a`](https://github.com/thirdweb-dev/js/commit/f33e31ad6e045fe751c2d7a51874f8a13e99861f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fixed a regression that prompted the user to pay the full amount in the TransactionWidget, rather than the difference from their current balance
+
+- [#7589](https://github.com/thirdweb-dev/js/pull/7589) [`592bf6f`](https://github.com/thirdweb-dev/js/commit/592bf6f1fdd4f1a2babbef94a37b93881d28b6f5) Thanks [@MananTank](https://github.com/MananTank)! - Fix theme in ConnectButton Details Modal Buy screen
+
+## 5.105.15
+
+### Patch Changes
+
+- [#7570](https://github.com/thirdweb-dev/js/pull/7570) [`585eac2`](https://github.com/thirdweb-dev/js/commit/585eac2a6f49877318cb275f6fff5910ceabdbfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make vault access token optional
+
+- [#7586](https://github.com/thirdweb-dev/js/pull/7586) [`d62e997`](https://github.com/thirdweb-dev/js/commit/d62e9971ee7707211b513509de80a5b0abdaa4d0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix inapp wallets showing up in all wallets list
+
+## 5.105.14
+
+### Patch Changes
+
+- [#7581](https://github.com/thirdweb-dev/js/pull/7581) [`f3234c3`](https://github.com/thirdweb-dev/js/commit/f3234c3c414f2fb4ee41c2394bf52a56fa081f73) Thanks [@d4mr](https://github.com/d4mr)! - fix engine server wallet usage with session keys
+
 ## 5.105.13
 
 ### Patch Changes

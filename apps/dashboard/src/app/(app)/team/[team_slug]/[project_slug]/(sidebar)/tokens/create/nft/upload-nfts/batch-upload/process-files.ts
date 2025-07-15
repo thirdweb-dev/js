@@ -2,10 +2,7 @@ import Papa from "papaparse";
 import { getAddress, isAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import type { NFTInput } from "thirdweb/utils";
 import z from "zod";
-import {
-  csvMimeTypes,
-  jsonMimeTypes,
-} from "../../../../../../../../../../../@/utils/batch";
+import { csvMimeTypes, jsonMimeTypes } from "@/utils/batch";
 
 const transformHeader = (h: string) => {
   const headersToTransform = [
