@@ -33,7 +33,7 @@
     "react-markdown": "10.1.0",
     "remark-gfm": "4.0.1",
     "server-only": "^0.0.1",
-    "shiki": "1.27.0",
+    "shiki": "3.8.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "workspace:*",
