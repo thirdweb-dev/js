@@ -140,6 +140,12 @@ export function getContractPageSidebarLinks(data: {
       href: `${layoutPrefix}/permissions`,
       label: "Permissions",
     },
+    {
+      exactMatch: true,
+      hide: !data.metadata.showClaimRewards,
+      href: `${layoutPrefix}/claim-rewards`,
+      label: "Claim Rewards",
+    },
   ];
 
   const extensionsToShow = extensionsLinks.filter((l) => !l.hide);

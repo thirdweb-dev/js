@@ -1,0 +1,91 @@
+import { notFound, redirect } from "next/navigation";
+import { getContract } from "thirdweb";
+import {
+  getDeployedEntrypointERC20,
+  getRewardLocker,
+  v3PositionManager as getV3PositionManager,
+} from "thirdweb/assets";
+import { getProject } from "@/api/projects";
+import { getContractPageParamsInfo } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/_utils/getContractFromParams";
+import type { ProjectContractPageParams } from "../types";
+import { ClaimRewardsPage } from "./components/claim-rewards-page";
+import { getValidReward } from "./utils/rewards";
+
+export default async function Page(props: {
+  params: Promise<ProjectContractPageParams>;
+}) {
+  const params = await props.params;
+  const project = await getProject(params.team_slug, params.project_slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  const info = await getContractPageParamsInfo({
+    chainIdOrSlug: params.chainIdOrSlug,
+    contractAddress: params.contractAddress,
+    teamId: project.teamId,
+  });
+
+  if (!info) {
+    notFound();
+  }
+
+  const assetContractClient = info.clientContract;
+
+  const entrypointContractClient = await getDeployedEntrypointERC20({
+    chain: assetContractClient.chain,
+    client: assetContractClient.client,
+  });
+
+  const reward = await getValidReward({
+    assetContract: assetContractClient,
+    entrypointContract: entrypointContractClient,
+  });
+
+  const rewardLocker = await getRewardLocker({
+    contract: entrypointContractClient,
+  }).catch(() => null);
+
+  if (!reward || !rewardLocker) {
+    redirect(
+      `/team/${params.team_slug}/${params.project_slug}/contract/${params.chainIdOrSlug}/${params.contractAddress}`,
+    );
+  }
+
+  const rewardLockerContractClient = getContract({
+    address: rewardLocker,
+    chain: assetContractClient.chain,
+    client: assetContractClient.client,
+  });
+
+  const v3PositionManager = await getV3PositionManager({
+    contract: rewardLockerContractClient,
+  }).catch(() => null);
+
+  // const v4PositionManager = await getV4PositionManager({
+  //   contract: rewardLockerContractClient,
+  // }).catch(() => null);
+
+  if (!v3PositionManager || v3PositionManager !== reward.positionManager) {
+    redirect(
+      `/team/${params.team_slug}/${params.project_slug}/contract/${params.chainIdOrSlug}/${params.contractAddress}`,
+    );
+  }
+
+  const v3PositionManagerContract = getContract({
+    address: reward.positionManager,
+    chain: assetContractClient.chain,
+    client: assetContractClient.client,
+  });
+
+  return (
+    <ClaimRewardsPage
+      assetContractClient={assetContractClient}
+      entrypointContractClient={entrypointContractClient}
+      rewardLockerContractClient={rewardLockerContractClient}
+      reward={reward}
+      v3PositionManagerContractClient={v3PositionManagerContract}
+    />
+  );
+}

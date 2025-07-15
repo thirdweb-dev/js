@@ -18,5 +18,10 @@ export type {
   PoolConfig,
   TokenParams,
 } from "../assets/types.js";
-export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
 export { getReward } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/read/getReward.js";
+export { getRewardLocker } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/read/getRewardLocker.js";
+export { claimReward } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/write/claimReward.js";
+export { positions } from "../extensions/assets/__generated__/RewardLocker/read/positions.js";
+export { v3PositionManager } from "../extensions/assets/__generated__/RewardLocker/read/v3PositionManager.js";
+export { v4PositionManager } from "../extensions/assets/__generated__/RewardLocker/read/v4PositionManager.js";
+export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
