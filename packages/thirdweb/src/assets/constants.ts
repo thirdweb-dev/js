@@ -4,7 +4,6 @@ export const DEFAULT_REFERRER_REWARD_BPS = 5000; // 50%
 export const DEFAULT_INFRA_ADMIN = "0x1a472863cf21d5aa27f417df9140400324c48f22";
 export const DEFAULT_FEE_RECIPIENT =
   "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
-export const DEFAULT_SALT = "0x";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   8453: {
