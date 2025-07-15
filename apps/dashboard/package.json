@@ -54,7 +54,7 @@
     "p-limit": "^6.2.0",
     "papaparse": "^5.5.3",
     "pluralize": "^8.0.0",
-    "posthog-js": "1.256.1",
+    "posthog-js": "1.257.0",
     "posthog-node": "^5.4.0",
     "prettier": "3.6.2",
     "qrcode": "^1.5.3",
