@@ -12,7 +12,8 @@
     "@testing-library/jest-dom",
     "tslib",
     "@thirdweb-dev/insight",
-    "@thirdweb-dev/engine"
+    "@thirdweb-dev/engine",
+    "@thirdweb-dev/api"
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs"],
   "rules": {

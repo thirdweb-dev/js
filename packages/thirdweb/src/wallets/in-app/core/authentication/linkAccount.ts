@@ -154,3 +154,34 @@ export async function getLinkedProfilesInternal({
 
   return (linkedAccounts ?? []) satisfies Profile[];
 }
+
+export async function fetchUserProfiles(options: {
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  authToken: string;
+}): Promise<Profile[]> {
+  const clientFetch = getClientFetch(options.client, options.ecosystem);
+  const IN_APP_URL = getThirdwebBaseUrl("inAppWallet");
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer iaw-auth-token:${options.authToken}`,
+    "Content-Type": "application/json",
+  };
+
+  const linkedAccountsResp = await clientFetch(
+    `${IN_APP_URL}/api/2024-05-05/accounts`,
+    {
+      headers,
+      method: "GET",
+    },
+  );
+
+  if (!linkedAccountsResp.ok) {
+    const body = await linkedAccountsResp.json();
+    throw new Error(body.message || "Failed to get linked accounts.");
+  }
+
+  const { linkedAccounts } = await linkedAccountsResp.json();
+
+  return (linkedAccounts ?? []) satisfies Profile[];
+}

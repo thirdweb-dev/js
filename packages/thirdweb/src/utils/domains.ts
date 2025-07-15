@@ -49,6 +49,12 @@ type DomainOverrides = {
    * @default "bridge.thirdweb.com"
    */
   bridge?: string;
+
+  /**
+   * The base URL for the API service.
+   * @default "api.thirdweb.com"
+   */
+  api?: string;
 };
 
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
@@ -61,6 +67,7 @@ const DEFAULT_ANALYTICS_URL = "c.thirdweb.com";
 const DEFAULT_INSIGHT_URL = "insight.thirdweb.com";
 const DEFAULT_ENGINE_CLOUD_URL = "engine.thirdweb.com";
 const DEFAULT_BRIDGE_URL = "bridge.thirdweb.com";
+const DEFAULT_API_URL = "api.thirdweb.com";
 
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   analytics: DEFAULT_ANALYTICS_URL,
@@ -73,6 +80,7 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
   rpc: DEFAULT_RPC_URL,
   social: DEFAULT_SOCIAL_URL,
   storage: DEFAULT_STORAGE_URL,
+  api: DEFAULT_API_URL,
 };
 
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
@@ -87,6 +95,7 @@ export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
     rpc: DomainOverrides.rpc ?? DEFAULT_RPC_URL,
     social: DomainOverrides.social ?? DEFAULT_SOCIAL_URL,
     storage: DomainOverrides.storage ?? DEFAULT_STORAGE_URL,
+    api: DomainOverrides.api ?? DEFAULT_API_URL,
   };
 };
 

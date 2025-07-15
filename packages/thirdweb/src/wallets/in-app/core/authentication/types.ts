@@ -174,6 +174,7 @@ export type AuthDetails = (
   backupRecoveryCodes?: string[];
   recoveryShareManagement: RecoveryShareManagement;
   walletType?: "sharded" | "enclave";
+  walletAddress?: string;
 };
 
 type InitializedUser = {
