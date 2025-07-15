@@ -24,8 +24,17 @@ import {
 } from "./token-utils.js";
 import type { CreateTokenByImplementationConfigOptions } from "./types.js";
 
-export async function createTokenByImplementationConfig(options: CreateTokenByImplementationConfigOptions) {
-  const { client, chain, account, params, implementationAddress, launchConfig } = options;
+export async function createTokenByImplementationConfig(
+  options: CreateTokenByImplementationConfigOptions,
+) {
+  const {
+    client,
+    chain,
+    account,
+    params,
+    implementationAddress,
+    launchConfig,
+  } = options;
 
   const creator = params.owner || account.address;
 

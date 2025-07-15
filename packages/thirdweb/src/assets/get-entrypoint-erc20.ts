@@ -3,9 +3,7 @@ import type {
   ClientAndChain,
   ClientAndChainAndAccount,
 } from "../utils/types.js";
-import {
-  IMPLEMENTATIONS,
-} from "./constants.js";
+import { IMPLEMENTATIONS } from "./constants.js";
 
 export async function getOrDeployEntrypointERC20(
   options: ClientAndChainAndAccount,
