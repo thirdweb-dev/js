@@ -84,7 +84,10 @@ type TeamCapabilities = {
   };
   nebula: {
     enabled: boolean;
-    rateLimit: number;
+    rateLimit: {
+      perSecond: number;
+      perMinute: number;
+    };
   };
   bundler: {
     enabled: boolean;
