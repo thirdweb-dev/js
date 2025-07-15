@@ -177,18 +177,41 @@ export async function status(options: status.Options): Promise<status.Result> {
   };
 }
 
+/**
+ * Namespace containing types for the status function.
+ * @namespace status
+ * @bridge
+ */
 export declare namespace status {
+  /**
+   * Options for checking transaction status.
+   * Can specify either chainId or chain object.
+   * @interface Options
+   * @bridge
+   */
   type Options =
     | {
+        /** The transaction hash to check status for */
         transactionHash: ox__Hex.Hex;
+        /** The chain ID where the transaction occurred */
         chainId: number;
+        /** Your thirdweb client */
         client: ThirdwebClient;
       }
     | {
+        /** The transaction hash to check status for */
         transactionHash: ox__Hex.Hex;
+        /** The chain object where the transaction occurred */
         chain: Chain;
+        /** Your thirdweb client */
         client: ThirdwebClient;
       };
 
+  /**
+   * Result returned from checking transaction status.
+   * Contains the current status and transaction details.
+   * @interface Result
+   * @bridge
+   */
   type Result = Status;
 }

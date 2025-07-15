@@ -154,17 +154,40 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   };
 }
 
+/**
+ * Namespace containing types for the sell quote function.
+ * @namespace quote
+ * @bridge Sell
+ */
 export declare namespace quote {
+  /**
+   * Options for getting a sell quote.
+   * @interface Options
+   * @bridge Sell
+   */
   type Options = {
+    /** The origin chain ID */
     originChainId: number;
+    /** The origin token address */
     originTokenAddress: ox__Address.Address;
+    /** The destination chain ID */
     destinationChainId: number;
+    /** The destination token address */
     destinationTokenAddress: ox__Address.Address;
+    /** The amount to sell in wei */
     amount: bigint;
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** Maximum number of steps in the route */
     maxSteps?: number;
   };
 
+  /**
+   * Result returned from getting a sell quote.
+   * Contains quote details and intent information.
+   * @interface Result
+   * @bridge Sell
+   */
   type Result = Quote & {
     intent: {
       originChainId: number;
@@ -393,17 +416,37 @@ export async function prepare(
   };
 }
 
+/**
+ * Namespace containing types for the sell prepare function.
+ * @namespace prepare
+ * @bridge Sell
+ */
 export declare namespace prepare {
+  /**
+   * Options for preparing a sell transaction.
+   * @interface Options
+   * @bridge Sell
+   */
   type Options = {
+    /** The origin chain ID */
     originChainId: number;
+    /** The origin token address */
     originTokenAddress: ox__Address.Address;
+    /** The destination chain ID */
     destinationChainId: number;
+    /** The destination token address */
     destinationTokenAddress: ox__Address.Address;
+    /** The amount to sell in wei */
     amount: bigint;
+    /** The sender address */
     sender: ox__Address.Address;
+    /** The receiver address */
     receiver: ox__Address.Address;
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** Arbitrary purchase data */
     purchaseData?: PurchaseData;
+    /** Maximum number of steps in the route */
     maxSteps?: number;
     /**
      * @hidden
@@ -411,6 +454,12 @@ export declare namespace prepare {
     paymentLinkId?: string;
   };
 
+  /**
+   * Result returned from preparing a sell transaction.
+   * Contains prepared quote with transaction data and intent information.
+   * @interface Result
+   * @bridge Sell
+   */
   type Result = PreparedQuote & {
     intent: {
       originChainId: number;

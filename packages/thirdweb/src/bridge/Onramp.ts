@@ -258,21 +258,45 @@ export async function prepare(
   };
 }
 
+/**
+ * Namespace containing types for the onramp prepare function.
+ * @namespace prepare
+ * @bridge Onramp
+ */
 export declare namespace prepare {
+  /**
+   * Options for preparing an onramp transaction.
+   * @interface Options
+   * @bridge Onramp
+   */
   export type Options = {
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** The onramp provider to use (e.g., "stripe", "coinbase", "transak") */
     onramp: "stripe" | "coinbase" | "transak";
+    /** The destination chain ID */
     chainId: number;
+    /** The destination token address */
     tokenAddress: ox__Address.Address;
+    /** The address that will receive the output token */
     receiver: ox__Address.Address;
+    /** The desired token amount in wei */
     amount?: bigint;
+    /** Arbitrary purchase data */
     purchaseData?: PurchaseData;
+    /** An optional address to associate as the onramp sender */
     sender?: ox__Address.Address;
+    /** The token to initially onramp to if the destination token is not supported by the provider */
     onrampTokenAddress?: ox__Address.Address;
+    /** The chain ID to initially onramp to if the destination chain is not supported */
     onrampChainId?: number;
+    /** The currency for the onramp (e.g., "USD", "GBP"). Defaults to user's preferred or "USD" */
     currency?: string;
+    /** Maximum number of post-onramp steps */
     maxSteps?: number;
+    /** Chain IDs to exclude from the route (string or array of strings) */
     excludeChainIds?: string | string[];
+    /** The user's country code (e.g. "US", "JP"). Defaults to "US". We highly recommend this be set (based on the user's IP address) */
     country?: string;
     /**
      * @hidden
@@ -280,5 +304,11 @@ export declare namespace prepare {
     paymentLinkId?: string;
   };
 
+  /**
+   * Result returned from preparing an onramp transaction.
+   * Contains the onramp link, quote information, and routing steps.
+   * @interface Result
+   * @bridge Onramp
+   */
   export type Result = OnrampPrepareQuoteResponseData;
 }

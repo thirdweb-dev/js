@@ -179,20 +179,47 @@ export async function routes(options: routes.Options): Promise<routes.Result> {
   return data;
 }
 
+/**
+ * Namespace containing types for the routes function.
+ * @namespace routes
+ * @bridge
+ */
 export declare namespace routes {
+  /**
+   * Options for fetching available bridge routes.
+   * @interface Options
+   * @bridge
+   */
   type Options = {
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** The origin chain ID to filter routes by */
     originChainId?: number;
+    /** The origin token address to filter routes by */
     originTokenAddress?: ox__Address.Address;
+    /** The destination chain ID to filter routes by */
     destinationChainId?: number;
+    /** The destination token address to filter routes by */
     destinationTokenAddress?: ox__Address.Address;
+    /** Transaction hash to filter routes by */
     transactionHash?: ox__Hex.Hex;
+    /** Sort routes by popularity */
     sortBy?: "popularity";
+    /** Maximum number of steps in the route */
     maxSteps?: number;
+    /** Whether to include price information in the response */
     includePrices?: boolean;
+    /** Number of results to return (pagination) */
     limit?: number;
+    /** Number of results to skip (pagination) */
     offset?: number;
   };
 
+  /**
+   * Result returned from fetching bridge routes.
+   * Contains an array of available routes.
+   * @interface Result
+   * @bridge
+   */
   type Result = Route[];
 }
