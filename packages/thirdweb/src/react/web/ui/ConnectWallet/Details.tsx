@@ -978,6 +978,11 @@ export function DetailsModal(props: {
         onCancel={() => setScreen("main")}
         onSuccess={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
+        theme={props.theme}
+        style={{
+          border: "none",
+          borderRadius: radius.lg,
+        }}
         tokenAddress={
           props.displayBalanceToken?.[Number(requestedChainId)] as
             | `0x${string}`

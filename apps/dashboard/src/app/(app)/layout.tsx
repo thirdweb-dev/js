@@ -54,7 +54,7 @@ export default function RootLayout({
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
-        <AppRouterProviders>{children}</AppRouterProviders>
+        <AppRouterProviders autoConnect={true}>{children}</AppRouterProviders>
         <DashboardRouterTopProgressBar />
         <NextTopLoader
           color="hsl(var(--foreground))"

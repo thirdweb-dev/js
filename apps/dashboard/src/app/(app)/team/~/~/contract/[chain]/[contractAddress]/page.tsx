@@ -11,8 +11,8 @@ import { AppFooter } from "@/components/footers/app-footer";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { fetchChain } from "@/utils/fetchChain";
+import { loginRedirect } from "@/utils/redirects";
 import { getValidAccount } from "../../../../../../account/settings/getAccount";
-import { loginRedirect } from "../../../../../../login/loginRedirect";
 import { TeamHeader } from "../../../../../components/TeamHeader/team-header";
 import {
   ImportAndSelectProjectForContract,

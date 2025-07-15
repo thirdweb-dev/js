@@ -1,12 +1,12 @@
 import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import { getWalletConnections } from "@/api/analytics";
+import { getAuthToken } from "@/api/auth-token";
 import { getProjects, type Project } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../@/api/auth-token";
-import { loginRedirect } from "../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { Changelog } from "./_components/Changelog";
 import { FreePlanUpsellBannerUI } from "./_components/FreePlanUpsellBannerUI";
 import { InviteTeamMembersButton } from "./_components/invite-team-members-button";

@@ -12,7 +12,7 @@ import { getLast24HoursRPCUsage } from "@/api/usage/rpc";
 import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { loginRedirect } from "../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { CountGraph } from "./components/count-graph";
 import { RateGraph } from "./components/rate-graph";
 

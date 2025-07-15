@@ -11,52 +11,19 @@ import {
     WalletsConnectIcon
 } from "@/icons"
 import EcosystemSocialConfig from '../assets/social-config.png'
+import { AuthMethodsTabs } from "@/components/Document/AuthMethodsTabs"
 
-# Sign-In Methods
+# Create wallets
 
-thirdweb supports various authentication methods: social logins, email and SMS, passkeys, and more. For every user, thirdweb generates a non-custodial [wallet](/connect/wallet/security) behind the scenes. 
+thirdweb supports creating wallets with various authentication methods: social logins, email, SMS, passkeys, and more. For every user, thirdweb generates a [non-custodial wallet](/connect/wallet/security) behind the scenes. 
 
-## Platform specific guides
+---
 
-To enable a given sign-in method for the thirdweb wallet, refer to the following guides:
+## Interactive Guide
 
-<Grid>
-    <ArticleIconCard
-        title="TypeScript"
-        icon={TypeScriptIcon}
-        href="/typescript/v5/inAppWallet#example"
-    />
-    <ArticleIconCard
-        title="React"
-        icon={ReactIcon}
-        href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
-    />
-    {/* TODO: Link to react native getting started for in app wallet */}
-    <ArticleIconCard
-        title="React Native"
-        icon={ReactIcon}
-        href="/react/v5/in-app-wallet/get-started#choose-authentication-methods"
-    />
-	<ArticleIconCard
-        title=".NET"
-        icon={DotNetIcon}
-        href="/dotnet/wallets/providers/in-app-wallet#login-methods"
-    />
-    <ArticleIconCard
-        title="Unity"
-        icon={UnityIcon}
-        href="/unity/v5/wallets/in-app-wallet#login-methods"
-    />
-    <ArticleIconCard
-        title="Unreal Engine"
-        icon={UnrealEngineIcon}
-        href="/unreal-engine/blueprints/in-app-wallet#otp"
-    />
-</Grid>
+Choose your authentication method and see the code for your platform:
 
-## Supported Methods
-
-<AuthList/>
+<AuthMethodsTabs/>
 
 ## Bring your own auth system
 

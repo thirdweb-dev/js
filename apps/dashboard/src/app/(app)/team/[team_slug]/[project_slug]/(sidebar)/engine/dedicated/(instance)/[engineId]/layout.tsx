@@ -1,4 +1,5 @@
 import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
+import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,9 +9,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import type { EngineInstance } from "@/hooks/useEngine";
-import { getAuthToken } from "../../../../../../../../../../@/api/auth-token";
+import { loginRedirect } from "@/utils/redirects";
 import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
-import { loginRedirect } from "../../../../../../../../login/loginRedirect";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";
 import { EngineSidebarLayout } from "./_components/EnginePageLayout";

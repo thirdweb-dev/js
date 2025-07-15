@@ -6,13 +6,11 @@ import { useMemo, useState } from "react";
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SkeletonContainer } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useTokenPriceData } from "../_hooks/useTokenPriceData";
+import type { TokenPriceData } from "../_apis/token-price-data";
 
 function PriceChartUI(props: {
-  isPending: boolean;
   showTimeOfDay: boolean;
   data: Array<{
     date: string;
@@ -29,7 +27,7 @@ function PriceChartUI(props: {
     <ThirdwebAreaChart
       cardContentClassName="p-0"
       chartClassName="aspect-[1.5] lg:aspect-[3]"
-      className="border-none bg-background p-0"
+      className="border-none bg-transparent p-0"
       config={{
         price: {
           color: "hsl(var(--chart-1))",
@@ -38,7 +36,7 @@ function PriceChartUI(props: {
       }}
       data={data}
       hideLabel={false}
-      isPending={props.isPending}
+      isPending={false}
       toolTipLabelFormatter={getTooltipLabelFormatter(props.showTimeOfDay)}
       toolTipValueFormatter={(value) => {
         return tokenPriceUSDFormatter.format(value as number);
@@ -49,7 +47,7 @@ function PriceChartUI(props: {
 
 const tokenPriceUSDFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
-  maximumFractionDigits: 10,
+  maximumFractionDigits: 8,
   minimumFractionDigits: 0,
   notation: "compact",
   roundingMode: "halfEven",
@@ -92,20 +90,14 @@ function getTooltipLabelFormatter(includeTimeOfDay: boolean) {
 export function TokenStats(params: {
   chainId: number;
   contractAddress: string;
+  tokenPriceData: TokenPriceData;
 }) {
-  const tokenPriceQuery = useTokenPriceData(params);
   const [interval, setInterval] = useState<Interval>("max");
-
-  const tokenPriceData = tokenPriceQuery.data;
 
   const filteredHistoricalPrices = useMemo(() => {
     const currentDate = new Date();
 
-    if (tokenPriceData?.type === "no-data") {
-      return [];
-    }
-
-    return tokenPriceData?.data?.historical_prices.filter((item) => {
+    return params.tokenPriceData.historical_prices.filter((item) => {
       const date = new Date(item.date);
       const maxDiff =
         interval === "24h"
@@ -120,106 +112,75 @@ export function TokenStats(params: {
 
       return differenceInCalendarDays(currentDate, date) <= maxDiff;
     });
-  }, [tokenPriceData, interval]);
+  }, [params.tokenPriceData, interval]);
 
-  const priceUsd =
-    tokenPriceData?.type === "no-data" || tokenPriceQuery.isError
-      ? "N/A"
-      : tokenPriceData?.data?.price_usd;
+  const priceUsd = params.tokenPriceData.price_usd;
+  const percentChange24h = params.tokenPriceData.percent_change_24h;
+  const marketCap = params.tokenPriceData.market_cap_usd;
+  const holders = params.tokenPriceData.holders;
 
-  const percentChange24h =
-    tokenPriceData?.type === "no-data" || tokenPriceQuery.isError
-      ? "N/A"
-      : tokenPriceData?.data?.percent_change_24h;
+  const formattedAbsChange = percentChangeFormatter.format(
+    Math.abs(percentChange24h),
+  );
 
-  const marketCap =
-    tokenPriceData?.type === "no-data" || tokenPriceQuery.isError
-      ? "N/A"
-      : tokenPriceData?.data?.market_cap_usd;
+  const isAlmostZeroChange =
+    formattedAbsChange === percentChangeFormatter.format(0);
 
-  const holders =
-    tokenPriceData?.type === "no-data" || tokenPriceQuery.isError
-      ? "N/A"
-      : tokenPriceData?.data?.holders;
+  const formattedPriceUSD = tokenPriceUSDFormatter.format(priceUsd);
 
   return (
-    <div>
+    <div className="bg-card rounded-lg border">
       {/* price and change */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between p-4 lg:p-6">
         <div>
           <p className="mb-1 text-muted-foreground text-sm">Current Price</p>
-          <div className="flex items-center gap-2">
-            <SkeletonContainer
-              loadedData={priceUsd}
-              render={(v) => {
-                return (
-                  <p className="font-bold text-4xl tracking-tight">
-                    {typeof v === "number"
-                      ? tokenPriceUSDFormatter.format(v)
-                      : v}
-                  </p>
-                );
-              }}
-              skeletonData={10.0001}
-            />
-            <SkeletonContainer
-              loadedData={percentChange24h}
-              render={(data) => {
-                if (typeof data === "string") {
-                  return null;
-                }
-
-                const formattedAbsChange = percentChangeFormatter.format(
-                  Math.abs(data),
-                );
-
-                const isAlmostZero =
-                  formattedAbsChange === percentChangeFormatter.format(0);
-
-                return (
-                  <Badge
-                    className="gap-2 text-sm"
-                    variant={
-                      isAlmostZero
-                        ? "default"
-                        : data > 0
-                          ? "success"
-                          : "destructive"
-                    }
-                  >
-                    <div className="flex items-center gap-0.5">
-                      {isAlmostZero ? null : data > 0 ? (
-                        <ArrowUpIcon className="size-3" />
-                      ) : (
-                        <ArrowDownIcon className="size-3" />
-                      )}
-                      <span>
-                        {isAlmostZero ? "~0%" : `${formattedAbsChange}%`}
-                      </span>
-                    </div>
-                    <span>(1d)</span>
-                  </Badge>
-                );
-              }}
-              skeletonData={0.001}
-            />
+          <div className="flex items-center gap-3">
+            <p
+              className={cn(
+                "font-bold text-3xl lg:text-4xl tracking-tight",
+                formattedPriceUSD.length > 8 && "text-2xl lg:text-4xl",
+              )}
+            >
+              {typeof priceUsd === "number" ? formattedPriceUSD : priceUsd}
+            </p>
+            <Badge
+              className="gap-2 lg:text-sm text-xs px-1.5"
+              variant={
+                isAlmostZeroChange
+                  ? "default"
+                  : percentChange24h > 0
+                    ? "success"
+                    : "destructive"
+              }
+            >
+              <div className="flex items-center gap-0.5">
+                {isAlmostZeroChange ? null : percentChange24h > 0 ? (
+                  <ArrowUpIcon className="size-3" />
+                ) : (
+                  <ArrowDownIcon className="size-3" />
+                )}
+                <span>
+                  {isAlmostZeroChange ? "~0%" : `${formattedAbsChange}%`}
+                </span>
+              </div>
+              <span>(1d)</span>
+            </Badge>
           </div>
         </div>
 
         <IntervalSelector interval={interval} setInterval={setInterval} />
       </div>
 
-      <div className="h-4" />
-      <PriceChartUI
-        data={filteredHistoricalPrices || []}
-        isPending={tokenPriceQuery.isPending}
-        showTimeOfDay={interval === "24h"}
-      />
+      <div className="px-0">
+        <PriceChartUI
+          data={filteredHistoricalPrices || []}
+          showTimeOfDay={interval === "24h"}
+        />
+      </div>
 
-      <div className="mt-8 flex gap-6 border-y border-dashed py-4 [&>*:not(:first-child)]:border-l [&>*:not(:first-child)]:border-dashed [&>*:not(:first-child)]:pl-5 [&>*]:grow">
+      <div className="px-4 lg:px-6 py-4 mt-6 border-t border-dashed flex gap-6 [&>*:not(:first-child)]:border-l [&>*:not(:first-child)]:pl-5 [&>*]:grow">
         <TokenStat
           label="Market Cap"
-          skeletonData={"1000000000"}
           tooltip="Market capitalization is the total value of all tokens in circulation, calculated by multiplying the current price by the circulating supply"
           value={
             typeof marketCap === "number"
@@ -230,7 +191,6 @@ export function TokenStats(params: {
 
         <TokenStat
           label="Number of Holders"
-          skeletonData={"1000000000"}
           tooltip="The total number of unique wallet addresses that currently hold this token on the blockchain"
           value={
             // show 0 value as N/A
@@ -246,9 +206,8 @@ export function TokenStats(params: {
   );
 }
 
-function TokenStat<T extends string | number>(props: {
-  value: T | undefined;
-  skeletonData: T;
+function TokenStat(props: {
+  value: string | number;
   label: string;
   tooltip: string;
 }) {
@@ -261,17 +220,9 @@ function TokenStat<T extends string | number>(props: {
         </ToolTipLabel>
       </div>
       <div className="flex">
-        <SkeletonContainer
-          loadedData={props.value}
-          render={(v) => {
-            return (
-              <p className="font-semibold text-foreground text-xl tracking-tight">
-                {v}
-              </p>
-            );
-          }}
-          skeletonData={props.skeletonData}
-        />
+        <p className="font-semibold text-foreground text-xl tracking-tight">
+          {props.value}
+        </p>
       </div>
     </div>
   );
@@ -296,7 +247,7 @@ function IntervalSelector(props: {
       {Object.entries(intervals).map(([key, value]) => (
         <Button
           className={cn(
-            "rounded-full",
+            "rounded-full px-2.5 py-1.5 h-auto bg-background text-xs lg:text-sm",
             props.interval === key && "border-active-border bg-accent",
           )}
           key={key}

@@ -1,100 +1,166 @@
 import {
 	ArticleCard,
-	Callout,
-	DocImage,
-	createMetadata,
+	GithubTemplateCard,
+	Grid,
+	ExpandableGrid,
 	FeatureCard,
+	createMetadata,
+	OpenSourceCard,
+	Stack,
+	ConnectCard,
+	SDKCard,
+	Callout,
+	ArticleIconCard,
+	DocImage,
 } from "@doc";
-import { WalletsConnectIcon } from "@/icons";
-import customModal from "./assets/custom-modals.png";
-import EcosystemWalletOverview from "./assets/ecosystem-wallet.png";
+import {
+	TypeScriptIcon,
+	ReactIcon,
+	DotNetIcon,
+	UnityIcon,
+	UnrealEngineIcon,
+} from "@/icons";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import SupportedChains from "../../../_images/supported-chains.png";
+import {
+	FuelIcon,
+	MonitorCheckIcon,
+	WalletCardsIcon,
+	UserLockIcon,
+	ExternalLinkIcon,
+	WalletIcon,
+	PencilIcon,
+	ShieldCheckIcon,
+	PiggyBankIcon,
+	GlobeIcon,
+	ComponentIcon,
+	CodeIcon,
+	ApiIcon,
+	WebhookIcon,
+	IdCardIcon,
+	HandCoinsIcon,
+	MonitorSmartphoneIcon,
+} from "lucide-react";
 
 export const metadata = createMetadata({
+	title: "thirdweb Connect",
+	description: "Everything you need for your web3 frontend.",
 	image: {
-		title: "thirdweb Wallets",
-		icon: "wallets",
+		title: "thirdweb Connect",
+		icon: "thirdweb",
 	},
-	title: "thirdweb Wallets | thirdweb",
-	description:
-		"thirdweb wallets provide a comprehensive toolkit for connecting users to applications and games. We offer a way to let users sign in however you want. Be it, connecting an external wallet, or creating a seamless login experiences for brand new users, or enabling you to own your web3 identity stack, we have a solution for you.",
 });
 
-# Overview
+# Wallets
 
-A flexible sign-up flow that accommodates different preferences is critical when onboarding users. thirdweb offers multiple wallet solutions to meet various integration needs:
+Wallets is a complete toolkit for connecting any user to your application. It includes **customizable components** for onboarding, **embedded wallets** , **account abstraction**
+for gasless transactions, **server wallets** for developers to carry out transactions, and a secure **non-custodial key management system**.
 
-1. **External Wallets** - Traditional wallet connection with 500+ providers
-2. **In-App Wallet** - Seamless onboarding with email, social, and passkey options
-3. **Ecosystem Wallet** - Branded wallet service for cross-application authentication
+## Live Playground
 
-<DocImage src={EcosystemWalletOverview} />
+<Stack>
 
-### Features
-
-<div
-	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
->
-	<FeatureCard
-		title="Wallet Support"
-		description="500+ wallet providers supported"
-		iconUrl="/icons/feature-cards/wallet.svg"
-	/>
-	<FeatureCard
-		title="Fiat On-Ramp"
-		description="Enable purchase options directly in modal"
-			iconUrl="/icons/feature-cards/fiat-ramp.svg"
-	/>
-	<FeatureCard
-		title="Seamless onboarding"
-		description="Email, phone, social, and passkey options"
-			iconUrl="/icons/feature-cards/fingerprint.svg"
-	/>
-	<FeatureCard
-		title="Customizable"
-		description="Match your applications branding"
-		iconUrl="/icons/feature-cards/customize.svg"
-	/>
-	<FeatureCard
-		title="Gasless"
-		description="Enable free transactions with smart accounts"
-		iconUrl="/icons/feature-cards/gasless.svg"
-	/>
-	<FeatureCard
-		title="Localization"
-		description="Support for multiple languages"
-			iconUrl="/icons/feature-cards/localization.svg"
-	/>
-	<FeatureCard
-		title="Cross-Chain Support"
-		description="Enable end users to view assets, balances, and activities for apps and games across any EVM-compatible chain"
-		iconUrl="/icons/feature-cards/compatibility.svg"
-	/>
-	<FeatureCard
-		title="User Attribution & Analytics"
-		description="Unlock analytics for developers and end user activity across your ecosystem"
-		iconUrl="/icons/feature-cards/compatibility.svg"
-	/>
-</div>
-
-### Solutions
-
-| SOLUTION         | BEST FOR                                                | PRICING                                                              |
-| ---------------- | ------------------------------------------------------- | -------------------------------------------------------------------- |
-| External Wallets | Applications needing traditional EOA wallet integration | Free                                                                 |
-| In-App Wallet    | Mainstream applications requiring seamless onboarding   | [Free up to 1,000 MAW, then $0.02/MAW](https://thirdweb.com/pricing) |
-| Ecosystem Wallet | Organizations building branded wallet networks          | [$250/mo](https://thirdweb.com/pricing)                              |
-
-### Use Cases
-
-- **Gaming & Entertainment** - Cross-game accounts and gasless transactions
-- **Enterprise & Loyalty** - Custom authentication and user attribution
-- **DeFi & NFT** - Traditional wallet connection and fiat on-ramps
-- **Chain Ecosystems** - Unified accounts across chain applications
-
-<ArticleCard
-	title="Getting started"
-	description="See our get started guide for quickly getting up and running with thirdweb wallets on the various supported platform."
-	href="/connect/wallet/get-started"
+<ArticleIconCard
+	title="Try Wallets"
+	icon={ExternalLinkIcon}
+	href="https://playground.thirdweb.com"
+	description="Try out the wallet components live in the interactive playground"
 />
 
-<DocImage src={customModal} />
+</Stack>
+
+## Features
+
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2"
+>
+	<FeatureCard
+		title="Non-Custodial Wallets"
+		description="Secure non-custodial wallets only accessible by the owner."
+		iconUrl={<UserLockIcon />}
+	/>
+
+    <FeatureCard
+    	title="EOA Support"
+    	description="Connect to over 500+ EOA wallet providers for crypto native users."
+    	iconUrl={<WalletCardsIcon />}
+    />
+
+    <FeatureCard
+    	title="Gas Sponsorship"
+    	description="Support for gasless transactions with account abstraction."
+    	iconUrl={<FuelIcon />}
+    />
+
+    <FeatureCard
+    	title="Ecosystem Wallets"
+    	description="Global wallets to connect your users to any application in an ecosystem."
+    	iconUrl={<MonitorCheckIcon />}
+    />
+
+    <FeatureCard
+    	title="Cross Platform Support"
+    	description="Create and manage wallets for web, mobile, games, and agents."
+    	iconUrl={<MonitorSmartphoneIcon />}
+    />
+
+
+    <FeatureCard
+    	title="One-Click Funding"
+    	description="Buy crypto or swap tokens directly in the wallet modal."
+    	iconUrl={<HandCoinsIcon />}
+    />
+
+    <FeatureCard
+    	title="Authentication"
+    	description="Enable SIWE standard for blockchain-based ID verification."
+    	iconUrl={<IdCardIcon />}
+    />
+
+    <FeatureCard
+    	title="Hardware-Level Security"
+    	description="Built with AWS Enclaves (TEE) to isolate and protect keys."
+    	iconUrl={<ShieldCheckIcon />}
+    />
+
+</div>
+
+## Quick Starts
+
+<Grid>
+	<SDKCard
+		title="TypeScript"
+		href="/typescript/v5/getting-started"
+		icon={TypeScriptIcon}
+	/>
+	<SDKCard title="React" href="/react/v5/getting-started" icon={ReactIcon} />
+	<SDKCard
+		title="React Native"
+		href="/react-native/v5/getting-started"
+		icon={ReactIcon}
+	/>
+	<SDKCard title="DotNet" href="/dotnet/getting-started" icon={DotNetIcon} />
+	<SDKCard title="Unity" href="/unity/v5/getting-started" icon={UnityIcon} />
+	<SDKCard
+		title="Unreal Engine"
+		href="/unreal-engine/getting-started"
+		icon={UnrealEngineIcon}
+	/>
+</Grid>
+
+## Supported Chains
+
+Wallets are supported on EVM compatible chains. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=connect-sdk).
+
+<DocImage src={SupportedChains} />
+
+## Starter Kits & demos
+
+View all available starter kits, demos, and templates on Github.
+
+<GithubTemplateCard
+	title="View all templates"
+	href="https://github.com/thirdweb-example"
+/>

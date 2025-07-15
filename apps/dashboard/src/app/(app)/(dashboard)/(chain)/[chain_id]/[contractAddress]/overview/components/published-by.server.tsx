@@ -1,5 +1,5 @@
 import type { ThirdwebContract } from "thirdweb";
-import { getAuthTokenWalletAddress } from "../../../../../../../../@/api/auth-token";
+import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import { getPublishedByCardProps, PublishedByUI } from "./published-by-ui";
 
 interface PublishedByProps {

@@ -25,7 +25,11 @@ type DocLayoutProps = {
 export function DocLayout(props: DocLayoutProps) {
   return (
     <div
-      className={`container relative flex flex-col gap-6 xl:grid ${props.showTableOfContents !== false ? "xl:grid-cols-[280px_820px_1fr]" : "xl:grid-cols-[280px_1100px]"}`}
+      className={`container relative flex flex-col gap-6 xl:grid ${
+        props.showTableOfContents !== false
+          ? "xl:grid-cols-[280px_820px_1fr]"
+          : "xl:grid-cols-[280px_1100px]"
+      }`}
       style={{
         minHeight: "calc(100vh - var(--sticky-top-height))",
       }}
@@ -48,7 +52,10 @@ export function DocLayout(props: DocLayoutProps) {
       >
         <div className="grow xl:mt-6">{props.children}</div>
         <div className="mt-16 xl:mt-20">
-          <PageFooter editPageButton={props.editPageButton} />
+          <PageFooter
+            editPageButton={props.editPageButton}
+            sidebarLinks={props.sideBar.links}
+          />
         </div>
       </main>
       {props.showTableOfContents !== false && <TableOfContentsSideBar />}

@@ -80,7 +80,7 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      "Invalid request: Unauthorized Bundle ID: com.foo.bar. You can view the restrictions on this API key at https://thirdweb.com/create-api-key",
+      "Invalid request: Unauthorized Bundle ID: com.foo.bar. You can view the restrictions for this project at https://thirdweb.com/test-team/test-project/settings",
     );
     expect(result.errorCode).toBe("BUNDLE_UNAUTHORIZED");
     expect(result.status).toBe(401);
@@ -101,7 +101,7 @@ describe("authorizeClient", () => {
     ) as any;
     expect(result.authorized).toBe(false);
     expect(result.errorMessage).toBe(
-      "Invalid request: Unauthorized domain: unauthorized.com. You can view the restrictions on this API key at https://thirdweb.com/create-api-key",
+      "Invalid request: Unauthorized domain: unauthorized.com. You can view the restrictions for this project at https://thirdweb.com/test-team/test-project/settings",
     );
     expect(result.errorCode).toBe("ORIGIN_UNAUTHORIZED");
     expect(result.status).toBe(401);

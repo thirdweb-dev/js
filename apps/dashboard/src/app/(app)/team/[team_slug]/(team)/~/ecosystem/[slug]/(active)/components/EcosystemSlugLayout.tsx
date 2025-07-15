@@ -63,6 +63,10 @@ export async function EcosystemLayoutSlug({
             path: `${ecosystemLayoutPath}/${ecosystem.slug}/analytics`,
           },
           {
+            name: "Users",
+            path: `${ecosystemLayoutPath}/${ecosystem.slug}/users`,
+          },
+          {
             name: "Design (coming soon)",
             path: `${ecosystemLayoutPath}/${ecosystem.slug}/#`,
           },

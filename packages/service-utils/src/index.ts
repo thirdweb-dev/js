@@ -15,7 +15,7 @@ export type {
 } from "./core/api.js";
 export { fetchTeamAndProject } from "./core/api.js";
 export { authorizeBundleId, authorizeDomain } from "./core/authorize/client.js";
+export { decrypt, encrypt } from "./core/encryption.js";
 export { rateLimit } from "./core/rateLimit/index.js";
-
 export { rateLimitSlidingWindow } from "./core/rateLimit/strategies/sliding-window.js";
 export * from "./core/services.js";

@@ -1,9 +1,9 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { InAppWalletUsersPageContent } from "@app/team/[team_slug]/[project_slug]/(sidebar)/wallets/users/components";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -34,6 +34,7 @@ export default async function Page(props: {
       authToken={authToken}
       client={client}
       projectClientId={project.publishableKey}
+      teamId={project.teamId}
     />
   );
 }

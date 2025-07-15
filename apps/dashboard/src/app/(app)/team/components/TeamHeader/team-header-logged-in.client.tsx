@@ -1,10 +1,10 @@
 "use client";
 
-import { doLogout } from "@app/login/auth-actions";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
+import { doLogout } from "@/actions/auth-actions";
 import { createTeam } from "@/actions/createTeam";
 import { useIdentifyAccount } from "@/analytics/hooks/identify-account";
 import { useIdentifyTeam } from "@/analytics/hooks/identify-team";

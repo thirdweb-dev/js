@@ -1,15 +1,11 @@
 "use client";
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/projects";
 import { type Step, StepsCard } from "@/components/blocks/StepsCard";
-import { Button } from "@/components/ui/button";
-import { CreateVaultAccountButton } from "../../vault/components/create-vault-account.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { SendTestTransaction } from "./send-test-tx.client";
-import { deleteUserAccessToken } from "./utils";
 
 interface Props {
   managementAccessToken: string | undefined;
@@ -19,27 +15,12 @@ interface Props {
   teamSlug: string;
   testTxWithWallet?: string | undefined;
   client: ThirdwebClient;
+  isManagedVault: boolean;
 }
 
 export const EngineChecklist: React.FC<Props> = (props) => {
-  const [userAccessToken, setUserAccessToken] = useState<string | undefined>();
-
   const finalSteps = useMemo(() => {
     const steps: Step[] = [];
-    steps.push({
-      children: (
-        <CreateVaultAccountStep
-          onUserAccessTokenCreated={(token) => setUserAccessToken(token)}
-          project={props.project}
-          teamSlug={props.teamSlug}
-        />
-      ),
-      completed: !!props.managementAccessToken,
-      description:
-        "Vault is thirdweb's key management system. It allows you to create secure server wallets and manage access tokens.",
-      showCompletedChildren: false,
-      title: "Create a Vault Admin Account",
-    });
     steps.push({
       children: (
         <CreateServerWalletStep
@@ -48,7 +29,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
           teamSlug={props.teamSlug}
         />
       ),
-      completed: props.wallets.length > 0,
+      completed: props.wallets.length > 0 || props.hasTransactions,
       description:
         "Server wallets are smart wallets, they don't require any gas funds to send transactions.",
       showCompletedChildren: false,
@@ -58,10 +39,10 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     steps.push({
       children: (
         <SendTestTransaction
+          isManagedVault={props.isManagedVault}
           client={props.client}
           project={props.project}
           teamSlug={props.teamSlug}
-          userAccessToken={userAccessToken}
           wallets={props.wallets}
         />
       ),
@@ -78,9 +59,9 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     props.project,
     props.wallets,
     props.hasTransactions,
-    userAccessToken,
     props.teamSlug,
     props.client,
+    props.isManagedVault,
   ]);
 
   const isComplete = useMemo(
@@ -91,10 +72,10 @@ export const EngineChecklist: React.FC<Props> = (props) => {
   if (props.testTxWithWallet) {
     return (
       <SendTestTransaction
+        isManagedVault={props.isManagedVault}
         client={props.client}
         project={props.project}
         teamSlug={props.teamSlug}
-        userAccessToken={userAccessToken}
         walletId={props.testTxWithWallet}
         wallets={props.wallets}
       />
@@ -102,8 +83,6 @@ export const EngineChecklist: React.FC<Props> = (props) => {
   }
 
   if (finalSteps.length === 0 || isComplete) {
-    // clear token from local storage after FTUX is complete
-    deleteUserAccessToken(props.project.id);
     return null;
   }
   return (
@@ -114,30 +93,6 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     />
   );
 };
-
-function CreateVaultAccountStep(props: {
-  project: Project;
-  teamSlug: string;
-  onUserAccessTokenCreated: (userAccessToken: string) => void;
-}) {
-  return (
-    <div className="mt-4 flex flex-row gap-4">
-      <CreateVaultAccountButton
-        onUserAccessTokenCreated={props.onUserAccessTokenCreated}
-        project={props.project}
-      />
-      <Button asChild variant="outline">
-        <Link
-          href="https://portal.thirdweb.com/vault"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn more about Vault
-        </Link>
-      </Button>
-    </div>
-  );
-}
 
 function CreateServerWalletStep(props: {
   project: Project;

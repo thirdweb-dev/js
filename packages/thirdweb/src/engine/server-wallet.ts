@@ -35,9 +35,10 @@ export type ServerWalletOptions = {
    */
   client: ThirdwebClient;
   /**
-   * The vault access token to use your server wallet.
+   * Optional vault access token to use your server wallet.
+   * If not provided, the server wallet will use the project secret key to authenticate.
    */
-  vaultAccessToken: string;
+  vaultAccessToken?: string;
   /**
    * The server wallet address to use for sending transactions inside engine.
    */
@@ -63,7 +64,7 @@ export type ServerWallet = Account & {
 };
 
 /**
- * Create a server wallet for sending transactions and signing messages via engine (v3+).
+ * Use a server wallet for sending transactions and signing messages via engine (v3+).
  * @param options - The server wallet options.
  * @returns An account object that can be used to send transactions and sign messages.
  * @engine
@@ -152,9 +153,11 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
   const { client, vaultAccessToken, address, chain, executionOptions } =
     options;
 
-  const headers: HeadersInit = {
-    "x-vault-access-token": vaultAccessToken,
-  };
+  const headers: HeadersInit = vaultAccessToken
+    ? {
+        "x-vault-access-token": vaultAccessToken,
+      }
+    : {};
 
   const getExecutionOptionsWithChainId = (
     chainId: number,
@@ -266,8 +269,18 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     return data.transactions.map((t) => t.id);
   };
 
+  const getAddress = () => {
+    if (
+      executionOptions?.type === "ERC4337" &&
+      executionOptions.smartAccountAddress
+    ) {
+      return executionOptions.smartAccountAddress;
+    }
+    return address;
+  };
+
   return {
-    address,
+    address: getAddress(),
     enqueueBatchTransaction: async (args: {
       transactions: PreparedTransaction[];
     }) => {

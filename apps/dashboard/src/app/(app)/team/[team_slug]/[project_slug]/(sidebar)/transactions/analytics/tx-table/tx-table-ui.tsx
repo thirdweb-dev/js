@@ -64,7 +64,6 @@ export function TransactionsTableUI(props: {
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
-    enabled: !!props.wallets && props.wallets.length > 0,
     placeholderData: keepPreviousData,
     queryFn: () => props.getData({ page, status }),
     queryKey: ["transactions", props.project.id, page, status],

@@ -8,8 +8,8 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ContractTable } from "@/components/contract-components/tables/contract-table";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 import { getSortedDeployedContracts } from "../../../../../account/contracts/_components/getSortedDeployedContracts";
-import { loginRedirect } from "../../../../../login/loginRedirect";
 import { Cards } from "./cards";
 
 export default async function Page(props: {

@@ -62,7 +62,7 @@ export function authorizeClient(
     return {
       authorized: false,
       errorCode: "ORIGIN_UNAUTHORIZED",
-      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
+      errorMessage: `Invalid request: Unauthorized domain: ${origin}. You can view the restrictions for this project at https://thirdweb.com/${team.slug}/${project.slug}/settings`,
       status: 401,
     };
   }
@@ -81,7 +81,7 @@ export function authorizeClient(
     return {
       authorized: false,
       errorCode: "BUNDLE_UNAUTHORIZED",
-      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions on this API key at https://thirdweb.com/create-api-key`,
+      errorMessage: `Invalid request: Unauthorized Bundle ID: ${bundleId}. You can view the restrictions for this project at https://thirdweb.com/${team.slug}/${project.slug}/settings`,
       status: 401,
     };
   }

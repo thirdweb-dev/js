@@ -100,6 +100,10 @@ export function AllWalletsList(
       .filter(
         (info) => !externalWallets.find((wallet) => wallet.id === info.id),
       )
+      .filter(
+        (info) =>
+          info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
+      )
       .filter((info) => info.hasMobileSupport);
 
     const fuse = new Fuse(filteredWallets, {

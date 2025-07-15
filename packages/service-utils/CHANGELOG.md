@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.3
+
+### Patch Changes
+
+- [#7570](https://github.com/thirdweb-dev/js/pull/7570) [`585eac2`](https://github.com/thirdweb-dev/js/commit/585eac2a6f49877318cb275f6fff5910ceabdbfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add encryption utilities
+
 ## 0.10.2
 
 ### Patch Changes
