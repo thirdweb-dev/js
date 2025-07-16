@@ -5,6 +5,7 @@ import { WebhookConfigModal } from "./webhook-config-modal";
 interface CreateWebhookConfigModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
   topics: Topic[];
@@ -19,6 +20,7 @@ export function CreateWebhookConfigModal(props: CreateWebhookConfigModalProps) {
       mode="create"
       onOpenChange={props.onOpenChange}
       open={props.open}
+      onSuccess={props.onSuccess}
       projectSlug={props.projectSlug}
       supportedChainIds={props.supportedChainIds}
       teamSlug={props.teamSlug}
