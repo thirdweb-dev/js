@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.4
+
+### Patch Changes
+
+- [#7614](https://github.com/thirdweb-dev/js/pull/7614) [`f82f885`](https://github.com/thirdweb-dev/js/commit/f82f885dad9a0eaecd64f365adbd1f49517b4fd9) Thanks [@jnsdls](https://github.com/jnsdls)! - update nebula ratelimit type
+
+- [#7613](https://github.com/thirdweb-dev/js/pull/7613) [`34d2fdd`](https://github.com/thirdweb-dev/js/commit/34d2fddf49291eb31d03fef98460ee719aef1044) Thanks [@jnsdls](https://github.com/jnsdls)! - update error response url
+
 ## 0.10.3
 
 ### Patch Changes
