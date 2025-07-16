@@ -52,11 +52,11 @@ export function ClaimRewardsPage(props: {
     );
 
     if (claimRewardsResult.error) {
-      toast.error("Failed to claim rewards", {
+      toast.error("Failed to distribute rewards", {
         description: parseError(claimRewardsResult.error),
       });
     } else {
-      toast.success("Rewards claimed successfully");
+      toast.success("Rewards distributed successfully");
       router.refresh();
     }
   }
@@ -128,7 +128,7 @@ export function ClaimRewardsPageUI(props: {
     <div>
       <div className="bg-card rounded-lg border">
         <div className="p-4 lg:px-6 py-5 border-b">
-          <h2 className="font-semibold text-2xl tracking-tight mb-0.5 lg:mb-0">
+          <h2 className="font-semibold text-xl tracking-tight mb-0.5 lg:mb-0">
             Uniswap LP Rewards
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -221,7 +221,7 @@ export function ClaimRewardsPageUI(props: {
           </div>
         </div>
 
-        <div className="p-4 lg:px-6 border-t flex justify-between items-center">
+        <div className="p-4 py-4 lg:px-6 border-t flex justify-between items-center">
           {hasUnclaimedRewards && (
             <p className="text-muted-foreground text-sm">
               Click on "Distribute Rewards" to distribute unclaimed rewards
@@ -230,7 +230,7 @@ export function ClaimRewardsPageUI(props: {
 
           {!hasUnclaimedRewards && (
             <p className="text-muted-foreground text-sm">
-              No unclaimed rewards to distribute
+              There are no unclaimed rewards available for distribution
             </p>
           )}
           <Button
