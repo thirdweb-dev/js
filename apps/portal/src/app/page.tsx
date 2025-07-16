@@ -133,7 +133,7 @@ function ReferenceSection() {
           icon={BridgeIcon}
           iconClassName="text-muted-foreground"
           isExternal
-          title="Universal Bridge"
+          title="Payments"
         />
         <SDKCard
           href="/connect/wallet/get-users"

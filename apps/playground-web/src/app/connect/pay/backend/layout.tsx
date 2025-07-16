@@ -9,7 +9,7 @@ export default function Layout(props: { children: React.ReactNode }) {
           <>HTTP API to bridge, swap and onramp to and from any currency</>
         }
         docsLink="https://portal.thirdweb.com/connect/pay/overview?utm_source=playground"
-        title="Universal Bridge API"
+        title="Payments API"
       />
 
       {props.children}

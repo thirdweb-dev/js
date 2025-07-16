@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
   metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | Universal Bridge",
+  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Payments",
 };
 
 export default function Page() {

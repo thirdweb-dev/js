@@ -137,7 +137,7 @@ const apisLinks = [
   },
   {
     href: "https://bridge.thirdweb.com/reference",
-    name: "Universal Bridge",
+    name: "Payments",
   },
   {
     href: "/connect/account-abstraction/api",

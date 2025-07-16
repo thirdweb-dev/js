@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "The easiest way for users to fund their wallets. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
   metadataBase,
-  title: "Buy Crypto | thirdweb Universal Bridge",
+  title: "Buy Crypto | thirdweb Payments",
 };
 
 export default function Page() {
