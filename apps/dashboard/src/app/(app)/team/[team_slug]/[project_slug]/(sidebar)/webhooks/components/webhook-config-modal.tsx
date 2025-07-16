@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
 import {
   createWebhookConfig,
@@ -45,9 +46,7 @@ const formSchema = z.object({
     }),
   isPaused: z.boolean().default(false),
   topics: z
-    .array(
-      z.object({ id: z.string(), filters: z.union([z.object({}), z.null()]) }),
-    )
+    .array(z.object({ id: z.string(), filters: z.unknown().nullable() }))
     .min(1, "At least one topic is required"),
 });
 
@@ -61,6 +60,8 @@ interface WebhookConfigModalProps {
   projectSlug: string;
   topics: Topic[];
   webhookConfig?: WebhookConfig; // Only required for edit mode
+  client?: ThirdwebClient;
+  supportedChainIds?: Array<number>;
 }
 
 export function WebhookConfigModal(props: WebhookConfigModalProps) {
@@ -70,7 +71,7 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
   const isEditMode = props.mode === "edit";
   const webhookConfig = props.webhookConfig;
 
-  const form = useForm<FormValues>({
+  const form = useForm({
     defaultValues: {
       description: isEditMode ? webhookConfig?.description || "" : "",
       destinationUrl: isEditMode ? webhookConfig?.destinationUrl || "" : "",
@@ -88,17 +89,23 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
 
   const mutation = useMutation({
     mutationFn: async (values: FormValues) => {
-      // Topics already have filters applied from the selector modal
-      const processedTopics = values.topics;
+      // Transform topics to topicIdsWithFilters format
+      const processedTopics: { id: string; filters: object | null }[] =
+        values.topics.map((topic) => ({
+          id: topic.id,
+          filters: topic.filters || null,
+        }));
+
+      const config = {
+        description: values.description,
+        destinationUrl: values.destinationUrl,
+        isPaused: values.isPaused,
+        topicIdsWithFilters: processedTopics,
+      };
 
       if (isEditMode && webhookConfig) {
         const result = await updateWebhookConfig({
-          config: {
-            description: values.description,
-            destinationUrl: values.destinationUrl,
-            isPaused: values.isPaused,
-            topicIdsWithFilters: processedTopics,
-          },
+          config,
           projectIdOrSlug: props.projectSlug,
           teamIdOrSlug: props.teamSlug,
           webhookConfigId: webhookConfig.id,
@@ -111,12 +118,7 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
         return result.data;
       } else {
         const result = await createWebhookConfig({
-          config: {
-            description: values.description,
-            destinationUrl: values.destinationUrl,
-            isPaused: values.isPaused,
-            topicIdsWithFilters: processedTopics,
-          },
+          config,
           projectIdOrSlug: props.projectSlug,
           teamIdOrSlug: props.teamSlug,
         });
@@ -333,12 +335,20 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
       </DialogContent>
 
       <TopicSelectorModal
+        client={props.client}
         onOpenChange={setIsTopicSelectorOpen}
         onSelectionChange={(topics) => {
-          form.setValue("topics", topics);
+          form.setValue(
+            "topics",
+            topics.map((topic) => ({
+              id: topic.id,
+              filters: topic.filters || null,
+            })) as { id: string; filters: object | null }[],
+          );
         }}
         open={isTopicSelectorOpen}
         selectedTopics={form.watch("topics")}
+        supportedChainIds={props.supportedChainIds}
         topics={props.topics}
       />
     </Dialog>

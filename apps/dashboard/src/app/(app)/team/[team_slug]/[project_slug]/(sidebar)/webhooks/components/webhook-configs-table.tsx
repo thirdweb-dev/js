@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import type { Topic, WebhookConfig } from "@/api/webhook-configs";
 import { deleteWebhookConfig } from "@/api/webhook-configs";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
@@ -54,6 +55,8 @@ export function WebhookConfigsTable(props: {
   webhookConfigs: WebhookConfig[];
   topics: Topic[];
   metricsMap: Map<string, WebhookSummaryStats | null>;
+  client?: ThirdwebClient;
+  supportedChainIds?: Array<number>;
 }) {
   const { webhookConfigs } = props;
   const [sortBy, setSortBy] = useState<SortById>("createdAt");
@@ -326,20 +329,24 @@ export function WebhookConfigsTable(props: {
       )}
 
       <CreateWebhookConfigModal
+        client={props.client}
         onOpenChange={setIsCreateModalOpen}
         open={isCreateModalOpen}
         projectSlug={props.projectSlug}
+        supportedChainIds={props.supportedChainIds}
         teamSlug={props.teamSlug}
         topics={props.topics}
       />
 
       {editingWebhook && (
         <EditWebhookConfigModal
+          client={props.client}
           onOpenChange={(open) => {
             if (!open) setEditingWebhook(null);
           }}
           open={!!editingWebhook}
           projectSlug={props.projectSlug}
+          supportedChainIds={props.supportedChainIds}
           teamSlug={props.teamSlug}
           topics={props.topics}
           webhookConfig={editingWebhook}
