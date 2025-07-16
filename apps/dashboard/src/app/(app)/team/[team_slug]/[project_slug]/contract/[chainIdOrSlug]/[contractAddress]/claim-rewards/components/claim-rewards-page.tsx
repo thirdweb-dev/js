@@ -1,9 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRightIcon } from "lucide-react";
 import { toast } from "sonner";
-import type { ThirdwebContract } from "thirdweb";
+import { type ThirdwebClient, type ThirdwebContract, toTokens } from "thirdweb";
 import { claimReward } from "thirdweb/assets";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -12,21 +11,28 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { parseError } from "@/utils/errorParser";
 import { tryCatch } from "@/utils/try-catch";
 import type { getValidReward } from "../utils/rewards";
-import { getUnclaimedFees } from "../utils/unclaimed-fees";
 
 export function ClaimRewardsPage(props: {
   assetContractClient: ThirdwebContract;
   entrypointContractClient: ThirdwebContract;
   reward: NonNullable<Awaited<ReturnType<typeof getValidReward>>>;
-  rewardLockerContractClient: ThirdwebContract;
-  v3PositionManagerContractClient: ThirdwebContract;
+  unclaimedFees: {
+    token0: {
+      address: string;
+      amount: bigint;
+    };
+    token1: {
+      address: string;
+      amount: bigint;
+    };
+  };
 }) {
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
 
   async function handleClaim() {
     const claimRewardsTx = claimReward({
       asset: props.assetContractClient.address,
-      contract: props.rewardLockerContractClient,
+      contract: props.entrypointContractClient,
     });
 
     const claimRewardsResult = await tryCatch(
@@ -42,29 +48,39 @@ export function ClaimRewardsPage(props: {
     }
   }
 
-  const unclaimedFeesQuery = useQuery({
-    queryKey: [
-      "get-unclaimed-fees",
-      {
-        positionManager: props.v3PositionManagerContractClient.address,
-        reward: {
-          tokenId: props.reward.tokenId.toString(),
-          recipient: props.reward.recipient,
-        },
-      },
-    ],
-    queryFn: async () =>
-      getUnclaimedFees({
-        positionManager: props.v3PositionManagerContractClient,
-        reward: {
-          tokenId: props.reward.tokenId,
-          recipient: props.reward.recipient,
-        },
-      }),
+  console.log({
+    props,
   });
 
-  // TODO: add proper UI
+  return (
+    <ClaimRewardsPageUI
+      unclaimedFees={props.unclaimedFees}
+      recipient={props.reward.recipient}
+      referrer={props.reward.referrer}
+      handleClaim={handleClaim}
+      isClaimPending={sendAndConfirmTransaction.isPending}
+      client={props.assetContractClient.client}
+    />
+  );
+}
 
+export function ClaimRewardsPageUI(props: {
+  unclaimedFees: {
+    token0: {
+      address: string;
+      amount: bigint;
+    };
+    token1: {
+      address: string;
+      amount: bigint;
+    };
+  };
+  recipient: string;
+  referrer: string;
+  handleClaim: () => void;
+  isClaimPending: boolean;
+  client: ThirdwebClient;
+}) {
   return (
     <div>
       <h2 className="font-semibold text-2xl tracking-tight mb-3">
@@ -72,41 +88,26 @@ export function ClaimRewardsPage(props: {
       </h2>
 
       <div className="mb-4">
-        {unclaimedFeesQuery.isPending && (
-          <div className="flex items-center gap-2">
-            <Spinner className="size-4" />
-            Loading unclaimed fees
-          </div>
-        )}
-        {unclaimedFeesQuery.error && (
-          <div className="text-red-500">
-            Failed to load unclaimed fees {parseError(unclaimedFeesQuery.error)}
-          </div>
-        )}
-
-        {unclaimedFeesQuery.data && (
-          <div className="flex flex-col gap-2">
-            <p>
-              Amount0: {unclaimedFeesQuery.data.token0.amount}{" "}
-              {unclaimedFeesQuery.data.token0.address}
-            </p>
-            <p>
-              Amount1: {unclaimedFeesQuery.data.token1.amount}{" "}
-              {unclaimedFeesQuery.data.token1.address}
-            </p>
-          </div>
-        )}
-
+        <div className="flex flex-col gap-2">
+          <p>
+            Amount0: {toTokens(props.unclaimedFees.token0.amount, 18)}{" "}
+            {props.unclaimedFees.token0.address}
+          </p>
+          <p>
+            Amount1: {toTokens(props.unclaimedFees.token1.amount, 18)}{" "}
+            {props.unclaimedFees.token1.address}
+          </p>
+        </div>
         <p>Recipient</p>
-        <WalletAddress
-          address={props.reward.recipient}
-          client={props.assetContractClient.client}
-        />
+        <WalletAddress address={props.recipient} client={props.client} />
+
+        <p>Referrer</p>
+        <WalletAddress address={props.referrer} client={props.client} />
       </div>
 
-      <Button onClick={handleClaim} className="gap-2">
+      <Button onClick={props.handleClaim} className="gap-2">
         Claim Rewards
-        {sendAndConfirmTransaction.isPending ? (
+        {props.isClaimPending ? (
           <Spinner className="size-4" />
         ) : (
           <ArrowRightIcon className="size-4" />

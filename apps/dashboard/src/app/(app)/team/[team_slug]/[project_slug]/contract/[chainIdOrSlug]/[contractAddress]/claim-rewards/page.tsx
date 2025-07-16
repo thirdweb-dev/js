@@ -10,6 +10,7 @@ import { getContractPageParamsInfo } from "../../../../../../../(dashboard)/(cha
 import type { ProjectContractPageParams } from "../types";
 import { ClaimRewardsPage } from "./components/claim-rewards-page";
 import { getValidReward } from "./utils/rewards";
+import { getUnclaimedFees } from "./utils/unclaimed-fees";
 
 export default async function Page(props: {
   params: Promise<ProjectContractPageParams>;
@@ -63,10 +64,6 @@ export default async function Page(props: {
     contract: rewardLockerContractClient,
   }).catch(() => null);
 
-  // const v4PositionManager = await getV4PositionManager({
-  //   contract: rewardLockerContractClient,
-  // }).catch(() => null);
-
   if (!v3PositionManager || v3PositionManager !== reward.positionManager) {
     redirect(
       `/team/${params.team_slug}/${params.project_slug}/contract/${params.chainIdOrSlug}/${params.contractAddress}`,
@@ -79,13 +76,20 @@ export default async function Page(props: {
     client: assetContractClient.client,
   });
 
+  const unclaimedFees = await getUnclaimedFees({
+    positionManager: v3PositionManagerContract,
+    reward: {
+      tokenId: reward.tokenId,
+      recipient: reward.recipient,
+    },
+  });
+
   return (
     <ClaimRewardsPage
       assetContractClient={assetContractClient}
       entrypointContractClient={entrypointContractClient}
-      rewardLockerContractClient={rewardLockerContractClient}
       reward={reward}
-      v3PositionManagerContractClient={v3PositionManagerContract}
+      unclaimedFees={unclaimedFees}
     />
   );
 }
