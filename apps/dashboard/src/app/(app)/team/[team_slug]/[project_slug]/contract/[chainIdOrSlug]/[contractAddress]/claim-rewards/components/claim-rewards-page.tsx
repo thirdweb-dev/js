@@ -2,15 +2,17 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRightIcon } from "lucide-react";
-import { readContract, type ThirdwebContract } from "thirdweb";
+import { toast } from "sonner";
+import type { ThirdwebContract } from "thirdweb";
 import { claimReward } from "thirdweb/assets";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { parseError } from "@/utils/errorParser";
+import { tryCatch } from "@/utils/try-catch";
 import type { getValidReward } from "../utils/rewards";
-
-const maxInt128 = 2n ** (128n - 1n) - 1n;
+import { getUnclaimedFees } from "../utils/unclaimed-fees";
 
 export function ClaimRewardsPage(props: {
   assetContractClient: ThirdwebContract;
@@ -22,43 +24,46 @@ export function ClaimRewardsPage(props: {
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
 
   async function handleClaim() {
-    const tx = claimReward({
+    const claimRewardsTx = claimReward({
       asset: props.assetContractClient.address,
       contract: props.rewardLockerContractClient,
     });
 
-    await sendAndConfirmTransaction.mutateAsync(tx);
+    const claimRewardsResult = await tryCatch(
+      sendAndConfirmTransaction.mutateAsync(claimRewardsTx),
+    );
+
+    if (claimRewardsResult.error) {
+      toast.error("Failed to claim rewards", {
+        description: parseError(claimRewardsResult.error),
+      });
+    } else {
+      toast.success("Rewards claimed successfully");
+    }
   }
 
-  const collectionQuery = useQuery({
+  const unclaimedFeesQuery = useQuery({
     queryKey: [
-      "unclaimed-fees",
+      "get-unclaimed-fees",
       {
-        ...props,
+        positionManager: props.v3PositionManagerContractClient.address,
         reward: {
-          ...props.reward,
-          tokenId: props.reward?.tokenId.toString(),
+          tokenId: props.reward.tokenId.toString(),
+          recipient: props.reward.recipient,
         },
       },
     ],
-    queryFn: async () => {
-      const result = await readContract({
-        contract: props.v3PositionManagerContractClient,
-        method:
-          "function collect((uint256 tokenId,address recipient,uint128 amount0Max,uint128 amount1Max)) returns (uint256,uint256)",
-        params: [
-          {
-            tokenId: props.reward.tokenId,
-            recipient: props.reward.recipient,
-            amount0Max: maxInt128,
-            amount1Max: maxInt128,
-          },
-        ],
-      });
-
-      return result;
-    },
+    queryFn: async () =>
+      getUnclaimedFees({
+        positionManager: props.v3PositionManagerContractClient,
+        reward: {
+          tokenId: props.reward.tokenId,
+          recipient: props.reward.recipient,
+        },
+      }),
   });
+
+  // TODO: add proper UI
 
   return (
     <div>
@@ -67,24 +72,36 @@ export function ClaimRewardsPage(props: {
       </h2>
 
       <div className="mb-4">
-        {collectionQuery.isPending && (
+        {unclaimedFeesQuery.isPending && (
           <div className="flex items-center gap-2">
             <Spinner className="size-4" />
             Loading unclaimed fees
           </div>
         )}
-        {collectionQuery.error && (
+        {unclaimedFeesQuery.error && (
           <div className="text-red-500">
-            Failed to load unclaimed fees {parseError(collectionQuery.error)}
+            Failed to load unclaimed fees {parseError(unclaimedFeesQuery.error)}
           </div>
         )}
 
-        {collectionQuery.data && (
-          <div className="flex items-center gap-2">
-            <p> Amount0: {collectionQuery.data[0]} </p>
-            <p> Amount1: {collectionQuery.data[1]} </p>
+        {unclaimedFeesQuery.data && (
+          <div className="flex flex-col gap-2">
+            <p>
+              Amount0: {unclaimedFeesQuery.data.token0.amount}{" "}
+              {unclaimedFeesQuery.data.token0.address}
+            </p>
+            <p>
+              Amount1: {unclaimedFeesQuery.data.token1.amount}{" "}
+              {unclaimedFeesQuery.data.token1.address}
+            </p>
           </div>
         )}
+
+        <p>Recipient</p>
+        <WalletAddress
+          address={props.reward.recipient}
+          client={props.assetContractClient.client}
+        />
       </div>
 
       <Button onClick={handleClaim} className="gap-2">
