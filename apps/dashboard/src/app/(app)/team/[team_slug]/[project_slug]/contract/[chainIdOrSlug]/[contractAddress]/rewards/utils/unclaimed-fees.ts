@@ -1,5 +1,6 @@
 import type { ThirdwebContract } from "thirdweb";
-import { readContract } from "thirdweb";
+import { getContract, readContract } from "thirdweb";
+import { symbol } from "thirdweb/extensions/common";
 
 export const maxUint128 = 2n ** 128n - 1n;
 
@@ -36,7 +37,6 @@ export async function getUnclaimedFees(params: {
     positionsResultPromise,
   ]);
 
-  // positionsResult
   // 0- nonce
   // 1- owner
   // 2- token0
@@ -50,14 +50,39 @@ export async function getUnclaimedFees(params: {
   // 10 - tokensOwed0
   // 11 - tokensOwed1
 
+  const client = params.positionManager.client;
+  const chain = params.positionManager.chain;
+
+  const token0Address = positionsResult[2];
+  const token1Address = positionsResult[3];
+
+  const [token0Symbol, token1Symbol] = await Promise.all([
+    symbol({
+      contract: getContract({
+        address: token0Address,
+        chain,
+        client,
+      }),
+    }),
+    symbol({
+      contract: getContract({
+        address: token1Address,
+        chain,
+        client,
+      }),
+    }),
+  ]);
+
   return {
     token0: {
-      address: positionsResult[2], // token0
+      address: token0Address,
       amount: collectResult[0],
+      symbol: token0Symbol,
     },
     token1: {
-      address: positionsResult[3], // token1
+      address: token1Address,
       amount: collectResult[1],
+      symbol: token1Symbol,
     },
   };
 }

@@ -90,6 +90,7 @@ export default async function Page(props: {
       entrypointContractClient={entrypointContractClient}
       reward={reward}
       unclaimedFees={unclaimedFees}
+      chainSlug={info.chainMetadata.slug}
     />
   );
 }

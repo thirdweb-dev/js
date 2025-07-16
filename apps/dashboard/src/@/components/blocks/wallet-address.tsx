@@ -24,6 +24,7 @@ export function WalletAddress(props: {
   iconClassName?: string;
   client: ThirdwebClient;
   preventOpenOnFocus?: boolean;
+  fallbackIcon?: React.ReactNode;
 }) {
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
@@ -86,6 +87,7 @@ export function WalletAddress(props: {
               iconClassName={props.iconClassName}
               profiles={profiles.data || []}
               thirdwebClient={props.client}
+              fallbackIcon={props.fallbackIcon}
             />
           )}
           <span className="cursor-pointer font-mono">
@@ -177,6 +179,7 @@ function WalletAvatar(props: {
   profiles: SocialProfile[];
   thirdwebClient: ThirdwebClient;
   iconClassName?: string;
+  fallbackIcon?: React.ReactNode;
 }) {
   const avatar = useMemo(() => {
     return props.profiles.find(
@@ -203,6 +206,8 @@ function WalletAvatar(props: {
           className={cn("size-6 object-cover", props.iconClassName)}
           src={resolvedAvatarSrc}
         />
+      ) : props.fallbackIcon ? (
+        props.fallbackIcon
       ) : (
         <Blobbie
           address={props.address}

@@ -143,8 +143,8 @@ export function getContractPageSidebarLinks(data: {
     {
       exactMatch: true,
       hide: !data.metadata.showClaimRewards,
-      href: `${layoutPrefix}/claim-rewards`,
-      label: "Claim Rewards",
+      href: `${layoutPrefix}/rewards`,
+      label: "Rewards",
     },
   ];
 
