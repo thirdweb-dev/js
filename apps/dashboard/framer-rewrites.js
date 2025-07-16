@@ -62,4 +62,6 @@ module.exports = [
   // -- universal bridge landing pages --
   "/universal-bridge-regions/:region_slug",
   "/enterprise",
+  "/token",
+  "/vault",
 ];
