@@ -2,14 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
 import { isRouterEnabled } from "thirdweb/assets";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Switch } from "@/components/ui/switch";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import type { TokenDistributionForm } from "../_common/form";
@@ -22,27 +22,48 @@ export function TokenSaleSection(props: {
   const saleMode = props.form.watch("saleMode");
   const { idToChain } = useAllChainsData();
   const chainMeta = idToChain.get(Number(props.chainId));
+  const [hasUserUpdatedSaleMode, setHasUserUpdatedSaleMode] = useState(false);
 
   const isRouterEnabledQuery = useQuery({
-    queryFn: () =>
-      isRouterEnabled({
-        // eslint-disable-next-line no-restricted-syntax
-        chain: defineChain(Number(props.chainId)),
-        client: props.client,
-      }),
+    queryFn: async () => {
+      try {
+        return await isRouterEnabled({
+          // eslint-disable-next-line no-restricted-syntax
+          chain: defineChain(Number(props.chainId)),
+          client: props.client,
+        });
+      } catch {
+        return false;
+      }
+    },
     queryKey: ["isRouterEnabled", props.chainId],
   });
+
+  const isRouterEnabledValue = isRouterEnabledQuery.data === true;
 
   const isSaleEnabled = saleMode !== "disabled";
 
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (isRouterEnabledQuery.data === false && isSaleEnabled) {
+    if (isRouterEnabledValue === false && isSaleEnabled) {
       props.form.setValue("saleMode", "disabled", {
         shouldValidate: true,
       });
     }
-  }, [isRouterEnabledQuery.data, isSaleEnabled, props.form]);
+  }, [isRouterEnabledValue, isSaleEnabled, props.form]);
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (
+      isRouterEnabledValue === true &&
+      !hasUserUpdatedSaleMode &&
+      !isSaleEnabled
+    ) {
+      props.form.setValue("saleMode", "pool", {
+        shouldValidate: true,
+      });
+    }
+  }, [isRouterEnabledValue, props.form, hasUserUpdatedSaleMode, isSaleEnabled]);
 
   return (
     <DynamicHeight>
@@ -52,22 +73,24 @@ export function TokenSaleSection(props: {
             <div>
               <h2 className="font-semibold text-lg">Sale</h2>
               <p className="text-muted-foreground text-sm">
-                List and add liquidity for your coin on a decentralized exchange
-                for purchase at fluctuating market price
+                List your coin on a decentralized exchange and earn rewards on
+                every trade
               </p>
             </div>
 
             <div className="flex items-center gap-2">
               {isRouterEnabledQuery.isPending ? (
-                <Skeleton className="h-[24px] w-[44px] rounded-full border" />
+                <Spinner className="size-5" />
               ) : (
                 <Switch
                   checked={isSaleEnabled}
-                  disabled={isRouterEnabledQuery.data !== true}
+                  disabled={!isRouterEnabledValue}
                   onCheckedChange={(checked) => {
-                    if (isRouterEnabledQuery.data !== true) {
+                    if (!isRouterEnabledValue) {
                       return;
                     }
+
+                    setHasUserUpdatedSaleMode(true);
 
                     props.form.setValue(
                       "saleMode",

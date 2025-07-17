@@ -17,6 +17,11 @@ import type {
 import { TokenAirdropSection } from "./token-airdrop";
 import { TokenSaleSection } from "./token-sale";
 
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 10,
+  notation: "compact",
+});
+
 export function TokenDistributionFieldset(props: {
   accountAddress: string;
   onNext: () => void;
@@ -49,6 +54,7 @@ export function TokenDistributionFieldset(props: {
               <FormFieldSetup
                 errorMessage={form.formState.errors.supply?.message}
                 htmlFor={supplyId}
+                helperText={`${compactNumberFormatter.format(Number(form.watch("supply")))} tokens`}
                 isRequired
                 label="Total Supply"
               >
@@ -73,12 +79,13 @@ export function TokenDistributionFieldset(props: {
               </div>
             </div>
 
-            <TokenAirdropSection client={props.client} form={form} />
             <TokenSaleSection
               chainId={props.chainId}
               client={props.client}
               form={form}
             />
+
+            <TokenAirdropSection client={props.client} form={form} />
           </div>
         </StepCard>
       </form>

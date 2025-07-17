@@ -49,7 +49,7 @@ export function CreateTokenAssetPageUI(props: {
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
     defaultValues: {
-      chain: activeChain?.id.toString() || "1",
+      chain: activeChain?.id.toString() || "8453",
       description: "",
       image: undefined,
       name: "",
@@ -75,12 +75,12 @@ export function CreateTokenAssetPageUI(props: {
       // airdrop
       airdropEnabled: false,
       pool: {
-        startingPricePerToken: "0.01",
+        startingPricePerToken: "0.000000001", // 1gwei per token
       },
       // sale fieldset
-      saleAllocationPercentage: "0",
-      saleMode: "disabled",
-      supply: "1000000",
+      saleAllocationPercentage: "100",
+      saleMode: "pool",
+      supply: "1000000000", // 1 billion
     },
     mode: "onChange",
     resolver: zodResolver(tokenDistributionFormSchema),
