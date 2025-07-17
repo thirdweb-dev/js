@@ -12,7 +12,7 @@ const tagsToGroup = {
   "@account": "Account",
   "@appURI": "App URI",
   "@auth": "Auth",
-  "@bridge": "Universal Bridge",
+  "@bridge": "Payments",
   "@chain": "Chain",
   "@claimConditions": "Claim Conditions",
   "@client": "Client",
@@ -303,13 +303,13 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
         linkGroups.push({
           href: getLink(`${path}/${key}`),
           isCollapsible: false,
-          links: [{ links: bridgeLinkGroups, name: "Universal Bridge" }],
+          links: [{ links: bridgeLinkGroups, name: "Payments" }],
           name: name,
         });
       } else {
         linkGroups
           .find((group) => group.name === name)
-          ?.links.push({ links: bridgeLinkGroups, name: "Universal Bridge" });
+          ?.links.push({ links: bridgeLinkGroups, name: "Payments" });
       }
     }
 

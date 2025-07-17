@@ -50,7 +50,7 @@ export const SERVICE_DEFINITIONS = {
     description:
       "Bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat or tokens via cross-chain routing",
     name: "pay",
-    title: "Universal Bridge",
+    title: "Payments",
   },
   relayer: {
     // all actions allowed

@@ -10,7 +10,7 @@ import {
   type SearchParams,
 } from "./components/server/routes-table";
 
-const title = "Universal Bridge Routes: Swap, Bridge, and Onramp";
+const title = "Payments Routes: Swap, Bridge, and Onramp";
 const description =
   "A list of token routes for swapping, bridging, and on-ramping between EVM chains with thirdweb.";
 
@@ -66,7 +66,7 @@ export default async function RoutesPage(props: {
         <div className="relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
             <h3 className="font-medium text-lg">
-              Get Started with Universal Bridge
+              Get Started with thirdweb Payments
             </h3>
             <p className="text-muted-foreground text-sm">
               Simple, instant, and secure payments across any token and chain.

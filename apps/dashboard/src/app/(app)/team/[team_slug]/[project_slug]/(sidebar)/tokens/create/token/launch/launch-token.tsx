@@ -64,10 +64,10 @@ export function LaunchTokenStatus(props: {
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
-  const canEnableGasless =
-    props.teamPlan !== "free" && activeWallet?.id === "inApp";
+  // TODO: enable later when bundler changes are done
+  const canEnableGasless = false; //props.teamPlan !== "free" && activeWallet?.id === "inApp";
   const [isGasless, setIsGasless] = useState(canEnableGasless);
-  const showGaslessSection = activeWallet?.id === "inApp";
+  const showGaslessSection = false; // activeWallet?.id === "inApp";
   const { idToChain } = useAllChainsData();
   const chainMetadata = idToChain.get(Number(formValues.chain));
 

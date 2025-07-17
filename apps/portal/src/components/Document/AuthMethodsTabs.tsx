@@ -762,7 +762,7 @@ function AuthMethodsTabsContent() {
             >
               <img
                 alt={method.label}
-                className="size-5 flex-shrink-0"
+                className="size-5 shrink-0"
                 src={getSocialIcon(method.id)}
               />
               <div className="min-w-0 flex-1">

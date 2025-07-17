@@ -30,6 +30,15 @@ function getEventType(filters: WebhookFilters): string {
   return "Unknown";
 }
 
+function maskWebhookSecret(secret: string): string {
+  if (!secret || secret.length <= 3) {
+    return secret;
+  }
+  const lastThreeChars = secret.slice(-3);
+  const maskedPart = "*".repeat(10);
+  return maskedPart + lastThreeChars;
+}
+
 interface WebhooksTableProps {
   webhooks: WebhookResponse[];
   projectClientId: string;
@@ -126,6 +135,30 @@ export function ContractsWebhooksTable({
         );
       },
       header: "Webhook URL",
+    },
+    {
+      accessorKey: "webhook_secret",
+      cell: ({ getValue }) => {
+        const secret = getValue() as string;
+        const maskedSecret = maskWebhookSecret(secret);
+        return (
+          <div className="flex items-center gap-2">
+            <span className="max-w-40 truncate font-mono text-sm">
+              {maskedSecret}
+            </span>
+            <CopyTextButton
+              className="flex h-6 w-6 items-center justify-center"
+              copyIconPosition="right"
+              iconClassName="h-3 w-3"
+              textToCopy={secret}
+              textToShow=""
+              tooltip="Copy Webhook Secret"
+              variant="ghost"
+            />
+          </div>
+        );
+      },
+      header: "Webhook Secret",
     },
     {
       accessorKey: "created_at",
