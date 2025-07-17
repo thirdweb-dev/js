@@ -212,22 +212,28 @@ export function TransactionPayment({
       <Spacer y="md" />
 
       {/* Contract Info */}
-      <Container
-        flex="row"
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text color="secondaryText" size="sm">
-          Contract
-        </Text>
-        <Text color="primaryText" size="sm">
-          {contractName}
-        </Text>
-      </Container>
+      {contractName !== "UnknownContract" &&
+        contractName !== undefined &&
+        contractName !== "Unknown Contract" && (
+          <>
+            <Container
+              flex="row"
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text color="secondaryText" size="sm">
+                Contract
+              </Text>
+              <Text color="primaryText" size="sm">
+                {contractName}
+              </Text>
+            </Container>
 
-      <Spacer y="xs" />
+            <Spacer y="xs" />
+          </>
+        )}
 
       {/* Address */}
       <Container
