@@ -10,6 +10,7 @@ export const USAGE_V2_SOURCES = [
   "wallet",
   "pay",
   "webhook",
+  "gateway",
 ] as const;
 export type UsageV2Source = (typeof USAGE_V2_SOURCES)[number];
 

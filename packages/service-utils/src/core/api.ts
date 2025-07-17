@@ -112,6 +112,10 @@ type TeamCapabilities = {
     enabled: boolean;
     rateLimit: number;
   };
+  gateway: {
+    enabled: boolean;
+    rateLimit: number;
+  };
 };
 
 type TeamPlan =
@@ -206,6 +210,10 @@ export type ProjectService =
       actions: never[];
       payoutAddress: string | null;
       developerFeeBPS?: number | null;
+    }
+  | {
+      name: "gateway";
+      actions: never[];
     }
   | {
       name: "storage";
