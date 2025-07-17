@@ -1,0 +1,82 @@
+import {
+	Grid,
+	Callout,
+	OpenSourceCard,
+	ArticleIconCard,
+	createMetadata,
+	Steps,
+	Step,
+} from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { WalletsSmartIcon } from "@/icons";
+import { TypeScriptIcon, DotNetIcon, EngineIcon } from "@/icons";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Monitor transactions",
+		icon: "transactions",
+	},
+	title: "Monitor Transactions",
+	description: "Monitor and get notified about transactions in your application.",
+});
+
+# Monitor Transactions
+
+Monitor and get notified about transactions in your application, both on your project dashboard and programmatically.
+
+---
+
+<Tabs defaultValue="http">
+	<TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+		<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+			<TypeScriptIcon className="size-4" />
+			TypeScript / React
+		</TabsTrigger>
+	</TabsList>
+
+  <TabsContent value="http">
+
+  You can track the status of transactions sent via the [transactions API](https://engine.thirdweb.com/reference) using its transaction id.
+
+```http
+GET /v1/transactions?id=<transaction-id>
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+```
+
+You can also search transactions by `from` or `status`.
+
+  </TabsContent>
+
+  <TabsContent value="typescript">
+
+    You can track the status of transactions sent via the [transactions API](https://engine.thirdweb.com/reference) using its transaction id.
+
+    ```typescript
+    import { Engine } from "thirdweb";
+ 
+    const executionResult = await Engine.getTransactionStatus({
+        client,
+        transactionId,  // the transaction id returned from enqueueTransaction
+    });
+    ```
+
+    You can also poll for the transaction hash with this convenience function:
+
+    ```typescript
+    import { Engine } from "thirdweb";
+ 
+    const { transactionHash } = await Engine.waitForTransactionHash({
+        client,
+        transactionId, // the transaction id returned from enqueueTransaction
+    }); 
+    ```
+
+  </TabsContent>
+
+</Tabs>
+

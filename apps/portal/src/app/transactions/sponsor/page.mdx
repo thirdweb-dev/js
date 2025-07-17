@@ -1,0 +1,208 @@
+import {
+	Grid,
+	Callout,
+	OpenSourceCard,
+	ArticleIconCard,
+	createMetadata,
+	Steps,
+	Step,
+} from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { WalletsSmartIcon } from "@/icons";
+import { TypeScriptIcon, DotNetIcon, EngineIcon } from "@/icons";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Sponsor gas",
+		icon: "transactions",
+	},
+	title: "Sponsor Gas",
+	description: "Sponsor Gas for your user or server wallets.",
+});
+
+# Sponsor gas
+
+Sponsor gas fees for transactions using EIP-7702 or ERC-4337. Thirdweb will handle the gas fees for you.
+
+---
+
+<Tabs defaultValue="eip7702">
+	<TabsList>
+		<TabsTrigger value="eip7702">EIP-7702</TabsTrigger>
+		<TabsTrigger value="eip4337">ERC-4337</TabsTrigger>
+	</TabsList>
+
+<TabsContent value="eip7702">
+
+## EIP-7702 (recommended)
+
+Sponsor gas fees using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enabling gasless transactions and improving user experience.
+
+<Tabs defaultValue="http">
+	<TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+		<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+			<TypeScriptIcon className="size-4" />
+			TypeScript / React
+		</TabsTrigger>
+		<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+			<DotNetIcon className="size-4" />
+			.NET / Unity
+		</TabsTrigger>
+	</TabsList>
+
+  <TabsContent value="http">
+
+  You can enable EIP-7702 execution for your server wallet and the [transactions API](https://engine.thirdweb.com/reference). This is the default execution mode for server wallets.
+
+```http
+POST /v1/contract/write
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+
+{
+  "executionOptions": {
+    "from": "0x...", // your server wallet **signer (EOA) address** address
+    "chainId": "1" // your chain id
+  },
+  "params": [{
+    "contractAddress": "0x...",
+    "method": "function transfer(address to, uint256 amount)",
+    "params": ["0x...", "1000000000000000000"],
+  }],
+}
+```
+
+You can also explicitly set `type: "EIP7702"` in the `executionOptions` to enable EIP-7702 execution.
+
+  </TabsContent>
+
+    <TabsContent value="typescript">
+
+    You can enable EIP-7702 execution for in-app wallets by passing the `executionMode` option to the `inAppWallet` function.
+
+    ```typescript
+    const wallet = inAppWallet({
+        // enable gasless transactions for the wallet
+        executionMode: {
+        mode: "EIP7702",
+        sponsorGas: true,
+        },
+    });
+    ```
+
+    For server wallets, EIP-7702 execution is the default execution mode when initializing a server wallet with a signer (EOA) address.
+
+    ```typescript
+    const wallet = await Engine.serverWallet({
+      client,
+      address: "0x...", // your server wallet signer (EOA) address
+    });
+    ```
+
+    </TabsContent>
+
+    <TabsContent value="dotnet">
+
+    You can enable EIP-7702 execution for in-app wallets by passing the `executionMode` option.
+
+    	```csharp
+    	var smartEoa = await InAppWallet.Create(
+    	    client: thirdwebClient,
+    	    authProvider: AuthProvider.Google, // or other auth providers
+    	    executionMode: ExecutionMode.EIP7702Sponsored // enable gas sponsorship
+    	);
+    	```
+    </TabsContent>
+
+</Tabs>
+
+That's it! All transactions executed by the user will be sponsored via the thirdweb infrastructure.
+
+</TabsContent>
+
+<TabsContent value="eip4337">
+
+## ERC-4337
+
+For chains that don't support EIP-7702, you can use EIP-4337 smart contract wallets to sponsor gas fees. Note that with EIP-4337, it will create a smart contract wallet with a different address than the admin wallet (EOA) that controls it.
+
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+        <TypeScriptIcon className="size-4" />
+        TypeScript / React
+    </TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+        <DotNetIcon className="size-4" />
+        .NET / Unity
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="http">
+
+You can enable ERC-4337 execution for your server wallet and the [transactions API](https://engine.thirdweb.com/reference).
+
+```http
+POST /v1/contract/write
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+
+{
+  "executionOptions": {
+    "from": "0x...", // your server wallet **smart wallet** address
+    "chainId": "1" // your chain id
+  },
+  "params": [{
+    "contractAddress": "0x...",
+    "method": "function transfer(address to, uint256 amount)",
+    "params": ["0x...", "1000000000000000000"],
+  }],
+}
+```
+
+You can also explicitly set `type: "ERC4337"` in the `executionOptions` to enable ERC-4337 execution.
+
+  </TabsContent>
+
+  For user wallets, you can enable ERC-4337 execution by passing the `smartAccount` option to the `inAppWallet` function.
+
+    <TabsContent value="typescript">
+    	```typescript
+    	const wallet = inAppWallet({
+    	  // will create a smart contract wallet for the user
+    	  executionMode: {
+    	    mode: "EIP4337",
+    	    smartAccount: {
+    	      chain: sepolia,
+    	      sponsorGas: true,
+    	    },
+    	  },
+    	});
+    	```
+    </TabsContent>
+
+    <TabsContent value="dotnet">
+
+    You can enable ERC-4337 execution for any wallet by creating a smart wallet with the `SmartWallet.Create` function.
+
+    	```csharp
+    	var adminWallet = await InAppWallet.Create(
+    	    client: thirdwebClient,
+    	    authProvider: AuthProvider.Google, // or other auth providers
+    	);
+    	var smartWallet = await SmartWallet.Create(adminWallet, chainId, gasless: true);
+    	```
+    </TabsContent>
+
+</Tabs>
+
+</TabsContent>
+</Tabs>
