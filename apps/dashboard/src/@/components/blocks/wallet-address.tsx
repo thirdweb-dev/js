@@ -1,5 +1,5 @@
 "use client";
-import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
+import { CheckIcon, CircleSlashIcon, CopyIcon, XIcon } from "lucide-react";
 import { useMemo } from "react";
 import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
@@ -61,9 +61,16 @@ export function WalletAddress(props: {
   // special case for zero address
   if (address === ZERO_ADDRESS) {
     return (
-      <span className={cn("cursor-pointer font-mono", props.className)}>
-        {shortenedAddress}
-      </span>
+      <div className="flex items-center gap-2 py-2">
+        <CircleSlashIcon
+          className={cn("size-6 text-muted-foreground/70", props.iconClassName)}
+        />
+        <span
+          className={cn("cursor-pointer font-mono text-sm", props.className)}
+        >
+          {shortenedAddress}
+        </span>
+      </div>
     );
   }
 
