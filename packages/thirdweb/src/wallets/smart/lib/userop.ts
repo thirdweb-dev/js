@@ -270,9 +270,9 @@ async function getGasFees(args: {
         resolvedMaxPriorityFeePerGas ?? feeData.maxPriorityFeePerGas ?? 0n;
       maxFeePerGas = resolvedMaxFeePerGas ?? feeData.maxFeePerGas ?? 0n;
 
-      if(chain.id === 88 || chain.id === 89) {
-        maxPriorityFeePerGas = maxPriorityFeePerGas || feeData.gasPrice || 0n
-        maxFeePerGas = maxFeePerGas || feeData.gasPrice || 0n
+      if (chain.id === 88 || chain.id === 89) {
+        maxPriorityFeePerGas = maxPriorityFeePerGas || feeData.gasPrice || 0n;
+        maxFeePerGas = maxFeePerGas || feeData.gasPrice || 0n;
       }
     }
   }
