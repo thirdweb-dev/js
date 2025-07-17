@@ -1,0 +1,160 @@
+import { createMetadata, Details } from "@/components/Document";
+import { DocImage, FeatureCard, OpenSourceCard, Callout } from "@doc";
+import { ArrowLeftRightIcon, UserLockIcon, UsersIcon, WalletIcon } from "lucide-react";
+
+
+export const metadata = createMetadata({
+	title: "thirdweb Webhooks",
+	description: "Receive real-time updates for onchain and offchain events.",
+});
+
+# Webhooks
+
+Webhooks are a way to receive real-time updates for onchain and offchain events.
+
+An **event** is a real-time update or action that occured for your team or project.
+
+A **webhook** is a configured endpoint on your backend that receives events.
+
+A **topic** is an identifier that groups events (example: `engine.transaction.sent`).
+- The thirdweb product ("engine")
+- The object ("engine.transaction")
+- The event that occurred ("sent")
+
+Each webhook can subscribe to multiple topics.
+
+## Quickstart
+
+1. Configure an HTTP endpoint on your backend to receive events.
+1. Create a webhook in the thirdweb dashboard to subscribe to topics.
+1. (Recommended) Verify the webhook signature to secure your endpoint.
+
+## Manage your webhooks
+
+Manage your webhooks from the thirdweb dashboard.
+
+1. Select your team and project.
+1. Select **Webhooks** in the left sidebar.
+
+### Create a webhook
+
+Select **Create Webhook** to create a new webhook.
+
+Provide the following details:
+- Description: A name for your webhook.
+- Destination URL: The URL to send the webhook to. Only HTTPS URLs are supported.
+- Topics: The thirdweb topics to subscribe this webhook to.
+- Start Paused: Whether the webhook should immediately start receiving events.
+
+### Update or delete a webhook
+
+Find your webhook in the list.
+- Select **... > Edit** to update your webhook details or subscribed topics.
+- Select **... > Delete** to delete it.
+
+### View analytics
+
+Monitor your webhooks' requests over time to identify errors or latency issues.
+
+## Retries
+
+Webhook delivery attempts only consider a **2xx status code** returned within the **10-second timeout** as successful.
+
+Otherwise the delivery will retry multiple times over the next 24 hours with exponential backoff.
+
+### Automatic suspension of failing webhooks
+
+Webhooks experiencing high error rates (non-2xx status codes) sustained over several hours will be paused automatically.
+A paused webhook cannot receive any webhook events until it is manually resumed from the dashboard.
+
+You will be notified via email and a dashboard notification when your webhook is paused.
+
+## Handle webhook events
+
+Your HTTP endpoint should handle webhook events and return a 200 status code quickly. Avoid slow or long-running synchronous operations, or move them to a queue in your backend.
+
+### HTTP format
+
+Webhooks are sent as a `POST` request to your configured endpoint.
+
+**Headers**
+
+- `content-type`: `application/json`
+- `x-webhook-id`: A unique identifier for this webhook
+- `x-webhook-signature`: HMAC-SHA256 signature
+  - See *Verify webhook signature* below
+- `x-webhook-timestamp`: Timestamp of delivery attempt in Unix seconds
+  - See *Reject expired webhooks* below
+
+**Request body**
+
+```json
+{
+  "id": "evt_cllcqqie908ii4q0ugld6noeu",
+  "type": "engine.transaction.sent",
+  "triggered_at": 1752471197,
+  "object": "engine.transaction",
+  "data": {
+    // ...engine.transaction fields
+  },
+}
+```
+
+- `id`: A unique identifier for the event for this topic. Multiple delivery attempts for the same event will use the same ID.
+- `type`: The topic that an event was triggered for.
+- `triggered_at`: The timestamp the event was triggered in Unix seconds.
+  - Note: This value does not change for each delivery attempt, but the `x-webhook-timestamp` header does.
+- `object`: The object that defines the shape of `data`.
+- `data`: The object payload for the event.
+
+### Secure your webhook endpoint
+
+The `x-webhook-signature` header is a signature that hashes the raw request body and the delivery timestamp.
+This signature ensures that neither the request body nor the timestamp were modified and can be trusted as sent from thirdweb.
+
+Follow these steps to verify the webhook signature:
+1. Concatenate `{TIMESTAMP_IN_UNIX_SECONDS}.{REQUEST_JSON_BODY}`.
+1. Hash the result with the webhook secret using SHA256.
+1. Compare the result with the `x-webhook-signature` header.
+
+**Code examples**
+
+<Details summary="Verify webhook signature in TypeScript"> 
+```typescript
+import { createHmac, timingSafeEqual } from "crypto";
+
+const webhookSecret = "whsecret_..."; // Your webhook secret from the dashboard
+const actualSignature = req.headers["x-webhook-signature"];
+const timestamp = req.headers["x-webhook-timestamp"];
+const body = "..." // raw HTTP body as string
+
+// Generate the expected signature.
+const expectedSignature = createHmac("sha256", webhookSecret)
+  .update(`${timestamp}.${body}`)
+  .digest("hex");
+
+// Use `timingSafeEqual` to compare the signatures safely.
+const expected = Buffer.from(expectedSignature, "hex");
+const actual = Buffer.from(actualSignature, "hex");
+const isValidSignature =
+  expected.length === actual.length &&
+  timingSafeEqual(expected, actual);
+
+if (!isValidSignature) {
+  throw new Error("Invalid webhook signature");
+}
+```
+</Details>
+
+### Reject expired webhooks (optional)
+
+You can reject webhook attempts that are received after a certain duration. This prevents requests from being replayed.
+
+```typescript
+const MAX_AGE_SECONDS = 10 * 60 * 1000; // 10 minutes
+const timestamp = req.headers["x-webhook-timestamp"];
+if (Date.now() / 1000 - timestamp > MAX_AGE_SECONDS) {
+  throw new Error("Webhook expired");
+}
+```
+
