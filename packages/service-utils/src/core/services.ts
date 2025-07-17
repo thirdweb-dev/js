@@ -83,6 +83,13 @@ export const SERVICE_DEFINITIONS = {
     name: "storage",
     title: "Storage",
   },
+  gateway: {
+    // all actions allowed
+    actions: [],
+    description: "api.thirdweb.com",
+    name: "gateway",
+    title: "Gateway",
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

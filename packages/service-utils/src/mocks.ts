@@ -84,6 +84,10 @@ export const validTeamResponse: TeamResponse = {
       enabled: true,
       rateLimit: 1000,
     },
+    gateway: {
+      enabled: true,
+      rateLimit: 1000,
+    },
     platform: {
       auditLogs: true,
       ecosystemWallets: true,
