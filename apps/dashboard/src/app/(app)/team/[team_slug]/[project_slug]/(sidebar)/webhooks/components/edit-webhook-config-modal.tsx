@@ -5,6 +5,7 @@ import { WebhookConfigModal } from "./webhook-config-modal";
 interface EditWebhookConfigModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
   topics: Topic[];
@@ -20,6 +21,7 @@ export function EditWebhookConfigModal(props: EditWebhookConfigModalProps) {
       mode="edit"
       onOpenChange={props.onOpenChange}
       open={props.open}
+      onSuccess={props.onSuccess}
       projectSlug={props.projectSlug}
       supportedChainIds={props.supportedChainIds}
       teamSlug={props.teamSlug}

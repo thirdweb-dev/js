@@ -155,10 +155,10 @@ export function LaunchNFT(props: {
     return shouldDeployERC721 ? "erc721" : "erc1155";
   }, [formValues.nfts]);
 
-  const canEnableGasless =
-    props.teamPlan !== "free" && activeWallet?.id === "inApp";
+  // TODO: enable later when bundler changes are done
+  const canEnableGasless = false; // props.teamPlan !== "free" && activeWallet?.id === "inApp";
   const [isGasless, setIsGasless] = useState(canEnableGasless);
-  const showGaslessSection = activeWallet?.id === "inApp";
+  const showGaslessSection = false; // activeWallet?.id === "inApp";
 
   const contractLink = contractAddressRef.current
     ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.collectionInfo.chain}/${contractAddressRef.current}`

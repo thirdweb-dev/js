@@ -9,7 +9,12 @@ import { keccak256, toFunctionSelector } from "thirdweb/utils";
 import type { Topic } from "@/api/webhook-configs";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SignatureSelector } from "@/components/blocks/SignatureSelector";
-import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -25,11 +30,10 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  RequiredFormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Textarea } from "@/components/ui/textarea";
 import { useAbiMultiFetch } from "../hooks/useAbiProcessing";
 import {
   extractEventSignatures,
@@ -40,8 +44,8 @@ import type { WebhookFormValues } from "../utils/webhookTypes";
 import { webhookFormSchema } from "../utils/webhookTypes";
 
 const TOPIC_IDS_THAT_SUPPORT_FILTERS = [
-  "insight.event.confirmed",
-  "insight.transaction.confirmed",
+  "contracts.event.confirmed",
+  "contracts.transaction.confirmed",
 ];
 
 interface TopicSelectorModalProps {
@@ -192,7 +196,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
         let formData: WebhookFormValues;
 
         // Get form data based on topic type
-        if (topic.id === "insight.event.confirmed") {
+        if (topic.id === "contracts.event.confirmed") {
           formData = eventFilterForm.getValues();
 
           // Validate required fields for events
@@ -229,7 +233,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
           }
 
           return { ...topic, filters };
-        } else if (topic.id === "insight.transaction.confirmed") {
+        } else if (topic.id === "contracts.transaction.confirmed") {
           formData = transactionFilterForm.getValues();
 
           // Validate required fields for transactions
@@ -318,606 +322,470 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto px-6 min-h-0">
-          <div className="space-y-6 pb-4">
-            {Object.entries(groupedTopics).map(([service, topics]) => (
-              <div key={service}>
-                <h3 className="font-medium text-sm mb-4 text-foreground capitalize">
-                  {service}
-                </h3>
-                <div className="space-y-3 ml-4">
-                  {topics.map((topic) => (
-                    <div className="flex items-start space-x-3" key={topic.id}>
-                      <Checkbox
-                        checked={tempSelection.some((t) => t.id === topic.id)}
-                        id={topic.id}
-                        onCheckedChange={(checked) =>
-                          handleTopicToggle(topic.id, !!checked)
-                        }
-                      />
-                      <div className="grid gap-1.5 leading-none flex-1">
-                        <label
-                          className="text-sm font-mono font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                          htmlFor={topic.id}
-                        >
-                          {topic.id}
-                        </label>
-                        <p className="text-xs text-muted-foreground">
-                          {topic.description}
-                        </p>
+          <div className="pb-4">
+            <Accordion type="multiple" className="w-full">
+              {Object.entries(groupedTopics).map(([service, topics]) => {
+                const selectedCount = topics.filter((topic) =>
+                  tempSelection.some((selected) => selected.id === topic.id),
+                ).length;
+                const totalCount = topics.length;
 
-                        {/* Show contract webhook filter form when selecting contract webhook topics */}
-                        {TOPIC_IDS_THAT_SUPPORT_FILTERS.includes(topic.id) &&
-                          tempSelection.some((t) => t.id === topic.id) &&
-                          props.client &&
-                          props.supportedChainIds && (
-                            <div className="mt-4 p-4 border rounded-lg bg-muted/50">
-                              <h4 className="font-medium text-sm mb-3">
-                                Configure{" "}
-                                {topic.id === "insight.event.confirmed"
-                                  ? "Event"
-                                  : "Transaction"}{" "}
-                                Filters
-                              </h4>
+                return (
+                  <AccordionItem key={service} value={service}>
+                    <AccordionTrigger className="py-3 text-sm no-underline hover:no-underline">
+                      <div className="flex items-center justify-between w-full pr-4">
+                        <span className="capitalize font-medium">
+                          {service}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedCount}/{totalCount} selected
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="p-2 pb-4">
+                      <div className="space-y-3">
+                        {topics.map((topic) => (
+                          <div
+                            className="flex items-start space-x-3"
+                            key={topic.id}
+                          >
+                            <Checkbox
+                              checked={tempSelection.some(
+                                (t) => t.id === topic.id,
+                              )}
+                              id={topic.id}
+                              onCheckedChange={(checked) =>
+                                handleTopicToggle(topic.id, !!checked)
+                              }
+                            />
+                            <div className="grid gap-1.5 leading-none flex-1">
+                              <label
+                                className="text-sm font-mono font-bold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                                htmlFor={topic.id}
+                              >
+                                {/* Show the service name more muted */}
+                                <span className="text-muted-foreground font-normal">
+                                  {topic.id.split(".")[0]}.
+                                </span>
+                                {topic.id.slice(topic.id.indexOf(".") + 1)}
+                              </label>
+                              <p className="text-xs text-muted-foreground">
+                                {topic.description}
+                              </p>
 
-                              {topic.id === "insight.event.confirmed" ? (
-                                <Form {...eventFilterForm}>
-                                  <div className="space-y-4">
-                                    {/* Chain IDs Field */}
-                                    <FormField
-                                      control={eventFilterForm.control}
-                                      name="chainIds"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              Chain IDs{" "}
-                                              <span className="text-red-500">
-                                                *
-                                              </span>
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            {props.client ? (
-                                              <MultiNetworkSelector
-                                                chainIds={
-                                                  props.supportedChainIds || []
-                                                }
-                                                client={props.client}
-                                                onChange={(chainIds) =>
-                                                  field.onChange(
-                                                    chainIds.map(String),
-                                                  )
-                                                }
-                                                selectedChainIds={
-                                                  Array.isArray(field.value)
-                                                    ? field.value.map(Number)
-                                                    : []
-                                                }
-                                              />
-                                            ) : (
-                                              <div className="text-sm text-muted-foreground">
-                                                Client not available
-                                              </div>
-                                            )}
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-
-                                    {/* Contract Addresses for Events */}
-                                    <FormField
-                                      control={eventFilterForm.control}
-                                      name="addresses"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              Contract Addresses{" "}
-                                              <span className="text-red-500">
-                                                *
-                                              </span>
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            <div className="space-y-2">
-                                              <Input
-                                                placeholder="0x1234..."
-                                                {...field}
-                                              />
-
-                                              {/* ABI fetch status */}
-                                              <div className="mt-2 flex items-center justify-between">
-                                                {topic.id ===
-                                                  "insight.event.confirmed" &&
-                                                  eventAbi.isFetching && (
-                                                    <div className="flex items-center">
-                                                      <Spinner className="mr-2 h-3 w-3" />
-                                                      <span className="text-xs">
-                                                        Fetching ABIs...
-                                                      </span>
-                                                    </div>
-                                                  )}
-                                              </div>
-
-                                              {/* ABI fetch results */}
-                                              {(Object.keys(
-                                                eventAbi.fetchedAbis,
-                                              ).length > 0 ||
-                                                Object.keys(eventAbi.errors)
-                                                  .length > 0) && (
-                                                <div className="mt-2 space-y-2 text-xs">
-                                                  {Object.keys(
-                                                    eventAbi.fetchedAbis,
-                                                  ).length > 0 && (
-                                                    <div className="flex items-center gap-2">
-                                                      <Badge
-                                                        className="border-green-200 bg-green-50 text-green-700"
-                                                        variant="outline"
-                                                      >
-                                                        ✓{" "}
-                                                        {
-                                                          Object.keys(
-                                                            eventAbi.fetchedAbis,
-                                                          ).length
-                                                        }{" "}
-                                                        ABI
-                                                        {Object.keys(
-                                                          eventAbi.fetchedAbis,
-                                                        ).length !== 1
-                                                          ? "s"
-                                                          : ""}{" "}
-                                                        fetched
-                                                      </Badge>
-                                                    </div>
-                                                  )}
-
-                                                  {Object.keys(eventAbi.errors)
-                                                    .length > 0 && (
-                                                    <div className="flex items-center gap-2">
-                                                      <Badge
-                                                        className="border-red-200 bg-red-50 text-red-700"
-                                                        variant="outline"
-                                                      >
-                                                        ✗{" "}
-                                                        {
-                                                          Object.keys(
-                                                            eventAbi.errors,
-                                                          ).length
-                                                        }{" "}
-                                                        error
-                                                        {Object.keys(
-                                                          eventAbi.errors,
-                                                        ).length !== 1
-                                                          ? "s"
-                                                          : ""}
-                                                      </Badge>
-                                                    </div>
-                                                  )}
+                              {/* Show contract webhook filter form when selecting contract webhook topics */}
+                              {TOPIC_IDS_THAT_SUPPORT_FILTERS.includes(
+                                topic.id,
+                              ) &&
+                                tempSelection.some((t) => t.id === topic.id) &&
+                                props.client &&
+                                props.supportedChainIds && (
+                                  <div className="py-3">
+                                    {topic.id ===
+                                    "contracts.event.confirmed" ? (
+                                      <Form {...eventFilterForm}>
+                                        <div className="space-y-4">
+                                          {/* Chain IDs Field */}
+                                          <FormField
+                                            control={eventFilterForm.control}
+                                            name="chainIds"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <RequiredFormLabel>
+                                                    Chain IDs
+                                                  </RequiredFormLabel>
                                                 </div>
-                                              )}
-                                            </div>
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-
-                                    {/* Signature Hash Field */}
-                                    <FormField
-                                      control={eventFilterForm.control}
-                                      name="sigHash"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              {topic.id ===
-                                              "insight.event.confirmed"
-                                                ? "Event Signature (optional)"
-                                                : "Function Signature (optional)"}
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            {topic.id ===
-                                              "insight.event.confirmed" &&
-                                            Object.keys(eventAbi.fetchedAbis)
-                                              .length > 0 &&
-                                            eventAbi.signatures.length > 0 ? (
-                                              <SignatureSelector
-                                                className="block w-full max-w-90 overflow-hidden text-ellipsis"
-                                                onChange={(val) => {
-                                                  field.onChange(val);
-                                                  // If custom signature, clear ABI field
-                                                  const known =
-                                                    eventAbi.signatures.map(
-                                                      (sig) => sig.signature,
-                                                    );
-                                                  if (
-                                                    val &&
-                                                    !known.includes(val)
-                                                  ) {
-                                                    eventFilterForm.setValue(
-                                                      "abi",
-                                                      "",
-                                                    );
-                                                  }
-                                                }}
-                                                options={eventAbi.signatures.map(
-                                                  (sig) => ({
-                                                    abi: sig.abi,
-                                                    label: truncateMiddle(
-                                                      sig.name,
-                                                      30,
-                                                      15,
-                                                    ),
-                                                    value: sig.signature,
-                                                  }),
-                                                )}
-                                                placeholder="Select or enter an event signature"
-                                                setAbi={(abi) =>
-                                                  eventFilterForm.setValue(
-                                                    "sigHashAbi",
-                                                    abi,
-                                                  )
-                                                }
-                                                value={field.value || ""}
-                                              />
-                                            ) : topic.id ===
-                                                "insight.transaction.confirmed" &&
-                                              Object.keys(txAbi.fetchedAbis)
-                                                .length > 0 &&
-                                              txAbi.signatures.length > 0 ? (
-                                              <SignatureSelector
-                                                onChange={(val) => {
-                                                  field.onChange(val);
-                                                  // If custom signature, clear ABI field
-                                                  const known =
-                                                    txAbi.signatures.map(
-                                                      (sig) => sig.signature,
-                                                    );
-                                                  if (
-                                                    val &&
-                                                    !known.includes(val)
-                                                  ) {
-                                                    transactionFilterForm.setValue(
-                                                      "abi",
-                                                      "",
-                                                    );
-                                                  }
-                                                }}
-                                                options={txAbi.signatures.map(
-                                                  (sig) => ({
-                                                    abi: sig.abi,
-                                                    label: truncateMiddle(
-                                                      sig.name,
-                                                      30,
-                                                      15,
-                                                    ),
-                                                    value: sig.signature,
-                                                  }),
-                                                )}
-                                                placeholder="Select or enter a function signature"
-                                                setAbi={(abi) =>
-                                                  transactionFilterForm.setValue(
-                                                    "sigHashAbi",
-                                                    abi,
-                                                  )
-                                                }
-                                                value={field.value || ""}
-                                              />
-                                            ) : (
-                                              <Input
-                                                disabled={
-                                                  (topic.id ===
-                                                    "insight.event.confirmed" &&
-                                                    eventAbi.isFetching) ||
-                                                  (topic.id ===
-                                                    "insight.transaction.confirmed" &&
-                                                    txAbi.isFetching)
-                                                }
-                                                onChange={field.onChange}
-                                                placeholder={
-                                                  topic.id ===
-                                                  "insight.event.confirmed"
-                                                    ? "Fetching event signatures..."
-                                                    : "Fetching function signatures..."
-                                                }
-                                                value={field.value}
-                                              />
+                                                <FormControl>
+                                                  {props.client && (
+                                                    <MultiNetworkSelector
+                                                      chainIds={
+                                                        props.supportedChainIds
+                                                      }
+                                                      client={props.client}
+                                                      onChange={(chainIds) =>
+                                                        field.onChange(
+                                                          chainIds.map(String),
+                                                        )
+                                                      }
+                                                      selectedChainIds={
+                                                        Array.isArray(
+                                                          field.value,
+                                                        )
+                                                          ? field.value.map(
+                                                              Number,
+                                                            )
+                                                          : []
+                                                      }
+                                                    />
+                                                  )}
+                                                </FormControl>
+                                              </FormItem>
                                             )}
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  </div>
-                                </Form>
-                              ) : (
-                                <Form {...transactionFilterForm}>
-                                  <div className="space-y-4">
-                                    {/* Chain IDs Field */}
-                                    <FormField
-                                      control={transactionFilterForm.control}
-                                      name="chainIds"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              Chain IDs{" "}
-                                              <span className="text-red-500">
-                                                *
-                                              </span>
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            {props.client ? (
-                                              <MultiNetworkSelector
-                                                chainIds={
-                                                  props.supportedChainIds || []
-                                                }
-                                                client={props.client}
-                                                onChange={(chainIds) =>
-                                                  field.onChange(
-                                                    chainIds.map(String),
-                                                  )
-                                                }
-                                                selectedChainIds={
-                                                  Array.isArray(field.value)
-                                                    ? field.value.map(Number)
-                                                    : []
-                                                }
-                                              />
-                                            ) : (
-                                              <div className="text-sm text-muted-foreground">
-                                                Client not available
-                                              </div>
-                                            )}
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
+                                          />
 
-                                    {/* From/To Addresses for Transactions */}
-                                    <FormField
-                                      control={transactionFilterForm.control}
-                                      name="fromAddresses"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              From Address{" "}
-                                              <span className="text-red-500">
-                                                *
-                                              </span>
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            <Input
-                                              onChange={field.onChange}
-                                              placeholder="0x1234..."
-                                              value={field.value ?? ""}
-                                            />
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
+                                          {/* Contract Addresses for Events */}
+                                          <FormField
+                                            control={eventFilterForm.control}
+                                            name="addresses"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <RequiredFormLabel>
+                                                    Contract Addresses
+                                                  </RequiredFormLabel>
+                                                </div>
+                                                <FormControl>
+                                                  <div className="space-y-2">
+                                                    <Input
+                                                      placeholder="0x..."
+                                                      {...field}
+                                                    />
 
-                                    <FormField
-                                      control={transactionFilterForm.control}
-                                      name="toAddresses"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>To Address</FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            <div className="space-y-2">
-                                              <Input
-                                                onChange={field.onChange}
-                                                placeholder="0x1234..."
-                                                value={field.value || ""}
-                                              />
-
-                                              {/* ABI fetch status */}
-                                              <div className="mt-2 flex items-center justify-between">
-                                                {txAbi.isFetching && (
-                                                  <div className="flex items-center">
-                                                    <Spinner className="mr-2 h-3 w-3" />
-                                                    <span className="text-xs">
-                                                      Fetching ABIs...
-                                                    </span>
+                                                    {/* ABI fetch status */}
+                                                    <div className="mt-2 flex items-center justify-between">
+                                                      {topic.id ===
+                                                        "contracts.event.confirmed" &&
+                                                        eventAbi.isFetching && (
+                                                          <div className="flex items-center">
+                                                            <Spinner className="mr-2 h-3 w-3" />
+                                                            <span className="text-xs">
+                                                              Fetching ABIs...
+                                                            </span>
+                                                          </div>
+                                                        )}
+                                                    </div>
                                                   </div>
-                                                )}
-                                              </div>
+                                                </FormControl>
+                                              </FormItem>
+                                            )}
+                                          />
 
-                                              {/* ABI fetch results */}
-                                              {(Object.keys(txAbi.fetchedAbis)
-                                                .length > 0 ||
-                                                Object.keys(txAbi.errors)
-                                                  .length > 0) && (
-                                                <div className="mt-2 space-y-2 text-xs">
+                                          {/* Signature Hash Field */}
+                                          <FormField
+                                            control={eventFilterForm.control}
+                                            name="sigHash"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <FormLabel>
+                                                    {topic.id ===
+                                                    "contracts.event.confirmed"
+                                                      ? "Event Signature"
+                                                      : "Function Signature"}
+                                                  </FormLabel>
+                                                </div>
+                                                <FormControl>
+                                                  {topic.id ===
+                                                    "contracts.event.confirmed" &&
+                                                  Object.keys(
+                                                    eventAbi.fetchedAbis,
+                                                  ).length > 0 &&
+                                                  eventAbi.signatures.length >
+                                                    0 ? (
+                                                    <SignatureSelector
+                                                      className="block w-full max-w-90 overflow-hidden text-ellipsis"
+                                                      onChange={(val) => {
+                                                        field.onChange(val);
+                                                        // If custom signature, clear ABI field
+                                                        const known =
+                                                          eventAbi.signatures.map(
+                                                            (sig) =>
+                                                              sig.signature,
+                                                          );
+                                                        if (
+                                                          val &&
+                                                          !known.includes(val)
+                                                        ) {
+                                                          eventFilterForm.setValue(
+                                                            "abi",
+                                                            "",
+                                                          );
+                                                        }
+                                                      }}
+                                                      options={eventAbi.signatures.map(
+                                                        (sig) => ({
+                                                          abi: sig.abi,
+                                                          label: truncateMiddle(
+                                                            sig.name,
+                                                            30,
+                                                            15,
+                                                          ),
+                                                          value: sig.signature,
+                                                        }),
+                                                      )}
+                                                      placeholder="Select or enter an event signature"
+                                                      setAbi={(abi) =>
+                                                        eventFilterForm.setValue(
+                                                          "sigHashAbi",
+                                                          abi,
+                                                        )
+                                                      }
+                                                      value={field.value || ""}
+                                                    />
+                                                  ) : topic.id ===
+                                                      "contracts.transaction.confirmed" &&
+                                                    Object.keys(
+                                                      txAbi.fetchedAbis,
+                                                    ).length > 0 &&
+                                                    txAbi.signatures.length >
+                                                      0 ? (
+                                                    <SignatureSelector
+                                                      onChange={(val) => {
+                                                        field.onChange(val);
+                                                        // If custom signature, clear ABI field
+                                                        const known =
+                                                          txAbi.signatures.map(
+                                                            (sig) =>
+                                                              sig.signature,
+                                                          );
+                                                        if (
+                                                          val &&
+                                                          !known.includes(val)
+                                                        ) {
+                                                          transactionFilterForm.setValue(
+                                                            "abi",
+                                                            "",
+                                                          );
+                                                        }
+                                                      }}
+                                                      options={txAbi.signatures.map(
+                                                        (sig) => ({
+                                                          abi: sig.abi,
+                                                          label: truncateMiddle(
+                                                            sig.name,
+                                                            30,
+                                                            15,
+                                                          ),
+                                                          value: sig.signature,
+                                                        }),
+                                                      )}
+                                                      placeholder="Select or enter a function signature"
+                                                      setAbi={(abi) =>
+                                                        transactionFilterForm.setValue(
+                                                          "sigHashAbi",
+                                                          abi,
+                                                        )
+                                                      }
+                                                      value={field.value || ""}
+                                                    />
+                                                  ) : (
+                                                    <Input
+                                                      disabled={
+                                                        (topic.id ===
+                                                          "contracts.event.confirmed" &&
+                                                          eventAbi.isFetching) ||
+                                                        (topic.id ===
+                                                          "contracts.transaction.confirmed" &&
+                                                          txAbi.isFetching)
+                                                      }
+                                                      onChange={field.onChange}
+                                                      placeholder="Provide above details first..."
+                                                      value={field.value}
+                                                    />
+                                                  )}
+                                                </FormControl>
+                                              </FormItem>
+                                            )}
+                                          />
+                                        </div>
+                                      </Form>
+                                    ) : (
+                                      <Form {...transactionFilterForm}>
+                                        <div className="space-y-4">
+                                          {/* Chain IDs Field */}
+                                          <FormField
+                                            control={
+                                              transactionFilterForm.control
+                                            }
+                                            name="chainIds"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <RequiredFormLabel>
+                                                    Chain IDs
+                                                  </RequiredFormLabel>
+                                                </div>
+                                                <FormControl>
+                                                  {props.client ? (
+                                                    <MultiNetworkSelector
+                                                      chainIds={
+                                                        props.supportedChainIds ||
+                                                        []
+                                                      }
+                                                      client={props.client}
+                                                      onChange={(chainIds) =>
+                                                        field.onChange(
+                                                          chainIds.map(String),
+                                                        )
+                                                      }
+                                                      selectedChainIds={
+                                                        Array.isArray(
+                                                          field.value,
+                                                        )
+                                                          ? field.value.map(
+                                                              Number,
+                                                            )
+                                                          : []
+                                                      }
+                                                    />
+                                                  ) : (
+                                                    <div className="text-sm text-muted-foreground">
+                                                      Client not available
+                                                    </div>
+                                                  )}
+                                                </FormControl>
+                                              </FormItem>
+                                            )}
+                                          />
+
+                                          {/* From/To Addresses for Transactions */}
+                                          <FormField
+                                            control={
+                                              transactionFilterForm.control
+                                            }
+                                            name="fromAddresses"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <RequiredFormLabel>
+                                                    From Address
+                                                  </RequiredFormLabel>
+                                                </div>
+                                                <FormControl>
+                                                  <Input
+                                                    onChange={field.onChange}
+                                                    placeholder="0x..."
+                                                    value={field.value ?? ""}
+                                                  />
+                                                </FormControl>
+                                              </FormItem>
+                                            )}
+                                          />
+
+                                          <FormField
+                                            control={
+                                              transactionFilterForm.control
+                                            }
+                                            name="toAddresses"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <FormLabel>
+                                                    To Address
+                                                  </FormLabel>
+                                                </div>
+                                                <FormControl>
+                                                  <div className="space-y-2">
+                                                    <Input
+                                                      onChange={field.onChange}
+                                                      placeholder="0x..."
+                                                      value={field.value || ""}
+                                                    />
+
+                                                    {/* ABI fetch status */}
+                                                    <div className="mt-2 flex items-center justify-between">
+                                                      {txAbi.isFetching && (
+                                                        <div className="flex items-center">
+                                                          <Spinner className="mr-2 h-3 w-3" />
+                                                          <span className="text-xs">
+                                                            Fetching ABIs...
+                                                          </span>
+                                                        </div>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                </FormControl>
+                                              </FormItem>
+                                            )}
+                                          />
+
+                                          {/* Signature Hash Field */}
+                                          <FormField
+                                            control={
+                                              transactionFilterForm.control
+                                            }
+                                            name="sigHash"
+                                            render={({ field }) => (
+                                              <FormItem className="flex flex-col">
+                                                <div className="flex items-center justify-between text-xs">
+                                                  <FormLabel>
+                                                    Function Signature
+                                                  </FormLabel>
+                                                </div>
+                                                <FormControl>
                                                   {Object.keys(
                                                     txAbi.fetchedAbis,
-                                                  ).length > 0 && (
-                                                    <div className="flex items-center gap-2">
-                                                      <Badge
-                                                        className="border-green-200 bg-green-50 text-green-700"
-                                                        variant="outline"
-                                                      >
-                                                        ✓{" "}
-                                                        {
-                                                          Object.keys(
-                                                            txAbi.fetchedAbis,
-                                                          ).length
-                                                        }{" "}
-                                                        ABI
-                                                        {Object.keys(
-                                                          txAbi.fetchedAbis,
-                                                        ).length !== 1
-                                                          ? "s"
-                                                          : ""}{" "}
-                                                        fetched
-                                                      </Badge>
-                                                    </div>
+                                                  ).length > 0 &&
+                                                  txAbi.signatures.length >
+                                                    0 ? (
+                                                    <SignatureSelector
+                                                      onChange={(val) => {
+                                                        field.onChange(val);
+                                                        // If custom signature, clear ABI field
+                                                        const known =
+                                                          txAbi.signatures.map(
+                                                            (sig) =>
+                                                              sig.signature,
+                                                          );
+                                                        if (
+                                                          val &&
+                                                          !known.includes(val)
+                                                        ) {
+                                                          transactionFilterForm.setValue(
+                                                            "abi",
+                                                            "",
+                                                          );
+                                                        }
+                                                      }}
+                                                      options={txAbi.signatures.map(
+                                                        (sig) => ({
+                                                          abi: sig.abi,
+                                                          label: truncateMiddle(
+                                                            sig.name,
+                                                            30,
+                                                            15,
+                                                          ),
+                                                          value: sig.signature,
+                                                        }),
+                                                      )}
+                                                      placeholder="Select or enter a function signature"
+                                                      setAbi={(abi) =>
+                                                        transactionFilterForm.setValue(
+                                                          "sigHashAbi",
+                                                          abi,
+                                                        )
+                                                      }
+                                                      value={field.value || ""}
+                                                    />
+                                                  ) : (
+                                                    <Input
+                                                      disabled={
+                                                        txAbi.isFetching
+                                                      }
+                                                      onChange={field.onChange}
+                                                      placeholder="Fetching function signatures..."
+                                                      value={field.value}
+                                                    />
                                                   )}
-
-                                                  {Object.keys(txAbi.errors)
-                                                    .length > 0 && (
-                                                    <div className="flex items-center gap-2">
-                                                      <Badge
-                                                        className="border-red-200 bg-red-50 text-red-700"
-                                                        variant="outline"
-                                                      >
-                                                        ⚠️{" "}
-                                                        {
-                                                          Object.keys(
-                                                            txAbi.errors,
-                                                          ).length
-                                                        }{" "}
-                                                        error
-                                                        {Object.keys(
-                                                          txAbi.errors,
-                                                        ).length !== 1
-                                                          ? "s"
-                                                          : ""}
-                                                      </Badge>
-                                                    </div>
-                                                  )}
-                                                </div>
-                                              )}
-                                            </div>
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-
-                                    {/* Signature Hash Field */}
-                                    <FormField
-                                      control={transactionFilterForm.control}
-                                      name="sigHash"
-                                      render={({ field }) => (
-                                        <FormItem className="flex flex-col">
-                                          <div className="flex items-center justify-between text-xs">
-                                            <FormLabel>
-                                              Function Signature (optional)
-                                            </FormLabel>
-                                          </div>
-                                          <FormControl>
-                                            {Object.keys(txAbi.fetchedAbis)
-                                              .length > 0 &&
-                                            txAbi.signatures.length > 0 ? (
-                                              <SignatureSelector
-                                                onChange={(val) => {
-                                                  field.onChange(val);
-                                                  // If custom signature, clear ABI field
-                                                  const known =
-                                                    txAbi.signatures.map(
-                                                      (sig) => sig.signature,
-                                                    );
-                                                  if (
-                                                    val &&
-                                                    !known.includes(val)
-                                                  ) {
-                                                    transactionFilterForm.setValue(
-                                                      "abi",
-                                                      "",
-                                                    );
-                                                  }
-                                                }}
-                                                options={txAbi.signatures.map(
-                                                  (sig) => ({
-                                                    abi: sig.abi,
-                                                    label: truncateMiddle(
-                                                      sig.name,
-                                                      30,
-                                                      15,
-                                                    ),
-                                                    value: sig.signature,
-                                                  }),
-                                                )}
-                                                placeholder="Select or enter a function signature"
-                                                setAbi={(abi) =>
-                                                  transactionFilterForm.setValue(
-                                                    "sigHashAbi",
-                                                    abi,
-                                                  )
-                                                }
-                                                value={field.value || ""}
-                                              />
-                                            ) : (
-                                              <Input
-                                                disabled={txAbi.isFetching}
-                                                onChange={field.onChange}
-                                                placeholder="Fetching function signatures..."
-                                                value={field.value}
-                                              />
+                                                </FormControl>
+                                              </FormItem>
                                             )}
-                                          </FormControl>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
+                                          />
+                                        </div>
+                                      </Form>
+                                    )}
                                   </div>
-                                </Form>
-                              )}
+                                )}
                             </div>
-                          )}
-
-                        {/* Show fallback for contract webhook topics when client/chain IDs not available */}
-                        {TOPIC_IDS_THAT_SUPPORT_FILTERS.includes(topic.id) &&
-                          tempSelection.some((t) => t.id === topic.id) &&
-                          (!props.client || !props.supportedChainIds) && (
-                            <div className="mt-2">
-                              <Textarea
-                                placeholder={`{\n  "key": "value"\n}`}
-                                rows={3}
-                                value={topicFilters[topic.id] || ""}
-                                onChange={(e) => {
-                                  setTopicFilters((prev) => ({
-                                    ...prev,
-                                    [topic.id]: e.target.value,
-                                  }));
-                                }}
-                                className="text-xs"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Enter JSON filters (optional). Leave empty to
-                                receive all events.
-                              </p>
-                            </div>
-                          )}
-
-                        {/* Show simple textarea for other topics that support filters */}
-                        {!TOPIC_IDS_THAT_SUPPORT_FILTERS.includes(topic.id) &&
-                          tempSelection.some((t) => t.id === topic.id) && (
-                            <div className="mt-2">
-                              <Textarea
-                                placeholder={`{\n  "key": "value"\n}`}
-                                rows={3}
-                                value={topicFilters[topic.id] || ""}
-                                onChange={(e) => {
-                                  setTopicFilters((prev) => ({
-                                    ...prev,
-                                    [topic.id]: e.target.value,
-                                  }));
-                                }}
-                                className="text-xs"
-                              />
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Enter JSON filters (optional). Leave empty to
-                                receive all events.
-                              </p>
-                            </div>
-                          )}
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
           </div>
         </div>
 
@@ -926,8 +794,8 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
             Cancel
           </Button>
           <Button onClick={handleSave}>
-            Select {tempSelection.length} Topic
-            {tempSelection.length !== 1 ? "s" : ""}
+            Select {tempSelection.length}{" "}
+            {tempSelection.length === 1 ? "Topic" : "Topics"}
           </Button>
         </DialogFooter>
       </DialogContent>
