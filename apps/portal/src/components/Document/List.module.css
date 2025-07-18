@@ -1,6 +1,6 @@
 .unorderedList,
 .orderedList {
-  @apply pl-5 leading-7 list-none mb-6 text-foreground;
+  @apply pl-5 leading-7 list-none mb-6 
 }
 
 .unorderedList > li {
@@ -12,14 +12,9 @@
 }
 
 .unorderedList > li::marker {
-  @apply text-muted-foreground !m-0 text-left;
+  @apply !m-0 text-left;
 }
 
 .orderedList > li::marker {
-  @apply text-muted-foreground text-left;
-}
-
-.unorderedList > li:hover::marker,
-.orderedList > li:hover::marker {
-  @apply text-foreground;
+  @apply text-left;
 }

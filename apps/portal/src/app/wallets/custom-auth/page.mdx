@@ -6,9 +6,9 @@ import {
 	DocImage,
 	createMetadata,
 } from "@doc";
-import EWCustomAuth from "../images/customauth.png";
-import EWCustomAuthdb from "../images/customauthdb.png";
-import EWCustomAuthdb2 from "../images/customauthdb2.png";
+import EWCustomAuth from "./images/customauth.png";
+import EWCustomAuthdb from "./images/customauthdb.png";
+import EWCustomAuthdb2 from "./images/customauthdb2.png";
 
 export const metadata = createMetadata({
 	image: {
@@ -26,8 +26,6 @@ You can attach wallets to your existing users using the `jwt` and `auth_endpoint
 
 - The `jwt` strategy is based on the [OIDC (Open ID Connect)](https://openid.net/developers/how-connect-works/) standard
 - The `auth_endpoint` strategy is a generic option that lets you bring your own auth server.
-
----
 
 <Tabs defaultValue="jwt">
 	<TabsList>
