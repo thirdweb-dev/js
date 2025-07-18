@@ -113,7 +113,7 @@ export function CreateTokenAssetPage(props: {
                       params.values.pool.startingPricePerToken,
                     ),
                   }),
-                  referrerRewardBps: 5000, // 50%
+                  referrerRewardBps: 1250, // 12.5%
                 },
               }
             : undefined,

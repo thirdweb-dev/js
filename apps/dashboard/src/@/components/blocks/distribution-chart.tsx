@@ -3,12 +3,15 @@ import { cn } from "@/lib/utils";
 export type Segment = {
   label: string;
   percent: number;
+  value: string;
   color: string;
 };
 
 type DistributionBarChartProps = {
   segments: Segment[];
-  title: string;
+  title?: string;
+  titleClassName?: string;
+  barClassName?: string;
 };
 
 export function DistributionBarChart(props: DistributionBarChartProps) {
@@ -21,24 +24,36 @@ export function DistributionBarChart(props: DistributionBarChartProps) {
 
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="font-medium text-sm">{props.title}</h3>
-        <div
-          className={cn(
-            "font-medium text-muted-foreground text-sm",
-            invalidTotalPercentage && "text-red-500",
-          )}
-        >
-          Total: {totalPercentage}%
+      {props.title && (
+        <div className="mb-2 flex items-center justify-between">
+          <h3 className={cn("font-medium text-sm", props.titleClassName)}>
+            {props.title}
+          </h3>
+          <div
+            className={cn(
+              "font-medium text-muted-foreground text-sm",
+              invalidTotalPercentage && "text-red-500",
+            )}
+          >
+            Total: {totalPercentage}%
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Bar */}
-      <div className="flex h-3 overflow-hidden rounded-lg">
+      <div
+        className={cn(
+          "flex h-3 overflow-hidden rounded-lg",
+          props.barClassName,
+        )}
+      >
         {props.segments.map((segment) => {
           return (
             <div
-              className="flex h-full items-center justify-center transition-all duration-200"
+              className={cn(
+                "flex h-full items-center justify-center transition-all duration-200",
+                segment.percent > 0 && "border-r-2 border-background",
+              )}
               key={segment.label}
               style={{
                 backgroundColor: segment.color,
@@ -67,7 +82,7 @@ export function DistributionBarChart(props: DistributionBarChartProps) {
                     "text-destructive-text",
                 )}
               >
-                {segment.label}: {segment.percent}%
+                {segment.label}: {segment.value}
               </p>
             </div>
           );

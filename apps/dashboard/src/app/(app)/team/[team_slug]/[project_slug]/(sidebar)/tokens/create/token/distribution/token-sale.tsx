@@ -1,11 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { XIcon } from "lucide-react";
+import { DollarSignIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
 import { isRouterEnabled } from "thirdweb/assets";
+import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
@@ -64,6 +65,11 @@ export function TokenSaleSection(props: {
       });
     }
   }, [isRouterEnabledValue, props.form, hasUserUpdatedSaleMode, isSaleEnabled]);
+
+  const protocolFee = 20;
+  const leftOverFee = 100 - protocolFee;
+  const convenienceFee = (12.5 * leftOverFee) / 100;
+  const deployerFee = leftOverFee - convenienceFee;
 
   return (
     <DynamicHeight>
@@ -131,6 +137,46 @@ export function TokenSaleSection(props: {
               client={props.client}
               form={props.form}
             />
+
+            <div className="mt-5 border p-4 bg-background rounded-lg relative">
+              <div className="flex mb-4">
+                <div className="p-2 rounded-full border bg-card">
+                  <DollarSignIcon className="size-5 text-muted-foreground" />
+                </div>
+              </div>
+              <h3 className="font-medium text-base mt-2"> Sale Rewards </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                All trades on the market are subjected to{" "}
+                <em className="text-foreground font-medium not-italic"> 1% </em>{" "}
+                fee distributed as:
+              </p>
+
+              <div className="relative">
+                <div className="absolute -top-6 right-0 text-sm">Total: 1%</div>
+                <DistributionBarChart
+                  segments={[
+                    {
+                      label: "Your Wallet",
+                      percent: deployerFee,
+                      color: "hsl(var(--chart-1))",
+                      value: `${deployerFee / 100}%`,
+                    },
+                    {
+                      label: "Protocol",
+                      percent: protocolFee,
+                      color: "hsl(var(--chart-2))",
+                      value: `${protocolFee / 100}%`,
+                    },
+                    {
+                      label: "Convenience fee",
+                      percent: convenienceFee,
+                      color: "hsl(var(--chart-3))",
+                      value: `${convenienceFee / 100}%`,
+                    },
+                  ]}
+                />
+              </div>
+            </div>
           </div>
         )}
       </div>

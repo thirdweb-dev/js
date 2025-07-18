@@ -67,7 +67,7 @@ export function TokenAirdropSection(props: {
   return (
     <DynamicHeight>
       <div className="relative border-t border-dashed">
-        <div className="flex items-center justify-between gap-3 px-4 py-5 md:px-6">
+        <div className="flex items-center justify-between gap-3 px-4 py-6 md:px-6">
           <div>
             <h2 className="font-semibold text-lg">Airdrop</h2>
             <p className="text-muted-foreground text-sm">

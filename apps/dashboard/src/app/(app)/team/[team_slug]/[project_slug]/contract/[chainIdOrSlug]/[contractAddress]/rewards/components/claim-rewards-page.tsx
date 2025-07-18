@@ -128,8 +128,8 @@ export function ClaimRewardsPageUI(props: {
     <div>
       <div className="bg-card rounded-lg border">
         <div className="p-4 lg:px-6 py-5 border-b">
-          <h2 className="font-semibold text-xl tracking-tight mb-0.5 lg:mb-0">
-            Uniswap LP Rewards
+          <h2 className="font-semibold text-2xl tracking-tight mb-0.5 lg:mb-0">
+            Rewards
           </h2>
           <p className="text-muted-foreground text-sm">
             Earnings received by Liquidity Providers (LPs) in exchange for
@@ -140,7 +140,7 @@ export function ClaimRewardsPageUI(props: {
 
         <div className="p-4 lg:p-6 border-b border-dashed">
           <div className="mb-2">
-            <h3 className="font-medium text-sm">Unclaimed Rewards</h3>
+            <h3 className="font-medium text-base">Unclaimed Rewards</h3>
           </div>
           <div className="flex flex-col gap-3 lg:flex-row">
             <TokenReward
@@ -161,21 +161,25 @@ export function ClaimRewardsPageUI(props: {
         <div className="p-4 lg:p-6">
           <DistributionBarChart
             title="Reward Distribution"
+            titleClassName="text-base"
             segments={[
               {
                 label: "Recipient",
                 color: recipientColor,
                 percent: fees.recipientPercentage,
+                value: `${fees.recipientPercentage}%`,
+              },
+              {
+                label: "Protocol",
+                color: protocolFeesColor,
+                percent: fees.protocolFees,
+                value: `${fees.protocolFees}%`,
               },
               {
                 label: "Referrer",
                 color: referrerColor,
                 percent: fees.referrerPercentage,
-              },
-              {
-                label: "Protocol Fees",
-                color: protocolFeesColor,
-                percent: fees.protocolFees,
+                value: `${fees.referrerPercentage}%`,
               },
             ]}
           />
@@ -289,7 +293,7 @@ function TokenReward(props: {
         <Link
           target="_blank"
           rel="noopener noreferrer"
-          href={`https://thirdweb.com/${props.chainSlug}/${props.token.address}`}
+          href={`/${props.chainSlug}/${props.token.address}`}
           className="flex items-center gap-1.5 text-muted-foreground before:absolute before:inset-0"
         >
           <span className="text-xs font-mono">

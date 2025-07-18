@@ -144,16 +144,19 @@ export function TokenDistributionBarChart(props: {
       color: "hsl(var(--chart-1))",
       label: "Owner",
       percent: ownerPercentage,
+      value: `${ownerPercentage}%`,
     },
     {
       color: "hsl(var(--chart-3))",
       label: "Airdrop",
       percent: airdropPercentage,
+      value: `${airdropPercentage}%`,
     },
     {
       color: "hsl(var(--chart-4))",
       label: "Sale",
       percent: salePercentage,
+      value: `${salePercentage}%`,
     },
   ];
 
