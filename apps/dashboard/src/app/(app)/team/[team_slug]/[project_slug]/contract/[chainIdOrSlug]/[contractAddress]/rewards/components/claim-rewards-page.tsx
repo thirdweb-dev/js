@@ -127,8 +127,14 @@ export function ClaimRewardsPageUI(props: {
   return (
     <div>
       <div className="bg-card rounded-lg border">
-        <div className="p-4 lg:px-8 py-8 border-b border-dashed">
-          <h2 className="font-semibold text-2xl tracking-tight mb-1">
+        <div className="p-4 lg:px-8 lg:py-8 border-b border-dashed">
+          <div className="flex mb-3">
+            <div className="rounded-full border bg-background p-2">
+              <DollarSignIcon className="size-5 text-muted-foreground" />
+            </div>
+          </div>
+
+          <h2 className="font-semibold text-3xl tracking-tight mb-0.5">
             Rewards
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -140,11 +146,6 @@ export function ClaimRewardsPageUI(props: {
 
         <div className="p-4 lg:px-8 py-8 border-b border-dashed">
           <div className="mb-3">
-            <div className="flex mb-3">
-              <div className="rounded-full border p-2">
-                <DollarSignIcon className="size-4 text-muted-foreground" />
-              </div>
-            </div>
             <h3 className="font-medium text-lg">Unclaimed Rewards</h3>
             <p className="text-muted-foreground text-sm">
               The rewards that are earned but haven't been distributed yet
@@ -167,12 +168,6 @@ export function ClaimRewardsPageUI(props: {
         </div>
 
         <div className="p-4 lg:px-8 py-8">
-          <div className="flex mb-3">
-            <div className="rounded-full border p-2">
-              <SplitIcon className="size-4 text-muted-foreground" />
-            </div>
-          </div>
-
           <h3 className="font-medium text-lg">Reward Distribution</h3>
           <p className="text-muted-foreground text-sm mb-3">
             The unclaimed rewards will be distributed as:
