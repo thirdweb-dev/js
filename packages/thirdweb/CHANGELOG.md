@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.105.17
+
+### Patch Changes
+
+- [#7634](https://github.com/thirdweb-dev/js/pull/7634) [`4cbf671`](https://github.com/thirdweb-dev/js/commit/4cbf67181da4746d252d0bd3bcf0b522719ecf67) Thanks [@Yash094](https://github.com/Yash094)! - feat(chains): add Etherlink mainnet and testnet chains
+
+- [#7600](https://github.com/thirdweb-dev/js/pull/7600) [`170c377`](https://github.com/thirdweb-dev/js/commit/170c3774456cbd05482227104307d834641ad1e2) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add fallback mechanism to usePaymentMethods hook for getOwnedTokens failures
+
+  When getOwnedTokens batches fail in the usePaymentMethods hook, the system now falls back to getting native token balances for each chain using getWalletBalance. This ensures users can still access their native tokens as payment methods even when the insight API is experiencing issues, providing a more resilient user experience.
+
+  The fallback mechanism:
+  - Catches getOwnedTokens failures and logs warnings
+  - Falls back to native balance fetching using getWalletBalance for each chain
+  - Transforms results to match the expected format
+  - Continues normal processing flow seamlessly
+
+- [#7642](https://github.com/thirdweb-dev/js/pull/7642) [`0f38a12`](https://github.com/thirdweb-dev/js/commit/0f38a1287af527da53e7948b54e0dfd4b738fa69) Thanks [@gregfromstl](https://github.com/gregfromstl)! - TransactionWidget: Hides the "UnknownContract" label
+
 ## 5.105.16
 
 ### Patch Changes
