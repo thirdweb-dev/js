@@ -1,6 +1,6 @@
-export const DEFAULT_MAX_SUPPLY_ERC20 = 10_000_000_000n;
+export const DEFAULT_MAX_SUPPLY_ERC20 = 1_000_000_000n;
 export const DEFAULT_POOL_INITIAL_TICK = 230200;
-export const DEFAULT_REFERRER_REWARD_BPS = 5000; // 50%
+export const DEFAULT_REFERRER_REWARD_BPS = 1250; // 12.50%
 export const DEFAULT_INFRA_ADMIN = "0x1a472863cf21d5aa27f417df9140400324c48f22";
 export const DEFAULT_FEE_RECIPIENT =
   "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
@@ -8,10 +8,10 @@ export const DEFAULT_SALT = "0x";
 
 export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   8453: {
-    AssetEntrypointERC20: "0xf27e8A456D3Fa6AA6ffc10Cf13361a682B5ed8C3",
+    AssetEntrypointERC20: "0x42e3a6eB0e96641Bd6e0604D5C6Bb96db874A942",
   },
   84532: {
-    AssetEntrypointERC20: "0x518aC4beE28eebfa3818978E69137CDA78d0C73b",
+    AssetEntrypointERC20: "0xcB8ab50D2E7E2e2f46a2BF440e60375b28A4b82f",
   },
 };
 
