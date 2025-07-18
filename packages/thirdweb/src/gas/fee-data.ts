@@ -137,12 +137,16 @@ export async function getDefaultGasOverrides(
     resolvedFeeType === "legacy" ||
     FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
   ) {
-    const gasPrice = await getGasPrice({ chain, client, percentMultiplier: 10 })
-    if(chain.id === 88 || chain.id === 89) {
+    const gasPrice = await getGasPrice({ 
+      chain, 
+      client, 
+      percentMultiplier: 10,
+    })
+    if (chain.id === 88 || chain.id === 89) {
       return {
         maxPriorityFeePerGas: gasPrice || 0n,
-        maxFeePerGas: gasPrice || 0n
-      }
+        maxFeePerGas: gasPrice || 0n,
+      };
     }
 
     return {
