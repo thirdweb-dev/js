@@ -1,4 +1,4 @@
-import { MessageCircleIcon } from "lucide-react";
+import { MessageCircleIcon, WebhookIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Grid, Heading, SDKCard } from "@/components/Document";
@@ -89,13 +89,17 @@ function ReferenceSection() {
       />
       <Grid>
         <SDKCard
-          href="/typescript/v5"
+          href="/references/typescript/v5"
           icon={TypeScriptIcon}
           title="TypeScript"
         />
-        <SDKCard href="/react/v5" icon={ReactIcon} title="React" />
         <SDKCard
-          href="/react-native/v5"
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
           icon={ReactIcon}
           title="React Native"
         />
@@ -147,6 +151,12 @@ function ReferenceSection() {
           iconClassName="text-muted-foreground"
           title="Bundler"
         />
+        <SDKCard
+          href="/webhooks"
+          icon={WebhookIcon}
+          iconClassName="text-muted-foreground"
+          title="Webhooks"
+        />
       </Grid>
     </section>
   );
@@ -171,7 +181,7 @@ function LearningResourcesSection() {
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
-          href="/engine"
+          href="/transactions"
           icon={EngineIcon}
           title="Transactions"
         />

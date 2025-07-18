@@ -19,7 +19,15 @@ export const sidebar: SideBar = {
     },
     {
       href: `${walletSlug}/sign-in-methods/configure`,
-      name: "Create Wallets",
+      name: "User Wallets",
+    },
+    {
+      href: `${walletSlug}/server`,
+      name: "Server Wallets",
+    },
+    {
+      href: `${connectSlug}/external-wallets`,
+      name: "External Wallets",
     },
     {
       href: `${aAslug}/get-started`,
@@ -48,10 +56,6 @@ export const sidebar: SideBar = {
     {
       href: `${walletSlug}/user-management/export-private-key`,
       name: "Export Private Keys",
-    },
-    {
-      href: `${connectSlug}/external-wallets`,
-      name: "External Wallets",
     },
     { separator: true },
     {
@@ -104,6 +108,10 @@ export const sidebar: SideBar = {
           href: "https://thirdweb.com/templates",
           icon: <ExternalLinkIcon />,
           name: "Templates",
+        },
+        {
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "Ecosystem Wallets",
         },
         {
           href: `${walletSlug}/security`,

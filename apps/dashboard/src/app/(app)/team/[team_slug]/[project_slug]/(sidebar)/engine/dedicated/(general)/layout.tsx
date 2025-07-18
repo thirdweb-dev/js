@@ -104,7 +104,7 @@ function EngineLegacyBannerUI(props: {
           <Button asChild size="sm" variant="outline">
             <Link
               className="gap-2 bg-background"
-              href="https://portal.thirdweb.com/engine/v3"
+              href="https://portal.thirdweb.com/transactions"
               rel="noopener noreferrer"
               target="_blank"
             >
