@@ -8,9 +8,17 @@ import { defineChain } from "thirdweb";
 import { isRouterEnabled } from "thirdweb/assets";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { Badge } from "@/components/ui/badge";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import type { TokenDistributionForm } from "../_common/form";
@@ -198,55 +206,85 @@ function PoolConfig(props: {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      {/* supply % */}
+    <div className="grid grid-cols-1 gap-5">
+      {/* Pricing Strategy */}
       <FormFieldSetup
-        errorMessage={
-          props.form.formState.errors.saleAllocationPercentage?.message
-        }
-        helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
         isRequired
-        label="Sell % of Total Supply"
+        label="Pricing Strategy"
+        errorMessage={undefined}
+        helperText="Bonding Curve pricing is a static formula for pricing tokens based on supply and demand"
       >
-        <div className="relative">
-          <DecimalInput
-            maxValue={100}
-            onChange={(value) => {
-              props.form.setValue("saleAllocationPercentage", value, {
-                shouldValidate: true,
-              });
-            }}
-            value={props.form.watch("saleAllocationPercentage")}
-          />
-          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
-            %
-          </span>
-        </div>
+        <Select value="bonding-curve">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bonding-curve">Bonding Curve</SelectItem>
+            <SelectItem value="fixed-price" disabled>
+              <span className="flex items-center gap-2">
+                Dynamic Bonding Curve{" "}
+                <Badge variant="secondary">Coming Soon</Badge>
+              </span>
+            </SelectItem>
+            <SelectItem value="dutch-auction" disabled>
+              <span className="flex items-center gap-2">
+                Fixed Price <Badge variant="secondary">Coming Soon</Badge>
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </FormFieldSetup>
 
-      {/* starting price */}
-      <FormFieldSetup
-        errorMessage={
-          props.form.formState.errors.pool?.startingPricePerToken?.message
-        }
-        isRequired
-        label="Starting price per token"
-      >
-        <div className="relative">
-          <DecimalInput
-            className="pr-10"
-            onChange={(value) => {
-              props.form.setValue("pool.startingPricePerToken", value, {
-                shouldValidate: true,
-              });
-            }}
-            value={props.form.watch("pool.startingPricePerToken")}
-          />
-          <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
-            {chainMeta?.nativeCurrency.symbol || "ETH"}
-          </span>
-        </div>
-      </FormFieldSetup>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* supply % */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.saleAllocationPercentage?.message
+          }
+          helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
+          isRequired
+          label="Sell % of Total Supply"
+        >
+          <div className="relative">
+            <DecimalInput
+              maxValue={100}
+              onChange={(value) => {
+                props.form.setValue("saleAllocationPercentage", value, {
+                  shouldValidate: true,
+                });
+              }}
+              value={props.form.watch("saleAllocationPercentage")}
+            />
+            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+              %
+            </span>
+          </div>
+        </FormFieldSetup>
+
+        {/* starting price */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.pool?.startingPricePerToken?.message
+          }
+          isRequired
+          label="Starting price per token"
+        >
+          <div className="relative">
+            <DecimalInput
+              className="pr-10"
+              onChange={(value) => {
+                props.form.setValue("pool.startingPricePerToken", value, {
+                  shouldValidate: true,
+                });
+              }}
+              value={props.form.watch("pool.startingPricePerToken")}
+            />
+            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+              {chainMeta?.nativeCurrency.symbol || "ETH"}
+            </span>
+          </div>
+        </FormFieldSetup>
+      </div>
     </div>
   );
 }

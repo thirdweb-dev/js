@@ -2,7 +2,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { getContract, readContract } from "thirdweb";
 import { symbol } from "thirdweb/extensions/common";
 
-export const maxUint128 = 2n ** 128n - 1n;
+const maxUint128 = 2n ** 128n - 1n;
 
 export async function getUnclaimedFees(params: {
   positionManager: ThirdwebContract;
