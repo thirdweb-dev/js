@@ -4,11 +4,11 @@ import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
 // TODO: remove all unused pages
-const inAppSlug = "/connect/in-app-wallet";
-const connectSlug = "/connect";
-const walletSlug = "/connect/wallet";
-const aAslug = "/connect/account-abstraction";
-const authSlug = "/connect/auth";
+const inAppSlug = "/payments/in-app-wallet";
+const connectSlug = "/payments";
+const walletSlug = "/payments/wallet";
+const aAslug = "/payments/account-abstraction";
+const authSlug = "/payments/auth";
 
 export const sidebar: SideBar = {
   links: [
@@ -17,41 +17,48 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
+    { separator: true },
     {
-      href: `${walletSlug}/sign-in-methods/configure`,
-      name: "Create Wallets",
-    },
-    {
-      href: `${aAslug}/get-started`,
-      name: "Sponsor Gas",
-    },
-    {
-      href: `${walletSlug}/get-users`,
-      name: "Fetch Users",
-    },
-    {
-      href: `${walletSlug}/pregenerate-wallets`,
-      name: "Pregenerate Wallets",
-    },
-    {
-      href: `${inAppSlug}/custom-auth/configuration`,
-      name: "Bring your own Auth",
-    },
-    {
-      href: `${authSlug}`,
-      name: "Sign in with Ethereum",
-    },
-    {
-      href: `${walletSlug}/user-management/link-multiple-identity`,
-      name: "Link Multiple Identities",
-    },
-    {
-      href: `${walletSlug}/user-management/export-private-key`,
-      name: "Export Private Keys",
-    },
-    {
-      href: `${connectSlug}/external-wallets`,
-      name: "External Wallets",
+      isCollapsible: false,
+      links: [
+        {
+          href: `${walletSlug}/sign-in-methods/configure`,
+          name: "Create Wallets",
+        },
+        {
+          href: `${aAslug}/get-started`,
+          name: "Sponsor Gas",
+        },
+        {
+          href: `${walletSlug}/get-users`,
+          name: "Fetch Users",
+        },
+        {
+          href: `${walletSlug}/pregenerate-wallets`,
+          name: "Pregenerate Wallets",
+        },
+        {
+          href: `${inAppSlug}/custom-auth/configuration`,
+          name: "Bring your own Auth",
+        },
+        {
+          href: `${authSlug}`,
+          name: "Sign in with Ethereum",
+        },
+        {
+          href: `${walletSlug}/user-management/link-multiple-identity`,
+          name: "Link Multiple Identities",
+        },
+        {
+          href: `${walletSlug}/user-management/export-private-key`,
+          name: "Export Private Keys",
+        },
+        {
+          href: `${connectSlug}/external-wallets`,
+          name: "External Wallets",
+        },
+      ],
+      name: "Guides",
     },
     { separator: true },
     {
@@ -116,5 +123,5 @@ export const sidebar: SideBar = {
       ],
     },
   ],
-  name: "Connect",
+  name: "Payments",
 };

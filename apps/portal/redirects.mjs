@@ -711,6 +711,7 @@ const walletRedirects = {
 };
 
 const paymentRedirects = {
+  "/pay": "/payments",
   "/checkouts": "/payments",
   "/checkouts/api-reference": "/payments/nft-checkout/api-reference",
   "/checkouts/checkout-link": "/payments/nft-checkout/checkout-link",
@@ -741,7 +742,6 @@ const paymentRedirects = {
   "/connect/pay/buy-with-fiat": "/connect/pay/overview",
   "/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
   "/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
-  "/payments/:match*": "/connect/pay/overview",
 };
 
 const contractRedirects = {
@@ -921,7 +921,6 @@ const otherRedirects = {
   // connect
   "/connect/connect": "/connect/sign-in",
   "/connect/ecosystems/:path*": "/connect/wallet/overview",
-  "/connect/embedded-wallet/:path*": "/connect/in-app-wallet/:path*",
   "/connect/embedded-wallet/how-to/get-embedded-wallet-details-on-server":
     "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
@@ -1016,11 +1015,11 @@ const otherRedirects = {
   "/unity/wallets/providers/smart-wallet":
     "/unity/wallets/providers/account-abstraction",
   "/wallet/get-started/overview": "/connect/wallet/overview",
-  // wallets > connect redirects
-  "/wallets": "/connect",
-  "/wallets/auth/:path*": "/connect/auth/:path*",
-  "/wallets/connect/:path*": "/connect/connect/:path*",
-  "/wallets/embedded-wallet/:path*": "/connect/embedded-wallet/:path*",
+  // connect > wallets
+  "/connect/:path*": "/wallets/:path*",
+  "/connect/auth/:path*": "/wallets/auth/:path*",
+  "/connect/connect/:path*": "/wallets/connect/:path*",
+  "/connect/embedded-wallet/:path*": "/wallets/embedded-wallet/:path*",
   // account abstraction rename
   "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
   "/web3-api/:path*": "/infrastructure/engine/overview",
