@@ -47,6 +47,8 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   2020, // Ronin Mainnet
   2021, // Ronin Testnet (Saigon)
   98866, // Plume mainnet
+  89, // Viction Testnet
+  88, // Viction Mainnet
 ];
 
 /**
@@ -135,8 +137,16 @@ export async function getDefaultGasOverrides(
     resolvedFeeType === "legacy" ||
     FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)
   ) {
+    const gasPrice = await getGasPrice({ chain, client, percentMultiplier: 10 })
+    if(chain.id === 88 || chain.id === 89) {
+      return {
+        maxPriorityFeePerGas: gasPrice || 0n,
+        maxFeePerGas: gasPrice || 0n
+      }
+    }
+
     return {
-      gasPrice: await getGasPrice({ chain, client, percentMultiplier: 10 }),
+      gasPrice,
     };
   }
   const feeData = await getDynamicFeeData(client, chain);
