@@ -18,44 +18,50 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
-      href: `${walletSlug}/sign-in-methods/configure`,
-      name: "User Wallets",
-    },
-    {
-      href: `${walletSlug}/server`,
-      name: "Server Wallets",
-    },
-    {
-      href: `${connectSlug}/external-wallets`,
-      name: "External Wallets",
-    },
-    {
-      href: `${aAslug}/get-started`,
-      name: "Sponsor Gas",
-    },
-    {
-      href: `${walletSlug}/get-users`,
-      name: "Fetch Users",
-    },
-    {
-      href: `${walletSlug}/pregenerate-wallets`,
-      name: "Pregenerate Wallets",
-    },
-    {
-      href: `${inAppSlug}/custom-auth/configuration`,
-      name: "Bring your own Auth",
-    },
-    {
-      href: `${authSlug}`,
-      name: "Sign in with Ethereum",
-    },
-    {
-      href: `${walletSlug}/user-management/link-multiple-identity`,
-      name: "Link Multiple Identities",
-    },
-    {
-      href: `${walletSlug}/user-management/export-private-key`,
-      name: "Export Private Keys",
+      isCollapsible: false,
+      links: [
+        {
+          href: `${walletSlug}/users`,
+          name: "User Wallets",
+        },
+        {
+          href: `${walletSlug}/server`,
+          name: "Server Wallets",
+        },
+        {
+          href: `${walletSlug}/external-wallets`,
+          name: "External Wallets",
+        },
+        {
+          href: `${walletSlug}/sponsor-gas`,
+          name: "Sponsor Gas",
+        },
+        {
+          href: `${walletSlug}/get-users`,
+          name: "Fetch Users",
+        },
+        {
+          href: `${walletSlug}/pregenerate-wallets`,
+          name: "Pregenerate Wallets",
+        },
+        {
+          href: `${walletSlug}/custom-auth`,
+          name: "Bring your own Auth",
+        },
+        {
+          href: `${walletSlug}/auth`,
+          name: "Sign in with Ethereum",
+        },
+        {
+          href: `${walletSlug}/link-profiles`,
+          name: "Link Profiles",
+        },
+        {
+          href: `${walletSlug}/export-private-key`,
+          name: "Export Private Keys",
+        },
+      ],
+      name: "Guides",
     },
     { separator: true },
     {

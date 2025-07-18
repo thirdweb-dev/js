@@ -1017,9 +1017,19 @@ const otherRedirects = {
   "/wallet/get-started/overview": "/connect/wallet/overview",
   // connect > wallets
   "/connect/:path*": "/wallets/:path*",
+  "connect/wallet/:path*": "/wallets/:path*",
   "/connect/auth/:path*": "/wallets/auth/:path*",
   "/connect/connect/:path*": "/wallets/connect/:path*",
   "/connect/embedded-wallet/:path*": "/wallets/embedded-wallet/:path*",
+  "/connect/wallet/sign-in-methods/configure": "/wallets/users",
+  "/connect/wallet/server": "/wallets/server",
+  "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",
+  "/connect/account-abstraction/*": "/wallets/sponsor-gas",
+  "/wallets/in-app-wallet/custom-auth/configuration": "/wallets/custom-auth",
+  "/connect/wallets/user-management/link-multiple-identity":
+    "/wallets/link-profiles",
+  "/connect/wallets/user-management/export-private-key":
+    "/wallets/export-private-key",
   // account abstraction rename
   "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
   "/web3-api/:path*": "/infrastructure/engine/overview",
