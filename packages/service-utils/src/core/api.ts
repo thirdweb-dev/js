@@ -112,6 +112,10 @@ type TeamCapabilities = {
     enabled: boolean;
     rateLimit: number;
   };
+  mcp: {
+    enabled: boolean;
+    rateLimit: number;
+  };
 };
 
 type TeamPlan =
