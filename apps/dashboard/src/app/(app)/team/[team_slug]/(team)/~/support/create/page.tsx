@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
 import { CreateSupportCase } from "../_components/CreateSupportCase";
@@ -17,6 +17,10 @@ export default async function CreatePage(props: {
 
   if (!team || !token) {
     notFound();
+  }
+
+  if (team.billingPlan === "free") {
+    redirect(`/team/${params.team_slug}/~/support`);
   }
 
   return <CreateSupportCase authToken={token} team={team} />;

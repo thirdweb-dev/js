@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircleIcon, XIcon } from "lucide-react";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
 import type { Team } from "@/api/team";
@@ -21,10 +22,15 @@ export function CustomChatButton(props: {
   team: Team;
   clientId: string | undefined;
 }) {
+  const layoutSegments = useSelectedLayoutSegments();
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const closeModal = useCallback(() => setIsOpen(false), []);
   const ref = useRef<HTMLDivElement>(null);
+
+  if (layoutSegments[0] === "~" && layoutSegments[1] === "support") {
+    return null;
+  }
 
   return (
     <>

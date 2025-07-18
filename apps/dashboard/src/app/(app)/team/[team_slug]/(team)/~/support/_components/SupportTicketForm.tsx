@@ -1,4 +1,6 @@
+import { LockIcon } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { revalidatePathAction } from "@/actions/revalidate";
@@ -105,6 +107,7 @@ interface SupportTicketFormProps {
   setProductLabel: (val: string) => void;
   onSuccess?: () => void;
   conversationId?: string;
+  closeForm: () => void;
 }
 
 export function SupportTicketForm({
@@ -113,6 +116,7 @@ export function SupportTicketForm({
   setProductLabel,
   onSuccess,
   conversationId,
+  closeForm,
 }: SupportTicketFormProps) {
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -189,6 +193,37 @@ export function SupportTicketForm({
       setIsSubmittingForm(false);
     }
   };
+
+  if (team.billingPlan === "free") {
+    return (
+      <div className="relative">
+        <div className="px-4 lg:px-6 py-16 z-10 relative">
+          <div className="flex justify-center">
+            <div className="mb-4 border rounded-full p-3 bg-background">
+              <LockIcon className="size-5 text-foreground" />
+            </div>
+          </div>
+          <p className="text-sm text-foreground text-center mb-4">
+            You are currently on the free plan. <br /> Please upgrade to a paid
+            plan to create a support case.
+          </p>
+
+          <div className="flex justify-center">
+            <Button asChild size="sm">
+              <Link
+                href={`/team/${team.slug}/~/billing?showPlans=true`}
+                onClick={() => {
+                  closeForm();
+                }}
+              >
+                Upgrade Plan
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleFormSubmit} ref={formRef}>

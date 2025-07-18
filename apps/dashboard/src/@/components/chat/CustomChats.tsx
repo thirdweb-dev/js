@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "@/lib/utils";
@@ -105,6 +104,8 @@ export function CustomChats(props: {
     chatScrollContainer.addEventListener("wheel", disableScroll);
   }, [setEnableAutoScroll, enableAutoScroll]);
 
+  const [showSupportFormDialog, setShowSupportFormDialog] = useState(false);
+
   return (
     <div
       className="relative flex max-h-full flex-1 flex-col overflow-hidden"
@@ -149,18 +150,19 @@ export function CustomChats(props: {
                         {/* Only show button/form if ticket not created */}
                         {!supportTicketCreated && (
                           <div className="mt-3 pl-12">
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button
-                                  onClick={() => props.setShowSupportForm(true)}
-                                  size="sm"
-                                  variant="outline"
-                                  className="rounded-full bg-card"
-                                >
-                                  Create Support Case
-                                  <ArrowRightIcon className="w-4 h-4 ml-2" />
-                                </Button>
-                              </DialogTrigger>
+                            <Dialog
+                              open={showSupportFormDialog}
+                              onOpenChange={setShowSupportFormDialog}
+                            >
+                              <Button
+                                onClick={() => setShowSupportFormDialog(true)}
+                                size="sm"
+                                variant="outline"
+                                className="rounded-full bg-card"
+                              >
+                                Create Support Case
+                                <ArrowRightIcon className="w-4 h-4 ml-2" />
+                              </Button>
 
                               <DialogContent className="p-0 bg-card">
                                 <DynamicHeight>
@@ -178,6 +180,9 @@ export function CustomChats(props: {
                                     productLabel={props.productLabel}
                                     setProductLabel={props.setProductLabel}
                                     conversationId={props.sessionId}
+                                    closeForm={() => {
+                                      setShowSupportFormDialog(false);
+                                    }}
                                     onSuccess={() => {
                                       props.setShowSupportForm(false);
                                       props.setProductLabel("");

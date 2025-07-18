@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
@@ -153,6 +152,8 @@ export function CreateSupportCase(props: { team: Team; authToken: string }) {
     </div>
   );
 
+  const [showCreateCaseDialog, setShowCreateCaseDialog] = useState(false);
+
   return (
     <div className="flex flex-col border bg-card rounded-xl mt-4">
       <div className="px-4 lg:px-12 py-4 lg:py-10 border-b border-dashed">
@@ -203,17 +204,19 @@ export function CreateSupportCase(props: { team: Team; authToken: string }) {
                       !message.isSuccessMessage &&
                       chatMessages.length > 2 && (
                         <div className="mt-5">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="gap-2 rounded-full bg-background"
-                              >
-                                Create Support Case
-                                <ArrowRightIcon className="w-4 h-4" />
-                              </Button>
-                            </DialogTrigger>
+                          <Dialog
+                            open={showCreateCaseDialog}
+                            onOpenChange={setShowCreateCaseDialog}
+                          >
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-2 rounded-full bg-background"
+                              onClick={() => setShowCreateCaseDialog(true)}
+                            >
+                              Create Support Case
+                              <ArrowRightIcon className="w-4 h-4" />
+                            </Button>
                             <DialogContent className="p-0 bg-card !gap-0">
                               <DynamicHeight>
                                 <DialogHeader className="p-4 lg:p-6 border-b border-dashed space-y-1">
@@ -227,6 +230,9 @@ export function CreateSupportCase(props: { team: Team; authToken: string }) {
                                 </DialogHeader>
 
                                 <SupportTicketForm
+                                  closeForm={() => {
+                                    setShowCreateCaseDialog(false);
+                                  }}
                                   team={team}
                                   productLabel={productLabel}
                                   setProductLabel={setProductLabel}

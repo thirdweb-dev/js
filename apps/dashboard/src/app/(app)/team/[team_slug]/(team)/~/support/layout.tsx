@@ -15,7 +15,10 @@ export default async function Layout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <SupportHeader teamSlug={team.slug} />
+      <SupportHeader
+        teamSlug={team.slug}
+        isFreePlan={team.billingPlan === "free"}
+      />
       <div className="container max-w-5xl pt-6 pb-10 flex flex-col grow">
         {props.children}
       </div>
