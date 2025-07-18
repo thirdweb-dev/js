@@ -25,6 +25,7 @@ export function CopyAddressButton(props: {
       copyIconPosition={props.copyIconPosition}
       textToCopy={props.address}
       textToShow={shortenedAddress}
+      iconClassName={props.iconClassName}
       tooltip={props.tooltip || "Copy Address"}
       variant={props.variant}
     />

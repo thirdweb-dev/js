@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ConnectButton, ThirdwebProvider } from "thirdweb/react";
 import { storybookThirdwebClient } from "@/storybook/utils";
-import { CreateTokenAssetPageUI } from "./create-token-page.client";
+import {
+  CreateTokenAssetPageUI,
+  type CreateTokenFunctions,
+} from "./create-token-page.client";
 
 const meta = {
   component: CreateTokenAssetPageUI,
@@ -9,9 +12,9 @@ const meta = {
     (Story) => (
       <ThirdwebProvider>
         <div className="container max-w-5xl py-10">
-          <ConnectButton client={storybookThirdwebClient} />
-          <div className="h-10" />
           <Story />
+          <div className="h-10" />
+          <ConnectButton client={storybookThirdwebClient} />
         </div>
       </ThirdwebProvider>
     ),
@@ -22,19 +25,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const mockCreateTokenFunctions = {
+const mockCreateTokenFunctions: CreateTokenFunctions = {
   airdropTokens: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   },
   deployContract: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return { contractAddress: "0x123" };
-  },
-  mintTokens: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  },
-  setClaimConditions: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
   },
 };
 
