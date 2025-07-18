@@ -21,7 +21,7 @@ export function useAbiMultiFetch({
   type,
 }: {
   isOpen: boolean;
-  thirdwebClient: ThirdwebClient;
+  thirdwebClient?: ThirdwebClient;
   chainIds: string[];
   addresses: string;
   extractSignatures: (
@@ -45,8 +45,12 @@ export function useAbiMultiFetch({
   }, [chainIds, addresses]);
 
   const queryResult = useQuery({
-    enabled: isOpen && !!addresses.trim() && chainIds.length > 0,
+    enabled:
+      isOpen && !!addresses.trim() && chainIds.length > 0 && !!thirdwebClient,
     queryFn: async () => {
+      if (!thirdwebClient) {
+        throw new Error("ThirdwebClient is required");
+      }
       return Promise.all(
         pairs.map(async ({ chainId, address }) => {
           try {

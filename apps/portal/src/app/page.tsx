@@ -1,4 +1,4 @@
-import { MessageCircleIcon } from "lucide-react";
+import { MessageCircleIcon, WebhookIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Grid, Heading, SDKCard } from "@/components/Document";
@@ -133,7 +133,7 @@ function ReferenceSection() {
           icon={BridgeIcon}
           iconClassName="text-muted-foreground"
           isExternal
-          title="Universal Bridge"
+          title="Payments"
         />
         <SDKCard
           href="/connect/wallet/get-users"
@@ -146,6 +146,12 @@ function ReferenceSection() {
           icon={ConnectIcon} // TODO: actual openAPI docs
           iconClassName="text-muted-foreground"
           title="Bundler"
+        />
+        <SDKCard
+          href="/webhooks"
+          icon={WebhookIcon}
+          iconClassName="text-muted-foreground"
+          title="Webhooks"
         />
       </Grid>
     </section>

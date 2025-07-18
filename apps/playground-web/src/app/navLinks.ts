@@ -109,7 +109,7 @@ const universalBridgeSidebarLinks: SidebarLink = {
       name: "Backend API",
     },
   ],
-  name: "Universal Bridge",
+  name: "Payments",
 };
 
 const engineSidebarLinks: SidebarLink = {

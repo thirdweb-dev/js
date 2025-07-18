@@ -75,6 +75,10 @@ export const sidebar: SideBar = {
               href: "/knowledge-base/troubleshoot/contracts/erc20-transfer-allowance",
               name: "Transfer Amount Exceeds Allowance",
             },
+            {
+              href: "/knowledge-base/troubleshoot/contracts/update-nft-metadata",
+              name: "Bulk update NFT metadata",
+            },
           ],
           name: "Contracts",
         },

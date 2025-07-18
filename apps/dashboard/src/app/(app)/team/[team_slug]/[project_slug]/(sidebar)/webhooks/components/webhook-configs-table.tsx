@@ -12,12 +12,14 @@ import {
   MoreHorizontalIcon,
   PauseIcon,
   PlusIcon,
+  SendIcon,
   TrashIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import type { Topic, WebhookConfig } from "@/api/webhook-configs";
-import { deleteWebhookConfig } from "@/api/webhook-configs";
+import { deleteWebhookConfig, testDestinationUrl } from "@/api/webhook-configs";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
@@ -28,6 +30,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Table,
   TableBody,
@@ -37,6 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { WebhookSummaryStats } from "@/types/analytics";
 import { CreateWebhookConfigModal } from "./create-webhook-config-modal";
@@ -54,6 +58,8 @@ export function WebhookConfigsTable(props: {
   webhookConfigs: WebhookConfig[];
   topics: Topic[];
   metricsMap: Map<string, WebhookSummaryStats | null>;
+  client?: ThirdwebClient;
+  supportedChainIds?: Array<number>;
 }) {
   const { webhookConfigs } = props;
   const [sortBy, setSortBy] = useState<SortById>("createdAt");
@@ -64,7 +70,9 @@ export function WebhookConfigsTable(props: {
   const [deletingWebhook, setDeletingWebhook] = useState<WebhookConfig | null>(
     null,
   );
+  const [testingWebhookId, setTestingWebhookId] = useState<string | null>(null);
   const queryClient = useQueryClient();
+  const router = useDashboardRouter();
 
   const deleteMutation = useMutation({
     mutationFn: async (webhookId: string) => {
@@ -91,8 +99,63 @@ export function WebhookConfigsTable(props: {
       queryClient.invalidateQueries({
         queryKey: ["webhook-configs", props.teamSlug, props.projectSlug],
       });
+      router.refresh();
     },
   });
+
+  const testMutation = useMutation({
+    mutationFn: async ({
+      destinationUrl,
+      webhookId,
+    }: {
+      destinationUrl: string;
+      webhookId: string;
+    }) => {
+      setTestingWebhookId(webhookId);
+      const result = await testDestinationUrl({
+        teamIdOrSlug: props.teamSlug,
+        projectIdOrSlug: props.projectSlug,
+        destinationUrl,
+      });
+      if (result.status === "error") {
+        throw new Error(result.body);
+      }
+      return { result: result.result, webhookId };
+    },
+    onError: (error) => {
+      setTestingWebhookId(null);
+      toast.error("Failed to test webhook", {
+        description: error.message,
+      });
+    },
+    onSuccess: (data) => {
+      const is2xx =
+        data.result.httpStatusCode >= 200 && data.result.httpStatusCode < 300;
+
+      setTestingWebhookId(null);
+      if (is2xx) {
+        toast.success(`Success! Status: ${data.result.httpStatusCode}`, {
+          description: data.result.httpResponseBody,
+        });
+      } else {
+        toast.error(`Failed! Status: ${data.result.httpStatusCode}`, {
+          description: data.result.httpResponseBody,
+        });
+      }
+    },
+  });
+
+  function handleTestWebhook(config: WebhookConfig) {
+    if (!config.destinationUrl) {
+      toast.error("No destination URL to test");
+      return;
+    }
+
+    testMutation.mutate({
+      destinationUrl: config.destinationUrl,
+      webhookId: config.id,
+    });
+  }
 
   const sortedConfigs = useMemo(() => {
     let _configsToShow = webhookConfigs;
@@ -144,7 +207,6 @@ export function WebhookConfigsTable(props: {
           </p>
         </div>
 
-        {/* Filters + Add New */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <SortDropdown
             hasActiveFilters={hasActiveFilters}
@@ -165,7 +227,6 @@ export function WebhookConfigsTable(props: {
         </div>
       </div>
 
-      {/* Webhook Configs Table */}
       {paginatedConfigs.length === 0 ? (
         <div className="flex min-h-[300px] grow items-center justify-center border rounded-lg border-dashed bg-card">
           <div className="flex flex-col items-center">
@@ -296,6 +357,22 @@ export function WebhookConfigsTable(props: {
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleTestWebhook(config);
+                            }}
+                          >
+                            <span className="mr-2 h-4 w-4 flex items-center justify-center">
+                              {testingWebhookId === config.id ? (
+                                <Spinner className="size-4" />
+                              ) : (
+                                <SendIcon className="size-4" />
+                              )}
+                            </span>
+                            Test Webhook
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             className="cursor-pointer text-destructive focus:text-destructive"
                             onClick={() => {
                               setDeletingWebhook(config);
@@ -326,20 +403,30 @@ export function WebhookConfigsTable(props: {
       )}
 
       <CreateWebhookConfigModal
+        client={props.client}
         onOpenChange={setIsCreateModalOpen}
+        onSuccess={() => {
+          router.refresh();
+        }}
         open={isCreateModalOpen}
         projectSlug={props.projectSlug}
+        supportedChainIds={props.supportedChainIds}
         teamSlug={props.teamSlug}
         topics={props.topics}
       />
 
       {editingWebhook && (
         <EditWebhookConfigModal
+          client={props.client}
           onOpenChange={(open) => {
             if (!open) setEditingWebhook(null);
           }}
+          onSuccess={() => {
+            router.refresh();
+          }}
           open={!!editingWebhook}
           projectSlug={props.projectSlug}
+          supportedChainIds={props.supportedChainIds}
           teamSlug={props.teamSlug}
           topics={props.topics}
           webhookConfig={editingWebhook}
@@ -356,6 +443,7 @@ export function WebhookConfigsTable(props: {
         onConfirm={() => {
           if (deletingWebhook) {
             deleteMutation.mutate(deletingWebhook.id);
+            router.refresh();
           }
         }}
         onOpenChange={(open) => {

@@ -64,7 +64,7 @@ function Breadcrumbs() {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/connect/pay/backend">
-            Universal Bridge API
+            Payments API
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

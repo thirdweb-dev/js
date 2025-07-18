@@ -251,15 +251,33 @@ export async function prepare(
   };
 }
 
+/**
+ * Namespace containing types for the transfer prepare function.
+ * @namespace prepare
+ * @bridge Transfer
+ */
 export declare namespace prepare {
+  /**
+   * Options for preparing a transfer transaction.
+   * @interface Options
+   * @bridge Transfer
+   */
   type Options = {
+    /** The chain ID */
     chainId: number;
+    /** The token address */
     tokenAddress: ox__Address.Address;
+    /** The sender address */
     sender: ox__Address.Address;
+    /** The receiver address */
     receiver: ox__Address.Address;
+    /** The amount to transfer in wei */
     amount: bigint;
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** Arbitrary purchase data */
     purchaseData?: PurchaseData;
+    /** Who pays the fees - sender or receiver */
     feePayer?: "sender" | "receiver";
     /**
      * @hidden
@@ -267,6 +285,12 @@ export declare namespace prepare {
     paymentLinkId?: string;
   };
 
+  /**
+   * Result returned from preparing a transfer transaction.
+   * Contains prepared quote with transaction data and intent information.
+   * @interface Result
+   * @bridge Transfer
+   */
   type Result = PreparedQuote & {
     intent: {
       chainId: number;

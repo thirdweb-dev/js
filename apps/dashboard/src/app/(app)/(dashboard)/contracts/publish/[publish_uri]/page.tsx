@@ -2,9 +2,9 @@ import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
+import { getUserThirdwebClient } from "@/api/auth-token";
 import { ContractPublishForm } from "@/components/contract-components/contract-publish-form";
 import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
 
@@ -68,14 +68,15 @@ export default async function PublishContractPage(
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }
 
+  const userThirdwebClient = await getUserThirdwebClient({
+    teamId: undefined,
+  });
+
   return (
     <div className="container flex max-w-[1130px] flex-col gap-8 py-8">
       <ChakraProviderSetup>
         <ContractPublishForm
-          client={getClientThirdwebClient({
-            jwt: token,
-            teamId: undefined,
-          })}
+          client={userThirdwebClient}
           isLoggedIn={!!token}
           onPublishSuccess={async () => {
             "use server";

@@ -8,8 +8,7 @@ export const metadata: Metadata = {
   description:
     "The easiest way for users to transact in your app. Onramp users, pay with any token and generate revenue for each user transaction. Integrate for free.",
   metadataBase,
-  title:
-    "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Universal Bridge",
+  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Payments",
 };
 
 export default function Page(props: {
@@ -25,7 +24,7 @@ export default function Page(props: {
           </>
         }
         docsLink="https://portal.thirdweb.com/connect/pay/get-started?utm_source=playground"
-        title="Universal Bridge UI component"
+        title="Payments UI component"
       >
         <PayEmbedPlayground searchParams={props.searchParams} />
       </PageLayout>

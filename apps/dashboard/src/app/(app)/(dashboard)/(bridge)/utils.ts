@@ -1,6 +1,5 @@
 import "server-only";
 
-import type { Address } from "thirdweb";
 import { NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST } from "@/constants/public-envs";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import type { Route } from "./types/route";
@@ -10,21 +9,13 @@ export async function getRoutes({
   offset,
   originQuery,
   destinationQuery,
-  originChainId,
-  destinationChainId,
-  originTokenAddress,
-  destinationTokenAddress,
 }: {
   limit?: number;
   offset?: number;
   originQuery?: string;
   destinationQuery?: string;
-  originChainId?: number;
-  destinationChainId?: number;
-  originTokenAddress?: Address;
-  destinationTokenAddress?: Address;
 } = {}) {
-  const url = new URL(`${NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST}/v1/routes`);
+  const url = new URL(`${NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST}/v1/routes/search`);
   if (limit) {
     url.searchParams.set("limit", limit.toString());
   }
@@ -37,20 +28,7 @@ export async function getRoutes({
   if (destinationQuery) {
     url.searchParams.set("destinationQuery", destinationQuery);
   }
-  if (originChainId) {
-    url.searchParams.set("originChainId", originChainId.toString());
-  }
-  if (destinationChainId) {
-    url.searchParams.set("destinationChainId", destinationChainId.toString());
-  }
-  if (originTokenAddress) {
-    url.searchParams.set("originTokenAddress", originTokenAddress);
-  }
-  if (destinationTokenAddress) {
-    url.searchParams.set("destinationTokenAddress", destinationTokenAddress);
-  }
   url.searchParams.set("sortBy", "popularity");
-  // It's faster to filter client side, doesn't seem to be a big performance boost to paginate/filter server side
   const routesResponse = await fetch(url, {
     headers: {
       "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,

@@ -11,11 +11,11 @@ export default async function Page() {
         <div className="flex flex-col justify-between md:flex-row md:gap-8">
           <div>
             <h2 className="mb-1 font-semibold text-2xl tracking-tight">
-              Universal Bridge REST API
+              thirdweb Payments REST API
             </h2>
             <p className="mb-5 text-muted-foreground">
-              Directly interact with the Universal Bridge API from your backend,
-              using standard REST APIs.
+              Directly interact with the thirdweb Payments API from your
+              backend, using standard REST APIs.
             </p>
           </div>
 

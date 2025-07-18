@@ -308,10 +308,10 @@ export const sidebar: SideBar = {
         },
         {
           href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.Bridge.ThirdwebBridge.html",
-          name: "Universal Bridge Full Reference",
+          name: "Full Reference",
         },
       ],
-      name: "Bridge",
+      name: "Payments",
     },
     {
       separator: true,

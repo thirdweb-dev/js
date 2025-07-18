@@ -2,8 +2,10 @@ import { notFound, redirect } from "next/navigation";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { getWebhookSummary } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
+import { getSupportedWebhookChains } from "@/api/insight/webhooks";
 import { getProject } from "@/api/projects";
 import { getAvailableTopics, getWebhookConfigs } from "@/api/webhook-configs";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { WebhooksOverview } from "./components/overview";
 
@@ -39,14 +41,16 @@ export default async function WebhooksPage(props: {
     );
   }
 
-  // Fetch webhook configs and topics in parallel
-  const [webhookConfigsResult, topicsResult] = await Promise.all([
-    getWebhookConfigs({
-      projectIdOrSlug: params.project_slug,
-      teamIdOrSlug: params.team_slug,
-    }),
-    getAvailableTopics(),
-  ]);
+  // Fetch webhook configs, topics, and supported chains in parallel
+  const [webhookConfigsResult, topicsResult, supportedChainsResult] =
+    await Promise.all([
+      getWebhookConfigs({
+        projectIdOrSlug: params.project_slug,
+        teamIdOrSlug: params.team_slug,
+      }),
+      getAvailableTopics(),
+      getSupportedWebhookChains(),
+    ]);
 
   if (
     webhookConfigsResult.status === "error" ||
@@ -57,6 +61,18 @@ export default async function WebhooksPage(props: {
 
   const webhookConfigs = webhookConfigsResult.data || [];
   const topics = topicsResult.data || [];
+
+  // Get supported chain IDs
+  let supportedChainIds: number[] = [];
+  if ("chains" in supportedChainsResult) {
+    supportedChainIds = supportedChainsResult.chains;
+  }
+
+  // Create client
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
 
   // Fetch metrics for all webhooks in parallel
   const webhookMetrics = await Promise.all(
@@ -85,9 +101,11 @@ export default async function WebhooksPage(props: {
 
   return (
     <WebhooksOverview
+      client={client}
       metricsMap={metricsMap}
       projectId={project.id}
       projectSlug={params.project_slug}
+      supportedChainIds={supportedChainIds}
       teamId={project.teamId}
       teamSlug={params.team_slug}
       topics={topics}
