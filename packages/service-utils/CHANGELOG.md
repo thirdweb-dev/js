@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.5
+
+### Patch Changes
+
+- [#7636](https://github.com/thirdweb-dev/js/pull/7636) [`746b0c9`](https://github.com/thirdweb-dev/js/commit/746b0c9d8b597517898bed5fd93ac6717f5bf8dd) Thanks [@jnsdls](https://github.com/jnsdls)! - add `mcp` to team capabilities
+
 ## 0.10.4
 
 ### Patch Changes
