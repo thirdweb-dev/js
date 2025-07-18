@@ -1,44 +1,36 @@
 "use client";
-import { ArrowRightIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
-import { NebulaIcon } from "@/icons/NebulaIcon";
+import { ThirdwebMiniLogo } from "../../../app/(app)/components/ThirdwebMiniLogo";
 import { ChatBar } from "./ChatBar";
 import type { UserMessage, UserMessageContent } from "./CustomChats";
 import { type CustomChatMessage, CustomChats } from "./CustomChats";
-import type { ExamplePrompt, NebulaContext } from "./types";
+import type { ExamplePrompt } from "./types";
 
 export default function CustomChatContent(props: {
   authToken: string | undefined;
-  teamId: string | undefined;
+  team: Team;
   clientId: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
-  networks: NebulaContext["networks"];
-  requireLogin?: boolean;
 }) {
-  if (props.requireLogin !== false && !props.authToken) {
-    return <LoggedOutStateChatContent />;
-  }
-
   return (
     <CustomChatContentLoggedIn
       authToken={props.authToken || ""}
       client={props.client}
       clientId={props.clientId}
       examplePrompts={props.examplePrompts}
-      teamId={props.teamId}
+      team={props.team}
     />
   );
 }
 
 function CustomChatContentLoggedIn(props: {
   authToken: string;
-  teamId: string | undefined;
+  team: Team;
   clientId: string | undefined;
   client: ThirdwebClient;
   examplePrompts: ExamplePrompt[];
@@ -54,6 +46,9 @@ function CustomChatContentLoggedIn(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const connectionStatus = useActiveWalletConnectionStatus();
+
+  const [showSupportForm, setShowSupportForm] = useState(false);
+  const [productLabel, setProductLabel] = useState("");
 
   const handleSendMessage = useCallback(
     async (userMessage: UserMessage) => {
@@ -96,7 +91,7 @@ function CustomChatContentLoggedIn(props: {
           headers: {
             Authorization: `Bearer ${props.authToken}`,
             "Content-Type": "application/json",
-            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+            "x-team-id": props.team.id,
             ...(props.clientId ? { "x-client-id": props.clientId } : {}),
           },
           method: "POST",
@@ -132,7 +127,7 @@ function CustomChatContentLoggedIn(props: {
         setEnableAutoScroll(false);
       }
     },
-    [props.authToken, props.clientId, props.teamId, sessionId],
+    [props.authToken, props.clientId, props.team.id, sessionId],
   );
 
   const handleFeedback = useCallback(
@@ -165,7 +160,7 @@ function CustomChatContentLoggedIn(props: {
           headers: {
             Authorization: `Bearer ${props.authToken}`,
             "Content-Type": "application/json",
-            ...(props.teamId ? { "x-team-id": props.teamId } : {}),
+            "x-team-id": props.team.id,
           },
           method: "POST",
         });
@@ -188,8 +183,19 @@ function CustomChatContentLoggedIn(props: {
         // Consider implementing retry logic here
       }
     },
-    [sessionId, props.authToken, props.teamId, messages],
+    [sessionId, props.authToken, props.team.id, messages],
   );
+
+  const handleAddSuccessMessage = useCallback((message: string) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        type: "assistant" as const,
+        text: message,
+        request_id: undefined,
+      },
+    ]);
+  }, []);
 
   const showEmptyState = !userHasSubmittedMessage && messages.length === 0;
   return (
@@ -212,6 +218,12 @@ function CustomChatContentLoggedIn(props: {
           sessionId={sessionId}
           setEnableAutoScroll={setEnableAutoScroll}
           useSmallText
+          showSupportForm={showSupportForm}
+          setShowSupportForm={setShowSupportForm}
+          productLabel={productLabel}
+          setProductLabel={setProductLabel}
+          team={props.team}
+          addSuccessMessage={handleAddSuccessMessage}
         />
       )}
       <ChatBar
@@ -245,42 +257,6 @@ function CustomChatContentLoggedIn(props: {
   );
 }
 
-function LoggedOutStateChatContent() {
-  const pathname = usePathname();
-  return (
-    <div className="flex grow flex-col items-center justify-center p-4">
-      <div className="mb-4 flex justify-center">
-        <div className="rounded-full border p-1">
-          <div className="rounded-full border bg-card p-2">
-            <NebulaIcon className="size-7 text-muted-foreground" />
-          </div>
-        </div>
-      </div>
-
-      <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
-        How can I help you <br className="max-sm:hidden" />
-        today?
-      </h1>
-
-      <div className="h-3" />
-      <p className="text-base text-muted-foreground">
-        Sign in to use AI Assistant
-      </p>
-      <div className="h-5" />
-
-      <Button asChild>
-        <Link
-          className="w-full max-w-96 gap-2"
-          href={`/login?next=${encodeURIComponent(pathname)}`}
-        >
-          Sign in
-          <ArrowRightIcon className="size-4" />
-        </Link>
-      </Button>
-    </div>
-  );
-}
-
 function EmptyStateChatPageContent(props: {
   sendMessage: (message: UserMessage) => void;
   examplePrompts: { title: string; message: string }[];
@@ -288,9 +264,12 @@ function EmptyStateChatPageContent(props: {
   return (
     <div className="flex flex-1 flex-col items-center justify-center overflow-auto p-4 ">
       <div className="mb-4 flex justify-center">
-        <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/20 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-1">
-          <div className="rounded-full border-[1.5px] border-nebula-pink-foreground/40 bg-[hsl(var(--nebula-pink-foreground)/5%)] p-2">
-            <NebulaIcon className="size-7 text-nebula-pink-foreground" />
+        <div className="rounded-full border p-1 bg-muted/20">
+          <div className="rounded-full border p-2 bg-inverted">
+            <ThirdwebMiniLogo
+              isMonoChrome
+              className="size-7 text-inverted-foreground"
+            />
           </div>
         </div>
       </div>
@@ -301,11 +280,12 @@ function EmptyStateChatPageContent(props: {
       </h1>
 
       <div className="h-6" />
-      <div className="flex max-w-lg flex-col flex-wrap justify-center gap-2.5">
+      <div className="flex flex-col items-center justify-center gap-2.5 overflow-hidden">
         {props.examplePrompts.map((prompt) => (
           <Button
             disabled={false}
             key={prompt.title}
+            className="rounded-full text-xs sm:text-sm truncate bg-card w-fit h-auto py-1.5 whitespace-pre-wrap"
             onClick={() =>
               props.sendMessage({
                 content: [

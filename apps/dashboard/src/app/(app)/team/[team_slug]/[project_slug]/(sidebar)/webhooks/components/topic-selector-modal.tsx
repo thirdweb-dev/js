@@ -85,6 +85,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
       eventTypes: [] as string[],
       filterType: "event" as const,
       fromAddresses: "",
+      // biome-ignore lint/suspicious/noExplicitAny: TODO - fix
       inputAbi: [] as any[],
       name: "",
       secret: "",
@@ -104,6 +105,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
       eventTypes: [] as string[],
       filterType: "transaction" as const,
       fromAddresses: "",
+      // biome-ignore lint/suspicious/noExplicitAny: TODO - fix
       inputAbi: [] as any[],
       name: "",
       secret: "",
@@ -210,6 +212,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
           }
 
           // Build event filters
+          // biome-ignore lint/suspicious/noExplicitAny: TODO - fix
           const filters: any = {
             chain_ids: formData.chainIds?.map(String),
             addresses: formData.addresses
@@ -249,6 +252,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
           }
 
           // Build transaction filters
+          // biome-ignore lint/suspicious/noExplicitAny: TODO - fix
           const filters: any = {
             chain_ids: formData.chainIds?.map(String),
             from_addresses: formData.fromAddresses

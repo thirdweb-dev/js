@@ -7,9 +7,9 @@ import { getChainSubscriptions } from "@/api/team-subscription";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { siwaExamplePrompts } from "@/constants/siwa-example-prompts";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getChain } from "../../../(dashboard)/(chain)/utils";
-import { siwaExamplePrompts } from "../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../components/TeamHeader/team-header-logged-in.client";
 import { StaffModeNotice } from "./_components/StaffModeNotice";
@@ -103,17 +103,13 @@ export default async function TeamLayout(props: {
         >
           {props.children}
         </TeamSidebarLayout>
-        <div className="fixed right-6 bottom-6 z-50">
+        <div className="fixed right-4 bottom-4 z-50">
           <CustomChatButton
             authToken={authToken}
             clientId={undefined}
             examplePrompts={siwaExamplePrompts}
-            isFloating={true}
-            isLoggedIn={true}
-            label="Ask AI Assistant"
-            networks="all"
-            pageType="support"
-            teamId={team.id}
+            label="Get Help"
+            team={team}
           />
         </div>
       </div>
