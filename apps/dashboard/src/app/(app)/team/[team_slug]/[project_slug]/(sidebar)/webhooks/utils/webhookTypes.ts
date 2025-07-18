@@ -149,11 +149,3 @@ export interface AbiData {
   functions?: string[];
   name?: string;
 }
-
-export type WebhookFormStep = "basicInfo" | "filterDetails" | "review";
-
-export const WebhookFormSteps = {
-  BasicInfo: "basicInfo" as WebhookFormStep,
-  FilterDetails: "filterDetails" as WebhookFormStep,
-  Review: "review" as WebhookFormStep,
-} as const;
