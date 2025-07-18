@@ -80,7 +80,6 @@ export type ServerWallet = Account & {
  * const myServerWallet = Engine.serverWallet({
  *   client,
  *   address: "<your-server-wallet-address>",
- *   vaultAccessToken: "<your-vault-access-token>",
  * });
  * ```
  *
