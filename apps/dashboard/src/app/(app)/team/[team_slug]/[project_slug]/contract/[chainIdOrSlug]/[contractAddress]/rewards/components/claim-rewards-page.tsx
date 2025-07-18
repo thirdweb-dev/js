@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
+import { DollarSignIcon, ExternalLinkIcon, SplitIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -118,7 +118,7 @@ export function ClaimRewardsPageUI(props: {
 
   const recipientColor = `hsl(var(--chart-1))`;
   const referrerColor = `hsl(var(--chart-2))`;
-  const protocolFeesColor = `hsl(var(--chart-10))`;
+  const protocolFeesColor = `hsl(var(--chart-3))`;
 
   const hasUnclaimedRewards =
     props.unclaimedFees.token0.amount > 0 ||
@@ -127,8 +127,8 @@ export function ClaimRewardsPageUI(props: {
   return (
     <div>
       <div className="bg-card rounded-lg border">
-        <div className="p-4 lg:px-6 py-5 border-b">
-          <h2 className="font-semibold text-2xl tracking-tight mb-0.5 lg:mb-0">
+        <div className="p-4 lg:px-8 py-8 border-b border-dashed">
+          <h2 className="font-semibold text-2xl tracking-tight mb-1">
             Rewards
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -138,9 +138,17 @@ export function ClaimRewardsPageUI(props: {
           </p>
         </div>
 
-        <div className="p-4 lg:p-6 border-b border-dashed">
-          <div className="mb-2">
-            <h3 className="font-medium text-base">Unclaimed Rewards</h3>
+        <div className="p-4 lg:px-8 py-8 border-b border-dashed">
+          <div className="mb-3">
+            <div className="flex mb-3">
+              <div className="rounded-full border p-2">
+                <DollarSignIcon className="size-4 text-muted-foreground" />
+              </div>
+            </div>
+            <h3 className="font-medium text-lg">Unclaimed Rewards</h3>
+            <p className="text-muted-foreground text-sm">
+              The rewards that are earned but haven't been distributed yet
+            </p>
           </div>
           <div className="flex flex-col gap-3 lg:flex-row">
             <TokenReward
@@ -158,10 +166,19 @@ export function ClaimRewardsPageUI(props: {
           </div>
         </div>
 
-        <div className="p-4 lg:p-6">
+        <div className="p-4 lg:px-8 py-8">
+          <div className="flex mb-3">
+            <div className="rounded-full border p-2">
+              <SplitIcon className="size-4 text-muted-foreground" />
+            </div>
+          </div>
+
+          <h3 className="font-medium text-lg">Reward Distribution</h3>
+          <p className="text-muted-foreground text-sm mb-3">
+            The unclaimed rewards will be distributed as:
+          </p>
+
           <DistributionBarChart
-            title="Reward Distribution"
-            titleClassName="text-base"
             segments={[
               {
                 label: "Recipient",
@@ -225,7 +242,7 @@ export function ClaimRewardsPageUI(props: {
           </div>
         </div>
 
-        <div className="p-4 py-4 lg:px-6 border-t flex justify-between items-center">
+        <div className="p-4 py-6 lg:px-8 border-t border-dashed flex-col lg:flex-row flex lg:justify-between lg:items-center gap-4">
           {hasUnclaimedRewards && (
             <p className="text-muted-foreground text-sm">
               Click on "Distribute Rewards" to distribute unclaimed rewards
@@ -239,14 +256,14 @@ export function ClaimRewardsPageUI(props: {
           )}
           <Button
             onClick={props.handleClaim}
-            className="gap-2"
+            className="gap-2 rounded-lg"
             disabled={!hasUnclaimedRewards}
           >
             Distribute Rewards
             {props.isClaimPending ? (
               <Spinner className="size-4" />
             ) : (
-              <ArrowRightIcon className="size-4" />
+              <SplitIcon className="size-4" />
             )}
           </Button>
         </div>
@@ -272,7 +289,7 @@ function TokenReward(props: {
   );
 
   return (
-    <div className="border p-3 rounded-xl flex items-center gap-3 min-w-[300px] bg-background relative hover:border-active-border">
+    <div className="border p-3 rounded-lg flex items-center gap-3 min-w-[300px] bg-background relative hover:border-active-border">
       <div className="rounded-full border shrink-0">
         <TokenProvider
           address={props.token.address}
