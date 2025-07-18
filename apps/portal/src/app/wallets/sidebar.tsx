@@ -3,11 +3,7 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
-// TODO: remove all unused pages
-const inAppSlug = "/wallets/in-app-wallet";
 const walletSlug = "/wallets";
-const aAslug = "/wallets/account-abstraction";
-const authSlug = "/wallets/auth";
 
 export const sidebar: SideBar = {
   links: [
