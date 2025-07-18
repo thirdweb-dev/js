@@ -1,7 +1,7 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
-import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import type { SendTransactionOptions } from "../../../../transaction/actions/send-transaction.js";
 import type { TransactionReceipt } from "../../../../transaction/types.js";
 import { useActiveAccount } from "../wallets/useActiveAccount.js";
 
@@ -56,7 +56,7 @@ type SendAndConfirmTransactionConfig = {
  */
 export function useSendAndConfirmTransaction(
   config: SendAndConfirmTransactionConfig = {},
-): UseMutationResult<TransactionReceipt, Error, PreparedTransaction> {
+): UseMutationResult<TransactionReceipt, Error, SendTransactionOptions["transaction"]> {
   const account = useActiveAccount();
   const { gasless } = config;
   return useMutation({
