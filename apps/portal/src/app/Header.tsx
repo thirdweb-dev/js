@@ -284,7 +284,7 @@ export function Header() {
                   }}
                 >
                   <NavLink href={link.href} name={link.name} />
-                  {pathname === link.href && (
+                  {pathname.includes(link.href) && (
                     <div className="bg-violet-700 h-1 left-0.5 right-0.5 rounded-full absolute -bottom-0.5" />
                   )}
                 </li>
@@ -510,7 +510,9 @@ function NavLink(props: {
     <Link
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
-        pathname === props.href ? "text-foreground" : "text-muted-foreground ",
+        pathname.includes(props.href)
+          ? "text-foreground"
+          : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",
       )}
       href={props.href}
@@ -519,7 +521,7 @@ function NavLink(props: {
     >
       {props.icon ? (
         <>
-          <props.icon className="size-6 text-muted-foreground" />
+          <props.icon className="size-6" />
           <span className="my-auto">{props.name}</span>
         </>
       ) : (
