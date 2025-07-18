@@ -18,46 +18,44 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
-      isCollapsible: false,
-      links: [
-        {
-          href: `${walletSlug}/sign-in-methods/configure`,
-          name: "Create Wallets",
-        },
-        {
-          href: `${aAslug}/get-started`,
-          name: "Sponsor Gas",
-        },
-        {
-          href: `${walletSlug}/get-users`,
-          name: "Fetch Users",
-        },
-        {
-          href: `${walletSlug}/pregenerate-wallets`,
-          name: "Pregenerate Wallets",
-        },
-        {
-          href: `${inAppSlug}/custom-auth/configuration`,
-          name: "Bring your own Auth",
-        },
-        {
-          href: `${authSlug}`,
-          name: "Sign in with Ethereum",
-        },
-        {
-          href: `${walletSlug}/user-management/link-multiple-identity`,
-          name: "Link Multiple Identities",
-        },
-        {
-          href: `${walletSlug}/user-management/export-private-key`,
-          name: "Export Private Keys",
-        },
-        {
-          href: `${walletSlug}/external-wallets`,
-          name: "External Wallets",
-        },
-      ],
-      name: "Guides",
+      href: `${walletSlug}/sign-in-methods/configure`,
+      name: "User Wallets",
+    },
+    {
+      href: `${walletSlug}/server`,
+      name: "Server Wallets",
+    },
+    {
+      href: `${connectSlug}/external-wallets`,
+      name: "External Wallets",
+    },
+    {
+      href: `${aAslug}/get-started`,
+      name: "Sponsor Gas",
+    },
+    {
+      href: `${walletSlug}/get-users`,
+      name: "Fetch Users",
+    },
+    {
+      href: `${walletSlug}/pregenerate-wallets`,
+      name: "Pregenerate Wallets",
+    },
+    {
+      href: `${inAppSlug}/custom-auth/configuration`,
+      name: "Bring your own Auth",
+    },
+    {
+      href: `${authSlug}`,
+      name: "Sign in with Ethereum",
+    },
+    {
+      href: `${walletSlug}/user-management/link-multiple-identity`,
+      name: "Link Multiple Identities",
+    },
+    {
+      href: `${walletSlug}/user-management/export-private-key`,
+      name: "Export Private Keys",
     },
     { separator: true },
     {
@@ -110,6 +108,10 @@ export const sidebar: SideBar = {
           href: "https://thirdweb.com/templates",
           icon: <ExternalLinkIcon />,
           name: "Templates",
+        },
+        {
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "Ecosystem Wallets",
         },
         {
           href: `${walletSlug}/security`,

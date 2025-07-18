@@ -89,13 +89,17 @@ function ReferenceSection() {
       />
       <Grid>
         <SDKCard
-          href="/typescript/v5"
+          href="/references/typescript/v5"
           icon={TypeScriptIcon}
           title="TypeScript"
         />
-        <SDKCard href="/react/v5" icon={ReactIcon} title="React" />
         <SDKCard
-          href="/react-native/v5"
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
           icon={ReactIcon}
           title="React Native"
         />
@@ -177,7 +181,7 @@ function LearningResourcesSection() {
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
-          href="/engine"
+          href="/transactions"
           icon={EngineIcon}
           title="Transactions"
         />
