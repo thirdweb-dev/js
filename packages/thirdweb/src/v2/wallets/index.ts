@@ -8,10 +8,10 @@ export {
   loginWithOauthRedirect,
 } from "./oauth.js";
 export {
-  loginWithCode as verifyCode,
-  type SendCodeOptions,
-  sendCode,
-  type VerifyCodeOptions,
+  verifyLoginCode,
+  type SendLoginCodeOptions,
+  sendLoginCode,
+  type VerifyLoginCodeOptions,
 } from "./otp.js";
 export { type LoginWithPasskeyOptions, loginWithPasskey } from "./passkey.js";
 export { type LoginWithWalletOptions, loginWithWallet } from "./siwe.js";

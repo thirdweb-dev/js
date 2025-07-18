@@ -2,18 +2,18 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { BaseLoginOptions, UserWallet } from "./types.js";
 import { createUserWallet } from "./user.js";
 
-export type SendCodeOptions = Prettify<
+export type SendLoginCodeOptions = Prettify<
   BaseLoginOptions &
-    (
-      | {
-          type: "phone";
-          phoneNumber: string;
-        }
-      | {
-          type: "email";
-          email: string;
-        }
-    )
+  (
+    | {
+      type: "phone";
+      phoneNumber: string;
+    }
+    | {
+      type: "email";
+      email: string;
+    }
+  )
 >;
 
 /**
@@ -24,14 +24,14 @@ export type SendCodeOptions = Prettify<
  * @example
  * ```typescript
  * // Send OTP via email
- * await Wallets.sendCode({
+ * await Wallets.sendLoginCode({
  *   client: thirdwebClient,
  *   type: "email",
  *   email: "user@example.com",
  * });
  *
  * // Send OTP via phone
- * await Wallets.sendCode({
+ * await Wallets.sendLoginCode({
  *   client: thirdwebClient,
  *   type: "phone",
  *   phoneNumber: "+1234567890",
@@ -39,7 +39,7 @@ export type SendCodeOptions = Prettify<
  * ```
  * @wallet
  */
-export async function sendCode(options: SendCodeOptions) {
+export async function sendLoginCode(options: SendLoginCodeOptions) {
   const { sendOtp } = await import("../../wallets/in-app/web/lib/auth/otp.js");
   switch (options.type) {
     case "email":
@@ -59,20 +59,20 @@ export async function sendCode(options: SendCodeOptions) {
   }
 }
 
-export type VerifyCodeOptions = Prettify<
+export type VerifyLoginCodeOptions = Prettify<
   BaseLoginOptions &
-    (
-      | {
-          type: "phone";
-          phoneNumber: string;
-          otp: string;
-        }
-      | {
-          type: "email";
-          email: string;
-          otp: string;
-        }
-    )
+  (
+    | {
+      type: "phone";
+      phoneNumber: string;
+      otp: string;
+    }
+    | {
+      type: "email";
+      email: string;
+      otp: string;
+    }
+  )
 >;
 
 /**
@@ -85,7 +85,7 @@ export type VerifyCodeOptions = Prettify<
  * import { Wallets } from "thirdweb/v2";
  *
  * // Login with email OTP
- * const userWallet = await Wallets.loginWithCode({
+ * const userWallet = await Wallets.verifyLoginCode({
  *   client: thirdwebClient,
  *   type: "email",
  *   email: "user@example.com",
@@ -93,7 +93,7 @@ export type VerifyCodeOptions = Prettify<
  * });
  *
  * // Login with phone OTP
- * const userWallet = await Wallets.loginWithCode({
+ * const userWallet = await Wallets.verifyLoginCode({
  *   client: thirdwebClient,
  *   type: "phone",
  *   phoneNumber: "+1234567890",
@@ -102,8 +102,8 @@ export type VerifyCodeOptions = Prettify<
  * ```
  * @wallet
  */
-export async function loginWithCode(
-  options: VerifyCodeOptions,
+export async function verifyLoginCode(
+  options: VerifyLoginCodeOptions
 ): Promise<UserWallet> {
   const { verifyOtp } = await import(
     "../../wallets/in-app/web/lib/auth/otp.js"

@@ -18,13 +18,13 @@ describe.skip("login tests", () => {
       clientId: "...",
     });
 
-    await Wallets.sendCode({
+    await Wallets.sendLoginCode({
       client,
       type: "phone",
       phoneNumber: "+1111111111",
     });
 
-    const wallet = await Wallets.verifyCode({
+    const wallet = await Wallets.verifyLoginCode({
       client,
       type: "phone",
       phoneNumber: "+1111111111",
