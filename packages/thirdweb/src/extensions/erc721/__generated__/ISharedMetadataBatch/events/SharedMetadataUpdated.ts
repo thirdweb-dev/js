@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "SharedMetadataUpdated" event.
@@ -36,8 +36,8 @@ export function sharedMetadataUpdatedEvent(
   filters: SharedMetadataUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event SharedMetadataUpdated(bytes32 indexed id, string name, string description, string imageURI, string animationURI)",
+    filters,
   });
 }

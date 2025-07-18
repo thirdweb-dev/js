@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getPermissionsForSigner" function.
@@ -16,36 +16,36 @@ export type GetPermissionsForSignerParams = {
 export const FN_SELECTOR = "0xf15d424e" as const;
 const FN_INPUTS = [
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
+    name: "permissions",
     components: [
       {
-        name: "signer",
         type: "address",
+        name: "signer",
       },
       {
-        name: "approvedTargets",
         type: "address[]",
+        name: "approvedTargets",
       },
       {
-        name: "nativeTokenLimitPerTransaction",
         type: "uint256",
+        name: "nativeTokenLimitPerTransaction",
       },
       {
+        type: "uint128",
         name: "startTimestamp",
-        type: "uint128",
       },
       {
-        name: "endTimestamp",
         type: "uint128",
+        name: "endTimestamp",
       },
     ],
-    name: "permissions",
-    type: "tuple",
   },
 ] as const;
 

@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getAllValidAuctions" function.
@@ -17,76 +17,76 @@ export type GetAllValidAuctionsParams = {
 export const FN_SELECTOR = "0x7b063801" as const;
 const FN_INPUTS = [
   {
-    name: "_startId",
     type: "uint256",
+    name: "_startId",
   },
   {
-    name: "_endId",
     type: "uint256",
+    name: "_endId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "auctions",
     components: [
       {
+        type: "uint256",
         name: "auctionId",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "quantity",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "minimumBidAmount",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "buyoutBidAmount",
-        type: "uint256",
       },
       {
+        type: "uint64",
         name: "timeBufferInSeconds",
-        type: "uint64",
       },
       {
+        type: "uint64",
         name: "bidBufferBps",
-        type: "uint64",
       },
       {
+        type: "uint64",
         name: "startTimestamp",
-        type: "uint64",
       },
       {
+        type: "uint64",
         name: "endTimestamp",
-        type: "uint64",
       },
       {
+        type: "address",
         name: "auctionCreator",
-        type: "address",
       },
       {
+        type: "address",
         name: "assetContract",
-        type: "address",
       },
       {
+        type: "address",
         name: "currency",
-        type: "address",
       },
       {
+        type: "uint8",
         name: "tokenType",
-        type: "uint8",
       },
       {
-        name: "status",
         type: "uint8",
+        name: "status",
       },
     ],
-    name: "auctions",
-    type: "tuple[]",
   },
 ] as const;
 

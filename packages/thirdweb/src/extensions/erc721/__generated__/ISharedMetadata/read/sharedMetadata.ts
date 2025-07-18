@@ -1,27 +1,28 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xb280f703" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "string",
     name: "name",
-    type: "string",
   },
   {
+    type: "string",
     name: "description",
-    type: "string",
   },
   {
+    type: "string",
     name: "imageURI",
-    type: "string",
   },
   {
-    name: "animationURI",
     type: "string",
+    name: "animationURI",
   },
 ] as const;
 

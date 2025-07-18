@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "verifySignerPermissionRequest" function.
@@ -31,60 +31,60 @@ export type VerifySignerPermissionRequestParams = {
 export const FN_SELECTOR = "0xa9082d84" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "req",
     components: [
       {
-        name: "signer",
         type: "address",
+        name: "signer",
       },
       {
-        name: "isAdmin",
         type: "uint8",
+        name: "isAdmin",
       },
       {
-        name: "approvedTargets",
         type: "address[]",
+        name: "approvedTargets",
       },
       {
-        name: "nativeTokenLimitPerTransaction",
         type: "uint256",
+        name: "nativeTokenLimitPerTransaction",
       },
       {
+        type: "uint128",
         name: "permissionStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "permissionEndTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "reqValidityStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "reqValidityEndTimestamp",
-        type: "uint128",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "req",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "success",
     type: "bool",
+    name: "success",
   },
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 

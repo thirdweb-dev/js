@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getUserOpHash" function.
@@ -30,46 +30,46 @@ export type GetUserOpHashParams = {
 export const FN_SELECTOR = "0x22cdde4c" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "userOp",
     components: [
       {
-        name: "sender",
         type: "address",
+        name: "sender",
       },
       {
+        type: "uint256",
         name: "nonce",
-        type: "uint256",
       },
       {
+        type: "bytes",
         name: "initCode",
-        type: "bytes",
       },
       {
+        type: "bytes",
         name: "callData",
-        type: "bytes",
       },
       {
+        type: "bytes32",
         name: "accountGasLimits",
-        type: "bytes32",
       },
       {
-        name: "preVerificationGas",
         type: "uint256",
+        name: "preVerificationGas",
       },
       {
-        name: "gasFees",
         type: "bytes32",
+        name: "gasFees",
       },
       {
+        type: "bytes",
         name: "paymasterAndData",
-        type: "bytes",
       },
       {
-        name: "signature",
         type: "bytes",
+        name: "signature",
       },
     ],
-    name: "userOp",
-    type: "tuple",
   },
 ] as const;
 const FN_OUTPUTS = [

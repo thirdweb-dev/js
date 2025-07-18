@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "TokensLazyMinted" event.
@@ -36,8 +36,8 @@ export function tokensLazyMintedEvent(
   filters: TokensLazyMintedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)",
+    filters,
   });
 }

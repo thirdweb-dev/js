@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getPublisherProfileUri" function.
@@ -19,14 +19,14 @@ export type GetPublisherProfileUriParams = {
 export const FN_SELECTOR = "0x4f781675" as const;
 const FN_INPUTS = [
   {
-    name: "publisher",
     type: "address",
+    name: "publisher",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "uri",
     type: "string",
+    name: "uri",
   },
 ] as const;
 

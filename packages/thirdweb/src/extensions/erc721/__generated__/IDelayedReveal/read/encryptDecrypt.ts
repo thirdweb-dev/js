@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "encryptDecrypt" function.
@@ -17,18 +17,18 @@ export type EncryptDecryptParams = {
 export const FN_SELECTOR = "0xe7150322" as const;
 const FN_INPUTS = [
   {
-    name: "data",
     type: "bytes",
+    name: "data",
   },
   {
-    name: "key",
     type: "bytes",
+    name: "key",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "bytes",
+    name: "result",
   },
 ] as const;
 

@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "verify" function.
@@ -34,72 +34,72 @@ export type VerifyParams = {
 export const FN_SELECTOR = "0xb17cd86f" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "req",
     components: [
       {
+        type: "address",
         name: "to",
-        type: "address",
       },
       {
+        type: "address",
         name: "royaltyRecipient",
-        type: "address",
       },
       {
+        type: "uint256",
         name: "royaltyBps",
-        type: "uint256",
       },
       {
+        type: "address",
         name: "primarySaleRecipient",
-        type: "address",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
       },
       {
-        name: "uri",
         type: "string",
+        name: "uri",
       },
       {
+        type: "uint256",
         name: "quantity",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "pricePerToken",
-        type: "uint256",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
+        type: "uint128",
         name: "validityStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "validityEndTimestamp",
-        type: "uint128",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "req",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "success",
     type: "bool",
+    name: "success",
   },
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 

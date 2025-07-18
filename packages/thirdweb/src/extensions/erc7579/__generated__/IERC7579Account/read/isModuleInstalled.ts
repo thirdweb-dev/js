@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "isModuleInstalled" function.
@@ -24,16 +24,16 @@ export type IsModuleInstalledParams = {
 export const FN_SELECTOR = "0x112d3a7d" as const;
 const FN_INPUTS = [
   {
-    name: "moduleTypeId",
     type: "uint256",
+    name: "moduleTypeId",
   },
   {
-    name: "module",
     type: "address",
+    name: "module",
   },
   {
-    name: "additionalContext",
     type: "bytes",
+    name: "additionalContext",
   },
 ] as const;
 const FN_OUTPUTS = [

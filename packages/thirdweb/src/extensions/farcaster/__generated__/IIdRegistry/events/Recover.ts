@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "Recover" event.
@@ -46,8 +46,8 @@ export type RecoverEventFilters = Partial<{
  */
 export function recoverEvent(filters: RecoverEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event Recover(address indexed from, address indexed to, uint256 indexed id)",
+    filters,
   });
 }

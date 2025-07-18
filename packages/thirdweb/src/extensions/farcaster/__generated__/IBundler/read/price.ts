@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "price" function.
@@ -19,8 +19,8 @@ export type PriceParams = {
 export const FN_SELECTOR = "0x26a49e37" as const;
 const FN_INPUTS = [
   {
-    name: "extraStorage",
     type: "uint256",
+    name: "extraStorage",
   },
 ] as const;
 const FN_OUTPUTS = [

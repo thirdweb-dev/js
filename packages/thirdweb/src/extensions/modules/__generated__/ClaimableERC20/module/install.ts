@@ -4,12 +4,12 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../../utils/address.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
-import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
-import { installPublishedModule } from "../../../common/installPublishedModule.js";
 import {
   type EncodeBytesOnInstallParams,
   encodeBytesOnInstallParams,
 } from "../encode/encodeBytesOnInstall.js";
+import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
+import { installPublishedModule } from "../../../common/installPublishedModule.js";
 
 const contractId = "ClaimableERC20";
 
@@ -55,8 +55,8 @@ export function module(
       publisher: params?.publisher,
     });
     return {
-      data: encodeInstall(params),
       module: moduleContract.address as Address,
+      data: encodeInstall(params),
     };
   };
 }
@@ -92,8 +92,8 @@ export function install(options: {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
-    moduleData: encodeInstall(options.params),
     moduleName: contractId,
+    moduleData: encodeInstall(options.params),
     publisher: options.params?.publisher,
   });
 }

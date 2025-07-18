@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getWrappedContents" function.
@@ -16,32 +16,32 @@ export type GetWrappedContentsParams = {
 export const FN_SELECTOR = "0xd5576d26" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenId",
     type: "uint256",
+    name: "_tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "contents",
     components: [
       {
-        name: "assetContract",
         type: "address",
+        name: "assetContract",
       },
       {
-        name: "tokenType",
         type: "uint8",
+        name: "tokenType",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
       },
       {
-        name: "amount",
         type: "uint256",
+        name: "amount",
       },
     ],
-    name: "contents",
-    type: "tuple[]",
   },
 ] as const;
 

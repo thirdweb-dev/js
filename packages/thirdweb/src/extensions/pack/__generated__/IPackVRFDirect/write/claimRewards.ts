@@ -1,5 +1,5 @@
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
@@ -7,26 +7,26 @@ export const FN_SELECTOR = "0x372500ab" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "rewardUnits",
     components: [
       {
-        name: "assetContract",
         type: "address",
+        name: "assetContract",
       },
       {
-        name: "tokenType",
         type: "uint8",
+        name: "tokenType",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
       },
       {
-        name: "totalAmount",
         type: "uint256",
+        name: "totalAmount",
       },
     ],
-    name: "rewardUnits",
-    type: "tuple[]",
   },
 ] as const;
 

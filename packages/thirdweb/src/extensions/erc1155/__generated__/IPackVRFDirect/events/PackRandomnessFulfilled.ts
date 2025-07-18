@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "PackRandomnessFulfilled" event.
@@ -42,8 +42,8 @@ export function packRandomnessFulfilledEvent(
   filters: PackRandomnessFulfilledEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event PackRandomnessFulfilled(uint256 indexed packId, uint256 indexed requestId)",
+    filters,
   });
 }

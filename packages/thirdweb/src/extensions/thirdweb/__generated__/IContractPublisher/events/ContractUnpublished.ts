@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "ContractUnpublished" event.
@@ -48,8 +48,8 @@ export function contractUnpublishedEvent(
   filters: ContractUnpublishedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event ContractUnpublished(address indexed operator, address indexed publisher, string indexed contractId)",
+    filters,
   });
 }

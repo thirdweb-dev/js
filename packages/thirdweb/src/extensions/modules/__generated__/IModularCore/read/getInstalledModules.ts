@@ -1,62 +1,63 @@
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0x3e429396" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
     components: [
       {
-        name: "implementation",
         type: "address",
+        name: "implementation",
       },
       {
+        type: "tuple",
+        name: "config",
         components: [
           {
-            name: "registerInstallationCallback",
             type: "bool",
+            name: "registerInstallationCallback",
           },
           {
+            type: "bytes4[]",
             name: "requiredInterfaces",
-            type: "bytes4[]",
           },
           {
+            type: "bytes4[]",
             name: "supportedInterfaces",
-            type: "bytes4[]",
           },
           {
-            components: [
-              {
-                name: "selector",
-                type: "bytes4",
-              },
-            ],
+            type: "tuple[]",
             name: "callbackFunctions",
-            type: "tuple[]",
-          },
-          {
             components: [
               {
-                name: "selector",
                 type: "bytes4",
-              },
-              {
-                name: "permissionBits",
-                type: "uint256",
+                name: "selector",
               },
             ],
-            name: "fallbackFunctions",
+          },
+          {
             type: "tuple[]",
+            name: "fallbackFunctions",
+            components: [
+              {
+                type: "bytes4",
+                name: "selector",
+              },
+              {
+                type: "uint256",
+                name: "permissionBits",
+              },
+            ],
           },
         ],
-        name: "config",
-        type: "tuple",
       },
     ],
-    type: "tuple[]",
   },
 ] as const;
 

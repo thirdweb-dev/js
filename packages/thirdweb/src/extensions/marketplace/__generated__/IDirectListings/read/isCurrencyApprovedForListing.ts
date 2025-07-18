@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "isCurrencyApprovedForListing" function.
@@ -20,12 +20,12 @@ export type IsCurrencyApprovedForListingParams = {
 export const FN_SELECTOR = "0xa8519047" as const;
 const FN_INPUTS = [
   {
-    name: "_listingId",
     type: "uint256",
+    name: "_listingId",
   },
   {
-    name: "_currency",
     type: "address",
+    name: "_currency",
   },
 ] as const;
 const FN_OUTPUTS = [

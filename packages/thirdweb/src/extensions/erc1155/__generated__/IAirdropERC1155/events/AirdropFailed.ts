@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "AirdropFailed" event.
@@ -46,8 +46,8 @@ export type AirdropFailedEventFilters = Partial<{
  */
 export function airdropFailedEvent(filters: AirdropFailedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event AirdropFailed(address indexed tokenAddress, address indexed tokenOwner, address indexed recipient, uint256 tokenId, uint256 amount)",
+    filters,
   });
 }

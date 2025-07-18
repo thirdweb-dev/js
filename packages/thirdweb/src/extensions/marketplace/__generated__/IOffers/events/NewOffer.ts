@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "NewOffer" event.
@@ -46,8 +46,8 @@ export type NewOfferEventFilters = Partial<{
  */
 export function newOfferEvent(filters: NewOfferEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event NewOffer(address indexed offeror, uint256 indexed offerId, address indexed assetContract, (uint256 offerId, uint256 tokenId, uint256 quantity, uint256 totalPrice, uint256 expirationTimestamp, address offeror, address assetContract, address currency, uint8 tokenType, uint8 status) offer)",
+    filters,
   });
 }

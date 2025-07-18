@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "RolesUpdated" event.
@@ -40,8 +40,8 @@ export type RolesUpdatedEventFilters = Partial<{
  */
 export function rolesUpdatedEvent(filters: RolesUpdatedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event RolesUpdated(address indexed user, uint256 indexed roles)",
+    filters,
   });
 }

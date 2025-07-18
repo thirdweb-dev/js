@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getDepositInfo" function.
@@ -16,36 +16,36 @@ export type GetDepositInfoParams = {
 export const FN_SELECTOR = "0x5287ce12" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
+    name: "info",
     components: [
       {
+        type: "uint112",
         name: "deposit",
-        type: "uint112",
       },
       {
-        name: "staked",
         type: "bool",
+        name: "staked",
       },
       {
-        name: "stake",
         type: "uint112",
+        name: "stake",
       },
       {
-        name: "unstakeDelaySec",
         type: "uint32",
+        name: "unstakeDelaySec",
       },
       {
-        name: "withdrawTime",
         type: "uint48",
+        name: "withdrawTime",
       },
     ],
-    name: "info",
-    type: "tuple",
   },
 ] as const;
 

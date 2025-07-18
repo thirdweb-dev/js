@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "CancelledListing" event.
@@ -42,8 +42,8 @@ export function cancelledListingEvent(
   filters: CancelledListingEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event CancelledListing(address indexed listingCreator, uint256 indexed listingId)",
+    filters,
   });
 }

@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "proposals" function.
@@ -16,30 +16,30 @@ export type ProposalsParams = {
 export const FN_SELECTOR = "0x013cf08b" as const;
 const FN_INPUTS = [
   {
-    name: "key",
     type: "uint256",
+    name: "key",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "uint256",
     name: "proposalId",
-    type: "uint256",
   },
   {
-    name: "proposer",
     type: "address",
+    name: "proposer",
   },
   {
+    type: "uint256",
     name: "startBlock",
-    type: "uint256",
   },
   {
+    type: "uint256",
     name: "endBlock",
-    type: "uint256",
   },
   {
-    name: "description",
     type: "string",
+    name: "description",
   },
 ] as const;
 

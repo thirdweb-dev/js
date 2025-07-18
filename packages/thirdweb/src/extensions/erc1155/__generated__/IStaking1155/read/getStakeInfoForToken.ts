@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getStakeInfoForToken" function.
@@ -17,22 +17,22 @@ export type GetStakeInfoForTokenParams = {
 export const FN_SELECTOR = "0x168fb5c5" as const;
 const FN_INPUTS = [
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
   {
-    name: "staker",
     type: "address",
+    name: "staker",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "_tokensStaked",
     type: "uint256",
+    name: "_tokensStaked",
   },
   {
-    name: "_rewards",
     type: "uint256",
+    name: "_rewards",
   },
 ] as const;
 

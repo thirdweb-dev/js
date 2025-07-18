@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "ClaimConditionsUpdated" event.
@@ -36,8 +36,8 @@ export function claimConditionsUpdatedEvent(
   filters: ClaimConditionsUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature:
       "event ClaimConditionsUpdated(uint256 indexed tokenId, (uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, bytes32 merkleRoot, uint256 pricePerToken, address currency, string metadata)[] claimConditions, bool resetEligibility)",
+    filters,
   });
 }

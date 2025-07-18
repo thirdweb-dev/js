@@ -1,5 +1,5 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "Approval" event.
@@ -40,8 +40,8 @@ export type ApprovalEventFilters = Partial<{
  */
 export function approvalEvent(filters: ApprovalEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature:
       "event Approval(address indexed owner, address indexed spender, uint256 value)",
+    filters,
   });
 }
