@@ -50,6 +50,7 @@ type ReferenceSideBarProps = {
   links: SidebarLink[];
   onLinkClick?: () => void;
   header?: React.ReactNode;
+  name: string;
 };
 
 export function DocSidebar(props: ReferenceSideBarProps) {
