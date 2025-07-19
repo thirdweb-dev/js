@@ -1,12 +1,12 @@
 // export { CustomAccordion } from "../others/CustomAccordion";
 
+export { Badge } from "../ui/badge";
 // export { Table } from "./Table";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 export { AuthList } from "./AuthList";
 export { Breadcrumb } from "./Breadcrumb";
 export { Callout } from "./Callout";
 export { ArticleCard, ArticleIconCard } from "./Cards/ArticleCard";
-export { ConnectCard } from "./Cards/ConnectCard";
 export { GithubTemplateCard } from "./Cards/GithubTemplateCard";
 export { CodeBlock } from "./Code";
 export { Details } from "./Details";

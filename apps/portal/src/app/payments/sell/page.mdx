@@ -1,0 +1,77 @@
+import {
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+import {
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+} from "@/icons";
+import { ExternalLink } from "lucide-react";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Payments",
+    icon: "pay",
+  },
+  title: "Sell Tokens",
+  description: "Learn how to sell tokens with thirdweb Payments.",
+});
+
+# Sell a Specific Amount of Tokens
+
+You can create a payment with either the input amount (sell) or output amount (buy) of a token. Most examples focus on buying a specific amount, but you can just as easily sell a specific amount of tokens.
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="typescript">
+    ### Generate a sell payment
+
+    To generate a sale, use the same inputs as `Buy.prepare`, but with the `Sell.prepare` function. The following function will sell 50 USDT on Arbitrum. The returned `destinationAmount` will indicate how much USDC on Optimism you'll receive after fees.
+
+    ```typescript
+    import { Bridge } from "thirdweb";
+
+    const preparedQuote = await Bridge.Sell.prepare({
+  originChainId: 42161,
+  originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT on Arbitrum
+  destinationChainId: 50,
+  destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // USDC on Optimism
+  amount: 10_000_000n, // 10 USDC in wei (USDC has 6 decimals)
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  receiver: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  client,
+});
+    ```
+
+    You can execute this quote exactly like a buy. See the [Send a Payment](/payments/send) guide for more details on this process.
+</TabsContent>
+</Tabs>
+
+## Going further
+
+To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
+
+- [Send a Payment](/payments/send)
+- [Get Routes](/payments/routes)
+
+## Explore Full API References
+
+- [Bridge.Sell.prepare](/references/typescript/v5/sell/prepare)

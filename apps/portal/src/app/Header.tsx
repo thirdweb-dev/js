@@ -32,11 +32,11 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
-    href: "/connect",
+    href: "/wallets",
     name: "Wallets",
   },
   {
-    href: "/pay",
+    href: "/payments",
     name: "Payments",
   },
   {
@@ -196,9 +196,10 @@ const supportLinks = [
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background p-2 lg:px-4">
+    <header className="flex w-full flex-col gap-2 border-b bg-background pt-4 px-4 lg:px-8 overflow-hidden">
       <div className="container flex items-center justify-between gap-6">
         {/* Top row */}
         <div className="flex items-center gap-2">
@@ -273,7 +274,7 @@ export function Header() {
             {links.map((link) => {
               return (
                 <li
-                  className="flex items-center"
+                  className="flex items-center py-4 relative overflow-hidden"
                   key={link.href}
                   onClick={() => {
                     setShowBurgerMenu(false);
@@ -283,6 +284,9 @@ export function Header() {
                   }}
                 >
                   <NavLink href={link.href} name={link.name} />
+                  {pathname.includes(link.href) && (
+                    <div className="bg-violet-700 h-1 inset-x-0.5 rounded-full absolute -bottom-0.5" />
+                  )}
                 </li>
               );
             })}
@@ -506,7 +510,9 @@ function NavLink(props: {
     <Link
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
-        pathname === props.href ? "text-foreground" : "text-muted-foreground ",
+        pathname.includes(props.href)
+          ? "text-foreground"
+          : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",
       )}
       href={props.href}
@@ -515,7 +521,7 @@ function NavLink(props: {
     >
       {props.icon ? (
         <>
-          <props.icon className="size-6 text-muted-foreground" />
+          <props.icon className="size-6" />
           <span className="my-auto">{props.name}</span>
         </>
       ) : (

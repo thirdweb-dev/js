@@ -146,8 +146,8 @@ export const MarkdownRenderer: React.FC<{
           li: ({ children: c, ...props }) => (
             <li
               className={cn(
-                "mb-1.5 text-muted-foreground leading-loose [&>p]:m-0",
                 markdownProps.li?.className,
+                "mb-1.5 text-muted-foreground leading-loose [&>p]:m-0",
               )}
               {...cleanedProps(props)}
             >
@@ -156,16 +156,16 @@ export const MarkdownRenderer: React.FC<{
           ),
           ol: (props) => (
             <ol
-              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
               {...cleanedProps(props)}
+              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
             />
           ),
 
           p: (props) => (
             <p
               className={cn(
-                "mb-4 text-muted-foreground leading-loose",
                 markdownProps.p?.className,
+                "mb-4 text-muted-foreground leading-loose",
               )}
               {...cleanedProps(props)}
             />
@@ -200,8 +200,8 @@ export const MarkdownRenderer: React.FC<{
           ul: (props) => {
             return (
               <ul
-                className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
                 {...cleanedProps(props)}
+                className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
               />
             );
           },

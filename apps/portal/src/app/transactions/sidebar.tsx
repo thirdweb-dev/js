@@ -12,19 +12,19 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
-    {
-      href: `${transactionsSlug}/sponsor`,
-      name: "Sponsor Gas",
-    },
-    {
-      href: `${transactionsSlug}/monitor`,
-      name: "Monitor Transactions",
-    },
     { separator: true },
     {
       name: "Guides",
       isCollapsible: false,
       links: [
+        {
+          href: `${transactionsSlug}/sponsor`,
+          name: "Sponsor Gas",
+        },
+        {
+          href: `${transactionsSlug}/monitor`,
+          name: "Monitor Transactions",
+        },
         {
           href: `${transactionsSlug}/distribute-tokens`,
           name: "Distribute Tokens",
