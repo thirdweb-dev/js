@@ -51,7 +51,7 @@ export function DocLayout(props: DocLayoutProps) {
         data-noindex={props.noIndex}
       >
         <div className="grow xl:mt-6">
-          <h5 className="mb-2 text-sm font-semibold text-violet-600">
+          <h5 className="mb-2 text-sm font-semibold text-violet-500">
             {props.sideBar.name}
           </h5>
           {props.children}
