@@ -18,8 +18,8 @@ export function PageFooter(props: {
 }) {
   return (
     <footer className="flex flex-col gap-7 pb-20" data-noindex>
-      <div className="flex flex-col justify-between gap-7 md:flex-row md:items-center">
-        <div className="flex gap-4">
+      <div className="flex flex-col justify-between gap-7">
+        <div className="flex gap-4 justify-between items-center">
           {props.editPageButton && <AutoEditPageButton />}
           {props.sidebarLinks && (
             <AutoNextPageButton sidebarLinks={props.sidebarLinks} />

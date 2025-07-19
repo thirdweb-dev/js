@@ -1,19 +1,14 @@
 import { ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
-import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
+import { EngineIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
-// TODO: remove all unused pages
-const inAppSlug = "/payments/in-app-wallet";
-const connectSlug = "/payments";
-const walletSlug = "/payments/wallet";
-const aAslug = "/payments/account-abstraction";
-const authSlug = "/payments/auth";
+const paymentsSlug = "/payments";
 
 export const sidebar: SideBar = {
   links: [
     {
-      href: connectSlug,
+      href: paymentsSlug,
       name: "Get Started",
       icon: <ZapIcon />,
     },
@@ -22,40 +17,32 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `${walletSlug}/sign-in-methods/configure`,
-          name: "Create Wallets",
+          href: `${paymentsSlug}/send`,
+          name: "Send a Payment",
         },
         {
-          href: `${aAslug}/get-started`,
-          name: "Sponsor Gas",
+          href: `${paymentsSlug}/sell`,
+          name: "Sell Tokens",
         },
         {
-          href: `${walletSlug}/get-users`,
-          name: "Fetch Users",
+          href: `${paymentsSlug}/products`,
+          name: "Sell a Product",
         },
         {
-          href: `${walletSlug}/pregenerate-wallets`,
-          name: "Pregenerate Wallets",
+          href: `${paymentsSlug}/tokens`,
+          name: "Get Token Prices",
         },
         {
-          href: `${inAppSlug}/custom-auth/configuration`,
-          name: "Bring your own Auth",
+          href: `${paymentsSlug}/routes`,
+          name: "Get Routes",
         },
         {
-          href: `${authSlug}`,
-          name: "Sign in with Ethereum",
+          href: `${paymentsSlug}/webhooks`,
+          name: "Webhooks",
         },
         {
-          href: `${walletSlug}/user-management/link-multiple-identity`,
-          name: "Link Multiple Identities",
-        },
-        {
-          href: `${walletSlug}/user-management/export-private-key`,
-          name: "Export Private Keys",
-        },
-        {
-          href: `${connectSlug}/external-wallets`,
-          name: "External Wallets",
+          href: `${paymentsSlug}/custom-data`,
+          name: "Custom Data",
         },
       ],
       name: "Guides",
@@ -65,6 +52,11 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
+          href: `https://payments.thirdweb.com/reference`,
+          icon: <EngineIcon />,
+          name: "REST API",
+        },
+        {
           href: "/references/typescript/v5",
           icon: <TypeScriptIcon />,
           name: "TypeScript",
@@ -73,16 +65,6 @@ export const sidebar: SideBar = {
           href: "/references/typescript/v5",
           icon: <ReactIcon />,
           name: "React",
-        },
-        {
-          href: "/references/typescript/v5",
-          icon: <ReactIcon />,
-          name: "React Native",
-        },
-        {
-          href: "/dotnet",
-          icon: <DotNetIcon />,
-          name: "Dotnet",
         },
         {
           href: "/unity",
@@ -113,11 +95,7 @@ export const sidebar: SideBar = {
           name: "Templates",
         },
         {
-          href: `${walletSlug}/security`,
-          name: "Security",
-        },
-        {
-          href: `${walletSlug}/faq`,
+          href: `${paymentsSlug}/faq`,
           name: "FAQ",
         },
       ],

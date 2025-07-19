@@ -104,8 +104,10 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
     return (
       <Link
         className={clsx(
-          "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground text-sm rounded-md hover:bg-violet-800/15",
-          isActive ? "font-medium text-foreground bg-violet-800/25" : "",
+          "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground text-sm rounded-lg hover:bg-violet-800/15",
+          isActive
+            ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
+            : "",
           "flex flex-row items-center gap-2",
         )}
         href={link.href}
@@ -123,8 +125,10 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
   return (
     <Link
       className={clsx(
-        "block overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-violet-800/15 text-sm rounded-md",
-        isActive ? "font-medium text-foreground bg-violet-800/25" : "",
+        "block overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-violet-800/15 border border-transparent hover:border-violet-800/50 text-sm rounded-lg",
+        isActive
+          ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
+          : "",
       )}
       href={link.href}
       onClick={props.onLinkClick}
@@ -145,12 +149,12 @@ function DocSidebarNonCollapsible(props: {
 
   return (
     <div className="my-4">
-      <div className="mb-2 px-3 flex items-center gap-2 rounded-md text-foreground">
+      <div className="mb-2 px-3 flex items-center gap-2 rounded-lg text-foreground">
         {icon && <SidebarIcon icon={icon} />}
         {href ? (
           <Link
             className={cn(
-              "block hover:bg-violet-800/15",
+              "block hover:bg-violet-800/20 hover:border-violet-800/50 border border-transparent",
               isCategoryActive && "text-foreground",
             )}
             href={href}
