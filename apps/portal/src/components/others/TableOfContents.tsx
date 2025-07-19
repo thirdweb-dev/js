@@ -1,10 +1,10 @@
 "use client";
 
+import { BookOpenTextIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { BookIcon, BookOpenTextIcon } from "lucide-react";
 
 /**
  * Automatically query all the heading anchors inside the <main> and creates a table of contents
