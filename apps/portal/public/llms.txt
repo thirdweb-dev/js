@@ -5,7 +5,7 @@
 ---
 **UI Components**
 ---
-# Universal Bridge
+# Payments
 ---
 ## Widgets
 * [Widgets.BuyWidget](https://portal.thirdweb.com/references/typescript/v5/widgets/BuyWidget): Widget is a prebuilt UI for purchasing a specific token.
@@ -21,7 +21,6 @@
 * [WalletProvider](https://portal.thirdweb.com/references/typescript/v5/WalletProvider): A React context provider component that supplies Wallet-related data to its child components.
 ---
 # Wallet Connection
-* [AutoConnectProps](https://portal.thirdweb.com/references/typescript/v5/AutoConnect): Enable Account abstraction for all wallets. This will connect to the users's smart account based on the connected personal wallet and the given options.
 * [ConnectButton](https://portal.thirdweb.com/references/typescript/v5/ConnectButton): A fully featured wallet connection component that allows to:
 * [ConnectEmbed](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbed): An inline wallet connection component that allows to:
 * [SiteEmbed](https://portal.thirdweb.com/references/typescript/v5/SiteEmbed): Embeds another thirdweb-supported site for seamless in-app and ecosystem wallet connection.
@@ -135,7 +134,7 @@
 * [DEPLOY.deployERC1155Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC1155Contract): Deploys an thirdweb ERC1155 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.deployERC20Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC20Contract): Deploys an thirdweb ERC20 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.deployERC721Contract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployERC721Contract): Deploys an thirdweb ERC721 contract of the given type. On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
-
+* [DEPLOY.deployPackContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployPackContract): \[Pack contract is incompatible with Pectra update. Support for this contract is being removed in next release.\]
 * [DEPLOY.deployPublishedContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deployPublishedContract): Deploy an instance of a published contract on a given chain
 * [DEPLOY.deploySplitContract](https://portal.thirdweb.com/references/typescript/v5/deploy/deploySplitContract): Deploys a thirdweb [Split contract](https://thirdweb.com/thirdweb.eth/Split)On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
 * [DEPLOY.prepareDeterministicDeployTransaction](https://portal.thirdweb.com/references/typescript/v5/deploy/prepareDeterministicDeployTransaction): Deploy a contract deterministically - will maintain the same address across chains. This is meant to be used with published contracts configured with the 'direct deploy' method. Under the hood, this uses a keyless transaction with a common create2 factory.
@@ -982,7 +981,7 @@
 * [TransferableERC721.setTransferable](https://portal.thirdweb.com/references/typescript/v5/transferableerc721/setTransferable): Prepares a transaction to call the "setTransferable" function on the contract.
 * [TransferableERC721.setTransferableFor](https://portal.thirdweb.com/references/typescript/v5/transferableerc721/setTransferableFor): Prepares a transaction to call the "setTransferableFor" function on the contract.
 ---
-# Universal Bridge
+# Payments
 ---
 ## Buy
 * [Buy.prepare](https://portal.thirdweb.com/references/typescript/v5/buy/prepare): Prepares a _finalized_ Universal Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
@@ -1029,6 +1028,7 @@
 * [ERC7579.erc7579](https://portal.thirdweb.com/references/typescript/v5/erc7579): Config for a ERC7579 modular smart wallet.
 ---
 # Wallet Connection
+* [AutoConnectProps](https://portal.thirdweb.com/references/typescript/v5/AutoConnect): Enable Account abstraction for all wallets. This will connect to the users's smart account based on the connected personal wallet and the given options.
 * [AutoConnect](https://portal.thirdweb.com/references/typescript/v5/autoConnect): AutoConnect last connected wallet on page reload or revisit. Note: If you are using `ConnectButton` or `ConnectEmbed` components, You don't need to use this component as it is already included.
 ---
 # Wallet Utilities
@@ -1113,7 +1113,7 @@
 * [getTransactions](https://portal.thirdweb.com/references/typescript/v5/getTransactions): Get transactions for a wallet
 ---
 # Engine
-* [createServerWallet](https://portal.thirdweb.com/references/typescript/v5/createServerWallet): Create a server wallet.
+* [createServerWallet](https://portal.thirdweb.com/references/typescript/v5/createServerWallet): Create a new server wallet.
 * [getServerWallets](https://portal.thirdweb.com/references/typescript/v5/getServerWallets): List all server wallets.
 * [getTransactionStatus](https://portal.thirdweb.com/references/typescript/v5/getTransactionStatus): Get the execution status of a transaction.
 * [searchTransactions](https://portal.thirdweb.com/references/typescript/v5/searchTransactions): Search for transactions by their ids.
@@ -1254,6 +1254,8 @@
 * [installPublishedExtension](https://portal.thirdweb.com/references/typescript/v5/installPublishedExtension): Install a published extension on a dynamic contract
 * [uninstallExtension](https://portal.thirdweb.com/references/typescript/v5/uninstallExtension): Uninstall an extension on a dynamic contract
 * [activateStylusContract](https://portal.thirdweb.com/references/typescript/v5/activateStylusContract): Activate a stylus contract by calling ArbWasm Precompile
+* [deployWithStylusConstructor](https://portal.thirdweb.com/references/typescript/v5/deployWithStylusConstructor): Deploy stylus contract with constructor params
+* [isContractActivated](https://portal.thirdweb.com/references/typescript/v5/isContractActivated): Reference for isContractActivated
 * [convertCryptoToFiat](https://portal.thirdweb.com/references/typescript/v5/convertCryptoToFiat): Get a price of a token (using tokenAddress + chainId) in fiat. Only USD is supported at the moment.
 * [convertFiatToCrypto](https://portal.thirdweb.com/references/typescript/v5/convertFiatToCrypto): Convert a fiat value to a token. Currently only USD is supported.
 * [getBuyHistory](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory): Get Buy transaction history for a given wallet address.
