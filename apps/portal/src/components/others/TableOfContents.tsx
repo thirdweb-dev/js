@@ -124,7 +124,7 @@ export function TableOfContentsSideBar(props: {
         visibility: hideNav ? "hidden" : "visible",
       }}
     >
-      <div className="bg-muted text-sm p-4 border rounded-lg shadow-sm">
+      <div className="bg-card text-sm p-4 border rounded-lg shadow-sm">
         <div className="font-medium flex items-center">
           <BookOpenTextIcon className="mr-2 size-4" />
           On this page

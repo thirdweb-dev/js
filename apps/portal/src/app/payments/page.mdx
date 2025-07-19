@@ -10,6 +10,7 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
+  Badge
 } from "@doc";
 import {
   ReactIcon,
@@ -30,27 +31,29 @@ export const metadata = createMetadata({
   description: "Monetize your app with thirdweb Payments. Sell products, transfer funds between users, launch tokens, and more.",
 });
 
-# Get Started with Payments
+# Get Started
 
 thirdweb Payments allow developers to create advanced payment flows to monetize their apps through product sales, peer to peer payments, token sales, and more.
 
 <Tabs defaultValue="typescript">
   <TabsList>
-    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
-      <TypeScriptIcon className="w-4 h-4 mr-2" />
+    <TabsTrigger value="typescript" className="flex items-center [&>p]:mb-0">
+      <TypeScriptIcon className="size-4 mr-1.5" />
       TypeScript
     </TabsTrigger>
-    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
-      <ReactIcon className="w-4 h-4 mr-2" />
+    <TabsTrigger value="react" className="flex items-center [&>p]:mb-0">
+      <ReactIcon className="size-4 mr-1.5" />
       React
     </TabsTrigger>
-    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
-      <EngineIcon className="w-4 h-4 mr-2" />
+    <TabsTrigger value="http" className="flex items-center [&>p]:mb-0">
+      <EngineIcon className="size-4 mr-1.5" />
       HTTP API
     </TabsTrigger>
   </TabsList>
 
   <TabsContent value="typescript">
+    Get started sending payments in your apps with the thirdweb TypeScript SDK.
+
     ### Installation
 
     Install the thirdweb SDK in your TypeScript project:

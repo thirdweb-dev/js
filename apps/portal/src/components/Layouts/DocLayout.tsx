@@ -50,7 +50,12 @@ export function DocLayout(props: DocLayoutProps) {
         data-no-llm={props.noLLM}
         data-noindex={props.noIndex}
       >
-        <div className="grow xl:mt-6">{props.children}</div>
+        <div className="grow xl:mt-6">
+          <h5 className="mb-2 text-sm font-semibold text-violet-600">
+            {props.sideBar.name}
+          </h5>
+          {props.children}
+        </div>
         <div className="mt-16 xl:mt-20">
           <PageFooter
             editPageButton={props.editPageButton}

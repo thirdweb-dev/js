@@ -2,6 +2,7 @@
 
 // export { Table } from "./Table";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+export { Badge } from "../ui/badge";
 export { AuthList } from "./AuthList";
 export { Breadcrumb } from "./Breadcrumb";
 export { Callout } from "./Callout";
