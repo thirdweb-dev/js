@@ -52,9 +52,9 @@ You can create a payment with either the input amount (sell) or output amount (b
     const preparedQuote = await Bridge.Sell.prepare({
   originChainId: 42161,
   originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT on Arbitrum
-  destinationChainId: 50,
+  destinationChainId: 10,
   destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // USDC on Optimism
-  amount: 10_000_000n, // 10 USDC in wei (USDC has 6 decimals)
+  amount: 50_000_000n, // 50 USDT in wei (USDT has 6 decimals)
   sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
   receiver: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   client,

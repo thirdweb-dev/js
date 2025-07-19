@@ -285,7 +285,7 @@ export function Header() {
                 >
                   <NavLink href={link.href} name={link.name} />
                   {pathname.includes(link.href) && (
-                    <div className="bg-violet-700 h-1 left-0.5 right-0.5 rounded-full absolute -bottom-0.5" />
+                    <div className="bg-violet-700 h-1 inset-x-0.5 rounded-full absolute -bottom-0.5" />
                   )}
                 </li>
               );

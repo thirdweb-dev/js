@@ -1,6 +1,6 @@
 .unorderedList,
 .orderedList {
-  @apply pl-5 leading-7 list-none mb-6 
+  @apply pl-5 leading-7 list-none mb-6;
 }
 
 .unorderedList > li {
