@@ -192,15 +192,6 @@ export function MobileBurgerMenuButton(
               </Link>
 
               <Link
-                className="text-muted-foreground hover:text-foreground "
-                href="/support"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Support
-              </Link>
-
-              <Link
                 className="text-muted-foreground hover:text-foreground"
                 href="https://feedback.thirdweb.com"
                 rel="noopener noreferrer"
