@@ -17,6 +17,7 @@ import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { radius, spacing } from "../../design-system/index.js";
+import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { type ContainerType, Header } from "../components/Header.js";
@@ -74,6 +75,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     ...props,
     connectModal: { ...props },
   } as ConnectButtonProps;
+  useAutoConnect({
+    ...props,
+    siweAuth: siweAuth,
+  });
+
   return isConnected ? null : (
     <ConnectModal
       {...adaptedProps}
