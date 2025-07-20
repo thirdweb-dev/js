@@ -18,7 +18,7 @@ export type TransactionsFilterNested = {
 };
 
 /**
- * ### Address
+ * EVM Address
  * Used to represent an EVM address. This is a string of length 42 with a `0x` prefix. Non-checksummed addresses are also supported, but will be converted to checksummed.
  */
 export type AddressDef = string;
@@ -368,7 +368,7 @@ export type BatchResultsSignResultData = {
 };
 
 /**
- * # Bytes
+ * Bytes
  * Used to represent "bytes". This is a 0x prefixed hex string.
  */
 export type BytesDef = string;
@@ -470,6 +470,21 @@ export type ContractWrite = ContractCall & {
 };
 
 /**
+ * EIP-7702 Execution Options
+ */
+export type Eip7702ExecutionOptions = {
+	/**
+	 * The EOA address that will sign the EIP-7702 transaction
+	 */
+	from: AddressDef;
+};
+
+export type EmptyIdempotencySetResponse = {
+	queueName: string;
+	message: string;
+};
+
+/**
  * Options for encoding contract function calls
  */
 export type EncodeOptions = {
@@ -529,6 +544,37 @@ export type EntrypointAndFactoryDetailsDeserHelper = {
 };
 
 export type EntrypointVersion = "0.6" | "0.7";
+
+/**
+ * ### EOA Execution Options
+ * This struct configures EOA (Externally Owned Account) direct execution.
+ *
+ * EOA execution sends transactions directly from an EOA address without
+ * smart contract abstraction. This is the most basic form of transaction
+ * execution and is suitable for simple transfers and contract interactions.
+ *
+ * ### Use Cases
+ * - Direct ETH transfers
+ * - Simple contract interactions
+ * - Gas-efficient transactions
+ * - When smart account features are not needed
+ *
+ * ### Features
+ * - Direct transaction execution from EOA
+ * - Automatic nonce management
+ * - Gas price optimization
+ * - Transaction confirmation tracking
+ * - Retry and recovery mechanisms
+ * - Support for EIP-1559, EIP-2930, and Legacy transactions
+ * - Support for EIP-7702 delegated transactions
+ */
+export type EoaExecutionOptions = {
+	/**
+	 * The EOA address to send transactions from
+	 * This account must have sufficient balance to pay for gas and transaction value
+	 */
+	from: AddressDef;
+};
 
 /**
  * EOA signing options
@@ -675,13 +721,18 @@ export type IawError =
 	  });
 
 /**
- * # InnerTransaction
+ * ### InnerTransaction
  * This is the actual encoded inner transaction data that will be sent to the blockchain.
  */
-export type InnerTransaction = {
+export type InnerTransaction = (null | TransactionTypeData) & {
 	to?: null | AddressDef;
 	data?: BytesDef;
 	value?: U256Def;
+	/**
+	 * Gas limit for the transaction
+	 * If not provided, engine will estimate the gas limit
+	 */
+	gasLimit?: number | null;
 };
 
 export type MessageFormatDef = "text" | "hex";
@@ -699,6 +750,8 @@ export type MessageInput = {
 	 */
 	format?: MessageFormatDef;
 };
+
+export type MulticallDocType = boolean | AddressDef;
 
 /**
  * # QueuedTransaction
@@ -742,14 +795,8 @@ export type ReadOptions = {
 	/**
 	 * The blockchain network ID to read from
 	 */
-	chainId: string;
-	/**
-	 * Address of the Multicall3 contract to use for batching calls
-	 *
-	 * Defaults to the standard Multicall3 address: 0xcA11bde05977b3631167028862bE2a173976CA11
-	 * which is deployed on most networks
-	 */
-	multicallAddress?: AddressDef;
+	chainId: number;
+	multicall?: null | MulticallDocType;
 	from?: null | AddressDef;
 };
 
@@ -782,9 +829,11 @@ export type RpcErrorKind =
 			type: "NULL_RESP";
 	  }
 	| {
+			message: string;
 			type: "UNSUPPORTED_FEATURE";
 	  }
 	| {
+			message: string;
 			type: "INTERNAL_ERROR";
 	  }
 	| {
@@ -811,6 +860,7 @@ export type RpcErrorKind =
 			type: "TRANSPORT_HTTP_ERROR";
 	  }
 	| {
+			message: string;
 			type: "OTHER_TRANSPORT_ERROR";
 	  };
 
@@ -836,7 +886,7 @@ export type RpcErrorResponse = {
 export type SendTransactionRequest = {
 	executionOptions: ExecutionOptions;
 	params: Array<InnerTransaction>;
-	webhookOptions?: Array<WebhookOptions> | null;
+	webhookOptions?: Array<WebhookOptions>;
 };
 
 export type SerializableReqwestError =
@@ -952,11 +1002,49 @@ export type SignTypedDataRequest = {
 };
 
 /**
+ * EIP-7702 Signed Authorization
+ * EIP-7702 Signed Authorization structure for OpenAPI schema
+ * Contains an authorization plus the cryptographic signature
+ */
+export type SignedAuthorizationSchema = {
+	/**
+	 * The chain ID of the authorization
+	 * Must match the chain where the transaction will be executed
+	 */
+	chainId: U256Def;
+	/**
+	 * The smart contract address to delegate to
+	 * This contract will be able to execute logic on behalf of the EOA
+	 */
+	address: AddressDef;
+	/**
+	 * The nonce for the authorization
+	 * Must be the current nonce of the authorizing account
+	 */
+	nonce: number;
+	/**
+	 * Signature parity value (0 or 1)
+	 * Used for ECDSA signature recovery
+	 */
+	yParity: number;
+	/**
+	 * Signature r value
+	 * First component of the ECDSA signature
+	 */
+	r: U256Def;
+	/**
+	 * Signature s value
+	 * Second component of the ECDSA signature
+	 */
+	s: U256Def;
+};
+
+/**
  * Configuration options for signing operations
  */
 export type SigningOptions =
 	| (EoaSigningOptions & {
-			type: "eoa";
+			type: "EOA";
 	  })
 	| (Erc4337SigningOptions & {
 			type: "ERC4337";
@@ -983,7 +1071,20 @@ export type SpecificExecutionOptions =
 	  })
 	| (Erc4337ExecutionOptions & {
 			type: "ERC4337";
+	  })
+	| (EoaExecutionOptions & {
+			type: "EOA";
+	  })
+	| (Eip7702ExecutionOptions & {
+			type: "EIP7702";
 	  });
+
+export type SuccessResponseEmptyIdempotencySetResponse = {
+	result: {
+		queueName: string;
+		message: string;
+	};
+};
 
 export type SuccessResponseQueuedTransactionsResponse = {
 	result: {
@@ -1016,10 +1117,72 @@ export type ThirdwebSerializationError = {
 	};
 };
 
+/**
+ * EIP-1559 Specific Transaction Data
+ * EIP-1559 transaction configuration
+ * Uses base fee + priority fee model for more predictable gas pricing
+ */
+export type Transaction1559Data = {
+	/**
+	 * Maximum fee per gas willing to pay (in wei)
+	 * This is the total fee cap including base fee and priority fee
+	 */
+	maxFeePerGas?: number | null;
+	/**
+	 * Maximum priority fee per gas willing to pay (in wei)
+	 * This is the tip paid to validators for transaction inclusion
+	 */
+	maxPriorityFeePerGas?: number | null;
+};
+
+/**
+ * EIP-7702 Specific Transaction Data
+ * EIP-7702 transaction configuration
+ * Allows delegation of EOA to smart contract logic temporarily
+ */
+export type Transaction7702Data = {
+	/**
+	 * List of signed authorizations for contract delegation
+	 * Each authorization allows the EOA to temporarily delegate to a smart contract
+	 */
+	authorizationList?: Array<SignedAuthorizationSchema> | null;
+	/**
+	 * Maximum fee per gas willing to pay (in wei)
+	 * This is the total fee cap including base fee and priority fee
+	 */
+	maxFeePerGas?: number | null;
+	/**
+	 * Maximum priority fee per gas willing to pay (in wei)
+	 * This is the tip paid to validators for transaction inclusion
+	 */
+	maxPriorityFeePerGas?: number | null;
+};
+
 export type TransactionCancelResponse = {
 	transactionId: string;
 	result: CancelResult;
 };
+
+/**
+ * Legacy Specific Transaction Data
+ * Legacy transaction configuration
+ * Uses simple gas price model (pre-EIP-1559)
+ */
+export type TransactionLegacyData = {
+	/**
+	 * Gas price willing to pay (in wei)
+	 * This is the total price per unit of gas for legacy transactions
+	 */
+	gasPrice?: number | null;
+};
+
+/**
+ * Transaction Type Specific Data
+ */
+export type TransactionTypeData =
+	| Transaction7702Data
+	| Transaction1559Data
+	| TransactionLegacyData;
 
 export type TypedDataDef = {
 	/**
@@ -1059,7 +1222,7 @@ export type TypedDataDomainDef = {
 };
 
 /**
- * # U256
+ * U256
  * Used to represent a 256-bit unsigned integer. Engine can parse these from any valid encoding of the Ethereum "quantity" format.
  */
 export type U256Def = string;
@@ -1076,6 +1239,11 @@ export type Value = unknown;
 export type WebhookOptions = {
 	url: string;
 	secret?: string | null;
+	/**
+	 * Custom metadata provided by the user to be included in webhook notifications.
+	 * Limited to 4KB (4096 bytes) to prevent abuse.
+	 */
+	userMetadata?: string | null;
 };
 
 /**
@@ -1093,7 +1261,7 @@ export type WriteContractRequest = {
 	 * or as separate transactions if atomic batching is not supported
 	 */
 	params: Array<ContractWrite>;
-	webhookOptions?: Array<WebhookOptions> | null;
+	webhookOptions?: Array<WebhookOptions>;
 };
 
 export type U64 = number;
@@ -1267,7 +1435,10 @@ export type CancelTransactionResponse =
 export type ListAccountsData = {
 	body?: never;
 	path?: never;
-	query?: never;
+	query?: {
+		page?: number;
+		limit?: number;
+	};
 	url: "/v1/accounts";
 };
 
@@ -1276,17 +1447,25 @@ export type ListAccountsResponses = {
 	 * Accounts retrieved successfully
 	 */
 	200: {
-		result: Array<{
-			/**
-			 * EVM address in hex format
-			 */
-			address: string;
-			label?: string;
-			/**
-			 * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
-			 */
-			smartAccountAddress?: string;
-		}>;
+		result: {
+			accounts: Array<{
+				/**
+				 * EVM address in hex format
+				 */
+				address: string;
+				label?: string;
+				createdAt: string;
+				/**
+				 * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
+				 */
+				smartAccountAddress?: string;
+			}>;
+			pagination: {
+				totalCount: number;
+				page: number;
+				limit: number;
+			};
+		};
 	};
 };
 
@@ -1319,6 +1498,7 @@ export type CreateAccountResponses = {
 			 */
 			address: string;
 			label?: string;
+			createdAt: string;
 			/**
 			 * The predicted smart account address for use with the default thirdweb v0.7 AccountFactory
 			 */
@@ -1346,6 +1526,7 @@ export type GetTransactionsData = {
 		 * EVM address in hex format
 		 */
 		signerAddress?: string;
+		status?: "QUEUED" | "SUBMITTED" | "CONFIRMED" | "FAILED";
 		sortBy?: "createdAt" | "confirmedAt";
 		sortDirection?: "asc" | "desc";
 	};

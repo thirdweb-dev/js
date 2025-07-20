@@ -16,7 +16,6 @@ import { setApprovalForAll } from "../extensions/erc1155/__generated__/IERC1155/
 import { claimTo } from "../extensions/erc1155/drops/write/claimTo.js";
 import { getAllActiveSigners } from "../extensions/erc4337/__generated__/IAccountPermissions/read/getAllActiveSigners.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
-import { setThirdwebDomains } from "../utils/domains.js";
 import { smartWallet } from "../wallets/smart/smart-wallet.js";
 import { generateAccount } from "../wallets/utils/generateAccount.js";
 import * as Engine from "./index.js";
@@ -35,15 +34,15 @@ describe.runIf(
     let serverWallet: Engine.ServerWallet;
 
     beforeAll(async () => {
-      setThirdwebDomains({
-        bundler: "bundler.thirdweb-dev.com",
-        engineCloud: "engine.thirdweb-dev.com",
-        // engineCloud: "localhost:3009",
-        rpc: "rpc.thirdweb-dev.com",
-        storage: "storage.thirdweb-dev.com",
-      });
+      // setThirdwebDomains({
+      //   bundler: "bundler.thirdweb-dev.com",
+      //   engineCloud: "engine.thirdweb-dev.com",
+      //   // engineCloud: "localhost:3009",
+      //   rpc: "rpc.thirdweb-dev.com",
+      //   storage: "storage.thirdweb-dev.com",
+      // });
       serverWallet = Engine.serverWallet({
-        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS as string,
+        address: process.env.ENGINE_CLOUD_WALLET_ADDRESS_EOA as string,
         chain: sepolia,
         client: TEST_CLIENT,
         vaultAccessToken: process.env.VAULT_TOKEN as string,
@@ -61,9 +60,9 @@ describe.runIf(
         client: TEST_CLIENT,
       });
       expect(serverWallets).toBeDefined();
-      expect(serverWallets.length).toBeGreaterThan(0);
+      expect(serverWallets.accounts.length).toBeGreaterThan(0);
       expect(
-        serverWallets.find((s) => s.address === serverWallet.address),
+        serverWallets.accounts.find((s) => s.address === serverWallet.address),
       ).toBeDefined();
     });
 
@@ -111,7 +110,7 @@ describe.runIf(
       const tx = await sendTransaction({
         account: serverWallet,
         transaction: {
-          chain: arbitrumSepolia,
+          chain: baseSepolia,
           client: TEST_CLIENT,
           to: TEST_ACCOUNT_B.address,
           value: 0n,
