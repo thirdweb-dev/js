@@ -95,6 +95,7 @@ export function WalletEntryButton(props: {
 export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       backgroundColor: theme.colors.tertiaryBg,
       transform: "scale(1.01)",
@@ -102,7 +103,7 @@ export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
     '&[data-active="true"]': {
       backgroundColor: theme.colors.tertiaryBg,
     },
-    all: "unset",
+
     alignItems: "center",
     borderRadius: radius.md,
     boxSizing: "border-box",
