@@ -9,7 +9,10 @@ import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js
 import type { PurchaseData } from "../../../../pay/types.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
-import { sendTransaction, type SendTransactionOptions } from "../../../../transaction/actions/send-transaction.js";
+import {
+  type SendTransactionOptions,
+  sendTransaction,
+} from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../../transaction/utils.js";
@@ -132,7 +135,11 @@ export function useSendTransactionCore(args: {
   gasless?: GaslessOptions;
   wallet: Wallet | undefined;
   switchChain: (chain: Chain) => Promise<void>;
-}): UseMutationResult<WaitForReceiptOptions, Error, SendTransactionOptions["transaction"]> {
+}): UseMutationResult<
+  WaitForReceiptOptions,
+  Error,
+  SendTransactionOptions["transaction"]
+> {
   const { showPayModal, gasless, wallet, switchChain } = args;
   let _account = wallet?.getAccount();
 

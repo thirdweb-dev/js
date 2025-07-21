@@ -56,7 +56,11 @@ type SendAndConfirmTransactionConfig = {
  */
 export function useSendAndConfirmTransaction(
   config: SendAndConfirmTransactionConfig = {},
-): UseMutationResult<TransactionReceipt, Error, SendTransactionOptions["transaction"]> {
+): UseMutationResult<
+  TransactionReceipt,
+  Error,
+  SendTransactionOptions["transaction"]
+> {
   const account = useActiveAccount();
   const { gasless } = config;
   return useMutation({
