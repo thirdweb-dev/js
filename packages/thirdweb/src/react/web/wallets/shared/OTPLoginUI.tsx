@@ -342,10 +342,10 @@ export function OTPLoginUI(props: {
 const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       color: theme.colors.primaryText,
     },
-    all: "unset",
     color: theme.colors.accentText,
     cursor: "pointer",
     fontSize: fontSize.sm,
