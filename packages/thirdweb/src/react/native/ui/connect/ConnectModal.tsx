@@ -14,10 +14,12 @@ import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEm
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
+import { useIsAutoConnecting } from "../../../core/hooks/wallets/useIsAutoConnecting.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
+import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { type ContainerType, Header } from "../components/Header.js";
 import { RNImage } from "../components/RNImage.js";
@@ -32,6 +34,7 @@ import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
 import { ErrorView } from "./ErrorView.js";
 import { AllWalletsList, ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin, PasskeyView } from "./InAppWalletUI.js";
+import { LoadingView } from "./LoadingView.js";
 import WalletLoadingThumbnail from "./WalletLoadingThumbnail.js";
 
 export type ModalState =
@@ -74,13 +77,42 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     ...props,
     connectModal: { ...props },
   } as ConnectButtonProps;
-  return isConnected ? null : (
-    <ConnectModal
-      {...adaptedProps}
-      containerType="embed"
+  const isAutoConnecting = useIsAutoConnecting();
+  const wallets = props.wallets || getDefaultWallets(props);
+
+  const autoConnectComp = props.autoConnect !== false && (
+    <AutoConnect
+      accountAbstraction={props.accountAbstraction}
+      appMetadata={props.appMetadata}
+      chain={props.chain}
+      client={props.client}
+      onConnect={props.onConnect}
       siweAuth={siweAuth}
-      theme={theme}
+      timeout={
+        typeof props.autoConnect === "boolean"
+          ? undefined
+          : props.autoConnect?.timeout
+      }
+      wallets={wallets}
     />
+  );
+
+  if (isAutoConnecting) {
+    return <LoadingView theme={theme} />;
+  }
+
+  return isConnected ? (
+    autoConnectComp
+  ) : (
+    <>
+      <ConnectModal
+        {...adaptedProps}
+        containerType="embed"
+        siweAuth={siweAuth}
+        theme={theme}
+      />
+      {autoConnectComp}
+    </>
   );
 }
 
