@@ -165,17 +165,17 @@ function ReferenceSection() {
 function LearningResourcesSection() {
   return (
     <section>
-      <SectionTitle anchorId="learning" title="Learning Resources" />
+      <SectionTitle anchorId="learning" title="Documentation" />
       <Grid className="md:grid-cols-1 lg:grid-cols-3">
         <ArticleCardIndex
           description="Create and manage crypto wallets"
-          href="/connect"
+          href="/wallets"
           icon={ConnectIcon}
           title="Wallets"
         />
         <ArticleCardIndex
           description="Bridge and onramp tokens on any chain"
-          href="/pay"
+          href="/payments"
           icon={BridgeIcon}
           title="Payments"
         />
@@ -242,13 +242,11 @@ function ArticleCardIndex(props: {
       href={props.href}
       target={props.external ? "_blank" : undefined}
     >
-      <div className="flex items-center gap-3">
-        {props.icon && <props.icon className="text-muted-foreground" />}
+      <div className="flex items-start gap-3">
+        {props.icon && <props.icon className="text-foreground size-6" />}
         <div className="flex flex-col gap-0.5">
-          <h3 className="font-semibold text-foreground text-lg">
-            {props.title}
-          </h3>
-          <p className="text-muted-foreground">{props.description}</p>
+          <h3 className="font-semibold text-foreground">{props.title}</h3>
+          <p className="text-sm text-muted-foreground">{props.description}</p>
         </div>
       </div>
     </Link>
