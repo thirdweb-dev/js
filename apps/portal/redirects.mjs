@@ -1030,6 +1030,8 @@ const otherRedirects = {
     "/wallets/link-profiles",
   "/connect/wallets/user-management/export-private-key":
     "/wallets/export-private-key",
+  "/wallets/wallet/server": "/wallets/server",
+  "/wallets/wallet/sign-in-methods/configure": "/wallets/users",
   // account abstraction rename
   "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
   "/web3-api/:path*": "/infrastructure/engine/overview",
