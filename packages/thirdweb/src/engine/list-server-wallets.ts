@@ -6,6 +6,8 @@ import { getClientFetch } from "../utils/fetch.js";
 
 export type GetServerWalletsArgs = {
   client: ThirdwebClient;
+  limit?: number;
+  page?: number;
 };
 
 /**
@@ -30,6 +32,10 @@ export async function getServerWallets(params: GetServerWalletsArgs) {
     baseUrl: getThirdwebBaseUrl("engineCloud"),
     bodySerializer: stringify,
     fetch: getClientFetch(client),
+    query: {
+      limit: params.limit,
+      page: params.page,
+    },
   });
 
   if (result.error) {
