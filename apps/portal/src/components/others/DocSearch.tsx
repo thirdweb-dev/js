@@ -358,7 +358,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
               variant="outline"
             >
               <span className="text-xs">Search Docs</span>
-              <div className="flex items-center gap-1 rounded-sm px-1 py-1 text-muted-foreground text-xs">
+              <div className="flex items-center gap-1 rounded-sm p-1 text-muted-foreground text-xs">
                 <CommandIcon className="size-3" />K
               </div>
             </Button>
