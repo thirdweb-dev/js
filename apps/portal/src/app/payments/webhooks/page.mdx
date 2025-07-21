@@ -1,0 +1,230 @@
+import {
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+import {
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+} from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Payments",
+    icon: "pay",
+  },
+  title: "Payments Webhooks",
+  description: "Learn how to set up and handle webhooks for thirdweb Payments transactions.",
+});
+
+# Webhooks
+
+Create webhooks to be notified each time a payment is completed in your app.
+
+### Create a Webhook
+
+You can create a webhook in your project dashboard under the Payments tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
+
+## Parse Webhook Payloads
+
+### Parse Webhook Payloads with the thirdweb SDK
+
+The thirdweb SDK has a built-in function for parsing payment webhooks:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// In your webhook handler (e.g., Next.js API route)
+export async function POST(request: Request) {
+  const body = await request.text();
+  const headers = Object.fromEntries(request.headers.entries());
+  
+  try {
+    const webhook = await Bridge.Webhook.parse(
+      body,
+      headers,
+      process.env.WEBHOOK_SECRET // Your webhook secret
+    );
+    
+    // Process the webhook
+    console.log("Webhook received:", webhook);
+    
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error("Webhook verification failed:", error);
+    return Response.json({ error: "Invalid webhook" }, { status: 400 });
+  }
+}
+```
+
+### Example Payloads
+
+<Tabs defaultValue="bridge">
+  <TabsList>
+    <TabsTrigger value="bridge">Bridge & Swap</TabsTrigger>
+    <TabsTrigger value="onramp">Onramp</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="bridge">
+    ```json
+    {
+      "version": 2,
+      "type": "pay.onchain-transaction",
+      "data": {
+        "transactionId": "0x7baae858e28628fe57cb0ca93c86fcda68f556563199cb4472044bfd9fbe5ec8",
+        "paymentId": "0xbea711bf1da223b29b176cff7f01596834dd63c7ad85477a3504f4b9285b33a2",
+        "clientId": "c56b27030ad22846003fafbb4302b5d7",
+        "action": "SELL",
+        "status": "COMPLETED",
+        "originToken": {
+          "chainId": 466,
+          "address": "0x675C3ce7F43b00045a4Dab954AF36160fb57cB45",
+          "symbol": "USDC",
+          "name": "USD Coin",
+          "decimals": 6,
+          "priceUsd": 0.99995,
+          "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+        },
+        "originAmount": "24875000",
+        "destinationToken": {
+          "chainId": 8453,
+          "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "symbol": "USDC",
+          "name": "USD Coin",
+          "decimals": 6,
+          "priceUsd": 0.99995,
+          "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+        },
+        "destinationAmount": "24794905",
+        "sender": "0xb4523A0D69612B9A4629A70E42021B2F384CC8Fa",
+        "receiver": "0x044A83bA68f36CF1F27836Cb93614f86d8B0ea96",
+        "type": "sell",
+        "transactions": [
+          {
+            "chainId": 466,
+            "transactionHash": "0xc507bde1da0832d097c2160aacc2c9333ac3a0516c8dca4fb955f4c949da1ef6"
+          },
+          {
+            "chainId": 8453,
+            "transactionHash": "0xc44b372284061a11ec96c67acfc96a67cc6180d14753b55a93c1f780d16ddc95"
+          }
+        ],
+        "developerFeeBps": 20,
+        "developerFeeRecipient": "0x66d3d733e597bdf8b794ab6e13c8f2be0fcda39b"
+      }
+    }
+    ```
+  </TabsContent>
+
+  <TabsContent value="onramp">
+    ```json
+    {
+      "version": 2,
+      "type": "pay.onramp-transaction",
+      "data": {
+        "id": "d5d33244-f855-441d-af62-4593094a3eb1",
+        "onramp": "stripe",
+        "token": {
+          "chainId": 8453,
+          "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "symbol": "USDC",
+          "name": "USD Coin",
+          "decimals": 6,
+          "priceUsd": 0.99995,
+          "iconUri": "https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694"
+        },
+        "amount": "5100000",
+        "currency": "USDC",
+        "currencyAmount": 5.36,
+        "receiver": "0xa5a484Af10FF67257A06DDbf8DdE6A99a483f098",
+        "status": "PENDING",
+        "purchaseData": null
+      }
+    }
+    ```
+  </TabsContent>
+</Tabs>
+
+### Manual Verification
+
+If you prefer to handle verification manually, you can verify webhooks using the Web Crypto API (same method as the SDK):
+
+```typescript
+async function verifyWebhook(
+  payload: string, 
+  headers: Record<string, string>, 
+  secret: string,
+  tolerance = 300 // 5 minutes
+) {
+  // Get the signature and timestamp from headers
+  const receivedSignature = headers["x-payload-signature"] || headers["x-pay-signature"];
+  const receivedTimestamp = headers["x-timestamp"] || headers["x-pay-timestamp"];
+  
+  if (!receivedSignature || !receivedTimestamp) {
+    throw new Error("Missing required webhook headers: signature or timestamp");
+  }
+  
+  // Verify timestamp
+  const now = Math.floor(Date.now() / 1000);
+  const timestamp = parseInt(receivedTimestamp, 10);
+  const diff = Math.abs(now - timestamp);
+  
+  if (diff > tolerance) {
+    throw new Error(
+      `Webhook timestamp is too old. Difference: ${diff}s, tolerance: ${tolerance}s`
+    );
+  }
+  
+  // Generate signature using Web Crypto API
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { hash: "SHA-256", name: "HMAC" },
+    false,
+    ["sign"]
+  );
+  
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(`${receivedTimestamp}.${payload}`)
+  );
+  
+  // Convert the signature to hex string
+  const computedSignature = Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  
+  // Compare signatures
+  if (computedSignature !== receivedSignature) {
+    throw new Error("Invalid webhook signature");
+  }
+  
+  // Parse and return the payload
+  return JSON.parse(payload);
+}
+```
+
+## Going further
+
+To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
+
+- [Send a Payment](/payments/send)
+- [Find Routes](/payments/routes)
+- [Get Token Prices](/payments/tokens)
+
+## Explore Full API References
+
+- [Bridge.Webhook.parse](/references/typescript/v5/webhook/parse)

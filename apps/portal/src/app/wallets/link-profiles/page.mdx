@@ -1,0 +1,264 @@
+import { createMetadata, ArticleIconCard, Callout, Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
+import {
+	ReactIcon,
+	TypeScriptIcon,
+	UnityIcon,
+	DotNetIcon,
+	ExternalLinkIcon,
+	UnrealEngineIcon
+} from "@/icons"
+
+export const metadata = createMetadata({
+	image: {
+		title: "Linking Multiple Identities",
+		icon: "wallets",
+	},
+	title: "Linking Multiple Identities",
+	description:
+		"Learn how to associate multiple social profiles with a single wallet address.",
+});
+
+# Linking Profiles
+
+thirdweb Wallets allow users to tie the same wallet address to multiple social identities. Developers can programmatically link additional identities at any point in their user journey.
+
+<Tabs defaultValue="typescript">
+<TabsList>
+	<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+		<TypeScriptIcon className="w-4 h-4 mr-2" />
+		TypeScript
+	</TabsTrigger>
+	<TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+		<ReactIcon className="w-4 h-4 mr-2" />
+		React
+	</TabsTrigger>
+	<TabsTrigger value="react-native" className="flex items-center gap-2 [&>p]:mb-0">
+		<ReactIcon className="w-4 h-4 mr-2" />
+		React Native
+	</TabsTrigger>
+	<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+		<DotNetIcon className="w-4 h-4 mr-2" />
+		.NET
+	</TabsTrigger>
+	<TabsTrigger value="unity" className="flex items-center gap-2 [&>p]:mb-0">
+		<UnityIcon className="w-4 h-4 mr-2" />
+		Unity
+	</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
+**OAuth Authentication (Discord, Google, Apple, etc.)**
+
+```typescript
+import { linkProfile } from "thirdweb/wallets";
+ 
+// optionally specify the ecosystem if you're linking an ecosystem wallet
+await linkProfile({ client, strategy: "discord" });
+```
+
+**OTP Authentication (Email, Phone)**
+
+```typescript
+import { linkProfile, preAuthenticate } from "thirdweb/wallets";
+
+// For email OTP
+const sendEmail = async () => {
+  await preAuthenticate({
+    client,
+    strategy: "email",
+    email: "john.doe@example.com",
+  });
+};
+
+// Then link with verification code
+await linkProfile({
+  client,
+  strategy: "email",
+  email: "john.doe@example.com",
+  verificationCode: "123456",
+});
+```
+</TabsContent>
+
+<TabsContent value="react">
+**OAuth Authentication (Discord, Google, Apple, etc.)**
+
+```tsx
+import { useLinkProfile } from "thirdweb/react";
+ 
+const { mutate: linkProfile } = useLinkProfile();
+
+const handleOAuthLink = () => {
+  linkProfile({
+    client,
+    strategy: "discord",
+  });
+};
+```
+
+**OTP Authentication (Email, Phone)**
+
+```tsx
+import { useLinkProfile } from "thirdweb/react";
+import { preAuthenticate } from "thirdweb/wallets";
+ 
+const { mutate: linkProfile } = useLinkProfile();
+ 
+// send a verification email first
+const sendEmail = async () => {
+  const email = await preAuthenticate({
+    client,
+    strategy: "email",
+    email: "john.doe@example.com",
+  });
+};
+ 
+// then link the profile with the verification code
+const onClick = (code: string) => {
+  linkProfile({
+    client,
+    strategy: "email",
+    email: "john.doe@example.com",
+    verificationCode: code,
+  });
+};
+```
+</TabsContent>
+
+<TabsContent value="react-native">
+**OAuth Authentication (Discord, Google, Apple, etc.)**
+
+```tsx
+import { useLinkProfile } from "thirdweb/react";
+ 
+const { mutate: linkProfile } = useLinkProfile();
+
+const handleOAuthLink = () => {
+  linkProfile({
+    client,
+    strategy: "google",
+  });
+};
+```
+
+**OTP Authentication (Email, Phone)**
+
+```tsx
+import { useLinkProfile } from "thirdweb/react";
+import { preAuthenticate } from "thirdweb/wallets";
+ 
+const { mutate: linkProfile } = useLinkProfile();
+ 
+// send a verification email first
+const sendEmail = async () => {
+  await preAuthenticate({
+    client,
+    strategy: "email",
+    email: "john.doe@example.com",
+  });
+};
+ 
+// then link the profile with the verification code
+const linkWithCode = (code: string) => {
+  linkProfile({
+    client,
+    strategy: "email",
+    email: "john.doe@example.com",
+    verificationCode: code,
+  });
+};
+```
+</TabsContent>
+
+<TabsContent value="dotnet">
+```csharp
+// Your main InAppWallet account, already authenticated and connected
+InAppWallet mainInAppWallet = ...
+ 
+// Prepare Telegram
+var socialWallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Telegram);
+// Link Telegram
+_ = await mainWallet.LinkAccount(walletToLink: socialWallet,);
+ 
+// Prepare Phone
+var phoneWallet = await InAppWallet.Create(client: client, phoneNumber: "+1234567890");
+_ = await phoneWallet.SendOTP();
+var otp = Console.ReadLine();
+// Link Phone
+_ = await mainWallet.LinkAccount(walletToLink: phoneWallet, otp: otp);
+```
+</TabsContent>
+
+<TabsContent value="unity">
+```csharp
+// Your main InAppWallet account, already authenticated and connected
+InAppWallet mainInAppWallet = ...
+ 
+// An InAppWallet with a new auth provider to be linked to the main account, not connected
+InAppWallet walletToLink = await InAppWallet.Create(client: Client, authProvider: AuthProvider.Telegram);
+ 
+// Link Account - Headless version
+var linkedAccounts = await mainInAppWallet.LinkAccount(walletToLink: walletToLink);
+ 
+// Link Account - Unity wrapper version
+var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet, walletToLink);
+```
+</TabsContent>
+</Tabs>
+
+## Retrieve Linked Profiles
+
+Once linked, you can retrieve the user profiles via either identity.
+
+<Tabs defaultValue="typescript">
+<TabsList>
+	<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+		<TypeScriptIcon className="w-4 h-4 mr-2" />
+		TypeScript
+	</TabsTrigger>
+	<TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+		<ReactIcon className="w-4 h-4 mr-2" />
+		React
+	</TabsTrigger>
+	<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+		<DotNetIcon className="w-4 h-4 mr-2" />
+		.NET
+	</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
+```typescript
+import { getProfiles } from "thirdweb/wallets";
+ 
+const profiles = await getProfiles({
+  client,
+  // optionally sepcify the ecosystem for ecosystem wallets
+});
+ 
+console.log(profiles[0].type); // will be "email", "phone", "google", "discord", etc
+console.log(profiles[0].details.email);
+console.log(profiles[0].details.phone);
+```
+</TabsContent>
+
+<TabsContent value="react">
+```tsx
+import { useProfiles } from "thirdweb/react";
+ 
+const { data: profiles } = useProfiles({
+  client,
+});
+ 
+console.log("Type:", profiles[0].type); // "discord"
+console.log("Email:", profiles[0].details.email); // "john.doe@example.com"
+```
+</TabsContent>
+
+<TabsContent value="dotnet">
+```csharp
+List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();
+```
+</TabsContent>
+</Tabs>
+
+For fetching linked profile information from the backend, see [Fetch Users](/connect/wallet/get-users).

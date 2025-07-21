@@ -1,0 +1,284 @@
+import {
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+import {
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+} from "@/icons";
+import { ExternalLink } from "lucide-react";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Payments",
+    icon: "pay",
+  },
+  title: "Send a payment",
+  description: "Learn how to send a payment between users with thirdweb Payments.",
+});
+
+# Send a payment
+
+Send a payment between users using any combination of chains or tokens. thirdweb Payments handles the conversion between currencies into your app or users' destination of choice.
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="typescript">
+    ### Generate a payment
+
+    To get started, lets generate a payment for 10 USDC on Optimism, paid with USDT on Arbitrum.
+
+    ```typescript
+    import { Bridge } from "thirdweb";
+    
+    const preparedQuote = await Bridge.Buy.prepare({
+  originChainId: 42161,
+  originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT on Arbitrum
+  destinationChainId: 10,
+  destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // USDC on Optimism
+  amount: 10_000_000n, // 10 USDC in wei (USDC has 6 decimals)
+  sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  receiver: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+  client,
+});
+    ```
+
+    The prepared quote will contain all kinds of details about the payment, including the transactions to execute it.
+
+    ```typescript
+{
+  blockNumber: 359092559n,
+  destinationAmount: 10000000n,
+  estimatedExecutionTimeMs: 4000,
+  intent: {
+    amount: 10000000n,
+    destinationChainId: 10,
+    destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+    originChainId: 42161,
+    originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+    receiver: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709"
+  },
+  originAmount: 10090837n,
+  steps: [
+    {
+      originToken: {
+        chainId: 42161,
+        address: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+        symbol: "USDT",
+        name: "Tether USD",
+        decimals: 6,
+        priceUsd: 1.000466,
+        iconUri: "https://coin-images.coingecko.com/coins/images/39963/large/usdt.png?1724952731",
+        prices: {
+          USD: 1.000466,
+          EUR: 0.8609646893353334,
+          GBP: 0.7457410919589597,
+          JPY: 148.84716380366666,
+          KRW: 1393.140564565217,
+          CNY: 7.180734583881414,
+          INR: 86.20425180362268,
+          NOK: 10.184560461233335,
+          SEK: 9.684730839937778,
+          CHF: 0.8021262834093335,
+          AUD: 1.5377762699600002,
+          CAD: 1.3733740236813332,
+          NZD: 1.6782897168704254,
+          MXN: 18.73599357293333,
+          BRL: 5.595589663566668,
+          CLP: 964.1817295505031,
+          CZK: 21.2024757516,
+          DKK: 6.426816835006667,
+          HKD: 7.851685514536667,
+          HUF: 343.46386049894534,
+          IDR: 16316.185254379243,
+          ILS: 3.3592046583330104,
+          ISK: 122.60710748362601
+        }
+      },
+      destinationToken: {
+        chainId: 10,
+        address: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        symbol: "USDC",
+        name: "USD Coin",
+        decimals: 6,
+        priceUsd: 0.999859,
+        iconUri: "https://ethereum-optimism.github.io/data/USDC/logo.png",
+        prices: {
+          USD: 0.999859,
+          EUR: 0.8604423271896667,
+          GBP: 0.7452886379597042,
+          JPY: 148.75685565883333,
+          KRW: 1392.2953221255027,
+          CNY: 7.176377908199865,
+          INR: 86.15195019532734,
+          NOK: 10.178381312516668,
+          SEK: 9.678854946484284,
+          CHF: 0.8016396195406668,
+          AUD: 1.5368432745400002,
+          CAD: 1.3725407739433366,
+          NZD: 1.6772714695155524,
+          MXN: 18.724626122066667,
+          BRL: 5.592194722683334,
+          CLP: 963.5967438440051,
+          CZK: 21.1896118434,
+          DKK: 6.422917574243334,
+          HKD: 7.846921761338334,
+          HUF: 343.25547504324487,
+          IDR: 16306.285943008934,
+          ILS: 3.3571665708541674,
+          ISK: 122.53271963412132
+        }
+      },
+      transactions: [
+        {
+          chainId: 42161,
+          to: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+          data: "0x095ea7b3000000000000000000000000f8ab2dbe6c43bf1a856471182290f91d621ba76d00000000000000000000000000000000000000000000000000000000009d0695",
+          type: "eip1559",
+          id: "0x2354360325ff8315dad5673894207d90c28cb898788025202b6a6f8c2bd8220a",
+          action: "approval",
+          chain: {
+            id: 42161,
+            rpc: "https://42161.rpc.thirdweb.com"
+          },
+          client: {
+            clientId: "..."
+          }
+        },
+        {
+          type: "eip1559",
+          to: "0xF8Ab2dBE6c43bf1a856471182290f91D621Ba76d",
+          from: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+          value: 0n,
+          data: "0x...",
+          chainId: 42161,
+          action: "buy",
+          id: "0xc4fd6ecdbbf6fb0780c87779adff09ea7f480fac385b8db4873fc1a0d3309264",
+          spender: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+          chain: {
+            id: 42161,
+            rpc: "https://42161.rpc.thirdweb.com"
+          },
+          client: {
+            clientId: "...",
+          }
+        }
+      ],
+      originAmount: 10090837n,
+      destinationAmount: 10000000n,
+      estimatedExecutionTimeMs: 4000
+    }
+  ],
+  timestamp: 1752866509083
+}
+    ```
+
+    You can execute the included transactions using the wallet of your choice. In the next section, we'll execute this prepared quote using thirdweb Wallets.
+
+    ### Execute the payment with thirdweb Wallets
+
+    This step assumes you already have a thirdweb wallet logged in. To learn how to setup wallets, see the Wallets [getting started guide](/wallets).
+
+    To execute a single transaction, all we need to do is call `sendAndConfirmTransaction` with the transaction and user's wallet.
+
+    ```typescript
+    import { sendAndConfirmTransaction } from "thirdweb";
+
+    const transaction = preparedQuote.steps[0].transactions[0];
+
+    const result = await sendAndConfirmTransaction({
+        transaction,
+        account: wallet.getAccount(),
+      });
+    ```
+
+    However, prepared payments might contain multiple transactions. Approvals, swaps, and any other pre-execution steps are computed for you and included in the returned transactions. Lets wrap our transaction execution in a loop so we account for all steps.
+
+    ```typescript
+    import { sendAndConfirmTransaction } from "thirdweb";
+
+    for (const step of preparedQuote.steps) {
+      for (const transaction of step.transactions) {
+        const result = await sendAndConfirmTransaction({
+          transaction,
+          account: wallet.getAccount(),
+        });
+        console.log("Transaction sent:", result.transactionHash);
+      }
+    }
+    ```
+
+    This will execute the transactions in order, but it might not work yet. Payment transactions that are cross-chain require both an origin **and a destination transaction**. To account for this, thirdweb Payments have a special status function allowing you to get the end to end status of a buy, sell, or transfer. Lets wait for the cross-chain transactions to be fully completed in our loop.
+
+    You can determine the type of a transaction by checking the `action` field.
+
+    ```typescript
+    import { sendAndConfirmTransaction, Bridge } from "thirdweb";
+
+    for (const step of preparedQuote.steps) {
+      for (const transaction of step.transactions) {
+        const result = await sendAndConfirmTransaction({
+          transaction,
+          account: wallet.getAccount(),
+        });
+        console.log("Transaction sent:", result.transactionHash);
+
+    if (["buy", "sell", "transfer"].includes(transaction.action)) {
+    // Wait for destination completion before continuing
+      let swapStatus;
+      do {
+        swapStatus = await Bridge.status({
+          transactionHash: result.transactionHash,
+          chainId: transaction.chainId,
+          client: thirdwebClient,
+        });
+        if (swapStatus.status === "PENDING") {
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
+        }
+      } while (swapStatus.status === "PENDING");
+ 
+      if (swapStatus.status === "FAILED") {
+        throw new Error("Swap transaction failed");
+      }
+      }
+    }
+    }
+    ```
+
+    Once this code completes, your payment has been fully executed. Payments normally take just a few seconds to complete, but can take as long as 10 minutes for less common chains.
+
+
+  </TabsContent>
+</Tabs>
+
+## Going further
+
+- [Other auth strategies](/connect/wallet/sign-in-methods/configure)
+- [Sponsor Gas](/connect/account-abstraction/overview)
+- [Implement Sign In with Ethereum](/connect/auth)
+- [External Wallets](/connect/wallet/sign-in-methods/external-wallets) (e.g. MetaMask, WalletConnect, Coinbase Wallet, etc.)
+
+## Explore API References
+
+- [Bridge.Buy.prepare](/references/typescript/v5/buy/prepare)
+- [Bridge.status](/references/typescript/v5/status)
+
