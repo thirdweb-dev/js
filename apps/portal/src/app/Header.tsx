@@ -8,7 +8,7 @@ import {
   TableOfContentsIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { DocSearch } from "@/components/others/DocSearch";
 import { Button } from "@/components/ui/button";
@@ -191,13 +191,12 @@ const supportLinks = [
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
-  const router = useRouter();
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background pt-4 px-4 lg:px-8 overflow-hidden">
+    <header className="flex w-full flex-col gap-2 border-b bg-background pt-4 px-4 pb-4 xl:pb-0 lg:px-8 overflow-hidden">
+      {/* Top row */}
       <div className="container flex items-center justify-between gap-6">
-        {/* Top row */}
         <div className="flex items-center gap-2">
           <Link
             aria-label="thirdweb Docs"
@@ -219,7 +218,7 @@ export function Header() {
               href="https://github.com/thirdweb-dev"
               target="_blank"
             >
-              <GithubIcon className="mx-3 size-6" />
+              <GithubIcon className="size-6 lg:size-5" />
             </Link>
           </div>
 
@@ -232,25 +231,21 @@ export function Header() {
           </div>
 
           <div className="hidden xl:block">
-            <Button
-              onClick={() => {
-                router.push("/chat");
-              }}
-            >
-              <MessageCircleIcon className="mr-2 size-4" />
-              Ask AI
+            <Button asChild>
+              <Link href="/chat">
+                <MessageCircleIcon className="mr-2 size-4" />
+                Ask AI
+              </Link>
             </Button>
           </div>
 
           <div className="flex items-center gap-1 xl:hidden">
             <ThemeSwitcher className="border-none bg-transparent" />
             <DocSearch variant="icon" />
-            <Button
-              className="p-2"
-              onClick={() => router.push("/chat")}
-              variant="ghost"
-            >
-              <MessageCircleIcon className="size-7" />
+            <Button className="p-2" asChild variant="ghost">
+              <Link href="/chat">
+                <MessageCircleIcon className="size-6" />
+              </Link>
             </Button>
             <Button
               className="p-2"
@@ -264,13 +259,13 @@ export function Header() {
       </div>
 
       {/* Bottom row - hidden on mobile */}
-      <div className="container hidden items-center justify-between gap-6 xl:flex">
+      <div className="container hidden items-center justify-between gap-6 xl:flex mt-1">
         <nav className="flex grow gap-5">
-          <ul className="flex flex-row items-center gap-5">
+          <ul className="flex flex-row items-center gap-0 mb-1">
             {links.map((link) => {
               return (
                 <li
-                  className="flex items-center py-4 relative overflow-hidden"
+                  className="flex items-center py-2 relative px-2.5 rounded-lg hover:bg-accent hover:text-foreground"
                   key={link.href}
                   onClick={() => {
                     setShowBurgerMenu(false);
@@ -281,7 +276,7 @@ export function Header() {
                 >
                   <NavLink href={link.href} name={link.name} />
                   {pathname.includes(link.href) && (
-                    <div className="bg-violet-700 h-1 inset-x-0.5 rounded-full absolute -bottom-0.5" />
+                    <div className="bg-violet-700 h-[2px] inset-x-0 rounded-full absolute -bottom-1" />
                   )}
                 </li>
               );

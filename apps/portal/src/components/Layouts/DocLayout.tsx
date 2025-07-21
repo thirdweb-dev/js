@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { PageFooter } from "../Document/PageFooter";
 import {
   DocSidebar,
@@ -25,17 +25,18 @@ type DocLayoutProps = {
 export function DocLayout(props: DocLayoutProps) {
   return (
     <div
-      className={`container text-muted-foreground relative flex flex-col gap-12 xl:grid p-4 ${
+      className={cn(
+        "container text-muted-foreground relative flex flex-col gap-12 xl:grid",
         props.showTableOfContents !== false
           ? "xl:grid-cols-[220px_720px_1fr]"
-          : "xl:grid-cols-[220px_1160px]"
-      }`}
+          : "xl:grid-cols-[220px_1160px]",
+      )}
       style={{
         minHeight: "calc(100vh - var(--sticky-top-height))",
       }}
     >
       <aside
-        className={clsx(
+        className={cn(
           "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-hidden",
           "hidden xl:flex",
         )}
