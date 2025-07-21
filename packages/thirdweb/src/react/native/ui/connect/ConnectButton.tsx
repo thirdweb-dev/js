@@ -16,7 +16,8 @@ import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.j
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useActiveWalletConnectionStatus.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
-import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
+import { getDefaultWallets } from "../../wallets/defaultWallets.js";
+import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
@@ -47,11 +48,6 @@ export function ConnectButton(props: ConnectButtonProps) {
   const status = useActiveWalletConnectionStatus();
   const connectionManager = useConnectionManager();
   const siweAuth = useSiweAuth(wallet, account, props.auth);
-  useAutoConnect({
-    ...props,
-    siweAuth: siweAuth,
-  });
-
   const fadeAnim = useRef(new Animated.Value(0)); // For background opacity
   const slideAnim = useRef(new Animated.Value(screenHeight)); // For bottom sheet position
 
@@ -108,6 +104,25 @@ export function ConnectButton(props: ConnectButtonProps) {
   const isConnected = wallet && account;
   const isConnectedAndNotAuth = isConnected && needsAuth;
   const isConnectedAndAuth = isConnected && !needsAuth;
+
+  const wallets = props.wallets || getDefaultWallets(props);
+
+  const autoConnectComp = props.autoConnect !== false && (
+    <AutoConnect
+      accountAbstraction={props.accountAbstraction}
+      appMetadata={props.appMetadata}
+      chain={props.chain}
+      client={props.client}
+      onConnect={props.onConnect}
+      siweAuth={siweAuth}
+      timeout={
+        typeof props.autoConnect === "boolean"
+          ? undefined
+          : props.autoConnect?.timeout
+      }
+      wallets={wallets}
+    />
+  );
 
   return (
     <View>
@@ -178,6 +193,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           </Animated.View>
         </KeyboardAvoidingView>
       </Modal>
+      {autoConnectComp}
     </View>
   );
 }
