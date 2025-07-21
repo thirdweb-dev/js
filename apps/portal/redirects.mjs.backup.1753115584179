@@ -1089,12 +1089,6 @@ const walletRefactorRedirects = {
 /**
  * @type {import('next').NextConfig['redirects']}
  */
-
-const finalCatchAll = {
-  // Final catch-all for any unmatched routes (must be last)
-  "/:path*": "https://portal.thirdweb.com",
-};
-
 export const redirects = async () => {
   return [
     // old portal redirects
@@ -1114,8 +1108,6 @@ export const redirects = async () => {
     ...createRedirects(glossaryRedirects),
     ...createRedirects(payRedirects),
     ...createRedirects(walletRefactorRedirects),
-    // Final catch-all redirect for 404 errors - MUST BE LAST
-    ...createRedirects(finalCatchAll, false),
   ];
 };
 
