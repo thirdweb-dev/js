@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { fetchEcosystemList } from "@/api/ecosystems";
-import { loginRedirect } from "../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string }>;

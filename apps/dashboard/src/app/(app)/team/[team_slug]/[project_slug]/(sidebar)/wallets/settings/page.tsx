@@ -1,4 +1,3 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
@@ -6,6 +5,7 @@ import { getSMSCountryTiers } from "@/api/sms";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
+import { loginRedirect } from "@/utils/redirects";
 import { InAppWalletSettingsPage } from "./components";
 
 export default async function Page(props: {

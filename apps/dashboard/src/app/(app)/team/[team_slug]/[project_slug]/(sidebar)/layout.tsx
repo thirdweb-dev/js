@@ -6,8 +6,8 @@ import { getTeamBySlug, getTeams } from "@/api/team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { siwaExamplePrompts } from "@/constants/siwa-example-prompts";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { siwaExamplePrompts } from "../../../../(dashboard)/support/definitions";
 import { getValidAccount } from "../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-logged-in.client";
 import { StaffModeNotice } from "../../(team)/_components/StaffModeNotice";
@@ -97,17 +97,13 @@ export default async function ProjectLayout(props: {
           {props.children}
         </ProjectSidebarLayout>
       </div>
-      <div className="fixed right-6 bottom-6 z-50">
+      <div className="fixed right-4 bottom-4 z-50">
         <CustomChatButton
           authToken={authToken}
           clientId={project.publishableKey}
           examplePrompts={siwaExamplePrompts}
-          isFloating={true}
-          isLoggedIn={true}
           label="Ask AI Assistant"
-          networks="all"
-          pageType="support"
-          teamId={team.id}
+          team={team}
         />
       </div>
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />

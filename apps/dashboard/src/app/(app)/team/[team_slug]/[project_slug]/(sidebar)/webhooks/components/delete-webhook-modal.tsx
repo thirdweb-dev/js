@@ -1,5 +1,6 @@
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { AlertTriangleIcon } from "lucide-react";
+import type { WebhookConfig } from "@/api/webhook-configs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import type { WebhookSummaryStats } from "@/types/analytics";
-import type { WebhookConfig } from "../../../../../../../../@/api/webhook-configs";
 
 interface DeleteWebhookModalProps {
   webhookConfig: WebhookConfig | null;

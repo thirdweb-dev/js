@@ -10,6 +10,7 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { maxUint256 } from "thirdweb/utils";
 import * as z from "zod";
 import {
   reportAssetBuyFailed,
@@ -225,8 +226,12 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
 
         {claimCondition.data ? (
           <SupplyClaimedProgress
-            claimedSupply={claimCondition.data.supplyClaimed}
-            totalSupply={claimCondition.data.maxClaimableSupply}
+            claimedSupplyTokens={Number(claimCondition.data.supplyClaimed)}
+            totalSupplyTokens={
+              claimCondition.data.maxClaimableSupply === maxUint256
+                ? "unlimited"
+                : Number(claimCondition.data.maxClaimableSupply)
+            }
           />
         ) : (
           <Skeleton className="h-[62px] w-full" />

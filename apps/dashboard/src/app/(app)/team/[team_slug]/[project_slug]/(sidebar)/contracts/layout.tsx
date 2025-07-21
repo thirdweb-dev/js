@@ -1,11 +1,11 @@
 import { DeployedContractsPageHeader } from "@app/account/contracts/DeployedContractsPageHeader";
-import { loginRedirect } from "@app/login/loginRedirect";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 
 export default async function Layout(props: {
   children: React.ReactNode;

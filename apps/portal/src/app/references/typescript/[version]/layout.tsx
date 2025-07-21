@@ -5,7 +5,7 @@ import { getTDocLayout } from "@/app/references/components/TDoc/PageLayout";
 export default getTDocLayout({
   getDoc: fetchTypeScriptDoc,
   packageSlug: "typescript",
-  sdkTitle: "Connect SDK",
+  sdkTitle: "TypeScript SDK",
 });
 
 export const metadata = createMetadata({

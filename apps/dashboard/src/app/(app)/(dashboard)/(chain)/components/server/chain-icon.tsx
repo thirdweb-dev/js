@@ -3,8 +3,8 @@ import "server-only";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { cn } from "@/lib/utils";
+import { fallbackChainIcon } from "@/utils/chain-icons";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import { fallbackChainIcon } from "../../../../../../@/utils/chain-icons";
 
 export async function ChainIcon(props: {
   iconUrl?: string;

@@ -43,7 +43,7 @@ export function authorizeService(
     return {
       authorized: false,
       errorCode: "SERVICE_UNAUTHORIZED",
-      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope} for project: ${project.name} (${project.publishableKey}). You can view the restrictions on this project in your dashboard: https://thirdweb.com`,
+      errorMessage: `Invalid request: Unauthorized service: ${serviceConfig.serviceScope} for project: ${project.name} (${project.publishableKey}). You can view the restrictions for this project at https://thirdweb.com/${team.slug}/${project.slug}/settings`,
       status: 403,
     };
   }
@@ -57,7 +57,7 @@ export function authorizeService(
       return {
         authorized: false,
         errorCode: "SERVICE_ACTION_UNAUTHORIZED",
-        errorMessage: `Invalid request: Unauthorized action: ${serviceConfig.serviceScope} ${serviceConfig.serviceAction} for project: ${project.name} (${project.publishableKey}). You can view the restrictions on this API key in your dashboard:  https://thirdweb.com/create-api-key`,
+        errorMessage: `Invalid request: Unauthorized action: ${serviceConfig.serviceScope} ${serviceConfig.serviceAction} for project: ${project.name} (${project.publishableKey}). You can view the restrictions for this project at https://thirdweb.com/${team.slug}/${project.slug}/settings`,
         status: 403,
       };
     }

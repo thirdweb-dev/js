@@ -4,14 +4,14 @@ import type { JSX } from "react";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <span>
-    If you believe this is incorrect or the error persists, please visit our{" "}
+    If you believe this is incorrect or the error persists, please{" "}
     <Link
       className="font-semibold underline"
-      href="/support"
+      href="/team/~/~/support"
       rel="noopener noreferrer"
       target="_blank"
     >
-      support site
+      contact support
     </Link>
     .
   </span>

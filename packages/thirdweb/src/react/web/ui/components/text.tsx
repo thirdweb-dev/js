@@ -44,11 +44,11 @@ type LinkProps = {
 export const Link = /* @__PURE__ */ StyledAnchor<LinkProps>((p) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       color: theme.colors[p.hoverColor || "primaryText"],
       textDecoration: "none",
     },
-    all: "unset",
     color: theme.colors[p.color || "accentText"],
     cursor: "pointer",
     display: p.inline ? "inline" : "block",

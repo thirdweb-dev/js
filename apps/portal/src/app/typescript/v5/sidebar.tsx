@@ -345,5 +345,5 @@ export const sidebar: SideBar = {
       name: "Migrate from v4",
     },
   ],
-  name: "Connect Typescript SDK",
+  name: "Typescript SDK",
 };

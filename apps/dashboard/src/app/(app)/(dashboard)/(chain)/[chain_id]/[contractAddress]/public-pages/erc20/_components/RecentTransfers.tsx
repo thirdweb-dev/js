@@ -47,8 +47,8 @@ function RecentTransfersUI(props: {
 }) {
   return (
     <div>
-      <div className="mb-4">
-        <h2 className="font-semibold text-xl tracking-tight">
+      <div className="p-4 lg:p-6 bg-card border rounded-b-none border-b-0 rounded-lg">
+        <h2 className="font-semibold text-2xl tracking-tight mb-0.5">
           Recent Transfers
         </h2>
         <p className="text-muted-foreground text-sm">
@@ -57,7 +57,7 @@ function RecentTransfersUI(props: {
         </p>
       </div>
 
-      <TableContainer className="rounded-b-none">
+      <TableContainer className="rounded-b-none rounded-t-none">
         <Table>
           <TableHeader>
             <TableRow>
@@ -159,7 +159,7 @@ function RecentTransfersUI(props: {
 
       <div className="flex items-center justify-end gap-3 rounded-b-lg border-x border-b bg-card px-6 py-5">
         <Button
-          className="gap-1.5 bg-background"
+          className="gap-1.5 bg-background rounded-full"
           disabled={props.page === 0 || props.isPending}
           onClick={() => props.setPage(props.page - 1)}
           size="sm"
@@ -169,7 +169,7 @@ function RecentTransfersUI(props: {
           Previous
         </Button>
         <Button
-          className="gap-1.5 bg-background"
+          className="gap-1.5 bg-background rounded-full"
           disabled={props.isPending || props.data.length < props.rowsPerPage}
           onClick={() => props.setPage(props.page + 1)}
           size="sm"
@@ -222,23 +222,21 @@ export function RecentTransfers(props: {
   });
 
   return (
-    <div>
-      <RecentTransfersUI
-        client={props.clientContract.client}
-        data={tokenQuery.data ?? []}
-        explorerUrl={
-          props.chainMetadata.explorers?.[0]?.url ||
-          `https://thirdweb.com/${props.chainMetadata.slug}`
-        }
-        isPending={tokenQuery.isPending}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        setPage={setPage}
-        tokenMetadata={{
-          decimals: props.decimals,
-          symbol: props.tokenSymbol,
-        }}
-      />
-    </div>
+    <RecentTransfersUI
+      client={props.clientContract.client}
+      data={tokenQuery.data ?? []}
+      explorerUrl={
+        props.chainMetadata.explorers?.[0]?.url ||
+        `https://thirdweb.com/${props.chainMetadata.slug}`
+      }
+      isPending={tokenQuery.isPending}
+      page={page}
+      rowsPerPage={rowsPerPage}
+      setPage={setPage}
+      tokenMetadata={{
+        decimals: props.decimals,
+        symbol: props.tokenSymbol,
+      }}
+    />
   );
 }

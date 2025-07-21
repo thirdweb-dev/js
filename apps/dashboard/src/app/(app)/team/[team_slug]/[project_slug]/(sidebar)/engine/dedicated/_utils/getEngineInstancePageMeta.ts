@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getAuthToken } from "../../../../../../../../../@/api/auth-token";
+import { loginRedirect } from "@/utils/redirects";
 import { getValidAccount } from "../../../../../../../account/settings/getAccount";
-import { loginRedirect } from "../../../../../../../login/loginRedirect";
 import { getEngineInstance } from "./getEngineInstance";
 
 export async function engineInstancePageHandler(params: {

@@ -68,7 +68,7 @@ export function EngineCloudBarChartCardUI({
   if (data.length === 0 || isAllEmpty) {
     return (
       <EmptyStateCard
-        link="https://portal.thirdweb.com/engine/v3"
+        link="https://portal.thirdweb.com/transactions"
         metric="Transactions"
       />
     );

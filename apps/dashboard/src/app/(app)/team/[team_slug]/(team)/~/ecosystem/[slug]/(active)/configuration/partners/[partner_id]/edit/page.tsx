@@ -3,7 +3,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { loginRedirect } from "../../../../../../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { UpdatePartnerForm } from "../../../components/client/update-partner-form.client";
 import { fetchPartnerDetails } from "../../../hooks/fetchPartnerDetails";
 

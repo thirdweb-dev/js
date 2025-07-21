@@ -1,0 +1,105 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { TypeScriptIcon, EngineIcon } from "@/icons";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    image: {
+        title: "Server Wallets",
+        icon: "wallets",
+    },
+    title: "Server Wallets",
+    description:
+        "Server wallets are wallets that are managed by your own application, like a treasury wallet or admin wallet. They are used to send transactions from the server.",
+});
+
+# Server Wallets
+
+Server wallets are wallets that are managed by your own application, like a treasury wallet or admin wallet. They are used to send transactions from the server.
+
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP API
+    </TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="http">
+
+### Use an existing Server Wallet
+
+Once created, you can use your server wallet by passing it as the `from` field of the `executionOptions` of the [transactions API](https://engine.thirdweb.com/reference).
+
+### Create a new Server Wallet Programmatically
+
+```http
+POST /v1/accounts
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+
+{
+    "label": "My Server Wallet"
+}
+```
+
+### List all Server Wallets
+
+```http
+GET /v1/accounts
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+```
+
+  </TabsContent>
+
+  <TabsContent value="typescript">
+
+    ### Use an existing Server Wallet
+
+    For existing server wallets, you can get a wallet object with the `serverWallet` function.
+
+    ```typescript
+        import { Engine, createThirdwebClient } from "thirdweb";
+
+        const client = createThirdwebClient({
+            secretKey: "...", // your project secret key
+        });
+
+        const wallet = Engine.serverWallet({
+            client,
+            address: "0x...", // your server wallet address
+        });
+    ```
+
+    You can then use this wallet to send transactions just like user wallets with the thirdweb SDK.
+
+    ### Create a new Server Wallet Programmatically
+
+    You can also create new server wallets programmatically with a label.
+
+    ```typescript
+        import { Engine } from "thirdweb";
+
+        const wallet = Engine.createServerWallet({
+            client,
+            label: "My Server Wallet",
+        });
+    ```
+
+    ### List all Server Wallets
+
+    You can list all server wallets for your project.
+
+    ```typescript
+        import { Engine } from "thirdweb";
+
+        const wallets = await Engine.getServerWallets({
+            client,
+        });
+    ```
+  </TabsContent>
+</Tabs>

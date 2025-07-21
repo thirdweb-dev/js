@@ -3,7 +3,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { fetchEcosystem } from "@/api/ecosystems";
 import { getTeamBySlug } from "@/api/team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { loginRedirect } from "../../../../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { AddPartnerForm } from "../components/client/add-partner-form.client";
 
 export default async function AddPartnerPage({

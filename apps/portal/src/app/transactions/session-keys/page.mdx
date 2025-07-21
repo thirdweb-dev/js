@@ -1,0 +1,223 @@
+# Session Keys
+
+Session keys enable secure transaction execution on behalf of smart accounts without requiring direct access to the main account's private key. This guide will walk you through creating and using session keys with the thirdweb TypeScript SDK.
+
+## Prerequisites
+
+Before you begin, ensure you have:
+- A thirdweb client configured
+- A frontend application
+- A [server wallet](/connect/wallet/server)
+
+## Frontend Setup
+
+First, let's set up the necessary imports and configuration:
+
+```typescript
+import { 
+  generateAccount, 
+  smartWallet, 
+  sendTransaction, 
+  getContract,
+  createThirdwebClient
+} from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { getAllActiveSigners } from "thirdweb/extensions/erc4337";
+import { Engine } from "thirdweb/engine";
+
+// Configure your client
+const client = createThirdwebClient({
+  clientId: "your-client-id",
+});
+
+// Your session key account address
+const sessionKeyServerWalletAddress = "0x..."; // Replace with your server wallet address
+
+// Target address for transactions
+const targetAddress = "0x..."; // Replace with your target address
+```
+
+## Step 1: Configure User Smart Wallet with Session Key
+
+The first step is to add our session key address as a signer to the user's smart account. This is typically done on the client side since it needs explicit user approval. This can be done by configuring the smart wallet with the session key address and permissions.
+
+In a React application, this can be done by using the `ConnectButton` or `ConnectEmbed` component. This will automatically configure the smart wallet with the session key address and permissions.
+
+```tsx
+<ConnectButton
+  accountAbstraction={{
+    chain: sepolia,
+    sessionKey: {
+      address: sessionKeyServerWalletAddress,
+      permissions: {
+        // "*" allows all targets, or specify specific contract addresses
+        approvedTargets: "*",
+      },
+    },
+    sponsorGas: true,
+  }}
+/>
+```
+
+This can also be done in pure TypeScript by using the `smartWallet` function and connecting it to a personal account.
+
+For this guide, we'll generate a random personal account that will be used to create the smart wallet:
+
+```typescript
+// this would be the user's personal account
+const personalAccount = await generateAccount({
+  client: client,
+});
+
+// wrapped in a smart wallet with session key permissions
+const smart = smartWallet({
+  chain: sepolia,
+  sessionKey: {
+    address: sessionKeyServerWalletAddress,
+    permissions: {
+      // "*" allows all targets, or specify specific contract addresses
+      approvedTargets: "*",
+    },
+  },
+  sponsorGas: true, // Enable gas sponsorship
+});
+
+console.log("Personal account created:", personalAccount.address);
+```
+
+### Session Key Permissions
+
+The `permissions` object allows you to control what the session key can do:
+
+- `approvedTargets`: Specify which contract addresses the session key can interact with
+  - Use `"*"` for all targets
+  - Use an array of addresses for specific contracts: `["0x123...", "0x456..."]`
+
+## Step 2: Connect Smart Account
+
+Connect the smart wallet using the personal account:
+
+```typescript
+const smartAccount = await smart.connect({
+  client: client,
+  personalAccount: personalAccount,
+});
+
+console.log("Smart account address:", smartAccount.address);
+```
+
+Note that in a React application, this would be done automatically by the `ConnectButton` or `ConnectEmbed` component.
+
+## Step 3 (Optional): Verify Session Key Registration
+
+Check that the session key is properly registered as an active signer:
+
+```typescript
+const signers = await getAllActiveSigners({
+  contract: getContract({
+    address: smartAccount.address,
+    chain: sepolia,
+    client: client,
+  }),
+});
+
+// Verify the session key is in the list of active signers
+const isSessionKeyActive = signers
+  .map((s) => s.signer)
+  .includes(sessionKeyServerWalletAddress);
+
+console.log("Session key is active:", isSessionKeyActive);
+console.log("All active signers:", signers.map((s) => s.signer));
+```
+
+## Step 4: Create Engine Server Wallet
+
+Set up an Engine server wallet using the session key for transaction execution:
+
+```typescript
+const serverWallet = Engine.serverWallet({
+  address: sessionKeyServerWalletAddress,
+  chain: sepolia,
+  client: client,
+  executionOptions: {
+    entrypointVersion: "0.6", // ERC-4337 entrypoint version
+    signerAddress: sessionKeyServerWalletAddress,
+    smartAccountAddress: smartAccount.address,
+    type: "ERC4337",
+  },
+  vaultAccessToken: process.env.VAULT_TOKEN as string, // Your vault access token
+});
+```
+
+### Execution Options
+
+- `entrypointVersion`: The ERC-4337 entrypoint version to use
+- `signerAddress`: The session key address that will sign transactions
+- `smartAccountAddress`: The smart account address that will execute transactions
+- `type`: The account abstraction type (ERC4337)
+
+## Step 5: Execute Transactions
+
+Now you can execute transactions using the session key:
+
+```typescript
+const tx = await sendTransaction({
+  account: serverWallet,
+  transaction: {
+    chain: sepolia,
+    client: client,
+    to: targetAddress,
+    value: 0n, // Amount in wei (0 for no ETH transfer)
+    // data: "0x...", // Optional: contract call data
+  },
+});
+
+console.log("Transaction sent:", tx.transactionHash);
+```
+
+## Security Considerations
+
+- **Session Key Storage**: Store session keys securely, preferably in a vault system
+- **Permission Scope**: Limit session key permissions to only necessary targets
+- **Key Rotation**: Regularly rotate session keys for enhanced security
+- **Monitoring**: Monitor session key usage for suspicious activity
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Session key not active**: Ensure the session key is properly registered with the smart account
+2. **Permission denied**: Check that the target address is included in `approvedTargets`
+3. **Gas estimation failed**: Verify that gas sponsorship is properly configured
+4. **Vault token invalid**: Ensure your vault access token is valid and has proper permissions
+
+### Error Handling
+
+Always wrap your session key operations in try-catch blocks:
+
+```typescript
+try {
+  const tx = await sendTransaction({
+    account: serverWallet,
+    transaction: {
+      chain: sepolia,
+      client,
+      to: targetAddress,
+      value: 0n,
+    },
+  });
+} catch (error) {
+  if (error.message.includes("permission")) {
+    console.error("Session key lacks permission for this operation");
+  } else if (error.message.includes("gas")) {
+    console.error("Gas estimation or sponsorship failed");
+  } else {
+    console.error("Transaction failed:", error);
+  }
+}
+```
+
+## Next Steps
+
+- Explore [Engine API Reference](https://engine.thirdweb.com/reference)
+- Check out the [TypeScript SDK](/references/typescript/v5/serverWallet) documentation

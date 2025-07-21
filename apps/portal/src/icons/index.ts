@@ -8,6 +8,7 @@ export { ContractInteractIcon } from "./products/contracts/ContractInteractIcon"
 // contracts
 export { ContractModularContractIcon } from "./products/contracts/ContractModularContractIcon";
 export { ContractPublishIcon } from "./products/contracts/ContractPublishIcon";
+export { EngineIcon } from "./products/EngineIcon";
 // infra
 export { InfraRPCIcon } from "./products/infra/InfraRPCIcon";
 export { InfraStorageIcon } from "./products/infra/InfraStorageIcon";

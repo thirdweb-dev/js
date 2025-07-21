@@ -6,15 +6,25 @@ import {
   VideoIcon,
 } from "lucide-react";
 import { Feedback } from "../others/Feedback";
+import type { SidebarLink } from "../others/Sidebar";
 import { Subscribe } from "../others/Subscribe";
 import { DocLink } from ".";
 import { AutoEditPageButton } from "./AutoEditPageButton";
+import { AutoNextPageButton } from "./AutoNextPageButton";
 
-export function PageFooter(props: { editPageButton?: true }) {
+export function PageFooter(props: {
+  editPageButton?: true;
+  sidebarLinks?: SidebarLink[];
+}) {
   return (
     <footer className="flex flex-col gap-7 pb-20" data-noindex>
-      <div className="flex flex-col justify-between gap-7 md:flex-row md:items-center">
-        {props.editPageButton && <AutoEditPageButton />}
+      <div className="flex flex-col justify-between gap-7">
+        <div className="flex gap-4 justify-between items-center">
+          {props.editPageButton && <AutoEditPageButton />}
+          {props.sidebarLinks && (
+            <AutoNextPageButton sidebarLinks={props.sidebarLinks} />
+          )}
+        </div>
         <Feedback />
       </div>
       <div className="h-1 border-t" />

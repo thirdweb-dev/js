@@ -488,7 +488,7 @@ export function TransactionCharts(props: {
     autoUpdate: false,
     instanceUrl: props.instanceUrl,
     queryParams: {
-      limit: 10000,
+      limit: 2000,
       page: 1,
     },
   });

@@ -46,15 +46,6 @@ export function SecondaryNavLinks() {
 
       <Link
         className="text-muted-foreground text-sm hover:text-foreground"
-        href="/support"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Support
-      </Link>
-
-      <Link
-        className="text-muted-foreground text-sm hover:text-foreground"
         href="https://feedback.thirdweb.com"
         rel="noopener noreferrer"
         target="_blank"

@@ -29,6 +29,7 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
     title: string;
     description?: string;
     titleClassName?: string;
+    headerClassName?: string;
   };
   customHeader?: React.ReactNode;
   // chart config
@@ -52,6 +53,12 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
   toolTipLabelFormatter?: (label: string, payload: unknown) => React.ReactNode;
   toolTipValueFormatter?: (value: unknown) => React.ReactNode;
   emptyChartState?: React.ReactElement;
+  margin?: {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  };
 };
 
 export function ThirdwebAreaChart<TConfig extends ChartConfig>(
@@ -62,7 +69,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
   return (
     <Card className={props.className}>
       {props.header && (
-        <CardHeader>
+        <CardHeader className={props.header.headerClassName}>
           <CardTitle className={cn("mb-2", props.header.titleClassName)}>
             {props.header.title}
           </CardTitle>
@@ -85,7 +92,16 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
               {props.emptyChartState}
             </EmptyChartState>
           ) : (
-            <AreaChart accessibilityLayer data={props.data}>
+            <AreaChart
+              accessibilityLayer
+              data={props.data}
+              margin={{
+                right: props.margin?.right ?? 0,
+                left: props.margin?.left ?? 0,
+                bottom: props.margin?.bottom ?? 10,
+                top: props.margin?.top ?? 0,
+              }}
+            >
               <CartesianGrid vertical={false} />
               {props.yAxis && <YAxis axisLine={false} tickLine={false} />}
               <XAxis

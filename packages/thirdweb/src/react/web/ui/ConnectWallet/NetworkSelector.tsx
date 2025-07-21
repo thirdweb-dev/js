@@ -735,11 +735,11 @@ export const TabButton = /* @__PURE__ */ (() =>
   styled.button((_) => {
     const theme = useCustomTheme();
     return {
+      all: "unset",
       "&[data-active='true']": {
         background: theme.colors.secondaryButtonBg,
         color: theme.colors.primaryText,
       },
-      all: "unset",
       borderRadius: radius.lg,
       color: theme.colors.secondaryText,
       cursor: "pointer",
@@ -784,8 +784,8 @@ export const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
     "&:hover": {
       background: theme.colors.secondaryButtonBg,
     },
-    alignItems: "center",
     all: "unset",
+    alignItems: "center",
     borderRadius: radius.md,
     boxSizing: "border-box",
     color: theme.colors.primaryText,

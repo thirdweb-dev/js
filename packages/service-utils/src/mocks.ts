@@ -75,7 +75,10 @@ export const validTeamResponse: TeamResponse = {
     },
     nebula: {
       enabled: true,
-      rateLimit: 1000,
+      rateLimit: {
+        perSecond: 1000,
+        perMinute: 1000,
+      },
     },
     pay: {
       enabled: true,
@@ -99,6 +102,10 @@ export const validTeamResponse: TeamResponse = {
         rateLimit: 1000,
         totalFileSizeBytesLimit: 1_000_000_000,
       },
+    },
+    mcp: {
+      enabled: true,
+      rateLimit: 10,
     },
   },
   createdAt: new Date("2024-06-01").toISOString(),

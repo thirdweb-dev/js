@@ -416,7 +416,7 @@ async function redirects() {
       source: "/connect/account-abstraction",
     },
     {
-      destination: "/universal-bridge",
+      destination: "/payments",
       permanent: false,
       source: "/connect/universal-bridge",
     },
@@ -440,9 +440,19 @@ async function redirects() {
       permanent: false,
       source: "/rpc-edge",
     },
+    {
+      destination: "/payments",
+      permanent: false,
+      source: "/universal-bridge",
+    },
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,
     ...teamPageRedirects,
+    {
+      source: "/support/:path*",
+      destination: "/team/~/~/support",
+      permanent: false,
+    },
   ];
 }
 

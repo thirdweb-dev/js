@@ -1,0 +1,87 @@
+import {
+  Callout,
+  createMetadata,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent
+} from "@doc";
+import {
+  ReactIcon,
+} from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Sell a Product",
+    icon: "payments",
+  },
+  title: "Sell a Product",
+  description: "Accept any token as payment for your products.",
+});
+
+# Sell a Product
+
+Accept crypto and fiat payments for any product using the `CheckoutWidget`.
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+  </TabsList>
+
+<TabsContent value="react">
+
+### Sell a Product with the `CheckoutWidget`
+
+```tsx
+import { CheckoutWidget } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { arbitrum } from "thirdweb/chains";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
+
+function ProductPage() {
+  return (
+    <div>
+      <h1>Premium Course</h1>
+      <p>Complete guide to web3 development</p>
+
+      <CheckoutWidget
+        client={client}
+        chain={arbitrum}
+        amount="99"
+        seller="0x123...abc" // Your wallet address
+        name="Premium Course"
+        description="Complete guide to web3 development"
+        image="/course-thumbnail.jpg"
+        purchaseData={{
+          productId: "premium-course",
+          customerId: "user-123",
+          orderId: "order-456",
+        }}
+        onSuccess={() => {
+          alert("Purchase successful!");
+          // Redirect or update UI
+        }}
+      />
+    </div>
+  );
+}
+```
+
+The CheckoutWidget handles the complete payment flow, supporting both crypto and fiat payments across 50+ chains.
+</TabsContent>
+</Tabs>
+
+## Going Further
+
+- [Custom Payment Data](/payments/custom-data) - Attach metadata to payments
+- [Webhooks](/payments/webhooks) - Get notified when payments complete
+
+## API Reference
+
+- [CheckoutWidget](/references/typescript/v5/checkoutwidget)

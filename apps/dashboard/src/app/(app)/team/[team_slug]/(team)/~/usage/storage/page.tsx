@@ -1,7 +1,7 @@
 import Link from "next/link";
+import { getAuthToken } from "@/api/auth-token";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { getAuthToken } from "../../../../../../../../@/api/auth-token";
-import { loginRedirect } from "../../../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { GuidesSection } from "./components/GuideSection";
 import { SDKSection } from "./components/SDKSection";
 import { YourFilesSection } from "./your-files";

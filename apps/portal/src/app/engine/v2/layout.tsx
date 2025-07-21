@@ -8,12 +8,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
     <DocLayout
       editPageButton={true}
       sideBar={sidebar}
-      sidebarHeader={
-        <div className="flex-col items-center gap-1">
-          <p className="py-5 font-semibold text-foreground text-lg">Engine</p>
-          <EngineVersionSelector selected="v2" />
-        </div>
-      }
+      sidebarHeader={<EngineVersionSelector selected="v2" />}
     >
       {props.children}
     </DocLayout>

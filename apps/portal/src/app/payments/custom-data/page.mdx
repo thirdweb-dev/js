@@ -1,0 +1,201 @@
+import {
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+import {
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+} from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Custom Payment Data",
+    icon: "payments",
+  },
+  title: "Custom Payment Data",
+  description: "Pass custom app data to payments to be included on webhooks, payment history, and more.",
+});
+
+# Custom Payment Data
+
+Associate user IDs, custom payment IDs, order details, and more with any payment.
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="typescript">
+    To include custom `purchaseData` in webhooks or payment history, pass a `purchaseData` object to any `prepare` function:
+
+    ```typescript
+    import { Bridge } from "thirdweb";
+
+    const preparedQuote = await Bridge.Buy.prepare({
+      originChainId: 42161,
+      originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      destinationChainId: 10,
+      destinationTokenAddress: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+      amount: 10_000_000n,
+      sender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+      receiver: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+      client,
+      purchaseData: {
+        userId: "75750df7-ec39-4724-9995-6c75e7a59ef6",
+        itemId: "af4a7350-a89b-4329-8262-0cdf09557803",
+        size: "L",
+        shippingAddress: {
+          addressLine1: "2 Marina Blvd",
+          city: "San Francisco",
+          state: "CA",
+          postalCode: "94123",
+          country: "US",
+        },
+      },
+    });
+    ```
+  </TabsContent>
+
+  <TabsContent value="react">
+    For React applications, you can pass custom `purchaseData` to any of the payment widgets:
+
+    ### BuyWidget
+
+    ```tsx
+    import { BuyWidget } from "thirdweb/react";
+    import { ethereum } from "thirdweb/chains";
+
+    function FundWalletComponent() {
+      return (
+        <BuyWidget
+          client={client}
+          chain={ethereum}
+          amount="0.1"
+          purchaseData={{
+            userId: "user-123",
+            orderId: "order-456",
+            productType: "wallet-funding",
+            metadata: {
+              source: "app",
+              campaign: "new-user"
+            }
+          }}
+        />
+      );
+    }
+    ```
+
+    ### CheckoutWidget
+
+    ```tsx
+    import { CheckoutWidget } from "thirdweb/react";
+    import { base } from "thirdweb/chains";
+
+    function CheckoutComponent() {
+      return (
+        <CheckoutWidget
+          client={client}
+          chain={base}
+          amount="50"
+          seller="0x123...abc"
+          name="Digital Product"
+          description="Premium subscription"
+          purchaseData={{
+            itemId: "premium-plan-yearly",
+            customerId: "customer-789",
+            size: "enterprise",
+            shippingAddress: {
+              addressLine1: "123 Business Ave",
+              city: "New York",
+              state: "NY",
+              postalCode: "10001",
+              country: "US"
+            },
+            specialInstructions: "Corporate billing required"
+          }}
+        />
+      );
+    }
+    ```
+
+    ### TransactionWidget
+
+    ```tsx
+    import { TransactionWidget, prepareContractCall } from "thirdweb/react";
+    import { ethereum } from "thirdweb/chains";
+    import { getContract } from "thirdweb";
+
+    function MintNFTComponent() {
+      const contract = getContract({
+        client,
+        chain: ethereum,
+        address: "0x...", // Your NFT contract address
+      });
+
+      const transaction = prepareContractCall({
+        contract,
+        method: "mint",
+        params: ["0x123...abc", 1], // recipient, quantity
+      });
+
+      return (
+        <TransactionWidget
+          client={client}
+          transaction={transaction}
+          title="Mint NFT"
+          description="Mint your exclusive NFT"
+          purchaseData={{
+            transactionType: "nft-mint",
+            collectionId: "exclusive-collection",
+            mintQuantity: 1,
+            recipientInfo: {
+              userId: "user-456",
+              email: "user@example.com",
+              tier: "premium"
+            }
+          }}
+        />
+      );
+    }
+    ```
+
+    All widgets support the same `purchaseData` format, allowing you to pass any custom metadata that will be included in webhooks and payment history.
+  </TabsContent>
+</Tabs>
+
+Any purchase data you provide to a payment will be included on all webhooks, status responses, and payment history for that payment.
+
+## Going further
+
+To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
+
+- [Send a Payment](/payments/send)
+- [Webhooks](/payments/webhooks)
+
+## Explore Full API References
+
+- [Buy.prepare](/references/typescript/v5/buy/prepare)
+- [Sell.prepare](/references/typescript/v5/sell/prepare)
+- [BuyWidget](/references/typescript/v5/buywidget)
+- [CheckoutWidget](/references/typescript/v5/checkoutwidget)
+- [TransactionWidget](/references/typescript/v5/transactionwidget)
+

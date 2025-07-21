@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { mapV4ChainToV5Chain } from "../../../../../../@/utils/map-chains";
+import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";

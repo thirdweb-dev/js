@@ -6,7 +6,7 @@ import { PublicPageConnectButton } from "./PublicPageConnectButton";
 
 export function PageHeader(props: { containerClassName?: string }) {
   return (
-    <div className="border-b border-dashed">
+    <div className="border-b bg-card">
       <header
         className={cn(
           "container flex max-w-8xl justify-between py-3",

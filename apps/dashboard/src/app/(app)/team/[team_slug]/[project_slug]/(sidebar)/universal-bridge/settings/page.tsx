@@ -1,4 +1,3 @@
-import { loginRedirect } from "@app/login/loginRedirect";
 import { PayConfig } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/PayConfig";
 import { RouteDiscovery } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/RouteDiscovery";
 import { redirect } from "next/navigation";
@@ -7,6 +6,7 @@ import { getProject } from "@/api/projects";
 import { getTeamBySlug } from "@/api/team";
 import { getFees } from "@/api/universal-bridge/developer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { loginRedirect } from "@/utils/redirects";
 
 export default async function Page(props: {
   params: Promise<{

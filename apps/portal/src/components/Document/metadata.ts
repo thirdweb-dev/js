@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getBaseUrl } from "../../lib/getBaseUrl";
 
-const BAST_URL = getBaseUrl();
+const BASE_URL = getBaseUrl();
 
 type DynamicImageOptions = {
   title: string;
@@ -14,7 +14,8 @@ type DynamicImageOptions = {
     | "wallets"
     | "auth"
     | "contract"
-    | "payment"
+    | "payments"
+    | "vault"
     | "infra"
     | "rpc"
     | "storage"
@@ -22,7 +23,8 @@ type DynamicImageOptions = {
     | "dotnet"
     | "nebula"
     | "unreal-engine"
-    | "insight";
+    | "insight"
+    | "webhooks";
 };
 
 export type MetadataImageIcon = DynamicImageOptions["icon"];
@@ -41,7 +43,7 @@ export function createMetadata(obj: {
         ? [
             {
               height: 630,
-              url: `${BAST_URL}/api/og?icon=${obj.image.icon}&title=${obj.image.title}`,
+              url: `${BASE_URL}/api/og?icon=${obj.image.icon}&title=${obj.image.title}`,
               width: 1200,
             },
           ]

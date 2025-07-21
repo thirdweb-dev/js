@@ -108,7 +108,7 @@ export const sidebar: SideBar = {
         {
           href: "/dotnet/universal-bridge/quickstart",
           icon: <ExternalLinkIcon />,
-          name: "Universal Bridge",
+          name: "Payments",
         },
       ],
       name: "Advanced Functionality",

@@ -978,6 +978,11 @@ export function DetailsModal(props: {
         onCancel={() => setScreen("main")}
         onSuccess={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
+        theme={props.theme}
+        style={{
+          border: "none",
+          borderRadius: radius.lg,
+        }}
         tokenAddress={
           props.displayBalanceToken?.[Number(requestedChainId)] as
             | `0x${string}`
@@ -1148,12 +1153,12 @@ export function NetworkSwitcherButton(props: {
 const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       background: theme.colors.connectedButtonBgHover,
       transition: "background 250ms ease",
     },
     alignItems: "center",
-    all: "unset",
     animation: `${fadeInAnimation} 300ms ease`,
     background: theme.colors.connectedButtonBg,
     border: `1px solid ${theme.colors.borderColor}`,

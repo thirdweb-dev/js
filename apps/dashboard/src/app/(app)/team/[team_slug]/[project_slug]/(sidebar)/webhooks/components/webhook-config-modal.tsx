@@ -2,16 +2,20 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CheckIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
 import {
   createWebhookConfig,
   type Topic,
+  testDestinationUrl,
   updateWebhookConfig,
   type WebhookConfig,
 } from "@/api/webhook-configs";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,10 +32,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  RequiredFormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Switch } from "@/components/ui/switch";
 import { TopicSelectorModal } from "./topic-selector-modal";
 
 const formSchema = z.object({
@@ -45,9 +49,7 @@ const formSchema = z.object({
     }),
   isPaused: z.boolean().default(false),
   topics: z
-    .array(
-      z.object({ id: z.string(), filters: z.union([z.object({}), z.null()]) }),
-    )
+    .array(z.object({ id: z.string(), filters: z.unknown().nullable() }))
     .min(1, "At least one topic is required"),
 });
 
@@ -57,20 +59,28 @@ interface WebhookConfigModalProps {
   mode: "create" | "edit";
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
   teamSlug: string;
   projectSlug: string;
   topics: Topic[];
   webhookConfig?: WebhookConfig; // Only required for edit mode
+  client?: ThirdwebClient;
+  supportedChainIds?: Array<number>;
 }
 
 export function WebhookConfigModal(props: WebhookConfigModalProps) {
   const [isTopicSelectorOpen, setIsTopicSelectorOpen] = useState(false);
+  const [testResult, setTestResult] = useState<{
+    success: boolean;
+    statusCode: number;
+    responseBody?: string;
+  } | null>(null);
   const queryClient = useQueryClient();
 
   const isEditMode = props.mode === "edit";
   const webhookConfig = props.webhookConfig;
 
-  const form = useForm<FormValues>({
+  const form = useForm({
     defaultValues: {
       description: isEditMode ? webhookConfig?.description || "" : "",
       destinationUrl: isEditMode ? webhookConfig?.destinationUrl || "" : "",
@@ -88,17 +98,23 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
 
   const mutation = useMutation({
     mutationFn: async (values: FormValues) => {
-      // Topics already have filters applied from the selector modal
-      const processedTopics = values.topics;
+      // Transform topics to topicIdsWithFilters format
+      const processedTopics: { id: string; filters: object | null }[] =
+        values.topics.map((topic) => ({
+          id: topic.id,
+          filters: topic.filters || null,
+        }));
+
+      const config = {
+        description: values.description,
+        destinationUrl: values.destinationUrl,
+        isPaused: values.isPaused,
+        topicIdsWithFilters: processedTopics,
+      };
 
       if (isEditMode && webhookConfig) {
         const result = await updateWebhookConfig({
-          config: {
-            description: values.description,
-            destinationUrl: values.destinationUrl,
-            isPaused: values.isPaused,
-            topics: processedTopics,
-          },
+          config,
           projectIdOrSlug: props.projectSlug,
           teamIdOrSlug: props.teamSlug,
           webhookConfigId: webhookConfig.id,
@@ -111,12 +127,7 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
         return result.data;
       } else {
         const result = await createWebhookConfig({
-          config: {
-            description: values.description,
-            destinationUrl: values.destinationUrl,
-            isPaused: values.isPaused,
-            topics: processedTopics,
-          },
+          config,
           projectIdOrSlug: props.projectSlug,
           teamIdOrSlug: props.teamSlug,
         });
@@ -129,14 +140,20 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
       }
     },
     onError: (error) => {
-      toast.error(`Failed to ${isEditMode ? "update" : "create"} webhook`, {
-        description: error.message,
-      });
+      toast.error(
+        isEditMode ? "Failed to update webhook" : "Failed to create webhook",
+        {
+          description: error.message,
+        },
+      );
     },
     onSuccess: () => {
       toast.success(
-        `Webhook ${isEditMode ? "updated" : "created"} successfully`,
+        isEditMode
+          ? "Webhook updated successfully"
+          : "Webhook created successfully",
       );
+      props.onSuccess();
       props.onOpenChange(false);
       if (!isEditMode) {
         form.reset();
@@ -147,8 +164,70 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
     },
   });
 
+  const testMutation = useMutation({
+    mutationFn: async (destinationUrl: string) => {
+      const result = await testDestinationUrl({
+        teamIdOrSlug: props.teamSlug,
+        projectIdOrSlug: props.projectSlug,
+        destinationUrl,
+      });
+      if (result.status === "error") {
+        throw new Error(result.body);
+      }
+      return result.result;
+    },
+    onError: (error) => {
+      setTestResult({
+        success: false,
+        statusCode: 0,
+        responseBody: error.message,
+      });
+      toast.error("Failed to test webhook", {
+        description: error.message,
+      });
+    },
+    onSuccess: (data) => {
+      const is2xx = data.httpStatusCode >= 200 && data.httpStatusCode < 300;
+
+      setTestResult({
+        success: is2xx,
+        statusCode: data.httpStatusCode,
+        responseBody: data.httpResponseBody,
+      });
+
+      if (is2xx) {
+        toast.success(`Success! Status: ${data.httpStatusCode}`, {
+          description: data.httpResponseBody,
+        });
+      } else {
+        toast.error(`Failed! Status: ${data.httpStatusCode}`, {
+          description: data.httpResponseBody,
+        });
+      }
+    },
+  });
+
   function onSubmit(values: FormValues) {
     mutation.mutate(values);
+  }
+
+  function handleTestWebhook() {
+    const destinationUrl = form.getValues("destinationUrl");
+
+    // Validate URL
+    try {
+      const url = new URL(destinationUrl);
+      if (!url.protocol.startsWith("https:")) {
+        toast.error("URL must start with https://");
+        return;
+      }
+    } catch {
+      toast.error("Please enter a valid URL");
+      return;
+    }
+
+    setTestResult(null);
+    testMutation.mutate(destinationUrl);
   }
 
   function handleOpenChange(open: boolean) {
@@ -180,7 +259,7 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
             <div className="p-6">
               <DialogHeader className="mb-4">
                 <DialogTitle className="font-semibold text-2xl tracking-tight">
-                  {isEditMode ? "Edit" : "Create"} Webhook Configuration
+                  {isEditMode ? "Edit Webhook" : "Create Webhook"}
                 </DialogTitle>
               </DialogHeader>
 
@@ -190,7 +269,7 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <RequiredFormLabel>Description</RequiredFormLabel>
                       <FormControl>
                         <Input
                           placeholder={
@@ -211,20 +290,50 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
                   name="destinationUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Destination URL</FormLabel>
+                      <RequiredFormLabel>Destination URL</RequiredFormLabel>
                       <FormControl>
                         <Input
                           placeholder="https://example.com/webhook"
                           type="url"
                           {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setTestResult(null);
+                            testMutation.reset();
+                          }}
                         />
                       </FormControl>
                       <FormDescription>
-                        {isEditMode
-                          ? "The URL where webhook events will be sent"
-                          : "Enter your webhook URL. Only https:// is supported."}
+                        Enter your webhook URL. Only https:// is supported.
                       </FormDescription>
                       <FormMessage />
+
+                      {/* Test Webhook Button */}
+                      <div className="flex items-center gap-3 mt-3">
+                        <Button
+                          disabled={
+                            !field.value ||
+                            !field.value.startsWith("https://") ||
+                            testMutation.isPending
+                          }
+                          variant="outline"
+                          onClick={handleTestWebhook}
+                          type="button"
+                          size="sm"
+                        >
+                          {testMutation.isPending && (
+                            <Spinner className="size-4 mr-2" />
+                          )}
+                          {!testMutation.isPending &&
+                            testResult &&
+                            (testResult.success ? (
+                              <CheckIcon className="size-4 mr-2 text-green-500" />
+                            ) : (
+                              <XIcon className="size-4 mr-2 text-red-500" />
+                            ))}
+                          Test Webhook
+                        </Button>
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -248,33 +357,15 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
                         </Button>
                       </FormControl>
                       <FormDescription>
-                        {isEditMode
-                          ? "Select the events you want to receive notifications for"
-                          : "Select the events to trigger calls to your webhook."}
+                        Select the events to receive real-time notifications
                       </FormDescription>
                       {field.value && field.value.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {field.value.map((topic) => {
                             return (
-                              <div
-                                className="flex items-center gap-1 rounded-full bg-accent px-2 py-1 text-xs"
-                                key={topic.id}
-                              >
+                              <Badge variant="secondary" key={topic.id}>
                                 {topic.id}
-                                <button
-                                  className="ml-1 text-muted-foreground hover:text-foreground"
-                                  onClick={() => {
-                                    field.onChange(
-                                      field.value?.filter(
-                                        (t) => t.id !== topic.id,
-                                      ),
-                                    );
-                                  }}
-                                  type="button"
-                                >
-                                  ×
-                                </button>
-                              </div>
+                              </Badge>
                             );
                           })}
                         </div>
@@ -283,39 +374,14 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="isPaused"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-sm font-medium">
-                          {isEditMode ? "Paused" : "Start Paused"}
-                        </FormLabel>
-                        <FormDescription className="text-xs">
-                          {isEditMode
-                            ? "Pause webhook notifications"
-                            : "Do not send events yet. You can unpause at any time."}
-                        </FormDescription>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
               </div>
             </div>
 
-            <DialogFooter className="mt-4 gap-4 border-border border-t bg-card p-6 lg:gap-2">
+            <DialogFooter className="mt-4 border-border border-t bg-card p-6 flex justify-between">
               <Button
                 disabled={mutation.isPending}
                 onClick={() => handleOpenChange(false)}
-                variant="outline"
+                variant="ghost"
               >
                 Cancel
               </Button>
@@ -333,12 +399,20 @@ export function WebhookConfigModal(props: WebhookConfigModalProps) {
       </DialogContent>
 
       <TopicSelectorModal
+        client={props.client}
         onOpenChange={setIsTopicSelectorOpen}
         onSelectionChange={(topics) => {
-          form.setValue("topics", topics);
+          form.setValue(
+            "topics",
+            topics.map((topic) => ({
+              id: topic.id,
+              filters: topic.filters || null,
+            })) as { id: string; filters: object | null }[],
+          );
         }}
         open={isTopicSelectorOpen}
         selectedTopics={form.watch("topics")}
+        supportedChainIds={props.supportedChainIds}
         topics={props.topics}
       />
     </Dialog>

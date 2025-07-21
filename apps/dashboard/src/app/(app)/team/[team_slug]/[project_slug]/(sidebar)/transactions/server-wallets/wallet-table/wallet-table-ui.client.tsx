@@ -58,12 +58,12 @@ export function ServerWalletsTableUI({
   totalPages: number;
   client: ThirdwebClient;
 }) {
-  const [showSigners, setShowSigners] = useState(false);
-  const showSignersId = useId();
+  const [showContractWallets, setShowContractWallets] = useState(false);
+  const showContractWalletsId = useId();
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
-      <div className="flex flex-row items-center gap-4 px-6 py-6">
-        <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none lg:flex-row lg:justify-between">
+      <div className="flex flex-col lg:flex-row items-center gap-4 px-6 py-6">
+        <div className="flex flex-1 flex-col gap-4 rounded-lg rounded-b-none items-start">
           <div>
             <h2 className="font-semibold text-xl tracking-tight">
               Server Wallets
@@ -73,20 +73,26 @@ export function ServerWalletsTableUI({
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-end gap-2">
-          <label className="cursor-pointer text-sm" htmlFor={showSignersId}>
-            Show Signer Addresses
-          </label>
-          <Switch
-            checked={showSigners}
-            id={showSignersId}
-            onCheckedChange={() => setShowSigners(!showSigners)}
+        <div className="flex flex-col gap-4 items-end">
+          <CreateServerWallet
+            managementAccessToken={managementAccessToken}
+            project={project}
+            teamSlug={teamSlug}
           />
         </div>
-        <CreateServerWallet
-          managementAccessToken={managementAccessToken}
-          project={project}
-          teamSlug={teamSlug}
+      </div>
+
+      <div className="flex items-center justify-end gap-2 py-4">
+        <label
+          className="cursor-pointer text-sm text-muted-foreground"
+          htmlFor={showContractWalletsId}
+        >
+          Show ERC4337 Smart Account Addresses
+        </label>
+        <Switch
+          checked={showContractWallets}
+          id={showContractWalletsId}
+          onCheckedChange={() => setShowContractWallets(!showContractWallets)}
         />
       </div>
 
@@ -94,7 +100,9 @@ export function ServerWalletsTableUI({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Address</TableHead>
+              <TableHead>
+                {showContractWallets ? "Smart Account Address" : "EOA Address"}
+              </TableHead>
               <TableHead>Label</TableHead>
               <TableHead className="text-right">Created At</TableHead>
               <TableHead className="text-right">Updated At</TableHead>
@@ -105,10 +113,10 @@ export function ServerWalletsTableUI({
             {wallets.map((wallet) => (
               <TableRow className="hover:bg-accent/50" key={wallet.id}>
                 <TableCell>
-                  {showSigners ? (
-                    <WalletAddress address={wallet.address} client={client} />
-                  ) : (
+                  {showContractWallets ? (
                     <SmartAccountCell client={client} wallet={wallet} />
+                  ) : (
+                    <WalletAddress address={wallet.address} client={client} />
                   )}
                 </TableCell>
                 <TableCell>{wallet.metadata.label || "none"}</TableCell>
@@ -197,7 +205,7 @@ export function ServerWalletsTableUI({
   );
 }
 
-export function SmartAccountCell({
+function SmartAccountCell({
   wallet,
   client,
 }: {

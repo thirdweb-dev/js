@@ -26,7 +26,6 @@ const buttonVariants = cva(
         link: "underline-offset-4 hover:underline",
         outline:
           "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
-        pink: "border border-nebula-pink-foreground !text-nebula-pink-foreground bg-[hsl(var(--nebula-pink-foreground)/5%)] hover:bg-nebula-pink-foreground/10 dark:!text-foreground dark:bg-nebula-pink-foreground/10 dark:hover:bg-nebula-pink-foreground/20",
         primary: "bg-primary hover:bg-primary/90 text-primary-foreground ",
         secondary:
           "bg-secondary hover:bg-secondary/80 text-secondary-foreground ",

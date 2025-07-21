@@ -57,7 +57,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
       },
       nebula: {
         enabled: true,
-        rateLimit: 1000,
+        rateLimit: {
+          perSecond: 1000,
+          perMinute: 1000,
+        },
       },
       pay: {
         enabled: true,
@@ -81,6 +84,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
           rateLimit: 1000,
           totalFileSizeBytesLimit: 1_000_000_000,
         },
+      },
+      mcp: {
+        enabled: true,
+        rateLimit: 10,
       },
     },
     createdAt: new Date().toISOString(),

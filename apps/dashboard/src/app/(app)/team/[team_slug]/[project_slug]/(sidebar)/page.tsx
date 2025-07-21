@@ -37,7 +37,7 @@ import type {
   WalletStats,
   WalletUserStats,
 } from "@/types/analytics";
-import { loginRedirect } from "../../../../login/loginRedirect";
+import { loginRedirect } from "@/utils/redirects";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { EngineCloudChartCard } from "./components/EngineCloudChartCard";

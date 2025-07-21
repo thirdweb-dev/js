@@ -1,4 +1,4 @@
-import { MessageCircleIcon } from "lucide-react";
+import { MessageCircleIcon, WebhookIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Grid, Heading, SDKCard } from "@/components/Document";
@@ -89,13 +89,17 @@ function ReferenceSection() {
       />
       <Grid>
         <SDKCard
-          href="/typescript/v5"
+          href="/references/typescript/v5"
           icon={TypeScriptIcon}
           title="TypeScript"
         />
-        <SDKCard href="/react/v5" icon={ReactIcon} title="React" />
         <SDKCard
-          href="/react-native/v5"
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
           icon={ReactIcon}
           title="React Native"
         />
@@ -115,14 +119,14 @@ function ReferenceSection() {
       />
       <Grid>
         <SDKCard
-          href="https://thirdweb-engine.apidocumentation.com/"
+          href="https://engine.thirdweb.com/reference"
           icon={EngineIcon}
           iconClassName="text-muted-foreground"
           isExternal
           title="Engine"
         />
         <SDKCard
-          href="https://insight.thirdweb.com/reference#tag/webhooks"
+          href="https://insight.thirdweb.com/reference"
           icon={InsightIcon}
           iconClassName="text-muted-foreground"
           isExternal
@@ -133,7 +137,7 @@ function ReferenceSection() {
           icon={BridgeIcon}
           iconClassName="text-muted-foreground"
           isExternal
-          title="Universal Bridge"
+          title="Payments"
         />
         <SDKCard
           href="/connect/wallet/get-users"
@@ -147,6 +151,12 @@ function ReferenceSection() {
           iconClassName="text-muted-foreground"
           title="Bundler"
         />
+        <SDKCard
+          href="/webhooks"
+          icon={WebhookIcon}
+          iconClassName="text-muted-foreground"
+          title="Webhooks"
+        />
       </Grid>
     </section>
   );
@@ -155,23 +165,23 @@ function ReferenceSection() {
 function LearningResourcesSection() {
   return (
     <section>
-      <SectionTitle anchorId="learning" title="Learning Resources" />
+      <SectionTitle anchorId="learning" title="Documentation" />
       <Grid className="md:grid-cols-1 lg:grid-cols-3">
         <ArticleCardIndex
           description="Create and manage crypto wallets"
-          href="/connect"
+          href="/wallets"
           icon={ConnectIcon}
           title="Wallets"
         />
         <ArticleCardIndex
           description="Bridge and onramp tokens on any chain"
-          href="/pay"
+          href="/payments"
           icon={BridgeIcon}
           title="Payments"
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
-          href="/engine"
+          href="/transactions"
           icon={EngineIcon}
           title="Transactions"
         />
@@ -232,13 +242,11 @@ function ArticleCardIndex(props: {
       href={props.href}
       target={props.external ? "_blank" : undefined}
     >
-      <div className="flex items-center gap-3">
-        {props.icon && <props.icon className="text-muted-foreground" />}
+      <div className="flex items-start gap-3">
+        {props.icon && <props.icon className="text-foreground size-6" />}
         <div className="flex flex-col gap-0.5">
-          <h3 className="font-semibold text-foreground text-lg">
-            {props.title}
-          </h3>
-          <p className="text-muted-foreground">{props.description}</p>
+          <h3 className="font-semibold text-foreground">{props.title}</h3>
+          <p className="text-sm text-muted-foreground">{props.description}</p>
         </div>
       </div>
     </Link>

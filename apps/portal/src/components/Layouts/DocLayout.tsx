@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { PageFooter } from "../Document/PageFooter";
 import {
   DocSidebar,
@@ -25,14 +25,19 @@ type DocLayoutProps = {
 export function DocLayout(props: DocLayoutProps) {
   return (
     <div
-      className={`container relative flex flex-col gap-6 xl:grid ${props.showTableOfContents !== false ? "xl:grid-cols-[280px_820px_1fr]" : "xl:grid-cols-[280px_1100px]"}`}
+      className={cn(
+        "container text-muted-foreground relative flex flex-col gap-12 xl:grid",
+        props.showTableOfContents !== false
+          ? "xl:grid-cols-[220px_720px_1fr]"
+          : "xl:grid-cols-[220px_1160px]",
+      )}
       style={{
         minHeight: "calc(100vh - var(--sticky-top-height))",
       }}
     >
       <aside
-        className={clsx(
-          "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-hidden",
+        className={cn(
+          "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-auto no-scrollbar",
           "hidden xl:flex",
         )}
       >
@@ -46,9 +51,17 @@ export function DocLayout(props: DocLayoutProps) {
         data-no-llm={props.noLLM}
         data-noindex={props.noIndex}
       >
-        <div className="grow xl:mt-6">{props.children}</div>
+        <div className="grow xl:mt-6">
+          <h5 className="mb-2 text-sm font-semibold text-violet-500">
+            {props.sideBar.name}
+          </h5>
+          {props.children}
+        </div>
         <div className="mt-16 xl:mt-20">
-          <PageFooter editPageButton={props.editPageButton} />
+          <PageFooter
+            editPageButton={props.editPageButton}
+            sidebarLinks={props.sideBar.links}
+          />
         </div>
       </main>
       {props.showTableOfContents !== false && <TableOfContentsSideBar />}

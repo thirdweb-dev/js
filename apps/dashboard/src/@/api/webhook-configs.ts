@@ -37,7 +37,7 @@ type WebhookConfigsResponse =
     };
 
 interface CreateWebhookConfigRequest {
-  topics: { id: string; filters: object | null }[];
+  topicIdsWithFilters: { id: string; filters: object | null }[];
   destinationUrl: string;
   description: string;
   isPaused?: boolean;
@@ -76,7 +76,7 @@ type TopicsResponse =
 
 interface UpdateWebhookConfigRequest {
   destinationUrl?: string;
-  topics?: { id: string; filters: object | null }[];
+  topicIdsWithFilters?: { id: string; filters: object | null }[];
   description?: string;
   isPaused?: boolean;
 }
@@ -309,4 +309,54 @@ export async function deleteWebhookConfig(props: {
     data: result.data,
     status: "success",
   };
+}
+
+type TestDestinationUrlResponse =
+  | {
+      result: {
+        httpStatusCode: number;
+        httpResponseBody: string;
+      };
+      status: "success";
+    }
+  | {
+      body: string;
+      reason: string;
+      status: "error";
+    };
+
+export async function testDestinationUrl(props: {
+  teamIdOrSlug: string;
+  projectIdOrSlug: string;
+  destinationUrl: string;
+}): Promise<TestDestinationUrlResponse> {
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    return {
+      body: "Authentication required",
+      reason: "no_auth_token",
+      status: "error",
+    };
+  }
+
+  const resp = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${props.teamIdOrSlug}/projects/${props.projectIdOrSlug}/webhook-configs/test-destination-url`,
+    {
+      body: JSON.stringify({ destinationUrl: props.destinationUrl }),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    },
+  );
+  if (!resp.ok) {
+    return {
+      body: await resp.text(),
+      reason: "unknown",
+      status: "error",
+    };
+  }
+  return await resp.json();
 }

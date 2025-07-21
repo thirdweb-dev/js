@@ -331,17 +331,13 @@ function TxStatusCell(props: { transaction: Transaction }) {
   const { errorMessage } = transaction;
   const minedAt = transaction.confirmedAt;
   const status =
-    (transaction.executionResult?.status as TransactionStatus) ?? null;
+    (transaction.executionResult?.status as TransactionStatus) ?? "QUEUED";
 
   const onchainStatus =
     transaction.executionResult &&
     "onchainStatus" in transaction.executionResult
       ? transaction.executionResult.onchainStatus
       : null;
-
-  if (!status) {
-    return null;
-  }
 
   const tooltip =
     onchainStatus !== "REVERTED"

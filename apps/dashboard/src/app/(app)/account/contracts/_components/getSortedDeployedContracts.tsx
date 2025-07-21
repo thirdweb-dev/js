@@ -1,8 +1,8 @@
 import {
   getProjectContracts,
   type ProjectContract,
-} from "../../../../../@/api/getProjectContracts";
-import { fetchChainWithLocalOverrides } from "../../../../../@/utils/fetchChainWithLocalOverrides";
+} from "@/api/getProjectContracts";
+import { fetchChainWithLocalOverrides } from "@/utils/fetchChainWithLocalOverrides";
 
 export async function getSortedDeployedContracts(params: {
   onlyMainnet?: boolean;

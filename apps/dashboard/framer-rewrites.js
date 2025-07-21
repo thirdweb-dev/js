@@ -9,7 +9,7 @@ module.exports = [
   // -- build category
   "/wallets",
   "/account-abstraction",
-  "/universal-bridge",
+  "/payments",
   "/auth",
   "/in-app-wallets",
   "/transactions",
@@ -62,4 +62,6 @@ module.exports = [
   // -- universal bridge landing pages --
   "/universal-bridge-regions/:region_slug",
   "/enterprise",
+  "/token",
+  "/vault",
 ];

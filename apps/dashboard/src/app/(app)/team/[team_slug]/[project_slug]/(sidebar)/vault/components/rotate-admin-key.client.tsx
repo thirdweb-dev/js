@@ -27,8 +27,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
-  createVaultAccountAndAccessToken,
   maskSecret,
+  rotateVaultAccountAndAccessToken,
 } from "../../transactions/lib/vault.client";
 
 export default function RotateAdminKeyButton(props: {
@@ -43,7 +43,7 @@ export default function RotateAdminKeyButton(props: {
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
       // passing no secret key means we're rotating the admin key and deleting any stored keys
-      const result = await createVaultAccountAndAccessToken({
+      const result = await rotateVaultAccountAndAccessToken({
         project: props.project,
       });
 

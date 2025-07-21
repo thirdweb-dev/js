@@ -41,7 +41,6 @@ export function PayTransactionPreview() {
 
   return (
     <TransactionWidget
-      amount={"0.001"}
       client={THIRDWEB_CLIENT}
       description={nft?.metadata?.description}
       image={nft?.metadata?.image}

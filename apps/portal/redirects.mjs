@@ -628,7 +628,6 @@ const walletRedirects = {
     "/connect/wallet/sign-in-methods/configure",
 
   "/connect/sign-in/overview": "/connect/wallet/overview",
-  "/connect/supported-wallets": "/connect/connect",
   "/connect/usage-with-react-native-sdk": "/connect/sign-in",
   "/connect/usage-with-react-sdk": "/connect/sign-in",
   "/connect/usage-with-typescript-sdk": "/connect/sign-in",
@@ -712,6 +711,7 @@ const walletRedirects = {
 };
 
 const paymentRedirects = {
+  "/pay": "/payments",
   "/checkouts": "/payments",
   "/checkouts/api-reference": "/payments/nft-checkout/api-reference",
   "/checkouts/checkout-link": "/payments/nft-checkout/checkout-link",
@@ -742,7 +742,6 @@ const paymentRedirects = {
   "/connect/pay/buy-with-fiat": "/connect/pay/overview",
   "/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
   "/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
-  "/payments/:match*": "/connect/pay/overview",
 };
 
 const contractRedirects = {
@@ -937,7 +936,6 @@ const otherRedirects = {
   // connect
   "/connect/connect": "/connect/sign-in",
   "/connect/ecosystems/:path*": "/connect/wallet/overview",
-  "/connect/embedded-wallet/:path*": "/connect/in-app-wallet/:path*",
   "/connect/embedded-wallet/how-to/get-embedded-wallet-details-on-server":
     "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
@@ -1032,11 +1030,23 @@ const otherRedirects = {
   "/unity/wallets/providers/smart-wallet":
     "/unity/wallets/providers/account-abstraction",
   "/wallet/get-started/overview": "/connect/wallet/overview",
-  // wallets > connect redirects
-  "/wallets": "/connect",
-  "/wallets/auth/:path*": "/connect/auth/:path*",
-  "/wallets/connect/:path*": "/connect/connect/:path*",
-  "/wallets/embedded-wallet/:path*": "/connect/embedded-wallet/:path*",
+  // connect > wallets
+  "/connect/:path*": "/wallets/:path*",
+  "/connect/wallet/:path*": "/wallets/:path*",
+  "/connect/auth/:path*": "/wallets/auth/:path*",
+  "/connect/connect/:path*": "/wallets/connect/:path*",
+  "/connect/embedded-wallet/:path*": "/wallets/embedded-wallet/:path*",
+  "/connect/wallet/sign-in-methods/configure": "/wallets/users",
+  "/connect/wallet/server": "/wallets/server",
+  "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",
+  "/connect/account-abstraction/:path*": "/wallets/sponsor-gas",
+  "/wallets/in-app-wallet/custom-auth/configuration": "/wallets/custom-auth",
+  "/connect/wallets/user-management/link-multiple-identity":
+    "/wallets/link-profiles",
+  "/connect/wallets/user-management/export-private-key":
+    "/wallets/export-private-key",
+  "/wallets/wallet/server": "/wallets/server",
+  "/wallets/wallet/sign-in-methods/configure": "/wallets/users",
   // account abstraction rename
   "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
   "/web3-api/:path*": "/infrastructure/engine/overview",
@@ -1054,8 +1064,8 @@ const v4ToV5Redirects = {
   "/react-native/v0/:path*": "/react-native/v5",
   "/react/v4": "/react/v5",
   "/react/v4/:path*": "/react/v5",
-  "/references/wallets": "/typescript/v5/supported-wallets",
-  "/references/wallets/:path*": "/typescript/v5/supported-wallets",
+  "/references/wallets": "/connect/external-wallets",
+  "/references/wallets/:path*": "/connect/external-wallets",
   "/storage-sdk/v2": "/typescript/v5/storage",
   "/storage-sdk/v2/:path*": "/typescript/v5/storage",
   "/typescript/v4": "/typescript/v5",
@@ -1086,6 +1096,11 @@ const payRedirects = {
   "/connect/pay/webhooks": "/pay/webhooks",
 };
 
+const walletRefactorRedirects = {
+  "/typescript/v5/supported-wallets": "/connect/external-wallets",
+  "/typescript/v5/supported-wallets/:path*": "/connect/external-wallets/:path*",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -1107,6 +1122,7 @@ export const redirects = async () => {
     ...createRedirects(v4ToV5Redirects),
     ...createRedirects(glossaryRedirects),
     ...createRedirects(payRedirects),
+    ...createRedirects(walletRefactorRedirects),
   ];
 };
 

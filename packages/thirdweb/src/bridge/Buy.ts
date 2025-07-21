@@ -155,23 +155,47 @@ export async function quote(options: quote.Options): Promise<quote.Result> {
   };
 }
 
+/**
+ * Namespace containing types for the buy quote function.
+ * @namespace quote
+ * @bridge Buy
+ */
 export declare namespace quote {
+  /**
+   * Options for getting a buy quote.
+   * @interface Options
+   * @bridge Buy
+   */
   type Options = {
+    /** The origin chain ID */
     originChainId: number;
+    /** The origin token address */
     originTokenAddress: ox__Address.Address;
+    /** The destination chain ID */
     destinationChainId: number;
+    /** The destination token address */
     destinationTokenAddress: ox__Address.Address;
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** Maximum number of steps in the route */
     maxSteps?: number;
   } & (
     | {
+        /** The amount to buy in wei */
         buyAmountWei: bigint;
       }
     | {
+        /** The amount to spend in wei */
         amount: bigint;
       }
   );
 
+  /**
+   * Result returned from getting a buy quote.
+   * Contains quote details and intent information.
+   * @interface Result
+   * @bridge Buy
+   */
   type Result = Quote & {
     intent: {
       originChainId: number;
@@ -404,17 +428,37 @@ export async function prepare(
   };
 }
 
+/**
+ * Namespace containing types for the buy prepare function.
+ * @namespace prepare
+ * @bridge Buy
+ */
 export declare namespace prepare {
+  /**
+   * Options for preparing a buy transaction.
+   * @interface Options
+   * @bridge Buy
+   */
   type Options = {
+    /** The origin chain ID */
     originChainId: number;
+    /** The origin token address */
     originTokenAddress: ox__Address.Address;
+    /** The destination chain ID */
     destinationChainId: number;
+    /** The destination token address */
     destinationTokenAddress: ox__Address.Address;
+    /** The sender address */
     sender: ox__Address.Address;
+    /** The receiver address */
     receiver: ox__Address.Address;
+    /** The amount to buy in wei */
     amount: bigint;
+    /** Your thirdweb client */
     client: ThirdwebClient;
+    /** Arbitrary purchase data */
     purchaseData?: PurchaseData;
+    /** Maximum number of steps in the route */
     maxSteps?: number;
     /**
      * @hidden
@@ -422,6 +466,12 @@ export declare namespace prepare {
     paymentLinkId?: string;
   };
 
+  /**
+   * Result returned from preparing a buy transaction.
+   * Contains prepared quote with transaction data and intent information.
+   * @interface Result
+   * @bridge Buy
+   */
   type Result = PreparedQuote & {
     intent: {
       originChainId: number;

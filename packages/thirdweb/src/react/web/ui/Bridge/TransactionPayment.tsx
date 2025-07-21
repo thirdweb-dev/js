@@ -1,11 +1,15 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import {
   type Address,
   getAddress,
   shortenAddress,
 } from "../../../../utils/address.js";
+import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -75,6 +79,31 @@ export function TransactionPayment({
     client,
     transaction: uiOptions.transaction,
     wallet,
+  });
+
+  // We can't use useWalletBalance here because erc20Value is a possibly async value
+  const { data: userBalance } = useQuery({
+    enabled: !!activeAccount?.address,
+    queryFn: async (): Promise<string> => {
+      if (!activeAccount?.address) {
+        return "0";
+      }
+      const erc20Value = await resolvePromisedValue(
+        uiOptions.transaction.erc20Value,
+      );
+      const walletBalance = await getWalletBalance({
+        address: activeAccount?.address,
+        chain: uiOptions.transaction.chain,
+        tokenAddress:
+          erc20Value?.tokenAddress.toLowerCase() !== NATIVE_TOKEN_ADDRESS
+            ? erc20Value?.tokenAddress
+            : undefined,
+        client,
+      });
+
+      return walletBalance.displayValue;
+    },
+    queryKey: ["user-balance", activeAccount?.address],
   });
 
   const contractName =
@@ -183,22 +212,28 @@ export function TransactionPayment({
       <Spacer y="md" />
 
       {/* Contract Info */}
-      <Container
-        flex="row"
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text color="secondaryText" size="sm">
-          Contract
-        </Text>
-        <Text color="primaryText" size="sm">
-          {contractName}
-        </Text>
-      </Container>
+      {contractName !== "UnknownContract" &&
+        contractName !== undefined &&
+        contractName !== "Unknown Contract" && (
+          <>
+            <Container
+              flex="row"
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text color="secondaryText" size="sm">
+                Contract
+              </Text>
+              <Text color="primaryText" size="sm">
+                {contractName}
+              </Text>
+            </Container>
 
-      <Spacer y="xs" />
+            <Spacer y="xs" />
+          </>
+        )}
 
       {/* Address */}
       <Container
@@ -326,6 +361,24 @@ export function TransactionPayment({
           fullWidth
           onClick={() => {
             if (transactionDataQuery.data?.tokenInfo) {
+              if (
+                userBalance &&
+                Number(userBalance) <
+                  Number(transactionDataQuery.data.totalCost)
+              ) {
+                // if user has funds, but not enough, we need to fund the wallet with the difference
+                onContinue(
+                  (
+                    Number(transactionDataQuery.data.totalCost) -
+                    Number(userBalance)
+                  ).toString(),
+                  transactionDataQuery.data.tokenInfo,
+                  getAddress(activeAccount.address),
+                );
+                return;
+              }
+
+              // otherwise, use the full transaction cost
               onContinue(
                 transactionDataQuery.data.totalCost,
                 transactionDataQuery.data.tokenInfo,
