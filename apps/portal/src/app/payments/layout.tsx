@@ -14,7 +14,7 @@ export const metadata = createMetadata({
   description:
     "Monetize your app with thirdweb Payments. Sell products, transfer funds between users, launch tokens, and more.",
   image: {
-    icon: "payment",
+    icon: "payments",
     title: "thirdweb Payments Docs",
   },
   title: "thirdweb Payments Documentation",

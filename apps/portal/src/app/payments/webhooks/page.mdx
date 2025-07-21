@@ -21,8 +21,8 @@ import {
 
 export const metadata = createMetadata({
   image: {
-    title: "Payments",
-    icon: "pay",
+    title: "Payments Webhooks",
+    icon: "payments",
   },
   title: "Payments Webhooks",
   description: "Learn how to set up and handle webhooks for thirdweb Payments transactions.",
@@ -49,17 +49,17 @@ import { Bridge } from "thirdweb";
 export async function POST(request: Request) {
   const body = await request.text();
   const headers = Object.fromEntries(request.headers.entries());
-  
+
   try {
     const webhook = await Bridge.Webhook.parse(
       body,
       headers,
       process.env.WEBHOOK_SECRET // Your webhook secret
     );
-    
+
     // Process the webhook
     console.log("Webhook received:", webhook);
-    
+
     return Response.json({ success: true });
   } catch (error) {
     console.error("Webhook verification failed:", error);
@@ -162,30 +162,30 @@ If you prefer to handle verification manually, you can verify webhooks using the
 
 ```typescript
 async function verifyWebhook(
-  payload: string, 
-  headers: Record<string, string>, 
+  payload: string,
+  headers: Record<string, string>,
   secret: string,
   tolerance = 300 // 5 minutes
 ) {
   // Get the signature and timestamp from headers
   const receivedSignature = headers["x-payload-signature"] || headers["x-pay-signature"];
   const receivedTimestamp = headers["x-timestamp"] || headers["x-pay-timestamp"];
-  
+
   if (!receivedSignature || !receivedTimestamp) {
     throw new Error("Missing required webhook headers: signature or timestamp");
   }
-  
+
   // Verify timestamp
   const now = Math.floor(Date.now() / 1000);
   const timestamp = parseInt(receivedTimestamp, 10);
   const diff = Math.abs(now - timestamp);
-  
+
   if (diff > tolerance) {
     throw new Error(
       `Webhook timestamp is too old. Difference: ${diff}s, tolerance: ${tolerance}s`
     );
   }
-  
+
   // Generate signature using Web Crypto API
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -195,23 +195,23 @@ async function verifyWebhook(
     false,
     ["sign"]
   );
-  
+
   const signature = await crypto.subtle.sign(
     "HMAC",
     key,
     encoder.encode(`${receivedTimestamp}.${payload}`)
   );
-  
+
   // Convert the signature to hex string
   const computedSignature = Array.from(new Uint8Array(signature))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
-  
+
   // Compare signatures
   if (computedSignature !== receivedSignature) {
     throw new Error("Invalid webhook signature");
   }
-  
+
   // Parse and return the payload
   return JSON.parse(payload);
 }

@@ -21,8 +21,8 @@ import {
 
 export const metadata = createMetadata({
   image: {
-    title: "Payments",
-    icon: "pay",
+    title: "Custom Payment Data",
+    icon: "payments",
   },
   title: "Custom Payment Data",
   description: "Pass custom app data to payments to be included on webhooks, payment history, and more.",
@@ -92,7 +92,7 @@ Associate user IDs, custom payment IDs, order details, and more with any payment
           amount="0.1"
           purchaseData={{
             userId: "user-123",
-            orderId: "order-456", 
+            orderId: "order-456",
             productType: "wallet-funding",
             metadata: {
               source: "app",

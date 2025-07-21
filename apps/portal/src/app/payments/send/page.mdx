@@ -22,8 +22,8 @@ import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
   image: {
-    title: "Payments",
-    icon: "pay",
+    title: "Send a payment",
+    icon: "payments",
   },
   title: "Send a payment",
   description: "Learn how to send a payment between users with thirdweb Payments.",
@@ -48,7 +48,7 @@ Send a payment between users using any combination of chains or tokens. thirdweb
 
     ```typescript
     import { Bridge } from "thirdweb";
-    
+
     const preparedQuote = await Bridge.Buy.prepare({
   originChainId: 42161,
   originTokenAddress: "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", // USDT on Arbitrum
@@ -255,7 +255,7 @@ Send a payment between users using any combination of chains or tokens. thirdweb
           await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
         }
       } while (swapStatus.status === "PENDING");
- 
+
       if (swapStatus.status === "FAILED") {
         throw new Error("Swap transaction failed");
       }
