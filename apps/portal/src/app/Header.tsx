@@ -195,7 +195,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background pt-4 px-4 lg:px-8 overflow-hidden">
+    <header className="flex w-full flex-col gap-2 border-b bg-background p-4 px-4 lg:px-8 overflow-hidden">
       <div className="container flex items-center justify-between gap-6">
         {/* Top row */}
         <div className="flex items-center gap-2">
@@ -250,14 +250,14 @@ export function Header() {
               onClick={() => router.push("/chat")}
               variant="ghost"
             >
-              <MessageCircleIcon className="size-7" />
+              <MessageCircleIcon className="size-5 lg:size-6" />
             </Button>
             <Button
               className="p-2"
               onClick={() => setShowBurgerMenu(!showBurgerMenu)}
               variant="ghost"
             >
-              <MenuIcon className="size-7" />
+              <MenuIcon className="size-5 lg:size-6" />
             </Button>
           </div>
         </div>

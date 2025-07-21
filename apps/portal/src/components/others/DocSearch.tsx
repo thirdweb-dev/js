@@ -198,7 +198,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
           {/* links */}
           {data && data.length > 0 && (
             <div
-              className="styled-scrollbar flex max-h-[50vh] min-h-[200px] flex-col gap-2 overflow-y-auto p-4"
+              className="styled-scrollbar flex max-h-[50vh] min-h-[200px] flex-col gap-2 overflow-y-scroll no-scrollbar p-4"
               ref={scrollableElement}
             >
               {data.map((result) => {
@@ -368,7 +368,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         {!forDesktop && (
           <DialogTrigger asChild>
             <Button className="px-3" variant="ghost">
-              <SearchIcon className="size-6 text-foreground" />
+              <SearchIcon className="size-5 text-foreground" />
             </Button>
           </DialogTrigger>
         )}
