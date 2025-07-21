@@ -36,7 +36,7 @@ export function DocLayout(props: DocLayoutProps) {
     >
       <aside
         className={clsx(
-          "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-hidden",
+          "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-scroll",
           "hidden xl:flex",
         )}
       >
