@@ -361,12 +361,26 @@ export function TransactionPayment({
           fullWidth
           onClick={() => {
             if (transactionDataQuery.data?.tokenInfo) {
+              if (
+                userBalance &&
+                Number(userBalance) <
+                  Number(transactionDataQuery.data.totalCost)
+              ) {
+                // if user has funds, but not enough, we need to fund the wallet with the difference
+                onContinue(
+                  (
+                    Number(transactionDataQuery.data.totalCost) -
+                    Number(userBalance)
+                  ).toString(),
+                  transactionDataQuery.data.tokenInfo,
+                  getAddress(activeAccount.address),
+                );
+                return;
+              }
+
+              // otherwise, use the full transaction cost
               onContinue(
-                Math.max(
-                  0,
-                  Number(transactionDataQuery.data.totalCost) -
-                    Number(userBalance ?? "0"),
-                ).toString(),
+                transactionDataQuery.data.totalCost,
                 transactionDataQuery.data.tokenInfo,
                 getAddress(activeAccount.address),
               );
