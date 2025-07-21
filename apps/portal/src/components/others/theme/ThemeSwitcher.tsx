@@ -22,11 +22,11 @@ export function ThemeSwitcher(props: { className?: string }) {
       variant="outline"
     >
       {!hasMounted ? (
-        <Skeleton className="size-6 lg:size-5" />
+        <Skeleton className="size-5 lg:size-6" />
       ) : theme === "light" ? (
-        <SunIcon className="size-6 lg:size-5" />
+        <SunIcon className="size-5 lg:size-6" />
       ) : (
-        <MoonIcon className="size-6 lg:size-5" />
+        <MoonIcon className="size-5 lg:size-6" />
       )}
     </Button>
   );

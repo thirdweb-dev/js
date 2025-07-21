@@ -368,7 +368,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         {!forDesktop && (
           <DialogTrigger asChild>
             <Button className="px-3" variant="ghost">
-              <SearchIcon className="size-6 text-foreground" />
+              <SearchIcon className="size-5 lg:size-6 text-foreground" />
             </Button>
           </DialogTrigger>
         )}
