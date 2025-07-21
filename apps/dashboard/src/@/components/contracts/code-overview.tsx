@@ -661,7 +661,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    Connect SDK
+                    thirdweb SDK
                   </UnderlineLink>{" "}
                   in your applications. This will ensure account contracts are
                   deployed for your users only when they need it.

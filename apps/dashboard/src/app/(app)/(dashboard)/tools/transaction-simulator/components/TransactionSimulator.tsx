@@ -308,7 +308,7 @@ ${Object.keys(populatedTransaction)
             rel="noopener noreferrer"
             target="_blank"
           >
-            Connect SDK example
+            TypeScript SDK example
           </a>
           <CodeClient code={state.codeExample} lang="ts" />
         </div>

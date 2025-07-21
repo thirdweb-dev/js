@@ -69,7 +69,7 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
         <DescriptionInputWrapper />
       </>
     ),
-    label: "Connect SDKs",
+    label: "thirdweb SDKs",
   },
   {
     component: (

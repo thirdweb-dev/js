@@ -28,7 +28,7 @@ export const sidebar: SideBar = {
           links: [
             {
               href: "/connect",
-              name: "Connect SDK",
+              name: "TypeScript SDK",
             },
             {
               href: `${storageSlug}/how-to-use-storage/upload-files-to-ipfs`,

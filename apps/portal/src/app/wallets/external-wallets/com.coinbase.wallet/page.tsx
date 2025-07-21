@@ -19,7 +19,7 @@ export async function generateMetadata() {
   const walletMetadata = await getWalletInfo(walletId);
 
   return createMetadata({
-    description: `Connect ${walletMetadata.name} with thirdweb Connect SDK`,
+    description: `Connect ${walletMetadata.name} with thirdweb TypeScript SDK`,
     image: {
       icon: "wallets",
       title: walletMetadata.name,

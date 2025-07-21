@@ -124,10 +124,6 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
-    href: "https://engine.thirdweb.com/reference",
-    name: "Engine",
-  },
-  {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
   },
