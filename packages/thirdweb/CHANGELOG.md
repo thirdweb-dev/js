@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.18
+
+### Patch Changes
+
+- [#7666](https://github.com/thirdweb-dev/js/pull/7666) [`37414eb`](https://github.com/thirdweb-dev/js/commit/37414eb54aacd9c155155f2bd5497e31b109bf97) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix native token fallback when insight query fails
+
+- [#7657](https://github.com/thirdweb-dev/js/pull/7657) [`22bf68a`](https://github.com/thirdweb-dev/js/commit/22bf68a6f00b715b899d28469cc3d795480d736c) Thanks [@MananTank](https://github.com/MananTank)! - Fix Various alignment issues in React Components
+
 ## 5.105.17
 
 ### Patch Changes
