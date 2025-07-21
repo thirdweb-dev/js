@@ -194,7 +194,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background pt-4 px-4 pb-4 xl:pb-0 lg:px-8 overflow-hidden">
+    <header className="flex w-full flex-col gap-2 border-b bg-background p-4 xl:pb-0 lg:px-8 overflow-hidden">
       {/* Top row */}
       <div className="container flex items-center justify-between gap-6">
         <div className="flex items-center gap-2">
