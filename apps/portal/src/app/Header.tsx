@@ -136,7 +136,7 @@ const apisLinks = [
     name: "Payments",
   },
   {
-    href: "/connect/account-abstraction/api",
+    href: "/bundler",
     name: "Bundler",
   },
 ];
