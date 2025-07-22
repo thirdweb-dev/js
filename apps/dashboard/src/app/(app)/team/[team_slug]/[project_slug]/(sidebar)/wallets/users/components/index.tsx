@@ -81,10 +81,13 @@ export function InAppWalletUsersPageContent(
           }
           return (
             <div className="space-y-1">
-              {externalWallets.slice(0, 2).map((account, index) => {
+              {externalWallets.slice(0, 2).map((account) => {
                 const address = account.details?.address as string | undefined;
                 return address ? (
-                  <div key={`external-${index}`} className="text-xs">
+                  <div
+                    key={`external-${address}-${account.details?.id}`}
+                    className="text-xs"
+                  >
                     <WalletAddress address={address} client={props.client} />
                   </div>
                 ) : null;
