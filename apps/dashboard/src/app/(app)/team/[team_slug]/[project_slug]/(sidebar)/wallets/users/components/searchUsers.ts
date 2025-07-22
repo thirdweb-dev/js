@@ -33,6 +33,9 @@ export async function searchUsers(
     case "address":
       url.searchParams.append("address", query);
       break;
+    case "externalWallet":
+      url.searchParams.append("externalWalletAddress", query);
+      break;
   }
 
   const response = await fetch(url.toString(), {
