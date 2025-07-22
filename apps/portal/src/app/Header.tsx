@@ -82,7 +82,7 @@ export const connectLinks: Array<{
   icon: React.FC<{ className?: string }>;
 }> = [
   {
-    href: "/connect",
+    href: "/wallets",
     icon: TableOfContentsIcon,
     name: "Overview",
   },
