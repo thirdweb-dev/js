@@ -36,6 +36,10 @@ const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   );
 };
 
+const getExternalWallets = (accounts: WalletUser["linkedAccounts"]) => {
+  return accounts?.filter((account) => account.type === "siwe") || [];
+};
+
 const columnHelper = createColumnHelper<WalletUser>();
 
 export function InAppWalletUsersPageContent(
@@ -68,6 +72,33 @@ export function InAppWalletUsersPageContent(
         },
         header: "Address",
         id: "address",
+      }),
+      columnHelper.accessor("linkedAccounts", {
+        cell: (cell) => {
+          const externalWallets = getExternalWallets(cell.getValue());
+          if (externalWallets.length === 0) {
+            return <span className="text-muted-foreground text-xs">None</span>;
+          }
+          return (
+            <div className="space-y-1">
+              {externalWallets.slice(0, 2).map((account, index) => {
+                const address = account.details?.address as string | undefined;
+                return address ? (
+                  <div key={`external-${index}`} className="text-xs">
+                    <WalletAddress address={address} client={props.client} />
+                  </div>
+                ) : null;
+              })}
+              {externalWallets.length > 2 && (
+                <span className="text-muted-foreground text-xs">
+                  +{externalWallets.length - 2} more
+                </span>
+              )}
+            </div>
+          );
+        },
+        header: "External Wallets",
+        id: "external_wallets",
       }),
       columnHelper.accessor("wallets", {
         cell: (cell) => {
@@ -172,11 +203,18 @@ export function InAppWalletUsersPageContent(
     });
     const csv = Papa.unparse(
       usersWallets.map((row) => {
+        const externalWallets = getExternalWallets(row.linkedAccounts);
+        const externalWalletAddresses = externalWallets
+          .map((account) => account.details?.address)
+          .filter(Boolean)
+          .join(", ");
+        
         return {
           address: row.wallets[0]?.address || "Uninitialized",
           created: row.wallets[0]?.createdAt
             ? format(new Date(row.wallets[0].createdAt), "MMM dd, yyyy")
             : "Wallet not created yet",
+          external_wallets: externalWalletAddresses || "None",
           login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
           user_identifier: getUserIdentifier(row.linkedAccounts),
         };

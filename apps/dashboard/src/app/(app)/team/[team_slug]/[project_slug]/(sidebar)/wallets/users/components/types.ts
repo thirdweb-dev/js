@@ -1,1 +1,1 @@
-export type SearchType = "email" | "phone" | "id" | "address";
+export type SearchType = "email" | "phone" | "id" | "address" | "externalWallet";
