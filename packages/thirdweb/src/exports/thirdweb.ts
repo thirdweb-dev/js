@@ -297,4 +297,8 @@ export {
 export { keccak256 } from "../utils/hashing/keccak256.js";
 // sha256
 export { sha256 } from "../utils/hashing/sha256.js";
+export * as Contracts from "../v2/contracts/index.js";
+
+// namespaced API
+export * as Wallets from "../v2/wallets/index.js";
 export { deploySmartAccount } from "../wallets/smart/lib/signing.js";

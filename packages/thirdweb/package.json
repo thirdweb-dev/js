@@ -23,6 +23,7 @@
     "@radix-ui/react-tooltip": "1.2.7",
     "@storybook/react": "9.0.15",
     "@tanstack/react-query": "5.81.5",
+    "@thirdweb-dev/api": "workspace:*",
     "@thirdweb-dev/engine": "workspace:*",
     "@thirdweb-dev/insight": "workspace:*",
     "@walletconnect/sign-client": "2.20.1",

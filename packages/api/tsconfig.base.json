@@ -1,0 +1,48 @@
+{
+  // This tsconfig file contains the shared config for the build (tsconfig.build.json) and type checking (tsconfig.json) config.
+  "compilerOptions": {
+    // Incremental builds
+    // NOTE: Enabling incremental builds speeds up `tsc`. Keep in mind though that it does not reliably bust the cache when the `tsconfig.json` file changes.
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+
+    // Interop constraints
+    "esModuleInterop": false,
+    "exactOptionalPropertyTypes": false,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    // Incremental builds
+    // NOTE: Enabling incremental builds speeds up `tsc`. Keep in mind though that it does not reliably bust the cache when the `tsconfig.json` file changes.
+    "incremental": false,
+
+    // jsx for "/react" portion
+    "jsx": "react-jsx",
+    "lib": [
+      "ES2022", // By using ES2022 we get access to the `.cause` property on `Error` instances.
+      "DOM", // We are adding `DOM` here to get the `fetch`, etc. types. This should be removed once these types are available via DefinitelyTyped.
+      "DOM.Iterable" // Adding `DOM.Iterable` for the Headers.entries() method.
+    ],
+    "module": "NodeNext",
+
+    // Language and environment
+    "moduleResolution": "NodeNext",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // Skip type checking for node modules
+    "skipLibCheck": true,
+
+    // Type checking
+    "strict": true,
+    "target": "ES2021",
+    "useDefineForClassFields": true,
+    "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": []
+}

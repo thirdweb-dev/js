@@ -21,6 +21,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     "x-client-id": client.clientId,
+    ...(client.secretKey ? { "x-secret-key": client.secretKey } : {}),
   };
 
   if (ecosystem?.id) {
@@ -51,7 +52,10 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to send verification code");
+    const error = await response.text();
+    throw new Error(
+      `Failed to send verification code: ${response.status} ${response.statusText} ${error}`,
+    );
   }
 
   return await response.json();
