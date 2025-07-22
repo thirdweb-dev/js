@@ -150,12 +150,12 @@ function DocSidebarNonCollapsible(props: {
 
   return (
     <div className="my-4">
-      <div className="mb-2 px-3 flex items-center gap-2 rounded-lg text-foreground">
+      <div className="mb-2 flex items-center gap-2 rounded-lg text-foreground">
         {icon && <SidebarIcon icon={icon} />}
         {href ? (
           <Link
             className={cn(
-              "block hover:bg-violet-800/20 hover:border-violet-800/50 border border-transparent",
+              "block px-3 py-1.5 hover:bg-violet-800/20 w-full rounded-lg hover:border-violet-800/50 border border-transparent",
               isCategoryActive && "text-foreground",
             )}
             href={href}
@@ -163,7 +163,7 @@ function DocSidebarNonCollapsible(props: {
             {name}
           </Link>
         ) : (
-          <div className="">{name}</div>
+          <div className="px-3">{name}</div>
         )}
       </div>
       <ul className="flex flex-col">
@@ -215,7 +215,10 @@ function DocSidebarCategory(props: {
   );
 
   const triggerEl = href ? (
-    <Link className={cn("block w-full text-left font-medium")} href={href}>
+    <Link
+      className={cn("w-full py-1.5 px-3 text-left font-medium")}
+      href={href}
+    >
       {triggerElContent}
     </Link>
   ) : (
