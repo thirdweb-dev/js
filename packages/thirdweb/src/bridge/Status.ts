@@ -96,6 +96,7 @@ import type { Status } from "./types/Status.js";
  * @param options - The options for the quote.
  * @param options.transactionHash - The hash of the origin transaction to get the bridge status for.
  * @param options.chainId - The chain ID of the origin token.
+ * @param options.transactionId - The transaction ID received from the `prepare` request.
  * @param options.client - Your thirdweb client.
  *
  * @returns A promise that resolves to a status object for the transaction.
@@ -105,13 +106,16 @@ import type { Status } from "./types/Status.js";
  * @beta
  */
 export async function status(options: status.Options): Promise<status.Result> {
-  const { transactionHash, client } = options;
+  const { transactionHash, client, transactionId } = options;
   const chainId = "chainId" in options ? options.chainId : options.chain.id;
 
   const clientFetch = getClientFetch(client);
   const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/status`);
   url.searchParams.set("transactionHash", transactionHash);
   url.searchParams.set("chainId", chainId.toString());
+  if (transactionId) {
+    url.searchParams.set("transactionId", transactionId);
+  }
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -195,6 +199,8 @@ export declare namespace status {
         transactionHash: ox__Hex.Hex;
         /** The chain ID where the transaction occurred */
         chainId: number;
+        /** The transaction ID received from the `prepare` request */
+        transactionId?: string;
         /** Your thirdweb client */
         client: ThirdwebClient;
       }
@@ -203,6 +209,8 @@ export declare namespace status {
         transactionHash: ox__Hex.Hex;
         /** The chain object where the transaction occurred */
         chain: Chain;
+        /** The transaction ID received from the `prepare` request */
+        transactionId?: string;
         /** Your thirdweb client */
         client: ThirdwebClient;
       };
