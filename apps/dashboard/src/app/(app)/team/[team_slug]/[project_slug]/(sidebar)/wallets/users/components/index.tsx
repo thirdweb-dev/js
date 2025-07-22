@@ -208,7 +208,7 @@ export function InAppWalletUsersPageContent(
           .map((account) => account.details?.address)
           .filter(Boolean)
           .join(", ");
-        
+
         return {
           address: row.wallets[0]?.address || "Uninitialized",
           created: row.wallets[0]?.createdAt

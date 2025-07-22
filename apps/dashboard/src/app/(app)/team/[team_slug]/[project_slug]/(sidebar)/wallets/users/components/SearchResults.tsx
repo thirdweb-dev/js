@@ -51,11 +51,11 @@ export function SearchResults(props: {
         const mainDetail = user.linkedAccounts?.[0]?.details;
         const email = mainDetail?.email as string | undefined;
         const phone = mainDetail?.phone as string | undefined;
-        
+
         // Get external wallet addresses from linkedAccounts where type is 'siwe'
-        const externalWalletAccounts = user.linkedAccounts?.filter(
-          (account) => account.type === "siwe"
-        ) || [];
+        const externalWalletAccounts =
+          user.linkedAccounts?.filter((account) => account.type === "siwe") ||
+          [];
 
         return (
           <Card key={user.id}>
@@ -108,7 +108,9 @@ export function SearchResults(props: {
                     </p>
                     <div className="space-y-1">
                       {externalWalletAccounts.map((account, index) => {
-                        const address = account.details?.address as string | undefined;
+                        const address = account.details?.address as
+                          | string
+                          | undefined;
                         return address ? (
                           <div key={`${user.id}-external-${index}`}>
                             <WalletAddress
