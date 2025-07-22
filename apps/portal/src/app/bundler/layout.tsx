@@ -6,7 +6,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
       editPageButton={true}
       sideBar={{
         name: "Bundler",
-        links: []
+        links: [],
       }}
     >
       {props.children}
