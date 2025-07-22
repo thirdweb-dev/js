@@ -1,0 +1,214 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { createMetadata, ArticleIconCard } from "@doc";
+import { ExternalLinkIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: { title: "Get Started with thirdweb Solidity SDK", icon: "solidity" },
+	title: "Get Started with thirdweb Solidity SDK",
+	description:
+		"To get started with the Solidity SDK, run the following command to create a new project:",
+});
+
+# Getting Started
+
+Deploy and manage tokens on any EVM compatible blockchain, thirdweb offers:
+
+- Prebuilt audited contracts deployable via dashboard or programatically.
+- Base implementations to customize and build your own contracts.
+
+---
+
+<Tabs defaultValue="pre-built">
+
+<TabsList>
+	<TabsTrigger value="pre-built">Pre-built</TabsTrigger>
+	<TabsTrigger value="build-your-own">Build your own</TabsTrigger>
+</TabsList>
+
+<TabsContent value="pre-built">
+
+Create Coins (ERC-20) and NFTs (ERC-721/ERC-1155) on any EVM compatible blockchain directly from the dashboard.
+
+<ArticleIconCard
+	title="Create a Coin or NFT for your app"
+	icon={ExternalLinkIcon}
+	href="https://thirdweb.com/team"
+	description="Deploy a token contract in seconds."
+/>
+
+</TabsContent>
+
+<TabsContent value="build-your-own">
+```bash
+npx thirdweb create contract
+```
+
+Or, install the `contracts` package into your existing Solidity project:
+
+<Tabs defaultValue="forge">
+
+<TabsList>
+	<TabsTrigger value="forge">Forge</TabsTrigger>
+	<TabsTrigger value="hardhat">Hardhat</TabsTrigger>
+</TabsList>
+
+<TabsContent value="forge">
+```bash
+forge install https://github.com/thirdweb-dev/contracts
+```
+</TabsContent>
+<TabsContent value="hardhat">
+```bash
+npm i @thirdweb-dev/contracts
+```
+</TabsContent>
+</Tabs>
+
+## Using the Solidity SDK
+
+The Solidity SDK can be used to build new smart contracts _end-to-end_, or to add functionality to your own, existing smart contract using [extensions](/contracts/build/extensions).
+
+All functions in the [base contracts](/contracts/build/base-contracts) and [extensions](/contracts/build/extensions) can be modified by [overriding them](/contracts/build/get-started#inheritance-and-overriding-functions).
+
+### Using Base Contracts
+
+The Solidity SDK includes [base contracts](/contracts/build/base-contracts) that are fully complete smart contracts that can be customized by overriding functions OR by adding extensions.
+
+**1.** To start, import and inherit the base contract. You can find the list of all available base contracts [here](/contracts/build/base-contracts).
+
+**2.** Base contracts expect certain constructor arguments to function as intended. Implement a constructor for your smart contract and pass the
+appropriate values to a constructor for the base contract.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+
+contract MyNFT is ERC721Base {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+}
+```
+
+**3.** Now you're all set up! 🎉 Your smart contract now has all the [extensions](/contracts/build/extensions) provided by the [base contract](/contracts/build/base-contracts) it inherits and is ready to be [deployed](/contracts/deploy/overview) to any EVM blockchain of your choice.
+
+### Using Extensions
+
+Extensions are to be used via inheritance - your project's smart contract will inherit from them.
+
+Additional [extensions](/contracts/build/extensions) can be added to existing smart contracts or to the [base contracts](/contracts/build/base-contracts) to add extra functionality and unlocking features in the SDKs and Dashboard.
+
+**1.** To start, import and inherit the extension. You can find the list of all available extensions [here](/contracts/build/extensions).
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+import "@thirdweb-dev/contracts/extension/Permissions.sol";
+
+contract MyNFT is ERC721Base, Permissions {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+}
+```
+
+**Note:**
+
+- Some Extensions are **Abstract** and so require certain functions to be implemented\*.
+- Some Extensions are **Interfaces** and so require **all** the functions to be implemented\*.
+
+\*implement = write the logic for the function with a matching function signature (matching name, parameters, visibility and return type)
+
+**2.** Use the functions provided by the Extension to change the behavior of your smart contract.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+import "@thirdweb-dev/contracts/extension/Permissions.sol";
+
+contract MyNFT is ERC721Base, Permissions {
+    bytes32 private constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+
+    /**
+     *  `_canMint` is a function available in `ERC721Base`.
+     *
+     *  It is called every time a wallet tries to mint NFTs on this
+     *  contract, and lets you define the condition in which an
+     *  attempt to mint NFTs should be permitted, or rejected.
+     *
+     *  By default, `ERC721Base` only lets the contract's owner mint
+     *  NFTs. Here, we override that functionality.
+     *
+     *  We use the `Permissions` extension to specify that anyone holding
+     *  "MINTER_ROLE" should be able to mint NFTs.
+     */
+    function _canMint() internal view override returns (bool) {
+        return hasRole(MINTER_ROLE, msg.sender);
+    }
+}
+```
+
+### Inheritance and Overriding Functions
+
+Inheritance allows you to extend your smart contract's properties to include the parent contract's attributes and properties.
+The inherited functions from this parent contract can be modified in the child contract via a process known as overriding.
+
+Parent contract: Contract that the inheriting contract is inheriting from.
+
+Child contract: The inheriting contract.
+
+To override a function, to add your own custom logic, simply use the keyword `override` when declaring the function, making sure that the function signature matches.
+To add the original logic from the parent contract, use the keyword `super`.
+
+For example, the [`ERC721Base`](/contracts/build/base-contracts/erc-721/base) contract has an implementation of the function `mintTo`, I could instead override this function to add custom logic
+and restrict this function in the `myNFT` contract to only allow 1 NFT per wallet:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+import "@thirdweb-dev/contracts/extension/Permissions.sol";
+
+contract MyNFT is ERC721Base, Permissions {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+
+    function mintTo(address _to, string memory _tokenURI) public override {
+        require(balanceOf(_to) < 1, "only 1 NFT per wallet!");
+        super.mintTo(_to, _tokenURI);
+    }
+}
+```
+
+</TabsContent>
+
+</Tabs>
+

@@ -48,12 +48,8 @@ const links = [
     name: "Contracts",
   },
   {
-    href: "/insight",
-    name: "Insight",
-  },
-  {
-    href: "/vault",
-    name: "Vault",
+    href: "/tokens",
+    name: "Tokens",
   },
 ];
 
