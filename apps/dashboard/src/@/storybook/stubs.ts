@@ -85,6 +85,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
           totalFileSizeBytesLimit: 1_000_000_000,
         },
       },
+      mcp: {
+        enabled: true,
+        rateLimit: 10,
+      },
     },
     createdAt: new Date().toISOString(),
     dedicatedSupportChannel: null,

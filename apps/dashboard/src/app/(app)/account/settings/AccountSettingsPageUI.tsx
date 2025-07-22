@@ -285,7 +285,7 @@ function DeleteAccountCard(props: {
                         variant="outline"
                       >
                         <Link
-                          href="/support/create-ticket"
+                          href="/team/~/~/support"
                           rel="noopener noreferrer"
                           target="_blank"
                         >

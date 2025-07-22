@@ -66,37 +66,6 @@ export async function GET(request: Request) {
       >
         <div
           style={{
-            alignItems: "center",
-            display: "flex",
-            gap: "10px",
-            marginBottom: "40px",
-          }}
-        >
-          <img
-            alt=""
-            height={50 / 1.7}
-            src={`${BAST_URL}/icons/thirdweb-logo.svg`}
-            style={{
-              display: "flex",
-            }}
-            width={300 / 1.7}
-          />
-
-          <div
-            style={{
-              color: "white",
-              fontFamily: "Inter",
-              fontSize: "26px",
-              fontWeight: 600,
-              marginTop: "2px",
-            }}
-          >
-            Docs
-          </div>
-        </div>
-
-        <div
-          style={{
             display: "flex",
             fontFamily: "Inter",
             fontSize: "60px",
@@ -106,26 +75,6 @@ export async function GET(request: Request) {
           }}
         >
           {title}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              borderRadius: "10px",
-              color: "black",
-              fontFamily: "Inter",
-              fontSize: "24px",
-              fontWeight: 600,
-              padding: "14px 20px",
-            }}
-          >
-            Read More
-          </div>
         </div>
       </div>
 

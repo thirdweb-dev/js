@@ -212,13 +212,13 @@ const InstallScanScreen: React.FC<{
 const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       background: theme.colors.secondaryButtonHoverBg,
       color: theme.colors.primaryText,
       textDecoration: "none",
     },
     alignItems: "center",
-    all: "unset",
     background: theme.colors.secondaryButtonBg,
     borderRadius: radius.sm,
     boxSizing: "border-box",

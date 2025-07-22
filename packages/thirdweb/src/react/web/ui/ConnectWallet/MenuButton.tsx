@@ -9,6 +9,7 @@ import { StyledButton } from "../design-system/elements.js";
 export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       backgroundColor: theme.colors.tertiaryBg,
       svg: {
@@ -24,8 +25,8 @@ export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
     "&[disabled]": {
       cursor: "not-allowed",
     },
+
     alignItems: "center",
-    all: "unset",
     backgroundColor: "transparent",
     borderRadius: radius.md,
     // border: `1px solid ${theme.colors.borderColor}`,

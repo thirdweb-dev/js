@@ -22,6 +22,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     return {};
   }
   return {
+    all: "unset",
     "&:active": {
       transform: "translateY(1px)",
     },
@@ -38,7 +39,6 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       cursor: "not-allowed",
     },
     alignItems: "center",
-    all: "unset",
     background: (() => {
       if (props.bg) {
         return theme.colors[props.bg];
@@ -144,6 +144,7 @@ export const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 export const IconButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
+    all: "unset",
     "&:hover": {
       background: theme.colors.secondaryIconHoverBg,
       color: theme.colors.secondaryIconHoverColor,
@@ -152,7 +153,6 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
       cursor: "not-allowed",
     },
     alignItems: "center",
-    all: "unset",
     borderRadius: radius.sm,
     color: theme.colors.secondaryIconColor,
     cursor: "pointer",

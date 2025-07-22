@@ -119,6 +119,25 @@ export function usePaymentMethods(options: {
             .filter((result) => result.status === "fulfilled")
             .map((result) => result.value)
             .filter((balance) => balance.value > 0n);
+
+          // Convert to our format
+          const tokensWithBalance = batch.map((b) => ({
+            balance: b.value,
+            originToken: {
+              address: b.tokenAddress,
+              chainId: b.chainId,
+              decimals: b.decimals,
+              iconUri: "",
+              name: b.name,
+              prices: {
+                USD: 0,
+              },
+              symbol: b.symbol,
+            } as Token,
+          }));
+
+          allOwnedTokens = [...allOwnedTokens, ...tokensWithBalance];
+          break;
         }
 
         if (batch.length === 0) {

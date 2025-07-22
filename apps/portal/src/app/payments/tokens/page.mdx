@@ -1,0 +1,126 @@
+import {
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+import {
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+} from "@/icons";
+import { ExternalLink } from "lucide-react";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Get Token Prices",
+    icon: "payments",
+  },
+  title: "Get Token Prices",
+  description: "Use thirdweb Payments to get any token's current price and metadata.",
+});
+
+# Get Token Prices
+
+Use thirdweb's `Bridge.tokens` utility to retrieve token prices and metadata.
+
+## Get Specific Token
+
+Retrieve a specific token by its address and chain:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// Get USDC token information on Ethereum
+const token = await Bridge.tokens({
+  chainId: 1,
+  tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  client,
+});
+```
+
+This returns token information with current price:
+
+```typescript
+[
+  {
+    chainId: 1,
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    decimals: 6,
+    symbol: "USDC",
+    name: "USD Coin",
+    iconUri: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+    priceUsd: 1.00
+  }
+]
+```
+
+## Filter Tokens by Symbol
+
+Search for tokens by their symbol:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// Search for USDC tokens across all chains
+const usdcTokens = await Bridge.tokens({
+  symbol: "USDC",
+  client,
+});
+```
+
+## Filter Tokens by Name
+
+Search for tokens by their name:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// Search for tokens by name
+const ethereumTokens = await Bridge.tokens({
+  name: "Ethereum",
+  client,
+});
+```
+
+## Pagination
+
+For large result sets, use pagination to retrieve tokens in chunks:
+
+```typescript
+import { Bridge } from "thirdweb";
+
+// Get the first 50 tokens
+const tokens = await Bridge.tokens({
+  limit: 50,
+  offset: 0,
+  client,
+});
+
+// Get the next 50 tokens
+const nextTokens = await Bridge.tokens({
+  limit: 50,
+  offset: 50,
+  client,
+});
+```
+
+## Going further
+
+To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
+
+- [Send a Payment](/payments/send)
+- [Get Routes](/payments/routes)
+
+## Explore Full API References
+
+- [Bridge.tokens](/references/typescript/v5/tokens)

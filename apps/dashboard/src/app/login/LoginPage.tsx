@@ -23,7 +23,6 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookies";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";
@@ -95,15 +94,6 @@ export function LoginAndOnboardingPage(props: {
 
               <Link
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
-                href="/support"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Support
-              </Link>
-
-              <Link
-                className="px-2 text-muted-foreground text-sm hover:text-foreground"
                 href="https://feedback.thirdweb.com"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -151,13 +141,6 @@ function LoginPageContainer(props: { children: React.ReactNode }) {
             <p>
               You can instead log into your account using your account email
               address.
-            </p>
-            <p>
-              Please{" "}
-              <UnderlineLink href="/support">
-                reach out to support
-              </UnderlineLink>{" "}
-              if you need help.
             </p>
           </div>
         </div>

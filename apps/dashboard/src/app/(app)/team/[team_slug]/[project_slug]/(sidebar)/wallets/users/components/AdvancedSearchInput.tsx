@@ -55,6 +55,7 @@ export function AdvancedSearchInput(props: {
             <SelectItem value="phone">Phone</SelectItem>
             <SelectItem value="id">ID</SelectItem>
             <SelectItem value="address">Address</SelectItem>
+            <SelectItem value="externalWallet">External Wallet</SelectItem>
           </SelectContent>
         </Select>
 

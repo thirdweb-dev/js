@@ -1,6 +1,6 @@
 "use client";
 
-import { CrownIcon, LockIcon, SparklesIcon } from "lucide-react";
+import { CrownIcon, LockIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import type { Team } from "@/api/team";
@@ -111,18 +111,15 @@ export function UpsellContent(props: {
       <CardContent className="space-y-6">
         {props.benefits && props.benefits.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wide">
-              What you'll get:
+            <h4 className="font-semibold text-foreground text-sm capitalize text-center">
+              What you'll get
             </h4>
-            <div className="grid gap-2">
+            <div className="grid gap-1.5">
               {props.benefits.map((benefit) => (
                 <div
-                  className="flex items-center gap-3"
+                  className="flex items-center justify-center gap-3 text-center text-balance"
                   key={benefit.description}
                 >
-                  <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent">
-                    <SparklesIcon className="h-3 w-3 text-success-text" />
-                  </div>
                   <span className="text-sm">{benefit.description}</span>
                   {benefit.status === "soon" && (
                     <Badge className="text-xs" variant="secondary">

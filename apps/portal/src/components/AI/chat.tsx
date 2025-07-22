@@ -277,19 +277,15 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      className="text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
+      className="[&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
       code={{
         className: "bg-transparent",
         ignoreFormattingErrors: true,
       }}
       inlineCode={{ className: "border-none" }}
-      li={{ className: "text-foreground" }}
       markdownText={props.text}
       p={{
-        className:
-          props.type === "assistant"
-            ? "text-foreground"
-            : "text-foreground leading-normal",
+        className: props.type === "assistant" ? "" : "leading-normal",
       }}
       skipHtml
     />

@@ -1,5 +1,6 @@
 "use client";
 
+import { BookOpenTextIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -116,22 +117,28 @@ export function TableOfContentsSideBar(props: {
   return (
     <nav
       className={cn(
-        "hrink-0 hidden pt-6 text-sm xl:block",
+        "shrink-0 hidden pt-6 text-sm xl:block",
         "styled-scrollbar sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-auto",
       )}
       style={{
         visibility: hideNav ? "hidden" : "visible",
       }}
     >
-      <div className="mb-5 font-semibold text-base">On this page</div>
-      <div
-        ref={tocRef}
-        style={{
-          opacity: nodes.length > 0 ? 1 : 0,
-          transition: "opacity 0.5s ease",
-        }}
-      >
-        <TableOfContents linkClassName={props.linkClassName} nodes={nodes} />
+      <div className="bg-card text-sm p-4 border rounded-lg shadow-sm">
+        <div className="font-medium flex items-center">
+          <BookOpenTextIcon className="mr-2 size-4" />
+          On this page
+        </div>
+        <hr className="my-4 border-t" />
+        <div
+          ref={tocRef}
+          style={{
+            opacity: nodes.length > 0 ? 1 : 0,
+            transition: "opacity 0.5s ease",
+          }}
+        >
+          <TableOfContents linkClassName={props.linkClassName} nodes={nodes} />
+        </div>
       </div>
     </nav>
   );

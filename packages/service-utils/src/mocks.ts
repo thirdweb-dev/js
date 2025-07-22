@@ -103,6 +103,10 @@ export const validTeamResponse: TeamResponse = {
         totalFileSizeBytesLimit: 1_000_000_000,
       },
     },
+    mcp: {
+      enabled: true,
+      rateLimit: 10,
+    },
   },
   createdAt: new Date("2024-06-01").toISOString(),
   dedicatedSupportChannel: null,

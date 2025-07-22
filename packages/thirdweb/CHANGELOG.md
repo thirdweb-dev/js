@@ -1,5 +1,42 @@
 # thirdweb
 
+## 5.105.18
+
+### Patch Changes
+
+- [#7666](https://github.com/thirdweb-dev/js/pull/7666) [`37414eb`](https://github.com/thirdweb-dev/js/commit/37414eb54aacd9c155155f2bd5497e31b109bf97) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix native token fallback when insight query fails
+
+- [#7657](https://github.com/thirdweb-dev/js/pull/7657) [`22bf68a`](https://github.com/thirdweb-dev/js/commit/22bf68a6f00b715b899d28469cc3d795480d736c) Thanks [@MananTank](https://github.com/MananTank)! - Fix Various alignment issues in React Components
+
+## 5.105.17
+
+### Patch Changes
+
+- [#7634](https://github.com/thirdweb-dev/js/pull/7634) [`4cbf671`](https://github.com/thirdweb-dev/js/commit/4cbf67181da4746d252d0bd3bcf0b522719ecf67) Thanks [@Yash094](https://github.com/Yash094)! - feat(chains): add Etherlink mainnet and testnet chains
+
+- [#7650](https://github.com/thirdweb-dev/js/pull/7650) [`426bb8b`](https://github.com/thirdweb-dev/js/commit/426bb8bbb21b1c0f485aa3ab79134aad30927afb) Thanks [@alecananian](https://github.com/alecananian)! - react: fix native `<ConnectEmbed />` component not auto-connecting
+
+- [#7600](https://github.com/thirdweb-dev/js/pull/7600) [`170c377`](https://github.com/thirdweb-dev/js/commit/170c3774456cbd05482227104307d834641ad1e2) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add fallback mechanism to usePaymentMethods hook for getOwnedTokens failures
+
+  When getOwnedTokens batches fail in the usePaymentMethods hook, the system now falls back to getting native token balances for each chain using getWalletBalance. This ensures users can still access their native tokens as payment methods even when the insight API is experiencing issues, providing a more resilient user experience.
+
+  The fallback mechanism:
+  - Catches getOwnedTokens failures and logs warnings
+  - Falls back to native balance fetching using getWalletBalance for each chain
+  - Transforms results to match the expected format
+  - Continues normal processing flow seamlessly
+
+- [#7656](https://github.com/thirdweb-dev/js/pull/7656) [`bfa0a42`](https://github.com/thirdweb-dev/js/commit/bfa0a42219cb8351ca169973211864af14f94896) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix TransactionWidget when wallet has enough currency for the transaction
+
+- [#7647](https://github.com/thirdweb-dev/js/pull/7647) [`823af01`](https://github.com/thirdweb-dev/js/commit/823af013ae8681ec9177f54929834d36802f39b5) Thanks [@alecananian](https://github.com/alecananian)! - react: update hooks to use core transaction types
+
+- [#7642](https://github.com/thirdweb-dev/js/pull/7642) [`0f38a12`](https://github.com/thirdweb-dev/js/commit/0f38a1287af527da53e7948b54e0dfd4b738fa69) Thanks [@gregfromstl](https://github.com/gregfromstl)! - TransactionWidget: Hides the "UnknownContract" label
+
+- [#7652](https://github.com/thirdweb-dev/js/pull/7652) [`620e294`](https://github.com/thirdweb-dev/js/commit/620e294f8ce59e8ec217e3984177ac6dd6d48772) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update server wallet config types for 7702 and EOA execution
+
+- Updated dependencies [[`620e294`](https://github.com/thirdweb-dev/js/commit/620e294f8ce59e8ec217e3984177ac6dd6d48772)]:
+  - @thirdweb-dev/engine@3.2.1
+
 ## 5.105.16
 
 ### Patch Changes

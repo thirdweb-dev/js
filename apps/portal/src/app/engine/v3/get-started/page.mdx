@@ -55,7 +55,7 @@ Learn how to get started with thirdweb Transactions. This guide will walk you th
 
 			<TabsContent value="curl">
 				```bash
-				curl -X POST "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract" \
+				curl -X POST "https://engine.thirdweb.com/v1/write/contract" \
 					-H "Content-Type: application/json" \
 					-H "x-secret-key: <your-project-secret-key>" \
 					-H "x-vault-access-token: <your-vault-access-token>" \
@@ -79,7 +79,7 @@ Learn how to get started with thirdweb Transactions. This guide will walk you th
 			<TabsContent value="javascript">
 				```typescript
 				const response = await fetch(
-					"https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract",
+					"https://engine.thirdweb.com/v1/write/contract",
 					{
 						method: "POST",
 						headers: {
@@ -110,7 +110,7 @@ Learn how to get started with thirdweb Transactions. This guide will walk you th
 				import requests
 				import json
 
-				url = "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract"
+				url = "https://engine.thirdweb.com/v1/write/contract"
 				headers = {
 					"Content-Type": "application/json",
 					"x-secret-key": "<your-project-secret-key>",
@@ -147,7 +147,7 @@ Learn how to get started with thirdweb Transactions. This guide will walk you th
 				)
 
 				func main() {
-					url := "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract"
+					url := "https://engine.thirdweb.com/v1/write/contract"
 					
 					// Create the request payload
 					type Param struct {
@@ -213,7 +213,7 @@ Learn how to get started with thirdweb Transactions. This guide will walk you th
                 {
                     static async Task Main()
                     {
-                        var url = "https://engine-cloud-dev-l8wt.chainsaw-dev.zeet.app/v1/write/contract";
+                        var url = "https://engine.thirdweb.com/v1/write/contract";
                         
                         var requestData = new
                         {

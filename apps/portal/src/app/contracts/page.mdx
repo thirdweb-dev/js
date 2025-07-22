@@ -1,119 +1,709 @@
-import { GithubTemplateCard, ExpandableGrid, createMetadata, OpenSourceCard, DocImage, ArticleIconCard, Grid } from "@doc";
-import SupportedChains from "../_images/supported-chains.png";
-import { ExternalLinkIcon } from "lucide-react";
+import {
+	Callout,
+	OpenSourceCard,
+	createMetadata,
+	InstallTabs,
+	SDKCard,
+	Grid,
+	ArticleIconCard,
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+} from "@doc";
+import {
+	ReactIcon,
+	TypeScriptIcon,
+	UnityIcon,
+	DotNetIcon,
+	UnrealEngineIcon,
+	EngineIcon,
+} from "@/icons";
+import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
-	title: "thirdweb Contracts",
-	description:
-		"Tools to easily create, deploy, and manage smart contracts on any EVM compatible blockchain.",
+	image: {
+		title: "Contracts",
+		icon: "contracts",
+	},
+	title: "Contracts",
+	description: "Read, write, and deploy smart contracts on any EVM compatible blockchain.",
 });
 
-# What are Contracts?
+# Get Started
 
-Contracts is an end-to-end development suite which provides tools to develop, deploy, and manage smart contracts.
+Read, write, and deploy smart contracts on any EVM compatible blockchain.
+
+---
+
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+    <TabsTrigger value="reactnative" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React Native
+    </TabsTrigger>
+    <TabsTrigger value="unity" className="flex items-center gap-2 [&>p]:mb-0">
+      <UnityIcon className="w-4 h-4 mr-2" />
+      Unity
+    </TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+      <DotNetIcon className="w-4 h-4 mr-2" />
+      .NET
+    </TabsTrigger>
+    <TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
+      <UnrealEngineIcon className="w-4 h-4 mr-2" />
+      Unreal Engine
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="http">
+    ### Read a Contract
+
+    You can read contract data efficiently using the [contract read API](https://engine.thirdweb.com/reference).
+
+    ```http
+    GET /v1/contract/read
+    Content-Type: application/json
+    x-secret-key: <your-project-secret-key>
+
+    {
+        "readOptions": {
+          "chainId": "1" // your chain id
+		  "from": "0x...", // optional, if you want to read from a specific address
+        },
+        "params": [{
+          "contractAddress": "0x...",
+          "method": "function allowance(address owner, address spender)",
+          "params": ["0x...", "0x..."],
+        }],
+    }
+    ```
+
+	You can batch multiple contract reads in a single request, and the response will be an array of results or errors.
+
+	### Write to a Contract
+
+	You can write to a contract using the [contract write API](https://engine.thirdweb.com/reference).
+
+	```http
+	POST /v1/contract/write
+	Content-Type: application/json
+	x-secret-key: <your-project-secret-key>
+
+	{
+		"executionOptions": {
+			"from": "0x...", // your server wallet address
+			"chainId": "1" // your chain id
+		},
+		"params": [{
+			"contractAddress": "0x...",
+			"method": "function transfer(address to, uint256 amount)",
+			"params": ["0x...", "1000000000000000000"],
+		}]
+	}
+	```
+
+	You can batch multiple contract writes in a single request, and the transactions will be batched atomically onchain.
+
+	### Deploy a Contract
+
+	You can deploy a contract using the [contract deploy API](https://engine.thirdweb.com/reference).
+
+  </TabsContent>
+
+  <TabsContent value="typescript">
+    ### Installation
+
+    Install the thirdweb SDK in your TypeScript project:
+
+    <InstallTabs
+      npm="npm i thirdweb"
+      yarn="yarn add thirdweb"
+      pnpm="pnpm i thirdweb"
+      bun="bun i thirdweb"
+    />
+
+    ### Set up the Client
+
+    First, create a client instance to connect with thirdweb services:
+
+    ```typescript
+    import { createThirdwebClient } from "thirdweb";
+
+    // - clientId for client-side applications
+    // - secretKey for server-side applications
+    const client = createThirdwebClient({
+      clientId: "YOUR_CLIENT_ID", // Get from your thirdweb dashboard
+    });
+    ```
+
+	### Defining a Contract
+
+	You can define a contract using the [`getContract`](/references/typescript/v5/getContract) function.
+
+	```tsx
+	import { getContract, defineChain } from "thirdweb";
+
+	const contract = await getContract({
+		client,
+		address: "0x...",
+		chain: defineChain(8453),
+	});
+	```
+
+    ### Read a Contract
+
+    You can read contract data using the [`readContract`](/references/typescript/v5/readContract) function.
+
+    ```typescript
+    import { readContract, getContract } from "thirdweb";
+    import { defineChain } from "thirdweb/chains";
+
+    const data = await readContract({
+      contract,
+      method: "function allowance(address owner, address spender)",
+      params: ["0x...", "0x..."],
+    });
+    ```
+
+    ### Write to a Contract
+
+    You can preapre a write transaction to a contract using the [`prepareContractCall`](/references/typescript/v5/prepareContractCall) function, then send it or enqueue it.
+
+	You can also use the [catalog of pre-built contract calls](/references/typescript/v5/functions#extensions) to easily prepare a transaction for standards like ERC20, ERC721, ERC1155, and more.
+
+    <Tabs defaultValue="frontend">
+      <TabsList>
+        <TabsTrigger value="frontend">Frontend</TabsTrigger>
+        <TabsTrigger value="backend">Backend</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="frontend">
+            On the frontend, you can use the [`sendTransaction`](/references/typescript/v5/sendTransaction) function to send a transaction from [user wallets](/wallets/users). The `account` parameter is the wallet that will be used to send the transaction. You can get an account object from a user wallet or a server wallet.
+
+    ```typescript
+    import { sendTransaction } from "thirdweb";
+
+    // connect user wallet
+    const wallet = inAppWallet();
+    const account = await wallet.connect({ client });
+
+	// prepare the contract write call
+	const transaction = prepareContractCall({
+		contract,
+		method: "function transfer(address to, uint256 amount)",
+		params: ["0x...", "1000000000000000000"],
+	});
+
+    // send transaction
+    const { transactionHash } = await sendTransaction({
+      account,
+      transaction,
+    });
+
+    console.log("transaction sent", transactionHash);
+    ```
+      </TabsContent>
+
+      <TabsContent value="backend">
+        On the backend, you can use a [server wallet](/wallets/servers) to enqueue a transaction. Enqueued transactions is recommended to not block your server. You can then monitor the transaction status using the [transaction monitor](/transactions/monitor) API.
+
+        ```typescript
+        import { Engine } from "thirdweb";
+
+        // get a server wallet
+        const wallet = Engine.serverWallet({
+          client,
+          address: "0x...",
+        });
+
+		// prepare the contract write call
+		const transaction = prepareContractCall({
+			contract,
+			method: "function transfer(address to, uint256 amount)",
+			params: ["0x...", "1000000000000000000"],
+		});
+
+        // enqueue the transaction
+        const { transactionId } = await wallet.enqueueTransaction({
+          transaction,
+          simulate: true, // optional, if you want to simulate the transaction before enqueuing it
+        });
+
+        console.log("transaction enqueued", transactionId);
+        ```
+      </TabsContent>
+    </Tabs>
+
+  </TabsContent>
+
+  <TabsContent value="react">
+    ### Installation
+
+    Install the thirdweb SDK in your React project:
+
+    <InstallTabs
+      npm="npm i thirdweb"
+      yarn="yarn add thirdweb"
+      pnpm="pnpm i thirdweb"
+      bun="bun i thirdweb"
+    />
+
+
+    ### Create a Client
+
+    First, create a client file (e.g., `thirdwebClient.ts`) for reuse throughout your app:
+
+    ```typescript
+    // thirdwebClient.ts
+    import { createThirdwebClient } from "thirdweb";
+
+    export const client = createThirdwebClient({
+      clientId: "YOUR_CLIENT_ID", // Get from your thirdweb dashboard
+    });
+    ```
+
+    ### Setup the Provider
+
+    Wrap your application with the ThirdwebProvider:
+
+    ```tsx
+    // app.tsx / _app.tsx
+    import { ThirdwebProvider } from "thirdweb/react";
+
+    function App() {
+      return (
+        <ThirdwebProvider>
+          <YourApp />
+        </ThirdwebProvider>
+      );
+    }
+    ```
+
+	### Defining a Contract
+
+	You can define a contract using the [`getContract`](/references/typescript/v5/getContract) function.
+
+	```tsx
+	import { getContract, defineChain } from "thirdweb";
+
+	const contract = await getContract({
+		client,
+		address: "0x...",
+		chain: defineChain(8453),
+	});
+	```
+
+    ### Read a Contract
+
+    You can read contract data using the [`useReadContract`](/references/typescript/v5/useReadContract) hook.
+
+    ```tsx
+    import { useReadContract } from "thirdweb/react";
+    import { getContract, defineChain } from "thirdweb";
+
+    function YourApp() {
+      const { data } = useReadContract({
+        contract,
+        method: "function allowance(address owner, address spender)",
+        params: ["0x...", "0x..."],
+      });
+
+      return (
+        <div>
+          {data?.toString()}
+        </div>
+      );
+    }
+    ```
+
+    ### Write to a Contract
+
+    You can write to a contract using [`prepareContractCall`](/references/typescript/v5/prepareContractCall) and the [`useSendTransaction`](/references/typescript/v5/useSendTransaction) hook.
+
+    ```tsx
+    import { useSendTransaction, useActiveAccount } from "thirdweb/react";
+
+    function YourApp() {
+      const { mutate: sendTransaction, isPending, data } = useSendTransaction();
+
+      console.log("transaction hash", data?.transactionHash);
+
+      const onClick = () => {
+        const transaction = prepareContractCall({
+          contract,
+          method: "function transfer(address to, uint256 amount)",
+          params: ["0x...", "1000000000000000000"],
+        });
+
+        // automatically uses the connected wallet as the sender
+        sendTransaction(transaction);
+      };
+
+      return (
+        <button onClick={onClick}>
+          Send Transaction
+        </button>
+      );
+    }
+    ```
+
+    You can also use the [catalog of pre-built contract calls](/references/typescript/v5/functions#extensions) to easily prepare a transaction for standards like ERC20, ERC721, ERC1155, and more.
+
+  </TabsContent>
+
+  <TabsContent value="reactnative">
+    ### Installation
+
+    Install the thirdweb SDK in your React Native project:
+
+    <InstallTabs
+      npm="npm i thirdweb"
+      yarn="yarn add thirdweb"
+      pnpm="pnpm i thirdweb"
+      bun="bun i thirdweb"
+    />
+
+
+    <Callout variant="info" title="Expo Go Support">
+      You cannot use Expo Go with thirdweb because native modules are required.
+      Use an Expo development build (`npx expo prebuild`) or React Native CLI app.
+    </Callout>
+
+    ### Create a Client
+
+    Create a client once and reuse it throughout your app:
+
+    ```typescript
+    import { createThirdwebClient } from "thirdweb";
+
+    export const client = createThirdwebClient({
+      clientId: "YOUR_CLIENT_ID", // Get from your thirdweb dashboard
+    });
+    ```
+
+    <Callout variant="info" title="Allowlist your Bundle ID">
+      When creating your client ID on the thirdweb dashboard, allowlist your mobile app's bundle ID (e.g., com.yourcompany.app) for security.
+    </Callout>
+
+    ### Setup the Provider
+
+    Wrap your application with the ThirdwebProvider:
+
+    ```tsx
+    import { ThirdwebProvider } from "thirdweb/react";
+
+    function App() {
+      return (
+        <ThirdwebProvider>
+          <YourApp />
+        </ThirdwebProvider>
+      );
+    }
+    ```
+
+	### Defining a Contract
+
+	You can define a contract using the [`getContract`](/references/typescript/v5/getContract) function.
+
+	```tsx
+	import { getContract, defineChain } from "thirdweb";
+
+	const contract = await getContract({
+		client,
+		address: "0x...",
+		chain: defineChain(8453),
+	});
+	```
+
+    ### Read a Contract
+
+    You can read contract data using the [`useReadContract`](/references/typescript/v5/useReadContract) hook.
+
+    ```tsx
+    import { useReadContract } from "thirdweb/react";
+    import { getContract, defineChain } from "thirdweb";
+
+    const contract = await getContract({
+      client,
+      address: "0x...",
+      chain: defineChain(8453),
+    });
+
+    function YourApp() {
+      const { data } = useReadContract({
+        contract,
+        method: "function allowance(address owner, address spender)",
+        params: ["0x...", "0x..."],
+      });
+
+      return (
+        <div>
+          {data?.toString()}
+        </div>
+      );
+    }
+    ```
+
+    ### Write to a Contract
+
+    You can write to a contract using [`prepareContractCall`](/references/typescript/v5/prepareContractCall) and the [`useSendTransaction`](/references/typescript/v5/useSendTransaction) hook.
+
+    ```tsx
+    import { useSendTransaction, useActiveAccount } from "thirdweb/react";
+
+    function YourApp() {
+      const { mutate: sendTransaction, isPending, data } = useSendTransaction();
+
+      console.log("transaction hash", data?.transactionHash);
+
+      const onClick = () => {
+        const transaction = prepareContractCall({
+          contract,
+          method: "function transfer(address to, uint256 amount)",
+          params: ["0x...", "1000000000000000000"],
+        });
+
+        // automatically uses the connected wallet as the sender
+        sendTransaction(transaction);
+      };
+
+      return (
+        <button onClick={onClick}>
+          Send Transaction
+        </button>
+      );
+    }
+    ```
+
+    You can also use the [catalog of pre-built contract calls](/references/typescript/v5/functions#extensions) to easily prepare a transaction for standards like ERC20, ERC721, ERC1155, and more.
+
+  </TabsContent>
+
+  <TabsContent value="unity">
+    ### Installation
+
+    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity-sdk/releases) (.unitypackage file)
+    2. Import the package into your Unity project via Assets > Import Package > Custom Package
+
+    ### Configure Client ID
+
+    After importing the SDK:
+
+    1. Go to Project Settings > Thirdweb
+    2. Enter your Client ID from the thirdweb dashboard
+    3. Allowlist your game's Bundle ID on the thirdweb dashboard for security
+
+    ### Read a Contract
+
+    You can read contract data using the [`ThirdwebContract.Read`](/dotnet/contracts/read) method.
+
+	```csharp
+    using Thirdweb;
+    using UnityEngine;
+    using UnityEngine.UI;
+
+    public class TransactionManager : MonoBehaviour
+    {
+        private ThirdwebSDK sdk;
+        public Text walletAddressText;
+        public Button sendButton;
+
+        void Start()
+        {
+            // Client ID is set in Project Settings > Thirdweb
+            sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
+            sendButton.onClick.AddListener(ReadContract);
+        }
+
+        public async void ReadContract()
+        {
+            try {
+                var contract = await ThirdwebManager.Instance.GetContract(
+                    address: "contract-address",
+                    chainId: 1,
+                    abi: "optional-abi"
+                );
+
+                // Send a transaction
+                var data = await contract.Read(wallet, contract, "allowance", ownerAddress, spenderAddress);
+                Debug.Log($"Contract data: {data}");
+            }
+            catch (System.Exception e) {
+                Debug.LogError("Error sending transaction: " + e.Message);
+            }
+        }
+    }
+    ```
+
+    ### Write to a Contract
+
+    You can write to a contract using the [`ThirdwebContract.Write`](/dotnet/contracts/write) method.
+
+    ```csharp
+    using Thirdweb;
+    using UnityEngine;
+    using UnityEngine.UI;
+
+    public class TransactionManager : MonoBehaviour
+    {
+        private ThirdwebSDK sdk;
+        public Text walletAddressText;
+        public Button sendButton;
+
+        void Start()
+        {
+            // Client ID is set in Project Settings > Thirdweb
+            sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
+            sendButton.onClick.AddListener(SendTransaction);
+        }
+
+        public async void SendTransaction()
+        {
+            try {
+                var contract = await ThirdwebManager.Instance.GetContract(
+                    address: "contract-address",
+                    chainId: 1,
+                    abi: "optional-abi"
+                );
+
+                // Send a transaction
+                var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+                Debug.Log($"Transaction receipt: {receipt}");
+            }
+            catch (System.Exception e) {
+                Debug.LogError("Error sending transaction: " + e.Message);
+            }
+        }
+    }
+    ```
+
+  </TabsContent>
+
+  <TabsContent value="dotnet">
+    ### Installation
+
+    Install the thirdweb .NET SDK using NuGet:
+
+    ```bash
+    dotnet add package Thirdweb
+    ```
+
+    ### Initialize the SDK
+
+    Create a client instance to connect with thirdweb services:
+
+    ```csharp
+    using Thirdweb;
+
+    // For client-side applications:
+    var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
+    {
+        ClientId = "YOUR_CLIENT_ID" // From thirdweb dashboard
+    });
+
+    // For server-side applications:
+    // var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
+    // {
+    //     SecretKey = Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY")
+    // });
+    ```
+
+    ### Read a Contract
+
+    You can read contract data using the [`ThirdwebContract.Read`](/dotnet/contracts/read) method.
+
+	```csharp
+	BigInteger chainId = 1; // Ethereum mainnet
+	string contractAddress = "0x..."; // Your contract address
+	var contract = await ThirdwebContract.Create(client, contractAddress, chainId);
+
+	var data = await contract.Read(wallet, contract, "allowance", ownerAddress, spenderAddress);
+	Console.WriteLine($"Contract data: {data}");
+	```
+
+    ### Write to a Contract
+
+    ```csharp
+    BigInteger chainId = 1; // Ethereum mainnet
+    string contractAddress = "0x..."; // Your contract address
+    var contract = await ThirdwebContract.Create(client, contractAddress, chainId);
+
+    // The wallet that signs and sends the transaction
+    var wallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
+
+    // Assuming transfer takes an address and an amount as parameters
+    string toAddress = "0x...";
+    BigInteger amount = new BigInteger(1000); // The amount to transfer
+
+    // No ether is being sent in this non-payable transaction, so weiValue is 0
+    BigInteger weiValue = BigInteger.Zero;
+
+    // Executing the transfer
+    var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+    Console.WriteLine($"Transaction receipt: {receipt}");
+    ```
+
+  </TabsContent>
+
+  <TabsContent value="unreal">
+    ### Installation
+
+    1. Download the thirdweb Unreal Engine plugin from the [Unreal Engine Marketplace](https://www.unrealengine.com/marketplace/en-US/product/thirdweb)
+    2. Add the plugin to your Unreal project
+    3. Enable the plugin in your project settings
+
+    ### Configure Client ID
+
+    1. Go to Edit > Project Settings > Thirdweb
+    2. Enter your Client ID from the thirdweb dashboard
+    3. Enter your Bundle ID (must match what was allowlisted on the thirdweb dashboard)
+
+    ### Read and Write to a Contract
+
+    You can read and write to a contract using the [Engine Blueprint](/unreal-engine/blueprints/engine).
+
+  </TabsContent>
+</Tabs>
+
+## Going further
+
+- [Deploy Contracts](/contracts/deploy)
+- [Contract Events](/contracts/read)
+
+## Explore Full API References
+
+For comprehensive guides on implementing the full thirdweb SDK, explore our language-specific documentation:
 
 <Grid>
-
-<ArticleIconCard
-	title="Deployment Tool"
-	icon={ExternalLinkIcon}
-	href="/contracts/deploy/overview"
-	description="Securely deploy any smart contract."
-/>
-<ArticleIconCard
-	title="Explore"
-	icon={ExternalLinkIcon}
-	href="/contracts/explore/overview"
-	description="Audited and expansive library of contracts."
-/>
-
-<ArticleIconCard
-	title="Modular Contracts"
-	icon={ExternalLinkIcon}
-	href="/contracts/explore/overview"
-	description="Build customizable smart contracts."
-/>
-
+	<SDKCard
+		title="TypeScript"
+		href="/references/typescript/v5"
+		icon={TypeScriptIcon}
+	/>
+	<SDKCard title="React" href="/references/typescript/v5" icon={ReactIcon} />
+	<SDKCard
+		title="React Native"
+		href="/references/typescript/v5"
+		icon={ReactIcon}
+	/>
+	<SDKCard title="DotNet" href="/dotnet/getting-started" icon={DotNetIcon} />
+	<SDKCard title="Unity" href="/unity/v5/getting-started" icon={UnityIcon} />
+	<SDKCard
+		title="Unreal Engine"
+		href="/unreal-engine/getting-started"
+		icon={UnrealEngineIcon}
+	/>
 </Grid>
-
-<OpenSourceCard title="Contracts" href="https://github.com/thirdweb-dev/contracts" />
-
-### With Contracts, you can:
-
-- Easily deploy custom or pre-built contracts to [any EVM network](https://thirdweb.com/chainlist)
-- Create and publish contracts for your team or community to utilize with an easy-to-deploy interface
-- Create reusable contract components or modules to add to modular contracts to upgrade functionality
-- Manage contract functionality, upload NFTs, set distribution mechanisms, and more directly from the dashboard
-- Reduce development time by using an existing library of contracts with accompanying SDK functions and dashboard integrations to interact with contracts
-
-### Templates
-
-<ExpandableGrid>
-
-<GithubTemplateCard
-	title="Hardhat JavaScript Starter"
-	href="https://github.com/thirdweb-example/hardhat-javascript-starter"
-/>
-
-<GithubTemplateCard
-	title="Hardhat TypeScript Starter"
-	href="https://github.com/thirdweb-example/hardhat-typescript-starter"
-/>
-
-<GithubTemplateCard
-	title="Forge Starter"
-	href="https://github.com/thirdweb-example/forge-starter"
-/>
-
-<GithubTemplateCard
-	title="Solidity Hello World"
-	href="https://github.com/thirdweb-example/solidity-hello-world"
-/>
-
-<GithubTemplateCard
-	title="Smart Account Upgrades"
-	href="https://github.com/thirdweb-example/smart-account-upgrades"
-/>
-
-<GithubTemplateCard
-	title="Tiered Loyalty Contract"
-	href="https://github.com/thirdweb-example/tiered-loyalty-contract"
-/>
-
-<GithubTemplateCard
-	title="ERC-6551"
-	href="https://github.com/thirdweb-example/erc-6551"
-/>
-
-<GithubTemplateCard
-	title="Anvil Local Node"
-	href="https://github.com/thirdweb-example/anvil-local-node"
-/>
-
-<GithubTemplateCard
-	title="Soulbound Token"
-	href="https://github.com/thirdweb-example/soulbound-token"
-/>
-
-<GithubTemplateCard
-	title="Onchain NFT Metadata"
-	href="https://github.com/thirdweb-example/on-chain-nft-metadata"
-/>
-
-<GithubTemplateCard
-	title="ERC-721 NFT Collection with Deploy & Hardhat"
-	href="https://github.com/thirdweb-example/erc721a-thirdweb-deploy"
-/>
-
-<GithubTemplateCard
-	title="Token Gated Account"
-	href="https://github.com/thirdweb-example/token-gated-account"
-/>
-
-</ExpandableGrid>
-
-## Supported Chains
-Contracts is supported on every EVM compatible chain. To view the full list, visit [thirdweb chainlist](https://thirdweb.com/chainlist?service=contracts).
-
-<DocImage src={SupportedChains} />
-

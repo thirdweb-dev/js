@@ -1,5 +1,4 @@
 import {
-  BadgeHelpIcon,
   BrainIcon,
   type LucideIcon,
   ScrollTextIcon,
@@ -18,8 +17,8 @@ export function PageFooter(props: {
 }) {
   return (
     <footer className="flex flex-col gap-7 pb-20" data-noindex>
-      <div className="flex flex-col justify-between gap-7 md:flex-row md:items-center">
-        <div className="flex gap-4">
+      <div className="flex flex-col justify-between gap-7">
+        <div className="flex gap-4 justify-between items-center">
           {props.editPageButton && <AutoEditPageButton />}
           {props.sidebarLinks && (
             <AutoNextPageButton sidebarLinks={props.sidebarLinks} />
@@ -39,13 +38,6 @@ export function PageFooter(props: {
 function Links() {
   return (
     <ul className="flex flex-col gap-3">
-      <FooterLinkItem
-        href="https://thirdweb.com/support"
-        icon={BadgeHelpIcon}
-        label="Visit our support site"
-        prefix="Need help?"
-      />
-
       <FooterLinkItem
         href="https://www.youtube.com/@thirdweb_"
         icon={VideoIcon}

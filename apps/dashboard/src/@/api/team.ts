@@ -48,7 +48,7 @@ export async function service_getTeamBySlug(slug: string) {
   return null;
 }
 
-export function getTeamById(id: string) {
+function getTeamById(id: string) {
   return getTeamBySlug(id);
 }
 

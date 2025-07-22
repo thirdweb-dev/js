@@ -169,7 +169,13 @@ export const signTypedData = <ThrowOnError extends boolean = false>(
 
 /**
  * Read Contract
- * Read from multiple smart contracts using multicall
+ * Read from smart contracts with intelligent execution strategy:
+ * - Single calls: Always executed directly for efficiency
+ * - Multiple calls: Uses multicall by default, or direct calls if disabled
+ * - Failed preparations: Returns preparation errors directly
+ *
+ * If multicall is not specified, it will be used by default. In case of multicall related errors, engine will fallback to direct calls.
+ * Only in the case where multicall is explicitly enabled, engine will not fallback to direct calls.
  */
 export const readContract = <ThrowOnError extends boolean = false>(
 	options: Options<ReadContractData, ThrowOnError>,
@@ -268,8 +274,8 @@ export const listAccounts = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Create Server Wallet
- * Create a new engine server wallet. This is a helper route for creating a new EOA with your KMS provider, provided as a convenient alternative to creating an EOA directly with your KMS provider. Your KMS credentials are not stored, and usage of created accounts require your KMS credentials to be sent with requests.
+ * Get or Create Server Wallet
+ * Create a new engine server wallet or retrieve an existing one. If the EOA already exists for the given label, it will be returned without creating a new one.
  */
 export const createAccount = <ThrowOnError extends boolean = false>(
 	options?: Options<CreateAccountData, ThrowOnError>,

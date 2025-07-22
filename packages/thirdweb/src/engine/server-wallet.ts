@@ -80,7 +80,6 @@ export type ServerWallet = Account & {
  * const myServerWallet = Engine.serverWallet({
  *   client,
  *   address: "<your-server-wallet-address>",
- *   vaultAccessToken: "<your-vault-access-token>",
  * });
  * ```
  *
@@ -182,6 +181,18 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           chainId,
           type: "ERC4337",
         };
+      case "EOA":
+        return {
+          chainId,
+          from: address,
+          type: "EOA",
+        };
+      case "EIP7702":
+        return {
+          chainId,
+          from: address,
+          type: "EIP7702",
+        };
     }
   };
 
@@ -193,7 +204,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     if (!chainId) {
       return {
         from: address,
-        type: "eoa",
+        type: "EOA",
       };
     }
 
@@ -213,12 +224,19 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           type: "ERC4337",
         };
       }
-
       case "auto": {
         return {
           chainId,
           from: address,
           type: "auto",
+        };
+      }
+      case "EIP7702":
+      case "EOA": {
+        return {
+          chainId,
+          from: address,
+          type: "EOA",
         };
       }
     }
@@ -246,6 +264,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       params: transaction.map((t) => ({
         data: t.data,
         to: t.to,
+        gasLimit: t.gas ? Number(t.gas) : undefined,
         value: t.value?.toString(),
       })),
     };
