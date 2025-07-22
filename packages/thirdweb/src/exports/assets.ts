@@ -18,5 +18,5 @@ export type {
   PoolConfig,
   TokenParams,
 } from "../assets/types.js";
-export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
 export { getReward } from "../extensions/assets/__generated__/ERC20AssetEntrypoint/read/getReward.js";
+export { getInitBytecodeWithSalt } from "../utils/any-evm/get-init-bytecode-with-salt.js";
