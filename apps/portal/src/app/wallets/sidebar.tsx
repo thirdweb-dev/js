@@ -29,6 +29,10 @@ export const sidebar: SideBar = {
           name: "External Wallets",
         },
         {
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "Ecosystem Wallets",
+        },
+        {
           href: `${walletSlug}/sponsor-gas`,
           name: "Sponsor Gas",
         },
@@ -110,10 +114,6 @@ export const sidebar: SideBar = {
           href: "https://thirdweb.com/templates",
           icon: <ExternalLinkIcon />,
           name: "Templates",
-        },
-        {
-          href: `${walletSlug}/ecosystem/set-up`,
-          name: "Ecosystem Wallets",
         },
         {
           href: `${walletSlug}/security`,
