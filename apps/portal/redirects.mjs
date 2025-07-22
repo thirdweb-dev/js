@@ -748,6 +748,21 @@ const contractRedirects = {
   "/contracts/DropERC721": "/contracts/explore/pre-built-contracts/nft-drop",
   "/contracts/DropERC1155":
     "/contracts/explore/pre-built-contracts/edition-drop",
+  // DEPRECATED: Pre-built modular contracts redirects
+  "/contracts/explore/pre-built-modular/token":
+    "/contracts/explore/pre-built-contracts/token",
+  "/contracts/explore/pre-built-modular/token-drop":
+    "/contracts/explore/pre-built-contracts/token-drop",
+  "/contracts/explore/pre-built-modular/nft-collection":
+    "/contracts/explore/pre-built-contracts/nft-collection",
+  "/contracts/explore/pre-built-modular/nft-drop":
+    "/contracts/explore/pre-built-contracts/nft-drop",
+  "/contracts/explore/pre-built-modular/open-edition":
+    "/contracts/explore/pre-built-contracts/open-edition",
+  "/contracts/explore/pre-built-modular/edition":
+    "/contracts/explore/pre-built-contracts/edition",
+  "/contracts/explore/pre-built-modular/edition-drop":
+    "/contracts/explore/pre-built-contracts/edition-drop",
   //design documentation
   "/contracts/design/Drop": "/contracts/design-docs/drop",
   "/contracts/design/Marketplace": "/contracts/design-docs/marketplace",
