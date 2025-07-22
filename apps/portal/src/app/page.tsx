@@ -128,7 +128,7 @@ function ReferenceSection() {
             title="Payments"
           />
           <SDKCard
-            href="/connect/wallet/get-users"
+            href="/wallets/get-users"
             icon={ConnectIcon} // TODO: actual openAPI docs
             title="Wallets"
           />

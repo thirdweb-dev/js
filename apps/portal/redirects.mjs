@@ -712,6 +712,7 @@ const walletRedirects = {
 
 const paymentRedirects = {
   "/pay": "/payments",
+  "/pay/:path*": "/payments",
   "/checkouts": "/payments",
   "/checkouts/api-reference": "/payments/nft-checkout/api-reference",
   "/checkouts/checkout-link": "/payments/nft-checkout/checkout-link",
@@ -920,7 +921,6 @@ const otherRedirects = {
   "/connect/account-abstraction": "/connect/account-abstraction/overview",
   // connect
   "/connect/connect": "/connect/sign-in",
-  "/connect/ecosystems/:path*": "/connect/wallet/overview",
   "/connect/embedded-wallet/how-to/get-embedded-wallet-details-on-server":
     "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
@@ -1021,6 +1021,9 @@ const otherRedirects = {
   "/connect/wallet/server": "/wallets/server",
   "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",
   "/connect/account-abstraction/:path*": "/wallets/sponsor-gas",
+  "/connect/pay/:path*": "/payments",
+  "/connect/ecosystems/:path*": "/wallets/ecosystem/set-up",
+  "/connect/:path*": "/wallets",
   "/wallets/in-app-wallet/custom-auth/configuration": "/wallets/custom-auth",
   "/connect/wallets/user-management/link-multiple-identity":
     "/wallets/link-profiles",
