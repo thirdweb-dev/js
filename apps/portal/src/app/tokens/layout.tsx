@@ -12,10 +12,10 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
 export const metadata = createMetadata({
   description:
-    "Easily read, write, deploy, and listen to contract events on any EVM compatible blockchain",
+    "Easily create, deploy, and manage smart contracts on any EVM compatible blockchain",
   image: {
     icon: "contract",
-    title: "Contracts",
+    title: "thirdweb contracts",
   },
-  title: "Contracts",
+  title: "thirdweb Contracts",
 });
