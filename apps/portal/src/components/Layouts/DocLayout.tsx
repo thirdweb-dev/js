@@ -27,22 +27,28 @@ export function DocLayout(props: DocLayoutProps) {
     <div
       className={cn(
         "container text-muted-foreground relative flex flex-col gap-12 xl:grid",
-        props.showTableOfContents !== false
-          ? "xl:grid-cols-[220px_720px_1fr]"
-          : "xl:grid-cols-[220px_1160px]",
+        props.sideBar.links.length > 0
+          ? props.showTableOfContents !== false
+            ? "xl:grid-cols-[220px_720px_1fr]"
+            : "xl:grid-cols-[220px_1160px]"
+          : props.showTableOfContents !== false
+            ? "xl:grid-cols-[960px_1fr]"
+            : "",
       )}
       style={{
         minHeight: "calc(100vh - var(--sticky-top-height))",
       }}
     >
-      <aside
-        className={cn(
-          "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-auto no-scrollbar",
-          "hidden xl:flex",
-        )}
-      >
-        <DocSidebar {...props.sideBar} header={props.sidebarHeader} />
-      </aside>
+      {props.sideBar.links.length > 0 && (
+        <aside
+          className={cn(
+            "sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-auto no-scrollbar",
+            "hidden xl:flex",
+          )}
+        >
+          <DocSidebar {...props.sideBar} header={props.sidebarHeader} />
+        </aside>
+      )}
       <div className="sticky top-sticky-top-height z-stickyMobileSidebar border-b bg-background py-4 xl:hidden">
         <DocSidebarMobile {...props.sideBar} header={props.sidebarHeader} />
       </div>

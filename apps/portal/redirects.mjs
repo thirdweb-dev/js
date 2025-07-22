@@ -1016,11 +1016,7 @@ const otherRedirects = {
     "/unity/wallets/providers/account-abstraction",
   "/wallet/get-started/overview": "/connect/wallet/overview",
   // connect > wallets
-  "/connect/:path*": "/wallets/:path*",
-  "/connect/wallet/:path*": "/wallets/:path*",
-  "/connect/auth/:path*": "/wallets/auth/:path*",
-  "/connect/connect/:path*": "/wallets/connect/:path*",
-  "/connect/embedded-wallet/:path*": "/wallets/embedded-wallet/:path*",
+  "/connect": "/wallets",
   "/connect/wallet/sign-in-methods/configure": "/wallets/users",
   "/connect/wallet/server": "/wallets/server",
   "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",

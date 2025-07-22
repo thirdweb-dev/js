@@ -133,7 +133,7 @@ function ReferenceSection() {
             title="Wallets"
           />
           <SDKCard
-            href="/connect/account-abstraction/api"
+            href="/bundler"
             icon={ConnectIcon} // TODO: actual openAPI docs
             title="Bundler"
           />

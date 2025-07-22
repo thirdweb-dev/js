@@ -1,5 +1,4 @@
 import {
-  BadgeHelpIcon,
   BrainIcon,
   type LucideIcon,
   ScrollTextIcon,
@@ -39,13 +38,6 @@ export function PageFooter(props: {
 function Links() {
   return (
     <ul className="flex flex-col gap-3">
-      <FooterLinkItem
-        href="https://thirdweb.com/support"
-        icon={BadgeHelpIcon}
-        label="Visit our support site"
-        prefix="Need help?"
-      />
-
       <FooterLinkItem
         href="https://www.youtube.com/@thirdweb_"
         icon={VideoIcon}

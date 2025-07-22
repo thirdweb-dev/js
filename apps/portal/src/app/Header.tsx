@@ -136,7 +136,7 @@ const apisLinks = [
     name: "Payments",
   },
   {
-    href: "/connect/account-abstraction/api",
+    href: "/bundler",
     name: "Bundler",
   },
 ];
@@ -265,7 +265,7 @@ export function Header() {
             {links.map((link) => {
               return (
                 <li
-                  className="flex items-center py-2 relative px-2.5 rounded-lg hover:bg-accent hover:text-foreground"
+                  className="flex items-center py-2 relative px-2.5 hover:text-foreground"
                   key={link.href}
                   onClick={() => {
                     setShowBurgerMenu(false);
