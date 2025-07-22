@@ -146,20 +146,56 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
 
     ### Send a Transaction
 
-    Send a transaction from a [user wallet](/connect/wallet/sign-in-methods/configure) or [server wallet](/connect/wallet/server) using the [`sendTransaction`](/references/typescript/v5/sendTransaction) function.
+    Send a transaction from a [user wallet](/connect/wallet/sign-in-methods/configure) from the frontend, or [server wallet](/connect/wallet/server) from the backend.
 
-    The `account` parameter is the wallet that will be used to send the transaction. You can get an account object from a user wallet or a server wallet.
+    <Tabs defaultValue="frontend">
+      <TabsList>
+        <TabsTrigger value="frontend">Frontend</TabsTrigger>
+        <TabsTrigger value="backend">Backend</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="frontend">
+            On the frontend, you can use the [`sendTransaction`](/references/typescript/v5/sendTransaction) function to send a transaction from user wallets. The `account` parameter is the wallet that will be used to send the transaction. You can get an account object from a user wallet or a server wallet.
 
     ```typescript
     import { sendTransaction } from "thirdweb";
 
+    // connect user wallet
+    const wallet = inAppWallet();
+    const account = await wallet.connect({ client });
+
+    // send transaction
     const { transactionHash } = await sendTransaction({
-      account: wallet.getAccount(),
+      account,
       transaction,
     });
 
     console.log("transaction sent", transactionHash);
     ```
+      </TabsContent>
+
+      <TabsContent value="backend">
+        On the backend, you can use the server wallet to enqueue a transaction. Enqueued transactions is recommended to not block your server. You can then monitor the transaction status using the [transaction monitor](/transactions/monitor) API.
+
+        ```typescript
+        import { Engine } from "thirdweb";
+
+        // get a server wallet
+        const wallet = Engine.serverWallet({
+          client,
+          address: "0x...",
+        });
+
+        // enqueue a transaction
+        const { transactionId } = await wallet.enqueueTransaction({
+          transaction,
+          simulate: true, // optional, if you want to simulate the transaction before enqueuing it
+        });
+
+        console.log("transaction enqueued", transactionId);
+        ```
+      </TabsContent>
+    </Tabs>
 
   </TabsContent>
 
@@ -434,8 +470,8 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
         {
             try {
                 var contract = await ThirdwebManager.Instance.GetContract(
-                    address: "contract-address", 
-                    chainId: 1, 
+                    address: "contract-address",
+                    chainId: 1,
                     abi: "optional-abi"
                 );
 
