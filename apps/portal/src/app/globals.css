@@ -9,7 +9,7 @@
     --popover: 0 0% 100%;
     --card: 0 0% 100%;
     --secondary: 0 0% 90%;
-    --muted: 0 0% 93%;
+    --muted: 0 0% 97%;
     --accent: 0 0% 93%;
     --inverted: 0 0% 4%;
 
@@ -58,7 +58,7 @@
     --card: 0 0% 3.92%;
     --popover: 0 0% 0%;
     --secondary: 0 0% 11%;
-    --muted: 0 0% 11%;
+    --muted: 0 0% 8%;
     --accent: 0 0% 11%;
     --inverted: 0 0% 100%;
 
@@ -105,6 +105,16 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

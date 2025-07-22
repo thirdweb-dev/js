@@ -412,5 +412,5 @@
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.105.16"
+  "version": "5.105.18"
 }

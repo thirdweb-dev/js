@@ -1,6 +1,6 @@
 # React Native Adapter
 
-This package is required to run the thirdweb connect SDK in React Native.
+This package is required to run the thirdweb SDK in React Native.
 
 ## Instructions
 
@@ -62,9 +62,9 @@ const config = getDefaultConfig(__dirname);
 // ADD THESE 2 PROPERTIES
 config.resolver.unstable_enablePackageExports = true;
 config.resolver.unstable_conditionNames = [
-	"react-native",
-	"browser",
-	"require",
+  "react-native",
+  "browser",
+  "require",
 ];
 
 module.exports = config;
@@ -107,8 +107,7 @@ Now you can replace `expo-router/entry` with `./app/index` as your main entrypoi
 ### Additional notes
 
 1. `react-native-aes-gcm-crypto` requires `minSDK 26` for android, you can edit this in your `build.gradle` file
-2. You will get some warnings about unresolved exports, this is normal and  will get better as the libraries get updated.
-
+2. You will get some warnings about unresolved exports, this is normal and will get better as the libraries get updated.
 
 ### Use the `thirdweb` package in React Native
 

@@ -448,6 +448,11 @@ async function redirects() {
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,
     ...teamPageRedirects,
+    {
+      source: "/support/:path*",
+      destination: "/team/~/~/support",
+      permanent: false,
+    },
   ];
 }
 

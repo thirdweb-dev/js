@@ -8,7 +8,7 @@ import {
   TableOfContentsIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { DocSearch } from "@/components/others/DocSearch";
 import { Button } from "@/components/ui/button";
@@ -32,15 +32,15 @@ import { ThirdwebIcon } from "../icons/thirdweb";
 
 const links = [
   {
-    href: "/connect",
+    href: "/wallets",
     name: "Wallets",
   },
   {
-    href: "/pay",
+    href: "/payments",
     name: "Payments",
   },
   {
-    href: "/engine",
+    href: "/transactions",
     name: "Transactions",
   },
   {
@@ -48,12 +48,8 @@ const links = [
     name: "Contracts",
   },
   {
-    href: "/insight",
-    name: "Insight",
-  },
-  {
-    href: "/vault",
-    name: "Vault",
+    href: "/tokens",
+    name: "Tokens",
   },
 ];
 
@@ -124,10 +120,6 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
-    href: "https://engine.thirdweb.com/reference",
-    name: "Engine",
-  },
-  {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
   },
@@ -140,7 +132,7 @@ const apisLinks = [
     name: "Payments",
   },
   {
-    href: "/connect/account-abstraction/api",
+    href: "/bundler",
     name: "Bundler",
   },
 ];
@@ -195,12 +187,12 @@ const supportLinks = [
 
 export function Header() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background p-2 lg:px-4">
+    <header className="flex w-full flex-col gap-2 border-b bg-background p-4 xl:pb-0 lg:px-8 overflow-hidden">
+      {/* Top row */}
       <div className="container flex items-center justify-between gap-6">
-        {/* Top row */}
         <div className="flex items-center gap-2">
           <Link
             aria-label="thirdweb Docs"
@@ -222,7 +214,7 @@ export function Header() {
               href="https://github.com/thirdweb-dev"
               target="_blank"
             >
-              <GithubIcon className="mx-3 size-6" />
+              <GithubIcon className="size-6 lg:size-5" />
             </Link>
           </div>
 
@@ -235,25 +227,21 @@ export function Header() {
           </div>
 
           <div className="hidden xl:block">
-            <Button
-              onClick={() => {
-                router.push("/chat");
-              }}
-            >
-              <MessageCircleIcon className="mr-2 size-4" />
-              Ask AI
+            <Button asChild>
+              <Link href="/chat">
+                <MessageCircleIcon className="mr-2 size-4" />
+                Ask AI
+              </Link>
             </Button>
           </div>
 
           <div className="flex items-center gap-1 xl:hidden">
             <ThemeSwitcher className="border-none bg-transparent" />
             <DocSearch variant="icon" />
-            <Button
-              className="p-2"
-              onClick={() => router.push("/chat")}
-              variant="ghost"
-            >
-              <MessageCircleIcon className="size-7" />
+            <Button className="p-2" asChild variant="ghost">
+              <Link href="/chat">
+                <MessageCircleIcon className="size-6" />
+              </Link>
             </Button>
             <Button
               className="p-2"
@@ -267,13 +255,13 @@ export function Header() {
       </div>
 
       {/* Bottom row - hidden on mobile */}
-      <div className="container hidden items-center justify-between gap-6 xl:flex">
+      <div className="container hidden items-center justify-between gap-6 xl:flex mt-1">
         <nav className="flex grow gap-5">
-          <ul className="flex flex-row items-center gap-5">
+          <ul className="flex flex-row items-center gap-0 mb-1">
             {links.map((link) => {
               return (
                 <li
-                  className="flex items-center"
+                  className="flex items-center py-2 relative px-2.5 hover:text-foreground"
                   key={link.href}
                   onClick={() => {
                     setShowBurgerMenu(false);
@@ -283,6 +271,9 @@ export function Header() {
                   }}
                 >
                   <NavLink href={link.href} name={link.name} />
+                  {pathname.includes(link.href) && (
+                    <div className="bg-violet-700 h-[2px] inset-x-0 rounded-full absolute -bottom-1" />
+                  )}
                 </li>
               );
             })}
@@ -506,7 +497,9 @@ function NavLink(props: {
     <Link
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
-        pathname === props.href ? "text-foreground" : "text-muted-foreground ",
+        pathname.includes(props.href)
+          ? "text-foreground"
+          : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",
       )}
       href={props.href}
@@ -515,7 +508,7 @@ function NavLink(props: {
     >
       {props.icon ? (
         <>
-          <props.icon className="size-6 text-muted-foreground" />
+          <props.icon className="size-6" />
           <span className="my-auto">{props.name}</span>
         </>
       ) : (

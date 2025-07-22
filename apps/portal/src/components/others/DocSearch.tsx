@@ -354,11 +354,11 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         {forDesktop && (
           <DialogTrigger asChild>
             <Button
-              className="flex w-64 justify-between gap-6 px-3 text-muted-foreground"
+              className="flex w-64 justify-between gap-6 px-3 text-muted-foreground bg-card"
               variant="outline"
             >
-              Search Docs
-              <div className="flex items-center gap-1 rounded-sm border bg-background px-2 py-1 text-muted-foreground text-xs">
+              <span className="text-xs">Search Docs</span>
+              <div className="flex items-center gap-1 rounded-sm p-1 text-muted-foreground text-xs">
                 <CommandIcon className="size-3" />K
               </div>
             </Button>

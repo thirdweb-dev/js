@@ -6,6 +6,7 @@ import {
   DatabaseIcon,
   DollarSignIcon,
   FileTextIcon,
+  HelpCircleIcon,
   HomeIcon,
   SettingsIcon,
   WalletCardsIcon,
@@ -89,6 +90,11 @@ export function TeamSidebarLayout(props: {
           : []),
       ]}
       footerSidebarLinks={[
+        {
+          href: `${layoutPath}/~/support`,
+          icon: HelpCircleIcon,
+          label: "Support",
+        },
         {
           href: `${layoutPath}/~/billing`,
           icon: DollarSignIcon,

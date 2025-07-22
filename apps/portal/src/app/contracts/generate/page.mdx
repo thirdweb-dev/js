@@ -1,0 +1,69 @@
+# Generating extensions
+
+You can generate precompiled, optimized extensions for any deployed contract using the thirdweb CLI.
+
+The thirdweb SDK comes with a CLI that can be run with your package manager of choice.
+
+```bash
+npx thirdweb generate <chainId>/<contract-address>
+```
+
+This will generate a new `thirdweb` directory in your own project, containing the precompiled extension for the contract at the given address.
+
+### Example: Generating an extension for a USDC contract on Optimism
+
+```bash
+npx thirdweb generate 10/0x0b2c639c533813f4aa9d7837caf62653d097ff85
+```
+
+This will generate the following file `thirdweb/10/0x0b2c639c533813f4aa9d7837caf62653d097ff85.ts` in your project, containing:
+
+- Precompiled, type-safe event definitions
+- Precompiled, type-safe function definitions
+
+You can inspect the generated code, modify it, and use it in your project.
+
+### Example: Using a generated extension function
+
+```typescript
+import { permit } from "/thirdweb/10/0x0b2c639c533813f4aa9d7837caf62653d097ff85";
+
+const contract = getContract({
+	client,
+	chain: optimism,
+	address: USDC_ADDRESS,
+});
+
+// Type-safe function to do a permit transaction
+const transaction = permit({
+  owner: ...,
+  spender: ...,
+  value: ...,
+  deadline: ...,
+  signature: ...,
+});
+await sendTransaction({ transaction, account });
+```
+
+### Example: Using a generated event
+
+```typescript
+import { transferEvent } from "/thirdweb/10/0x0b2c639c533813f4aa9d7837caf62653d097ff85";
+
+const contract = getContract({
+	client,
+	chain: optimism,
+	address: USDC_ADDRESS,
+});
+
+// Type-safe event listener
+const events = await getContractEvents({
+  contract,
+  events: [
+    transferEvent({
+      from: ...,
+      to: ...,
+    })
+  ],
+});
+```

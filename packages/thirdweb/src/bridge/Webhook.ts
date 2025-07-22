@@ -95,8 +95,8 @@ export type WebhookPayload = Exclude<
  * @param payload - The raw text body received from thirdweb.
  * @param headers - The webhook headers received from thirdweb.
  * @param secret - The webhook secret to verify the payload with.
- * @beta
  * @bridge Webhook
+ * @beta
  */
 export async function parse(
   /**

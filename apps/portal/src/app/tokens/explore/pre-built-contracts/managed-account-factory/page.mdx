@@ -1,0 +1,49 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Managed Account Factory",
+		icon: "contract",
+	},
+	title: "Managed Account Factory | thirdweb",
+	description: `The Managed Account Factory contract is used to deploy upgradeable ERC-4337 smart wallets with role based permission control.`,
+});
+
+# Managed Account Factory
+
+The **Managed Account Factory** contract is used to deploy upgradeable [ERC-4337](https://eips.ethereum.org/EIPS/eip-4337s) smart wallets with role based permission control.
+
+The `ManagedAccount` smart wallet is an **upgradeable** smart contract written in the [dynamic contract pattern](https://github.com/thirdweb-dev/dynamic-contracts).
+
+App developers can issue `ManagedAccount` smart wallets programmatically by deploying a `ManagedAccountFactory` smart contract.
+
+The admin of the `ManagedAccountFactory` contract can push upgrades to all `ManagedAccounts` that it creates. This admin does not require any permissions on the `ManagedAccount` smart wallets to do so.
+An upgrade to the features of `ManagedAccount` applies to all `ManagedAccount` smart wallets created by the factory.
+This is the right wallet for developers who anticipate pushing upgrades to their users' wallets.
+
+thirdweb's smart wallets have the following features by default:
+
+- Have multiple signers with different permissions
+- Execute transactions (single and batched).
+- Send and receive native tokens.
+- Send and receive ERC-721 and ERC-1155 NFTs.
+- Multicall-able.
+- Store contract metadata.
+
+## Extensions
+
+This contract includes the following extensions:
+
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [AccountFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory)
+- [DynamicContract](https://github.com/thirdweb-dev/dynamic-contracts)
+
+## Use Cases & Examples
+
+Use the `ManagedAccountFactory` contract alongside the [thirdweb SDK](/connect/account-abstraction) to easily use account abstraction in your projects:
+
+- [React Guide](/connect/account-abstraction/guides/react)
+- [Typescript Guide](/connect/account-abstraction/guides/typescript)
+- [Unity Guide](/unity/wallets/providers/account-abstraction)

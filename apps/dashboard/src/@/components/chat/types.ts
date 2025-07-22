@@ -6,12 +6,6 @@ export type ExamplePrompt = {
 
 // TODO - remove "Nebula" wording and simplify types
 
-export type NebulaContext = {
-  chainIds: string[] | null;
-  walletAddress: string | null;
-  networks: "mainnet" | "testnet" | "all" | null;
-};
-
 type NebulaUserMessageContentItem =
   | {
       type: "image";

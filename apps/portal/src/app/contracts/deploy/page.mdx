@@ -1,0 +1,57 @@
+# Deploy Contracts
+
+You can deploy contracts via CLI or programatically.
+
+## Deploying via CLI
+
+From your forge or hardhat project, you can deploy your contract with a single command.
+
+```bash
+npx thirdweb deploy -k <project-secret-key>
+```
+
+You can also publish your contract to be deployable by anyone on any chain.
+
+```bash
+npx thirdweb publish -k <project-secret-key>
+```
+
+
+
+## Deploying via SDK
+
+You can deploy contracts from ABI and bytecode.
+
+```ts
+import { deployContract } from "thirdweb/deploys";
+
+const address = await deployContract({
+  client,
+  chain,
+  bytecode: "0x...",
+  abi: contractAbi,
+  constructorParams: {
+    param1: "value1",
+    param2: 123,
+  },
+  salt, // optional: salt enables deterministic deploys
+});
+```
+
+Or alternatively, you can deploy a contract from a previously published contract.
+
+```ts
+import { deployPublishedContract } from "thirdweb/deploys";
+
+const address = await deployPublishedContract({
+  client,
+  chain,
+  account,
+  contractId: "MyPublishedContract",
+  contractParams: {
+    param1: "value1",
+    param2: 123,
+  },
+  publisher: "0x...", // optional, defaults to the thirdweb deployer
+});
+```

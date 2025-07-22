@@ -40,7 +40,7 @@ function BuyOnchainAsset() {
   return (
     <CodeExample
       code={`import { claimTo } from "thirdweb/extensions/erc1155";
-          import { PayEmbed, useActiveAccount } from "thirdweb/react";
+          import { TransactionWidget, useActiveAccount } from "thirdweb/react";
 
         function App() {
           const account = useActiveAccount();

@@ -1,0 +1,117 @@
+import { Steps, Step } from "@doc";
+
+# Quickstart
+
+Learn how to add TypeScript SDK to your application, log in your users, and allow them to interact with your application.
+
+The following guide is in Typescript. You can also learn how to integrate Connect with our [Unity SDK](https://portal.thirdweb.com/unity).
+
+<Steps>
+<Step title="Install the TypeScript SDK">
+
+```bash
+npm i thirdweb
+```
+
+</Step>
+
+<Step title="Get Your Client ID">
+
+Log in to the [thirdweb dashboard](https://thirdweb.com/team). Create a new project to get your **Client ID**.
+
+</Step>
+
+<Step title="Set up the Client, Provider and ConnectButton">
+
+1. Pass your clientId to `createThirdwebClient`
+2. Wrap your application with a `ThirdwebProvider`
+3. Add a `ConnectButton` to your application
+
+```tsx
+import { createThirdwebClient } from "thirdweb";
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+
+export const client = createThirdwebClient({ clientId: <your_client_id> });
+
+export default function App() {
+  return (
+    <ThirdwebProvider>
+      <ConnectButton client={client} />
+    </ThirdwebProvider>
+  );
+}
+```
+
+</Step>
+
+<Step title="Interact With A Wallet">
+
+Once your user has logged in by clicking the `ConnectButton`, you can interact with their wallet.
+
+Here's how to:
+1. Get the wallet address using `useActiveAccount`
+2. Read the wallet balance using `useWalletBalance`
+
+```tsx
+import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+
+export default function MyComponent() {
+  // 1. get wallet address
+  const account = useActiveAccount();
+  console.log("wallet address", account?.address);
+
+  // 2. get wallet balance
+  const { data: balance, isLoading } = useWalletBalance({
+    client,
+    chain,
+    address: account?.address,
+  });
+  console.log("wallet balance", balance?.displayValue, balance?.symbol);
+}
+```
+
+</Step>
+
+<Step title="Send a Transaction">
+
+[Extensions](/typescript/v5/extensions/use) are the easiest way to prepare transactions.
+
+1. Import the Extension you want to use
+2. Define your contract with `getContract` on your target chains
+3. Call the `useSendTransaction` mutation hook
+4. Execute the transaction using the mutate function
+
+```tsx
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useSendTransaction } from "thirdweb/react";
+// 1. import the extension you want to use
+import { transfer } from "thirdweb/extensions/erc20";
+
+// 2. define the target contract
+const USDC = getContract({ client, address: USDC_ADDRESS, chain: sepolia });
+
+export default function MyComponent() {
+  // 3. call the useSendTransaction hook
+  const { mutate: sendTransaction, isPending } = useSendTransaction();
+
+  const onClick = () => {
+    // 4. execute the transaction (send 15 USDC to the target address)
+    const transaction = transfer({ contract: USDC, amount: 15, to: "0x..." });
+    sendTransaction(transaction);
+  }
+}
+```
+
+</Step>
+
+
+
+<Step title="You're Ready to build">
+
+Congratulations, you've connected a wallet and sent a transaction from your application! You can now explore all the other accessible features in [the full React documentation.](/react/v5)
+
+</Step>
+</Steps>
+
+

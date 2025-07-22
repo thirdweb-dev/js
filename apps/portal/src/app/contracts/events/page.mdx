@@ -1,0 +1,40 @@
+# Listening to Events
+
+The recommended way to listen to contract events is to use the [`getContractEvents`](/references/typescript/v5/getContractEvents) function and passing a prepared event with the Solidity event signature and the params. This is type-safe based on the Solidity event signature you define. You can get your desired contract event signature from the solidity code directly.
+
+```ts
+import { getContractEvents, prepareEvent } from "thirdweb";
+
+const myEvent = prepareEvent({
+  signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
+});
+
+const events = await getContractEvents({
+  contract: myContract,
+  events: [myEvent],
+});
+```
+
+### Using standard event definitions
+
+You can also use the standard event definitions from the SDK to define the events you want to listen to.
+
+```ts
+import { getContractEvents } from "thirdweb";
+import { transferEvent } from "thirdweb/extensions/erc20";
+
+const events = await getContractEvents({
+  contract: myContract,
+  events: [transferEvent()],
+});
+```
+
+### Generating all read functions and events for a deployed contract
+
+Using the CLI, you can generate optimized functions for all the possible calls to a contract. This saves you time and precomputes all the necessary encoding.
+
+```shell
+npx thirdweb generate <contractId>/<contractAddress>
+```
+
+Read more on how to [generate extension functions using the CLI](/contracts/generate).

@@ -258,12 +258,10 @@ export function getSidebarLinkGroups(doc: TransformedDoc, path: string) {
       const bridgeGroups = bridge.reduce(
         (acc, d) => {
           const [, moduleName] = getCustomTag(d) || [];
-          if (moduleName) {
-            if (!acc[moduleName]) {
-              acc[moduleName] = [];
-            }
-            acc[moduleName]?.push(d);
+          if (!acc[moduleName ?? "common"]) {
+            acc[moduleName ?? "common"] = [];
           }
+          acc[moduleName ?? "common"]?.push(d);
           return acc;
         },
         {} as Record<string, SomeDoc[]>,

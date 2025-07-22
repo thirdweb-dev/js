@@ -1,8 +1,10 @@
 "use client";
 
 import { MessageCircleIcon, XIcon } from "lucide-react";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
+import type { Team } from "@/api/team";
 import { Button } from "@/components/ui/button";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
@@ -14,21 +16,21 @@ const client = createThirdwebClient({
 });
 
 export function CustomChatButton(props: {
-  isLoggedIn: boolean;
-  networks: "mainnet" | "testnet" | "all" | null;
-  isFloating: boolean;
-  pageType: "chain" | "contract" | "support";
   label: string;
   examplePrompts: string[];
-  authToken: string | undefined;
-  teamId: string | undefined;
+  authToken: string;
+  team: Team;
   clientId: string | undefined;
-  requireLogin?: boolean;
 }) {
+  const layoutSegments = useSelectedLayoutSegments();
   const [isOpen, setIsOpen] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const closeModal = useCallback(() => setIsOpen(false), []);
   const ref = useRef<HTMLDivElement>(null);
+
+  if (layoutSegments[0] === "~" && layoutSegments[1] === "support") {
+    return null;
+  }
 
   return (
     <>
@@ -54,14 +56,14 @@ export function CustomChatButton(props: {
         ref={ref}
       >
         {/* Header with close button */}
-        <div className="flex items-center justify-between border-b px-4 py-2">
+        <div className="flex items-center justify-between border-b px-4 py-4">
           <div className="flex items-center gap-2 font-semibold text-lg">
             <MessageCircleIcon className="size-5 text-muted-foreground" />
             {props.label}
           </div>
           <Button
             aria-label="Close chat"
-            className="h-auto w-auto p-1 text-muted-foreground"
+            className="h-auto w-auto p-1 text-muted-foreground rounded-full"
             onClick={closeModal}
             size="icon"
             variant="ghost"
@@ -80,9 +82,7 @@ export function CustomChatButton(props: {
                 message: prompt,
                 title: prompt,
               }))}
-              networks={props.networks}
-              requireLogin={props.requireLogin}
-              teamId={props.teamId}
+              team={props.team}
             />
           )}
         </div>

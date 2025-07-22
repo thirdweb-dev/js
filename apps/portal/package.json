@@ -70,6 +70,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "format": "biome format ./src --write",
     "create-index": "pnpm tsx scripts/createEmptySearchIndex.ts",
     "dev": "next dev",
     "extract-llm-content": "pnpm tsx scripts/extractLLMData.ts",
