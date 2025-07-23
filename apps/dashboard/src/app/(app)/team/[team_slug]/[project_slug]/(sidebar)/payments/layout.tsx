@@ -18,7 +18,7 @@ export default async function Layout(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
-  const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/universal-bridge`;
+  const payLayoutPath = `/team/${params.team_slug}/${params.project_slug}/payments`;
 
   return (
     <div className="flex grow flex-col">
@@ -32,7 +32,7 @@ export default async function Layout(props: {
             cryptocurrencies and execute transactions with any fiat options or
             tokens via cross-chain routing.{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/pay"
+              href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -47,8 +47,13 @@ export default async function Layout(props: {
           links={[
             {
               exactMatch: true,
+              name: "Overview",
+              path: `${payLayoutPath}`,
+            },
+            {
+              exactMatch: true,
               name: "Analytics",
-              path: payLayoutPath,
+              path: `${payLayoutPath}/analytics`,
             },
             {
               name: "Webhooks",

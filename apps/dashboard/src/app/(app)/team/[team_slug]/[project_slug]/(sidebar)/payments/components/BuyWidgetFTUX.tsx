@@ -8,7 +8,7 @@ import { TabButtons } from "@/components/ui/tabs";
 
 type Tab = "embed" | "sdk" | "api";
 
-export function PayEmbedFTUX(props: {
+export function BuyWidgetFTUX(props: {
   clientId: string;
   codeExamples: {
     embed: React.ReactNode;
@@ -21,7 +21,7 @@ export function PayEmbedFTUX(props: {
     <div className="rounded-lg border bg-card">
       <div className="border-b border-dashed p-4">
         <h2 className="font-semibold text-lg tracking-tight">
-          Start Monetizing Your App
+          Setup Payments to View Analytics
         </h2>
       </div>
 
@@ -56,7 +56,7 @@ export function PayEmbedFTUX(props: {
           <Button asChild size="sm" variant="outline">
             <Link
               className="gap-2"
-              href="https://portal.thirdweb.com/pay"
+              href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"
               target="_blank"
             >
