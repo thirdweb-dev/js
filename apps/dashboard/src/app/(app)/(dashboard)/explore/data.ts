@@ -90,144 +90,6 @@ const MARKETS = {
   name: "Marketplace",
 } satisfies ExploreCategory;
 
-const MODULAR_CONTRACTS = {
-  contracts: [
-    // erc721 drop
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC721",
-        "deployer.thirdweb.eth/BatchMetadataERC721",
-        "deployer.thirdweb.eth/RoyaltyERC721",
-      ],
-      {
-        description: "ERC721 NFTs that anyone can mint.",
-        title: "Modular NFT Drop",
-      },
-    ],
-    // erc721 token
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/MintableERC721",
-        "deployer.thirdweb.eth/BatchMetadataERC721",
-        "deployer.thirdweb.eth/TransferableERC721",
-      ],
-      {
-        description: "ERC721 NFTs that only owners can mint.",
-        title: "Modular NFT Collection",
-      },
-    ],
-    // open edition 721
-    [
-      "thirdweb.eth/ERC721CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC721",
-        "deployer.thirdweb.eth/OpenEditionMetadataERC721",
-        "deployer.thirdweb.eth/RoyaltyERC721",
-      ],
-      {
-        description: "ERC721 NFTs with identical metadata.",
-        title: "Modular Open Edition",
-      },
-    ],
-    // erc1155 drop
-    [
-      "thirdweb.eth/ERC1155CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC1155",
-        "deployer.thirdweb.eth/BatchMetadataERC1155",
-        "deployer.thirdweb.eth/RoyaltyERC1155",
-        "deployer.thirdweb.eth/SequentialTokenIdERC1155",
-      ],
-      {
-        description: "ERC1155 NFTs that others can mint.",
-        title: "Modular Edition Drop",
-      },
-    ],
-    // erc1155 token
-    [
-      "thirdweb.eth/ERC1155CoreInitializable",
-      [
-        "deployer.thirdweb.eth/MintableERC1155",
-        "deployer.thirdweb.eth/BatchMetadataERC1155",
-        "deployer.thirdweb.eth/TransferableERC1155",
-        "deployer.thirdweb.eth/SequentialTokenIdERC1155",
-      ],
-      {
-        description: "ERC1155 NFTs that only owners can mint.",
-        title: "Modular Edition",
-      },
-    ],
-    // erc20 drop
-    [
-      "thirdweb.eth/ERC20CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC20",
-        "deployer.thirdweb.eth/TransferableERC20",
-      ],
-      {
-        description: "ERC20 Tokens that others can mint.",
-        title: "Modular Token Drop",
-      },
-    ],
-    // erc20 token
-    [
-      "thirdweb.eth/ERC20CoreInitializable",
-      [
-        "deployer.thirdweb.eth/MintableERC20",
-        "deployer.thirdweb.eth/TransferableERC20",
-      ],
-      {
-        description: "ERC20 Tokens that only owners can mint.",
-        title: "Modular Token",
-      },
-    ],
-  ],
-  description:
-    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
-  displayName: "Modular Contracts",
-  id: "modular-contracts",
-  name: "modular",
-} satisfies ExploreCategory;
-
-const SUPERCHAIN = {
-  contracts: [
-    // erc20 token + superchain
-    [
-      "thirdweb.eth/ERC20CoreInitializable",
-      [
-        "deployer.thirdweb.eth/MintableERC20",
-        "deployer.thirdweb.eth/TransferableERC20",
-        "deployer.thirdweb.eth/SuperChainInterop",
-      ],
-      {
-        description: "ERC20 Tokens that only owners can mint.",
-        title: "Modular Superchain Token",
-      },
-    ],
-    // erc20 drop + superchain
-    [
-      "thirdweb.eth/ERC20CoreInitializable",
-      [
-        "deployer.thirdweb.eth/ClaimableERC20",
-        "deployer.thirdweb.eth/TransferableERC20",
-        "deployer.thirdweb.eth/SuperChainInterop",
-      ],
-      {
-        description: "ERC20 Tokens that others can mint.",
-        title: "Modular Superchain Token Drop",
-      },
-    ],
-  ],
-  description: "Modular contracts with OP Superchain support",
-  displayName: "Modular Superchain Contracts",
-  id: "modular-superchain-contracts",
-  isBeta: true,
-  name: "Modular Superchain Contracts",
-  showInExplore: true,
-} satisfies ExploreCategory;
-
 const AIRDROP = {
   contracts: ["thirdweb.eth/Airdrop"],
   description:
@@ -313,12 +175,26 @@ const SMART_WALLET = {
   showInExplore: true,
 } satisfies ExploreCategory;
 
+const STYLUS = {
+  contracts: [
+    "0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusAirdropERC1155",
+    "0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusAirdropERC721",
+    "0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusAirdropERC20",
+  ],
+  description:
+    "Airdrop your NFTs or tokens to a large number of recipients. Built with Arbitrum Stylus.",
+  displayName: "Arbitrum Stylus Contracts",
+  id: "stylus",
+  name: "Stylus",
+  showInExplore: true,
+  isBeta: true,
+} satisfies ExploreCategory;
+
 const CATEGORIES: Record<string, ExploreCategory> = {
   [POPULAR.id]: POPULAR,
-  [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
-  [SUPERCHAIN.id]: SUPERCHAIN,
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
+  [STYLUS.id]: STYLUS,
   [DROPS.id]: DROPS,
   [SMART_WALLET.id]: SMART_WALLET,
   [AIRDROP.id]: AIRDROP,
