@@ -9,8 +9,8 @@ import {
   type ThirdwebContract,
   toTokens,
 } from "thirdweb";
-import { claimReward } from "thirdweb/assets";
 import { TokenIcon, TokenProvider, useSendTransaction } from "thirdweb/react";
+import { claimReward } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";

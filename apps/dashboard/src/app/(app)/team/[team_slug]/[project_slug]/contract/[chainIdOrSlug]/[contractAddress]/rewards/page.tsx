@@ -4,7 +4,7 @@ import {
   getDeployedEntrypointERC20,
   getRewardLocker,
   v3PositionManager as getV3PositionManager,
-} from "thirdweb/assets";
+} from "thirdweb/tokens";
 import { getProject } from "@/api/projects";
 import { getContractPageParamsInfo } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/_utils/getContractFromParams";
 import type { ProjectContractPageParams } from "../types";

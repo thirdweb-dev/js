@@ -1,6 +1,6 @@
 import type { ThirdwebContract } from "thirdweb";
-import { getDeployedEntrypointERC20 } from "thirdweb/assets";
 import { contractType as getContractType } from "thirdweb/extensions/thirdweb";
+import { getDeployedEntrypointERC20 } from "thirdweb/tokens";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { getValidReward } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/rewards/utils/rewards";
 import {

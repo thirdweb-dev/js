@@ -5,7 +5,7 @@ import { DollarSignIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
-import { isRouterEnabled } from "thirdweb/assets";
+import { isRouterEnabled } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Badge } from "@/components/ui/badge";

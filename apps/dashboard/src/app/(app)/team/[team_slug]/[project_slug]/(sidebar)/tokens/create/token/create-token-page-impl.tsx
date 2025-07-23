@@ -7,13 +7,13 @@ import {
   type ThirdwebClient,
   toWei,
 } from "thirdweb";
+import { approve } from "thirdweb/extensions/erc20";
+import { useActiveAccount } from "thirdweb/react";
 import {
   createToken,
   distributeToken,
   getDeployedEntrypointERC20,
-} from "thirdweb/assets";
-import { approve } from "thirdweb/extensions/erc20";
-import { useActiveAccount } from "thirdweb/react";
+} from "thirdweb/tokens";
 import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import {

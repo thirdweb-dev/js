@@ -1,5 +1,5 @@
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import { getReward } from "thirdweb/assets";
+import { getReward } from "thirdweb/tokens";
 
 export async function getValidReward(params: {
   assetContract: ThirdwebContract;
