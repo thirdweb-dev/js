@@ -39,6 +39,7 @@ import { TokenDistributionBarChart } from "../distribution/token-distribution";
 
 const stepIds = {
   "airdrop-tokens": "airdrop-tokens",
+  "approve-airdrop-tokens": "approve-airdrop-tokens",
   "deploy-contract": "deploy-contract",
   "mint-tokens": "mint-tokens",
   "set-claim-conditions": "set-claim-conditions",
@@ -98,6 +99,12 @@ export function LaunchTokenStatus(props: {
 
     if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
       initialSteps.push({
+        id: stepIds["approve-airdrop-tokens"],
+        label: "Approve spending tokens for airdrop",
+        status: { type: "idle" },
+      });
+
+      initialSteps.push({
         id: stepIds["airdrop-tokens"],
         label: "Airdrop tokens",
         status: { type: "idle" },
@@ -123,6 +130,8 @@ export function LaunchTokenStatus(props: {
       setContractAddress(result.contractAddress);
     } else if (stepId === "airdrop-tokens") {
       await createTokenFunctions.airdropTokens(params);
+    } else if (stepId === "approve-airdrop-tokens") {
+      await createTokenFunctions.approveAirdropTokens(params);
     }
   }
 

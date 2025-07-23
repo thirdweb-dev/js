@@ -28,6 +28,7 @@ export type CreateTokenFunctions = {
     contractAddress: string;
   }>;
   airdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
+  approveAirdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
 };
 
 export function CreateTokenAssetPageUI(props: {

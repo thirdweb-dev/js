@@ -29,6 +29,9 @@ const mockCreateTokenFunctions: CreateTokenFunctions = {
   airdropTokens: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
   },
+  approveAirdropTokens: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  },
   deployContract: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     return { contractAddress: "0x123" };

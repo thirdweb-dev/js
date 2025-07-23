@@ -176,12 +176,47 @@ export function CreateTokenAssetPage(props: {
     const account = getAccount(gasless);
     const contract = getDeployedContract({ chain: values.chain });
 
+    try {
+      const airdropTx = await distributeToken({
+        chain: contract.chain,
+        client: props.client,
+        contents: values.airdropAddresses.map((recipient) => ({
+          amount: BigInt(recipient.quantity),
+          recipient: recipient.address,
+        })),
+        tokenAddress: contract.address,
+      });
+
+      await sendAndConfirmTransaction({
+        account,
+        transaction: airdropTx,
+      });
+    } catch (e) {
+      console.error(e);
+      const errorMessage = parseError(e);
+
+      reportAssetCreationFailed({
+        assetType: "coin",
+        contractType: "DropERC20",
+        error: errorMessage,
+        step: "airdrop-tokens",
+      });
+      throw e;
+    }
+  }
+
+  async function approveAirdropTokens(params: {
+    values: CreateAssetFormValues;
+    gasless: boolean;
+  }) {
+    const { values, gasless } = params;
+    const account = getAccount(gasless);
+    const contract = getDeployedContract({ chain: values.chain });
+
     const totalAmountToAirdrop = values.airdropAddresses.reduce(
       (acc, recipient) => acc + BigInt(recipient.quantity),
       0n,
     );
-
-    // approve entrypoint to spend tokens
 
     try {
       const entrypoint = await getDeployedEntrypointERC20({
@@ -215,34 +250,6 @@ export function CreateTokenAssetPage(props: {
 
       throw e;
     }
-
-    try {
-      const airdropTx = await distributeToken({
-        chain: contract.chain,
-        client: props.client,
-        contents: values.airdropAddresses.map((recipient) => ({
-          amount: BigInt(recipient.quantity),
-          recipient: recipient.address,
-        })),
-        tokenAddress: contract.address,
-      });
-
-      await sendAndConfirmTransaction({
-        account,
-        transaction: airdropTx,
-      });
-    } catch (e) {
-      console.error(e);
-      const errorMessage = parseError(e);
-
-      reportAssetCreationFailed({
-        assetType: "coin",
-        contractType: "DropERC20",
-        error: errorMessage,
-        step: "airdrop-tokens",
-      });
-      throw e;
-    }
   }
 
   return (
@@ -252,6 +259,7 @@ export function CreateTokenAssetPage(props: {
       createTokenFunctions={{
         airdropTokens,
         deployContract,
+        approveAirdropTokens,
       }}
       onLaunchSuccess={(params) => {
         createTokenOnUniversalBridge({
