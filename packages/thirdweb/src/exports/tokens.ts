@@ -13,6 +13,11 @@ export { createToken } from "../tokens/create-token.js";
 export { distributeToken } from "../tokens/distribute-token.js";
 export { getDeployedEntrypointERC20 } from "../tokens/get-entrypoint-erc20.js";
 export { isRouterEnabled } from "../tokens/is-router-enabled.js";
+export {
+  generateSalt,
+  SaltFlag,
+  type SaltFlagType,
+} from "../tokens/token-utils.js";
 export type {
   CreateTokenByImplementationConfigOptions,
   CreateTokenOptions,
