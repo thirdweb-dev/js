@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { SupportedSmsCountry } from "../../../../react/web/wallets/in-app/supported-sms-countries.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
+import type { Wallet } from "../../../interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
 import type {
   AuthOption,
@@ -16,6 +17,14 @@ import type {
   SingleStepAuthArgsType,
 } from "../authentication/types.js";
 import type { UserStatus } from "./enclave-wallet.js";
+
+export type InAppWallet = Wallet<"inApp"> & {
+  getAuthToken: () => string | null;
+};
+
+export type EcosystemWallet = Wallet<EcosystemWalletId> & {
+  getAuthToken: () => string | null;
+};
 
 export type Ecosystem = {
   id: EcosystemWalletId;
