@@ -17,18 +17,18 @@ export type EncryptDecryptParams = {
 export const FN_SELECTOR = "0xe7150322" as const;
 const FN_INPUTS = [
   {
-    name: "data",
     type: "bytes",
+    name: "data",
   },
   {
-    name: "key",
     type: "bytes",
+    name: "key",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "bytes",
+    name: "result",
   },
 ] as const;
 

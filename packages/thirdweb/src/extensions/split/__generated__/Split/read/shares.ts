@@ -16,8 +16,8 @@ export type SharesParams = {
 export const FN_SELECTOR = "0xce7c2ac2" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

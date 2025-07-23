@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x3408e470" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "chainid",
     type: "uint256",
+    name: "chainid",
   },
 ] as const;
 

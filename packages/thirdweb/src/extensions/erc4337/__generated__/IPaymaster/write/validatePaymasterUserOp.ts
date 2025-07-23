@@ -39,72 +39,72 @@ export type ValidatePaymasterUserOpParams = WithOverrides<{
 export const FN_SELECTOR = "0xf465c77e" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "userOp",
     components: [
       {
-        name: "sender",
         type: "address",
+        name: "sender",
       },
       {
+        type: "uint256",
         name: "nonce",
-        type: "uint256",
       },
       {
+        type: "bytes",
         name: "initCode",
-        type: "bytes",
       },
       {
+        type: "bytes",
         name: "callData",
-        type: "bytes",
       },
       {
+        type: "uint256",
         name: "callGasLimit",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "verificationGasLimit",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "preVerificationGas",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "maxFeePerGas",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "maxPriorityFeePerGas",
-        type: "uint256",
       },
       {
+        type: "bytes",
         name: "paymasterAndData",
-        type: "bytes",
       },
       {
-        name: "signature",
         type: "bytes",
+        name: "signature",
       },
     ],
-    name: "userOp",
-    type: "tuple",
   },
   {
-    name: "userOpHash",
     type: "bytes32",
+    name: "userOpHash",
   },
   {
-    name: "maxCost",
     type: "uint256",
+    name: "maxCost",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "context",
     type: "bytes",
+    name: "context",
   },
   {
-    name: "validationData",
     type: "uint256",
+    name: "validationData",
   },
 ] as const;
 
@@ -217,19 +217,8 @@ export function validatePaymasterUserOp(
   });
 
   return prepareContractCall({
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -239,5 +228,16 @@ export function validatePaymasterUserOp(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
   });
 }

@@ -20,22 +20,22 @@ export type RoyaltyInfoParams = {
 export const FN_SELECTOR = "0x2a55205a" as const;
 const FN_INPUTS = [
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
   {
-    name: "salePrice",
     type: "uint256",
+    name: "salePrice",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "receiver",
     type: "address",
+    name: "receiver",
   },
   {
-    name: "royaltyAmount",
     type: "uint256",
+    name: "royaltyAmount",
   },
 ] as const;
 

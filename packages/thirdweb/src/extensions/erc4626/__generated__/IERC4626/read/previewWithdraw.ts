@@ -16,14 +16,14 @@ export type PreviewWithdrawParams = {
 export const FN_SELECTOR = "0x0a28a477" as const;
 const FN_INPUTS = [
   {
-    name: "assets",
     type: "uint256",
+    name: "assets",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "shares",
     type: "uint256",
+    name: "shares",
   },
 ] as const;
 

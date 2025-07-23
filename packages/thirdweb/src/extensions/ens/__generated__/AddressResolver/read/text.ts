@@ -17,12 +17,12 @@ export type TextParams = {
 export const FN_SELECTOR = "0x59d1d43c" as const;
 const FN_INPUTS = [
   {
-    name: "name",
     type: "bytes32",
+    name: "name",
   },
   {
-    name: "key",
     type: "string",
+    name: "key",
   },
 ] as const;
 const FN_OUTPUTS = [

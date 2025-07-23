@@ -17,12 +17,12 @@ export type GetAccountsParams = {
 export const FN_SELECTOR = "0xe68a7c3b" as const;
 const FN_INPUTS = [
   {
-    name: "start",
     type: "uint256",
+    name: "start",
   },
   {
-    name: "end",
     type: "uint256",
+    name: "end",
   },
 ] as const;
 const FN_OUTPUTS = [

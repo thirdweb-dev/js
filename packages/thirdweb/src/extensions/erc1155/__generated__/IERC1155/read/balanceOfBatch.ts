@@ -20,12 +20,12 @@ export type BalanceOfBatchParams = {
 export const FN_SELECTOR = "0x4e1273f4" as const;
 const FN_INPUTS = [
   {
-    name: "_owners",
     type: "address[]",
+    name: "_owners",
   },
   {
-    name: "tokenIds",
     type: "uint256[]",
+    name: "tokenIds",
   },
 ] as const;
 const FN_OUTPUTS = [

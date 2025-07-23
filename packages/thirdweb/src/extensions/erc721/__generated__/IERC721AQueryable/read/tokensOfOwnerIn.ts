@@ -18,16 +18,16 @@ export type TokensOfOwnerInParams = {
 export const FN_SELECTOR = "0x99a2557a" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
   {
+    type: "uint256",
     name: "start",
-    type: "uint256",
   },
   {
-    name: "stop",
     type: "uint256",
+    name: "stop",
   },
 ] as const;
 const FN_OUTPUTS = [

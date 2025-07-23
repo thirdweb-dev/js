@@ -34,7 +34,7 @@ export type UpgradedEventFilters = Partial<{
  */
 export function upgradedEvent(filters: UpgradedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature: "event Upgraded(address indexed implementation)",
+    filters,
   });
 }

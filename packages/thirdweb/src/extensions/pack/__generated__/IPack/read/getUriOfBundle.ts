@@ -16,8 +16,8 @@ export type GetUriOfBundleParams = {
 export const FN_SELECTOR = "0x61195e94" as const;
 const FN_INPUTS = [
   {
-    name: "_bundleId",
     type: "uint256",
+    name: "_bundleId",
   },
 ] as const;
 const FN_OUTPUTS = [

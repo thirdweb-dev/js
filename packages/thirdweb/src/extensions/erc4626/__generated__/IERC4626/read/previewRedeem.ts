@@ -16,14 +16,14 @@ export type PreviewRedeemParams = {
 export const FN_SELECTOR = "0x4cdad506" as const;
 const FN_INPUTS = [
   {
-    name: "shares",
     type: "uint256",
+    name: "shares",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "assets",
     type: "uint256",
+    name: "assets",
   },
 ] as const;
 

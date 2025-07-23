@@ -17,12 +17,12 @@ export type HasRoleParams = {
 export const FN_SELECTOR = "0x91d14854" as const;
 const FN_INPUTS = [
   {
-    name: "role",
     type: "bytes32",
+    name: "role",
   },
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

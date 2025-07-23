@@ -17,12 +17,12 @@ export type IsApprovedForAllParams = {
 export const FN_SELECTOR = "0xe985e9c5" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
   {
-    name: "operator",
     type: "address",
+    name: "operator",
   },
 ] as const;
 const FN_OUTPUTS = [

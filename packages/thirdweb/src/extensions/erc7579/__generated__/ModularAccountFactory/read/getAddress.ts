@@ -17,18 +17,18 @@ export type GetAddressParams = {
 export const FN_SELECTOR = "0x8878ed33" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
   {
-    name: "salt",
     type: "bytes",
+    name: "salt",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 

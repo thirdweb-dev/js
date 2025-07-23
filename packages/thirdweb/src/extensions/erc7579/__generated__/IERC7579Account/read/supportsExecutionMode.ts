@@ -19,8 +19,8 @@ export type SupportsExecutionModeParams = {
 export const FN_SELECTOR = "0xd03c7914" as const;
 const FN_INPUTS = [
   {
-    name: "encodedMode",
     type: "bytes32",
+    name: "encodedMode",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -16,8 +16,8 @@ export type ReleasableParams = {
 export const FN_SELECTOR = "0xa3f8eace" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

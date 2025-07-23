@@ -19,14 +19,14 @@ export type OwnershipHandoverExpiresAtParams = {
 export const FN_SELECTOR = "0xfee81cf4" as const;
 const FN_INPUTS = [
   {
-    name: "pendingOwner",
     type: "address",
+    name: "pendingOwner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "uint256",
+    name: "result",
   },
 ] as const;
 

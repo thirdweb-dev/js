@@ -36,7 +36,7 @@ export function sharedMetadataDeletedEvent(
   filters: SharedMetadataDeletedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature: "event SharedMetadataDeleted(bytes32 indexed id)",
+    filters,
   });
 }

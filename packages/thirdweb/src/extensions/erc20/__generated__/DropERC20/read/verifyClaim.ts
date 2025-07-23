@@ -36,52 +36,52 @@ export type VerifyClaimParams = {
 export const FN_SELECTOR = "0x23a2902b" as const;
 const FN_INPUTS = [
   {
+    type: "uint256",
     name: "_conditionId",
-    type: "uint256",
   },
   {
+    type: "address",
     name: "_claimer",
-    type: "address",
   },
   {
+    type: "uint256",
     name: "_quantity",
-    type: "uint256",
   },
   {
-    name: "_currency",
     type: "address",
+    name: "_currency",
   },
   {
-    name: "_pricePerToken",
     type: "uint256",
+    name: "_pricePerToken",
   },
   {
+    type: "tuple",
+    name: "_allowlistProof",
     components: [
       {
-        name: "proof",
         type: "bytes32[]",
+        name: "proof",
       },
       {
+        type: "uint256",
         name: "quantityLimitPerWallet",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "pricePerToken",
-        type: "uint256",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
     ],
-    name: "_allowlistProof",
-    type: "tuple",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "isOverride",
     type: "bool",
+    name: "isOverride",
   },
 ] as const;
 

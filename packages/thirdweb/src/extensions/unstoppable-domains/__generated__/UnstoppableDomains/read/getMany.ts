@@ -17,18 +17,18 @@ export type GetManyParams = {
 export const FN_SELECTOR = "0x1bd8cc1a" as const;
 const FN_INPUTS = [
   {
-    name: "keys",
     type: "string[]",
+    name: "keys",
   },
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "values",
     type: "string[]",
+    name: "values",
   },
 ] as const;
 

@@ -20,12 +20,12 @@ export type GetVotesParams = {
 export const FN_SELECTOR = "0xeb9019d4" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
   {
-    name: "blockNumber",
     type: "uint256",
+    name: "blockNumber",
   },
 ] as const;
 const FN_OUTPUTS = [

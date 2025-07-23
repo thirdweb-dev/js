@@ -19,8 +19,8 @@ export type IsErc20CurrencyRegisteredParams = {
 export const FN_SELECTOR = "0xf21b24d7" as const;
 const FN_INPUTS = [
   {
-    name: "currencyAddress",
     type: "address",
+    name: "currencyAddress",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -17,12 +17,12 @@ export type GetRoleMemberParams = {
 export const FN_SELECTOR = "0x9010d07c" as const;
 const FN_INPUTS = [
   {
-    name: "role",
     type: "bytes32",
+    name: "role",
   },
   {
-    name: "index",
     type: "uint256",
+    name: "index",
   },
 ] as const;
 const FN_OUTPUTS = [

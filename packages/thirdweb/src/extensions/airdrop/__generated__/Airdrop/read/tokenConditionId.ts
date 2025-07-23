@@ -19,8 +19,8 @@ export type TokenConditionIdParams = {
 export const FN_SELECTOR = "0x3dc28d49" as const;
 const FN_INPUTS = [
   {
-    name: "tokenAddress",
     type: "address",
+    name: "tokenAddress",
   },
 ] as const;
 const FN_OUTPUTS = [

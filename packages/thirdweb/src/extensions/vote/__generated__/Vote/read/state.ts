@@ -19,8 +19,8 @@ export type StateParams = {
 export const FN_SELECTOR = "0x3e4f49e6" as const;
 const FN_INPUTS = [
   {
-    name: "proposalId",
     type: "uint256",
+    name: "proposalId",
   },
 ] as const;
 const FN_OUTPUTS = [

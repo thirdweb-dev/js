@@ -19,8 +19,8 @@ export type IsModuleRegisteredParams = {
 export const FN_SELECTOR = "0x1c5ebe2f" as const;
 const FN_INPUTS = [
   {
-    name: "moduleAddress",
     type: "address",
+    name: "moduleAddress",
   },
 ] as const;
 const FN_OUTPUTS = [

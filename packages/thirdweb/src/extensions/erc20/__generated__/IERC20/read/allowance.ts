@@ -17,12 +17,12 @@ export type AllowanceParams = {
 export const FN_SELECTOR = "0xdd62ed3e" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
   {
-    name: "spender",
     type: "address",
+    name: "spender",
   },
 ] as const;
 const FN_OUTPUTS = [

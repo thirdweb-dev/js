@@ -8,17 +8,17 @@ export const FN_SELECTOR = "0xf147db8a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
     components: [
       {
-        name: "selector",
         type: "bytes4",
+        name: "selector",
       },
       {
-        name: "mode",
         type: "uint8",
+        name: "mode",
       },
     ],
-    type: "tuple[]",
   },
 ] as const;
 

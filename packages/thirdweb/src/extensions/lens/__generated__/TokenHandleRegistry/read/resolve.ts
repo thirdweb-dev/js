@@ -16,8 +16,8 @@ export type ResolveParams = {
 export const FN_SELECTOR = "0x4f896d4f" as const;
 const FN_INPUTS = [
   {
-    name: "handleId",
     type: "uint256",
+    name: "handleId",
   },
 ] as const;
 const FN_OUTPUTS = [

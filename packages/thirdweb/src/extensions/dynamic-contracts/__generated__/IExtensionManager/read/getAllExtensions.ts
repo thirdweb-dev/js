@@ -8,41 +8,41 @@ export const FN_SELECTOR = "0x4a00cc48" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
     components: [
       {
+        type: "tuple",
+        name: "metadata",
         components: [
           {
+            type: "string",
             name: "name",
-            type: "string",
           },
           {
+            type: "string",
             name: "metadataURI",
-            type: "string",
           },
           {
-            name: "implementation",
             type: "address",
+            name: "implementation",
           },
         ],
-        name: "metadata",
-        type: "tuple",
       },
       {
+        type: "tuple[]",
+        name: "functions",
         components: [
           {
-            name: "functionSelector",
             type: "bytes4",
+            name: "functionSelector",
           },
           {
-            name: "functionSignature",
             type: "string",
+            name: "functionSignature",
           },
         ],
-        name: "functions",
-        type: "tuple[]",
       },
     ],
-    type: "tuple[]",
   },
 ] as const;
 

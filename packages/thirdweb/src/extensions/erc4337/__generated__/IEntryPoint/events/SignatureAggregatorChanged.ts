@@ -36,7 +36,7 @@ export function signatureAggregatorChangedEvent(
   filters: SignatureAggregatorChangedEventFilters = {},
 ) {
   return prepareEvent({
-    filters,
     signature: "event SignatureAggregatorChanged(address indexed aggregator)",
+    filters,
   });
 }

@@ -17,12 +17,12 @@ export type TokenOfOwnerByIndexParams = {
 export const FN_SELECTOR = "0x2f745c59" as const;
 const FN_INPUTS = [
   {
-    name: "_owner",
     type: "address",
+    name: "_owner",
   },
   {
-    name: "_index",
     type: "uint256",
+    name: "_index",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -19,31 +19,31 @@ export type GetFollowDataParams = {
 export const FN_SELECTOR = "0xd6cbec5d" as const;
 const FN_INPUTS = [
   {
-    name: "followTokenId",
     type: "uint256",
+    name: "followTokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
     components: [
       {
-        name: "followerProfileId",
         type: "uint160",
+        name: "followerProfileId",
       },
       {
+        type: "uint48",
         name: "originalFollowTimestamp",
-        type: "uint48",
       },
       {
+        type: "uint48",
         name: "followTimestamp",
-        type: "uint48",
       },
       {
-        name: "profileIdAllowedToRecover",
         type: "uint256",
+        name: "profileIdAllowedToRecover",
       },
     ],
-    type: "tuple",
   },
 ] as const;
 

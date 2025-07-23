@@ -19,14 +19,14 @@ export type GetBlockHashParams = {
 export const FN_SELECTOR = "0xee82ac5e" as const;
 const FN_INPUTS = [
   {
-    name: "blockNumber",
     type: "uint256",
+    name: "blockNumber",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "blockHash",
     type: "bytes32",
+    name: "blockHash",
   },
 ] as const;
 

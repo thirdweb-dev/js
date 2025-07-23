@@ -16,14 +16,14 @@ export type CustodyOfParams = {
 export const FN_SELECTOR = "0x65269e47" as const;
 const FN_INPUTS = [
   {
-    name: "fid",
     type: "uint256",
+    name: "fid",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
 ] as const;
 

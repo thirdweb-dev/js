@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x9cfd7cff" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "accountImplementationId",
     type: "string",
+    name: "accountImplementationId",
   },
 ] as const;
 

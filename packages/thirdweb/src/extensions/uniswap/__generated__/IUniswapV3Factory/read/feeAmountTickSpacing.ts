@@ -16,8 +16,8 @@ export type FeeAmountTickSpacingParams = {
 export const FN_SELECTOR = "0x22afcccb" as const;
 const FN_INPUTS = [
   {
-    name: "fee",
     type: "uint24",
+    name: "fee",
   },
 ] as const;
 const FN_OUTPUTS = [
