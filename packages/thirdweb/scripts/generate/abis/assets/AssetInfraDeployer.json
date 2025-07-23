@@ -1,5 +1,0 @@
-[
-  "function deployInfraProxyDeterministic(address implementation, bytes data, bytes32 salt, bytes extraData) returns (address deployedProxy)",
-  "event AssetInfraDeployed(address indexed implementation, address indexed proxy, bytes32 inputSalt, bytes data, bytes extraData)",
-  "error ProxyDeploymentFailed()"
-]
