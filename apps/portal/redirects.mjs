@@ -339,6 +339,11 @@ const solidityRedirects = {
   "/solidity/extensions/primarysale":
     "/contracts/build/extensions/general/PrimarySale",
   "/solidity/extensions/royalty": "/contracts/build/extensions/general/Royalty",
+
+  // contracts -> tokens
+  "/contracts/deploy/:path*": "/contracts/deploy",
+  "/contracts/build": "/tokens/build",
+  "/contracts/build/:path*": "/tokens/build/:path*",
 };
 
 const extensionsTable = "/typescript/v4/extensions#all-available-extensions";
