@@ -1,5 +1,6 @@
 export { getReward } from "../extensions/tokens/__generated__/ERC20Entrypoint/read/getReward.js";
 export { getRewardLocker } from "../extensions/tokens/__generated__/ERC20Entrypoint/read/getRewardLocker.js";
+export { claimReward } from "../extensions/tokens/__generated__/ERC20Entrypoint/write/claimReward.js";
 export { positions } from "../extensions/tokens/__generated__/RewardLocker/read/positions.js";
 export { v3PositionManager } from "../extensions/tokens/__generated__/RewardLocker/read/v3PositionManager.js";
 export { v4PositionManager } from "../extensions/tokens/__generated__/RewardLocker/read/v4PositionManager.js";
