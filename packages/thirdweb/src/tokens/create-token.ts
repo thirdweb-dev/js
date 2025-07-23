@@ -7,10 +7,7 @@ import { keccakId } from "../utils/any-evm/keccak-id.js";
 import { toHex } from "../utils/encoding/hex.js";
 import { DEFAULT_REFERRER_ADDRESS } from "./constants.js";
 import { getOrDeployEntrypointERC20 } from "./get-entrypoint-erc20.js";
-import {
-  encodeInitParams,
-  encodePoolConfig,
-} from "./token-utils.js";
+import { encodeInitParams, encodePoolConfig } from "./token-utils.js";
 import type { CreateTokenOptions } from "./types.js";
 
 export async function createToken(options: CreateTokenOptions) {

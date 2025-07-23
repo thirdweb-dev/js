@@ -75,4 +75,3 @@ export function encodePoolConfig(poolConfig: PoolConfig): Hex {
     poolConfig.referrerRewardBps || DEFAULT_REFERRER_REWARD_BPS,
   ]);
 }
-
