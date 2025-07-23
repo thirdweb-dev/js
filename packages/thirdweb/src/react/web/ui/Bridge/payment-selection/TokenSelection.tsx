@@ -3,7 +3,6 @@ import type { Token } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
-import { useBridgeQuote } from "../../../../core/hooks/useBridgeQuote.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
@@ -36,29 +35,13 @@ interface PaymentMethodTokenRowProps {
 
 function PaymentMethodTokenRow({
   paymentMethod,
-  destinationToken,
-  destinationAmount,
   client,
   onPaymentMethodSelected,
-  feePayer,
 }: PaymentMethodTokenRowProps) {
   const theme = useCustomTheme();
 
-  // Fetch individual quote for this specific token pair
-  const {
-    data: quote,
-    isLoading: quoteLoading,
-    error: quoteError,
-  } = useBridgeQuote({
-    client,
-    destinationAmount,
-    destinationToken,
-    feePayer,
-    originToken: paymentMethod.originToken,
-  });
-
   // Use the fetched originAmount if available, otherwise fall back to the one from paymentMethod
-  const displayOriginAmount = quote?.originAmount;
+  const displayOriginAmount = paymentMethod.quote?.originAmount;
   const hasEnoughBalance = displayOriginAmount
     ? paymentMethod.balance >= displayOriginAmount
     : false;
@@ -97,21 +80,7 @@ function PaymentMethodTokenRow({
           gap="3xs"
           style={{ alignItems: "flex-end", flex: 1 }}
         >
-          {quoteLoading ? (
-            <>
-              {/* Price amount skeleton */}
-              <Skeleton height="16px" width="80px" />
-              {/* Balance skeleton */}
-              <Container flex="row" gap="3xs">
-                <Skeleton height="12px" width="50px" />
-                <Skeleton height="12px" width="40px" />
-              </Container>
-            </>
-          ) : quoteError ? (
-            <Text color="danger" size="sm" style={{ fontWeight: 600 }}>
-              Quote failed
-            </Text>
-          ) : displayOriginAmount ? (
+          {displayOriginAmount ? (
             <Text
               color="primaryText"
               size="sm"
@@ -125,28 +94,6 @@ function PaymentMethodTokenRow({
             </Text>
           ) : (
             "--.--"
-          )}
-          {!quoteLoading && (
-            <Container flex="row" gap="3xs">
-              <Text color="secondaryText" size="xs">
-                Balance:{" "}
-              </Text>
-              <Text
-                color={
-                  !quoteLoading
-                    ? hasEnoughBalance
-                      ? "success"
-                      : "danger"
-                    : "secondaryText"
-                }
-                size="xs"
-              >
-                {formatTokenAmount(
-                  paymentMethod.balance,
-                  paymentMethod.originToken.decimals,
-                )}
-              </Text>
-            </Container>
           )}
         </Container>
       </Container>
