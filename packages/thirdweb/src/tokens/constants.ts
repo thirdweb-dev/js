@@ -15,16 +15,16 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
   },
 };
 
-export enum ImplementationType {
-  CLONE = 0,
-  CLONE_WITH_IMMUTABLE_ARGS = 1,
-  ERC1967 = 2,
-  ERC1967_WITH_IMMUTABLE_ARGS = 3,
-}
+// export enum ImplementationType {
+//   CLONE = 0,
+//   CLONE_WITH_IMMUTABLE_ARGS = 1,
+//   ERC1967 = 2,
+//   ERC1967_WITH_IMMUTABLE_ARGS = 3,
+// }
 
-export enum CreateHook {
-  NONE = 0, // do nothing
-  CREATE_POOL = 1, // create a DEX pool via Router
-  DISTRIBUTE = 2, // distribute tokens to recipients
-  EXTERNAL_HOOK = 3, // call an external hook contract
-}
+// export enum CreateHook {
+//   NONE = 0, // do nothing
+//   CREATE_POOL = 1, // create a DEX pool via Router
+//   DISTRIBUTE = 2, // distribute tokens to recipients
+//   EXTERNAL_HOOK = 3, // call an external hook contract
+// }
