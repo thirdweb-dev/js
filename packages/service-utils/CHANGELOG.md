@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.6
+
+### Patch Changes
+
+- [#7700](https://github.com/thirdweb-dev/js/pull/7700) [`9d8c7f1`](https://github.com/thirdweb-dev/js/commit/9d8c7f1f7d14329d2eab49d4af7e37086924f40e) Thanks [@jnsdls](https://github.com/jnsdls)! - add `gateway` to possible usage sources
+
 ## 0.10.5
 
 ### Patch Changes
