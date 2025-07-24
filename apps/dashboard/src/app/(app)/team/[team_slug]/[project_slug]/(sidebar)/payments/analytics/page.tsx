@@ -5,8 +5,8 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
-import { PayAnalytics } from "./components/PayAnalytics";
-import { getUniversalBridgeFiltersFromSearchParams } from "./components/time";
+import { PayAnalytics } from "../components/PayAnalytics";
+import { getUniversalBridgeFiltersFromSearchParams } from "../components/time";
 
 export default async function Page(props: {
   params: Promise<{
@@ -24,9 +24,7 @@ export default async function Page(props: {
   const project = await getProject(params.team_slug, params.project_slug);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/universal-bridge`,
-    );
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/payments`);
   }
 
   if (!project) {
@@ -70,7 +68,7 @@ export default async function Page(props: {
             </div>
             <a
               className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
-              href="https://portal.thirdweb.com/pay"
+              href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"
               target="_blank"
             >

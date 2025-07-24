@@ -7,10 +7,10 @@ import {
 import type { Range } from "@/components/analytics/date-range-selector";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BuyWidgetFTUX } from "./BuyWidgetFTUX";
 import { apiCode, embedCode, sdkCode } from "./code-examples";
 import { PayAnalyticsFilter } from "./PayAnalyticsFilter";
 import { PayCustomersTable } from "./PayCustomersTable";
-import { PayEmbedFTUX } from "./PayEmbedFTUX";
 import { PaymentHistory } from "./PaymentHistory";
 import { PaymentsSuccessRate } from "./PaymentsSuccessRate";
 import { PayNewCustomers } from "./PayNewCustomers";
@@ -67,7 +67,7 @@ export async function PayAnalytics(props: {
 
   if (!hasVolume && !hasWallet) {
     return (
-      <PayEmbedFTUX
+      <BuyWidgetFTUX
         clientId={props.projectClientId}
         codeExamples={
           {

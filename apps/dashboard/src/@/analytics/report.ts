@@ -413,3 +413,18 @@ export function reportUpsellShown(properties: UpsellParams) {
 export function reportUpsellClicked(properties: UpsellParams) {
   posthog.capture("upsell clicked", properties);
 }
+
+// ----------------------------
+// PAYMENTS
+// ----------------------------
+
+/**
+ * ### Why do we need to report this event?
+ * - To track conversions on payment overview page
+ *
+ * ### Who is responsible for this event?
+ * @samina
+ */
+export function reportPaymentCardClick(properties: { id: string }) {
+  posthog.capture("payment card clicked", properties);
+}
