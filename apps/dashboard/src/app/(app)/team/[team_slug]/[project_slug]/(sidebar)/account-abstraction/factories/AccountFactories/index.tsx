@@ -39,7 +39,7 @@ export function DefaultFactoriesSection() {
         <p className="text-muted-foreground text-sm">
           Ready to use account factories that are pre-deployed on each chain.{" "}
           <UnderlineLink
-            href="https://playground.thirdweb.com/connect/account-abstraction/connect"
+            href="https://playground.thirdweb.com/wallets/account-abstraction/sponsor"
             rel="noopener noreferrer"
             target="_blank"
           >

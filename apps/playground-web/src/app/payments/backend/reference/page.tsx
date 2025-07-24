@@ -20,7 +20,7 @@ export default async function Page(props: {
 
   // invalid url
   if (!params.route) {
-    redirect("/connect/pay/backend");
+    redirect("/payments/backend");
   }
 
   const thirdwebDomain = !isProd ? "thirdweb-dev" : "thirdweb";
@@ -31,7 +31,7 @@ export default async function Page(props: {
 
   // invalid url
   if (!pathMetadata) {
-    redirect("/connect/pay/backend");
+    redirect("/payments/backend");
   }
 
   const title = pathMetadata.summary || "";
@@ -46,7 +46,7 @@ export default async function Page(props: {
       )}
 
       <BlueprintPlayground
-        backLink={"/connect/pay/backend"}
+        backLink={"/payments/backend"}
         clientId={THIRDWEB_CLIENT.clientId}
         domain={domain}
         key={params.route}
@@ -63,7 +63,7 @@ function Breadcrumbs() {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/connect/pay/backend">
+          <BreadcrumbLink href="/payments/backend">
             Payments API
           </BreadcrumbLink>
         </BreadcrumbItem>

@@ -60,15 +60,15 @@ export function InAppWalletsFooter() {
       right={{
         links: [
           {
-            href: "https://playground.thirdweb.com/connect/in-app-wallet/ecosystem",
+            href: "https://playground.thirdweb.com/wallets/in-app-wallet/ecosystem",
             label: "Ecosystems",
           },
           {
-            href: "https://playground.thirdweb.com/connect/in-app-wallet/sponsor",
+            href: "https://playground.thirdweb.com/wallets/account-abstraction/sponsor",
             label: "Signless Sponsored Transactions",
           },
           {
-            href: "https://playground.thirdweb.com/connect/in-app-wallet",
+            href: "https://playground.thirdweb.com/wallets/in-app-wallet",
             label: "Customized UI",
           },
         ],

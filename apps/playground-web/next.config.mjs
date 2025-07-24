@@ -57,14 +57,30 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        destination: "/connect/sign-in/button",
+        destination: "/wallets/sign-in/button",
         permanent: false,
-        source: "/connect/sign-in",
+        source: "/wallets/sign-in",
       },
       {
-        destination: "/connect/account-abstraction/connect",
+        destination: "/wallets/account-abstraction/sponsor",
         permanent: false,
-        source: "/connect/account-abstraction",
+        source: "/wallets/account-abstraction",
+      },
+      // Old slug redirects
+      {
+        destination: "/transactions/:path*",
+        permanent: false,
+        source: "/engine/:path*",
+      },
+      {
+        destination: "/payments/:path*",
+        permanent: false,
+        source: "/connect/pay/:path*",
+      },
+      {
+        destination: "/wallets/:path*",
+        permanent: false,
+        source: "/connect/:path((?!pay).*)",
       },
     ];
   },

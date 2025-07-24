@@ -6,15 +6,15 @@ export function AAFooter() {
       center={{
         links: [
           {
-            href: "https://playground.thirdweb.com/connect/account-abstraction/connect",
+            href: "https://playground.thirdweb.com/wallets/account-abstraction/sponsor",
             label: "Connect Smart Accounts",
           },
           {
-            href: "https://playground.thirdweb.com/connect/account-abstraction/sponsor",
+            href: "https://playground.thirdweb.com/wallets/account-abstraction/sponsor",
             label: "Sponsor Gas Fees",
           },
           {
-            href: "https://playground.thirdweb.com/connect/account-abstraction/native-aa",
+            href: "https://playground.thirdweb.com/wallets/account-abstraction/native-aa",
             label: "Native Account Abstraction",
           },
         ],

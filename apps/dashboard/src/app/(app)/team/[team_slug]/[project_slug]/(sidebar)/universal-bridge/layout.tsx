@@ -84,19 +84,19 @@ function UBFooter() {
       center={{
         links: [
           {
-            href: "https://playground.thirdweb.com/connect/pay",
+            href: "https://playground.thirdweb.com/payments",
             label: "UI Component",
           },
           {
-            href: "https://playground.thirdweb.com/connect/pay/fund-wallet",
+            href: "https://playground.thirdweb.com/payments/fund-wallet",
             label: "Buy Crypto",
           },
           {
-            href: "https://playground.thirdweb.com/connect/pay/commerce",
+            href: "https://playground.thirdweb.com/payments/commerce",
             label: "Checkout",
           },
           {
-            href: "https://playground.thirdweb.com/connect/pay/transactions",
+            href: "https://playground.thirdweb.com/payments/transactions",
             label: "Transactions",
           },
         ],

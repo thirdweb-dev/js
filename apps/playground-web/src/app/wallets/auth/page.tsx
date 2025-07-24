@@ -50,7 +50,7 @@ import {
   isLoggedIn,
   login,
   logout,
-} from "@/app/connect/auth/server/actions/auth";
+} from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { ConnectButton } from "thirdweb/react";
 
@@ -93,7 +93,7 @@ import {
   isLoggedIn,
   login,
   logout,
-} from "@/app/connect/auth/server/actions/auth";
+} from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { type SiweAuthOptions, useConnectModal } from "thirdweb/react";
 
@@ -140,7 +140,7 @@ function GatedContent() {
     <CodeExample
       code={`import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
-import { getAuthResult } from "@/app/connect/auth/server/actions/auth";
+import { getAuthResult } from "@/app/wallets/auth/server/actions/auth";
 import { hasEnoughBalance } from "...";
 
 export async function GatedContentPreview() {
@@ -193,7 +193,7 @@ import {
   isLoggedIn,
   login,
   logout,
-} from "@/app/connect/auth/server/actions/auth";
+} from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { ConnectButton } from "thirdweb/react";
 import { defineChain } from "thirdweb";

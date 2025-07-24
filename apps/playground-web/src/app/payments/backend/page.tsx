@@ -38,7 +38,7 @@ export default async function Page() {
                 }
                 return {
                   description: pathObj.get?.description || "",
-                  link: `/connect/pay/backend/reference?route=${pathName}`,
+                  link: `/payments/backend/reference?route=${pathName}`,
                   name: pathName,
                 };
               })}

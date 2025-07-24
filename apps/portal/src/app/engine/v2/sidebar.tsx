@@ -25,7 +25,7 @@ export const sidebar: SideBar = {
       name: "Overview",
     },
     {
-      href: "https://playground.thirdweb.com/engine/airdrop",
+      href: "https://playground.thirdweb.com/transactions/airdrop",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },

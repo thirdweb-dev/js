@@ -8,7 +8,7 @@ import { ThirdwebTextIcon } from "./icons/ThirdwebTextIcon.js";
 export function PoweredByThirdweb(props: { link?: string }) {
   const link =
     props.link ||
-    "https://playground.thirdweb.com/connect/sign-in/button?utm_source=cw_text";
+    "https://playground.thirdweb.com/wallets/sign-in/button?utm_source=cw_text";
   return (
     <Link
       color="secondaryText"

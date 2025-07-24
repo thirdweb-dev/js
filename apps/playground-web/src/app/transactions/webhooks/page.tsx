@@ -1,4 +1,4 @@
-import { EngineWebhooksPreview } from "@/app/engine/webhooks/_components/webhooks-preview";
+import { EngineWebhooksPreview } from "@/app/transactions/webhooks/_components/webhooks-preview";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 
