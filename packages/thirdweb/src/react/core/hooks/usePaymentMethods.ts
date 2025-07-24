@@ -240,10 +240,10 @@ export function usePaymentMethods(options: {
       validOwnedTokens.sort((a, b) => {
         const aDollarBalance =
           Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
-          (a.originToken.prices["USD"] || 0);
+          (a.originToken.prices.USD || 0);
         const bDollarBalance =
           Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
-          (b.originToken.prices["USD"] || 0);
+          (b.originToken.prices.USD || 0);
         return bDollarBalance - aDollarBalance;
       });
 

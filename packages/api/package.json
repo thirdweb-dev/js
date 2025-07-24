@@ -1,13 +1,22 @@
 {
+  "name": "@thirdweb-dev/api",
+  "version": "0.0.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
   "author": "thirdweb eng <eng@thirdweb.com>",
+  "type": "module",
+  "main": "./dist/cjs/exports/thirdweb.js",
+  "module": "./dist/esm/exports/thirdweb.js",
+  "types": "./dist/types/exports/thirdweb.d.ts",
+  "typings": "./dist/types/exports/thirdweb.d.ts",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "devDependencies": {
-    "@biomejs/biome": "2.0.6",
-    "@wagmi/core": "2.17.3",
-    "rimraf": "6.0.1",
-    "thirdweb": "workspace:*"
+  "dependencies": {
+    "@hey-api/client-fetch": "0.10.0"
   },
   "engines": {
     "node": ">=18"
@@ -24,13 +33,13 @@
     "dist/*",
     "src/*"
   ],
-  "license": "Apache-2.0",
-  "main": "./dist/cjs/exports/thirdweb.js",
-  "module": "./dist/esm/exports/thirdweb.js",
-  "name": "@thirdweb-dev/wagmi-adapter",
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@hey-api/openapi-ts": "0.76.0",
+    "rimraf": "6.0.1",
+    "tslib": "^2.8.1"
+  },
   "peerDependencies": {
-    "@wagmi/core": "^2.16.0",
-    "thirdweb": "^5.85.0",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
@@ -38,22 +47,15 @@
       "optional": true
     }
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thirdweb-dev/js.git#main"
-  },
   "scripts": {
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:generate": "openapi-ts && pnpm format && pnpm fix",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf dist",
-    "fix": "biome check ./src --fix",
-    "format": "biome format ./src --write",
+    "fix": "biome check --write ./src",
+    "format": "biome format --write ./src",
     "lint": "biome check ./src"
-  },
-  "type": "module",
-  "types": "./dist/types/exports/thirdweb.d.ts",
-  "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "0.2.117"
+  }
 }

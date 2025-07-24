@@ -31,7 +31,7 @@ const suggestedLinks: { title: string; href: string }[] = [
     title: "Contracts",
   },
   {
-    href: "/engine/v3",
+    href: "/transactions",
     title: "Transactions",
   },
   {
@@ -45,6 +45,7 @@ type Tag =
   | "React Native"
   | "Unity"
   | "TypeScript"
+  | "Wallet SDK"
   | "Wallets"
   | "Reference"
   | "Python"
@@ -55,7 +56,8 @@ type Tag =
   | "Solidity"
   | "Payments"
   | "Glossary"
-  | "Engine";
+  | "Engine"
+  | "Transactions";
 
 function SearchModalContent(props: { closeModal: () => void }) {
   const [input, setInput] = useState("");
@@ -416,6 +418,9 @@ function getTagsFromHref(href: string): Tag[] | undefined {
   }
   if (href.includes("/engine")) {
     return ["Engine"];
+  }
+  if (href.includes("/transactions")) {
+    return ["Transactions"];
   }
   if (href.includes("/infrastructure")) {
     return ["Infra"];

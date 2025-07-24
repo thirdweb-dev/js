@@ -198,14 +198,14 @@ export async function getBuyWithCryptoTransfer(
           Number(
             Value.format(quote.originAmount, firstStep.originToken.decimals),
           ) *
-          (firstStep.originToken.prices["USD"] || 0) *
+          (firstStep.originToken.prices.USD || 0) *
           100,
         amountWei: quote.originAmount.toString(),
         token: {
           chainId: firstStep.originToken.chainId,
           decimals: firstStep.originToken.decimals,
           name: firstStep.originToken.name,
-          priceUSDCents: (firstStep.originToken.prices["USD"] || 0) * 100,
+          priceUSDCents: (firstStep.originToken.prices.USD || 0) * 100,
           symbol: firstStep.originToken.symbol,
           tokenAddress: firstStep.originToken.address,
         },
@@ -226,7 +226,7 @@ export async function getBuyWithCryptoTransfer(
                   firstStep.originToken.decimals,
                 ),
               ) *
-              (firstStep.originToken.prices["USD"] || 0) *
+              (firstStep.originToken.prices.USD || 0) *
               100
             : 0,
         amountWei:
@@ -237,7 +237,7 @@ export async function getBuyWithCryptoTransfer(
           chainId: firstStep.originToken.chainId,
           decimals: firstStep.originToken.decimals,
           name: firstStep.originToken.name,
-          priceUSDCents: (firstStep.originToken.prices["USD"] || 0) * 100,
+          priceUSDCents: (firstStep.originToken.prices.USD || 0) * 100,
           symbol: firstStep.originToken.symbol,
           tokenAddress: firstStep.originToken.address,
         },
