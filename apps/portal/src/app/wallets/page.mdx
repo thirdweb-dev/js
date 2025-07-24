@@ -17,6 +17,7 @@ import {
 	UnityIcon,
 	DotNetIcon,
 	UnrealEngineIcon,
+	EngineIcon,
 } from "@/icons";
 import { ExternalLink } from "lucide-react";
 
@@ -31,10 +32,19 @@ export const metadata = createMetadata({
 
 # Get Started
 
-Create wallets for your users, authenticate with your backend, connect to external wallets, and more.
+Create user or server wallets, authenticate with your backend, connect to external wallets, and more. User wallets can be created using different authentication methods:
 
-<Tabs defaultValue="typescript">
+- verification code (email, phone, etc.)
+- oauth (google, apple, etc.)
+- passkey
+- sign in with ethereum
+
+<Tabs defaultValue="http">
   <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
     <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
       <TypeScriptIcon className="w-4 h-4 mr-2" />
       TypeScript
@@ -60,6 +70,65 @@ Create wallets for your users, authenticate with your backend, connect to extern
       Unreal Engine
     </TabsTrigger>
   </TabsList>
+
+  <TabsContent value="http">
+
+### API Usage
+
+You can use the [thirdweb API](https://api.thirdweb.com/reference) to create user wallets.
+
+Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
+
+#### Send a login code to the user
+
+```http
+POST /v1/wallets/user/code
+Host: api.thirdweb.com
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "email",
+  "email": "user@example.com"
+}
+```
+
+#### Verify the code and authenticate the user
+
+```http
+POST /v1/wallets/user/code/verify
+Host: api.thirdweb.com
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "email",
+  "email": "user@example.com",
+  "code": "123456",
+}
+```
+
+Once authenticated, the endpoint will return the wallet address and a JWT token for usage with the rest of the API.
+
+</TabsContent>
+
+<TabsContent value="server">
+  You can create a server wallet with your project secret key and an identifier for the wallet:
+
+  ```http
+  POST /v1/wallets/server
+  Host: api.thirdweb.com
+  Content-Type: application/json
+  x-secret-key: <your-project-secret-key>
+
+  {
+    "identifier": "treasury-wallet", // your identifier
+  }
+  ```
+
+  This will return the server wallet address to use with the rest of the API. If the wallet already exists, the same wallet will be returned.
+
+</TabsContent>
 
   <TabsContent value="typescript">
     ### Installation
@@ -585,7 +654,7 @@ Create wallets for your users, authenticate with your backend, connect to extern
 To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
 
 - [Authentication Methods](/wallets/users)
-- [Sponsor Gas](/wallets/sponsor-gas)
+- [Server wallets](/wallets/server)
 - [Implement Sign In with Ethereum](/wallets/auth)
 - [External Wallets](/wallets/external-wallets) (e.g. MetaMask, WalletConnect, Coinbase Wallet, etc.)
 

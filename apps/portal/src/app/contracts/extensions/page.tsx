@@ -70,15 +70,9 @@ export default async function ExtensionPage() {
         </TBody>
       </Table>
       <Paragraph>
-        More extensions are being added regularly. Anyone can{" "}
-        <DocLink href="/typescript/v5/extensions/create">
-          create an extension
-        </DocLink>{" "}
-        and contribute it back to the repository. You can also{" "}
-        <DocLink href="/typescript/v5/extensions/generate">
-          generate extensions
-        </DocLink>{" "}
-        for any deployed contract.
+        More extensions are being added regularly. You can also{" "}
+        <DocLink href="/contracts/generate">generate extensions</DocLink> for
+        any deployed contract.
       </Paragraph>
     </>
   );

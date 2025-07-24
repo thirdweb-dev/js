@@ -341,7 +341,9 @@ const solidityRedirects = {
   "/solidity/extensions/royalty": "/contracts/build/extensions/general/Royalty",
 
   // contracts -> tokens
-  "/contracts/deploy/:path*": "/contracts/deploy",
+  "/contracts/deploy/overview": "/contracts/deploy",
+  "/contracts/deploy/reference": "/contracts/deploy",
+  "/contracts/deploy/deploy-contract": "/contracts/deploy",
   "/contracts/build": "/tokens/build",
   "/contracts/build/:path*": "/tokens/build/:path*",
 };

@@ -79,7 +79,7 @@ export async function POST(request: Request) {
 	const { userWalletAddress } = await request.json();
 
 	await fetch(
-		"https://engine.thirdweb.com/v1/contract/write",
+		"https://api.thirdweb.com/v1/contracts/write",
 		{
 			method: "POST",
 			headers: {
@@ -87,11 +87,9 @@ export async function POST(request: Request) {
 				"x-secret-key": "<thirdweb_secret_key>",
 			},
 			body: JSON.stringify({
-				executionOptions: {
-					from: "<server_wallet_address>",
-					chainId: "<chain_id>",
-				},
-				params: [
+				from: "<server_wallet_address>",
+				chainId: "<chain_id>",
+				calls: [
 					{
 						contractAddress: "<token_contract_address>",
 						method: "function transfer(address to, uint256 amount)",

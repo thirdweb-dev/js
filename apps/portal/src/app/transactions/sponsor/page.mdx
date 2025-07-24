@@ -24,8 +24,6 @@ export const metadata = createMetadata({
 
 Sponsor gas fees for transactions using EIP-7702 or ERC-4337. Thirdweb will handle the gas fees for you.
 
----
-
 <Tabs defaultValue="eip7702">
 	<TabsList>
 		<TabsTrigger value="eip7702">EIP-7702</TabsTrigger>
@@ -56,27 +54,24 @@ Sponsor gas fees using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enab
 
   <TabsContent value="http">
 
-  You can enable EIP-7702 execution for your server wallet and the [transactions API](https://engine.thirdweb.com/reference). This is the default execution mode for server wallets.
+  EIP-7702 is the default execution mode in the [thirdweb API](https://api.thirdweb.com/reference) for your user and server wallets.
 
 ```http
-POST /v1/contract/write
+POST /v1/contracts/write
+Host: api.thirdweb.com
 Content-Type: application/json
 x-secret-key: <your-project-secret-key>
 
 {
-  "executionOptions": {
-    "from": "0x...", // your server wallet **signer (EOA) address** address
-    "chainId": "1" // your chain id
-  },
-  "params": [{
+  "from": "0x...", // your user or server wallet **EOA address** address
+  "chainId": "1", // your chain id
+  "calls": [{
     "contractAddress": "0x...",
     "method": "function transfer(address to, uint256 amount)",
     "params": ["0x...", "1000000000000000000"],
   }],
 }
 ```
-
-You can also explicitly set `type: "EIP7702"` in the `executionOptions` to enable EIP-7702 execution.
 
   </TabsContent>
 
@@ -148,17 +143,20 @@ For chains that don't support EIP-7702, you can use EIP-4337 smart contract wall
 
   <TabsContent value="http">
 
-You can enable ERC-4337 execution for your server wallet and the [transactions API](https://engine.thirdweb.com/reference).
+ERC4337 execution is not supported in the high level thirdweb API, but you can use the lower level [transactions API](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract) with specific execution options:
 
 ```http
-POST /v1/contract/write
+POST /v1/contracts/write
+Host: engine.thirdweb.com
 Content-Type: application/json
 x-secret-key: <your-project-secret-key>
 
 {
   "executionOptions": {
-    "from": "0x...", // your server wallet **smart wallet** address
-    "chainId": "1" // your chain id
+    "type": "ERC4337",
+    "signerAddress": "0x...", // the EOA that has sign permissions on the smart wallet
+    "smartAccountAddress": "0x...", // optional, the address of the smart wallet to act on behalf of
+    "chainId": "1", // your chain id
   },
   "params": [{
     "contractAddress": "0x...",
@@ -168,13 +166,13 @@ x-secret-key: <your-project-secret-key>
 }
 ```
 
-You can also explicitly set `type: "ERC4337"` in the `executionOptions` to enable ERC-4337 execution.
+View all the available execution options in the [transactions API reference](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract).
 
   </TabsContent>
 
+    <TabsContent value="typescript">
   For user wallets, you can enable ERC-4337 execution by passing the `smartAccount` option to the `inAppWallet` function.
 
-    <TabsContent value="typescript">
     	```typescript
     	const wallet = inAppWallet({
     	  // will create a smart contract wallet for the user
