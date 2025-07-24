@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
@@ -39,6 +40,12 @@ export function CreditBalanceSection({
   const [selectedAmount, setSelectedAmount] = useState<string>(
     predefinedAmounts[0].value,
   );
+  const [customAmount, setCustomAmount] = useState<string>("");
+
+  const isSelectedAmountValid =
+    selectedAmount !== "" &&
+    Number.isInteger(Number(selectedAmount)) &&
+    Number(selectedAmount) > 0;
 
   return (
     <Card className="w-full">
@@ -74,7 +81,10 @@ export function CreditBalanceSection({
             <Label className="font-medium text-base">Select Amount</Label>
             <RadioGroup
               className="grid grid-cols-4 gap-3"
-              onValueChange={setSelectedAmount}
+              onValueChange={(value) => {
+                setSelectedAmount(value);
+                setCustomAmount("");
+              }}
               value={selectedAmount}
             >
               {predefinedAmounts.map((amount) => (
@@ -95,6 +105,30 @@ export function CreditBalanceSection({
                 </div>
               ))}
             </RadioGroup>
+
+            {/* Custom Amount Input */}
+            <div className="space-y-2">
+              <Label className="font-medium text-base" htmlFor="customAmount">
+                Or enter custom amount
+              </Label>
+              <Input
+                id="customAmount"
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                min={1}
+                step={1}
+                value={customAmount}
+                placeholder="Custom amount"
+                onChange={(e) => {
+                  const val = e.target.value.replace(/^0+/, "");
+                  if (/^\d*$/.test(val)) {
+                    setCustomAmount(val);
+                    setSelectedAmount(val);
+                  }
+                }}
+              />
+            </div>
           </div>
 
           {/* Top-up Summary and Button */}
@@ -125,7 +159,7 @@ export function CreditBalanceSection({
                 <Button
                   asChild
                   className="w-full"
-                  disabled={!isOwnerAccount}
+                  disabled={!isOwnerAccount || !isSelectedAmountValid}
                   size="lg"
                 >
                   <a
