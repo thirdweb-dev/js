@@ -120,7 +120,7 @@ function DocSidebarNonCollapsible(props: {
       <ul className="mb-8 flex flex-col">
         {links.map((link, i) => {
           return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            // biome-ignore lint/suspicious/noArrayIndexKey: order is static
             <li key={i}>
               <SidebarItem link={link} onLinkClick={props.onLinkClick} />
             </li>
@@ -193,7 +193,7 @@ function SidebarCategory(props: {
         <ul className="flex flex-col border-l pl-4">
           {links.map((link, i) => {
             return (
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              // biome-ignore lint/suspicious/noArrayIndexKey: order is static
               <li key={i}>
                 <SidebarItem link={link} onLinkClick={props.onLinkClick} />
               </li>
