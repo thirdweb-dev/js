@@ -1,20 +1,12 @@
 import type * as ox__TypedData from "ox/TypedData";
 import { serializeErc6492Signature } from "../../../auth/serialize-erc6492-signature.js";
-import {
-  verifyEip1271Signature,
-  verifyHash,
-} from "../../../auth/verify-hash.js";
+import { verifyEip1271Signature } from "../../../auth/verify-hash.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import {
-  getContract,
-  type ThirdwebContract,
-} from "../../../contract/contract.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 import { encode } from "../../../transaction/actions/encode.js";
-import { readContract } from "../../../transaction/read-contract.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
 import { hashMessage } from "../../../utils/hashing/hashMessage.js";
 import { hashTypedData } from "../../../utils/hashing/hashTypedData.js";
 import type { SignableMessage } from "../../../utils/types.js";
@@ -40,33 +32,24 @@ export async function smartAccountSignMessage({
   message: SignableMessage;
 }) {
   const originalMsgHash = hashMessage(message);
-  const is712Factory = await checkFor712Factory({
-    accountContract,
-    factoryContract,
-    originalMsgHash,
-  });
 
   let sig: `0x${string}`;
-  if (is712Factory) {
-    const wrappedMessageHash = encodeAbiParameters(
-      [{ type: "bytes32" }],
-      [originalMsgHash],
-    );
+  const wrappedMessageHash = encodeAbiParameters(
+    [{ type: "bytes32" }],
+    [originalMsgHash],
+  );
 
-    sig = await options.personalAccount.signTypedData({
-      domain: {
-        chainId: options.chain.id,
-        name: "Account",
-        verifyingContract: accountContract.address,
-        version: "1",
-      },
-      message: { message: wrappedMessageHash },
-      primaryType: "AccountMessage",
-      types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-    });
-  } else {
-    sig = await options.personalAccount.signMessage({ message });
-  }
+  sig = await options.personalAccount.signTypedData({
+    domain: {
+      chainId: options.chain.id,
+      name: "Account",
+      verifyingContract: accountContract.address,
+      version: "1",
+    },
+    message: { message: wrappedMessageHash },
+    primaryType: "AccountMessage",
+    types: { AccountMessage: [{ name: "message", type: "bytes" }] },
+  });
 
   const isDeployed = await isContractDeployed(accountContract);
   if (isDeployed) {
@@ -96,19 +79,7 @@ export async function smartAccountSignMessage({
       signature: sig,
     });
 
-    // check if the signature is valid
-    const isValid = await verifyHash({
-      address: accountContract.address,
-      chain: accountContract.chain,
-      client: accountContract.client,
-      hash: originalMsgHash,
-      signature: erc6492Sig,
-    });
-
-    if (isValid) {
-      return erc6492Sig;
-    }
-    throw new Error("Unable to verify ERC-6492 signature after signing.");
+    return erc6492Sig;
   }
 }
 
@@ -138,33 +109,23 @@ export async function smartAccountSignTypedData<
   }
 
   const originalMsgHash = hashTypedData(typedData);
-  // check if the account contract supports EIP721 domain separator based signing
-  const is712Factory = await checkFor712Factory({
-    accountContract,
-    factoryContract,
-    originalMsgHash,
-  });
 
   let sig: `0x${string}`;
-  if (is712Factory) {
-    const wrappedMessageHash = encodeAbiParameters(
-      [{ type: "bytes32" }],
-      [originalMsgHash],
-    );
-    sig = await options.personalAccount.signTypedData({
-      domain: {
-        chainId: options.chain.id,
-        name: "Account",
-        verifyingContract: accountContract.address,
-        version: "1",
-      },
-      message: { message: wrappedMessageHash },
-      primaryType: "AccountMessage",
-      types: { AccountMessage: [{ name: "message", type: "bytes" }] },
-    });
-  } else {
-    sig = await options.personalAccount.signTypedData(typedData);
-  }
+  const wrappedMessageHash = encodeAbiParameters(
+    [{ type: "bytes32" }],
+    [originalMsgHash],
+  );
+  sig = await options.personalAccount.signTypedData({
+    domain: {
+      chainId: options.chain.id,
+      name: "Account",
+      verifyingContract: accountContract.address,
+      version: "1",
+    },
+    message: { message: wrappedMessageHash },
+    primaryType: "AccountMessage",
+    types: { AccountMessage: [{ name: "message", type: "bytes" }] },
+  });
 
   const isDeployed = await isContractDeployed(accountContract);
   if (isDeployed) {
@@ -194,21 +155,7 @@ export async function smartAccountSignTypedData<
       signature: sig,
     });
 
-    // check if the signature is valid
-    const isValid = await verifyHash({
-      address: accountContract.address,
-      chain: accountContract.chain,
-      client: accountContract.client,
-      hash: originalMsgHash,
-      signature: erc6492Sig,
-    });
-
-    if (isValid) {
-      return erc6492Sig;
-    }
-    throw new Error(
-      "Unable to verify signature on smart account, please make sure the admin wallet has permissions and the signature is valid.",
-    );
+    return erc6492Sig;
   }
 }
 
@@ -230,40 +177,6 @@ export async function confirmContractDeployment(args: {
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
     isDeployed = await isContractDeployed(accountContract);
-  }
-}
-
-async function checkFor712Factory({
-  factoryContract,
-  accountContract,
-  originalMsgHash,
-}: {
-  factoryContract: ThirdwebContract;
-  accountContract: ThirdwebContract;
-  originalMsgHash: Hex;
-}) {
-  try {
-    const implementationAccount = await readContract({
-      contract: factoryContract,
-      method: "function accountImplementation() public view returns (address)",
-    });
-    // check if the account contract supports EIP721 domain separator or modular based signing
-    const is712Factory = await readContract({
-      contract: getContract({
-        address: implementationAccount,
-        chain: accountContract.chain,
-        client: accountContract.client,
-      }),
-      method:
-        "function getMessageHash(bytes32 _hash) public view returns (bytes32)",
-      params: [originalMsgHash],
-    })
-      .then((res) => res !== "0x")
-      .catch(() => false);
-
-    return is712Factory;
-  } catch {
-    return false;
   }
 }
 
