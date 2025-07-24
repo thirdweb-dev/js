@@ -11,7 +11,7 @@ import {
   isLoggedIn,
   login,
   logout,
-} from "@/app/connect/auth/server/actions/auth";
+} from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { Button } from "../ui/button";
 

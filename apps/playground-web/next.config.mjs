@@ -57,14 +57,59 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        destination: "/connect/sign-in/button",
+        source: "/connect/pay",
+        destination: "/payments/ui-components",
         permanent: false,
-        source: "/connect/sign-in",
       },
       {
-        destination: "/connect/account-abstraction/connect",
+        source: "/connect/pay/:path*",
+        destination: "/payments/:path*",
         permanent: false,
-        source: "/connect/account-abstraction",
+      },
+      {
+        source: "/connect/ui",
+        destination: "/wallets/headless/account-components",
+        permanent: false,
+      },
+      {
+        source: "/connect/ui/nft",
+        destination: "/wallets/headless/nft-components",
+        permanent: false,
+      },
+      {
+        source: "/connect/ui/token",
+        destination: "/wallets/headless/token-components",
+        permanent: false,
+      },
+      {
+        source: "/connect/ui/chain",
+        destination: "/wallets/headless/chain-components",
+        permanent: false,
+      },
+      {
+        source: "/connect/ui/wallet",
+        destination: "/wallets/headless/wallet-components",
+        permanent: false,
+      },
+      {
+        source: "/connect/:path*",
+        destination: "/wallets/:path*",
+        permanent: false,
+      },
+      {
+        source: "/engine/airdrop",
+        destination: "/transactions/airdrop-tokens",
+        permanent: false,
+      },
+      {
+        source: "/engine/minting",
+        destination: "/transactions/mint-tokens",
+        permanent: false,
+      },
+      {
+        source: "/engine/webhooks",
+        destination: "/transactions/webhooks",
+        permanent: false,
       },
     ];
   },

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { balanceOf } from "thirdweb/extensions/erc20";
-import { getAuthResult } from "@/app/connect/auth/server/actions/auth";
+import { getAuthResult } from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { AuthButton } from "./auth-button";
 
@@ -58,7 +58,7 @@ export async function GatedContentPreview() {
           Mint some tokens{" "}
           <Link
             className="font-bold text-yellow-400"
-            href="/connect/blockchain-api"
+            href="/wallets/blockchain-api"
           >
             here
           </Link>

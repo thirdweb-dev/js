@@ -44,7 +44,7 @@ export function CustomLoginForm() {
         auth: {
           mode: "redirect",
           options: ["google"],
-          redirectUrl: `${window.location.origin}/connect/in-app-wallet`,
+          redirectUrl: `${window.location.origin}/wallets/in-app-wallet`,
         },
       });
       await wallet.connect({
