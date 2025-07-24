@@ -28,9 +28,7 @@ export default async function Layout(props: {
             Payments
           </h1>
           <p className="max-w-3xl text-muted-foreground text-sm leading-relaxed">
-            Payments allows your users to bridge, swap, and purchase
-            cryptocurrencies and execute transactions with any fiat options or
-            tokens via cross-chain routing.{" "}
+            Send and accept payments with cross-chain token routing.{" "}
             <UnderlineLink
               href="https://portal.thirdweb.com/payments"
               rel="noopener noreferrer"

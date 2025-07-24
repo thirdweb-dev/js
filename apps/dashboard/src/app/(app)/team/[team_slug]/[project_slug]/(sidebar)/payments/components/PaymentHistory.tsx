@@ -118,7 +118,7 @@ export function PaymentHistory(props: {
   );
 }
 
-function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
+export function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
   const { purchase } = props;
   const originAmount = toTokens(
     purchase.originAmount,
@@ -197,7 +197,7 @@ function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
   );
 }
 
-function SkeletonTableRow() {
+export function SkeletonTableRow() {
   return (
     <tr className="border-border border-b">
       <TableData>
