@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.20
+
+### Patch Changes
+
+- [#7693](https://github.com/thirdweb-dev/js/pull/7693) [`cf22c23`](https://github.com/thirdweb-dev/js/commit/cf22c23b45e86adbe50a2b7b40e7a283f5222941) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize 4337 signature performance
+
 ## 5.105.19
 
 ### Patch Changes
