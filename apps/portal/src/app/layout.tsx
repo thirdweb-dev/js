@@ -52,10 +52,6 @@ export default function RootLayout({
 
           <div className="relative flex min-h-screen flex-col">
             <StickyTopContainer>
-              {/* <Banner
-                href="https://thirdweb.com/payments"
-                text="Let users pay with whatever they have without leaving your app"
-              /> */}
               <Header />
             </StickyTopContainer>
 

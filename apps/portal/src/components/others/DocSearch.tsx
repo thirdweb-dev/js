@@ -393,24 +393,14 @@ function getTagsFromHref(href: string): Tag[] | undefined {
     }
     return ["React Native"];
   }
-  if (href.includes("/react/v4")) {
-    if (href.includes("/references")) {
-      return ["Reference", "React"];
-    }
-    return ["React"];
-  }
+
   if (href.includes("/typescript/v4")) {
     if (href.includes("/references")) {
       return ["Reference", "TypeScript"];
     }
     return ["TypeScript"];
   }
-  if (href.includes("/wallet-sdk/v2")) {
-    if (href.includes("/references")) {
-      return ["Reference", "Wallet SDK"];
-    }
-    return ["Wallet SDK"];
-  }
+
   if (href.includes("/unity")) {
     return ["Unity"];
   }

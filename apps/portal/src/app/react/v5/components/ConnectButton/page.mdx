@@ -43,7 +43,7 @@ Refer to [Props](#props) to see all the available configuration options
 
 <Callout title="In-App Wallets" variant="info">
 
-    This example uses [In-App Wallets](/connect/in-app-wallet/overview), a special type of wallet that allows users to connect to your app using email, social logins, or other custom forms of authentication.
+    This example uses [In-App Wallets](/wallets/users), a special type of wallet that allows users to connect to your app using email, social logins, or other custom forms of authentication.
 
 </Callout>
 
@@ -79,7 +79,7 @@ function Example() {
 
 ## Auth
 
-The `ConnectButton` can optionally include [Auth](/connect/auth) to manage user authentication for you. When the user connects their wallet, the `ConnectButton` will immediately prompt them to sign a message to login. That signature can then be verified on your server to issue the user a JWT authenticating their session.
+The `ConnectButton` can optionally include [Auth](/wallets/auth) to manage user authentication for you. When the user connects their wallet, the `ConnectButton` will immediately prompt them to sign a message to login. That signature can then be verified on your server to issue the user a JWT authenticating their session.
 
 ```ts
 <ConnectButton

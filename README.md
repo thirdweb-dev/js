@@ -18,8 +18,8 @@
 ## Features
 
 - Support for React & React-Native
-- First party support for [Embedded Wallets](https://portal.thirdweb.com/connect/embedded-wallet/overview) (social/email login)
-- First party support for [Account Abstraction](https://portal.thirdweb.com/connect/account-abstraction/overview)
+- First party support for [Embedded Wallets](https://portal.thirdweb.com/wallets) (social/email login)
+- First party support for [Account Abstraction](https://portal.thirdweb.com/wallets/sponsor-gas)
 - Instant connection to any chain with RPC Edge integration
 - Integrated IPFS upload/download
 - UI Components for connection, transactions, nft rendering
