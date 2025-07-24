@@ -50,7 +50,7 @@ export function TokenDistributionFieldset(props: {
           title="Coin Distribution"
         >
           <div>
-            <div className="space-y-6 p-4 md:px-6 md:py-6">
+            <div className="p-4 md:px-6 md:py-6">
               <FormFieldSetup
                 errorMessage={form.formState.errors.supply?.message}
                 htmlFor={supplyId}
@@ -65,18 +65,6 @@ export function TokenDistributionFieldset(props: {
                   </span>
                 </div>
               </FormFieldSetup>
-
-              <div className="flex flex-col gap-3">
-                <TokenDistributionBarChart
-                  distributionFormValues={form.watch()}
-                />
-
-                {distributionError && (
-                  <div className="text-destructive-text text-sm">
-                    {distributionError}
-                  </div>
-                )}
-              </div>
             </div>
 
             <TokenSaleSection
@@ -86,6 +74,18 @@ export function TokenDistributionFieldset(props: {
             />
 
             <TokenAirdropSection client={props.client} form={form} />
+
+            <div className="flex flex-col gap-3 p-4 py-6 md:px-6 md:py-6 border-t border-dashed">
+              <TokenDistributionBarChart
+                distributionFormValues={form.watch()}
+              />
+
+              {distributionError && (
+                <div className="text-destructive-text text-sm">
+                  {distributionError}
+                </div>
+              )}
+            </div>
           </div>
         </StepCard>
       </form>

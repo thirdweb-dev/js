@@ -97,6 +97,18 @@ export function TokenInfoFieldset(props: {
               >
                 <ClientOnly ssr={<Skeleton className="h-10" />}>
                   <SingleNetworkSelector
+                    priorityChains={[
+                      8453, // base
+                      84532, // base sepolia
+                      1, // ethereum
+                      56, // bnb smart chain mainnet (bsc)
+                      42161, // arbitrum one mainnet
+                      43114, // avalanche mainnet
+                      146, // sonic
+                      137, // polygon
+                      80094, // berachain mainnet
+                      10, // optimism
+                    ]}
                     chainId={Number(form.watch("chain"))}
                     className="bg-background"
                     client={props.client}

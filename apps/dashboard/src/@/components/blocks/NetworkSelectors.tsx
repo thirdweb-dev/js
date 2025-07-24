@@ -29,16 +29,18 @@ export function MultiNetworkSelector(props: {
   client: ThirdwebClient;
   chainIds?: number[];
 }) {
-  let { allChains, idToChain } = useAllChainsData();
-
-  if (props.chainIds && props.chainIds.length > 0) {
-    allChains = allChains.filter((chain) =>
-      props.chainIds?.includes(chain.chainId),
-    );
-  }
+  const { allChains, idToChain } = useAllChainsData();
 
   const options = useMemo(() => {
-    let sortedChains = allChains;
+    let chains = allChains.filter((chain) => chain.status !== "deprecated");
+
+    if (props.chainIds && props.chainIds.length > 0) {
+      chains = allChains.filter((chain) =>
+        props.chainIds?.includes(chain.chainId),
+      );
+    }
+
+    let sortedChains = chains;
 
     if (props.priorityChains) {
       const priorityChainsSet = new Set();
@@ -69,7 +71,13 @@ export function MultiNetworkSelector(props: {
         value: String(chain.chainId),
       };
     });
-  }, [allChains, props.priorityChains, idToChain, props.hideTestnets]);
+  }, [
+    allChains,
+    props.priorityChains,
+    idToChain,
+    props.hideTestnets,
+    props.chainIds,
+  ]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {
@@ -155,14 +163,36 @@ export function SingleNetworkSelector(props: {
   disableDeprecated?: boolean;
   placeholder?: string;
   client: ThirdwebClient;
+  priorityChains?: number[];
 }) {
   const { allChains, idToChain } = useAllChainsData();
 
   const chainsToShow = useMemo(() => {
     let chains = allChains;
 
+    chains = chains.filter((chain) => chain.status !== "deprecated");
+
     if (props.disableTestnets) {
       chains = chains.filter((chain) => !chain.testnet);
+    }
+
+    if (props.priorityChains) {
+      const priorityChainsSet = new Set();
+      for (const chainId of props.priorityChains || []) {
+        priorityChainsSet.add(chainId);
+      }
+
+      const priorityChains = (props.priorityChains || [])
+        .map((chainId) => {
+          return idToChain.get(chainId);
+        })
+        .filter((v) => !!v);
+
+      const otherChains = allChains.filter(
+        (chain) => !priorityChainsSet.has(chain.chainId),
+      );
+
+      chains = [...priorityChains, ...otherChains];
     }
 
     if (props.chainIds) {
@@ -180,6 +210,8 @@ export function SingleNetworkSelector(props: {
     props.chainIds,
     props.disableTestnets,
     props.disableDeprecated,
+    props.priorityChains,
+    idToChain,
   ]);
 
   const options = useMemo(() => {
