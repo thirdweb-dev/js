@@ -1,23 +1,18 @@
 "use client";
 
-import {
-  Alert,
-  AlertIcon,
-  Flex,
-  FormControl,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Textarea,
-} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "chakra/button";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
-import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react";
-import { useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  EyeIcon,
+  EyeOffIcon,
+  HelpCircleIcon,
+  LockKeyholeIcon,
+  RefreshCcwIcon,
+  ShuffleIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { CreateDelayedRevealBatchParams } from "thirdweb/extensions/erc721";
@@ -25,12 +20,14 @@ import type { NFTInput } from "thirdweb/utils";
 import { z } from "zod";
 import { FileInput } from "@/components/blocks/FileInput";
 import { TransactionButton } from "@/components/tx-button";
-import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import type { ComponentWithChildren } from "@/types/component-with-children";
+import { Button } from "@/components/ui/button";
+import { Form, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { processInputData, shuffleData } from "@/utils/batch";
+import { TabButtons } from "../ui/tabs";
 import { BatchTable } from "./batch-table";
-import { SelectOption } from "./lazy-mint-form/select-option";
 import { UploadStep } from "./upload-step";
 
 type DelayedSubmit = {
@@ -43,16 +40,6 @@ type InstantSubmit = {
 };
 
 type SubmitType = DelayedSubmit | InstantSubmit;
-
-interface BatchLazyMintEVMProps {
-  nextTokenIdToMint: bigint;
-  canCreateDelayedRevealBatch: boolean;
-  onSubmit: (formData: SubmitType) => Promise<unknown>;
-  chainId: number;
-  client: ThirdwebClient;
-}
-
-type BatchLazyMintProps = BatchLazyMintEVMProps;
 
 const BatchLazyMintFormSchema = z
   .object({
@@ -73,7 +60,7 @@ const BatchLazyMintFormSchema = z
         name: z.string().min(1, "A name is required"),
       })
       .optional(),
-    revealType: z.literal("instant").or(z.literal("delayed")).optional(),
+    revealType: z.literal("instant").or(z.literal("delayed")),
 
     // shared logic
     shuffle: z.boolean().default(false),
@@ -91,18 +78,21 @@ function useBatchLazyMintForm() {
   return useForm<BatchLazyMintFormType>({
     defaultValues: {
       metadatas: [],
-      revealType: undefined,
+      revealType: "instant",
       shuffle: false,
     },
     resolver: zodResolver(BatchLazyMintFormSchema),
   });
 }
 
-export const BatchLazyMint: ComponentWithChildren<
-  BatchLazyMintProps & {
-    isLoggedIn: boolean;
-  }
-> = (props) => {
+export function BatchLazyMint(props: {
+  nextTokenIdToMint: bigint;
+  canCreateDelayedRevealBatch: boolean;
+  onSubmit: (formData: SubmitType) => Promise<unknown>;
+  chainId: number;
+  client: ThirdwebClient;
+  isLoggedIn: boolean;
+}) {
   const [step, setStep] = useState(0);
 
   const form = useBatchLazyMintForm();
@@ -110,369 +100,415 @@ export const BatchLazyMint: ComponentWithChildren<
   const nftMetadatas = form.watch("metadatas");
   const hasError = !!form.getFieldState("metadatas", form.formState).error;
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: async (acceptedFiles) => {
-      try {
-        await processInputData(acceptedFiles, (data) =>
-          form.setValue("metadatas", data),
-        );
-      } catch {
-        form.setError("metadatas", {
-          message: "Invalid metadata files",
-          type: "validate",
-        });
-      }
-
-      if (nftMetadatas.length === 0) {
-        form.setError("metadatas", {
-          message: "Invalid metadata files",
-          type: "validate",
-        });
-      }
-    },
-  });
-
-  const paginationPortalRef = useRef<HTMLDivElement>(null);
-
   return (
-    <form
-      className="mt-4 flex w-full flex-col"
-      onSubmit={form.handleSubmit((data) => {
-        // first shuffle
-        const shuffledMetadatas = data.shuffle
-          ? shuffleData(data.metadatas)
-          : data.metadatas;
+    <Form {...form}>
+      <form
+        className="mt-4 flex w-full flex-col"
+        onSubmit={form.handleSubmit(async (data) => {
+          // first shuffle
+          const shuffledMetadatas = data.shuffle
+            ? shuffleData(data.metadatas)
+            : data.metadatas;
 
-        // check submit is instant
-        if (data.revealType === "instant") {
-          return props.onSubmit({
-            data: { metadatas: shuffledMetadatas },
-            revealType: "instant",
-          });
-        }
-        // validate password
-        if (!data.password) {
-          form.setError("password", {
-            message: "A password is required for delayed reveal.",
-            type: "validate",
-          });
-          return;
-        }
-        // validate placeholder
-        if (!data.placeHolder?.name) {
-          form.setError("placeHolder.name", {
-            message: "A name is required for delayed reveal.",
-            type: "validate",
-          });
-        }
-        // submit
-        return props.onSubmit({
-          data: {
-            metadata: shuffledMetadatas,
-            password: data.password,
-            placeholderMetadata: {
-              description: data.placeHolder?.description,
-              image: data.placeHolder?.image,
-              name: data.placeHolder?.name,
+          // check submit is instant
+          if (data.revealType === "instant") {
+            return props.onSubmit({
+              data: { metadatas: shuffledMetadatas },
+              revealType: "instant",
+            });
+          }
+          // validate password
+          if (!data.password) {
+            form.setError("password", {
+              message: "A password is required for delayed reveal.",
+              type: "validate",
+            });
+            return;
+          }
+          // validate placeholder
+          if (!data.placeHolder?.name) {
+            form.setError("placeHolder.name", {
+              message: "A name is required for delayed reveal.",
+              type: "validate",
+            });
+          }
+          // submit
+          await props.onSubmit({
+            data: {
+              metadata: shuffledMetadatas,
+              password: data.password,
+              placeholderMetadata: {
+                description: data.placeHolder?.description,
+                image: data.placeHolder?.image,
+                name: data.placeHolder?.name,
+              },
             },
-          },
-          revealType: "delayed",
-        });
-      })}
-    >
-      {step === 0 ? (
-        <div className="flex flex-col gap-6">
-          {nftMetadatas.length > 0 ? (
-            <>
-              <BatchTable
-                client={props.client}
-                data={nftMetadatas}
-                nextTokenIdToMint={props.nextTokenIdToMint}
-                portalRef={paginationPortalRef}
-              />
-              <div className="border-border border-t">
-                <div className="flex flex-col items-center justify-between p-0 md:flex-row md:p-4">
-                  <div ref={paginationPortalRef} />
-                  <div className="mt-4 flex w-full flex-row items-center gap-2 md:mt-0 md:w-auto">
-                    <Button
-                      borderRadius="md"
-                      isDisabled={!hasError}
-                      onClick={() => {
-                        form.reset();
-                      }}
-                      w={{ base: "100%", md: "auto" }}
-                    >
-                      Reset
-                    </Button>
-                    <Button
-                      borderRadius="md"
-                      colorScheme="primary"
-                      onClick={() => setStep(1)}
-                      w={{ base: "100%", md: "auto" }}
-                    >
-                      Next
-                    </Button>
-                  </div>
+            revealType: "delayed",
+          });
+        })}
+      >
+        {step === 0 ? (
+          <div>
+            {nftMetadatas.length > 0 ? (
+              <div className="pb-10">
+                <h2 className="text-2xl font-semibold tracking-tight mb-4">
+                  Upload NFTs
+                </h2>
+
+                <BatchTable
+                  client={props.client}
+                  data={nftMetadatas}
+                  nextTokenIdToMint={props.nextTokenIdToMint}
+                />
+                <div className="mt-5 flex justify-end gap-4">
+                  <Button
+                    className="w-full md:w-auto gap-2"
+                    disabled={!hasError}
+                    onClick={() => {
+                      form.reset();
+                    }}
+                    variant="outline"
+                  >
+                    <RefreshCcwIcon className="size-4" />
+                    Reset
+                  </Button>
+                  <Button
+                    className="w-full md:w-auto gap-2"
+                    onClick={() => setStep(1)}
+                  >
+                    Next <ArrowRightIcon className="size-4" />
+                  </Button>
                 </div>
               </div>
-            </>
-          ) : (
-            <UploadStep
-              getInputProps={getInputProps}
-              getRootProps={getRootProps}
-              hasFailed={hasError}
-              isDragActive={isDragActive}
-            />
-          )}
-        </div>
-      ) : (
-        <>
-          <Flex align="center" justify="space-between" mb={2} py={4} w="100%">
-            <div className="flex flex-row items-center gap-2">
+            ) : (
+              <UploadStep
+                hasFailed={hasError}
+                reset={() => {
+                  form.reset();
+                }}
+                onDrop={async (acceptedFiles) => {
+                  try {
+                    await processInputData(acceptedFiles, (data) =>
+                      form.setValue("metadatas", data),
+                    );
+                  } catch {
+                    form.setError("metadatas", {
+                      message: "Invalid metadata files",
+                      type: "validate",
+                    });
+                  }
+
+                  if (nftMetadatas.length === 0) {
+                    form.setError("metadatas", {
+                      message: "Invalid metadata files",
+                      type: "validate",
+                    });
+                  }
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="container px-0 max-w-4xl pb-14">
+            <div className="flex mb-3">
               <Button
-                className="text-muted-foreground"
+                className="gap-2 -translate-x-3 text-muted-foreground"
+                size="sm"
                 onClick={() => setStep(0)}
                 variant="ghost"
               >
-                <ChevronLeftIcon className="size-5 cursor-pointer" />
+                <ArrowLeftIcon className="size-4" />
+                Back
               </Button>
-              <Heading className="my-auto" size="title.md">
-                When will you reveal your NFTs?
-              </Heading>
             </div>
-          </Flex>
-          <SelectReveal
-            canCreateDelayedRevealBatch={props.canCreateDelayedRevealBatch}
-            client={props.client}
-            form={form}
-          />
-          {form.watch("revealType") && (
-            <>
-              <CheckboxWithLabel>
-                <Checkbox
-                  checked={form.watch("shuffle")}
-                  className="mt-3"
-                  onCheckedChange={(val) => form.setValue("shuffle", !!val)}
-                />
-                <div className="flex flex-col items-center gap-1 md:flex-row">
-                  <p>Shuffle the order of the NFTs before uploading.</p>
-                  <em>This is an off-chain operation and is not provable.</em>
-                </div>
-              </CheckboxWithLabel>
-              <div className="w-full md:w-[61%]">
-                <TransactionButton
-                  className="mt-4 w-full"
-                  client={props.client}
-                  disabled={!nftMetadatas.length}
-                  isLoggedIn={props.isLoggedIn}
-                  isPending={form.formState.isSubmitting}
-                  transactionCount={1}
-                  txChainID={props.chainId}
-                  type="submit"
-                >
-                  {form.formState.isSubmitting
-                    ? `Uploading ${nftMetadatas.length} NFTs`
-                    : `Upload ${nftMetadatas.length} NFTs`}
-                </TransactionButton>
-                {props.children}
-              </div>
-              <Text mt={2} size="body.sm">
-                <UnderlineLink
-                  className="text-primary-500"
-                  href="https://support.thirdweb.com/dashboard/n5evQ4EfEjEifczEQaZ1hL/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Experiencing issues uploading your files?
-                </UnderlineLink>
-              </Text>
-            </>
-          )}
-        </>
-      )}
-    </form>
-  );
-};
 
-interface SelectRevealProps {
+            <h2 className="text-2xl font-semibold tracking-tight mb-4">
+              Upload NFTs
+            </h2>
+
+            <SelectReveal
+              canCreateDelayedRevealBatch={props.canCreateDelayedRevealBatch}
+              client={props.client}
+              form={form}
+            />
+
+            <div className="h-4" />
+
+            <div className="space-y-6">
+              {form.watch("revealType") === "delayed" && (
+                <DelayedRevealConfiguration client={props.client} form={form} />
+              )}
+
+              {/* shuffle */}
+              <ShuffleNFTsCard
+                isShuffleEnabled={form.watch("shuffle")}
+                onShuffleChange={(val) => form.setValue("shuffle", val)}
+              />
+
+              <div className="space-y-3">
+                <div className="flex justify-end">
+                  <TransactionButton
+                    client={props.client}
+                    disabled={!nftMetadatas.length}
+                    isLoggedIn={props.isLoggedIn}
+                    isPending={form.formState.isSubmitting}
+                    transactionCount={1}
+                    txChainID={props.chainId}
+                    type="submit"
+                  >
+                    {form.formState.isSubmitting
+                      ? `Uploading ${nftMetadatas.length} NFTs`
+                      : `Upload ${nftMetadatas.length} NFTs`}
+                  </TransactionButton>
+                </div>
+
+                <div className="flex justify-end">
+                  <Link
+                    className="text-sm flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                    href="https://portal.thirdweb.com/knowledge-base/troubleshoot/contracts/batch-upload"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <HelpCircleIcon className="size-4" />
+                    Experiencing issues uploading your files?
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </form>
+    </Form>
+  );
+}
+
+function ShuffleNFTsCard(props: {
+  isShuffleEnabled: boolean;
+  onShuffleChange: (val: boolean) => void;
+}) {
+  return (
+    <div className="px-4 lg:px-6 py-8 border rounded-lg bg-card relative">
+      <div className="flex mb-3">
+        <div className="p-2 rounded-full border bg-card">
+          <ShuffleIcon className="size-4 text-muted-foreground" />
+        </div>
+      </div>
+
+      <h3 className="font-semibold text-lg mb-0.5 tracking-tight">
+        Shuffle NFTs
+      </h3>
+
+      <p className="text-sm text-muted-foreground">
+        Shuffle the order of the NFTs before uploading. This is an off-chain
+        operation and is not provable
+      </p>
+
+      <Switch
+        checked={props.isShuffleEnabled}
+        onCheckedChange={(val) => props.onShuffleChange(!!val)}
+        className="absolute right-4 top-4 lg:right-6 lg:top-8"
+      />
+    </div>
+  );
+}
+
+function SelectReveal(props: {
   form: ReturnType<typeof useBatchLazyMintForm>;
   canCreateDelayedRevealBatch: boolean;
   client: ThirdwebClient;
+}) {
+  const { form, canCreateDelayedRevealBatch } = props;
+
+  return (
+    <div>
+      {canCreateDelayedRevealBatch && (
+        <TabButtons
+          containerClassName="mb-8"
+          tabClassName="!text-sm"
+          tabs={[
+            {
+              name: "Reveal upon mint",
+              onClick: () => {
+                form.setValue("revealType", "instant");
+                // reset all fields related to delayed reveal
+                form.resetField("password");
+                form.resetField("confirmPassword");
+                form.resetField("placeHolder");
+              },
+              isActive: form.watch("revealType") === "instant",
+            },
+            {
+              name: "Delayed Reveal",
+              onClick: () => form.setValue("revealType", "delayed"),
+              isActive: form.watch("revealType") === "delayed",
+            },
+          ]}
+        />
+      )}
+
+      {form.watch("revealType") === "instant" && (
+        <div>
+          <h2 className="font-semibold text-xl mb-1 tracking-tight leading-none">
+            Reveal upon mint
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Collectors will immediately see the final NFT when they complete the
+            minting
+          </p>
+        </div>
+      )}
+
+      {form.watch("revealType") === "delayed" && (
+        <div>
+          <h2 className="font-semibold text-xl mb-1 tracking-tight leading-none">
+            Delayed Reveal
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Collectors will mint your placeholder image, then you reveal at a
+            later time
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
-const SelectReveal: React.FC<SelectRevealProps> = ({
-  form,
-  client,
-  canCreateDelayedRevealBatch,
-}) => {
+function DelayedRevealConfiguration(props: {
+  form: ReturnType<typeof useBatchLazyMintForm>;
+  client: ThirdwebClient;
+}) {
+  const { form, client } = props;
   const [show, setShow] = useState(false);
-
   const imageUrl = form.watch("placeHolder.image");
 
   return (
-    <Flex flexDir="column">
-      <Flex
-        flexDir={{ base: "column", md: "row" }}
-        gap={{ base: 3, md: 6 }}
-        mb={6}
-      >
-        <SelectOption
-          description="Collectors will immediately see the final NFT when they complete the minting"
-          isActive={form.watch("revealType") === "instant"}
-          name="Reveal upon mint"
-          onClick={() => form.setValue("revealType", "instant")}
-        />
-        <SelectOption
-          description="Collectors will mint your placeholder image, then you reveal at a later time"
-          disabled={!canCreateDelayedRevealBatch}
-          disabledText="This contract doesn't implement Delayed Reveal"
-          isActive={form.watch("revealType") === "delayed"}
-          name="Delayed Reveal"
-          onClick={() => form.setValue("revealType", "delayed")}
-        />
-      </Flex>
-      <div className="flex flex-col gap-3">
-        {form.watch("revealType") === "delayed" && (
-          <>
-            <Heading size="title.sm">Let&apos;s set a password</Heading>
-            <Alert borderRadius="lg" status="warning">
-              <AlertIcon />
-              You&apos;ll need this password to reveal your NFTs. Please save it
-              somewhere safe.
-            </Alert>
+    <div className="space-y-6">
+      {/* password  */}
+      <div className="border px-4 lg:px-6 py-8 rounded-lg bg-card">
+        <div className="flex mb-3">
+          <div className="p-2 rounded-full border bg-card">
+            <LockKeyholeIcon className="size-4 text-muted-foreground" />
+          </div>
+        </div>
+        <h3 className="font-semibold text-lg mb-0.5 tracking-tight">
+          Set password
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          You'll need this password to reveal your NFTs. Please save it
+          somewhere safe
+        </p>
 
-            <Flex
-              flexDir={{ base: "column", md: "row" }}
-              gap={{ base: 4, md: 0 }}
-            >
-              <FormControl
-                isInvalid={
-                  !!form.getFieldState("password", form.formState).error
-                }
-                isRequired
-                mr={4}
+        <div className="space-y-5">
+          {/* select password */}
+          <FormItem className="space-y-1">
+            <FormLabel>Password</FormLabel>
+            <div className="relative max-w-md">
+              <Input
+                {...form.register("password")}
+                className="pr-10"
+                type={show ? "text" : "password"}
+              />
+              <Button
+                variant="ghost"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 h-auto text-muted-foreground"
+                onClick={() => setShow(!show)}
               >
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    {...form.register("password")}
-                    placeholder="Choose password"
-                    type={show ? "text" : "password"}
-                  />
-                  <InputRightElement cursor="pointer">
-                    {show ? (
-                      <EyeIcon
-                        className="size-3"
-                        onClick={() => setShow(!show)}
-                      />
-                    ) : (
-                      <EyeOffIcon
-                        className="size-3"
-                        onClick={() => setShow(!show)}
-                      />
-                    )}
-                  </InputRightElement>
-                </InputGroup>
-
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("password", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl
-                isInvalid={
-                  !!form.getFieldState("confirmPassword", form.formState).error
-                }
-                isRequired
-              >
-                <FormLabel>Confirm password</FormLabel>
-                <Input
-                  {...form.register("confirmPassword")}
-                  placeholder="Confirm password"
-                  type="password"
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("confirmPassword", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-            </Flex>
-            <div className="flex flex-col gap-5">
-              <Heading size="title.sm">Placeholder</Heading>
-              <FormControl
-                isInvalid={
-                  !!form.getFieldState("placeHolder.image", form.formState)
-                    .error
-                }
-              >
-                <FormLabel>Image</FormLabel>
-                <div className="w-auto md:w-[350px]">
-                  <FileInput
-                    accept={{ "image/*": [] }}
-                    className="rounded border border-border transition-all duration-200"
-                    client={client}
-                    setValue={(file) =>
-                      form.setValue("placeHolder.image", file)
-                    }
-                    showUploadButton
-                    value={imageUrl}
-                  />
-                </div>
-                <FormHelperText>
-                  You can optionally upload an image as the placeholder.
-                </FormHelperText>
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("placeHolder.image", form.formState)
-                      .error?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl
-                isInvalid={
-                  !!form.getFieldState("placeHolder.name", form.formState).error
-                }
-                isRequired
-              >
-                <FormLabel>Name</FormLabel>
-                <Input
-                  {...form.register("placeHolder.name")}
-                  placeholder="eg. My NFT (Coming soon)"
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("placeHolder.name", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl
-                isInvalid={
-                  !!form.getFieldState("placeHolder.name", form.formState).error
-                }
-              >
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  {...form.register("placeHolder.description")}
-                  placeholder="eg. Reveal on July 15th!"
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState(
-                      "placeHolder.description",
-                      form.formState,
-                    ).error?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
+                {show ? (
+                  <EyeIcon className="size-4" />
+                ) : (
+                  <EyeOffIcon className="size-4" />
+                )}
+              </Button>
             </div>
-          </>
-        )}
+            <FormMessage>
+              {form.getFieldState("password", form.formState).error?.message}
+            </FormMessage>
+          </FormItem>
+
+          {/* confirm password */}
+          <FormItem className="space-y-1">
+            <FormLabel>Confirm password</FormLabel>
+            <div className="relative max-w-md">
+              <Input
+                {...form.register("confirmPassword")}
+                className="pr-10"
+                type="password"
+              />
+            </div>
+            <FormMessage>
+              {
+                form.getFieldState("confirmPassword", form.formState).error
+                  ?.message
+              }
+            </FormMessage>
+          </FormItem>
+        </div>
       </div>
-    </Flex>
+
+      {/* placeholder */}
+      <div className="border px-4 lg:px-6 py-8 rounded-lg bg-card">
+        <div className="flex mb-3">
+          <div className="p-2 rounded-full border bg-card">
+            <EyeIcon className="size-4 text-muted-foreground" />
+          </div>
+        </div>
+        <h3 className="font-semibold text-lg tracking-tight mb-0.5">
+          Set placeholder metadata
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          The placeholder metadata will be displayed for all NFTs until you
+          reveal your NFTs
+        </p>
+        <div className="flex flex-col lg:flex-row gap-5">
+          <FormItem className="w-[200px]">
+            <FormLabel>Image</FormLabel>
+            <FileInput
+              accept={{ "image/*": [] }}
+              className="rounded border bg-background transition-all duration-200 "
+              client={client}
+              setValue={(file) => form.setValue("placeHolder.image", file)}
+              value={imageUrl}
+            />
+
+            <FormMessage>
+              {
+                form.getFieldState("placeHolder.image", form.formState).error
+                  ?.message
+              }
+            </FormMessage>
+          </FormItem>
+          <div className="grow space-y-5 flex flex-col">
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <Input
+                className="max-w-sm"
+                {...form.register("placeHolder.name")}
+                placeholder="My NFT (Coming soon)"
+              />
+              <FormMessage>
+                {
+                  form.getFieldState("placeHolder.name", form.formState).error
+                    ?.message
+                }
+              </FormMessage>
+            </FormItem>
+            <FormItem className="grow flex flex-col">
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                {...form.register("placeHolder.description")}
+                className="grow"
+                placeholder="Reveal on July 15th!"
+              />
+              <FormMessage>
+                {
+                  form.getFieldState("placeHolder.description", form.formState)
+                    .error?.message
+                }
+              </FormMessage>
+            </FormItem>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-};
+}

@@ -42,18 +42,18 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
           disabled
             ? "pointer-events-none cursor-not-allowed bg-muted"
             : "cursor-pointer",
-          isActive && "border-primary",
+          isActive && "bg-muted/50 border-active-border",
           className,
         )}
         onClick={onClick}
         {...divProps}
       >
         <div className="flex flex-row justify-between">
-          <div className="flex flex-row items-start">
-            <div className="mt-0.5 mr-2.5 flex h-4 w-4 items-center justify-center rounded-full border border-inverted text-inverted">
+          <div className="flex flex-row items-start gap-4">
+            <div className="flex size-5 shrink-0 items-center justify-center rounded-full border border-inverted text-inverted">
               {isActive && <div className="h-2 w-2 rounded-full bg-inverted" />}
             </div>
-            <div className="ml-4 flex flex-col gap-2 self-start">
+            <div>
               <h4
                 className={cn(
                   "font-semibold text-sm",
@@ -62,7 +62,11 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
               >
                 {name}
               </h4>
-              {description && <p className="mt-1 text-sm">{description}</p>}
+              {description && (
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {description}
+                </p>
+              )}
             </div>
           </div>
           {infoText && (

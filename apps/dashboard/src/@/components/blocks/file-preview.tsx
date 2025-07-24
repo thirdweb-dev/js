@@ -37,7 +37,12 @@ export function FilePreview(props: {
 
   if (!objectUrl) {
     return (
-      <div className={cn("flex items-center justify-center", props.className)}>
+      <div
+        className={cn(
+          "flex items-center justify-center bg-accent",
+          props.className,
+        )}
+      >
         <ImageOffIcon className="size-6 text-muted-foreground" />
       </div>
     );
@@ -56,7 +61,10 @@ export function FilePreview(props: {
 
   return (
     <MediaRenderer
-      className={cn(props.className, "[&>div]:!bg-muted")}
+      className={cn(
+        props.className,
+        "[&>div]:!bg-accent [&_a]:!text-muted-foreground [&_a]:!no-underline [&_svg]:!size-6 [&_svg]:!text-muted-foreground relative overflow-hidden",
+      )}
       client={props.client}
       src={objectUrl}
     />

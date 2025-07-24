@@ -1,5 +1,6 @@
 import { ArrowDownToLineIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function handleDownload(params: {
   fileContent: string;
@@ -22,10 +23,14 @@ export function DownloadFileButton(props: {
   fileNameWithExtension: string;
   fileFormat: "text/csv" | "application/json";
   label: string;
+  variant?: "default" | "outline";
+  className?: string;
+  iconClassName?: string;
 }) {
   return (
     <Button
-      className="gap-2"
+      className={cn("gap-2", props.className)}
+      variant={props.variant}
       onClick={() => {
         handleDownload({
           fileContent: props.fileContent,
@@ -35,7 +40,7 @@ export function DownloadFileButton(props: {
       }}
       size="sm"
     >
-      <ArrowDownToLineIcon className="size-4" />
+      <ArrowDownToLineIcon className={cn("size-4", props.iconClassName)} />
       {props.label}
     </Button>
   );
