@@ -11,12 +11,13 @@ import { BuyWidgetFTUX } from "./BuyWidgetFTUX";
 import { apiCode, embedCode, sdkCode } from "./code-examples";
 import { PayAnalyticsFilter } from "./PayAnalyticsFilter";
 import { PayCustomersTable } from "./PayCustomersTable";
-import { PaymentHistory } from "./PaymentHistory";
+import { PaymentHistory } from "./PaymentHistory.client";
 import { PaymentsSuccessRate } from "./PaymentsSuccessRate";
 import { PayNewCustomers } from "./PayNewCustomers";
 import { Payouts } from "./Payouts";
 import { TotalPayVolume } from "./TotalPayVolume";
 import { TotalVolumePieChart } from "./TotalVolumePieChart";
+import { Card } from "@/components/ui/card";
 
 export async function PayAnalytics(props: {
   projectClientId: string;
@@ -154,13 +155,11 @@ export async function PayAnalytics(props: {
             </div>
             <PayCustomersTable client={props.client} data={walletData || []} />
           </GridWithSeparator>
-          <CardContainer>
-            <PaymentHistory
-              client={props.client}
-              projectClientId={props.projectClientId}
-              teamId={props.teamId}
-            />
-          </CardContainer>
+          <PaymentHistory
+            client={props.client}
+            projectClientId={props.projectClientId}
+            teamId={props.teamId}
+          />
         </div>
       </ResponsiveSuspense>
     </div>
@@ -178,9 +177,5 @@ function GridWithSeparator(props: { children: React.ReactNode }) {
 }
 
 function CardContainer(props: { children: React.ReactNode }) {
-  return (
-    <div className="flex rounded-xl border border-border bg-card p-4 xl:p-6">
-      {props.children}
-    </div>
-  );
+  return <Card className="flex p-4 lg:p-6">{props.children}</Card>;
 }

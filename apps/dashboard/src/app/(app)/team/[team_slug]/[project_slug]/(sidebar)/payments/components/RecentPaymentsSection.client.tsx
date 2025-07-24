@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TableHeading, TableHeadingRow } from "./common";
-import { SkeletonTableRow, TableRow } from "./PaymentHistory";
+import { TableRow, SkeletonTableRow } from "./PaymentsTableRow";
 
 export function RecentPaymentsSection(props: {
   client: ThirdwebClient;
@@ -54,8 +54,8 @@ export function RecentPaymentsSection(props: {
           <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
             <thead>
               <TableHeadingRow>
-                <TableHeading> Sent </TableHeading>
-                <TableHeading> Received </TableHeading>
+                <TableHeading>Sent</TableHeading>
+                <TableHeading>Received</TableHeading>
                 <TableHeading>Type</TableHeading>
                 <TableHeading>Status</TableHeading>
                 <TableHeading>Recipient</TableHeading>
