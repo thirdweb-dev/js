@@ -60,7 +60,7 @@ export function TokenInfoFieldset(props: {
               {/* name + symbol */}
               <div className="flex flex-col gap-6 lg:flex-row lg:gap-4">
                 <FormFieldSetup
-                  className="grow"
+                  className="lg:max-w-[300px] grow"
                   errorMessage={form.formState.errors.name?.message}
                   htmlFor={nameId}
                   isRequired
@@ -74,7 +74,7 @@ export function TokenInfoFieldset(props: {
                 </FormFieldSetup>
 
                 <FormFieldSetup
-                  className="lg:max-w-[200px]"
+                  className="lg:max-w-[150px]"
                   errorMessage={form.formState.errors.symbol?.message}
                   htmlFor={symbolId}
                   isRequired

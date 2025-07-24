@@ -81,11 +81,11 @@ export function TokenSaleSection(props: {
 
   return (
     <DynamicHeight>
-      <div className="relative border-t border-dashed p-4 md:p-6">
+      <div className="relative border-t border-dashed px-4 md:px-6 py-8">
         <div>
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="font-semibold text-lg">Sale</h2>
+              <h2 className="font-semibold text-xl tracking-tight">Sale</h2>
               <p className="text-muted-foreground text-sm">
                 List your coin on a decentralized exchange and earn rewards on
                 every trade
@@ -206,7 +206,7 @@ function PoolConfig(props: {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-5">
+    <div className="space-y-6">
       {/* Pricing Strategy */}
       <FormFieldSetup
         isRequired
@@ -235,7 +235,7 @@ function PoolConfig(props: {
         </Select>
       </FormFieldSetup>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:max-w-[536px]">
         {/* supply % */}
         <FormFieldSetup
           errorMessage={

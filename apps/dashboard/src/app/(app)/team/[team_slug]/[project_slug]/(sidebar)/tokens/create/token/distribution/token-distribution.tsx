@@ -58,7 +58,7 @@ export function TokenDistributionFieldset(props: {
                 isRequired
                 label="Total Supply"
               >
-                <div className="relative">
+                <div className="relative max-w-96">
                   <Input id={supplyId} {...form.register("supply")} />
                   <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                     {props.tokenSymbol || "Tokens"}
@@ -75,7 +75,7 @@ export function TokenDistributionFieldset(props: {
 
             <TokenAirdropSection client={props.client} form={form} />
 
-            <div className="flex flex-col gap-3 p-4 py-6 md:px-6 md:py-6 border-t border-dashed">
+            <div className="flex flex-col gap-3 p-4 py-8 md:px-6 border-t border-dashed">
               <TokenDistributionBarChart
                 distributionFormValues={form.watch()}
               />

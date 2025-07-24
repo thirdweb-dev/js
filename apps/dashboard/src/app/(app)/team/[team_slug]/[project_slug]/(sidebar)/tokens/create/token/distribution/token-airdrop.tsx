@@ -66,10 +66,10 @@ export function TokenAirdropSection(props: {
 
   return (
     <DynamicHeight>
-      <div className="relative border-t border-dashed">
-        <div className="flex items-center justify-between gap-3 px-4 py-6 md:px-6">
+      <div className="relative border-t border-dashed px-4 py-8 md:px-6">
+        <div className="flex items-center justify-between gap-3 ">
           <div>
-            <h2 className="font-semibold text-lg">Airdrop</h2>
+            <h2 className="font-semibold text-xl tracking-tight">Airdrop</h2>
             <p className="text-muted-foreground text-sm">
               Airdrop tokens to a list of addresses with each address receiving
               a specific quantity
@@ -88,7 +88,7 @@ export function TokenAirdropSection(props: {
         </div>
 
         {isEnabled && (
-          <div className="flex justify-start px-4 pb-4 md:px-6 md:pb-6">
+          <div className="flex justify-start mt-4">
             {airdropAddresses.length > 0 ? (
               <div className="flex w-full flex-col gap-4 rounded-lg border bg-background p-4 md:flex-row lg:items-center lg:justify-between">
                 {/* left */}
