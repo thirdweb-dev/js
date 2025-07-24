@@ -7,14 +7,12 @@ import {
   HammerIcon,
   LinkIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { loginRedirect } from "@/utils/redirects";
+import { FeatureCard } from "./components/FeatureCard.client";
 
 export default async function Page(props: {
   params: Promise<{
@@ -32,9 +30,7 @@ export default async function Page(props: {
   const project = await getProject(params.team_slug, params.project_slug);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/universal-bridge`,
-    );
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/payments`);
   }
 
   if (!project) {
@@ -51,6 +47,7 @@ export default async function Page(props: {
             title="Earn Fees"
             description="Setup fees to earn any time a user swaps or bridges funds."
             icon={<BadgeDollarSignIcon className="size-5" />}
+            id="earn_fees"
             link={{
               href: `/team/${params.team_slug}/${params.project_slug}/payments/settings`,
               label: "Configure",
@@ -60,6 +57,7 @@ export default async function Page(props: {
             title="Create Payment Links"
             description="Create shareable URLs to receive any token in seconds."
             icon={<LinkIcon className="size-5" />}
+            id="create_payment_links"
             link={{
               href: `/pay`,
               label: "Create",
@@ -69,6 +67,7 @@ export default async function Page(props: {
             title="Sell Your Token"
             description="Allow users to swap from any token to your token from your app."
             icon={<ArrowLeftRightIcon className="size-5" />}
+            id="sell_your_token"
             link={{
               href: `/team/${params.team_slug}/${params.project_slug}/tokens`,
               label: "Launch Token",
@@ -78,6 +77,7 @@ export default async function Page(props: {
             title="Get Notified"
             description="Create Webhooks to get notified on each purchase or transaction."
             icon={<BellDotIcon className="size-5" />}
+            id="get_notified"
             link={{
               href: `/team/${params.team_slug}/${params.project_slug}/payments/webhooks`,
               label: "Setup",
@@ -87,6 +87,7 @@ export default async function Page(props: {
             title="Sell Products"
             description="Sell physical or digital products with an easy-to-configure component."
             icon={<CoinsIcon className="size-5" />}
+            id="sell_products"
             link={{
               href: "https://portal.thirdweb.com/payments/products",
               label: "Get Started",
@@ -97,6 +98,7 @@ export default async function Page(props: {
             title="Customize Your Experience"
             description="Fully customizable backend API to create your own branded flows."
             icon={<HammerIcon className="size-5" />}
+            id="customize_your_experience"
             link={{
               href: "https://payments.thirdweb.com/reference",
               label: "Docs",
@@ -128,29 +130,5 @@ export default async function Page(props: {
         </div>
       </div>
     </ResponsiveSearchParamsProvider>
-  );
-}
-
-function FeatureCard(props: {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  link: { href: string; label: string; target?: string };
-}) {
-  return (
-    <Card className="p-4 flex flex-col items-start gap-4">
-      <div className="text-muted-foreground rounded-full border bg-background size-12 flex items-center justify-center">
-        {props.icon}
-      </div>
-      <div className="flex flex-col gap-0.5">
-        <h3 className="font-semibold">{props.title}</h3>
-        <p className="text-muted-foreground text-sm">{props.description}</p>
-      </div>
-      <Button size="sm" variant="default" className="h-8" asChild>
-        <Link href={props.link.href} target={props.link.target}>
-          {props.link.label}
-        </Link>
-      </Button>
-    </Card>
   );
 }

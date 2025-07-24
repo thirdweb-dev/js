@@ -79,7 +79,7 @@ export function ProjectSidebarLayout(props: {
           group: "Monetize",
           links: [
             {
-              href: `${layoutPath}/universal-bridge`,
+              href: `${layoutPath}/payments`,
               icon: PayIcon,
               label: "Payments",
             },

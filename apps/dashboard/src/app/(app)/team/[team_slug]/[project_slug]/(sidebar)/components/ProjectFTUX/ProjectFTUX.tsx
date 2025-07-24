@@ -254,7 +254,7 @@ function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
     {
       description:
         "Bridge, swap, and purchase cryptocurrencies with any fiat options or tokens via cross-chain routing",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/universal-bridge`,
+      href: `/team/${props.teamSlug}/${props.projectSlug}/payments`,
       icon: PayIcon,
       title: "Payments",
     },

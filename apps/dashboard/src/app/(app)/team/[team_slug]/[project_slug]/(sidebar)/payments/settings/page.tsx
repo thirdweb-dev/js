@@ -1,5 +1,5 @@
-import { PayConfig } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/PayConfig";
-import { RouteDiscovery } from "@app/team/[team_slug]/[project_slug]/(sidebar)/universal-bridge/settings/RouteDiscovery";
+import { PayConfig } from "@app/team/[team_slug]/[project_slug]/(sidebar)/payments/settings/PayConfig";
+import { RouteDiscovery } from "@app/team/[team_slug]/[project_slug]/(sidebar)/payments/settings/RouteDiscovery";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/projects";
@@ -23,9 +23,7 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${team_slug}/${project_slug}/universal-bridge/settings`,
-    );
+    loginRedirect(`/team/${team_slug}/${project_slug}/payments/settings`);
   }
 
   if (!team) {

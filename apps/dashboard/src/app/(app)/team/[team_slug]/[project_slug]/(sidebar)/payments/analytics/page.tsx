@@ -24,9 +24,7 @@ export default async function Page(props: {
   const project = await getProject(params.team_slug, params.project_slug);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/universal-bridge`,
-    );
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/payments`);
   }
 
   if (!project) {
