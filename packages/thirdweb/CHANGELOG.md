@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.105.21
+
+### Patch Changes
+
+- [#7708](https://github.com/thirdweb-dev/js/pull/7708) [`3c8e444`](https://github.com/thirdweb-dev/js/commit/3c8e444fe6f4bf90c8d2eaaa1b4481b683f41ec6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ecosystem wallet connection with default chains
+
+- [#7711](https://github.com/thirdweb-dev/js/pull/7711) [`adec6be`](https://github.com/thirdweb-dev/js/commit/adec6be844f8e35d770e2d7f491117cea4a34548) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix showQrModal option not respected on desktop web
+
 ## 5.105.20
 
 ### Patch Changes
