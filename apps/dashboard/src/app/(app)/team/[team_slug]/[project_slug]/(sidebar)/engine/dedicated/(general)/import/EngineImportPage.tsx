@@ -1,6 +1,5 @@
 "use client";
 
-import { FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon, DownloadIcon, ExternalLinkIcon } from "lucide-react";
@@ -12,6 +11,7 @@ import { apiServerProxy } from "@/actions/proxies";
 import { Button } from "@/components/ui/button";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
