@@ -107,6 +107,10 @@ export const validTeamResponse: TeamResponse = {
       enabled: true,
       rateLimit: 10,
     },
+    gateway: {
+      enabled: true,
+      rateLimit: 1000,
+    },
   },
   createdAt: new Date("2024-06-01").toISOString(),
   dedicatedSupportChannel: null,
