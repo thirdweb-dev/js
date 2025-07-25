@@ -517,7 +517,7 @@ function JSONWebTokenFields(props: {
             Optionally allow users to authenticate with a custom JWT.{" "}
             <Link
               className="text-link-foreground hover:text-foreground"
-              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
+              href="https://portal.thirdweb.com/wallets/custom-auth"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -609,7 +609,7 @@ function AuthEndpointFields(props: {
             that you provide.{" "}
             <Link
               className="text-link-foreground hover:text-foreground"
-              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
+              href="https://portal.thirdweb.com/wallets/custom-auth"
               rel="noopener noreferrer"
               target="_blank"
             >

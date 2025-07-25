@@ -64,7 +64,7 @@ export function EmptyState() {
       <div className="flex gap-2">
         <Button asChild className="min-w-36" variant="primary">
           <Link
-            href="https://portal.thirdweb.com/connect"
+            href="https://portal.thirdweb.com/wallets"
             rel="noopener noreferrer"
             target="_blank"
           >

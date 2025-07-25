@@ -108,7 +108,7 @@ function UBFooter() {
       left={{
         links: [
           {
-            href: "https://portal.thirdweb.com/connect/pay/overview",
+            href: "https://portal.thirdweb.com/payments",
             label: "Overview",
           },
           {

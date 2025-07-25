@@ -373,7 +373,7 @@ async function AsyncAppHighlightsCard(props: {
 
   return (
     <EmptyStateCard
-      link="https://portal.thirdweb.com/connect/quickstart"
+      link="https://portal.thirdweb.com/wallets"
       metric="Wallets"
     />
   );
@@ -395,7 +395,7 @@ async function AsyncWalletDistributionCard(props: {
     <WalletDistributionCard data={walletConnections} />
   ) : (
     <EmptyStateCard
-      link="https://portal.thirdweb.com/connect/quickstart"
+      link="https://portal.thirdweb.com/wallets"
       metric="Wallets"
     />
   );
@@ -436,7 +436,7 @@ function AppHighlightsCard({
       emptyContent: (
         <EmptyStateContent
           description="Onramp, swap, and bridge with thirdweb's Payments."
-          link="https://portal.thirdweb.com/connect/pay/overview"
+          link="https://portal.thirdweb.com/payments"
           metric="Payments"
         />
       ),

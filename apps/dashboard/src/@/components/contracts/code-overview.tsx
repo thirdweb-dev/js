@@ -6,7 +6,6 @@ import {
   formatAbiItem,
 } from "abitype";
 import { CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -882,14 +881,13 @@ function AccountFactorySection(props: {
           <AlertTitle>Account Factory</AlertTitle>
           <AlertDescription>
             The recommended way to use account factories is to integrate the{" "}
-            <Link
-              className="text-primary-500 underline hover:text-primary-600"
-              href="https://portal.thirdweb.com/connect/account-abstraction/overview"
+            <UnderlineLink
+              href="https://portal.thirdweb.com/transactions/sponsor"
               rel="noopener noreferrer"
               target="_blank"
             >
               thirdweb SDK
-            </Link>{" "}
+            </UnderlineLink>{" "}
             in your applications. This will ensure account contracts are
             deployed for your users only when they need it.
           </AlertDescription>

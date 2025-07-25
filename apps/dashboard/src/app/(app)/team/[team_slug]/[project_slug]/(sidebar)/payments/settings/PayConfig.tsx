@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { Project } from "@/api/projects";
@@ -94,14 +93,6 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
             <p className="mt-1.5 mb-4 text-foreground text-sm">
               thirdweb collects a 0.3% protocol fee on swap transactions. You
               may set your own developer fee in addition to this fee.{" "}
-              <Link
-                className="text-link-foreground hover:text-foreground"
-                href="https://portal.thirdweb.com/connect/pay/fee-sharing"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more.
-              </Link>
             </p>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

@@ -729,16 +729,15 @@ const paymentRedirects = {
   "/checkouts/translations": "/payments/nft-checkout/translations",
   "/checkouts/webhooks": "/payments/nft-checkout/webhooks",
   "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server":
-    "/connect/in-app-wallet/guides/get-user-details",
-  "/connect/in-app-wallet/how-it-works": "/connect/in-app-wallet/security",
-  "/connect/pay/build-a-custom-experience":
-    "/connect/pay/guides/build-a-custom-experience",
-  "/connect/pay/buy-with-crypto": "/connect/pay/overview",
-  "/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
-  "/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
-  "/connect/pay/buy-with-fiat": "/connect/pay/overview",
-  "/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
-  "/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
+    "/wallets/get-users",
+  "/connect/in-app-wallet/how-it-works": "/wallets/security",
+  "/connect/pay/build-a-custom-experience": "/payments/products",
+  "/connect/pay/buy-with-crypto": "/payments",
+  "/connect/pay/buy-with-crypto/fee-sharing": "/payments",
+  "/connect/pay/buy-with-crypto/overview": "/payments",
+  "/connect/pay/buy-with-fiat": "/payments",
+  "/connect/pay/enable-test-mode": "/payments",
+  "/connect/pay/guides/enable-test-mode": "/payments",
 };
 
 const contractRedirects = {
@@ -914,14 +913,14 @@ const glossaryRedirects = {
 
 const otherRedirects = {
   "/api-keys": "/account/api-keys",
-  "/connect/account-abstraction": "/connect/account-abstraction/overview",
+  "/connect/account-abstraction": "/wallets/sponsor-gas",
   // connect
-  "/connect/connect": "/connect/sign-in",
+  "/connect/connect": "/wallets",
   "/connect/embedded-wallet/how-to/get-embedded-wallet-details-on-server":
     "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
     "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server",
-  "/connect/smart-wallet/:path*": "/connect/account-abstraction/:path*",
+  "/connect/smart-wallet/:path*": "/wallets/sponsor-gas",
   "/connect/wallet/sign-in-methods/overview":
     "/connect/wallet/sign-in-methods/configure",
   "/contractkit/:path*": "/contracts",
@@ -1010,11 +1009,10 @@ const otherRedirects = {
     "/unity/wallets/providers/in-app-wallet",
   "/unity/wallets/providers/smart-wallet":
     "/unity/wallets/providers/account-abstraction",
-  "/wallet/get-started/overview": "/connect/wallet/overview",
+  "/wallet/get-started/overview": "/wallets",
   // connect > wallets
   "/connect": "/wallets",
   "/connect/auth": "/wallets/auth",
-  "/connect/:path*": "/wallets/:path*",
   "/connect/wallet/sign-in-methods/configure": "/wallets/users",
   "/connect/wallet/server": "/wallets/server",
   "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",
@@ -1030,7 +1028,7 @@ const otherRedirects = {
   "/wallets/wallet/server": "/wallets/server",
   "/wallets/wallet/sign-in-methods/configure": "/wallets/users",
   // account abstraction rename
-  "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
+  "/wallets/smart-wallet/:path*": "/wallets/sponsor-gas",
   "/web3-api/:path*": "/infrastructure/engine/overview",
 };
 
@@ -1046,8 +1044,8 @@ const v4ToV5Redirects = {
   "/react-native/v0/:path*": "/react-native/v5",
   "/react/v4": "/react/v5",
   "/react/v4/:path*": "/react/v5",
-  "/references/wallets": "/connect/external-wallets",
-  "/references/wallets/:path*": "/connect/external-wallets",
+  "/references/wallets": "/wallets/external-wallets",
+  "/references/wallets/:path*": "/wallets/external-wallets",
   "/storage-sdk/v2": "/typescript/v5/storage",
   "/storage-sdk/v2/:path*": "/typescript/v5/storage",
   "/typescript/v4": "/typescript/v5",
@@ -1058,29 +1056,24 @@ const v4ToV5Redirects = {
 };
 
 const payRedirects = {
-  "/connect/pay/customization/connectbutton":
-    "/pay/customization/connectbutton",
-  "/connect/pay/customization/payembed": "/pay/customization/payembed",
-  "/connect/pay/customization/send-transaction":
-    "/pay/customization/send-transaction",
-  "/connect/pay/faqs": "/pay/faqs",
-  "/connect/pay/fees": "/pay/fees",
-  "/connect/pay/get-started": "/pay/get-started",
-  "/connect/pay/guides/accept-direct-payments":
-    "/pay/guides/accept-direct-payments",
-  "/connect/pay/guides/build-a-custom-experience":
-    "/pay/guides/build-a-custom-experience",
-  "/connect/pay/guides/cross-chain-swapping":
-    "/pay/guides/cross-chain-swapping",
-  "/connect/pay/onramp-providers": "/pay/onramp-providers",
-  "/connect/pay/overview": "/pay",
-  "/connect/pay/testing-pay": "/pay/testing-pay",
-  "/connect/pay/webhooks": "/pay/webhooks",
+  "/connect/pay/customization/connectbutton": "/payments/products",
+  "/connect/pay/customization/payembed": "/payments/products",
+  "/connect/pay/customization/send-transaction": "/payments",
+  "/connect/pay/faqs": "/payments",
+  "/connect/pay/fees": "/payments",
+  "/connect/pay/get-started": "/payments",
+  "/connect/pay/guides/accept-direct-payments": "/payments",
+  "/connect/pay/guides/build-a-custom-experience": "/payments",
+  "/connect/pay/guides/cross-chain-swapping": "/payments",
+  "/connect/pay/onramp-providers": "/payments",
+  "/connect/pay/overview": "/payments",
+  "/connect/pay/testing-pay": "/payments",
+  "/connect/pay/webhooks": "/payments/webhooks",
 };
 
 const walletRefactorRedirects = {
-  "/typescript/v5/supported-wallets": "/connect/external-wallets",
-  "/typescript/v5/supported-wallets/:path*": "/connect/external-wallets/:path*",
+  "/typescript/v5/supported-wallets": "/wallets/external-wallets",
+  "/typescript/v5/supported-wallets/:path*": "/wallets/external-wallets",
 };
 
 /**
