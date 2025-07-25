@@ -57,7 +57,7 @@ export function createInAppWallet(args: {
   let client: ThirdwebClient | undefined;
   let authToken: string | null = null;
 
-  const resolveSmartAccountOptionsFromEcosystem = async (options: {
+  const resolveSmartAccountOptionsFromEcosystem = async (options?: {
     chain?: Chain;
   }) => {
     if (ecosystem) {
@@ -78,7 +78,7 @@ export function createInAppWallet(args: {
           // default to 4337
           const { defaultChainId } = ecosystemOptions.smartAccountOptions;
           const preferredChain =
-            options.chain ??
+            options?.chain ??
             (defaultChainId ? getCachedChain(defaultChainId) : undefined);
           if (!preferredChain) {
             throw new Error(
@@ -108,7 +108,7 @@ export function createInAppWallet(args: {
         ecosystem,
       );
 
-      await resolveSmartAccountOptionsFromEcosystem(options);
+      await resolveSmartAccountOptionsFromEcosystem();
 
       const {
         account: connectedAccount,
@@ -145,7 +145,7 @@ export function createInAppWallet(args: {
         ecosystem,
       );
 
-      await resolveSmartAccountOptionsFromEcosystem(options);
+      await resolveSmartAccountOptionsFromEcosystem();
 
       const {
         account: connectedAccount,
