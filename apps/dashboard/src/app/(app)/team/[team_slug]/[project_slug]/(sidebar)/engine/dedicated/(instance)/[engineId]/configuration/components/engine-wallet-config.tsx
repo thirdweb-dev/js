@@ -1,10 +1,9 @@
-import { Heading } from "chakra/heading";
 import { CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   EngineBackendWalletOptions,
   type EngineBackendWalletType,
@@ -20,19 +19,17 @@ import { KmsAwsConfig } from "./kms-aws-config";
 import { KmsGcpConfig } from "./kms-gcp-config";
 import { LocalConfig } from "./local-config";
 
-interface EngineWalletConfigProps {
-  instance: EngineInstance;
-  teamSlug: string;
-  projectSlug: string;
-  authToken: string;
-}
-
-export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
+export function EngineWalletConfig({
   instance,
   teamSlug,
   projectSlug,
   authToken,
-}) => {
+}: {
+  instance: EngineInstance;
+  teamSlug: string;
+  projectSlug: string;
+  authToken: string;
+}) {
   const { data: walletConfig } = useEngineWalletConfig({
     authToken,
     instanceUrl: instance.url,
@@ -68,17 +65,18 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
   const isGcpKmsConfigured = !!walletConfig?.gcpKmsKeyRingId;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <Heading size="title.md">Backend Wallets</Heading>
-        <p className="text-muted-foreground">
+    <div>
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight mb-1">
+          Backend Wallets
+        </h2>
+        <p className="text-muted-foreground text-sm">
           Create backend wallets on the{" "}
-          <Link
-            className="text-link-foreground hover:text-foreground"
+          <UnderlineLink
             href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}`}
           >
             Overview
-          </Link>{" "}
+          </UnderlineLink>{" "}
           tab. To use other wallet types, configure them below.
         </p>
       </div>
@@ -102,18 +100,20 @@ export const EngineWalletConfig: React.FC<EngineWalletConfigProps> = ({
         }))}
       />
 
-      {!isWalletCredentialsSupported && activeTab === "circle" && (
-        <Alert className="mt-4" variant="warning">
-          <CircleAlertIcon className="size-4" />
-          <AlertTitle>Update Required</AlertTitle>
-          <AlertDescription>
-            Circle wallet support requires a newer version of Engine. Please
-            update your Engine instance to use this feature.
-          </AlertDescription>
-        </Alert>
-      )}
+      <div className="mt-4 space-y-4">
+        {!isWalletCredentialsSupported && activeTab === "circle" && (
+          <Alert className="mt-4" variant="warning">
+            <CircleAlertIcon className="size-4" />
+            <AlertTitle>Update Required</AlertTitle>
+            <AlertDescription>
+              Circle wallet support requires a newer version of Engine. Please
+              update your Engine instance to use this feature.
+            </AlertDescription>
+          </Alert>
+        )}
 
-      {tabContent[activeTab]}
+        {tabContent[activeTab]}
+      </div>
     </div>
   );
-};
+}

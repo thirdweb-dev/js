@@ -26,14 +26,16 @@ export const EngineSystem: React.FC<EngineSystemProps> = ({
   }
 
   return (
-    <p className="gap-0 font-mono text-xs opacity-50">
-      Version: {healthQuery.data.engineVersion ?? "..."}
-      <br />
-      Enabled: {healthQuery.data.features?.join(", ")}
-      <br />
-      CPU: {metricsQuery.data?.result?.cpu?.toFixed(2) ?? "..."}%
-      <br />
-      Memory: {metricsQuery.data?.result?.memory?.toFixed(0) ?? "..."}MB
-    </p>
+    <div className="rounded-lg border border-dashed p-4 lg:p-6">
+      <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+        Version: {healthQuery.data.engineVersion ?? "..."}
+        <br />
+        Enabled: {healthQuery.data.features?.join(", ")}
+        <br />
+        CPU: {metricsQuery.data?.result?.cpu?.toFixed(2) ?? "..."}%
+        <br />
+        Memory: {metricsQuery.data?.result?.memory?.toFixed(0) ?? "..."}MB
+      </p>
+    </div>
   );
 };
