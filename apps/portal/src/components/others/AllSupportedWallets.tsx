@@ -125,10 +125,7 @@ function AllSupportedWalletsContent() {
 
           {currentWallets.length === 0 ? (
             <Tr>
-              <Td
-                colSpan={2}
-                className="text-center text-muted-foreground py-8"
-              >
+              <Td>
                 {searchQuery
                   ? "No wallets found matching your search."
                   : "No wallets available."}
