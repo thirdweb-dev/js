@@ -116,6 +116,10 @@ type TeamCapabilities = {
     enabled: boolean;
     rateLimit: number;
   };
+  gateway: {
+    enabled: boolean;
+    rateLimit: number;
+  };
 };
 
 type TeamPlan =

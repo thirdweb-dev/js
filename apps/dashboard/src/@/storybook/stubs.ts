@@ -89,6 +89,10 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
         enabled: true,
         rateLimit: 10,
       },
+      gateway: {
+        enabled: true,
+        rateLimit: 1000,
+      },
     },
     createdAt: new Date().toISOString(),
     dedicatedSupportChannel: null,
