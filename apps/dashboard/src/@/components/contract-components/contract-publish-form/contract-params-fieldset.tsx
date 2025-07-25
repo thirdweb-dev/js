@@ -1,4 +1,3 @@
-import { FormControl, useBreakpointValue } from "@chakra-ui/react";
 import type { AbiParameter } from "abitype";
 import { useId, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -12,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { getTemplateValuesForType } from "@/lib/deployment/template-values";
 import { DecodedInputArrayFieldset } from "./decoded-bytes-input/decoded-input-array-fieldset";
 import { RefInputFieldset } from "./ref-contract-input/ref-input-fieldset";
@@ -25,7 +25,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
   client,
 }) => {
   const form = useFormContext();
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useIsMobile();
   const displayNameId = useId();
   const descriptionId = useId();
   const [isCustomInputEnabledArray, setIsCustomInputEnabledArray] = useState(
@@ -70,22 +70,20 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 
   return (
     <fieldset>
-      <h2 className="font-semibold text-3xl tracking-tight">
+      <h2 className="text-2xl font-semibold tracking-tight mb-1">
         Contract Parameters
       </h2>
-      <p className="text-muted-foreground">
+      <p className="text-muted-foreground text-sm mb-6">
         These are the parameters users will need to fill in when deploying this
         contract.
       </p>
-
-      <div className="h-6" />
 
       <div className="flex flex-col gap-8">
         {deployParams.map((param, idx) => {
           const paramTemplateValues = getTemplateValuesForType(param.type);
           return (
             <div
-              className="rounded-lg border border-border bg-card p-6"
+              className="rounded-lg border border-border bg-card p-4"
               key={`implementation_${param.name}`}
             >
               {/* Title + Type */}
@@ -100,12 +98,12 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                   )}
                 </h3>
                 <InlineCode
-                  className="px-2 text-base text-muted-foreground"
+                  className="px-2 text-muted-foreground text-sm"
                   code={param.type}
                 />
               </div>
 
-              <div className="h-5" />
+              <div className="h-4" />
 
               {/* Display Name */}
               <FormFieldSetup
@@ -140,7 +138,7 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                 />
               </FormFieldSetup>
 
-              <div className="h-5" />
+              <div className="h-4" />
 
               {/* Description */}
               <FormFieldSetup
@@ -217,25 +215,23 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
 
                 {/* Inputs */}
                 {!isCustomInputEnabledArray[idx] ? (
-                  <FormControl>
-                    <SolidityInput
-                      className="!bg-background !text-sm placeholder:!text-sm"
-                      client={client}
-                      placeholder={
-                        isMobile ||
-                        paramTemplateValues?.[0]?.value ===
-                          "{{trusted_forwarders}}"
-                          ? "Pre-filled value."
-                          : "This value will be pre-filled in the deploy form."
-                      }
-                      solidityType={param.type}
-                      {...form.register(
-                        `constructorParams.${
-                          param.name ? param.name : "*"
-                        }.defaultValue`,
-                      )}
-                    />
-                  </FormControl>
+                  <SolidityInput
+                    className="!bg-background !text-sm placeholder:!text-sm"
+                    client={client}
+                    placeholder={
+                      isMobile ||
+                      paramTemplateValues?.[0]?.value ===
+                        "{{trusted_forwarders}}"
+                        ? "Pre-filled value."
+                        : "This value will be pre-filled in the deploy form."
+                    }
+                    solidityType={param.type}
+                    {...form.register(
+                      `constructorParams.${
+                        param.name ? param.name : "*"
+                      }.defaultValue`,
+                    )}
+                  />
                 ) : param.type === "address" || param.type === "address[]" ? (
                   <RefInputFieldset client={client} param={param} />
                 ) : (

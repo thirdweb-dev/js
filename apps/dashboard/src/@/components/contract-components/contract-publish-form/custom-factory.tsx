@@ -1,33 +1,26 @@
-import {
-  Box,
-  Flex,
-  FormControl,
-  IconButton,
-  Input,
-  ListItem,
-  UnorderedList,
-} from "@chakra-ui/react";
 import type { Abi } from "abitype";
-import { Button } from "chakra/button";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useCustomFactoryAbi } from "@/hooks/contract-hooks";
 import { AbiSelector } from "./abi-selector";
 
-interface CustomFactoryProps {
+export function CustomFactory(props: {
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
   client: ThirdwebClient;
-}
-
-export const CustomFactory: React.FC<CustomFactoryProps> = ({
-  setCustomFactoryAbi,
-  client,
-}) => {
+}) {
+  const { setCustomFactoryAbi, client } = props;
   const form = useFormContext();
 
   const customFactoryAbi = useCustomFactoryAbi(
@@ -35,7 +28,6 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
     form.watch("customFactoryAddresses[0].value"),
     form.watch("customFactoryAddresses[0].key"),
   );
-
   // FIXME: all of this logic needs to be reworked
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -58,102 +50,130 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
   }, [fields, append]);
 
   return (
-    <Flex flexDir="column" gap={12} pb={0} px={0}>
-      <UnorderedList>
-        <Text as={ListItem}>
+    <div className="space-y-12">
+      {/* Description */}
+      <div className="space-y-1.5 text-sm text-muted-foreground">
+        <p>
           Use this if you want to invoke your own function with custom logic
           when users deploy your contract.
-        </Text>
-        <Text as={ListItem}>
+        </p>
+
+        <p>
           You need to have factory contracts pre-deployed to all networks that
           you want to support.
-        </Text>
-      </UnorderedList>
-      <Flex flexDir="column" gap={4}>
-        <Flex flexDir="column" gap={2}>
-          <Heading size="title.md">Factory contract addresses</Heading>
-          <Text>
-            Paste the contract address of your factory contracts. Your contract
-            can be deployed only to networks with valid factory address.
-          </Text>
-        </Flex>
-        {fields.map((field, index) => (
-          <div key={field.id}>
-            <FormControl as={Flex} gap={4} isRequired>
-              <Box w={{ base: "full", md: "40%" }}>
-                <Controller
-                  control={form.control}
-                  name={`customFactoryAddresses[${index}].key`}
-                  render={({ field: _field }) => {
-                    return (
-                      <SingleNetworkSelector
-                        chainId={_field.value}
-                        client={client}
-                        onChange={(value) => {
-                          _field.onChange(value);
-                        }}
-                      />
-                    );
-                  }}
-                />
-              </Box>
-              <Box w="full">
-                <Input
-                  isRequired
-                  {...form.register(`customFactoryAddresses[${index}].value`)}
-                  placeholder="Factory contract address"
-                />
-              </Box>
-              <IconButton
-                aria-label="Remove row"
-                icon={<TrashIcon className="size-5" />}
-                isDisabled={fields.length === 1 || form.formState.isSubmitting}
-                onClick={() => remove(index)}
+        </p>
+      </div>
+
+      {/* Factory contract addresses */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-1">
+          Factory contract addresses
+        </h2>
+
+        <p className="text-sm text-muted-foreground mb-4">
+          Paste the contract address of your factory contracts. Your contract
+          can be deployed only to networks with valid factory address.
+        </p>
+
+        <div className="space-y-3 mb-5">
+          {fields.map((field, index) => (
+            <div
+              key={field.id}
+              className="flex flex-col lg:flex-row gap-4 lg:items-end"
+            >
+              <FormField
+                control={form.control}
+                name={`customFactoryAddresses[${index}].key`}
+                render={({ field }) => (
+                  <FormItem className="w-full lg:w-80 space-y-1.5">
+                    <FormLabel>Network</FormLabel>
+                    <SingleNetworkSelector
+                      chainId={field.value}
+                      disableChainId
+                      className="bg-card"
+                      client={client}
+                      onChange={field.onChange}
+                    />
+                  </FormItem>
+                )}
               />
-            </FormControl>
-          </div>
-        ))}
+
+              <FormField
+                control={form.control}
+                name={`customFactoryAddresses[${index}].value`}
+                render={({ field }) => (
+                  <FormItem className="grow space-y-1.5">
+                    <FormLabel>Factory contract address</FormLabel>
+                    <FormControl>
+                      <Input
+                        required
+                        className="bg-card"
+                        {...field}
+                        placeholder="0x..."
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-full p-0 size-10 bg-card self-end"
+                aria-label="Remove row"
+                disabled={fields.length === 1 || form.formState.isSubmitting}
+                onClick={() => remove(index)}
+              >
+                <TrashIcon className="size-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+
         <div>
           <Button
-            borderRadius="md"
-            colorScheme="primary"
-            leftIcon={<PlusIcon className="size-5" />}
-            onClick={() => append({ key: "", value: "" })}
+            variant="outline"
             size="sm"
-            type="button"
+            className="rounded-full bg-card"
+            onClick={() => append({ key: "", value: "" })}
           >
-            Add Network
+            <PlusIcon className="size-5 mr-2" /> Add Network
           </Button>
         </div>
-      </Flex>
-      <Flex flexDir="column" gap={4}>
-        <Flex flexDir="column" gap={2}>
-          <Heading size="title.md">Factory function</Heading>
-          <Text>Choose the factory function to deploy your contracts.</Text>
-        </Flex>
-        <FormControl isRequired>
-          {customFactoryAbi?.data ? (
-            <AbiSelector
-              abi={customFactoryAbi.data}
-              defaultValue="deployProxyByImplementation"
-              onChange={(selectedFn) =>
-                form.setValue(
-                  "factoryDeploymentData.customFactoryInput.factoryFunction",
-                  selectedFn,
-                )
-              }
-              value={form.watch(
+      </div>
+
+      {/* Factory function */}
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight mb-1">
+          Factory function
+        </h2>
+
+        <p className="text-sm text-muted-foreground mb-4">
+          Choose the factory function to deploy your contracts.
+        </p>
+
+        {customFactoryAbi?.data ? (
+          <AbiSelector
+            abi={customFactoryAbi.data}
+            defaultValue="deployProxyByImplementation"
+            onChange={(selectedFn) =>
+              form.setValue(
                 "factoryDeploymentData.customFactoryInput.factoryFunction",
-              )}
-            />
-          ) : (
-            <Text fontStyle="italic">
-              Custom factory ABI not found. Please provide a valid imported
-              contract on the previous step.
-            </Text>
-          )}
-        </FormControl>
-      </Flex>
-    </Flex>
+                selectedFn,
+              )
+            }
+            value={form.watch(
+              "factoryDeploymentData.customFactoryInput.factoryFunction",
+            )}
+          />
+        ) : (
+          <p className="text-sm text-red-500 font-medium">
+            Custom factory ABI not found. Please provide a valid imported
+            contract on the previous step.
+          </p>
+        )}
+      </div>
+    </div>
   );
-};
+}

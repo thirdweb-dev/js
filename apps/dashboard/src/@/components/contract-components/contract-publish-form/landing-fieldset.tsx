@@ -1,41 +1,30 @@
-import {
-  Box,
-  Flex,
-  FormControl,
-  Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Textarea,
-} from "@chakra-ui/react";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Link } from "chakra/link";
-import { Text } from "chakra/text";
 import { compare, validate } from "compare-versions";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { ExtendedMetadata } from "thirdweb/utils";
 import { SelectOption } from "@/components/batch-upload/lazy-mint-form/select-option";
 import { FileInput } from "@/components/blocks/FileInput";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { MarkdownRenderer } from "../../blocks/markdown-renderer";
+import { TabButtons } from "../../ui/tabs";
+import { UnderlineLink } from "../../ui/UnderlineLink";
 import { ExternalLinksFieldset } from "./external-links-fieldset";
 
-interface LandingFieldsetProps {
+type LandingFieldsetProps = {
   latestVersion: string | undefined;
   placeholderVersion: string;
   client: ThirdwebClient;
-}
+};
 
-export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
+export function LandingFieldset({
   latestVersion,
   placeholderVersion,
   client,
-}) => {
+}: LandingFieldsetProps) {
   const form = useFormContext<ExtendedMetadata>();
   const logoUrl = form.watch("logo");
 
@@ -66,205 +55,235 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
     }
   };
 
+  const [readmeTab, setReadmeTab] = useState<"write" | "preview">("write");
+  const [changelogTab, setChangelogTab] = useState<"write" | "preview">(
+    "write",
+  );
+
   return (
-    <Flex as="fieldset" direction="column" gap={16} mt={{ base: 4, md: 12 }}>
-      <Flex direction="column" gap={2}>
-        <Heading size="title.lg">
+    <fieldset className="space-y-12">
+      {/* header */}
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight mb-1">
           {!latestVersion ? "Publish" : "Edit"} your contract
-        </Heading>
-        <Text fontStyle="normal">
+        </h1>
+        <p className="text-muted-foreground text-sm">
           Publishing your contract makes it shareable, discoverable, and
           deployable in a single click.{" "}
-          <Link
-            color="blue.500"
+          <UnderlineLink
             href="https://portal.thirdweb.com/contracts/publish/overview"
-            isExternal
+            target="_blank"
+            rel="noopener noreferrer"
           >
             Learn more
-          </Link>
-        </Text>
-      </Flex>
-      <Flex gap={6} w="full">
-        <FormControl isInvalid={!!form.formState.errors.logo} w="auto">
-          <FormLabel>Image</FormLabel>
-          <Box width="141px">
+          </UnderlineLink>
+        </p>
+      </div>
+
+      {/* logo, name, description */}
+      <div className="flex flex-col md:flex-row gap-6 w-full">
+        <FormFieldSetup
+          label="Image"
+          errorMessage={form.formState.errors?.logo?.message as string}
+          isRequired={false}
+          className="w-auto"
+        >
+          <div className="w-[200px]">
             <FileInput
               accept={{ "image/*": [] }}
-              className="rounded border border-border transition-all duration-200"
+              className="rounded-lg border bg-card transition-all duration-200"
               client={client}
               helperText="Image"
               // @ts-expect-error - we upload the file later this is fine
               setValue={(file) => form.setValue("logo", file)}
               value={logoUrl}
             />
-          </Box>
-          <FormErrorMessage>
-            {form.formState.errors?.logo?.message as unknown as string}
-          </FormErrorMessage>
-        </FormControl>
-        <Flex flexDir="column" gap={4} w="full">
-          <FormControl
-            isInvalid={!!form.formState.errors.displayName}
-            isRequired
+          </div>
+        </FormFieldSetup>
+
+        <div className="flex flex-col gap-4 w-full grow">
+          <FormFieldSetup
+            htmlFor="displayName"
+            label="Contract Name"
+            errorMessage={form.formState.errors?.displayName?.message}
+            isRequired={true}
           >
-            <FormLabel>Contract Name</FormLabel>
             <Input
+              id="displayName"
               onChange={(e) => form.setValue("displayName", e.target.value)}
               placeholder="Ex. MyContract"
+              className="bg-card"
               value={form.watch("displayName")}
             />
-            <FormErrorMessage>
-              {form.formState.errors?.displayName?.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!form.formState.errors.description}>
-            <FormLabel>Description</FormLabel>
+          </FormFieldSetup>
+
+          <FormFieldSetup
+            htmlFor="description"
+            label="Description"
+            errorMessage={form.formState.errors?.description?.message}
+            isRequired={false}
+            className="grow flex flex-col"
+          >
             <Textarea
+              id="description"
               onChange={(e) => form.setValue("description", e.target.value)}
               placeholder="Briefly describe what your contract does."
               rows={2}
+              className="bg-card grow"
               value={form.watch("description")}
             />
-
-            <FormErrorMessage>
-              {form.formState.errors?.description?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
-      </Flex>
+          </FormFieldSetup>
+        </div>
+      </div>
 
       <div>
-        <Heading mb={2} size="title.md">
-          README
-        </Heading>
-        <Text mb={4} size="body.md">
+        <h2 className="text-xl font-semibold mb-1 tracking-tight">README</h2>
+        <p className="text-muted-foreground text-sm mb-5">
           Describe what your contract does and how it should be used. Markdown
           formatting is supported.
-        </Text>
-        <FormControl isInvalid={!!form.formState.errors.readme}>
-          <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
-            <TabList
-              borderBottomColor="borderColor"
-              borderBottomWidth="1px"
-              px={0}
-            >
-              <Tab gap={2}>
-                <Heading size="label.lg">Write</Heading>
-              </Tab>
-              <Tab gap={2}>
-                <Heading size="label.lg">Preview</Heading>
-              </Tab>
-            </TabList>
-            <TabPanels pt={2}>
-              <TabPanel pb={0} px={0}>
-                <Textarea
-                  {...form.register("readme")}
-                  placeholder="Describe how users can use this contract. Add links if relevant."
-                  rows={12}
-                />
-                <FormErrorMessage>
-                  {form.formState.errors?.readme?.message}
-                </FormErrorMessage>
-              </TabPanel>
-              <TabPanel pb={0} px={0}>
-                <Card>
-                  <MarkdownRenderer markdownText={form.watch("readme") || ""} />
-                </Card>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </FormControl>
+        </p>
+
+        <TabButtons
+          tabClassName="!text-sm"
+          tabs={[
+            {
+              name: "Write",
+              onClick: () => setReadmeTab("write"),
+              isActive: readmeTab === "write",
+            },
+            {
+              name: "Preview",
+              onClick: () => setReadmeTab("preview"),
+              isActive: readmeTab === "preview",
+            },
+          ]}
+        />
+
+        <div className="mt-2">
+          {readmeTab === "write" && (
+            <Textarea
+              {...form.register("readme")}
+              placeholder="Describe how users can use this contract. Add links if relevant."
+              rows={12}
+              className="bg-card"
+            />
+          )}
+
+          {readmeTab === "preview" && (
+            <div className="p-4 rounded-lg border border-border bg-card">
+              <MarkdownRenderer markdownText={form.watch("readme") || ""} />
+            </div>
+          )}
+        </div>
+
+        {form.formState.errors.readme && (
+          <p className="text-red-500 text-sm mt-2">
+            {form.formState.errors.readme.message}
+          </p>
+        )}
       </div>
+
       <ExternalLinksFieldset />
+
       <div>
-        <Heading mb={2} size="title.md">
-          Version information
-        </Heading>
-        <Text mb={4} size="body.md">
+        <h2 className="text-xl font-semibold mb-1">Version information</h2>
+        <p className="text-muted-foreground text-sm mb-5">
           Set your contract version number, add release notes, and link to your
           contract&apos;s audit report.
-        </Text>
-        <Flex flexDir="column" gap={6}>
-          <FormControl isInvalid={!!form.formState.errors.version} isRequired>
-            <Flex alignItems="center" mb={1}>
-              <FormLabel flex="1" mb={0}>
-                Version
-              </FormLabel>
-              {latestVersion && (
-                <Text size="body.md">latest version: {latestVersion}</Text>
-              )}
-            </Flex>
+        </p>
+
+        <div className="space-y-6">
+          <FormFieldSetup
+            htmlFor="version"
+            label={
+              <div className="flex items-center justify-between w-full">
+                <span>Version</span>
+                {latestVersion && (
+                  <span className="text-sm text-muted-foreground">
+                    latest version: {latestVersion}
+                  </span>
+                )}
+              </div>
+            }
+            errorMessage={form.formState.errors?.version?.message}
+            isRequired={true}
+          >
             <Input
+              id="version"
               onChange={handleVersionChange}
+              className="bg-card"
               placeholder={placeholderVersion}
               value={form.watch("version")}
             />
-            <FormErrorMessage>
-              {form.formState.errors?.version?.message}
-            </FormErrorMessage>
-          </FormControl>
+          </FormFieldSetup>
+
           {latestVersion && (
-            <FormControl isInvalid={!!form.formState.errors.changelog}>
-              <FormLabel>Release notes</FormLabel>
-              <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
-                <TabList
-                  borderBottomColor="borderColor"
-                  borderBottomWidth="1px"
-                  px={0}
-                >
-                  <Tab gap={2}>
-                    <Heading size="label.lg">Write</Heading>
-                  </Tab>
-                  <Tab gap={2}>
-                    <Heading size="label.lg">Preview</Heading>
-                  </Tab>
-                </TabList>
-                <TabPanels pt={2}>
-                  <TabPanel pb={0} px={0}>
-                    <Textarea
-                      {...form.register("changelog")}
-                      placeholder="Mention what is new in this version of your contract."
+            <div>
+              <h3 className="text-sm font-medium mb-2">Release notes</h3>
+              {form.formState.errors?.changelog?.message && (
+                <p className="text-red-500 text-sm mt-2">
+                  {form.formState.errors.changelog.message}
+                </p>
+              )}
+              <TabButtons
+                tabClassName="!text-sm"
+                tabs={[
+                  {
+                    name: "Write",
+                    onClick: () => setChangelogTab("write"),
+                    isActive: changelogTab === "write",
+                  },
+                  {
+                    name: "Preview",
+                    onClick: () => setChangelogTab("preview"),
+                    isActive: changelogTab === "preview",
+                  },
+                ]}
+              />
+
+              <div className="mt-2">
+                {changelogTab === "write" && (
+                  <Textarea
+                    {...form.register("changelog")}
+                    placeholder="Mention what is new in this version of your contract."
+                    className="bg-card"
+                  />
+                )}
+
+                {changelogTab === "preview" && (
+                  <div className="p-4 rounded-lg border bg-card">
+                    <MarkdownRenderer
+                      markdownText={form.watch("changelog") || ""}
                     />
-                    <FormErrorMessage>
-                      {form.formState.errors?.changelog?.message}
-                    </FormErrorMessage>
-                  </TabPanel>
-                  <TabPanel pb={0} px={0}>
-                    <Card>
-                      <MarkdownRenderer
-                        markdownText={form.watch("changelog") || ""}
-                      />
-                    </Card>
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </FormControl>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
-          <FormControl isInvalid={!!form.formState.errors.audit}>
-            <FormLabel>Audit report</FormLabel>
+
+          <FormFieldSetup
+            label="Audit report"
+            errorMessage={form.formState.errors?.audit?.message}
+            isRequired={false}
+            helperText="You can add a IPFS hash or URL pointing to an audit report, or add a file and we'll upload it to IPFS."
+          >
             <SolidityInput
               client={client}
               solidityType="string"
               {...form.register("audit")}
               placeholder="ipfs://... or https://..."
+              className="bg-card"
             />
-            <FormHelperText>
-              <Text size="body.sm">
-                You can add a IPFS hash or URL pointing to an audit report, or
-                add a file and we&apos;ll upload it to IPFS.
-              </Text>
-            </FormHelperText>
-          </FormControl>
-        </Flex>
+          </FormFieldSetup>
+        </div>
       </div>
+
       <div>
-        <Heading mb={2} size="title.md">
-          Deployment options
-        </Heading>
-        <Text mb={4} size="body.md">
+        <h2 className="text-xl font-semibold mb-1">Deployment options</h2>
+        <p className="text-muted-foreground text-sm mb-3">
           Choose how users will deploy your published contract.
-        </Text>
-        <Flex flexDir="column" gap={2} width="full">
+        </p>
+        <div className="flex flex-col md:flex-row gap-4 w-full">
           <SelectOption
             className="w-full"
             description="Users will directly deploy the full contract."
@@ -282,8 +301,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             name="Deploy via factory"
             onClick={() => form.setValue("deployType", "autoFactory")}
           />
-        </Flex>
+        </div>
       </div>
-    </Flex>
+    </fieldset>
   );
-};
+}

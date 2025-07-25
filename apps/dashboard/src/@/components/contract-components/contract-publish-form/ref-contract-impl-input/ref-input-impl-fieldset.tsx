@@ -1,20 +1,16 @@
 import type { AbiParameter } from "abitype";
-import { Button } from "chakra/button";
 import { PlusIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RefContractImplInput } from "./ref-input-impl";
 
-interface RefInputImplFieldsetProps {
+export function RefInputImplFieldset(props: {
   param: AbiParameter;
   client: ThirdwebClient;
-}
-
-export const RefInputImplFieldset: React.FC<RefInputImplFieldsetProps> = ({
-  param,
-  client,
-}) => {
+}) {
+  const { param, client } = props;
   const form = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -63,4 +59,4 @@ export const RefInputImplFieldset: React.FC<RefInputImplFieldsetProps> = ({
       )}
     </div>
   );
-};
+}
