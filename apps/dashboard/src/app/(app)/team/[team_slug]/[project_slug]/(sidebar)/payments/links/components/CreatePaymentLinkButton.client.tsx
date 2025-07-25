@@ -1,13 +1,14 @@
 "use client";
 
+import { resolveAddressAndEns } from "@app/(dashboard)/profile/[addressOrEns]/resolveAddressAndEns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinkIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Bridge, isAddress, toUnits } from "thirdweb";
-import { checksumAddress, shortenAddress } from "thirdweb/utils";
+import { Bridge, toUnits } from "thirdweb";
+import { checksumAddress } from "thirdweb/utils";
 import z from "zod";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
 import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
@@ -81,13 +82,22 @@ export function CreatePaymentLinkButton(
         throw new Error("Token not found");
       }
 
+      const addressResult = await resolveAddressAndEns(
+        values.recipient,
+        client,
+      );
+
+      if (!addressResult) {
+        throw new Error("Invalid recipient address.");
+      }
+
       await createPaymentLink({
         clientId: props.clientId,
         teamId: props.teamId,
         intent: {
           destinationChainId: values.chainId,
           destinationTokenAddress: checksumAddress(values.tokenAddress),
-          receiver: checksumAddress(values.recipient),
+          receiver: checksumAddress(addressResult.address),
           amount: toUnits(values.amount.toString(), token.decimals),
         },
         title: values.title,
@@ -179,11 +189,7 @@ export function CreatePaymentLinkButton(
                       className="w-full"
                       {...field}
                       onChange={field.onChange}
-                      value={
-                        isAddress(field.value)
-                          ? shortenAddress(field.value)
-                          : field.value
-                      }
+                      value={field.value}
                       placeholder="Address or ENS"
                       required
                     />
