@@ -1,18 +1,18 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CopyIcon, LinkIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { LinkIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
 import { toast } from "sonner";
 import { toTokens } from "thirdweb";
 import {
   deletePaymentLink,
-  deleteWebhook,
   getPaymentLinks,
   getPayments,
 } from "@/api/universal-bridge/developer";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/CopyButton";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +39,6 @@ import { EmptyState } from "../../components/EmptyState";
 import { ErrorState } from "../../components/ErrorState";
 import { formatTokenAmount } from "../../components/format";
 import { CreatePaymentLinkButton } from "./CreatePaymentLinkButton.client";
-import { CopyButton } from "@/components/ui/CopyButton";
 
 export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
   const paymentLinksQuery = useQuery({

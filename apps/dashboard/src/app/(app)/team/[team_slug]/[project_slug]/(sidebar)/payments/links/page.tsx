@@ -1,10 +1,10 @@
+import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { PaymentLinksTable } from "./components/PaymentLinksTable.client";
-import { CreatePaymentLinkButton } from "./components/CreatePaymentLinkButton.client";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { CreatePaymentLinkButton } from "./components/CreatePaymentLinkButton.client";
+import { PaymentLinksTable } from "./components/PaymentLinksTable.client";
 
 export default async function Page(props: {
   params: Promise<{
