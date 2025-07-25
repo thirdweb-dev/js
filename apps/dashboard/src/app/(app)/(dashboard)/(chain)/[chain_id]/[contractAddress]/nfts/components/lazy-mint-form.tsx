@@ -160,7 +160,7 @@ export function LazyMintNftForm({
           <FormField
             control={control}
             name="image"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
@@ -169,7 +169,11 @@ export function LazyMintNftForm({
                     className="rounded-lg bg-card border border-border transition-all"
                     client={contract.client}
                     previewMaxWidth="200px"
-                    setValue={(file) => setValue("image", file)}
+                    setValue={(file) =>
+                      setValue("image", file, {
+                        shouldValidate: true,
+                      })
+                    }
                     showUploadButton
                     value={image}
                   />

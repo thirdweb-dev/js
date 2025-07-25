@@ -1,10 +1,7 @@
-import { ArrowDownToLineIcon } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { CodeClient } from "@/components/ui/code/code.client";
 import { InlineCode } from "@/components/ui/inline-code";
 import { TabButtons } from "@/components/ui/tabs";
-import { handleDownload } from "../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/download-file-button";
+import { DownloadableCode } from "../blocks/code/downloadable-code";
 import { DropZone } from "../blocks/drop-zone/drop-zone";
 
 interface UploadStepProps {
@@ -105,7 +102,7 @@ export function UploadStep(props: UploadStepProps) {
                 "All other columns will be treated as Attributes. For example: See 'eyes', 'nose' below."}
             </p>
 
-            <ExampleCode
+            <DownloadableCode
               code={tab === "csv" ? csv_example_basic : json_example_basic}
               fileNameWithExtension={
                 tab === "csv" ? "example.csv" : "example.json"
@@ -120,7 +117,7 @@ export function UploadStep(props: UploadStepProps) {
               name of your files to the <InlineCode code="image" /> and{" "}
               <InlineCode code="animation_url" />{" "}
               {tab === "csv" ? "columns" : "properties"}.{" "}
-              <ExampleCode
+              <DownloadableCode
                 code={
                   tab === "csv"
                     ? csv_with_image_number_example
@@ -146,7 +143,7 @@ export function UploadStep(props: UploadStepProps) {
               {tab === "csv" ? "columns" : "properties"}. instead of uploading
               the assets and just upload a single{" "}
               {tab === "csv" ? "CSV" : "JSON"} file.
-              <ExampleCode
+              <DownloadableCode
                 code={
                   tab === "csv"
                     ? csv_with_image_link_example
@@ -177,37 +174,6 @@ function Section(props: { title: string; children: React.ReactNode }) {
         {props.children}
       </div>
     </section>
-  );
-}
-
-function ExampleCode(props: {
-  code: string;
-  lang: "csv" | "json";
-  fileNameWithExtension: string;
-}) {
-  return (
-    <div className="!my-3 relative">
-      <CodeClient
-        code={props.code}
-        lang={props.lang}
-        scrollableClassName="max-h-[300px] bg-card"
-      />
-
-      <Button
-        className="absolute top-3.5 right-14 mt-[1px] h-auto bg-background p-2"
-        onClick={() => {
-          handleDownload({
-            fileContent: props.code,
-            fileFormat: props.lang === "csv" ? "text/csv" : "application/json",
-            fileNameWithExtension: props.fileNameWithExtension,
-          });
-        }}
-        size="sm"
-        variant="outline"
-      >
-        <ArrowDownToLineIcon className="size-3" />
-      </Button>
-    </div>
   );
 }
 
