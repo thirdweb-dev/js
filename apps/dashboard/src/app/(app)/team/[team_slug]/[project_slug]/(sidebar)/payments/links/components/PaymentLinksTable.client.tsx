@@ -262,12 +262,8 @@ function DeletePaymentLinkButton(
       });
       return null;
     },
-    onSuccess: () => {
-      return queryClient.invalidateQueries({
-        queryKey: ["webhooks", props.clientId],
-      });
-    },
   });
+
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
@@ -295,7 +291,7 @@ function DeletePaymentLinkButton(
                   toast.success("Payment link deleted successfully.");
                   setOpen(false);
                   return queryClient.invalidateQueries({
-                    queryKey: ["payment-link", props.clientId],
+                    queryKey: ["payment-links", props.clientId, props.teamId],
                   });
                 },
               });

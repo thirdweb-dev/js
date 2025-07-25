@@ -12,7 +12,6 @@ import { checksumAddress, shortenAddress } from "thirdweb/utils";
 import z from "zod";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
 import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
-import { FileInput } from "@/components/blocks/FileInput";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Button } from "@/components/ui/button";
@@ -44,14 +43,13 @@ const formSchema = z.object({
   recipient: z.string(),
   amount: z.coerce.number(),
   title: z.string(),
-  imageUrl: z.string(),
 });
 
 export function CreatePaymentLinkButton(
   props: PropsWithChildren<{ clientId: string; teamId: string }>,
 ) {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState<File>();
+  // const [image, setImage] = useState<File>();
   const client = getClientThirdwebClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,7 +59,6 @@ export function CreatePaymentLinkButton(
       recipient: undefined,
       amount: undefined,
       title: undefined,
-      imageUrl: undefined,
     },
     resolver: zodResolver(formSchema),
   });
@@ -75,7 +72,7 @@ export function CreatePaymentLinkButton(
   });
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      console.log(values);
+      console.log("createMutation", values);
       const tokens = await getUniversalBridgeTokens({
         chainId: values.chainId,
         address: values.tokenAddress,
@@ -96,7 +93,6 @@ export function CreatePaymentLinkButton(
           amount: toUnits(values.amount.toString(), token.decimals),
         },
         title: values.title,
-        imageUrl: values.imageUrl,
       });
       return null;
     },
@@ -135,7 +131,7 @@ export function CreatePaymentLinkButton(
     },
     onError: (e) => {
       console.error(e);
-      setImage(undefined);
+      // setImage(undefined);
       toast.error(parseErrorToMessage(e), { duration: 5000 });
     },
   });
@@ -165,30 +161,6 @@ export function CreatePaymentLinkButton(
             </DialogHeader>
 
             <div className="flex flex-col gap-6 w-full">
-              <FormField
-                name="image"
-                render={() => (
-                  <FormItem className="w-full">
-                    <RequiredFormLabel>Image</RequiredFormLabel>
-                    <FileInput
-                      accept={{ "image/*": [] }}
-                      className="rounded-md h-32"
-                      client={client}
-                      helperText="image"
-                      isDisabled={uploadMutation.isPending}
-                      isDisabledText="Uploading..."
-                      selectOrUpload="Upload"
-                      setValue={async (file) => {
-                        await uploadMutation.mutateAsync(file);
-                        setImage(file);
-                      }}
-                      value={image}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 name="title"
                 render={({ field }) => (
@@ -298,7 +270,6 @@ export function CreatePaymentLinkButton(
                   disabled={
                     uploadMutation.isPending || createMutation.isPending
                   }
-                  onClick={() => console.log(form.getValues())}
                 >
                   {createMutation.isPending ? (
                     <Spinner className="size-4" />

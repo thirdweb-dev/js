@@ -163,7 +163,7 @@ export async function createPaymentLink(props: {
   clientId: string;
   teamId: string;
   title: string;
-  imageUrl: string;
+  imageUrl?: string;
   intent: {
     destinationChainId: number;
     destinationTokenAddress: Address;
