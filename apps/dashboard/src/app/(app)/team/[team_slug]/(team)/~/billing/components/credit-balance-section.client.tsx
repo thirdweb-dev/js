@@ -68,7 +68,7 @@ export function CreditBalanceSection({
 
         <Separator />
         <div className="space-y-2">
-          <h3 className="font-medium text-lg">Top Up Credits</h3>
+          <h3 className="font-medium text-lg">Credits</h3>
           <p className="text-muted-foreground text-sm">
             Add credits to your account for future billing cycles. Credits are
             non-refundable and do not expire.
@@ -152,7 +152,7 @@ export function CreditBalanceSection({
 
             <ToolTipLabel
               label={
-                isOwnerAccount ? null : "Only team owners can top up credits."
+                isOwnerAccount ? null : "Only team owners can purchase credits."
               }
             >
               <div>
@@ -168,7 +168,7 @@ export function CreditBalanceSection({
                     target="_blank"
                   >
                     <ThirdwebMiniLogo className="mr-2 h-4 w-4" />
-                    Top Up With Crypto
+                    Buy Credits
                     <ArrowRightIcon className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -237,7 +237,7 @@ function TopUpSummary({
     <div className="space-y-3 rounded-lg bg-muted/30 p-4">
       <h3 className="font-medium text-sm">Summary</h3>
       <div className="flex justify-between text-sm">
-        <span>Top-up amount:</span>
+        <span>Added credits:</span>
         <span className="font-medium">{formatUsd(Number(selectedAmount))}</span>
       </div>
       <div className="flex justify-between text-sm">
@@ -255,7 +255,7 @@ function TopUpSummarySkeleton({ selectedAmount }: { selectedAmount: string }) {
     <div className="space-y-3 rounded-lg bg-muted/30 p-4">
       <h3 className="font-medium text-sm">Summary</h3>
       <div className="flex justify-between text-sm">
-        <span>Top-up amount:</span>
+        <span>Added credits:</span>
         <span className="font-medium">{formatUsd(Number(selectedAmount))}</span>
       </div>
       <div className="flex justify-between text-sm">
@@ -275,7 +275,7 @@ function TopUpSummaryErrorBoundary({
     <div className="space-y-3 rounded-lg bg-muted/30 p-4">
       <h3 className="font-medium text-sm">Summary</h3>
       <div className="flex justify-between text-sm">
-        <span>Top-up amount:</span>
+        <span>Added credits:</span>
         <span className="font-medium">{formatUsd(Number(selectedAmount))}</span>
       </div>
       <div className="flex justify-between text-sm">
