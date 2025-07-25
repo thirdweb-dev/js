@@ -1,55 +1,64 @@
-import {
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button } from "chakra/button";
-import { FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { z } from "zod";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type EngineAdmin,
   useEngineGrantPermissions,
   useEngineRevokePermissions,
 } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
-
-interface AdminsTableProps {
-  instanceUrl: string;
-  admins: EngineAdmin[];
-  isPending: boolean;
-  isFetched: boolean;
-  authToken: string;
-  client: ThirdwebClient;
-}
+import { parseError } from "@/utils/errorParser";
 
 const columnHelper = createColumnHelper<EngineAdmin>();
 
-export const AdminsTable: React.FC<AdminsTableProps> = ({
+const editAdminSchema = z.object({
+  label: z.string().optional(),
+});
+
+type EditAdminFormData = z.infer<typeof editAdminSchema>;
+
+export function AdminsTable({
   instanceUrl,
   admins,
   isPending,
   isFetched,
   authToken,
   client,
-}) => {
-  const editDisclosure = useDisclosure();
-  const removeDisclosure = useDisclosure();
+}: {
+  instanceUrl: string;
+  admins: EngineAdmin[];
+  isPending: boolean;
+  isFetched: boolean;
+  authToken: string;
+  client: ThirdwebClient;
+}) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<EngineAdmin>();
 
   const columns = useMemo(() => {
@@ -63,11 +72,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
       }),
       columnHelper.accessor("label", {
         cell: (cell) => {
-          return (
-            <Text isTruncated maxW={300}>
-              {cell.getValue()}
-            </Text>
-          );
+          return <p className="truncate max-w-[300px]">{cell.getValue()}</p>;
         },
         header: "Label",
       }),
@@ -92,7 +97,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
             icon: <PencilIcon className="size-4" />,
             onClick: (admin) => {
               setSelectedAdmin(admin);
-              editDisclosure.onOpen();
+              setEditOpen(true);
             },
             text: "Edit",
           },
@@ -101,7 +106,7 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
             isDestructive: true,
             onClick: (admin) => {
               setSelectedAdmin(admin);
-              removeDisclosure.onOpen();
+              setRemoveOpen(true);
             },
             text: "Remove",
           },
@@ -109,174 +114,222 @@ export const AdminsTable: React.FC<AdminsTableProps> = ({
         title="admins"
       />
 
-      {selectedAdmin && editDisclosure.isOpen && (
-        <EditModal
+      {selectedAdmin && (
+        <EditDialog
           admin={selectedAdmin}
           authToken={authToken}
-          disclosure={editDisclosure}
           instanceUrl={instanceUrl}
+          open={editOpen}
+          onOpenChange={setEditOpen}
         />
       )}
-      {selectedAdmin && removeDisclosure.isOpen && (
-        <RemoveModal
+      {selectedAdmin && (
+        <RemoveDialog
           admin={selectedAdmin}
           authToken={authToken}
-          disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
+          open={removeOpen}
+          onOpenChange={setRemoveOpen}
         />
       )}
     </>
   );
-};
+}
 
-const EditModal = ({
+function EditDialog({
   admin,
-  disclosure,
   instanceUrl,
   authToken,
+  open,
+  onOpenChange,
 }: {
   admin: EngineAdmin;
-  disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
-}) => {
-  const { mutate: updatePermissions } = useEngineGrantPermissions({
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const updatePermissionsMutation = useEngineGrantPermissions({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully updated admin",
-    "Failed to update admin",
-  );
+  const form = useForm<EditAdminFormData>({
+    resolver: zodResolver(editAdminSchema),
+    values: {
+      label: admin.label ?? "",
+    },
+  });
 
-  const [label, setLabel] = useState(admin.label ?? "");
-
-  const onClick = () => {
-    updatePermissions(
+  const onSubmit = (data: EditAdminFormData) => {
+    updatePermissionsMutation.mutate(
       {
-        label,
+        label: data.label,
         permissions: admin.permissions,
         walletAddress: admin.walletAddress,
       },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to update admin.", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Admin updated successfully.");
+          onOpenChange(false);
+          form.reset();
         },
       },
     );
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Update Admin</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormControl>
-              <FormLabel>Wallet Address</FormLabel>
-              <Text>{admin.walletAddress}</Text>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Input
-                onChange={(e) => setLabel(e.target.value)}
-                placeholder="Enter a description for this admin"
-                type="text"
-                value={label}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Update Admin</DialogTitle>
+          <DialogDescription>
+            Update the label for this admin.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4 px-4 lg:px-6 pb-8">
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-medium">Wallet Address</h3>
+                <p className="text-sm text-muted-foreground">
+                  {admin.walletAddress}
+                </p>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="label"
+                render={({ field }) => (
+                  <FormItem className="space-y-1.5">
+                    <FormLabel>Label</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="bg-card"
+                        placeholder="Enter a description for this admin"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </FormControl>
-          </div>
-        </ModalBody>
+            </div>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
-            Cancel
-          </Button>
-          <Button colorScheme="blue" onClick={onClick} type="submit">
-            Save
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            <div className="flex justify-end gap-3 p-4 lg:p-6 bg-card border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" className="gap-2">
+                {updatePermissionsMutation.isPending && (
+                  <Spinner className="size-4" />
+                )}
+                Save
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
-};
+}
 
-const RemoveModal = ({
+function RemoveDialog({
   admin,
-  disclosure,
   instanceUrl,
   authToken,
+  open,
+  onOpenChange,
 }: {
   admin: EngineAdmin;
-  disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
-}) => {
-  const { mutate: revokePermissions } = useEngineRevokePermissions({
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const revokePermissionsMutation = useEngineRevokePermissions({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully removed admin",
-    "Failed to remove admin",
-  );
-
   const onClick = () => {
-    revokePermissions(
+    revokePermissionsMutation.mutate(
       {
         walletAddress: admin.walletAddress,
       },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to remove admin.", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Admin removed successfully.");
+          onOpenChange(false);
         },
       },
     );
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Remove Admin</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <Text>Are you sure you want to remove this admin?</Text>
-            <FormControl>
-              <FormLabel>Wallet Address</FormLabel>
-              <Text>{admin.walletAddress}</Text>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Text>{admin.label ?? <em>N/A</em>}</Text>
-            </FormControl>
-          </div>
-        </ModalBody>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Remove Admin</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to remove this admin?
+          </DialogDescription>
+        </DialogHeader>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
+        <div className="space-y-5 px-4 lg:px-6 pb-8">
+          <div className="space-y-1.5">
+            <h3 className="text-sm font-medium">Wallet Address</h3>
+            <p className="text-sm text-muted-foreground">
+              {admin.walletAddress}
+            </p>
+          </div>
+
+          <div className="space-y-1.5">
+            <h3 className="text-sm font-medium">Label</h3>
+            <p className="text-sm text-muted-foreground">
+              {admin.label ?? <em>N/A</em>}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 p-4 lg:p-6 bg-card border-t">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={onClick} type="submit">
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={onClick}
+            className="gap-2"
+          >
+            {revokePermissionsMutation.isPending && (
+              <Spinner className="size-4" />
+            )}
             Remove
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
+}
