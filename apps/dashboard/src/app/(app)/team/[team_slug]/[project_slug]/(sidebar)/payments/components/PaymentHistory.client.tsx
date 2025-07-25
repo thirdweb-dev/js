@@ -10,17 +10,11 @@ import {
 } from "@/api/universal-bridge/developer";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
-import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Badge } from "@/components/ui/badge";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import {
-  CardHeading,
-  TableData,
-  TableHeading,
-  TableHeadingRow,
-} from "./common";
+import { TableData, TableHeading, TableHeadingRow } from "./common";
+import { formatTokenAmount } from "./format";
+import { TableRow } from "./PaymentsTableRow";
 
 const pageSize = 50;
 
@@ -54,7 +48,14 @@ export function PaymentHistory(props: {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <CardHeading> Transaction History</CardHeading>
+        <div>
+          <h2 className="font-semibold text-xl tracking-tight">
+            Transaction History
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Past transactions from your project.
+          </p>
+        </div>
         <ExportToCSVButton
           fileName="transaction_history"
           getData={async () => {
@@ -118,110 +119,6 @@ export function PaymentHistory(props: {
   );
 }
 
-export function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
-  const { purchase } = props;
-  const originAmount = toTokens(
-    purchase.originAmount,
-    purchase.originToken.decimals,
-  );
-  const destinationAmount = toTokens(
-    purchase.destinationAmount,
-    purchase.destinationToken.decimals,
-  );
-  const type = (() => {
-    if (purchase.originToken.chainId !== purchase.destinationToken.chainId) {
-      return "Bridge";
-    }
-    if (purchase.originToken.address !== purchase.destinationToken.address) {
-      return "Swap";
-    }
-    return "Transfer";
-  })();
-
-  return (
-    <tr
-      className="fade-in-0 border-border border-b duration-300"
-      key={purchase.id}
-    >
-      {/* Paid */}
-      <TableData>{`${formatTokenAmount(originAmount)} ${purchase.originToken.symbol}`}</TableData>
-
-      {/* Bought */}
-      <TableData>
-        {`${formatTokenAmount(destinationAmount)} ${purchase.destinationToken.symbol}`}
-      </TableData>
-
-      {/* Type */}
-      <TableData>
-        <Badge
-          className={cn(
-            "uppercase",
-            type === "Transfer"
-              ? "bg-fuchsia-200 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-200"
-              : "bg-indigo-200 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200",
-          )}
-          variant="secondary"
-        >
-          {type}
-        </Badge>
-      </TableData>
-
-      {/* Status */}
-      <TableData>
-        <Badge
-          className="capitalize"
-          variant={
-            purchase.status === "COMPLETED"
-              ? "success"
-              : purchase.status === "PENDING"
-                ? "warning"
-                : "destructive"
-          }
-        >
-          {purchase.status}
-        </Badge>
-      </TableData>
-
-      {/* Address */}
-      <TableData>
-        <WalletAddress address={purchase.sender} client={props.client} />
-      </TableData>
-
-      {/* Date */}
-      <TableData>
-        <p className="min-w-[180px] lg:min-w-auto">
-          {format(new Date(purchase.createdAt), "LLL dd, y h:mm a")}
-        </p>
-      </TableData>
-    </tr>
-  );
-}
-
-export function SkeletonTableRow() {
-  return (
-    <tr className="border-border border-b">
-      <TableData>
-        <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-[140px]" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-[200px]" />
-      </TableData>
-    </tr>
-  );
-}
-
 function getCSVData(data: Payment[]) {
   const header = ["Type", "Bought", "Paid", "Status", "Recipient", "Date"];
 
@@ -263,12 +160,27 @@ function getCSVData(data: Payment[]) {
   return { header, rows };
 }
 
-function formatTokenAmount(value: string) {
-  // have at max 3 decimal places
-  const strValue = Number(`${Number(value).toFixed(3)}`);
-
-  if (Number(strValue) === 0) {
-    return "~0";
-  }
-  return strValue;
+function SkeletonTableRow() {
+  return (
+    <tr className="border-border border-b">
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[140px]" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[200px]" />
+      </TableData>
+    </tr>
+  );
 }

@@ -23,11 +23,11 @@ export function FeatureCard(props: {
       <div className="flex-1 flex flex-col items-start gap-6 w-full">
         <div className="relative w-full">
           <div
-            className={`${props.color === "green" ? "bg-green-700/25" : "bg-violet-700/25"} rounded-lg size-9 flex items-center justify-center`}
+            className={
+              "border bg-background rounded-lg size-9 flex items-center justify-center"
+            }
           >
-            <props.icon
-              className={`size-5 ${props.color === "green" ? "text-green-500" : "text-violet-500"}`}
-            />
+            <props.icon className={`size-5 text-foreground`} />
           </div>
           {props.badge && (
             <Badge

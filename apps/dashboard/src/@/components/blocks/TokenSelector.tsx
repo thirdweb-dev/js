@@ -14,6 +14,7 @@ import { useTokensData } from "@/hooks/tokens";
 import { replaceIpfsUrl } from "@/lib/sdk";
 import { cn } from "@/lib/utils";
 import { fallbackChainIcon } from "@/utils/chain-icons";
+import { Spinner } from "../ui/Spinner/Spinner";
 
 type Option = { label: string; value: string };
 
@@ -186,9 +187,14 @@ export function TokenSelector(props: {
       options={options}
       overrideSearchFn={searchFn}
       placeholder={
-        tokensQuery.isPending
-          ? "Loading Tokens"
-          : props.placeholder || "Select Token"
+        tokensQuery.isPending ? (
+          <div className="flex items-center gap-2">
+            <Spinner className="size-4" />
+            <span>Loading tokens</span>
+          </div>
+        ) : (
+          props.placeholder || "Select Token"
+        )
       }
       popoverContentClassName={props.popoverContentClassName}
       renderOption={renderOption}

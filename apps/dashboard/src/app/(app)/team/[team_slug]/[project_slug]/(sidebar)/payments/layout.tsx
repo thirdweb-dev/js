@@ -50,6 +50,11 @@ export default async function Layout(props: {
             },
             {
               exactMatch: true,
+              name: "Links",
+              path: `${payLayoutPath}/links`,
+            },
+            {
+              exactMatch: true,
               name: "Analytics",
               path: `${payLayoutPath}/analytics`,
             },

@@ -36,7 +36,7 @@ export function QuickStartSection({
             "Send instantly",
           ]}
           link={{
-            href: `/pay`,
+            href: `/team/${teamSlug}/${projectSlug}/payments/links`,
             label: "Create Link",
           }}
         />
@@ -47,10 +47,6 @@ export function QuickStartSection({
           id="fees"
           setupTime={1}
           color="violet"
-          badge={{
-            label: "Recommended",
-            variant: "outline",
-          }}
           features={[
             "Fees on every purchase",
             "Custom percentage",
@@ -68,10 +64,6 @@ export function QuickStartSection({
           id="components"
           color="violet"
           setupTime={2}
-          badge={{
-            label: "Popular",
-            variant: "outline",
-          }}
           features={[
             "Drop-in components",
             "Supports custom user data",
