@@ -71,13 +71,13 @@ function BuildCustomUISection() {
     <CodeExample
       code={`\
 import { useConnect } from "thirdweb/react";
-import { createWallet } from "thirdweb/wallets";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
 import { shortenAddress } from "thirdweb/utils";
 
 function App() {
   const account = useActiveAccount();
   const wallet = useActiveWallet();
-  const { connect, isConnecting, error } = useConnect();
+  const { connect, isConnecting, error, cancelConnection } = useConnect();
   const { disconnect } = useDisconnect();
 
   if (account) {
@@ -99,7 +99,17 @@ function App() {
         connect(async () => {
           // 500+ wallets supported with id autocomplete
           const wallet = createWallet("io.metamask");
-          await wallet.connect({ client });
+          const isInstalled = !!injectedProvider("io.metamask");
+          await wallet.connect({ client, ...(isInstalled ? {} : {
+            walletConnect: {
+              // if not installed, show qr modal
+              showQrModal: true,
+              onCancel: () => {
+                cancelConnection();
+              }
+              }
+            })
+          });
           return wallet;
         })
       }

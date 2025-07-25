@@ -3,7 +3,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { getSocialIcon } from "thirdweb/wallets/in-app";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -819,7 +819,26 @@ const getUnrealSnippet = (authMethod: AuthMethod): string => {
 
 function AuthMethodsTabsContent() {
   const [selectedAuth, setSelectedAuth] = useState<AuthMethod>("email");
-  const platforms = getPlatformsForAuth(selectedAuth);
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(
+    null,
+  );
+  const platforms = useMemo(
+    () => getPlatformsForAuth(selectedAuth),
+    [selectedAuth],
+  );
+
+  // Reset platform selection when platforms change
+  const currentPlatform = useMemo(() => {
+    const defaultPlatform = platforms[0]?.id || "typescript";
+    // If currently selected platform is not available in new platforms, reset to first available
+    if (
+      !selectedPlatform ||
+      !platforms.find((p) => p.id === selectedPlatform)
+    ) {
+      return defaultPlatform;
+    }
+    return selectedPlatform;
+  }, [platforms, selectedPlatform]);
 
   return (
     <div className="space-y-6">
@@ -858,7 +877,10 @@ function AuthMethodsTabsContent() {
         <h3 className="text-lg font-semibold mb-4 text-foreground">
           2. Select Platform
         </h3>
-        <Tabs defaultValue={platforms[0]?.id || "typescript"}>
+        <Tabs
+          value={currentPlatform}
+          onValueChange={(value) => setSelectedPlatform(value as Platform)}
+        >
           <TabsList>
             {platforms.map((platform) => {
               const IconComponent = platform.icon;

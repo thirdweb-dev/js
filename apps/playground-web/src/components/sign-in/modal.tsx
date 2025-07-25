@@ -54,7 +54,6 @@ export function ModalPreview({ enableAuth }: { enableAuth?: boolean }) {
       auth: enableAuth ? playgroundAuth : undefined,
       client: THIRDWEB_CLIENT,
     });
-    console.log("connected", wallet);
     return wallet;
   };
 
