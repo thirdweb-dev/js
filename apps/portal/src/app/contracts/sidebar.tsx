@@ -1,4 +1,4 @@
-import { ZapIcon } from "lucide-react";
+import { ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   DotNetIcon,
@@ -18,6 +18,11 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
+    {
+      href: "https://playground.thirdweb.com/",
+      icon: <ExternalLinkIcon />,
+      name: "Playground",
+    },
     { separator: true },
     {
       isCollapsible: false,
@@ -32,7 +37,11 @@ export const sidebar: SideBar = {
         },
         {
           href: `${slug}/events`,
-          name: "Listen to Events",
+          name: "Get Contract Events",
+        },
+        {
+          href: `${slug}/transactions`,
+          name: "Get Contract Transactions",
         },
         {
           href: `${slug}/deploy`,

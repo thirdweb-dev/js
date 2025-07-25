@@ -34,8 +34,6 @@ export const metadata = createMetadata({
 
 Read, write, and deploy smart contracts on any EVM compatible blockchain.
 
----
-
 <Tabs defaultValue="http">
   <TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
@@ -71,19 +69,17 @@ Read, write, and deploy smart contracts on any EVM compatible blockchain.
   <TabsContent value="http">
     ### Read a Contract
 
-    You can read contract data efficiently using the [contract read API](https://engine.thirdweb.com/reference).
+    You can read contract data efficiently using the [contract read API](https://api.thirdweb.com/reference#tag/contracts/post/v1/contracts/read).
 
     ```http
-    GET /v1/contract/read
+    GET /v1/contracts/read
+    Host: api.thirdweb.com
     Content-Type: application/json
-    x-secret-key: <your-project-secret-key>
+    x-client-id: <your-project-client-id>
 
     {
-        "readOptions": {
-          "chainId": "1" // your chain id
-		  "from": "0x...", // optional, if you want to read from a specific address
-        },
-        "params": [{
+        "chainId": "1" // your chain id
+        "calls": [{
           "contractAddress": "0x...",
           "method": "function allowance(address owner, address spender)",
           "params": ["0x...", "0x..."],
@@ -93,33 +89,67 @@ Read, write, and deploy smart contracts on any EVM compatible blockchain.
 
 	You can batch multiple contract reads in a single request, and the response will be an array of results or errors.
 
+  Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
+
 	### Write to a Contract
 
-	You can write to a contract using the [contract write API](https://engine.thirdweb.com/reference).
+	You can write to a contract using the [contract write API](https://api.thirdweb.com/reference#tag/contracts/post/v1/contracts/write).
 
-	```http
-	POST /v1/contract/write
-	Content-Type: application/json
-	x-secret-key: <your-project-secret-key>
+<Tabs defaultValue="frontend">
+      <TabsList>
+        <TabsTrigger value="frontend">Frontend</TabsTrigger>
+        <TabsTrigger value="backend">Backend</TabsTrigger>
+      </TabsList>
 
-	{
-		"executionOptions": {
-			"from": "0x...", // your server wallet address
-			"chainId": "1" // your chain id
-		},
-		"params": [{
-			"contractAddress": "0x...",
-			"method": "function transfer(address to, uint256 amount)",
-			"params": ["0x...", "1000000000000000000"],
-		}]
-	}
-	```
+      <TabsContent value="frontend">
+
+      On the frontend, use your project client ID and the users's auth token to send a transaction on their behalf.
+
+      ```http
+      POST /v1/contracts/write
+      Host: api.thirdweb.com
+      Content-Type: application/json
+      x-client-id: <your-project-client-id>
+      Authorization: Bearer <user-auth-token>
+
+      {
+        "from": "0x...", // the user wallet address
+        "chainId": "1" // the chain id
+        "calls": [{
+          "contractAddress": "0x...",
+          "method": "function transfer(address to, uint256 amount)",
+          "params": ["0x...", "1000000000000000000"],
+        }],
+      }
+      ```
+
+      </TabsContent>
+
+      <TabsContent value="backend">
+
+      On the backend, use your project secret key to send a transaction from any of your server wallets.
+
+      ```http
+      POST /v1/contracts/write
+      Host: api.thirdweb.com
+    Content-Type: application/json
+    x-secret-key: <your-project-secret-key>
+
+    {
+        "from": "0x...", // your server wallet address
+        "chainId": "1" // your chain id
+        "calls": [{
+          "contractAddress": "0x...",
+          "method": "function transfer(address to, uint256 amount)",
+          "params": ["0x...", "1000000000000000000"],
+        }],
+    }
+    ```
+
+      </TabsContent>
+    </Tabs>
 
 	You can batch multiple contract writes in a single request, and the transactions will be batched atomically onchain.
-
-	### Deploy a Contract
-
-	You can deploy a contract using the [contract deploy API](https://engine.thirdweb.com/reference).
 
   </TabsContent>
 

@@ -34,8 +34,6 @@ export const metadata = createMetadata({
 
 Send, monitor, and manage transactions. Send transactions from user or server wallets, sponsor gas, monitor transaction status, and more.
 
----
-
 <Tabs defaultValue="http">
   <TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
@@ -69,27 +67,95 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
   </TabsList>
 
   <TabsContent value="http">
+
     ### Send a Transaction
 
-    You can send transactions with your [server wallets](/wallets/server) using the [transactions API](https://engine.thirdweb.com/reference).
+    Send a transaction from a [user wallet](/wallets/users) from the frontend, or [server wallet](/wallets/server) from the backend using the [thirdweb API](https://api.thirdweb.com/reference#tag/transactions/post/v1/transactions).
 
-    ```http
-    POST /v1/contract/write
-    Content-Type: application/json
-    x-secret-key: <your-project-secret-key>
+    Transactions can be of type `contract-call`, `encoded` or `native-transfer`, and will be batched atomically onchain.
 
-    {
-        "executionOptions": {
-          "from": "0x...", // your server wallet address
-          "chainId": "1" // your chain id
-        },
-        "params": [{
+    <Tabs defaultValue="frontend">
+      <TabsList>
+        <TabsTrigger value="frontend">Frontend</TabsTrigger>
+        <TabsTrigger value="backend">Backend</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="frontend">
+
+      On the frontend, use your project client ID and the users's auth token to send a transaction on their behalf.
+
+      ```http
+      POST /v1/transactions
+      Host: api.thirdweb.com
+      Content-Type: application/json
+      x-client-id: <your-project-client-id>
+      # user auth token can be obtained from one of the v1/wallet/user login endpoints
+      Authorization: Bearer <user-auth-token> 
+
+      {
+        "from": "0x...", // the user wallet address
+        "chainId": "1" // the chain id
+        "transactions": [{
+          // contract call
+          "type": "contract-call",
           "contractAddress": "0x...",
           "method": "function transfer(address to, uint256 amount)",
           "params": ["0x...", "1000000000000000000"],
+        }, {
+          // encoded transaction
+          "type": "encoded",
+          "to": "0x...",
+          "data": "0x...",
+        }, {
+          // native transfer
+          "type": "native-transfer",
+          "to": "0x...",
+          "value": "1000000000000000000", // in wei
         }],
-    }
+      }
+      ```
+
+      In React applications that use the SDK, you can obtain the user auth token with the [`useAuthToken()`](/references/typescript/v5/useAuthToken) hook.
+
+      In TypeScript applications, you can get it by calling `wallet.getAuthToken()` on a connected [`inAppWallet()`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet()`](/references/typescript/v5/ecosystemWallet).
+
+      </TabsContent>
+
+      <TabsContent value="backend">
+
+      On the backend, use your project secret key to send a transaction from any of your server wallets.
+
+      ```http
+      POST /v1/transactions
+      Host: api.thirdweb.com
+    Content-Type: application/json
+    x-secret-key: <your-project-secret-key>
+
+     {
+        "from": "0x...", // the server wallet address
+        "chainId": "1" // the chain id
+        "transactions": [{
+          // contract call
+          "type": "contract-call",
+          "contractAddress": "0x...",
+          "method": "function transfer(address to, uint256 amount)",
+          "params": ["0x...", "1000000000000000000"],
+        }, {
+          // encoded transaction
+          "type": "encoded",
+          "to": "0x...",
+          "data": "0x...",
+        }, {
+          // native transfer
+          "type": "native-transfer",
+          "to": "0x...",
+          "value": "1000000000000000000", // in wei
+        }],
+      }
     ```
+
+      </TabsContent>
+    </Tabs>
 
   </TabsContent>
 

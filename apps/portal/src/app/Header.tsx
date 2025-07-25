@@ -120,6 +120,10 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
+    href: "https://api.thirdweb.com/reference",
+    name: "HTTP API",
+  },
+  {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
   },
@@ -271,7 +275,7 @@ export function Header() {
                   }}
                 >
                   <NavLink href={link.href} name={link.name} />
-                  {pathname.includes(link.href) && (
+                  {pathname.startsWith(link.href) && (
                     <div className="bg-violet-700 h-[2px] inset-x-0 rounded-full absolute -bottom-1" />
                   )}
                 </li>
@@ -281,6 +285,22 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <div className="px-1">
+            <DropdownLinks
+              category="AI"
+              links={[
+                {
+                  href: "/ai/mcp",
+                  name: "MCP",
+                },
+                {
+                  href: "/ai/llms-txt",
+                  name: "LLMs.txt",
+                },
+              ]}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
+          </div>
           <div className="px-1">
             <DropdownLinks
               category="SDKs"
@@ -497,7 +517,7 @@ function NavLink(props: {
     <Link
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
-        pathname.includes(props.href)
+        pathname.startsWith(props.href)
           ? "text-foreground"
           : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",

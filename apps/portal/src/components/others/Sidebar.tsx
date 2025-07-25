@@ -105,7 +105,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
     return (
       <Link
         className={clsx(
-          "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground text-sm rounded-lg hover:bg-violet-800/15",
+          "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-violet-800/15 border border-transparent hover:border-violet-800/50 text-sm rounded-lg",
           isActive
             ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
             : "",

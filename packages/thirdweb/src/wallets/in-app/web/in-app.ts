@@ -299,6 +299,24 @@ import type {
  * });
  * ```
  *
+ * ### Get the auth token for the wallet
+ *
+ * You can get the auth token for the wallet by calling `wallet.getAuthToken()`.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * await wallet.connect({
+ *   client,
+ *   strategy: "google",
+ * });
+ *
+ * const authToken = await wallet.getAuthToken(); // this will return a JWT token that can be used to authenticate the user in the backend
+ * console.log(authToken);
+ * ```
+ *
  * @returns The created in-app wallet.
  * @wallet
  */
