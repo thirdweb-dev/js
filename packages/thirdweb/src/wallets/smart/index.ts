@@ -80,7 +80,7 @@ export async function connectSmartAccount(
   connectionOptions: SmartWalletConnectionOptions,
   creationOptions: SmartWalletOptions,
 ): Promise<[Account, Chain]> {
-  const { personalAccount, client, chain: connectChain } = connectionOptions;
+  const { personalAccount, client } = connectionOptions;
 
   if (!personalAccount) {
     throw new Error(
@@ -89,7 +89,7 @@ export async function connectSmartAccount(
   }
 
   const options = creationOptions;
-  const chain = connectChain ?? options.chain;
+  const chain = creationOptions.chain;
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
   if (await isZkSyncChain(chain)) {

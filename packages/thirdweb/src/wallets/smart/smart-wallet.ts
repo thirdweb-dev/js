@@ -229,7 +229,7 @@ export function smartWallet(
       const { connectSmartAccount } = await import("./index.js");
       const [connectedAccount, connectedChain] = await connectSmartAccount(
         { ...lastConnectOptions, chain: newChain },
-        createOptions,
+        { ...createOptions, chain: newChain },
       );
       // set the states
       account = connectedAccount;
