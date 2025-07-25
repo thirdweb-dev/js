@@ -1,9 +1,9 @@
 import type { UseMutationResult } from "@tanstack/react-query";
-import { Button, type ButtonProps } from "chakra/button";
 import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { FileInput } from "@/components/blocks/FileInput";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { useErrorHandler } from "@/contexts/error-handler";
 import type { ComponentWithChildren } from "@/types/component-with-children";
 
@@ -39,12 +39,13 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
     <FileInput client={client} setValue={handleUpload}>
       <Button
         aria-label="Upload to IPFS"
-        isLoading={storageUpload.isPending}
-        rightIcon={<UploadIcon className="size-4" />}
+        variant="secondary"
+        disabled={storageUpload.isPending}
         size="sm"
-        variant="solid"
+        className="h-auto py-1.5 text-xs -translate-x-0.5 rounded-sm"
         {...buttonProps}
       >
+        <UploadIcon className="size-3 mr-2 text-muted-foreground" />
         {children}
       </Button>
     </FileInput>

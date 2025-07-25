@@ -30,7 +30,7 @@ const buttonSizesMap = {
 
 type PossibleButtonSize = keyof typeof buttonSizesMap;
 
-export interface ButtonProps extends Omit<ChakraButtonProps, "size"> {
+interface ButtonProps extends Omit<ChakraButtonProps, "size"> {
   size?: PossibleButtonSize;
   fromcolor?: string;
   tocolor?: string;
