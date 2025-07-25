@@ -97,7 +97,7 @@ export async function deleteWebhook(props: {
   return;
 }
 
-export type PaymentLink = {
+type PaymentLink = {
   id: string;
   link: string;
   title: string;

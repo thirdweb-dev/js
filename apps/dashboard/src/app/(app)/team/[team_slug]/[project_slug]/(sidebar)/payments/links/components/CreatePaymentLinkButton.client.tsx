@@ -6,8 +6,7 @@ import { LinkIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Bridge, createThirdwebClient, isAddress, toUnits } from "thirdweb";
-import { resolveScheme, upload } from "thirdweb/storage";
+import { Bridge, isAddress, toUnits } from "thirdweb";
 import { checksumAddress, shortenAddress } from "thirdweb/utils";
 import z from "zod";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
@@ -106,34 +105,34 @@ export function CreatePaymentLinkButton(
       toast.error(parseErrorToMessage(err), { duration: 5000 });
     },
   });
-  const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const uploadClient = createThirdwebClient({
-        clientId: "f958464759859da7a1c6f9d905c90a43", //7ae789153cf9ecde8f35649f2d8a4333", // Special client ID for uploads only on thirdweb.com
-      });
-      const uri = await upload({
-        client: uploadClient,
-        files: [file],
-      });
-
-      // eslint-disable-next-line no-restricted-syntax
-      const resolvedUrl = resolveScheme({
-        client: uploadClient,
-        uri,
-      });
-
-      form.setValue("imageUrl", resolvedUrl);
-      return;
-    },
-    onSuccess: () => {
-      toast.success("Image uploaded successfully.");
-    },
-    onError: (e) => {
-      console.error(e);
-      // setImage(undefined);
-      toast.error(parseErrorToMessage(e), { duration: 5000 });
-    },
-  });
+  // const uploadMutation = useMutation({
+  //   mutationFn: async (file: File) => {
+  //     const uploadClient = createThirdwebClient({
+  //       clientId: "f958464759859da7a1c6f9d905c90a43", //7ae789153cf9ecde8f35649f2d8a4333", // Special client ID for uploads only on thirdweb.com
+  //     });
+  //     const uri = await upload({
+  //       client: uploadClient,
+  //       files: [file],
+  //     });
+  //
+  //     // eslint-disable-next-line no-restricted-syntax
+  //     const resolvedUrl = resolveScheme({
+  //       client: uploadClient,
+  //       uri,
+  //     });
+  //
+  //     form.setValue("imageUrl", resolvedUrl);
+  //     return;
+  //   },
+  //   onSuccess: () => {
+  //     toast.success("Image uploaded successfully.");
+  //   },
+  //   onError: (e) => {
+  //     console.error(e);
+  //     // setImage(undefined);
+  //     toast.error(parseErrorToMessage(e), { duration: 5000 });
+  //   },
+  // });
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
@@ -266,9 +265,7 @@ export function CreatePaymentLinkButton(
                   size="sm"
                   className="flex-1 flex gap-2 items-center"
                   type="submit"
-                  disabled={
-                    uploadMutation.isPending || createMutation.isPending
-                  }
+                  disabled={createMutation.isPending}
                 >
                   {createMutation.isPending ? (
                     <Spinner className="size-4" />
