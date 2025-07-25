@@ -36,7 +36,7 @@ export function QuickStartSection({
             "Send instantly",
           ]}
           link={{
-            href: `/pay`,
+            href: `/team/${teamSlug}/${projectSlug}/payments/links`,
             label: "Create Link",
           }}
         />

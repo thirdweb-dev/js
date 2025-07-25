@@ -72,7 +72,6 @@ export function CreatePaymentLinkButton(
   });
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      console.log("createMutation", values);
       const tokens = await getUniversalBridgeTokens({
         chainId: values.chainId,
         address: values.tokenAddress,
