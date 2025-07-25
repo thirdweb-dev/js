@@ -39,6 +39,7 @@ export default async function Page(props: {
         </div>
         <CreatePaymentLinkButton
           key="create-payment-link"
+          clientId={project.publishableKey}
           teamId={project.teamId}
         >
           <Button className="gap-1" variant="default" size="sm">

@@ -6,6 +6,7 @@ import { type PropsWithChildren, useState } from "react";
 import { toast } from "sonner";
 import { toTokens } from "thirdweb";
 import {
+  deletePaymentLink,
   deleteWebhook,
   getPaymentLinks,
   getPayments,
@@ -106,6 +107,7 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
         buttons={[
           <CreatePaymentLinkButton
             key="create-payment-link"
+            clientId={props.clientId}
             teamId={props.teamId}
           >
             <Button className="gap-1" variant="default" size="sm">
@@ -195,15 +197,15 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
                       />
                     </TableCell>
                     <TableCell className="text-center">
-                      <DeleteWebhookButton
+                      <DeletePaymentLinkButton
                         clientId={props.clientId}
                         teamId={props.teamId}
-                        webhookId={paymentLink.id}
+                        paymentLinkId={paymentLink.id}
                       >
                         <Button size="icon" variant="ghost">
                           <TrashIcon className="size-5" strokeWidth={1} />
                         </Button>
-                      </DeleteWebhookButton>
+                      </DeletePaymentLinkButton>
                     </TableCell>
                   </TableRow>
                 ))
@@ -243,17 +245,21 @@ function SkeletonTableRow() {
   );
 }
 
-function DeleteWebhookButton(
-  props: PropsWithChildren<PayWebhooksPageProps & { webhookId: string }>,
+function DeletePaymentLinkButton(
+  props: PropsWithChildren<{
+    paymentLinkId: string;
+    clientId: string;
+    teamId: string;
+  }>,
 ) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await deleteWebhook({
+      await deletePaymentLink({
         clientId: props.clientId,
         teamId: props.teamId,
-        webhookId: id,
+        paymentLinkId: id,
       });
       return null;
     },
@@ -271,7 +277,7 @@ function DeleteWebhookButton(
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete the
-            webhook.
+            payment link.
           </DialogDescription>
         </DialogHeader>
 
@@ -280,17 +286,17 @@ function DeleteWebhookButton(
             className="gap-2"
             disabled={deleteMutation.isPending}
             onClick={() => {
-              deleteMutation.mutateAsync(props.webhookId, {
+              deleteMutation.mutateAsync(props.paymentLinkId, {
                 onError(err) {
-                  toast.error("Failed to delete webhook", {
+                  toast.error("Failed to delete payment link.", {
                     description: err instanceof Error ? err.message : undefined,
                   });
                 },
                 onSuccess: () => {
-                  toast.success("Webhook deleted successfully");
+                  toast.success("Payment link deleted successfully.");
                   setOpen(false);
                   return queryClient.invalidateQueries({
-                    queryKey: ["webhooks", props.clientId],
+                    queryKey: ["payment-link", props.clientId],
                   });
                 },
               });

@@ -48,7 +48,7 @@ const formSchema = z.object({
 });
 
 export function CreatePaymentLinkButton(
-  props: PropsWithChildren<{ teamId: string }>,
+  props: PropsWithChildren<{ clientId: string; teamId: string }>,
 ) {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<File>();
@@ -87,7 +87,7 @@ export function CreatePaymentLinkButton(
       }
 
       await createPaymentLink({
-        clientId: client.clientId,
+        clientId: props.clientId,
         teamId: props.teamId,
         intent: {
           destinationChainId: values.chainId,
@@ -103,7 +103,7 @@ export function CreatePaymentLinkButton(
     onSuccess: () => {
       toast.success("Payment link created successfully.");
       return queryClient.invalidateQueries({
-        queryKey: ["payment-links", client.clientId, props.teamId],
+        queryKey: ["payment-links", props.clientId, props.teamId],
       });
     },
     onError: (err) => {

@@ -203,6 +203,33 @@ export async function createPaymentLink(props: {
   return;
 }
 
+export async function deletePaymentLink(props: {
+  clientId: string;
+  teamId: string;
+  paymentLinkId: string;
+}) {
+  const authToken = await getAuthToken();
+  const res = await fetch(
+    `${UB_BASE_URL}/v1/developer/links/${props.paymentLinkId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": props.clientId,
+        "x-team-id": props.teamId,
+      },
+      method: "DELETE",
+    },
+  );
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  return;
+}
+
 export type Fee = {
   feeRecipient: string;
   feeBps: number;
@@ -309,28 +336,21 @@ export async function getPayments(props: {
   const authToken = await getAuthToken();
 
   // Build URL with query parameters if provided
-  let url = `${UB_BASE_URL}/v1/developer/payments`;
-  const queryParams = new URLSearchParams();
+  const url = new URL(`${UB_BASE_URL}/v1/developer/payments`);
 
   if (props.limit) {
-    queryParams.append("limit", props.limit.toString());
+    url.searchParams.append("limit", props.limit.toString());
   }
 
   if (props.offset) {
-    queryParams.append("offset", props.offset.toString());
+    url.searchParams.append("offset", props.offset.toString());
   }
 
   if (props.paymentLinkId) {
-    queryParams.append("paymentLinkId", props.paymentLinkId);
+    url.searchParams.append("paymentLinkId", props.paymentLinkId);
   }
 
-  // Append query params to URL if any exist
-  const queryString = queryParams.toString();
-  if (queryString) {
-    url = `${url}?${queryString}`;
-  }
-
-  const res = await fetch(url, {
+  const res = await fetch(url.toString(), {
     headers: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",

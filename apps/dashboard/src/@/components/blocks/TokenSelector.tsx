@@ -190,7 +190,7 @@ export function TokenSelector(props: {
         tokensQuery.isPending ? (
           <div className="flex items-center gap-2">
             <Spinner className="size-4" />
-            <span>Loading Tokens</span>
+            <span>Loading tokens</span>
           </div>
         ) : (
           props.placeholder || "Select Token"
