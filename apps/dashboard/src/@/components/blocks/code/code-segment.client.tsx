@@ -3,6 +3,7 @@ import type React from "react";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { TabButtons } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 export type CodeEnvironment =
   | "javascript"
@@ -50,6 +51,7 @@ interface CodeSegmentProps {
   isInstallCommand?: boolean;
   hideTabs?: boolean;
   onlyTabs?: boolean;
+  codeContainerClassName?: string;
 }
 
 export const CodeSegment: React.FC<CodeSegmentProps> = ({
@@ -59,6 +61,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
   isInstallCommand,
   hideTabs,
   onlyTabs,
+  codeContainerClassName,
 }) => {
   const activeEnvironment: CodeEnvironment = useMemo(() => {
     return (
@@ -106,7 +109,10 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
 
       {onlyTabs ? null : (
         <CodeClient
-          className="rounded-none border-none grow"
+          className={cn(
+            "rounded-none border-none grow",
+            codeContainerClassName,
+          )}
           scrollableContainerClassName="h-full"
           code={code}
           lang={

@@ -144,15 +144,13 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
             </Card>
           )}
           {contractFunctions && (
-            <Card p={0}>
-              <ContractFunctionsOverview
-                abi={publishedContract?.abi}
-                events={contractEvents}
-                functions={contractFunctions}
-                isLoggedIn={isLoggedIn}
-                sources={sources.data}
-              />
-            </Card>
+            <ContractFunctionsOverview
+              abi={publishedContract?.abi}
+              events={contractEvents}
+              functions={contractFunctions}
+              isLoggedIn={isLoggedIn}
+              sources={sources.data}
+            />
           )}
         </Flex>
       </GridItem>

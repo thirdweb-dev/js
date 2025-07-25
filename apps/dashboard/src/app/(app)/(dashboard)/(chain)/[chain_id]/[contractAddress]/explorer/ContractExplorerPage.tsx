@@ -34,7 +34,7 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
 
   const functions = getContractFunctionsFromAbi(abi);
   return (
-    <div className="flex h-[70vh] flex-col ">
+    <div className="flex h-[70vh] flex-col">
       {functions && functions.length > 0 ? (
         <ContractFunctionsOverview
           contract={contract}
