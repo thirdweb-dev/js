@@ -33,6 +33,7 @@ export async function getOwnedNFTs(args: {
   client: ThirdwebClient;
   chains: Chain[];
   ownerAddress: string;
+  contractAddress?: string;
   includeMetadata?: boolean;
   queryOptions?: Omit<GetV1NftsData["query"], "owner_address" | "chain">;
 }): Promise<(NFT & { quantityOwned: bigint })[]> {
@@ -50,8 +51,7 @@ export async function getOwnedNFTs(args: {
     import("viem"),
   ]);
 
-  // TODO (insight): add support for contract address filters
-  const { client, chains, ownerAddress, queryOptions } = args;
+  const { client, chains, ownerAddress, contractAddress, queryOptions } = args;
 
   await assertInsightEnabled(chains);
 
@@ -59,7 +59,8 @@ export async function getOwnedNFTs(args: {
     chain: chains.map((chain) => chain.id),
     // metadata: includeMetadata ? "true" : "false", TODO (insight): add support for this
     limit: 50,
-    owner_address: ownerAddress,
+    owner_address: [ownerAddress],
+    contract_address: contractAddress ? [contractAddress] : undefined,
   };
 
   const result = await getV1Nfts({
