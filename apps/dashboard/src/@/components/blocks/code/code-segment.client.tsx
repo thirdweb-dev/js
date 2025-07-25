@@ -86,7 +86,7 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
   return (
     <div
       className={
-        "flex flex-col overflow-hidden rounded-lg border border-border"
+        "flex flex-col overflow-hidden rounded-lg border border-border grow"
       }
     >
       {!hideTabs && (
@@ -106,7 +106,8 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
 
       {onlyTabs ? null : (
         <CodeClient
-          className="rounded-none border-none"
+          className="rounded-none border-none grow"
+          scrollableContainerClassName="h-full"
           code={code}
           lang={
             isInstallCommand

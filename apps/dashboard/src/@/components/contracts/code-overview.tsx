@@ -1,32 +1,12 @@
 "use client";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  GridItem,
-  List,
-  ListItem,
-  SimpleGrid,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import {
   type Abi,
   type AbiEvent,
   type AbiFunction,
   formatAbiItem,
 } from "abitype";
-import { Button } from "chakra/button";
-import { Card } from "chakra/card";
-import { Heading } from "chakra/heading";
-import { Link } from "chakra/link";
-import { Text } from "chakra/text";
+import { CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
@@ -35,23 +15,19 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
-
 import {
   type CodeEnvironment,
   CodeSegment,
 } from "@/components/blocks/code/code-segment.client";
 import { getContractFunctionsFromAbi } from "@/components/contract-components/getContractFunctionsFromAbi";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { TabButtons } from "@/components/ui/tabs";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useContractEvents } from "@/hooks/contract-hooks";
-
-interface CodeOverviewProps {
-  abi?: Abi;
-  contractAddress?: string;
-  onlyInstall?: boolean;
-  chainId: number;
-  noSidebar?: boolean;
-}
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export const COMMANDS = {
   events: {
@@ -434,7 +410,7 @@ const EXTENSION_NAMESPACE_FUNCTION_MAPPING = {
   >
 >;
 
-interface SnippetOptions {
+type SnippetOptions = {
   contractAddress?: string;
   fn?: AbiFunction | AbiEvent;
   args?: string[];
@@ -442,7 +418,7 @@ interface SnippetOptions {
   clientId?: string;
   chainId?: number;
   extensionNamespace?: string;
-}
+};
 
 export function formatSnippet(
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -537,13 +513,21 @@ export function formatSnippet(
   return code;
 }
 
-export const CodeOverview: React.FC<CodeOverviewProps> = ({
-  abi,
-  contractAddress = "0x...",
-  onlyInstall = false,
-  noSidebar = false,
-  chainId,
-}) => {
+export function CodeOverview(props: {
+  abi?: Abi;
+  contractAddress?: string;
+  onlyInstall?: boolean;
+  chainId: number;
+  noSidebar?: boolean;
+}) {
+  const {
+    abi,
+    contractAddress = "0x...",
+    onlyInstall = false,
+    noSidebar = false,
+    chainId,
+  } = props;
+
   const searchParams = useSearchParams();
   const defaultEnvironment = searchParams?.get("environment") as
     | CodeEnvironment
@@ -556,7 +540,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const [tab, setTab] = useState("write");
 
   const address = useActiveAccount()?.address;
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useIsMobile();
 
   const functionSelectors = useMemo(() => {
     return (abi || [])
@@ -626,340 +610,307 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
     events && events.length > 0 ? events[0] : undefined,
   );
 
+  const tabList = useMemo(() => {
+    const _tablist: Array<{
+      name: string;
+      onClick: () => void;
+      isActive: boolean;
+    }> = [];
+
+    if (writeFunctions && writeFunctions.length > 0) {
+      _tablist.push({
+        name: "Write",
+        onClick: () => setTab("write"),
+        isActive: tab === "write",
+      });
+    }
+
+    if (readFunctions && readFunctions.length > 0) {
+      _tablist.push({
+        name: "Read",
+        onClick: () => setTab("read"),
+        isActive: tab === "read",
+      });
+    }
+
+    if (events && events.length > 0) {
+      _tablist.push({
+        name: "Events",
+        onClick: () => setTab("events"),
+        isActive: tab === "events",
+      });
+    }
+
+    return _tablist;
+  }, [writeFunctions, readFunctions, events, tab]);
+
   return (
-    <SimpleGrid
-      columns={12}
-      display={{ base: "block", md: "grid" }}
-      gap={16}
-      justifyContent="space-between"
-      maxW="full"
-      overflowX={{ base: "scroll", md: "hidden" }}
-    >
-      <GridItem as={Flex} colSpan={12} flexDir="column" gap={12}>
-        {isAccountFactory && (
-          <Flex flexDirection="column" gap={4}>
-            <Flex flexDir="column" gap={6}>
-              <Heading size="title.md">Integrate your account factory</Heading>
-              <Alert
-                alignItems="start"
-                as={Flex}
-                borderRadius="md"
-                flexDir="column"
-                gap={2}
-                status="info"
-              >
-                <Flex justifyContent="start">
-                  <AlertIcon />
-                  <AlertTitle>Account Factory</AlertTitle>
-                </Flex>
-                <AlertDescription>
-                  The recommended way to use account factories is to integrate
-                  the{" "}
-                  <UnderlineLink
-                    className="text-primary-500"
-                    href="https://portal.thirdweb.com/connect/account-abstraction/overview"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    thirdweb SDK
-                  </UnderlineLink>{" "}
-                  in your applications. This will ensure account contracts are
-                  deployed for your users only when they need it.
-                </AlertDescription>
-              </Alert>
-              <Flex flexDir="column" gap={2}>
-                <CodeSegment
-                  environment={environment}
-                  hideTabs
-                  setEnvironment={setEnvironment}
-                  snippet={formatSnippet(
-                    (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
-                      ?.supportedLanguages || {}) as Record<
-                      CodeEnvironment,
-                      string
-                    >,
-                    {
-                      address,
-                      chainId,
-                      contractAddress,
-                    },
-                  )}
-                />
-              </Flex>
-            </Flex>
-          </Flex>
+    <div className="space-y-12">
+      {isAccountFactory && (
+        <AccountFactorySection
+          address={address}
+          chainId={chainId}
+          contractAddress={contractAddress}
+          environment={environment}
+          setEnvironment={setEnvironment}
+        />
+      )}
+
+      <div className="flex flex-col gap-4">
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold tracking-tight">
+            {isAccountFactory
+              ? "Direct contract interaction (advanced)"
+              : chainInfo
+                ? "Interact with this contract from your app"
+                : "Getting Started"}
+          </h2>
+        </div>
+        {(noSidebar || isMobile) && (
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-muted-foreground">Choose a language:</p>
+            <CodeSegment
+              environment={environment}
+              onlyTabs
+              setEnvironment={setEnvironment}
+              snippet={COMMANDS.install}
+            />
+          </div>
         )}
-        <Flex flexDirection="column" gap={4}>
-          <Flex flexDir="column" gap={2}>
-            <Heading size="title.md">
-              {isAccountFactory
-                ? "Direct contract interaction (advanced)"
-                : chainInfo
-                  ? "Interact with this contract from your app"
-                  : "Getting Started"}
-            </Heading>
-          </Flex>
-          {(noSidebar || isMobile) && (
-            <Flex flexDir="column" gap={2}>
-              <Text>Choose a language:</Text>
+        <div className="flex flex-col gap-2">
+          {environment === "react-native" || environment === "unity" ? (
+            <p className="text-sm text-muted-foreground">
+              Install the latest version of the SDK.{" "}
+              <UnderlineLink
+                className="text-primary-500"
+                href={`https://portal.thirdweb.com/${environment}`}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn how in the{" "}
+                {environment === "react-native" ? "React Native" : "Unity"}{" "}
+                documentation
+              </UnderlineLink>
+              .
+            </p>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Install the latest version of the SDK:
+              </p>
               <CodeSegment
                 environment={environment}
-                onlyTabs
+                hideTabs
+                isInstallCommand
                 setEnvironment={setEnvironment}
                 snippet={COMMANDS.install}
               />
-            </Flex>
+            </>
           )}
-          <Flex flexDir="column" gap={2}>
-            {environment === "react-native" || environment === "unity" ? (
-              <Text>
-                Install the latest version of the SDK. <br />
-                <UnderlineLink
-                  className="text-primary-500"
-                  href={`https://portal.thirdweb.com/${environment}`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Learn how in the{" "}
-                  {environment === "react-native" ? "React Native" : "Unity"}{" "}
-                  documentation
-                </UnderlineLink>
-                .
-              </Text>
-            ) : (
-              <>
-                <Text>Install the latest version of the SDK:</Text>
-                <CodeSegment
-                  environment={environment}
-                  hideTabs
-                  isInstallCommand
-                  setEnvironment={setEnvironment}
-                  snippet={COMMANDS.install}
-                />
-              </>
-            )}
-          </Flex>
-          <Flex flexDir="column" gap={2}>
-            <Text>Initialize the SDK and contract on your project:</Text>
+        </div>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">
+            Initialize the SDK and contract on your project:
+          </p>
+          <CodeSegment
+            environment={environment}
+            hideTabs
+            setEnvironment={setEnvironment}
+            snippet={formatSnippet(COMMANDS.setup, {
+              chainId,
+              contractAddress,
+            })}
+          />
+          <p className="text-sm text-muted-foreground">
+            You will need to pass a client ID/secret key to use thirdweb&apos;s
+            infrastructure services. If you don&apos;t have any API keys yet you
+            can create one by creating a project for free from the{" "}
+            <UnderlineLink href="/team">dashboard</UnderlineLink>.
+          </p>
+        </div>
+      </div>
+
+      {!onlyInstall && (
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight mb-3">
+            All Functions & Events
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4">
+            <div className="border bg-card rounded-lg overflow-hidden ">
+              {(writeFunctions || []).length > 0 ||
+              (readFunctions || []).length > 0 ? (
+                <div>
+                  {/* tabs */}
+                  <div className="bg-background">
+                    <TabButtons
+                      tabs={tabList}
+                      tabClassName="!text-sm"
+                      tabContainerClassName="px-3 pt-2"
+                    />
+                  </div>
+
+                  {tab === "write" && (
+                    <AccentButtonListContainer>
+                      {writeFunctions?.map((fn) => (
+                        <AccentButton
+                          isActive={write?.signature === fn.signature}
+                          key={fn.signature}
+                          label={fn.name}
+                          onClick={() => {
+                            setTab("write");
+                            setWrite(fn);
+                          }}
+                        />
+                      ))}
+                    </AccentButtonListContainer>
+                  )}
+
+                  {tab === "read" && (
+                    <AccentButtonListContainer>
+                      {readFunctions?.map((fn) => (
+                        <AccentButton
+                          isActive={read?.signature === fn.signature}
+                          key={fn.signature}
+                          onClick={() => {
+                            setTab("read");
+                            setRead(fn);
+                          }}
+                          label={fn.name}
+                        />
+                      ))}
+                    </AccentButtonListContainer>
+                  )}
+
+                  {tab === "events" && (
+                    <AccentButtonListContainer>
+                      {events?.map((ev) => (
+                        <AccentButton
+                          isActive={event?.name === ev.name}
+                          key={ev.name}
+                          onClick={() => {
+                            setTab("events");
+                            setEvent(ev);
+                          }}
+                          label={ev.name}
+                        />
+                      ))}
+                    </AccentButtonListContainer>
+                  )}
+                </div>
+              ) : null}
+            </div>
             <CodeSegment
               environment={environment}
-              hideTabs
               setEnvironment={setEnvironment}
-              snippet={formatSnippet(COMMANDS.setup, {
-                chainId,
-                contractAddress,
-              })}
-            />
-            <Text>
-              You will need to pass a client ID/secret key to use
-              thirdweb&apos;s infrastructure services. If you don&apos;t have
-              any API keys yet you can create one by creating a project for free
-              from the{" "}
-              <Link color="primary.500" href="/team">
-                dashboard
-              </Link>
-              .
-            </Text>
-          </Flex>
-        </Flex>
-        {!onlyInstall && (
-          <Flex flexDirection="column" gap={6}>
-            <Heading size="title.md">All Functions & Events</Heading>
-            <SimpleGrid columns={12} gap={3} height="100%">
-              <GridItem
-                as={Card}
-                colSpan={{ base: 12, md: 4 }}
-                height="100%"
-                overflow="auto"
-                overflowY="auto"
-                pt={0}
-                px={0}
-              >
-                <List height="100%" overflowX="hidden">
-                  {((writeFunctions || []).length > 0 ||
-                    (readFunctions || []).length > 0) && (
-                    <Tabs
-                      colorScheme="gray"
-                      display="flex"
-                      flexDir="column"
-                      h="100%"
-                      position="relative"
-                    >
-                      <TabList as={Flex}>
-                        {(writeFunctions || []).length > 0 && (
-                          <Tab flex="1 1 0" gap={2}>
-                            <Heading color="inherit" my={1} size="label.md">
-                              Write
-                            </Heading>
-                          </Tab>
-                        )}
-                        {(readFunctions || []).length > 0 && (
-                          <Tab flex="1 1 0" gap={2}>
-                            <Heading color="inherit" my={1} size="label.md">
-                              Read
-                            </Heading>
-                          </Tab>
-                        )}
-                        {(events || []).length > 0 && (
-                          <Tab flex="1 1 0" gap={2}>
-                            <Heading color="inherit" my={1} size="label.md">
-                              Events
-                            </Heading>
-                          </Tab>
-                        )}
-                      </TabList>
-                      <TabPanels h="auto" overflow="auto">
-                        <TabPanel>
-                          {writeFunctions?.map((fn) => (
-                            <ListItem key={fn.signature} my={0.5}>
-                              <Button
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
-                                color="heading"
-                                fontFamily="mono"
-                                fontWeight={
-                                  tab === "write" &&
-                                  write?.signature === fn.signature
-                                    ? 600
-                                    : 400
-                                }
-                                onClick={() => {
-                                  setTab("write");
-                                  setWrite(fn);
-                                }}
-                                opacity={
-                                  tab === "write" &&
-                                  write?.signature === fn.signature
-                                    ? 1
-                                    : 0.65
-                                }
-                                size="sm"
-                                variant="link"
-                              >
-                                {fn.name}
-                              </Button>
-                            </ListItem>
-                          ))}
-                        </TabPanel>
-                        <TabPanel>
-                          {readFunctions?.map((fn) => (
-                            <ListItem key={fn.signature} my={0.5}>
-                              <Button
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
-                                color="heading"
-                                fontFamily="mono"
-                                fontWeight={
-                                  tab === "read" &&
-                                  read?.signature === fn.signature
-                                    ? 600
-                                    : 400
-                                }
-                                onClick={() => {
-                                  setTab("read");
-                                  setRead(fn);
-                                }}
-                                opacity={
-                                  tab === "read" &&
-                                  read?.signature === fn.signature
-                                    ? 1
-                                    : 0.65
-                                }
-                                size="sm"
-                                variant="link"
-                              >
-                                {fn.name}
-                              </Button>
-                            </ListItem>
-                          ))}
-                        </TabPanel>
-                        <TabPanel>
-                          {events?.map((ev) => (
-                            <ListItem key={ev.name} my={0.5}>
-                              <Button
-                                _hover={{
-                                  opacity: 1,
-                                  textDecor: "underline",
-                                }}
-                                color="heading"
-                                fontFamily="mono"
-                                fontWeight={
-                                  tab === "events" &&
-                                  (event as AbiEvent).name ===
-                                    (ev as AbiEvent).name
-                                    ? 600
-                                    : 400
-                                }
-                                onClick={() => {
-                                  setTab("events");
-                                  setEvent(ev);
-                                }}
-                                opacity={
-                                  tab === "events" &&
-                                  (event as AbiEvent).name ===
-                                    (ev as AbiEvent).name
-                                    ? 1
-                                    : 0.65
-                                }
-                                size="sm"
-                                variant="link"
-                              >
-                                {ev.name}
-                              </Button>
-                            </ListItem>
-                          ))}
-                        </TabPanel>
-                      </TabPanels>
-                    </Tabs>
-                  )}
-                </List>
-              </GridItem>
-              <GridItem
-                as={Card}
-                colSpan={{ base: 12, md: 8 }}
-                height="100%"
-                overflow="auto"
-              >
-                <CodeSegment
-                  environment={environment}
-                  setEnvironment={setEnvironment}
-                  snippet={formatSnippet(
-                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                    COMMANDS[tab as keyof typeof COMMANDS] as any,
-                    {
-                      args:
-                        abi
-                          ?.filter(
-                            (f) => f.type === "function" || f.type === "event",
-                          )
-                          ?.find(
-                            (f) =>
-                              f.name ===
-                              (tab === "read"
-                                ? read?.name
-                                : tab === "write"
-                                  ? write?.name
-                                  : event?.name),
-                          )
-                          ?.inputs.map((i) => i.name || "") || [],
+              snippet={formatSnippet(
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
+                COMMANDS[tab as keyof typeof COMMANDS] as any,
+                {
+                  args:
+                    abi
+                      ?.filter(
+                        (f) => f.type === "function" || f.type === "event",
+                      )
+                      ?.find(
+                        (f) =>
+                          f.name ===
+                          (tab === "read"
+                            ? read?.name
+                            : tab === "write"
+                              ? write?.name
+                              : event?.name),
+                      )
+                      ?.inputs.map((i) => i.name || "") || [],
 
-                      chainId,
-                      contractAddress,
-                      extensionNamespace,
-                      fn:
-                        tab === "read" ? read : tab === "write" ? write : event,
-                    },
-                  )}
-                />
-              </GridItem>
-            </SimpleGrid>
-          </Flex>
-        )}
-      </GridItem>
-    </SimpleGrid>
+                  chainId,
+                  contractAddress,
+                  extensionNamespace,
+                  fn: tab === "read" ? read : tab === "write" ? write : event,
+                },
+              )}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
-};
+}
+
+function AccentButtonListContainer(props: { children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-0.5 px-2 py-3 max-h-[300px] lg:max-h-[700px] overflow-y-auto">
+      {props.children}
+    </div>
+  );
+}
+
+function AccentButton(props: {
+  isActive: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <Button
+      className={cn(
+        "text-sm justify-start h-auto py-1 px-2 text-muted-foreground",
+        props.isActive && "text-foreground bg-accent",
+      )}
+      onClick={props.onClick}
+      size="sm"
+      variant="ghost"
+    >
+      {props.label}
+    </Button>
+  );
+}
+
+function AccountFactorySection(props: {
+  environment: CodeEnvironment;
+  setEnvironment: (environment: CodeEnvironment) => void;
+  address?: string;
+  chainId: number;
+  contractAddress: string;
+}) {
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <h2 className="text-lg font-semibold tracking-tight">
+          Integrate your account factory
+        </h2>
+        <Alert variant="info">
+          <CircleAlertIcon className="w-5 h-5 text-blue-500" />
+          <AlertTitle>Account Factory</AlertTitle>
+          <AlertDescription>
+            The recommended way to use account factories is to integrate the{" "}
+            <Link
+              className="text-primary-500 underline hover:text-primary-600"
+              href="https://portal.thirdweb.com/connect/account-abstraction/overview"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              thirdweb SDK
+            </Link>{" "}
+            in your applications. This will ensure account contracts are
+            deployed for your users only when they need it.
+          </AlertDescription>
+        </Alert>
+      </div>
+      <div className="flex flex-col gap-2">
+        <CodeSegment
+          environment={props.environment}
+          hideTabs
+          setEnvironment={props.setEnvironment}
+          snippet={formatSnippet(
+            (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
+              ?.supportedLanguages || {}) as Record<CodeEnvironment, string>,
+            {
+              address: props.address,
+              chainId: props.chainId,
+              contractAddress: props.contractAddress,
+            },
+          )}
+        />
+      </div>
+    </div>
+  );
+}
