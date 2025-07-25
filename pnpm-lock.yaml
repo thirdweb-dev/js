@@ -135,7 +135,7 @@ importers:
         version: 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@scalar/api-reference-react':
         specifier: 0.7.25
-        version: 0.7.25(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(react@19.1.0)(tailwindcss@3.4.17)(typescript@5.8.3)
+        version: 0.7.25(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(react@19.1.0)(tailwindcss@3.4.17)(typescript@5.8.3)
       '@sentry/nextjs':
         specifier: 9.34.0
         version: 9.34.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(encoding@0.1.13)(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(webpack@5.99.9(esbuild@0.25.5))
@@ -233,8 +233,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2
       qrcode:
-        specifier: ^1.5.3
-        version: 1.5.4
+        specifier: 1.5.3
+        version: 1.5.3
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -354,7 +354,7 @@ importers:
         specifier: ^0.0.33
         version: 0.0.33
       '@types/qrcode':
-        specifier: ^1.5.5
+        specifier: 1.5.5
         version: 1.5.5
       '@types/react':
         specifier: 19.1.8
@@ -1314,6 +1314,9 @@ importers:
       prompts:
         specifier: 2.4.2
         version: 2.4.2
+      qrcode:
+        specifier: 1.5.3
+        version: 1.5.3
       toml:
         specifier: 3.0.0
         version: 3.0.0
@@ -1384,6 +1387,9 @@ importers:
       '@types/prompts':
         specifier: 2.4.9
         version: 2.4.9
+      '@types/qrcode':
+        specifier: 1.5.5
+        version: 1.5.5
       '@types/react':
         specifier: 19.1.8
         version: 19.1.8
@@ -13287,11 +13293,6 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  qrcode@1.5.4:
-    resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-
   qs@6.14.0:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
@@ -20879,7 +20880,7 @@ snapshots:
       mipd: 0.0.7(typescript@5.8.3)
       ofetch: 1.4.1
       pino-pretty: 10.3.1
-      qrcode: 1.5.4
+      qrcode: 1.5.3
       react: 19.1.0
       react-device-detect: 2.2.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react-dom: 19.1.0(react@19.1.0)
@@ -22460,7 +22461,7 @@ snapshots:
 
   '@safe-global/safe-gateway-typescript-sdk@3.23.1': {}
 
-  '@scalar/api-client@2.5.13(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(tailwindcss@3.4.17)(typescript@5.8.3)':
+  '@scalar/api-client@2.5.13(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(tailwindcss@3.4.17)(typescript@5.8.3)':
     dependencies:
       '@headlessui/tailwindcss': 0.2.2(tailwindcss@3.4.17)
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.8.3))
@@ -22483,7 +22484,7 @@ snapshots:
       '@scalar/use-tooltip': 1.1.0(typescript@5.8.3)
       '@types/har-format': 1.2.16
       '@vueuse/core': 10.11.1(vue@3.5.13(typescript@5.8.3))
-      '@vueuse/integrations': 11.3.0(axios@1.10.0)(focus-trap@7.6.4)(fuse.js@7.1.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(vue@3.5.13(typescript@5.8.3))
+      '@vueuse/integrations': 11.3.0(axios@1.10.0)(focus-trap@7.6.4)(fuse.js@7.1.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(vue@3.5.13(typescript@5.8.3))
       focus-trap: 7.6.4
       fuse.js: 7.1.0
       microdiff: 1.5.0
@@ -22513,9 +22514,9 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference-react@0.7.25(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(react@19.1.0)(tailwindcss@3.4.17)(typescript@5.8.3)':
+  '@scalar/api-reference-react@0.7.25(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(react@19.1.0)(tailwindcss@3.4.17)(typescript@5.8.3)':
     dependencies:
-      '@scalar/api-reference': 1.32.1(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(tailwindcss@3.4.17)(typescript@5.8.3)
+      '@scalar/api-reference': 1.32.1(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(tailwindcss@3.4.17)(typescript@5.8.3)
       '@scalar/types': 0.2.5
       react: 19.1.0
     transitivePeerDependencies:
@@ -22534,11 +22535,11 @@ snapshots:
       - typescript
       - universal-cookie
 
-  '@scalar/api-reference@1.32.1(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(tailwindcss@3.4.17)(typescript@5.8.3)':
+  '@scalar/api-reference@1.32.1(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(tailwindcss@3.4.17)(typescript@5.8.3)':
     dependencies:
       '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.8.3))
       '@headlessui/vue': 1.7.23(vue@3.5.13(typescript@5.8.3))
-      '@scalar/api-client': 2.5.13(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(tailwindcss@3.4.17)(typescript@5.8.3)
+      '@scalar/api-client': 2.5.13(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(tailwindcss@3.4.17)(typescript@5.8.3)
       '@scalar/code-highlight': 0.1.4
       '@scalar/components': 0.14.14(typescript@5.8.3)
       '@scalar/helpers': 0.0.5
@@ -25385,7 +25386,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/integrations@11.3.0(axios@1.10.0)(focus-trap@7.6.4)(fuse.js@7.1.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.4)(vue@3.5.13(typescript@5.8.3))':
+  '@vueuse/integrations@11.3.0(axios@1.10.0)(focus-trap@7.6.4)(fuse.js@7.1.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(vue@3.5.13(typescript@5.8.3))':
     dependencies:
       '@vueuse/core': 11.3.0(vue@3.5.13(typescript@5.8.3))
       '@vueuse/shared': 11.3.0(vue@3.5.13(typescript@5.8.3))
@@ -25396,7 +25397,7 @@ snapshots:
       fuse.js: 7.1.0
       idb-keyval: 6.2.2
       nprogress: 0.2.0
-      qrcode: 1.5.4
+      qrcode: 1.5.3
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -33729,12 +33730,6 @@ snapshots:
     dependencies:
       dijkstrajs: 1.0.3
       encode-utf8: 1.0.3
-      pngjs: 5.0.0
-      yargs: 15.4.1
-
-  qrcode@1.5.4:
-    dependencies:
-      dijkstrajs: 1.0.3
       pngjs: 5.0.0
       yargs: 15.4.1
 

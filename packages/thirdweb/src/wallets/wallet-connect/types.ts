@@ -157,6 +157,19 @@ export type WCConnectOptions = {
        * ```
        */
       onDisplayUri?: (_uri: string) => void;
+      /**
+       * Callback that gets called when the user cancels the connection process (e.g., closes the QR modal).
+       * This is only called for user-initiated cancellations, not for programmatic cleanup.
+       *
+       * ```tsx
+       * await wallet.connect({
+       *  onCancel: () => {
+       *    console.log("User cancelled wallet connection");
+       *  }
+       * })
+       * ```
+       */
+      onCancel?: () => void;
     }
   >;
 };

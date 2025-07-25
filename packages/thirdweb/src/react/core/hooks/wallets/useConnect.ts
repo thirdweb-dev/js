@@ -79,5 +79,15 @@ export function useConnect(options?: ConnectManagerOptions) {
     [connect, options, setConnectionStatus],
   );
 
-  return { connect: handleConnection, error, isConnecting } as const;
+  const cancelConnection = useCallback(() => {
+    setIsConnecting(false);
+    setConnectionStatus("disconnected");
+  }, [setConnectionStatus]);
+
+  return {
+    connect: handleConnection,
+    error,
+    isConnecting,
+    cancelConnection,
+  } as const;
 }
