@@ -1,4 +1,5 @@
 "use server";
+import type { Address } from "thirdweb";
 import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_BRIDGE_HOST } from "@/constants/public-envs";
 
@@ -87,6 +88,112 @@ export async function deleteWebhook(props: {
       method: "DELETE",
     },
   );
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  return;
+}
+
+export type PaymentLink = {
+  id: string;
+  link: string;
+  title: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  destinationToken: {
+    chainId: number;
+    address: Address;
+    symbol: string;
+    name: string;
+    decimals: number;
+    iconUri: string;
+  };
+  receiver: Address;
+  amount: bigint;
+};
+
+export async function getPaymentLinks(props: {
+  clientId: string;
+  teamId: string;
+}): Promise<Array<PaymentLink>> {
+  const authToken = await getAuthToken();
+  const res = await fetch(`${UB_BASE_URL}/v1/developer/links`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
+    },
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text);
+  }
+
+  const json = (await res.json()) as {
+    data: Array<PaymentLink & { amount: string }>;
+  };
+  return json.data.map((link) => ({
+    id: link.id,
+    link: link.link,
+    title: link.title,
+    imageUrl: link.imageUrl,
+    createdAt: link.createdAt,
+    updatedAt: link.updatedAt,
+    destinationToken: {
+      chainId: link.destinationToken.chainId,
+      address: link.destinationToken.address,
+      symbol: link.destinationToken.symbol,
+      name: link.destinationToken.name,
+      decimals: link.destinationToken.decimals,
+      iconUri: link.destinationToken.iconUri,
+    },
+    receiver: link.receiver,
+    amount: BigInt(link.amount),
+  }));
+}
+
+export async function createPaymentLink(props: {
+  clientId: string;
+  teamId: string;
+  title: string;
+  imageUrl: string;
+  intent: {
+    destinationChainId: number;
+    destinationTokenAddress: Address;
+    receiver: Address;
+    amount: bigint;
+    purchaseData?: unknown;
+  };
+}) {
+  const authToken = await getAuthToken();
+
+  const res = await fetch(`${UB_BASE_URL}/v1/developer/links`, {
+    body: JSON.stringify({
+      title: props.title,
+      imageUrl: props.imageUrl,
+      intent: {
+        destinationChainId: props.intent.destinationChainId,
+        destinationTokenAddress: props.intent.destinationTokenAddress,
+        receiver: props.intent.receiver,
+        amount: props.intent.amount.toString(),
+        purchaseData: props.intent.purchaseData,
+      },
+    }),
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+      "x-client-id": props.clientId,
+      "x-team-id": props.teamId,
+    },
+    method: "POST",
+  });
 
   if (!res.ok) {
     const text = await res.text();
@@ -195,6 +302,7 @@ export type Payment = {
 export async function getPayments(props: {
   clientId: string;
   teamId: string;
+  paymentLinkId?: string;
   limit?: number;
   offset?: number;
 }) {
@@ -210,6 +318,10 @@ export async function getPayments(props: {
 
   if (props.offset) {
     queryParams.append("offset", props.offset.toString());
+  }
+
+  if (props.paymentLinkId) {
+    queryParams.append("paymentLinkId", props.paymentLinkId);
   }
 
   // Append query params to URL if any exist

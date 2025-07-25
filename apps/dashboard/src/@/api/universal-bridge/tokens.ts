@@ -13,11 +13,17 @@ export type TokenMetadata = {
   iconUri?: string;
 };
 
-export async function getUniversalBridgeTokens(props: { chainId?: number }) {
+export async function getUniversalBridgeTokens(props: {
+  chainId?: number;
+  address?: string;
+}) {
   const url = new URL(`${UB_BASE_URL}/v1/tokens`);
 
   if (props.chainId) {
     url.searchParams.append("chainId", String(props.chainId));
+  }
+  if (props.address) {
+    url.searchParams.append("tokenAddress", props.address);
   }
   url.searchParams.append("limit", "1000");
 

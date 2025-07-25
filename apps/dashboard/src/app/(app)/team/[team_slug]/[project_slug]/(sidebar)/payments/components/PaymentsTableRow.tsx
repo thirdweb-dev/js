@@ -3,7 +3,6 @@ import { type ThirdwebClient, toTokens } from "thirdweb";
 import type { Payment } from "@/api/universal-bridge/developer";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { TableData } from "./common";
 import { formatTokenAmount } from "./format";
@@ -82,31 +81,6 @@ export function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
         <p className="min-w-[180px] lg:min-w-auto">
           {format(new Date(purchase.createdAt), "LLL dd, y h:mm a")}
         </p>
-      </TableData>
-    </tr>
-  );
-}
-
-export function SkeletonTableRow() {
-  return (
-    <tr className="border-border border-b">
-      <TableData>
-        <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-[140px]" />
-      </TableData>
-      <TableData>
-        <Skeleton className="h-7 w-[200px]" />
       </TableData>
     </tr>
   );

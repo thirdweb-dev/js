@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRightIcon, CreditCardIcon } from "lucide-react";
 import Link from "next/link";
@@ -11,8 +12,9 @@ import {
 } from "@/api/universal-bridge/developer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TableHeading, TableHeadingRow } from "./common";
-import { TableRow, SkeletonTableRow } from "./PaymentsTableRow";
+import { TableData, TableHeading, TableHeadingRow } from "./common";
+import { EmptyState } from "./EmptyState";
+import { TableRow } from "./PaymentsTableRow";
 
 export function RecentPaymentsSection(props: {
   client: ThirdwebClient;
@@ -81,21 +83,13 @@ export function RecentPaymentsSection(props: {
           </table>
         </Card>
       ) : (
-        <Card className="flex flex-col p-16 gap-8 items-center justify-center">
-          <div className="bg-violet-800/25 text-muted-foreground rounded-full size-16 flex items-center justify-center">
-            <CreditCardIcon className="size-8 text-violet-500" />
-          </div>
-          <div className="flex flex-col gap-1 items-center text-center">
-            <h3 className="text-foreground font-medium text-xl">
-              No payments yet
-            </h3>
-            <p className="text-muted-foreground text-sm max-w-md">
-              Start accepting crypto payments with payment links, prebuilt
-              components, or custom branded experiences.
-            </p>
-          </div>
-          <div className="flex gap-4">
+        <EmptyState
+          icon={CreditCardIcon}
+          title="No payments yet"
+          description="Start accepting crypto payments with payment links, prebuilt components, or custom branded experiences."
+          buttons={[
             <Button
+              key="create-payment-link"
               variant="default"
               size="sm"
               className="flex items-center gap-2"
@@ -105,15 +99,40 @@ export function RecentPaymentsSection(props: {
                 Create Payment Link
                 <ArrowRightIcon className="size-4" />
               </Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
+            </Button>,
+            <Button key="documentation" asChild variant="outline" size="sm">
               <Link href="https://portal.thirdweb.com/payments" target="_blank">
                 View Documentation
               </Link>
-            </Button>
-          </div>
-        </Card>
+            </Button>,
+          ]}
+        />
       )}
     </section>
+  );
+}
+
+function SkeletonTableRow() {
+  return (
+    <tr className="border-border border-b">
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[140px]" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[200px]" />
+      </TableData>
+    </tr>
   );
 }

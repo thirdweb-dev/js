@@ -5,6 +5,7 @@ import {
   getUniversalBridgeWalletUsage,
 } from "@/api/analytics";
 import type { Range } from "@/components/analytics/date-range-selector";
+import { Card } from "@/components/ui/card";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BuyWidgetFTUX } from "./BuyWidgetFTUX";
@@ -17,7 +18,6 @@ import { PayNewCustomers } from "./PayNewCustomers";
 import { Payouts } from "./Payouts";
 import { TotalPayVolume } from "./TotalPayVolume";
 import { TotalVolumePieChart } from "./TotalVolumePieChart";
-import { Card } from "@/components/ui/card";
 
 export async function PayAnalytics(props: {
   projectClientId: string;

@@ -11,9 +11,10 @@ import {
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { TableRow, SkeletonTableRow } from "./PaymentsTableRow";
-import { CardHeading, TableHeading, TableHeadingRow } from "./common";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { formatTokenAmount } from "./format";
+import { TableRow } from "./PaymentsTableRow";
 
 const pageSize = 50;
 
@@ -157,4 +158,29 @@ function getCSVData(data: Payment[]) {
   });
 
   return { header, rows };
+}
+
+function SkeletonTableRow() {
+  return (
+    <tr className="border-border border-b">
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-20 rounded-2xl" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[140px]" />
+      </TableData>
+      <TableData>
+        <Skeleton className="h-7 w-[200px]" />
+      </TableData>
+    </tr>
+  );
 }

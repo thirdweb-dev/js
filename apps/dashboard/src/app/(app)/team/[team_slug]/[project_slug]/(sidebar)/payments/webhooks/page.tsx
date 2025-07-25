@@ -22,7 +22,7 @@ export default async function Page(props: {
       <p className="text-muted-foreground text-sm">
         Get notified for Bridge, Swap and Onramp events.{" "}
         <UnderlineLink
-          href="https://portal.thirdweb.com/pay/webhooks"
+          href="https://portal.thirdweb.com/payments/webhooks"
           rel="noopener noreferrer"
           target="_blank"
         >
