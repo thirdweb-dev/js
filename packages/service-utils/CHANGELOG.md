@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.7
+
+### Patch Changes
+
+- [#7718](https://github.com/thirdweb-dev/js/pull/7718) [`80c6b6a`](https://github.com/thirdweb-dev/js/commit/80c6b6a79371d345c2ea95d2a904e1e85e766b99) Thanks [@jnsdls](https://github.com/jnsdls)! - add `gateway` team capabilities
+
 ## 0.10.6
 
 ### Patch Changes
