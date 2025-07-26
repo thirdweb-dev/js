@@ -2,7 +2,7 @@ import { getContract } from "../contract/contract.js";
 import type { ClientAndChain } from "../utils/types.js";
 import { IMPLEMENTATIONS } from "./constants.js";
 
-export async function getEntrypointERC20(options: ClientAndChain) {
+export async function getDeployedEntrypointERC20(options: ClientAndChain) {
   const implementations = IMPLEMENTATIONS[options.chain.id];
 
   if (implementations?.EntrypointERC20) {
