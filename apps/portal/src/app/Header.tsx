@@ -141,6 +141,17 @@ const apisLinks = [
   },
 ];
 
+const aiLinks = [
+  {
+    href: "/ai/mcp",
+    name: "MCP",
+  },
+  {
+    href: "/ai/llm-txt",
+    name: "LLMs.txt",
+  },
+];
+
 const sdkLinks = [
   {
     href: "/references/typescript/v5",
@@ -288,16 +299,7 @@ export function Header() {
           <div className="px-1">
             <DropdownLinks
               category="AI"
-              links={[
-                {
-                  href: "/ai/mcp",
-                  name: "MCP",
-                },
-                {
-                  href: "/ai/llms-txt",
-                  name: "LLMs.txt",
-                },
-              ]}
+              links={aiLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
             />
           </div>
@@ -359,12 +361,24 @@ export function Header() {
             </div>
 
             <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">AI</h3>
+              {aiLinks.map((link) => (
+                <NavLink
+                  href={link.href}
+                  key={link.name}
+                  name={link.name}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4">
               <h3 className="font-semibold text-lg">SDKs</h3>
               {sdkLinks.map((link) => (
                 <NavLink
                   href={link.href}
-                  icon={link.icon}
                   key={link.name}
+                  icon={link.icon}
                   name={link.name}
                   onClick={() => setShowBurgerMenu(false)}
                 />
