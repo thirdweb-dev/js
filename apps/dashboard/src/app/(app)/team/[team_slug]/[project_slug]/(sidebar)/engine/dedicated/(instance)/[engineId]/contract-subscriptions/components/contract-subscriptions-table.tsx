@@ -1,33 +1,32 @@
 "use client";
 
-import {
-  Flex,
-  FormControl,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Tooltip,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button, LinkButton } from "chakra/button";
-import { Card } from "chakra/card";
-import { FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import { format } from "date-fns";
 import { InfoIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { shortenAddress as shortenAddressThrows } from "thirdweb/utils";
 import { TWTable } from "@/components/blocks/TWTable";
+import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import {
@@ -35,36 +34,12 @@ import {
   useEngineRemoveContractSubscription,
   useEngineSubscriptionsLastBlock,
 } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { ChainIconClient } from "@/icons/ChainIcon";
-
-function shortenAddress(address: string) {
-  if (!address) {
-    return "";
-  }
-
-  try {
-    return shortenAddressThrows(address);
-  } catch {
-    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-  }
-}
-
-interface ContractSubscriptionTableProps {
-  instanceUrl: string;
-  contractSubscriptions: EngineContractSubscription[];
-  isPending: boolean;
-  isFetched: boolean;
-  autoUpdate: boolean;
-  authToken: string;
-  client: ThirdwebClient;
-}
+import { parseError } from "@/utils/errorParser";
 
 const columnHelper = createColumnHelper<EngineContractSubscription>();
 
-export const ContractSubscriptionTable: React.FC<
-  ContractSubscriptionTableProps
-> = ({
+export function ContractSubscriptionTable({
   instanceUrl,
   contractSubscriptions,
   isPending,
@@ -72,8 +47,16 @@ export const ContractSubscriptionTable: React.FC<
   autoUpdate,
   authToken,
   client,
-}) => {
-  const removeDisclosure = useDisclosure();
+}: {
+  instanceUrl: string;
+  contractSubscriptions: EngineContractSubscription[];
+  isPending: boolean;
+  isFetched: boolean;
+  autoUpdate: boolean;
+  authToken: string;
+  client: ThirdwebClient;
+}) {
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [selectedContractSub, setSelectedContractSub] =
     useState<EngineContractSubscription>();
   const { idToChain } = useAllChainsData();
@@ -83,14 +66,14 @@ export const ContractSubscriptionTable: React.FC<
       cell: (cell) => {
         const chain = idToChain.get(cell.getValue());
         return (
-          <Flex align="center" gap={2}>
+          <div className="flex items-center gap-2">
             <ChainIconClient
               className="size-3"
               client={client}
               src={chain?.icon?.url}
             />
-            <Text>{chain?.name ?? "N/A"}</Text>
-          </Flex>
+            <span>{chain?.name ?? "N/A"}</span>
+          </div>
         );
       },
       header: "Chain",
@@ -109,15 +92,17 @@ export const ContractSubscriptionTable: React.FC<
           );
         }
         return (
-          <LinkButton
-            fontFamily="mono"
-            href={explorer ? `${explorer.url}/address/${cell.getValue()}` : "#"}
-            isExternal
-            size="xs"
-            variant="ghost"
-          >
-            {shortenAddress(cell.getValue())}
-          </LinkButton>
+          <Button className="font-mono" variant="ghost" size="sm" asChild>
+            <a
+              href={
+                explorer ? `${explorer.url}/address/${cell.getValue()}` : "#"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {shortenAddress(cell.getValue())}
+            </a>
+          </Button>
         );
       },
       header: "Contract Address",
@@ -127,11 +112,7 @@ export const ContractSubscriptionTable: React.FC<
         const webhook = cell.getValue();
         const url = webhook?.url ?? "";
 
-        return (
-          <Text maxW={200} noOfLines={3} whiteSpace="normal">
-            {url}
-          </Text>
-        );
+        return <span className="max-w-[200px] truncate block">{url}</span>;
       },
       header: "Webhook URL",
     }),
@@ -145,63 +126,61 @@ export const ContractSubscriptionTable: React.FC<
         } = cell.row.original;
 
         return (
-          <Flex flexDirection="column">
+          <div className="flex flex-col">
             {/* Show logs + events */}
             {processEventLogs && (
-              <Flex gap={1}>
-                <Text>Logs:</Text>
+              <div className="flex gap-1">
+                <span>Logs:</span>
                 {filterEvents.length === 0 ? (
-                  <Text>All</Text>
+                  <span>All</span>
                 ) : (
-                  <Tooltip
-                    bgColor="backgroundCardHighlight"
-                    borderRadius="lg"
-                    label={
-                      <div className="flex flex-col gap-2 p-2 text-sm">
-                        {filterEvents.map((name) => (
-                          <Text key={name}>{name}</Text>
-                        ))}
-                      </div>
-                    }
-                    p={0}
-                    shouldWrapChildren
-                  >
-                    <Text textDecoration="underline dotted">
-                      {filterEvents.length} events
-                    </Text>
-                  </Tooltip>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="underline decoration-dotted cursor-help">
+                          {filterEvents.length} events
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent className="p-2">
+                        <div className="flex flex-col gap-2 text-sm">
+                          {filterEvents.map((name) => (
+                            <span key={name}>{name}</span>
+                          ))}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
-              </Flex>
+              </div>
             )}
 
             {/* Show receipts + functions */}
             {processTransactionReceipts && (
-              <Flex gap={1}>
-                <Text>Receipts:</Text>
+              <div className="flex gap-1">
+                <span>Receipts:</span>
                 {filterFunctions.length === 0 ? (
-                  <Text>All</Text>
+                  <span>All</span>
                 ) : (
-                  <Tooltip
-                    bgColor="backgroundCardHighlight"
-                    borderRadius="lg"
-                    label={
-                      <div className="flex flex-col gap-2 p-2 text-sm">
-                        {filterFunctions.map((name) => (
-                          <Text key={name}>{name}</Text>
-                        ))}
-                      </div>
-                    }
-                    p={0}
-                    shouldWrapChildren
-                  >
-                    <Text textDecoration="underline dotted">
-                      {filterFunctions.length} functions
-                    </Text>
-                  </Tooltip>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="underline decoration-dotted cursor-help">
+                          {filterFunctions.length} functions
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent className="p-2">
+                        <div className="flex flex-col gap-2 text-sm">
+                          {filterFunctions.map((name) => (
+                            <span key={name}>{name}</span>
+                          ))}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 )}
-              </Flex>
+              </div>
             )}
-          </Flex>
+          </div>
         );
       },
       header: "Filters",
@@ -236,7 +215,7 @@ export const ContractSubscriptionTable: React.FC<
             isDestructive: true,
             onClick: (contractSub) => {
               setSelectedContractSub(contractSub);
-              removeDisclosure.onOpen();
+              setIsRemoveModalOpen(true);
             },
             text: "Remove",
           },
@@ -244,20 +223,21 @@ export const ContractSubscriptionTable: React.FC<
         title="contract subscriptions"
       />
 
-      {selectedContractSub && removeDisclosure.isOpen && (
+      {selectedContractSub && (
         <RemoveModal
           authToken={authToken}
           client={client}
           contractSubscription={selectedContractSub}
-          disclosure={removeDisclosure}
+          isOpen={isRemoveModalOpen}
+          onClose={() => setIsRemoveModalOpen(false)}
           instanceUrl={instanceUrl}
         />
       )}
     </>
   );
-};
+}
 
-const ChainLastBlockTimestamp = ({
+function ChainLastBlockTimestamp({
   chainId,
   blockNumber,
   client,
@@ -265,7 +245,7 @@ const ChainLastBlockTimestamp = ({
   chainId: number;
   blockNumber: bigint;
   client: ThirdwebClient;
-}) => {
+}) {
   const chain = useV5DashboardChain(chainId);
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
@@ -290,13 +270,15 @@ const ChainLastBlockTimestamp = ({
   }
 
   return (
-    <Card bgColor="backgroundHighlight">
-      <Text>{format(ethBlockQuery.data, "PP pp z")}</Text>
+    <Card className="bg-muted">
+      <CardContent className="p-2">
+        <span>{format(ethBlockQuery.data, "PP pp z")}</span>
+      </CardContent>
     </Card>
   );
-};
+}
 
-const ChainLastBlock = ({
+function ChainLastBlock({
   instanceUrl,
   chainId,
   autoUpdate,
@@ -308,7 +290,7 @@ const ChainLastBlock = ({
   autoUpdate: boolean;
   authToken: string;
   client: ThirdwebClient;
-}) => {
+}) {
   const lastBlockQuery = useEngineSubscriptionsLastBlock({
     authToken,
     autoUpdate,
@@ -320,145 +302,158 @@ const ChainLastBlock = ({
   }
 
   return (
-    <Flex align="center" gap={2}>
-      <Text>{lastBlockQuery.data}</Text>
-      <Tooltip
-        bg="transparent"
-        borderRadius="md"
-        boxShadow="none"
-        label={
-          <ChainLastBlockTimestamp
-            blockNumber={BigInt(lastBlockQuery.data)}
-            chainId={chainId}
-            client={client}
-          />
-        }
-        placement="auto"
-        shouldWrapChildren
-      >
-        <InfoIcon className="size-4" />
-      </Tooltip>
-    </Flex>
+    <div className="flex items-center gap-2">
+      <span>{lastBlockQuery.data}</span>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <InfoIcon className="size-4 cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <ChainLastBlockTimestamp
+              blockNumber={BigInt(lastBlockQuery.data)}
+              chainId={chainId}
+              client={client}
+            />
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
   );
-};
+}
 
-const RemoveModal = ({
+function RemoveModal({
   contractSubscription,
-  disclosure,
+  isOpen,
+  onClose,
   instanceUrl,
   authToken,
   client,
 }: {
   contractSubscription: EngineContractSubscription;
-  disclosure: UseDisclosureReturn;
+  isOpen: boolean;
+  onClose: () => void;
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
-}) => {
-  const { mutate: removeContractSubscription } =
-    useEngineRemoveContractSubscription({
-      authToken,
-      instanceUrl,
-    });
+}) {
+  const removeContractSubscription = useEngineRemoveContractSubscription({
+    authToken,
+    instanceUrl,
+  });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully removed contract subscription.",
-    "Failed to remove contract subscription.",
-  );
   const { idToChain } = useAllChainsData();
   const chain = idToChain.get(contractSubscription.chainId);
 
   const onClick = () => {
-    removeContractSubscription(
+    removeContractSubscription.mutate(
       {
         contractSubscriptionId: contractSubscription.id,
       },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to remove contract subscription.", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Successfully removed contract subscription.");
+          onClose();
         },
       },
     );
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Remove Contract Subscription</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <Text>
-              This action will delete all stored data for this contract
-              subscription.
-            </Text>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Remove Contract Subscription</DialogTitle>
+          <DialogDescription>
+            This action will delete all stored data for this contract
+            subscription.
+          </DialogDescription>
+        </DialogHeader>
 
-            <Card as={Flex} flexDir="column" gap={4}>
-              <FormControl>
-                <FormLabel>Chain</FormLabel>
-                <Flex align="center" gap={2}>
-                  <ChainIconClient
-                    className="size-3"
-                    client={client}
-                    src={chain?.icon?.url}
-                  />
-                  <Text>{chain?.name ?? "N/A"}</Text>
-                </Flex>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Contract Address</FormLabel>
-                <Text fontFamily="mono">
-                  {contractSubscription.contractAddress}
-                </Text>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Webhook</FormLabel>
-                {contractSubscription.webhook ? (
-                  <Text>{contractSubscription.webhook.url}</Text>
-                ) : (
-                  <Text fontStyle="italic">N/A</Text>
-                )}
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Filters</FormLabel>
-                {contractSubscription.processEventLogs && (
-                  <Text>
-                    Logs:{" "}
-                    {contractSubscription.filterEvents.length === 0
-                      ? "All"
-                      : contractSubscription.filterEvents.join(", ")}
-                  </Text>
-                )}
-                {contractSubscription.processTransactionReceipts && (
-                  <Text>
-                    Receipts:{" "}
-                    {contractSubscription.filterFunctions.length === 0
-                      ? "All"
-                      : contractSubscription.filterFunctions.join(", ")}
-                  </Text>
-                )}
-              </FormControl>
-            </Card>
+        <div className="px-4 lg:px-6 pb-6 space-y-5">
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Chain</h3>
+            <div className="flex items-center gap-2">
+              <ChainIconClient
+                className="size-3"
+                client={client}
+                src={chain?.icon?.url}
+              />
+              <span className="text-sm text-foreground">
+                {chain?.name ?? "N/A"}
+              </span>
+            </div>
           </div>
-        </ModalBody>
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Contract Address</h3>
+            <span className="font-mono text-sm">
+              {contractSubscription.contractAddress}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Webhook</h3>
+            {contractSubscription.webhook ? (
+              <span className="text-sm">
+                {contractSubscription.webhook.url}
+              </span>
+            ) : (
+              <span className="italic text-sm">N/A</span>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Filters</h3>
+            {contractSubscription.processEventLogs && (
+              <span className="text-sm">
+                Logs:{" "}
+                {contractSubscription.filterEvents.length === 0
+                  ? "All"
+                  : contractSubscription.filterEvents.join(", ")}
+              </span>
+            )}
+            {contractSubscription.processTransactionReceipts && (
+              <span className="text-sm">
+                Receipts:{" "}
+                {contractSubscription.filterFunctions.length === 0
+                  ? "All"
+                  : contractSubscription.filterFunctions.join(", ")}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex gap-3 justify-end border-t p-4 lg:p-6 bg-card">
+          <Button onClick={onClose} variant="outline">
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={onClick} type="submit">
+          <Button onClick={onClick} variant="destructive" className="gap-2">
             Remove
+            {removeContractSubscription.isPending && (
+              <Spinner className="size-4" />
+            )}
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
+}
+
+function shortenAddress(address: string) {
+  if (!address) {
+    return "";
+  }
+
+  try {
+    return shortenAddressThrows(address);
+  } catch {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  }
+}
