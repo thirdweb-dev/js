@@ -27,9 +27,9 @@ export function EngineContractSubscriptions({
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-row gap-2 justify-between mb-4">
+      <div className="flex flex-col md:flex-row gap-4 justify-between mb-4">
         <div>
-          <h2 className="text-2xl font-semibold mb-1">
+          <h2 className="text-2xl font-semibold mb-1 tracking-tight">
             Contract Subscriptions
           </h2>
           <p className="text-muted-foreground text-sm">
