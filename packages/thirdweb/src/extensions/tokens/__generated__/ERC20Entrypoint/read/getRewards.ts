@@ -7,13 +7,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 
 /**
- * Represents the parameters for the "getReward" function.
+ * Represents the parameters for the "getRewards" function.
  */
-export type GetRewardParams = {
+export type GetRewardsParams = {
   asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
 };
 
-export const FN_SELECTOR = "0xc00007b0" as const;
+export const FN_SELECTOR = "0x79ee54f7" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -53,17 +53,17 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
- * Checks if the `getReward` method is supported by the given contract.
+ * Checks if the `getRewards` method is supported by the given contract.
  * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
- * @returns A boolean indicating if the `getReward` method is supported.
+ * @returns A boolean indicating if the `getRewards` method is supported.
  * @extension TOKENS
  * @example
  * ```ts
- * import { isGetRewardSupported } from "thirdweb/extensions/tokens";
- * const supported = isGetRewardSupported(["0x..."]);
+ * import { isGetRewardsSupported } from "thirdweb/extensions/tokens";
+ * const supported = isGetRewardsSupported(["0x..."]);
  * ```
  */
-export function isGetRewardSupported(availableSelectors: string[]) {
+export function isGetRewardsSupported(availableSelectors: string[]) {
   return detectMethod({
     availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
@@ -71,77 +71,77 @@ export function isGetRewardSupported(availableSelectors: string[]) {
 }
 
 /**
- * Encodes the parameters for the "getReward" function.
- * @param options - The options for the getReward function.
+ * Encodes the parameters for the "getRewards" function.
+ * @param options - The options for the getRewards function.
  * @returns The encoded ABI parameters.
  * @extension TOKENS
  * @example
  * ```ts
- * import { encodeGetRewardParams } from "thirdweb/extensions/tokens";
- * const result = encodeGetRewardParams({
+ * import { encodeGetRewardsParams } from "thirdweb/extensions/tokens";
+ * const result = encodeGetRewardsParams({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeGetRewardParams(options: GetRewardParams) {
+export function encodeGetRewardsParams(options: GetRewardsParams) {
   return encodeAbiParameters(FN_INPUTS, [options.asset]);
 }
 
 /**
- * Encodes the "getReward" function into a Hex string with its parameters.
- * @param options - The options for the getReward function.
+ * Encodes the "getRewards" function into a Hex string with its parameters.
+ * @param options - The options for the getRewards function.
  * @returns The encoded hexadecimal string.
  * @extension TOKENS
  * @example
  * ```ts
- * import { encodeGetReward } from "thirdweb/extensions/tokens";
- * const result = encodeGetReward({
+ * import { encodeGetRewards } from "thirdweb/extensions/tokens";
+ * const result = encodeGetRewards({
  *  asset: ...,
  * });
  * ```
  */
-export function encodeGetReward(options: GetRewardParams) {
+export function encodeGetRewards(options: GetRewardsParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeGetRewardParams(options).slice(
+    encodeGetRewardsParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Decodes the result of the getReward function call.
+ * Decodes the result of the getRewards function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension TOKENS
  * @example
  * ```ts
- * import { decodeGetRewardResult } from "thirdweb/extensions/tokens";
- * const result = decodeGetRewardResultResult("...");
+ * import { decodeGetRewardsResult } from "thirdweb/extensions/tokens";
+ * const result = decodeGetRewardsResultResult("...");
  * ```
  */
-export function decodeGetRewardResult(result: Hex) {
+export function decodeGetRewardsResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "getReward" function on the contract.
- * @param options - The options for the getReward function.
+ * Calls the "getRewards" function on the contract.
+ * @param options - The options for the getRewards function.
  * @returns The parsed result of the function call.
  * @extension TOKENS
  * @example
  * ```ts
- * import { getReward } from "thirdweb/extensions/tokens";
+ * import { getRewards } from "thirdweb/extensions/tokens";
  *
- * const result = await getReward({
+ * const result = await getRewards({
  *  contract,
  *  asset: ...,
  * });
  *
  * ```
  */
-export async function getReward(
-  options: BaseTransactionOptions<GetRewardParams>,
+export async function getRewards(
+  options: BaseTransactionOptions<GetRewardsParams>,
 ) {
   return readContract({
     contract: options.contract,
