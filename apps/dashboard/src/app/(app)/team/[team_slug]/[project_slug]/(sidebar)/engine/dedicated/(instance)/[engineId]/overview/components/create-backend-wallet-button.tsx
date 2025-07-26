@@ -304,7 +304,7 @@ export const CreateBackendWalletButton: React.FC<
                   Cancel
                 </Button>
                 <Button
-                  className="min-w-28 gap-2"
+                  className="gap-2"
                   disabled={
                     !form.formState.isValid ||
                     isNotConfigured ||
