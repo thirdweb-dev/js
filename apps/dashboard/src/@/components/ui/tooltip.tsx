@@ -46,7 +46,7 @@ export function ToolTipLabel(props: {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={100} disableHoverableContent={!props.hoverable}>
-        <TooltipTrigger asChild className="!pointer-events-auto">
+        <TooltipTrigger asChild className="!pointer-events-auto" tabIndex={-1}>
           {props.children}
         </TooltipTrigger>
         <TooltipContent
