@@ -1,51 +1,51 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 import { once } from "../../../../../utils/promise/once.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "initialize" function.
  */
 export type InitializeParams = WithOverrides<{
-  name: AbiParameterToPrimitiveType<{ type: "string"; name: "_name" }>;
-  symbol: AbiParameterToPrimitiveType<{ type: "string"; name: "_symbol" }>;
+  name: AbiParameterToPrimitiveType<{ type: "string"; name: "name" }>;
+  symbol: AbiParameterToPrimitiveType<{ type: "string"; name: "symbol" }>;
   contractURI: AbiParameterToPrimitiveType<{
     type: "string";
-    name: "_contractURI";
+    name: "contractURI";
   }>;
   maxSupply: AbiParameterToPrimitiveType<{
     type: "uint256";
-    name: "_maxSupply";
+    name: "maxSupply";
   }>;
-  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "_owner" }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 }>;
 
 export const FN_SELECTOR = "0x30a8ff4e" as const;
 const FN_INPUTS = [
   {
     type: "string",
-    name: "_name",
+    name: "name",
   },
   {
     type: "string",
-    name: "_symbol",
+    name: "symbol",
   },
   {
     type: "string",
-    name: "_contractURI",
+    name: "contractURI",
   },
   {
     type: "uint256",
-    name: "_maxSupply",
+    name: "maxSupply",
   },
   {
     type: "address",
-    name: "_owner",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

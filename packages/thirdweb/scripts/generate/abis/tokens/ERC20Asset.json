@@ -10,7 +10,7 @@
   "function completeOwnershipHandover(address pendingOwner) payable",
   "function contractURI() view returns (string)",
   "function decimals() view returns (uint8)",
-  "function initialize(string _name, string _symbol, string _contractURI, uint256 _maxSupply, address _owner)",
+  "function initialize(string name, string symbol, string contractURI, uint256 maxSupply, address owner)",
   "function name() view returns (string)",
   "function nonces(address owner) view returns (uint256 result)",
   "function owner() view returns (address result)",

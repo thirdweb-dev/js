@@ -1,15 +1,10 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { prepareEvent } from "../../../../../event/prepare-event.js";
+import type { AbiParameterToPrimitiveType } from "abitype";
 
 /**
  * Represents the filters for the "PositionLocked" event.
  */
 export type PositionLockedEventFilters = Partial<{
-  owner: AbiParameterToPrimitiveType<{
-    type: "address";
-    name: "owner";
-    indexed: true;
-  }>;
   asset: AbiParameterToPrimitiveType<{
     type: "address";
     name: "asset";
@@ -31,7 +26,6 @@ export type PositionLockedEventFilters = Partial<{
  * contract,
  * events: [
  *  positionLockedEvent({
- *  owner: ...,
  *  asset: ...,
  * })
  * ],
@@ -41,7 +35,7 @@ export type PositionLockedEventFilters = Partial<{
 export function positionLockedEvent(filters: PositionLockedEventFilters = {}) {
   return prepareEvent({
     signature:
-      "event PositionLocked(address indexed owner, address indexed asset, address positionManager, uint256 tokenId, address recipient, address referrer)",
+      "event PositionLocked(address owner, address indexed asset, address positionManager, uint256 positionId, address recipient, address referrer)",
     filters,
   });
 }
