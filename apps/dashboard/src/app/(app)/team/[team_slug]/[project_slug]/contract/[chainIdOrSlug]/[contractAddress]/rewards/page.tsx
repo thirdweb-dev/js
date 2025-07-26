@@ -2,8 +2,6 @@ import { notFound, redirect } from "next/navigation";
 import { getContract } from "thirdweb";
 import {
   getDeployedEntrypointERC20,
-  getRewardLocker,
-  v3PositionManager as getV3PositionManager,
 } from "thirdweb/tokens";
 import { getProject } from "@/api/projects";
 import { getContractPageParamsInfo } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/_utils/getContractFromParams";
@@ -44,27 +42,7 @@ export default async function Page(props: {
     entrypointContract: entrypointContractClient,
   });
 
-  const rewardLocker = await getRewardLocker({
-    contract: entrypointContractClient,
-  }).catch(() => null);
-
-  if (!reward || !rewardLocker) {
-    redirect(
-      `/team/${params.team_slug}/${params.project_slug}/contract/${params.chainIdOrSlug}/${params.contractAddress}`,
-    );
-  }
-
-  const rewardLockerContractClient = getContract({
-    address: rewardLocker,
-    chain: assetContractClient.chain,
-    client: assetContractClient.client,
-  });
-
-  const v3PositionManager = await getV3PositionManager({
-    contract: rewardLockerContractClient,
-  }).catch(() => null);
-
-  if (!v3PositionManager || v3PositionManager !== reward.positionManager) {
+  if (!reward) {
     redirect(
       `/team/${params.team_slug}/${params.project_slug}/contract/${params.chainIdOrSlug}/${params.contractAddress}`,
     );
@@ -79,7 +57,7 @@ export default async function Page(props: {
   const unclaimedFees = await getUnclaimedFees({
     positionManager: v3PositionManagerContract,
     reward: {
-      tokenId: reward.tokenId,
+      tokenId: reward.positionId,
       recipient: reward.recipient,
     },
   });

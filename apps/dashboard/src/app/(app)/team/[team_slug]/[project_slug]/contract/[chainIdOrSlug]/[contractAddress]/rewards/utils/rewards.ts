@@ -1,27 +1,22 @@
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import { getReward } from "thirdweb/tokens";
+import { type ThirdwebContract } from "thirdweb";
+import { getRewards } from "thirdweb/tokens";
 
 export async function getValidReward(params: {
   assetContract: ThirdwebContract;
   entrypointContract: ThirdwebContract;
 }) {
   try {
-    const reward = await getReward({
+    const rewards = await getRewards({
       contract: params.entrypointContract,
       asset: params.assetContract.address,
     });
 
-    if (
-      reward.positionManager === ZERO_ADDRESS ||
-      reward.recipient === ZERO_ADDRESS ||
-      reward.referrer === ZERO_ADDRESS ||
-      reward.referrerBps === 0 ||
-      reward.tokenId === BigInt(0)
-    ) {
+    if (rewards.length === 0) {
       return null;
     }
 
-    return reward;
+    // It's potentially possible to have multiple rewards locked up, but it's not the default use case.
+    return rewards[0];
   } catch {
     return null;
   }

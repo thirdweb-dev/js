@@ -5,7 +5,7 @@ import { DollarSignIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb";
-import { isRouterEnabled } from "thirdweb/tokens";
+import { isPoolRouterEnabled } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,7 @@ export function TokenSaleSection(props: {
   const isRouterEnabledQuery = useQuery({
     queryFn: async () => {
       try {
-        return await isRouterEnabled({
+        return await isPoolRouterEnabled({
           // eslint-disable-next-line no-restricted-syntax
           chain: defineChain(Number(props.chainId)),
           client: props.client,

@@ -10,7 +10,7 @@ import {
   toTokens,
 } from "thirdweb";
 import { TokenIcon, TokenProvider, useSendTransaction } from "thirdweb/react";
-import { claimReward } from "thirdweb/tokens";
+import { claimRewards } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ export function ClaimRewardsPage(props: {
   const router = useDashboardRouter();
 
   async function handleClaim() {
-    const claimRewardsTx = claimReward({
+    const claimRewardsTx = claimRewards({
       asset: props.assetContractClient.address,
       contract: props.entrypointContractClient,
     });
