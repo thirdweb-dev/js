@@ -1,5 +1,5 @@
-import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
