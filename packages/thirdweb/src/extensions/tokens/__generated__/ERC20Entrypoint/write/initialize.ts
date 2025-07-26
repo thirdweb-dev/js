@@ -1,27 +1,26 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 import { once } from "../../../../../utils/promise/once.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "initialize" function.
  */
 export type InitializeParams = WithOverrides<{
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
-  router: AbiParameterToPrimitiveType<{ type: "address"; name: "router" }>;
-  rewardLocker: AbiParameterToPrimitiveType<{
+  poolRouter: AbiParameterToPrimitiveType<{
     type: "address";
-    name: "rewardLocker";
+    name: "poolRouter";
   }>;
   airdrop: AbiParameterToPrimitiveType<{ type: "address"; name: "airdrop" }>;
 }>;
 
-export const FN_SELECTOR = "0xf8c8765e" as const;
+export const FN_SELECTOR = "0xc0c53b8b" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -29,11 +28,7 @@ const FN_INPUTS = [
   },
   {
     type: "address",
-    name: "router",
-  },
-  {
-    type: "address",
-    name: "rewardLocker",
+    name: "poolRouter",
   },
   {
     type: "address",
@@ -71,8 +66,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * import { encodeInitializeParams } from "thirdweb/extensions/tokens";
  * const result = encodeInitializeParams({
  *  owner: ...,
- *  router: ...,
- *  rewardLocker: ...,
+ *  poolRouter: ...,
  *  airdrop: ...,
  * });
  * ```
@@ -80,8 +74,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
 export function encodeInitializeParams(options: InitializeParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.owner,
-    options.router,
-    options.rewardLocker,
+    options.poolRouter,
     options.airdrop,
   ]);
 }
@@ -96,8 +89,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * import { encodeInitialize } from "thirdweb/extensions/tokens";
  * const result = encodeInitialize({
  *  owner: ...,
- *  router: ...,
- *  rewardLocker: ...,
+ *  poolRouter: ...,
  *  airdrop: ...,
  * });
  * ```
@@ -124,8 +116,7 @@ export function encodeInitialize(options: InitializeParams) {
  * const transaction = initialize({
  *  contract,
  *  owner: ...,
- *  router: ...,
- *  rewardLocker: ...,
+ *  poolRouter: ...,
  *  airdrop: ...,
  *  overrides: {
  *    ...
@@ -155,8 +146,7 @@ export function initialize(
       const resolvedOptions = await asyncOptions();
       return [
         resolvedOptions.owner,
-        resolvedOptions.router,
-        resolvedOptions.rewardLocker,
+        resolvedOptions.poolRouter,
         resolvedOptions.airdrop,
       ] as const;
     },

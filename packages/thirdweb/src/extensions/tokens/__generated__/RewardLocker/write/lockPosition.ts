@@ -1,23 +1,22 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import type {
   BaseTransactionOptions,
   WithOverrides,
 } from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 import { once } from "../../../../../utils/promise/once.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "lockPosition" function.
  */
 export type LockPositionParams = WithOverrides<{
   asset: AbiParameterToPrimitiveType<{ type: "address"; name: "asset" }>;
-  positionManager: AbiParameterToPrimitiveType<{
-    type: "address";
-    name: "positionManager";
+  positionId: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "positionId";
   }>;
-  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
     type: "address";
     name: "recipient";
@@ -27,21 +26,18 @@ export type LockPositionParams = WithOverrides<{
     type: "uint16";
     name: "referrerBps";
   }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
-export const FN_SELECTOR = "0x2cde40c2" as const;
+export const FN_SELECTOR = "0xbe7506e8" as const;
 const FN_INPUTS = [
   {
     type: "address",
     name: "asset",
   },
   {
-    type: "address",
-    name: "positionManager",
-  },
-  {
     type: "uint256",
-    name: "tokenId",
+    name: "positionId",
   },
   {
     type: "address",
@@ -54,6 +50,10 @@ const FN_INPUTS = [
   {
     type: "uint16",
     name: "referrerBps",
+  },
+  {
+    type: "bytes",
+    name: "data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -87,22 +87,22 @@ export function isLockPositionSupported(availableSelectors: string[]) {
  * import { encodeLockPositionParams } from "thirdweb/extensions/tokens";
  * const result = encodeLockPositionParams({
  *  asset: ...,
- *  positionManager: ...,
- *  tokenId: ...,
+ *  positionId: ...,
  *  recipient: ...,
  *  referrer: ...,
  *  referrerBps: ...,
+ *  data: ...,
  * });
  * ```
  */
 export function encodeLockPositionParams(options: LockPositionParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.asset,
-    options.positionManager,
-    options.tokenId,
+    options.positionId,
     options.recipient,
     options.referrer,
     options.referrerBps,
+    options.data,
   ]);
 }
 
@@ -116,11 +116,11 @@ export function encodeLockPositionParams(options: LockPositionParams) {
  * import { encodeLockPosition } from "thirdweb/extensions/tokens";
  * const result = encodeLockPosition({
  *  asset: ...,
- *  positionManager: ...,
- *  tokenId: ...,
+ *  positionId: ...,
  *  recipient: ...,
  *  referrer: ...,
  *  referrerBps: ...,
+ *  data: ...,
  * });
  * ```
  */
@@ -146,11 +146,11 @@ export function encodeLockPosition(options: LockPositionParams) {
  * const transaction = lockPosition({
  *  contract,
  *  asset: ...,
- *  positionManager: ...,
- *  tokenId: ...,
+ *  positionId: ...,
  *  recipient: ...,
  *  referrer: ...,
  *  referrerBps: ...,
+ *  data: ...,
  *  overrides: {
  *    ...
  *  }
@@ -179,11 +179,11 @@ export function lockPosition(
       const resolvedOptions = await asyncOptions();
       return [
         resolvedOptions.asset,
-        resolvedOptions.positionManager,
-        resolvedOptions.tokenId,
+        resolvedOptions.positionId,
         resolvedOptions.recipient,
         resolvedOptions.referrer,
         resolvedOptions.referrerBps,
+        resolvedOptions.data,
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,

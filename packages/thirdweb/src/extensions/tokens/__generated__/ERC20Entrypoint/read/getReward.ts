@@ -1,10 +1,10 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { decodeAbiParameters } from "viem";
 import { readContract } from "../../../../../transaction/read-contract.js";
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
-import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
  * Represents the parameters for the "getReward" function.
@@ -22,15 +22,11 @@ const FN_INPUTS = [
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
+    type: "tuple[]",
     components: [
       {
-        type: "address",
-        name: "positionManager",
-      },
-      {
         type: "uint256",
-        name: "tokenId",
+        name: "positionId",
       },
       {
         type: "address",
@@ -43,6 +39,14 @@ const FN_OUTPUTS = [
       {
         type: "uint16",
         name: "referrerBps",
+      },
+      {
+        type: "address",
+        name: "positionManager",
+      },
+      {
+        type: "address",
+        name: "rewardLocker",
       },
     ],
   },

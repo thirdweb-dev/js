@@ -4,12 +4,12 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
 import type { Address } from "../../../../../utils/address.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
-import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
-import { installPublishedModule } from "../../../common/installPublishedModule.js";
 import {
   type EncodeBytesOnInstallParams,
   encodeBytesOnInstallParams,
 } from "../encode/encodeBytesOnInstall.js";
+import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
+import { installPublishedModule } from "../../../common/installPublishedModule.js";
 
 const contractId = "SequentialTokenIdERC1155";
 
