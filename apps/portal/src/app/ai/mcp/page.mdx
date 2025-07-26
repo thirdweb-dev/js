@@ -15,6 +15,27 @@ Host: api.thirdweb.com
 x-secret-key <your-project-secret-key>
 ```
 
+### Usage with LLM clients
+
+You can also use the MCP server on your own LLM client, like cursor, claude code and more. Refer to your LLM client's documentation for more information.
+
+#### Example usage with Cursor:
+
+Add the following to your `.cursor/mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "thirdweb-api": {
+      "url": "https://api.thirdweb.com/mcp",
+      "headers": {
+        "x-secret-key": "<your-project-secret-key>"
+      }
+    }
+  }
+}
+```
+
 ### Usage with agents
 
 Use your favorite agent framework to plug in the MCP server as a collection of tools for your agent.  Refer to your agent framework's documentation for more information.
@@ -29,7 +50,7 @@ client = MultiServerMCPClient(
     {
         "thirdweb-api": {
             "transport": "streamable_http",
-            "url": "https://api.thirdweb-dev.com/mcp",
+            "url": "https://api.thirdweb.com/mcp",
             "headers": {
                 "x-secret-key": "<your-project-secret-key>"
             },
@@ -41,23 +62,3 @@ agent = create_react_agent("openai:gpt-4.1", tools)
 response = await agent.ainvoke({"messages": "create a server wallet called 'my-wallet'"})
 ```
 
-### Usage with LLM clients
-
-You can also use the MCP server on your own LLM client, like cursor, claude code and more. Refer to your LLM client's documentation for more information.
-
-#### Example usage with Cursor:
-
-Add the following to your `.cursor/mcp.json` file:
-
-```json
-{
-  "mcpServers": {
-    "thirdweb-api": {
-      "url": "https://api.thirdweb-dev.com/mcp",
-      "headers": {
-        "x-secret-key": "<your-project-secret-key>"
-      }
-    }
-  }
-}
-```
