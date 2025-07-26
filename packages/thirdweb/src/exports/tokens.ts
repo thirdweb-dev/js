@@ -8,7 +8,7 @@ export {
 } from "../tokens/constants.js";
 export { createToken } from "../tokens/create-token.js";
 export { distributeToken } from "../tokens/distribute-token.js";
-export { getEntrypointERC20 } from "../tokens/get-entrypoint-erc20.js";
+export { getDeployedEntrypointERC20 } from "../tokens/get-entrypoint-erc20.js";
 export { isPoolRouterEnabled } from "../tokens/is-router-enabled.js";
 export {
   generateSalt,

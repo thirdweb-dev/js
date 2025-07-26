@@ -5,7 +5,7 @@ import { createdEvent } from "../extensions/tokens/__generated__/ERC20Entrypoint
 import { create } from "../extensions/tokens/__generated__/ERC20Entrypoint/write/create.js";
 import { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 import { DEFAULT_REFERRER_ADDRESS } from "./constants.js";
-import { getEntrypointERC20 } from "./get-entrypoint-erc20.js";
+import { getDeployedEntrypointERC20 } from "./get-entrypoint-erc20.js";
 import {
   encodeInitParams,
   encodePoolConfig,
@@ -25,7 +25,7 @@ export async function createToken(options: CreateTokenOptions) {
 
   const salt: Hex = generateSalt(options.salt || bytesToHex(randomBytes(31)));
 
-  const entrypoint = await getEntrypointERC20(options);
+  const entrypoint = await getDeployedEntrypointERC20(options);
 
   let hookData: Hex = "0x";
   if (launchConfig?.kind === "pool") {
