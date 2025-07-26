@@ -1,7 +1,5 @@
 import { getContract } from "../contract/contract.js";
-import type {
-  ClientAndChain,
-} from "../utils/types.js";
+import type { ClientAndChain } from "../utils/types.js";
 import { IMPLEMENTATIONS } from "./constants.js";
 
 export async function getEntrypointERC20(options: ClientAndChain) {

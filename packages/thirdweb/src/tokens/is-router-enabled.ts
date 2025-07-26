@@ -21,10 +21,10 @@ export async function isPoolRouterEnabled(
   }
 
   const poolRouterContract = getContract({
-      address: poolRouterAddress,
-      chain: options.chain,
-      client: options.client,
-    })
+    address: poolRouterAddress,
+    chain: options.chain,
+    client: options.client,
+  });
 
   const [v3Adapter, v4Adapter] = await Promise.all([
     getAdapter({
@@ -34,9 +34,13 @@ export async function isPoolRouterEnabled(
     getAdapter({
       contract: poolRouterContract,
       adapterType: 2,
-    })]);
+    }),
+  ]);
 
-  if (v3Adapter.rewardLocker === ZERO_ADDRESS && v4Adapter.rewardLocker === ZERO_ADDRESS) {
+  if (
+    v3Adapter.rewardLocker === ZERO_ADDRESS &&
+    v4Adapter.rewardLocker === ZERO_ADDRESS
+  ) {
     return false;
   }
 
