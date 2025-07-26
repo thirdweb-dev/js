@@ -3,11 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  getAddress,
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
-} from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team";
@@ -31,18 +27,18 @@ export type CreateTokenFunctions = {
   deployContract: (params: CreateTokenFunctionsParams) => Promise<{
     contractAddress: string;
   }>;
-  setClaimConditions: (params: CreateTokenFunctionsParams) => Promise<void>;
-  mintTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
-  airdropTokens: (params: CreateTokenFunctionsParams) => Promise<void>;
+  airdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
+  approveAirdropTokens: (values: CreateTokenFunctionsParams) => Promise<void>;
 };
-
-const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
 
 export function CreateTokenAssetPageUI(props: {
   accountAddress: string;
   client: ThirdwebClient;
   createTokenFunctions: CreateTokenFunctions;
-  onLaunchSuccess: () => void;
+  onLaunchSuccess: (params: {
+    chainId: number;
+    contractAddress: string;
+  }) => void;
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
@@ -50,11 +46,11 @@ export function CreateTokenAssetPageUI(props: {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
   );
-  const activeWalletChain = useActiveWalletChain();
+  const activeChain = useActiveWalletChain();
 
   const tokenInfoForm = useForm<TokenInfoFormValues>({
     defaultValues: {
-      chain: activeWalletChain?.id.toString() || "1",
+      chain: activeChain?.id.toString() || "8453",
       description: "",
       image: undefined,
       name: "",
@@ -75,19 +71,21 @@ export function CreateTokenAssetPageUI(props: {
   });
 
   const tokenDistributionForm = useForm<TokenDistributionFormValues>({
-    resolver: zodResolver(tokenDistributionFormSchema),
-    reValidateMode: "onChange",
-    values: {
+    defaultValues: {
       airdropAddresses: [],
       // airdrop
       airdropEnabled: false,
+      pool: {
+        startingPricePerToken: "0.000000001", // 1gwei per token
+      },
       // sale fieldset
-      saleAllocationPercentage: "0",
-      saleEnabled: false,
-      salePrice: "0.1",
-      saleTokenAddress: checksummedNativeTokenAddress,
-      supply: "1000000",
+      saleAllocationPercentage: "100",
+      saleMode: "pool",
+      supply: "1000000000", // 1 billion
     },
+    mode: "onChange",
+    resolver: zodResolver(tokenDistributionFormSchema),
+    reValidateMode: "onChange",
   });
 
   return (
@@ -97,11 +95,7 @@ export function CreateTokenAssetPageUI(props: {
           client={props.client}
           form={tokenInfoForm}
           onChainUpdated={() => {
-            // if the chain is updated, set the sale token address to the native token address
-            tokenDistributionForm.setValue(
-              "saleTokenAddress",
-              checksummedNativeTokenAddress,
-            );
+            // no op
           }}
           onNext={() => {
             reportAssetCreationStepConfigured({

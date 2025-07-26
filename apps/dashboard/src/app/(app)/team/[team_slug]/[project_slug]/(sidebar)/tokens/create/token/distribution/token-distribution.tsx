@@ -17,6 +17,11 @@ import type {
 import { TokenAirdropSection } from "./token-airdrop";
 import { TokenSaleSection } from "./token-sale";
 
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 10,
+  notation: "compact",
+});
+
 export function TokenDistributionFieldset(props: {
   accountAddress: string;
   onNext: () => void;
@@ -45,40 +50,42 @@ export function TokenDistributionFieldset(props: {
           title="Coin Distribution"
         >
           <div>
-            <div className="space-y-6 p-4 md:px-6 md:py-6">
+            <div className="p-4 md:px-6 md:py-6">
               <FormFieldSetup
                 errorMessage={form.formState.errors.supply?.message}
                 htmlFor={supplyId}
+                helperText={`${compactNumberFormatter.format(Number(form.watch("supply")))} tokens`}
                 isRequired
                 label="Total Supply"
               >
-                <div className="relative">
+                <div className="relative max-w-96">
                   <Input id={supplyId} {...form.register("supply")} />
                   <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                     {props.tokenSymbol || "Tokens"}
                   </span>
                 </div>
               </FormFieldSetup>
-
-              <div className="flex flex-col gap-3">
-                <TokenDistributionBarChart
-                  distributionFormValues={form.watch()}
-                />
-
-                {distributionError && (
-                  <div className="text-destructive-text text-sm">
-                    {distributionError}
-                  </div>
-                )}
-              </div>
             </div>
 
-            <TokenAirdropSection client={props.client} form={form} />
             <TokenSaleSection
               chainId={props.chainId}
               client={props.client}
               form={form}
             />
+
+            <TokenAirdropSection client={props.client} form={form} />
+
+            <div className="flex flex-col gap-3 p-4 py-8 md:px-6 border-t border-dashed">
+              <TokenDistributionBarChart
+                distributionFormValues={form.watch()}
+              />
+
+              {distributionError && (
+                <div className="text-destructive-text text-sm">
+                  {distributionError}
+                </div>
+              )}
+            </div>
           </div>
         </StepCard>
       </form>
@@ -137,16 +144,19 @@ export function TokenDistributionBarChart(props: {
       color: "hsl(var(--chart-1))",
       label: "Owner",
       percent: ownerPercentage,
+      value: `${ownerPercentage}%`,
     },
     {
       color: "hsl(var(--chart-3))",
       label: "Airdrop",
       percent: airdropPercentage,
+      value: `${airdropPercentage}%`,
     },
     {
       color: "hsl(var(--chart-4))",
       label: "Sale",
       percent: salePercentage,
+      value: `${salePercentage}%`,
     },
   ];
 

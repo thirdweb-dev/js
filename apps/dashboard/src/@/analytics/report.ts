@@ -374,7 +374,8 @@ export function reportAssetCreationFailed(
           | "deploy-contract"
           | "set-claim-conditions"
           | "mint-tokens"
-          | "airdrop-tokens";
+          | "airdrop-tokens"
+          | "approve-airdrop-tokens";
       }
   ),
 ) {

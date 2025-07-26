@@ -1,6 +1,7 @@
 import type { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import { addressSchema, socialUrlsSchema } from "../../_common/schema";
+import { getInitialTickValue, isValidTickValue } from "../utils/calculate-tick";
 
 export const tokenInfoFormSchema = z.object({
   chain: z.string().min(1, "Chain is required"),
@@ -15,6 +16,16 @@ export const tokenInfoFormSchema = z.object({
     .max(10, "Symbol must be 10 characters or less"),
 });
 
+const priceAmountSchema = z.string().refine(
+  (value) => {
+    const number = Number(value);
+    return !Number.isNaN(number) && number >= 0;
+  },
+  {
+    message: "Must be number larger than or equal to 0",
+  },
+);
+
 export const tokenDistributionFormSchema = z.object({
   airdropAddresses: z.array(
     z.object({
@@ -24,6 +35,19 @@ export const tokenDistributionFormSchema = z.object({
   ),
   // UI states
   airdropEnabled: z.boolean(),
+  pool: z.object({
+    startingPricePerToken: priceAmountSchema.refine((value) => {
+      const numValue = Number(value);
+      if (numValue === 0) {
+        return false;
+      }
+      const tick = getInitialTickValue({
+        startingPricePerToken: Number(value),
+      });
+
+      return isValidTickValue(tick);
+    }, "Invalid price"),
+  }),
   saleAllocationPercentage: z.string().refine(
     (value) => {
       const number = Number(value);
@@ -36,17 +60,8 @@ export const tokenDistributionFormSchema = z.object({
       message: "Must be a number between 0 and 100",
     },
   ),
-  saleEnabled: z.boolean(),
-  salePrice: z.string().refine(
-    (value) => {
-      const number = Number(value);
-      return !Number.isNaN(number) && number >= 0;
-    },
-    {
-      message: "Must be number larger than or equal to 0",
-    },
-  ),
-  saleTokenAddress: z.string(),
+
+  saleMode: z.enum(["pool", "disabled"]),
   supply: z.string().min(1, "Supply is required"),
 });
 

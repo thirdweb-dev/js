@@ -1,11 +1,26 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { DollarSignIcon, XIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { defineChain } from "thirdweb";
+import { isPoolRouterEnabled } from "thirdweb/tokens";
+import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
-import { TokenSelector } from "@/components/blocks/TokenSelector";
+import { Badge } from "@/components/ui/badge";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useAllChainsData } from "@/hooks/chains/allChains";
 import type { TokenDistributionForm } from "../_common/form";
 
 export function TokenSaleSection(props: {
@@ -13,98 +28,162 @@ export function TokenSaleSection(props: {
   chainId: string;
   client: ThirdwebClient;
 }) {
-  const totalSupply = Number(props.form.watch("supply"));
-  const sellSupply = Math.floor(
-    (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
-  );
+  const saleMode = props.form.watch("saleMode");
+  const { idToChain } = useAllChainsData();
+  const chainMeta = idToChain.get(Number(props.chainId));
+  const [hasUserUpdatedSaleMode, setHasUserUpdatedSaleMode] = useState(false);
 
-  const isEnabled = props.form.watch("saleEnabled");
+  const isRouterEnabledQuery = useQuery({
+    queryFn: async () => {
+      try {
+        return await isPoolRouterEnabled({
+          // eslint-disable-next-line no-restricted-syntax
+          chain: defineChain(Number(props.chainId)),
+          client: props.client,
+        });
+      } catch {
+        return false;
+      }
+    },
+    queryKey: ["isRouterEnabled", props.chainId],
+  });
+
+  const isRouterEnabledValue = isRouterEnabledQuery.data === true;
+
+  const isSaleEnabled = saleMode !== "disabled";
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (isRouterEnabledValue === false && isSaleEnabled) {
+      props.form.setValue("saleMode", "disabled", {
+        shouldValidate: true,
+      });
+    }
+  }, [isRouterEnabledValue, isSaleEnabled, props.form]);
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (
+      isRouterEnabledValue === true &&
+      !hasUserUpdatedSaleMode &&
+      !isSaleEnabled
+    ) {
+      props.form.setValue("saleMode", "pool", {
+        shouldValidate: true,
+      });
+    }
+  }, [isRouterEnabledValue, props.form, hasUserUpdatedSaleMode, isSaleEnabled]);
+
+  const protocolFee = 20;
+  const leftOverFee = 100 - protocolFee;
+  const convenienceFee = (12.5 * leftOverFee) / 100;
+  const deployerFee = leftOverFee - convenienceFee;
+
   return (
     <DynamicHeight>
-      <div className="relative border-t border-dashed p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h2 className="font-semibold text-lg">Sale</h2>
-            <p className="text-muted-foreground text-sm">
-              Make your coin available for purchase by setting a price
-            </p>
+      <div className="relative border-t border-dashed px-4 md:px-6 py-8">
+        <div>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="font-semibold text-xl tracking-tight">Sale</h2>
+              <p className="text-muted-foreground text-sm">
+                List your coin on a decentralized exchange and earn rewards on
+                every trade
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {isRouterEnabledQuery.isPending ? (
+                <Spinner className="size-5" />
+              ) : (
+                <Switch
+                  checked={isSaleEnabled}
+                  disabled={!isRouterEnabledValue}
+                  onCheckedChange={(checked) => {
+                    if (!isRouterEnabledValue) {
+                      return;
+                    }
+
+                    setHasUserUpdatedSaleMode(true);
+
+                    props.form.setValue(
+                      "saleMode",
+                      checked ? "pool" : "disabled",
+                    );
+
+                    if (checked && !props.form.getValues("airdropEnabled")) {
+                      props.form.setValue("saleAllocationPercentage", "100", {
+                        shouldValidate: true,
+                      });
+                    } else {
+                      props.form.setValue("saleAllocationPercentage", "0", {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
+                />
+              )}
+            </div>
           </div>
 
-          <Switch
-            checked={isEnabled}
-            onCheckedChange={(checked) => {
-              props.form.setValue("saleEnabled", checked);
-              if (!checked) {
-                props.form.setValue("saleAllocationPercentage", "0");
-                props.form.setValue("salePrice", "0");
-              }
-            }}
-          />
+          {isRouterEnabledQuery.data === false && (
+            <div className="mt-4 flex items-center gap-1.5">
+              <div className="rounded-full border bg-background p-1">
+                <XIcon className="size-3 text-muted-foreground" />
+              </div>
+              <h2 className="text-muted-foreground text-sm">
+                Not Available on {chainMeta?.name || props.chainId}
+              </h2>
+            </div>
+          )}
         </div>
 
-        {isEnabled && (
-          <div className="mt-4 flex flex-col gap-6">
-            <FormFieldSetup
-              errorMessage={
-                props.form.formState.errors.saleAllocationPercentage?.message
-              }
-              helperText={`${sellSupply} tokens`}
-              isRequired
-              label="Sell % of Total Supply"
-            >
-              <div className="relative">
-                <DecimalInput
-                  maxValue={100}
-                  onChange={(value) => {
-                    props.form.setValue("saleAllocationPercentage", value);
-                  }}
-                  value={props.form.watch("saleAllocationPercentage")}
-                />
-                <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
-                  %
-                </span>
-              </div>
-            </FormFieldSetup>
+        {saleMode === "pool" && isRouterEnabledQuery.data === true && (
+          <div className="pt-4">
+            <PoolConfig
+              chainId={props.chainId}
+              client={props.client}
+              form={props.form}
+            />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <FormFieldSetup
-                errorMessage={props.form.formState.errors.salePrice?.message}
-                isRequired
-                label="Price per Token"
-              >
-                <div className="relative">
-                  <DecimalInput
-                    onChange={(value) => {
-                      props.form.setValue("salePrice", value);
-                    }}
-                    value={props.form.watch("salePrice")}
-                  />
+            <div className="mt-5 border p-4 bg-background rounded-lg relative">
+              <div className="flex mb-4">
+                <div className="p-2 rounded-full border bg-card">
+                  <DollarSignIcon className="size-5 text-muted-foreground" />
                 </div>
-              </FormFieldSetup>
+              </div>
+              <h3 className="font-medium text-base mt-2"> Sale Rewards </h3>
+              <p className="text-muted-foreground text-sm mb-4">
+                All trades on the market are subjected to{" "}
+                <em className="text-foreground font-medium not-italic"> 1% </em>{" "}
+                fee distributed as:
+              </p>
 
-              <FormFieldSetup
-                errorMessage={
-                  props.form.formState.errors.saleTokenAddress?.message
-                }
-                isRequired
-                label="Currency"
-              >
-                <TokenSelector
-                  addNativeTokenIfMissing={true}
-                  chainId={Number(props.chainId)}
-                  className="bg-background"
-                  client={props.client}
-                  disableAddress={true}
-                  onChange={(value) => {
-                    props.form.setValue("saleTokenAddress", value.address);
-                  }}
-                  selectedToken={{
-                    address: props.form.watch("saleTokenAddress"),
-                    chainId: Number(props.chainId),
-                  }}
-                  showCheck={true}
+              <div className="relative">
+                <div className="absolute -top-6 right-0 text-sm">Total: 1%</div>
+                <DistributionBarChart
+                  segments={[
+                    {
+                      label: "Your Wallet",
+                      percent: deployerFee,
+                      color: "hsl(var(--chart-1))",
+                      value: `${deployerFee / 100}%`,
+                    },
+                    {
+                      label: "Protocol",
+                      percent: protocolFee,
+                      color: "hsl(var(--chart-2))",
+                      value: `${protocolFee / 100}%`,
+                    },
+                    {
+                      label: "Convenience fee",
+                      percent: convenienceFee,
+                      color: "hsl(var(--chart-3))",
+                      value: `${convenienceFee / 100}%`,
+                    },
+                  ]}
                 />
-              </FormFieldSetup>
+              </div>
             </div>
           </div>
         )}
@@ -112,3 +191,105 @@ export function TokenSaleSection(props: {
     </DynamicHeight>
   );
 }
+
+function PoolConfig(props: {
+  form: TokenDistributionForm;
+  chainId: string;
+  client: ThirdwebClient;
+}) {
+  const { idToChain } = useAllChainsData();
+  const chainMeta = idToChain.get(Number(props.chainId));
+
+  const totalSupply = Number(props.form.watch("supply"));
+  const sellSupply = Math.floor(
+    (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Pricing Strategy */}
+      <FormFieldSetup
+        isRequired
+        label="Pricing Strategy"
+        errorMessage={undefined}
+        helperText="Bonding Curve pricing is a static formula for pricing tokens based on supply and demand"
+      >
+        <Select value="bonding-curve">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bonding-curve">Bonding Curve</SelectItem>
+            <SelectItem value="fixed-price" disabled>
+              <span className="flex items-center gap-2">
+                Dynamic Bonding Curve{" "}
+                <Badge variant="secondary">Coming Soon</Badge>
+              </span>
+            </SelectItem>
+            <SelectItem value="dutch-auction" disabled>
+              <span className="flex items-center gap-2">
+                Fixed Price <Badge variant="secondary">Coming Soon</Badge>
+              </span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </FormFieldSetup>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:max-w-[536px]">
+        {/* supply % */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.saleAllocationPercentage?.message
+          }
+          helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
+          isRequired
+          label="Sell % of Total Supply"
+        >
+          <div className="relative">
+            <DecimalInput
+              maxValue={100}
+              onChange={(value) => {
+                props.form.setValue("saleAllocationPercentage", value, {
+                  shouldValidate: true,
+                });
+              }}
+              value={props.form.watch("saleAllocationPercentage")}
+            />
+            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+              %
+            </span>
+          </div>
+        </FormFieldSetup>
+
+        {/* starting price */}
+        <FormFieldSetup
+          errorMessage={
+            props.form.formState.errors.pool?.startingPricePerToken?.message
+          }
+          isRequired
+          label="Starting price per token"
+        >
+          <div className="relative">
+            <DecimalInput
+              className="pr-10"
+              onChange={(value) => {
+                props.form.setValue("pool.startingPricePerToken", value, {
+                  shouldValidate: true,
+                });
+              }}
+              value={props.form.watch("pool.startingPricePerToken")}
+            />
+            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
+              {chainMeta?.nativeCurrency.symbol || "ETH"}
+            </span>
+          </div>
+        </FormFieldSetup>
+      </div>
+    </div>
+  );
+}
+
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 10,
+  notation: "compact",
+});
