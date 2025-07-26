@@ -10,6 +10,6 @@ export const IMPLEMENTATIONS: Record<number, Record<string, string>> = {
     EntrypointERC20: "",
   },
   84532: {
-    EntrypointERC20: "0x76d5aa9dEC618b54186DCa332C713B27A8ea70Ac",
+    EntrypointERC20: "0x51a037901cCFb5b4d000e3eded51F6f8866004be",
   },
 };
