@@ -1,3 +1,4 @@
+import { ArrowLeftIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { isAddress, NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { Button } from "@/components/ui/button";
@@ -109,10 +110,10 @@ export function CurrencySelector({
           className="rounded-r-none rounded-l-md"
           onClick={() => setIsAddingCurrency(false)}
         >
-          &lt;-
+          <ArrowLeftIcon className="size-4" />
         </Button>
         <Input
-          className="w-full rounded-none"
+          className={cn("w-full rounded-none", className)}
           onChange={(e) => setEditCustomCurrency(e.target.value)}
           placeholder="ERC20 Address"
           required
@@ -156,7 +157,7 @@ export function CurrencySelector({
               : value?.toLowerCase()
         }
       >
-        <SelectTrigger>
+        <SelectTrigger className={className}>
           <SelectValue placeholder="Select Currency" />
         </SelectTrigger>
         <SelectContent>

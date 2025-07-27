@@ -98,7 +98,7 @@ export async function getWalletNFTs(params: {
 type OwnedNFTInsightResponse = {
   name: string;
   description: string;
-  image_url: string;
+  image_url?: string;
   background_color: string;
   external_url: string;
   metadata_url: string;
@@ -186,7 +186,7 @@ async function getWalletNFTsFromInsight(params: {
         description: nft.description,
         external_url: nft.external_url,
         image: isDev
-          ? nft.image_url.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
+          ? nft.image_url?.replace("ipfscdn.io/", "thirdwebstorage-dev.com/")
           : nft.image_url,
         name: nft.name,
         uri: isDev
