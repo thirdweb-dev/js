@@ -1,4 +1,4 @@
-import { MessageCircleIcon, WebhookIcon } from "lucide-react";
+import { BotIcon, MessageCircleIcon, WebhookIcon, ZapIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
@@ -66,14 +66,28 @@ function Hero() {
 function PlaygroundSection() {
   return (
     <section>
-      <SectionTitle anchorId="playground" title="Live Demos" />
-      <ArticleCardIndex
-        description="Try out our interactive playground to get started"
-        external
-        href="https://playground.thirdweb.com"
-        icon={PlaygroundIcon}
-        title="Playground"
-      />
+      <SectionTitle anchorId="playground" title="Quick Starts" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ArticleCardIndex
+          description="Try out our interactive playground to get started"
+          external
+          href="https://playground.thirdweb.com"
+          icon={PlaygroundIcon}
+          title="Playground"
+        />
+        <ArticleCardIndex
+          description="For agents and humans: use the thirdweb API with natural language"
+          href="/ai/mcp"
+          icon={BotIcon}
+          title="MCP"
+        />
+        <ArticleCardIndex
+          description="Inject the thirdweb API reference in your prompts"
+          href="/ai/llm-txt"
+          icon={ZapIcon}
+          title="LLMs.txt"
+        />
+      </div>
     </section>
   );
 }
