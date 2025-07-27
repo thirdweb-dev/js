@@ -1,30 +1,43 @@
-import {
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  Textarea,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button, Legacy_CopyButton, LinkButton } from "chakra/button";
-import { FormHelperText, FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
+import { z } from "zod";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TWTable } from "@/components/blocks/TWTable";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import {
   type EngineRelayer,
@@ -33,31 +46,39 @@ import {
   useEngineRevokeRelayer,
   useEngineUpdateRelayer,
 } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { ChainIconClient } from "@/icons/ChainIcon";
-import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
+import { parseError } from "@/utils/errorParser";
+import { parseAddressListRaw } from "./add-relayer-button";
 
-interface RelayersTableProps {
-  instanceUrl: string;
-  relayers: EngineRelayer[];
-  isPending: boolean;
-  isFetched: boolean;
-  authToken: string;
-  client: ThirdwebClient;
-}
+const editRelayerFormSchema = z.object({
+  chainId: z.number().min(1, "Chain is required"),
+  backendWalletAddress: z.string().min(1, "Backend wallet is required"),
+  name: z.string().optional(),
+  allowedContractsRaw: z.string(),
+  allowedForwardersRaw: z.string(),
+});
+
+type EditRelayerFormData = z.infer<typeof editRelayerFormSchema>;
 
 const columnHelper = createColumnHelper<EngineRelayer>();
 
-export const RelayersTable: React.FC<RelayersTableProps> = ({
+export function RelayersTable({
   instanceUrl,
   relayers,
   isPending,
   isFetched,
   authToken,
   client,
-}) => {
-  const editDisclosure = useDisclosure();
-  const removeDisclosure = useDisclosure();
+}: {
+  instanceUrl: string;
+  relayers: EngineRelayer[];
+  isPending: boolean;
+  isFetched: boolean;
+  authToken: string;
+  client: ThirdwebClient;
+}) {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [selectedRelayer, setSelectedRelayer] = useState<EngineRelayer>();
   const { idToChain } = useAllChainsData();
 
@@ -66,14 +87,14 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
       cell: (cell) => {
         const chain = idToChain.get(Number.parseInt(cell.getValue()));
         return (
-          <Flex align="center" gap={2}>
+          <div className="flex items-center gap-2">
             <ChainIconClient
-              className="size-3"
+              className="size-5"
               client={client}
               src={chain?.icon?.url}
             />
-            <Text>{chain?.name ?? "N/A"}</Text>
-          </Flex>
+            <span>{chain?.name ?? "N/A"}</span>
+          </div>
         );
       },
       header: "Chain",
@@ -89,23 +110,18 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         }
 
         return (
-          <LinkButton
-            fontFamily="mono"
-            href={`${explorer.url}/address/${backendWalletAddress}`}
-            isExternal
-            key={explorer.name}
-            size="xs"
-            variant="ghost"
-          >
-            {backendWalletAddress}
-          </LinkButton>
+          <WalletAddress
+            address={backendWalletAddress}
+            client={client}
+            iconClassName="size-5"
+          />
         );
       },
       header: "Backend Wallet",
     }),
     columnHelper.accessor("name", {
       cell: (cell) => {
-        return <Text>{cell.getValue()}</Text>;
+        return <span>{cell.getValue()}</span>;
       },
       header: "Label",
     }),
@@ -118,7 +134,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             : allowedContracts.length === 1
               ? `${allowedContracts.length} address`
               : `${allowedContracts.length} addresses`;
-        return <Text>{value}</Text>;
+        return <span>{value}</span>;
       },
       header: "Allowed Contracts",
     }),
@@ -131,7 +147,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             : allowedForwarders.length === 1
               ? `${allowedForwarders.length} address`
               : `${allowedForwarders.length} addresses`;
-        return <Text>{value}</Text>;
+        return <span>{value}</span>;
       },
       header: "Allowed Forwarders",
     }),
@@ -139,7 +155,17 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
       cell: (cell) => {
         const id = cell.getValue();
         const url = `${instanceUrl}relayer/${id}`;
-        return <Legacy_CopyButton aria-label="Copy to clipboard" value={url} />;
+
+        return (
+          <CopyTextButton
+            copyIconPosition="right"
+            className="-translate-x-1.5"
+            variant="ghost"
+            textToCopy={url}
+            textToShow={`${url.slice(0, 20)}${url.length > 20 ? "..." : ""}`}
+            tooltip="Copy URL"
+          />
+        );
       },
       header: "URL",
     }),
@@ -157,7 +183,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             icon: <PencilIcon className="size-4" />,
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
-              editDisclosure.onOpen();
+              setEditDialogOpen(true);
             },
             text: "Edit",
           },
@@ -166,7 +192,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
             isDestructive: true,
             onClick: (relayer) => {
               setSelectedRelayer(relayer);
-              removeDisclosure.onOpen();
+              setRemoveDialogOpen(true);
             },
             text: "Remove",
           },
@@ -174,57 +200,62 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         title="relayers"
       />
 
-      {selectedRelayer && editDisclosure.isOpen && (
-        <EditModal
-          authToken={authToken}
-          client={client}
-          disclosure={editDisclosure}
-          instanceUrl={instanceUrl}
-          relayer={selectedRelayer}
-        />
-      )}
-      {selectedRelayer && removeDisclosure.isOpen && (
-        <RemoveModal
-          authToken={authToken}
-          client={client}
-          disclosure={removeDisclosure}
-          instanceUrl={instanceUrl}
-          relayer={selectedRelayer}
-        />
+      {selectedRelayer && (
+        <>
+          <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <DialogContent className="p-0 overflow-hidden">
+              <EditDialogContent
+                authToken={authToken}
+                client={client}
+                instanceUrl={instanceUrl}
+                relayer={selectedRelayer}
+                setOpen={setEditDialogOpen}
+              />
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
+            <DialogContent className="p-0">
+              <RemoveDialogContent
+                authToken={authToken}
+                client={client}
+                instanceUrl={instanceUrl}
+                relayer={selectedRelayer}
+                setOpen={setRemoveDialogOpen}
+              />
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </>
   );
-};
+}
 
-const EditModal = ({
+function EditDialogContent({
   relayer,
-  disclosure,
+  setOpen,
   instanceUrl,
   authToken,
   client,
 }: {
   relayer: EngineRelayer;
-  disclosure: UseDisclosureReturn;
+  setOpen: (open: boolean) => void;
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
-}) => {
-  const { mutate: updateRelayer } = useEngineUpdateRelayer({
+}) {
+  const updateRelayer = useEngineUpdateRelayer({
     authToken,
     instanceUrl,
   });
-  const { data: backendWallets } = useEngineBackendWallets({
+  const backendWalletsQuery = useEngineBackendWallets({
     authToken,
     instanceUrl,
   });
   const { idToChain } = useAllChainsData();
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully updated relayer",
-    "Failed to update relayer",
-  );
-
-  const form = useForm<AddModalInput>({
+  const form = useForm<EditRelayerFormData>({
+    resolver: zodResolver(editRelayerFormSchema),
     defaultValues: {
       ...relayer,
       allowedContractsRaw: (relayer.allowedContracts ?? []).join("\n"),
@@ -233,7 +264,7 @@ const EditModal = ({
     },
   });
 
-  const onSubmit = (data: AddModalInput) => {
+  const onSubmit = (data: EditRelayerFormData) => {
     const updateRelayerData: UpdateRelayerInput = {
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
       allowedForwarders: parseAddressListRaw(data.allowedForwardersRaw),
@@ -243,176 +274,253 @@ const EditModal = ({
       name: data.name,
     };
 
-    updateRelayer(updateRelayerData, {
+    updateRelayer.mutate(updateRelayerData, {
       onError: (error) => {
-        onError(error);
+        toast.error("Failed to update relayer", {
+          description: parseError(error),
+        });
         console.error(error);
       },
       onSuccess: () => {
-        onSuccess();
-        disclosure.onClose();
+        toast.success("Relayer updated successfully");
+        setOpen(false);
       },
     });
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent
-        as="form"
-        className="!bg-background rounded-lg border border-border"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <ModalHeader>Update Relayer</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormControl>
-              <FormLabel>Chain</FormLabel>
-              <SingleNetworkSelector
-                chainId={form.watch("chainId")}
-                client={client}
-                onChange={(val) => form.setValue("chainId", val)}
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="p-4 lg:p-6">
+            <DialogHeader className="mb-4">
+              <DialogTitle>Update Relayer</DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="chainId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chain</FormLabel>
+                    <FormControl>
+                      <SingleNetworkSelector
+                        chainId={field.value}
+                        disableDeprecated
+                        disableChainId
+                        className="bg-card"
+                        client={client}
+                        onChange={(val) => field.onChange(val)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Backend Wallet</FormLabel>
-              <Select
-                {...form.register("backendWalletAddress", { required: true })}
-              >
-                {backendWallets?.map((wallet) => (
-                  <option key={wallet.address} value={wallet.address}>
-                    {shortenAddress(wallet.address)}
-                    {wallet.label && ` (${wallet.label})`}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Input
-                placeholder="Enter a description for this relayer"
-                type="text"
-                {...form.register("name")}
+              <FormField
+                control={form.control}
+                name="backendWalletAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Backend Wallet</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-card">
+                          <SelectValue placeholder="Select a backend wallet" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {backendWalletsQuery.data?.map((wallet) => (
+                          <SelectItem
+                            key={wallet.address}
+                            value={wallet.address}
+                          >
+                            {shortenAddress(wallet.address)}
+                            {wallet.label && ` (${wallet.label})`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Allowed Contracts</FormLabel>
-              <Textarea
-                {...form.register("allowedContractsRaw")}
-                placeholder="Enter a comma or newline-separated list of contract addresses"
-                rows={4}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Label</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="bg-card"
+                        placeholder="Enter a description for this relayer"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormHelperText>Allow all contracts if omitted.</FormHelperText>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Allowed Forwarders</FormLabel>
-              <Textarea
-                {...form.register("allowedForwardersRaw")}
-                placeholder="Enter a comma or newline-separated list of forwarder addresses"
-                rows={4}
+              <FormField
+                control={form.control}
+                name="allowedContractsRaw"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Allowed Contracts</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="bg-card"
+                        placeholder="Enter a comma or newline-separated list of contract addresses"
+                        rows={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Allow all contracts if omitted.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormHelperText>Allow all forwarders if omitted.</FormHelperText>
-            </FormControl>
+              <FormField
+                control={form.control}
+                name="allowedForwardersRaw"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Allowed Forwarders</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="bg-card"
+                        placeholder="Enter a comma or newline-separated list of forwarder addresses"
+                        rows={2}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Allow all forwarders if omitted.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-        </ModalBody>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
-            Cancel
-          </Button>
-          <Button colorScheme="blue" type="submit">
-            Save
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <div className="flex gap-3 p-4 lg:p-6 border-t bg-card justify-end">
+            <Button onClick={() => setOpen(false)} variant="outline">
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={updateRelayer.isPending}
+              className="gap-2"
+            >
+              {updateRelayer.isPending && <Spinner className="size-4" />}
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
-};
+}
 
-const RemoveModal = ({
+function RemoveDialogContent({
   relayer,
-  disclosure,
+  setOpen,
   instanceUrl,
   authToken,
   client,
 }: {
   relayer: EngineRelayer;
-  disclosure: UseDisclosureReturn;
+  setOpen: (open: boolean) => void;
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
-}) => {
-  const { mutate: revokeRelayer } = useEngineRevokeRelayer({
+}) {
+  const revokeRelayer = useEngineRevokeRelayer({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully removed relayer",
-    "Failed to remove relayer",
-  );
   const { idToChain } = useAllChainsData();
 
   const onClick = () => {
-    revokeRelayer(
+    revokeRelayer.mutate(
       { id: relayer.id },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to remove relayer", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Relayer removed successfully");
+          setOpen(false);
         },
       },
     );
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Remove Relayer</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <Text>Are you sure you want to remove this relayer?</Text>
-            <FormControl>
-              <FormLabel>Chain</FormLabel>
-              <Flex align="center" gap={2}>
-                <ChainIconClient
-                  className="size-3"
-                  client={client}
-                  src={
-                    idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url
-                  }
-                />
-                <Text>
-                  {idToChain.get(Number.parseInt(relayer.chainId))?.name}
-                </Text>
-              </Flex>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Backend Wallet</FormLabel>
-              <Text>{relayer.backendWalletAddress}</Text>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Text>{relayer.name ?? <em>N/A</em>}</Text>
-            </FormControl>
+    <div>
+      <div className="p-4 lg:p-6">
+        <DialogHeader className="mb-5">
+          <DialogTitle>Remove Relayer</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to remove this relayer?
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-5">
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Chain</h3>
+            <div className="flex items-center gap-2">
+              <ChainIconClient
+                className="size-3.5"
+                client={client}
+                src={idToChain.get(Number.parseInt(relayer.chainId))?.icon?.url}
+              />
+              <span className="text-sm">
+                {idToChain.get(Number.parseInt(relayer.chainId))?.name}
+              </span>
+            </div>
           </div>
-        </ModalBody>
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
-            Cancel
-          </Button>
-          <Button colorScheme="red" onClick={onClick} type="submit">
-            Remove
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Backend Wallet</h3>
+            <WalletAddress
+              address={relayer.backendWalletAddress}
+              client={client}
+              iconClassName="size-3.5"
+              className="h-auto py-0"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <h3 className="text-sm font-medium">Label</h3>
+            <span className="text-sm">{relayer.name ?? <em>N/A</em>}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-3 p-4 lg:p-6 border-t bg-card justify-end rounded-b-lg">
+        <Button onClick={() => setOpen(false)} variant="outline">
+          Cancel
+        </Button>
+        <Button
+          onClick={onClick}
+          variant="destructive"
+          className="gap-2"
+          disabled={revokeRelayer.isPending}
+        >
+          {revokeRelayer.isPending && <Spinner className="size-4" />}
+          Remove
+        </Button>
+      </div>
+    </div>
   );
-};
+}

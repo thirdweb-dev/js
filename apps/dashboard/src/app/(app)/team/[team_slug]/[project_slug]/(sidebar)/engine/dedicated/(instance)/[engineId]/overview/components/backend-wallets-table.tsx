@@ -404,7 +404,6 @@ function EditModalContent({
               <WalletAddress
                 address={backendWallet.address}
                 client={client}
-                preventOpenOnFocus
                 iconClassName="size-4"
                 className="h-auto py-0"
               />
@@ -609,7 +608,6 @@ const SendFundsModal = ({
                   address={fromWallet.address}
                   client={client}
                   iconClassName="size-4"
-                  preventOpenOnFocus
                   className="h-auto py-0"
                 />
               </div>
@@ -802,7 +800,6 @@ function DeleteModal({
             <WalletAddress
               address={backendWallet.address}
               client={client}
-              preventOpenOnFocus
               iconClassName="size-4"
               className="h-auto py-1"
             />

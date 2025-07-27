@@ -278,7 +278,6 @@ function CancelTransactionButton({
               shortenAddress={false}
               className="h-auto py-1"
               iconClassName="size-4"
-              preventOpenOnFocus
             />
           </div>
 
