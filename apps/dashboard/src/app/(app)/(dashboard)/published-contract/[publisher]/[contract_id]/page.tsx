@@ -1,13 +1,12 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { PublishedContract } from "@/components/contracts/published-contract";
-import { Separator } from "@/components/ui/separator";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getRawAccount } from "../../../../account/settings/getAccount";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
+import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type PublishedContractDeployPageProps = {
@@ -44,31 +43,36 @@ export default async function PublishedContractPage(
   ]);
 
   return (
-    <>
-      <DeployContractHeader
-        {...params}
-        activeVersion={publishedContract}
-        allVersions={publishedContractVersions}
-      >
-        <PublishedActions
+    <div>
+      <div className="border-border border-b border-dashed">
+        <PublishedContractBreadcrumbs className="container max-w-7xl" />
+      </div>
+
+      <div className="border-border border-b">
+        <DeployContractHeader
           {...params}
-          displayName={publishedContract.displayName || publishedContract.name}
-        />
-      </DeployContractHeader>
-      <Separator />
-      {/* TODO: remove the chakra things :) */}
-      <ChakraProviderSetup>
-        <div className="grid w-full grid-cols-12 gap-6 md:gap-10">
-          <PublishedContract
-            client={getClientThirdwebClient({
-              jwt: authToken,
-              teamId: undefined,
-            })}
-            isLoggedIn={!!account}
-            publishedContract={publishedContract}
+          activeVersion={publishedContract}
+          allVersions={publishedContractVersions}
+          className="container max-w-7xl"
+        >
+          <PublishedActions
+            {...params}
+            displayName={
+              publishedContract.displayName || publishedContract.name
+            }
           />
-        </div>
-      </ChakraProviderSetup>
-    </>
+        </DeployContractHeader>
+      </div>
+
+      <PublishedContract
+        className="container max-w-7xl"
+        client={getClientThirdwebClient({
+          jwt: authToken,
+          teamId: undefined,
+        })}
+        isLoggedIn={!!account}
+        publishedContract={publishedContract}
+      />
+    </div>
   );
 }

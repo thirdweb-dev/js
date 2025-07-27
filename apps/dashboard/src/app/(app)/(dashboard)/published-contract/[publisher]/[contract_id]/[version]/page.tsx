@@ -1,16 +1,14 @@
-import { SimpleGrid } from "@chakra-ui/react";
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
 import { getUserThirdwebClient } from "@/api/auth-token";
 import { fetchPublishedContractVersions } from "@/components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "@/components/contracts/published-contract";
-import { Separator } from "@/components/ui/separator";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
+import { PublishedContractBreadcrumbs } from "../components/breadcrumbs.client";
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {
@@ -75,28 +73,33 @@ export default async function PublishedContractPage(
   ]);
 
   return (
-    <>
-      <DeployContractHeader
-        {...params}
-        activeVersion={publishedContract}
-        allVersions={publishedContractVersions}
-      >
-        <PublishedActions
+    <div>
+      <div className="border-border border-b border-dashed">
+        <PublishedContractBreadcrumbs className="container max-w-7xl" />
+      </div>
+
+      <div className="border-border border-b">
+        <DeployContractHeader
           {...params}
-          displayName={publishedContract.displayName || publishedContract.name}
-        />
-      </DeployContractHeader>
-      <Separator />
-      {/* TODO: remove the chakra things :) */}
-      <ChakraProviderSetup>
-        <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
-          <PublishedContract
-            client={client}
-            isLoggedIn={!!account}
-            publishedContract={publishedContract}
+          activeVersion={publishedContract}
+          allVersions={publishedContractVersions}
+          className="container max-w-7xl"
+        >
+          <PublishedActions
+            {...params}
+            displayName={
+              publishedContract.displayName || publishedContract.name
+            }
           />
-        </SimpleGrid>
-      </ChakraProviderSetup>
-    </>
+        </DeployContractHeader>
+      </div>
+
+      <PublishedContract
+        className="container max-w-7xl"
+        client={client}
+        isLoggedIn={!!account}
+        publishedContract={publishedContract}
+      />
+    </div>
   );
 }

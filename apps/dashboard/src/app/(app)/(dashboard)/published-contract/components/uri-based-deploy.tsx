@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { getUserThirdwebClient } from "@/api/auth-token";
 import { getProjects } from "@/api/projects";
@@ -48,17 +47,14 @@ export async function DeployFormForUri(props: DeployFormForUriProps) {
     })),
   );
 
-  // TODO: remove the `ChakraProviderSetup` wrapper once the form is updated to no longer use chakra
   return (
-    <ChakraProviderSetup>
-      <CustomContractForm
-        client={client}
-        isLoggedIn={true}
-        metadata={contractMetadata}
-        metadataNoFee={contractMetadataNoFee}
-        modules={modules?.filter((m) => m !== null)}
-        teamsAndProjects={teamsAndProjects}
-      />
-    </ChakraProviderSetup>
+    <CustomContractForm
+      client={client}
+      isLoggedIn={true}
+      metadata={contractMetadata}
+      metadataNoFee={contractMetadataNoFee}
+      modules={modules?.filter((m) => m !== null)}
+      teamsAndProjects={teamsAndProjects}
+    />
   );
 }

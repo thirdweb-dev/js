@@ -7,6 +7,7 @@ import {
 } from "@/components/contract-components/fetch-contracts-with-versions";
 import { ZERO_FEE_VERSIONS } from "@/constants/fee-config";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { PublishedContractBreadcrumbs } from "../[publisher]/[contract_id]/components/breadcrumbs.client";
 import { DeployContractHeader } from "./contract-header";
 import { DeployFormForUri } from "./uri-based-deploy";
 
@@ -92,18 +93,28 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
     ]);
 
   return (
-    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8 pb-20">
-      <DeployContractHeader
-        {...props}
-        activeVersion={publishedContract}
-        allVersions={publishedContractVersions}
-      />
-      <DeployFormForUri
-        contractMetadata={contractMetadata}
-        contractMetadataNoFee={contractMetadataNoFee}
-        modules={fetchedModules.filter((m) => m !== null)}
-        pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
-      />
+    <div>
+      <div className="border-border border-b border-dashed">
+        <PublishedContractBreadcrumbs className="container max-w-5xl" />
+      </div>
+
+      <div className="border-b">
+        <DeployContractHeader
+          {...props}
+          activeVersion={publishedContract}
+          allVersions={publishedContractVersions}
+          className="container max-w-5xl"
+        />
+      </div>
+
+      <div className="container max-w-5xl py-8">
+        <DeployFormForUri
+          contractMetadata={contractMetadata}
+          contractMetadataNoFee={contractMetadataNoFee}
+          modules={fetchedModules.filter((m) => m !== null)}
+          pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
+        />
+      </div>
     </div>
   );
 }
