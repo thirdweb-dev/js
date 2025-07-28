@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -45,11 +45,11 @@ function TransactionsLayout(props: {
               <div className="flex items-center gap-2">
                 <Link
                   className="max-w-full truncate text-muted-foreground text-sm hover:text-foreground" // TODO: change this
-                  href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`}
+                  href={`${NEXT_PUBLIC_THIRDWEB_API_HOST}/reference`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  {NEXT_PUBLIC_ENGINE_CLOUD_URL}
+                  {NEXT_PUBLIC_THIRDWEB_API_HOST}
                 </Link>
               </div>
             </div>
