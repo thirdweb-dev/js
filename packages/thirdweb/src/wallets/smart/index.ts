@@ -226,7 +226,7 @@ async function createSmartAccount(
       );
     }
   }
-
+  const sponsorGas = options.sponsorGas;
   let accountContract = options.accountContract;
   const account: Account = {
     address: getAddress(accountContract.address),
@@ -365,6 +365,40 @@ async function createSmartAccount(
         options,
         typedData,
       });
+    },
+    sendCalls: async (options) => {
+      const { inAppWalletSendCalls } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      const firstCall = options.calls[0];
+      if (!firstCall) {
+        throw new Error("No calls to send");
+      }
+      const client = firstCall.client;
+      const chain = firstCall.chain || options.chain;
+      const id = await inAppWalletSendCalls({
+        account: account,
+        calls: options.calls,
+      });
+      return { chain, client, id };
+    },
+    getCallsStatus: async (options) => {
+      const { inAppWalletGetCallsStatus } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      return inAppWalletGetCallsStatus(options);
+    },
+    getCapabilities: async (options) => {
+      return {
+        [options.chainId ?? 1]: {
+          atomic: {
+            status: "supported",
+          },
+          paymasterService: {
+            supported: sponsorGas ?? false,
+          },
+        },
+      };
     },
   };
   return account;
@@ -508,6 +542,40 @@ function createZkSyncAccount(args: {
     >(_typedData: ox__TypedData.Definition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
+    },
+    sendCalls: async (options) => {
+      const { inAppWalletSendCalls } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      const firstCall = options.calls[0];
+      if (!firstCall) {
+        throw new Error("No calls to send");
+      }
+      const client = firstCall.client;
+      const chain = firstCall.chain || options.chain;
+      const id = await inAppWalletSendCalls({
+        account: account,
+        calls: options.calls,
+      });
+      return { chain, client, id };
+    },
+    getCallsStatus: async (options) => {
+      const { inAppWalletGetCallsStatus } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      return inAppWalletGetCallsStatus(options);
+    },
+    getCapabilities: async (options) => {
+      return {
+        [options.chainId ?? 1]: {
+          atomic: {
+            status: "unsupported",
+          },
+          paymasterService: {
+            supported: args.sponsorGas ?? false,
+          },
+        },
+      };
     },
   };
   return account;

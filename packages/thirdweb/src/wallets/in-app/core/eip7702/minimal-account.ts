@@ -176,6 +176,40 @@ export const create7702MinimalAccount = (args: {
     >(
       _typedData: Definition<typedData, primaryType>,
     ): Promise<Hex> => adminAccount.signTypedData(_typedData),
+    sendCalls: async (options) => {
+      const { inAppWalletSendCalls } = await import(
+        "../eip5792/in-app-wallet-calls.js"
+      );
+      const firstCall = options.calls[0];
+      if (!firstCall) {
+        throw new Error("No calls to send");
+      }
+      const client = firstCall.client;
+      const chain = firstCall.chain || options.chain;
+      const id = await inAppWalletSendCalls({
+        account: minimalAccount,
+        calls: options.calls,
+      });
+      return { chain, client, id };
+    },
+    getCallsStatus: async (options) => {
+      const { inAppWalletGetCallsStatus } = await import(
+        "../eip5792/in-app-wallet-calls.js"
+      );
+      return inAppWalletGetCallsStatus(options);
+    },
+    getCapabilities: async (options) => {
+      return {
+        [options.chainId ?? 1]: {
+          atomic: {
+            status: "supported",
+          },
+          paymasterService: {
+            supported: sponsorGas ?? false,
+          },
+        },
+      };
+    },
   };
   return minimalAccount;
 };
@@ -202,6 +236,7 @@ async function getNonce(args: {
 }
 
 async function is7702MinimalAccount(
+  // biome-ignore lint/suspicious/noExplicitAny: TODO properly type tw contract
   eoaContract: ThirdwebContract<any>,
 ): Promise<boolean> {
   const code = await getBytecode(eoaContract);
@@ -220,7 +255,7 @@ async function waitForTransactionHash(args: {
   timeoutMs?: number;
   intervalMs?: number;
 }): Promise<Hex> {
-  const timeout = args.timeoutMs || 120000; // 2mins
+  const timeout = args.timeoutMs || 300000; // 5mins
   const interval = args.intervalMs || 1000; // 1s
   const endtime = Date.now() + timeout;
   while (Date.now() < endtime) {

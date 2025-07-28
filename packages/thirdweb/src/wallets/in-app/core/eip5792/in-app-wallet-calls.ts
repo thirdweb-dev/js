@@ -1,3 +1,4 @@
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_getTransactionReceipt } from "../../../../rpc/actions/eth_getTransactionReceipt.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
@@ -11,7 +12,7 @@ import type {
   GetCallsStatusResponse,
   WalletCallReceipt,
 } from "../../../eip5792/types.js";
-import type { Account, Wallet } from "../../../interfaces/wallet.js";
+import type { Account } from "../../../interfaces/wallet.js";
 
 const bundlesToTransactions = new LruMap<Hex[]>(1000);
 
@@ -52,16 +53,11 @@ export async function inAppWalletSendCalls(args: {
  * @internal
  */
 export async function inAppWalletGetCallsStatus(args: {
-  wallet: Wallet;
+  chain: Chain;
   client: ThirdwebClient;
   id: string;
 }): Promise<GetCallsStatusResponse> {
-  const { wallet, client, id } = args;
-
-  const chain = wallet.getChain();
-  if (!chain) {
-    throw new Error("Failed to get calls status, no active chain found");
-  }
+  const { chain, client, id } = args;
 
   const bundle = bundlesToTransactions.get(id);
   if (!bundle) {

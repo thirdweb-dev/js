@@ -179,7 +179,7 @@ export class EnclaveWallet implements IWebWallet {
         storage,
       });
     };
-    return {
+    const account: Account = {
       address: getAddress(address),
       async sendTransaction(tx) {
         const rpcRequest = getRpcClient({
@@ -264,7 +264,42 @@ export class EnclaveWallet implements IWebWallet {
 
         return signature as Hex;
       },
+      sendCalls: async (options) => {
+        const { inAppWalletSendCalls } = await import(
+          "../eip5792/in-app-wallet-calls.js"
+        );
+        const firstCall = options.calls[0];
+        if (!firstCall) {
+          throw new Error("No calls to send");
+        }
+        const client = firstCall.client;
+        const chain = firstCall.chain || options.chain;
+        const id = await inAppWalletSendCalls({
+          account: account,
+          calls: options.calls,
+        });
+        return { chain, client, id };
+      },
+      getCallsStatus: async (options) => {
+        const { inAppWalletGetCallsStatus } = await import(
+          "../eip5792/in-app-wallet-calls.js"
+        );
+        return inAppWalletGetCallsStatus(options);
+      },
+      getCapabilities: async (options) => {
+        return {
+          [options.chainId ?? 1]: {
+            atomic: {
+              status: "unsupported",
+            },
+            paymasterService: {
+              supported: false,
+            },
+          },
+        };
+      },
     };
+    return account;
   }
 }
 

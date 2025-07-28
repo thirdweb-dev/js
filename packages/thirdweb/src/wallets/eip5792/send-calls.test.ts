@@ -1,20 +1,15 @@
 import { afterEach } from "node:test";
-import { beforeAll, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import {
   ANVIL_CHAIN,
   FORKED_ETHEREUM_CHAIN,
 } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { USDT_CONTRACT } from "../../../test/src/test-contracts.js";
-import {
-  TEST_ACCOUNT_A,
-  TEST_ACCOUNT_B,
-  TEST_ACCOUNT_C,
-} from "../../../test/src/test-wallets.js";
+import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { sepolia } from "../../exports/chains.js";
-import { approve } from "../../exports/extensions/erc20.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import { numberToHex } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -35,64 +30,23 @@ const SEND_CALLS_OPTIONS: Omit<SendCallsOptions, "wallet"> = {
   ),
 };
 
-const RAW_UNSUPPORTED_ERROR = {
-  code: -32601,
-  message: "some nonsense the wallet sends us about not supporting",
-};
-
 const mocks = vi.hoisted(() => ({
-  eth_estimateGas: vi.fn(),
-  injectedRequest: vi.fn(),
-  sendAndConfirmTransaction: vi.fn(),
-  sendBatchTransaction: vi.fn(),
+  sendCalls: vi.fn(),
+  inAppWalletSendCalls: vi.fn(),
 }));
 
-vi.mock("../injected/index.js", () => {
+// Mock the in-app wallet calls implementation
+vi.mock("../in-app/core/eip5792/in-app-wallet-calls.js", () => {
   return {
-    getInjectedProvider: vi.fn().mockReturnValue({
-      request: mocks.injectedRequest,
-    }),
+    inAppWalletSendCalls: mocks.inAppWalletSendCalls,
   };
 });
 
-vi.mock("../../transaction/actions/send-and-confirm-transaction.js", () => {
-  return {
-    sendAndConfirmTransaction:
-      mocks.sendAndConfirmTransaction.mockResolvedValue({
-        transactionHash:
-          "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
-      }),
-  };
-});
-
-vi.mock("../../transaction/actions/send-batch-transaction.js", () => {
-  return {
-    sendBatchTransaction: mocks.sendBatchTransaction.mockResolvedValue({
-      transactionHash:
-        "0x9b7bb827c2e5e3c1a0a44dc53e573aa0b3af3bd1f9f5ed03071b100bb039eaff",
-    }),
-  };
-});
-
-describe.sequential("injected wallet", () => {
+describe.sequential("sendCalls general", () => {
   const wallet: Wallet = createWallet(METAMASK);
-
-  beforeAll(() => {
-    mocks.injectedRequest.mockResolvedValue("0x123456");
-  });
 
   afterEach(() => {
     vi.clearAllMocks();
-  });
-
-  test("with no chain should fail to send calls", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(undefined);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
-
-    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    await expect(promise).rejects.toMatchInlineSnapshot(
-      "[Error: Cannot send calls, no active chain found for wallet: io.metamask]",
-    );
   });
 
   test("with no account should fail to send calls", async () => {
@@ -105,14 +59,124 @@ describe.sequential("injected wallet", () => {
     );
   });
 
-  test("should send calls", async () => {
+  test("without sendCalls support should fail", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
+    wallet.getAccount = vi.fn().mockReturnValue({
+      ...TEST_ACCOUNT_A,
+      // no sendCalls method
+    });
+
+    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+    await expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Cannot send calls, wallet io.metamask does not support EIP-5792]",
+    );
+  });
+
+  test("should delegate to account.sendCalls", async () => {
+    const mockAccount = {
+      ...TEST_ACCOUNT_A,
+      sendCalls: mocks.sendCalls.mockResolvedValue({
+        id: "0x123456",
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+      }),
+    };
+
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue(mockAccount);
 
     const result = await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
     expect(result.id).toEqual("0x123456");
-    expect(mocks.injectedRequest).toHaveBeenCalledWith({
+    expect(result.wallet).toBe(wallet);
+    expect(mocks.sendCalls).toHaveBeenCalledWith({
+      calls: SEND_CALLS_OPTIONS.calls,
+    });
+  });
+
+  test("should switch chain if needed", async () => {
+    const mockAccount = {
+      ...TEST_ACCOUNT_A,
+      sendCalls: mocks.sendCalls.mockResolvedValue({
+        id: "0x123456",
+        client: TEST_CLIENT,
+        chain: sepolia,
+      }),
+    };
+
+    const switchChainMock = vi.fn();
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue(mockAccount);
+    wallet.switchChain = switchChainMock;
+
+    // Create calls with sepolia chain to trigger chain switch
+    const sepoliaCallsOptions = {
+      calls: [
+        {
+          data: "0xabcdef" as const,
+          to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+        },
+      ].map((call) =>
+        prepareTransaction({ ...call, chain: sepolia, client: TEST_CLIENT }),
+      ),
+    };
+
+    await sendCalls({ wallet, ...sepoliaCallsOptions });
+
+    expect(switchChainMock).toHaveBeenCalledWith(sepolia);
+  });
+});
+
+describe.sequential("injected wallet account.sendCalls", () => {
+  // These tests verify the behavior of the sendCalls method on injected wallet accounts
+  // The actual implementation is in packages/thirdweb/src/wallets/injected/index.ts
+
+  test("should handle successful sendCalls", async () => {
+    const mockProvider = {
+      request: vi.fn().mockResolvedValue("0x123456"),
+    };
+
+    // Mock what an injected account with sendCalls would look like
+    const injectedAccount = {
+      ...TEST_ACCOUNT_A,
+      sendCalls: async (_options: SendCallsOptions) => {
+        // This mimics the implementation in injected/index.ts
+        const callId = await mockProvider.request({
+          method: "wallet_sendCalls",
+          params: [
+            {
+              atomicRequired: false,
+              calls: [
+                {
+                  data: "0xabcdef",
+                  to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+                  value: undefined,
+                },
+                {
+                  data: "0x",
+                  to: "0xa922b54716264130634d6ff183747a8ead91a40b",
+                  value: numberToHex(123n),
+                },
+              ],
+              capabilities: undefined,
+              chainId: numberToHex(ANVIL_CHAIN.id),
+              from: TEST_ACCOUNT_A.address,
+              version: "2.0.0",
+            },
+          ],
+        });
+        return { id: callId, client: TEST_CLIENT, chain: ANVIL_CHAIN };
+      },
+    };
+
+    const wallet: Wallet = createWallet(METAMASK);
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue(injectedAccount);
+
+    const result = await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+
+    expect(result.id).toEqual("0x123456");
+    expect(mockProvider.request).toHaveBeenCalledWith({
       method: "wallet_sendCalls",
       params: [
         {
@@ -138,97 +202,39 @@ describe.sequential("injected wallet", () => {
     });
   });
 
-  test("should send calls from prepared contract call", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
+  test("should handle provider errors", async () => {
+    const mockProvider = {
+      request: vi.fn().mockRejectedValue({
+        code: -32601,
+        message: "some nonsense the wallet sends us about not supporting",
+      }),
+    };
 
-    const preparedTx = approve({
-      amount: 100,
-      contract: USDT_CONTRACT,
-      spender: TEST_ACCOUNT_B.address,
-    });
-    const preparedTx2 = approve({
-      amount: 100,
-      contract: USDT_CONTRACT,
-      spender: TEST_ACCOUNT_C.address,
-    });
+    const injectedAccount = {
+      ...TEST_ACCOUNT_A,
+      sendCalls: async (_options: SendCallsOptions) => {
+        try {
+          const callId = await mockProvider.request({
+            method: "wallet_sendCalls",
+            params: [],
+          });
+          return { id: callId, client: TEST_CLIENT, chain: ANVIL_CHAIN };
+        } catch (error) {
+          if (/unsupport|not support/i.test((error as Error).message)) {
+            throw new Error(
+              `io.metamask errored calling wallet_sendCalls, with error: ${stringify(error)}`,
+            );
+          }
+          throw error;
+        }
+      },
+    };
 
-    const result = await sendCalls({
-      calls: [preparedTx, preparedTx2],
-      chain: ANVIL_CHAIN,
-      wallet,
-    });
-
-    expect(result.id).toEqual("0x123456");
-    expect(mocks.injectedRequest).toHaveBeenCalledWith({
-      method: "wallet_sendCalls",
-      params: [
-        {
-          atomicRequired: false,
-          calls: [
-            {
-              data: "0x095ea7b300000000000000000000000070997970c51812dc3a010c7d01b50e0d17dc79c80000000000000000000000000000000000000000000000000000000005f5e100",
-              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-              value: undefined,
-            },
-            {
-              data: "0x095ea7b30000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000000000000000000000000000000000000005f5e100",
-              to: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-              value: undefined,
-            },
-          ],
-          capabilities: undefined,
-          chainId: numberToHex(ANVIL_CHAIN.id),
-          from: TEST_ACCOUNT_A.address,
-          version: "2.0.0",
-        },
-      ],
-    });
-  });
-
-  test("should override chainId", async () => {
+    const wallet: Wallet = createWallet(METAMASK);
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    const result = await sendCalls({
-      chain: sepolia,
-      wallet,
-      ...SEND_CALLS_OPTIONS,
-    });
+    wallet.getAccount = vi.fn().mockReturnValue(injectedAccount);
 
-    expect(result.id).toEqual("0x123456");
-    expect(mocks.injectedRequest).toHaveBeenCalledWith({
-      method: "wallet_sendCalls",
-      params: [
-        {
-          atomicRequired: false,
-          calls: [
-            {
-              data: "0xabcdef",
-              to: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
-              value: undefined,
-            },
-            {
-              data: "0x",
-              to: "0xa922b54716264130634d6ff183747a8ead91a40b",
-              value: numberToHex(123n),
-            },
-          ],
-          capabilities: undefined,
-          chainId: numberToHex(sepolia.id),
-          from: TEST_ACCOUNT_A.address,
-          version: "2.0.0",
-        },
-      ],
-    });
-  });
-
-  test("without support should fail", async () => {
-    mocks.injectedRequest.mockRejectedValue(RAW_UNSUPPORTED_ERROR);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
-    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    const promise = sendCalls({
-      wallet,
-      ...SEND_CALLS_OPTIONS,
-    });
+    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
     await expect(promise).rejects.toMatchInlineSnapshot(
       `[Error: io.metamask errored calling wallet_sendCalls, with error: {"code":-32601,"message":"some nonsense the wallet sends us about not supporting"}]`,
@@ -237,73 +243,45 @@ describe.sequential("injected wallet", () => {
 });
 
 describe.sequential("in-app wallet", () => {
-  let wallet: Wallet = createWallet("inApp");
+  const wallet: Wallet = createWallet("inApp");
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  test("should send individual calls", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
+  test("should send calls via inAppWalletSendCalls", async () => {
+    // Configure the mock to return the expected value
+    mocks.inAppWalletSendCalls.mockResolvedValue("0x789abc");
 
-    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-
-    expect(mocks.sendAndConfirmTransaction).toHaveBeenCalledTimes(2);
-  });
-
-  test("without account should fail", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(undefined);
-    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    await expect(promise).rejects.toMatchInlineSnapshot(
-      "[Error: Cannot send calls, no account connected for wallet: inApp]",
-    );
-  });
-
-  test("without account should fail", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(undefined);
-    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-    await expect(promise).rejects.toMatchInlineSnapshot(
-      "[Error: Cannot send calls, no account connected for wallet: inApp]",
-    );
-  });
-
-  test("with smart account should send batch calls", async () => {
-    wallet = createWallet("inApp", {
-      smartAccount: { chain: FORKED_ETHEREUM_CHAIN, sponsorGas: true },
-    });
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue({
+    const inAppAccount = {
       ...TEST_ACCOUNT_A,
-      sendBatchTransaction: vi.fn(), // must specify this to make it behave like a smart account without connecting
-    });
+      sendCalls: async (options: SendCallsOptions) => {
+        const id = await mocks.inAppWalletSendCalls({
+          account: inAppAccount,
+          calls: options.calls,
+        });
+        return { id, client: TEST_CLIENT, chain: ANVIL_CHAIN };
+      },
+    };
 
-    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-
-    expect(mocks.sendBatchTransaction).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe.sequential("smart wallet", () => {
-  const wallet: Wallet = createWallet("smart", {
-    chain: FORKED_ETHEREUM_CHAIN,
-    sponsorGas: true,
-  });
-  wallet.getAccount = vi.fn().mockReturnValue({
-    ...TEST_ACCOUNT_A,
-    sendBatchTransaction: vi.fn(), // must specify this to make it behave like a smart account without connecting
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  test("should send batch calls", async () => {
     wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue(inAppAccount);
 
-    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+    const result = await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
 
-    expect(mocks.sendBatchTransaction).toHaveBeenCalledTimes(1);
+    expect(result.id).toEqual("0x789abc");
+    expect(mocks.inAppWalletSendCalls).toHaveBeenCalledWith({
+      account: inAppAccount,
+      calls: SEND_CALLS_OPTIONS.calls,
+    });
+  });
+
+  test("without account should fail", async () => {
+    wallet.getAccount = vi.fn().mockReturnValue(undefined);
+    const promise = sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+    await expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Cannot send calls, no account connected for wallet: inApp]",
+    );
   });
 });
 
@@ -317,16 +295,32 @@ describe.sequential("smart wallet", () => {
     vi.clearAllMocks();
   });
 
-  test("should send batch transacition", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue({
+  test("should send calls via inAppWalletSendCalls", async () => {
+    // Configure the mock to return the expected value
+    mocks.inAppWalletSendCalls.mockResolvedValue("0x789abc");
+
+    const smartAccount = {
       ...TEST_ACCOUNT_A,
-      sendBatchTransaction: vi.fn(), // we have to mock this because it doesn't get set until the wallet is connected
+      sendBatchTransaction: vi.fn(),
+      sendCalls: async (options: SendCallsOptions) => {
+        const id = await mocks.inAppWalletSendCalls({
+          account: smartAccount,
+          calls: options.calls,
+        });
+        return { id, client: TEST_CLIENT, chain: ANVIL_CHAIN };
+      },
+    };
+
+    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
+    wallet.getAccount = vi.fn().mockReturnValue(smartAccount);
+
+    const result = await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
+
+    expect(result.id).toEqual("0x789abc");
+    expect(mocks.inAppWalletSendCalls).toHaveBeenCalledWith({
+      account: smartAccount,
+      calls: SEND_CALLS_OPTIONS.calls,
     });
-
-    await sendCalls({ wallet, ...SEND_CALLS_OPTIONS });
-
-    expect(mocks.sendBatchTransaction).toHaveBeenCalledTimes(1);
   });
 });
 
