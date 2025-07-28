@@ -657,7 +657,7 @@ export function CodeOverview(props: {
 
       <div className="flex flex-col gap-4">
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold tracking-tight">
+          <h2 className="text-2xl font-semibold tracking-tight">
             {isAccountFactory
               ? "Direct contract interaction (advanced)"
               : chainInfo
@@ -851,7 +851,7 @@ function AccentButton(props: {
   return (
     <Button
       className={cn(
-        "text-sm justify-start h-auto py-1 px-2 text-muted-foreground",
+        "text-sm justify-start h-auto py-1.5 px-2 text-muted-foreground font-normal font-mono",
         props.isActive && "text-foreground bg-accent",
       )}
       onClick={props.onClick}

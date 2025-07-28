@@ -11,9 +11,9 @@ import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useTokensData } from "@/hooks/tokens";
-import { replaceIpfsUrl } from "@/lib/sdk";
 import { cn } from "@/lib/utils";
 import { fallbackChainIcon } from "@/utils/chain-icons";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { Spinner } from "../ui/Spinner/Spinner";
 
 type Option = { label: string; value: string };
@@ -122,7 +122,10 @@ export function TokenSelector(props: {
         return option.label;
       }
       const resolvedSrc = token.iconUri
-        ? replaceIpfsUrl(token.iconUri, props.client)
+        ? resolveSchemeWithErrorHandler({
+            client: props.client,
+            uri: token.iconUri,
+          })
         : fallbackChainIcon;
 
       return (

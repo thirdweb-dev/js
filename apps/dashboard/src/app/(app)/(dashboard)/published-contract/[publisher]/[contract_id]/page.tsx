@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAuthToken } from "@/api/auth-token";
+import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
 import { PublishedContract } from "@/components/contracts/published-contract";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
@@ -20,6 +20,7 @@ export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
   const params = await props.params;
+  const accountAddress = await getAuthTokenWalletAddress();
   const publishedContractVersions =
     await getPublishedContractsWithPublisherMapping({
       client: serverThirdwebClient,
@@ -45,15 +46,16 @@ export default async function PublishedContractPage(
   return (
     <div>
       <div className="border-border border-b border-dashed">
-        <PublishedContractBreadcrumbs className="container max-w-7xl" />
+        <PublishedContractBreadcrumbs className="container max-w-5xl" />
       </div>
 
-      <div className="border-border border-b">
+      <div className="border-dashed border-b">
         <DeployContractHeader
           {...params}
           activeVersion={publishedContract}
           allVersions={publishedContractVersions}
-          className="container max-w-7xl"
+          className="container max-w-5xl"
+          accountAddress={accountAddress || undefined}
         >
           <PublishedActions
             {...params}
@@ -65,7 +67,7 @@ export default async function PublishedContractPage(
       </div>
 
       <PublishedContract
-        className="container max-w-7xl"
+        maxWidthClassName="container max-w-5xl"
         client={getClientThirdwebClient({
           jwt: authToken,
           teamId: undefined,

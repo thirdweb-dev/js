@@ -6,27 +6,24 @@ import {
   BookOpenTextIcon,
   CalendarDaysIcon,
   ExternalLinkIcon,
-  PencilIcon,
   ServerIcon,
   ShieldCheckIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
-import { PublisherHeader } from "@/components//contract-components/publisher/publisher-header";
+import { PublisherLink } from "@/components//contract-components/publisher/publisher-header";
 import { MarkdownRenderer } from "@/components/blocks/markdown-renderer";
 import type { PublishedContractWithVersion } from "@/components/contract-components/fetch-contracts-with-versions";
 import { ContractFunctionsOverview } from "@/components/contracts/functions/contract-functions";
-import { Button } from "@/components/ui/button";
 import {
   usePublishedContractEvents,
   usePublishedContractFunctions,
 } from "@/hooks/contract-hooks";
 import { correctAndUniqueLicenses } from "@/lib/licenses";
-import { replaceIpfsUrl } from "@/lib/sdk";
+import { publicIPFSGateway } from "@/lib/sdk";
 import { cn } from "@/lib/utils";
 
 type ExtendedPublishedContract = PublishedContractWithVersion & {
@@ -44,15 +41,13 @@ export function PublishedContract({
   publishedContract,
   isLoggedIn,
   client,
-  className,
+  maxWidthClassName,
 }: {
   publishedContract: ExtendedPublishedContract;
   isLoggedIn: boolean;
   client: ThirdwebClient;
-  className?: string;
+  maxWidthClassName?: string;
 }) {
-  const address = useActiveAccount()?.address;
-
   const contractFunctions = usePublishedContractFunctions(publishedContract);
   const contractEvents = usePublishedContractEvents(publishedContract);
 
@@ -103,171 +98,133 @@ export function PublishedContract({
   );
 
   return (
-    <div
-      className={cn(
-        "py-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8",
-        className,
-      )}
-    >
-      {/* left */}
-      <div className="space-y-6">
-        {address === publishedContract.publisher && (
-          <div className="flex justify-end">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="ml-auto gap-2"
-            >
-              <Link
-                href={`/contracts/publish/${encodeURIComponent(
-                  publishedContract.publishMetadataUri.replace("ipfs://", ""),
-                )}`}
-              >
-                <PencilIcon className="size-3" />
-                Edit
-              </Link>
-            </Button>
-          </div>
-        )}
-
-        {/* readme */}
-        {publishedContract?.readme && (
-          <div className="overflow-hidden">
-            <MarkdownRenderer markdownText={publishedContract?.readme} />
-          </div>
-        )}
-
-        {/* changelog */}
-        {publishedContract?.changelog && (
-          <div className="overflow-hidden">
-            <div className="border-b border-dashed pb-3 mb-3">
-              <h3 className="text-lg font-semibold">
-                {publishedContract?.version} Release Notes
-              </h3>
-            </div>
-            <MarkdownRenderer
-              markdownText={publishedContract?.changelog}
-              p={{
-                className: "text-sm leading-6",
-              }}
-            />
-          </div>
-        )}
-
-        {contractFunctions && (
-          <ContractFunctionsOverview
-            abi={publishedContract?.abi}
-            events={contractEvents}
-            functions={contractFunctions}
-            isLoggedIn={isLoggedIn}
-            sources={sources.data}
-          />
-        )}
-      </div>
-
-      {/* right */}
-      <div className="space-y-6">
-        {publishedContract.publisher && (
-          <PublisherHeader
-            client={client}
-            wallet={publishedContract.publisher}
-          />
-        )}
-
-        <div className="border-t border-dashed" />
-
-        <ul className="space-y-6">
-          {/* timestamp */}
-          {publishedContract.publishTimestamp && (
-            <li className="flex items-center gap-3">
-              <div className="p-2 rounded-full border bg-card">
-                <CalendarDaysIcon className="size-4 text-muted-foreground" />
-              </div>
-              <div className="space-y-2">
-                <h5 className="text-sm font-medium leading-none">
-                  Publish Date
-                </h5>
-                <p className="text-sm leading-none text-muted-foreground">
-                  {publishDate}
-                </p>
-              </div>
-            </li>
-          )}
-
-          {/* audit */}
-          {publishedContract?.audit && (
-            <li>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full border bg-card">
-                  <ShieldCheckIcon className="size-4 text-muted-foreground" />
-                </div>
-                <div className="space-y-2">
-                  <h5 className="text-sm font-medium leading-none">
-                    Audit Report
-                  </h5>
-                  <Link
-                    href={replaceIpfsUrl(publishedContract.audit, client)}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    className="flex items-center gap-2 text-sm hover:underline leading-none text-muted-foreground hover:text-foreground"
-                  >
-                    View Audit Report
-                    <ExternalLinkIcon className="size-3.5" />
-                  </Link>
-                </div>
-              </div>
-            </li>
-          )}
-
-          {/* license */}
-          <li className="flex items-center gap-3">
-            <div className="p-2 rounded-full border bg-card">
-              <BookOpenTextIcon className="size-4 text-muted-foreground" />
-            </div>
-            <div className="space-y-2">
-              <h5 className="text-sm font-medium leading-none">
-                License{licenses.length > 1 ? "s" : ""}
-              </h5>
-              <p className="text-sm leading-none text-muted-foreground">
-                {licenses.join(", ") || "None"}
-              </p>
-            </div>
-          </li>
-
-          {(publishedContract?.isDeployableViaProxy &&
-            hasImplementationAddresses) ||
-          (publishedContract?.isDeployableViaFactory && hasFactoryAddresses) ? (
-            <li className="flex items-center gap-3">
-              <div className="p-2 rounded-full border bg-card">
-                <ServerIcon className="size-4 text-muted-foreground" />
-              </div>
-              <h5 className="text-sm font-medium">
-                {publishedContract?.isDeployableViaFactory
-                  ? "Factory"
-                  : "Proxy"}{" "}
-                Enabled
-              </h5>
-            </li>
-          ) : null}
-        </ul>
-
-        <div className="border-t border-dashed" />
-
-        <Button
-          asChild
-          className="w-full gap-2 bg-card rounded-full"
-          variant="outline"
-        >
-          <Link
-            href="https://portal.thirdweb.com/tokens/publish/overview"
-            rel="noopener noreferrer"
-            target="_blank"
+    <div>
+      {/* right side content moved below changelog */}
+      {publishedContract.publisher && (
+        <div className="border-b py-6">
+          <div
+            className={cn(
+              "flex flex-col md:flex-row lg:items-center gap-6 justify-between flex-wrap",
+              maxWidthClassName,
+            )}
           >
-            Learn more about Publish{" "}
-            <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
-          </Link>
-        </Button>
+            <PublisherLink
+              client={client}
+              wallet={publishedContract.publisher}
+            />
+
+            <ul className="flex flex-col md:flex-row gap-8 lg:items-center lg:gap-6">
+              {/* timestamp */}
+              {publishedContract.publishTimestamp && (
+                <li className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-full border bg-card">
+                    <CalendarDaysIcon className="size-4 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-1.5 [&>*]:leading-none">
+                    <h5 className="text-sm font-medium">Publish Date</h5>
+                    <p className="text-sm text-muted-foreground">
+                      {publishDate}
+                    </p>
+                  </div>
+                </li>
+              )}
+
+              {/* audit */}
+              {publishedContract?.audit && (
+                <li>
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-full border bg-card">
+                      <ShieldCheckIcon className="size-4 text-muted-foreground" />
+                    </div>
+                    <div className="space-y-1.5 [&>*]:leading-none">
+                      <h5 className="text-sm font-medium">Audit Report</h5>
+                      <Link
+                        href={publicIPFSGateway(publishedContract.audit)}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="flex items-center gap-2 text-sm hover:underline leading-none text-muted-foreground hover:text-foreground"
+                      >
+                        View Audit Report
+                        <ExternalLinkIcon className="size-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </li>
+              )}
+
+              {/* license */}
+              <li className="flex items-center gap-2.5">
+                <div className="p-2 rounded-full border bg-card">
+                  <BookOpenTextIcon className="size-4 text-muted-foreground" />
+                </div>
+                <div className="space-y-1.5 [&>*]:leading-none">
+                  <h5 className="text-sm font-medium">
+                    License{licenses.length > 1 ? "s" : ""}
+                  </h5>
+                  <p className="text-sm text-muted-foreground">
+                    {licenses.join(", ") || "None"}
+                  </p>
+                </div>
+              </li>
+
+              {(publishedContract?.isDeployableViaProxy &&
+                hasImplementationAddresses) ||
+              (publishedContract?.isDeployableViaFactory &&
+                hasFactoryAddresses) ? (
+                <li className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-full border bg-card">
+                    <ServerIcon className="size-4 text-muted-foreground" />
+                  </div>
+                  <h5 className="text-sm font-medium">
+                    {publishedContract?.isDeployableViaFactory
+                      ? "Factory"
+                      : "Proxy"}{" "}
+                    Enabled
+                  </h5>
+                </li>
+              ) : null}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <div className={cn("py-8 space-y-8", maxWidthClassName)}>
+        {/* main content */}
+        <div className="space-y-6">
+          {/* readme */}
+          {publishedContract?.readme && (
+            <div className="overflow-hidden">
+              <MarkdownRenderer markdownText={publishedContract?.readme} />
+            </div>
+          )}
+
+          {/* changelog */}
+          {publishedContract?.changelog && (
+            <div className="overflow-hidden">
+              <div className="border-b border-dashed pb-3 mb-3">
+                <h3 className="text-lg font-semibold">
+                  {publishedContract?.version} Release Notes
+                </h3>
+              </div>
+              <MarkdownRenderer
+                markdownText={publishedContract?.changelog}
+                p={{
+                  className: "text-sm leading-6",
+                }}
+              />
+            </div>
+          )}
+
+          {contractFunctions && (
+            <ContractFunctionsOverview
+              abi={publishedContract?.abi}
+              events={contractEvents}
+              functions={contractFunctions}
+              isLoggedIn={isLoggedIn}
+              sources={sources.data}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

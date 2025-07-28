@@ -169,8 +169,8 @@ function ContractFunctionInputs(props: { fn: AbiFunction | AbiEvent }) {
 
   return (
     <div className="flex flex-col gap-1.5">
-      <div className="flex items-center flex-wrap gap-2 border-b pb-3 mb-3">
-        <h3 className="text-lg font-semibold">{fn.name}</h3>
+      <div className="flex items-center flex-wrap gap-2 border-b pb-2.5 mb-3">
+        <h3 className="text-base font-semibold">{fn.name}</h3>
         {isFunction && <Badge variant="success">{fn.stateMutability}</Badge>}
       </div>
 
@@ -206,7 +206,9 @@ function ContractFunctionInputs(props: { fn: AbiFunction | AbiEvent }) {
             </Table>
           </TableContainer>
         </div>
-      ) : null}
+      ) : (
+        <p className="text-muted-foreground text-base">No inputs required</p>
+      )}
     </div>
   );
 }
@@ -221,6 +223,8 @@ type ExtensionFunctions = {
   extension: string;
   functions: AbiFunction[];
 };
+
+type ReadOrWriteTab = "read" | "write";
 
 export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
@@ -280,14 +284,21 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
     return fnsOrEvents.filter((fn) => !("stateMutability" in fn)) as AbiEvent[];
   }, [fnsOrEvents]);
 
+  const defaultSelected = fnsOrEvents[0];
+
   const [selectedFunction, setSelectedFunction] = useState<
     AbiFunction | AbiEvent | undefined
-  >(fnsOrEvents[0]);
+  >(defaultSelected);
 
   const [_keywordSearch, setKeywordSearch] = useState<string>("");
   const [keywordSearch] = useDebounce(_keywordSearch, 150);
 
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<ReadOrWriteTab>(() => {
+    const isDefaultSelectedReadFunction = viewFunctions.find((e) =>
+      e.functions.find((fn) => fn.name === defaultSelected?.name),
+    );
+    return isDefaultSelectedReadFunction ? "read" : "write";
+  });
 
   const functionSection = (e: ExtensionFunctions) => {
     const filteredFunctions = keywordSearch
@@ -298,7 +309,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 
     return (
       <div key={e.extension} className="pb-6">
-        <div className="flex flex-col gap-0.5">
+        <div className="space-y-0.5">
           {selectedFunction &&
             filteredFunctions.map((fn) => (
               <FunctionsOrEventsListItem
@@ -314,30 +325,30 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] h-full bg-card rounded-lg border">
       {/* left */}
-      <div className="bg-card rounded-lg border overflow-auto">
+      <div className="overflow-auto border-b lg:border-b-0 lg:border-r">
         {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
           <div className="flex flex-col h-full relative">
             <TabButtons
               tabContainerClassName="px-3 pt-2"
               tabClassName="!text-sm"
               tabs={[
-                ...(writeFunctions.length > 0
-                  ? [
-                      {
-                        name: "Write",
-                        onClick: () => setActiveTab(0),
-                        isActive: activeTab === 0,
-                      },
-                    ]
-                  : []),
                 ...(viewFunctions.length > 0
                   ? [
                       {
                         name: "Read",
-                        onClick: () => setActiveTab(1),
-                        isActive: activeTab === 1,
+                        onClick: () => setActiveTab("read"),
+                        isActive: activeTab === "read",
+                      },
+                    ]
+                  : []),
+                ...(writeFunctions.length > 0
+                  ? [
+                      {
+                        name: "Write",
+                        onClick: () => setActiveTab("write"),
+                        isActive: activeTab === "write",
                       },
                     ]
                   : []),
@@ -357,18 +368,19 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             </div>
 
             <div className="h-auto overflow-auto pt-2 px-2">
-              {activeTab === 0 &&
+              {activeTab === "write" &&
                 writeFunctions.length > 0 &&
                 writeFunctions.map((e) => functionSection(e))}
 
-              {activeTab === 1 &&
+              {activeTab === "read" &&
                 viewFunctions.length > 0 &&
                 viewFunctions.map((e) => functionSection(e))}
             </div>
           </div>
         )}
+
         {events.length > 0 && selectedFunction && (
-          <div className="pt-2 px-4">
+          <div className="p-4 space-y-0.5">
             {events.map((fn) => (
               <FunctionsOrEventsListItem
                 fn={fn}
@@ -382,7 +394,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       </div>
 
       {/* right */}
-      <div className="bg-card rounded-lg border p-4 overflow-auto">
+      <div className="overflow-auto p-4">
         {selectedFunction && (
           <ContractFunction
             contract={contract}
@@ -414,7 +426,7 @@ const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   return (
     <Button
       className={cn(
-        "text-muted-foreground hover:text-foreground font-mono w-full justify-start h-auto px-2 py-1",
+        "text-muted-foreground hover:text-foreground font-mono w-full justify-start h-auto px-2 py-1.5",
         isActive && "text-foreground bg-accent",
       )}
       onClick={() => {

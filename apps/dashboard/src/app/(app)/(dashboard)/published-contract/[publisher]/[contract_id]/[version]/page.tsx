@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
-import { getUserThirdwebClient } from "@/api/auth-token";
+import {
+  getAuthTokenWalletAddress,
+  getUserThirdwebClient,
+} from "@/api/auth-token";
 import { fetchPublishedContractVersions } from "@/components/contract-components/fetch-contracts-with-versions";
 import { PublishedContract } from "@/components/contracts/published-contract";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
@@ -29,6 +32,7 @@ export default async function PublishedContractPage(
   props: PublishedContractDeployPageProps,
 ) {
   const params = await props.params;
+  const accountAddress = await getAuthTokenWalletAddress();
   // resolve ENS if required
   let publisherAddress: string | undefined;
 
@@ -75,15 +79,16 @@ export default async function PublishedContractPage(
   return (
     <div>
       <div className="border-border border-b border-dashed">
-        <PublishedContractBreadcrumbs className="container max-w-7xl" />
+        <PublishedContractBreadcrumbs className="container max-w-5xl" />
       </div>
 
-      <div className="border-border border-b">
+      <div className="border-dashed border-b">
         <DeployContractHeader
           {...params}
           activeVersion={publishedContract}
           allVersions={publishedContractVersions}
-          className="container max-w-7xl"
+          className="container max-w-5xl"
+          accountAddress={accountAddress || undefined}
         >
           <PublishedActions
             {...params}
@@ -95,7 +100,7 @@ export default async function PublishedContractPage(
       </div>
 
       <PublishedContract
-        className="container max-w-7xl"
+        maxWidthClassName="container max-w-5xl"
         client={client}
         isLoggedIn={!!account}
         publishedContract={publishedContract}

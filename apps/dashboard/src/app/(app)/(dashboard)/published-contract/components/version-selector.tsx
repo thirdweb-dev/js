@@ -57,7 +57,7 @@ export function DeployContractVersionSelector({
       }}
       value={version}
     >
-      <SelectTrigger className="min-w-[120px] bg-card rounded-full">
+      <SelectTrigger className="min-w-[120px] bg-card rounded-full w-fit">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

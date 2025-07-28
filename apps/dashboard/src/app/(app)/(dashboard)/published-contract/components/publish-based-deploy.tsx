@@ -1,6 +1,7 @@
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
@@ -26,6 +27,8 @@ function mapThirdwebPublisher(publisher: string) {
 }
 
 export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
+  const accountAddress = await getAuthTokenWalletAddress();
+
   // resolve ENS if required
   const publisherAddress = isAddress(props.publisher)
     ? props.publisher
@@ -104,6 +107,7 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
           activeVersion={publishedContract}
           allVersions={publishedContractVersions}
           className="container max-w-5xl"
+          accountAddress={accountAddress || undefined}
         />
       </div>
 

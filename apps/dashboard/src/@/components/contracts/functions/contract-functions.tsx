@@ -15,7 +15,6 @@ interface ContractFunctionsOverview {
   contract?: ThirdwebContract;
   sources?: SourceFile[];
   abi?: Abi;
-  onlyFunctions?: boolean;
   isLoggedIn: boolean;
 }
 
@@ -27,7 +26,6 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   contract,
   sources,
   abi,
-  onlyFunctions,
   isLoggedIn,
 }) => {
   const [activeTab, setActiveTab] = useState<Tab | undefined>(() => {
@@ -37,19 +35,6 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
     if (sources && sources.length > 0) return "sources";
     return undefined;
   });
-
-  if (onlyFunctions) {
-    if (functions && functions.length > 0) {
-      return (
-        <ContractFunctionsPanel
-          contract={contract}
-          fnsOrEvents={functions}
-          isLoggedIn={isLoggedIn}
-        />
-      );
-    }
-    return null;
-  }
 
   // Tab index: 0 = Functions, 1 = Events, 2 = Code, 3 = Sources
   const tabOptions = [
@@ -105,11 +90,13 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           </div>
         )}
         {events && events.length > 0 && activeTab === "events" && (
-          <ContractFunctionsPanel
-            contract={contract}
-            fnsOrEvents={events}
-            isLoggedIn={isLoggedIn}
-          />
+          <div className="h-[70vh]">
+            <ContractFunctionsPanel
+              contract={contract}
+              fnsOrEvents={events}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
         )}
         {abi && activeTab === "code" && (
           <CodeOverview abi={abi} chainId={contract?.chain.id || 1} noSidebar />
