@@ -1,15 +1,9 @@
-import {
-  InputGroup,
-  NumberInput,
-  NumberInputField,
-  type NumberInputProps,
-} from "@chakra-ui/react";
+import { DecimalInput } from "@/components/ui/decimal-input";
+
+type InputProps = React.ComponentProps<typeof DecimalInput>;
 
 interface PriceInputProps
-  extends Omit<
-    NumberInputProps,
-    "onChange" | "value" | "onBlur" | "max" | "min"
-  > {
+  extends Omit<InputProps, "onChange" | "value" | "onBlur" | "max" | "min"> {
   value: string;
   onChange: (value: string) => void;
 }
@@ -20,17 +14,15 @@ export const PriceInput: React.FC<PriceInputProps> = ({
   ...restInputProps
 }) => {
   return (
-    <InputGroup>
-      <NumberInput defaultValue={0} min={0} value={value} {...restInputProps}>
-        <NumberInputField
-          onChange={(e) => {
-            if (e.target.value === "" || Number(e.target.value) < 0) {
-              return onChange("0");
-            }
-            onChange(e.target.value);
-          }}
-        />
-      </NumberInput>
-    </InputGroup>
+    <DecimalInput
+      {...restInputProps}
+      onChange={(value) => {
+        if (value === "" || Number(value) < 0) {
+          return onChange("0");
+        }
+        onChange(value);
+      }}
+      value={value}
+    />
   );
 };

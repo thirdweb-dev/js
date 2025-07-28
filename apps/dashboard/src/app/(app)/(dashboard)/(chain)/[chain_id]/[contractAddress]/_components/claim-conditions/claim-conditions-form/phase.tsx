@@ -1,12 +1,12 @@
-import { ChevronDownIcon, ChevronUpIcon, XIcon } from "lucide-react";
+import { formatDate } from "date-fns";
+import { ChevronDownIcon, XIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
-import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { cn } from "@/lib/utils";
 import { PricePreview } from "../price-preview";
 import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
-import { CustomFormGroup } from "./common";
 import { ClaimerSelection } from "./Inputs/ClaimerSelection";
 import { ClaimPriceInput } from "./Inputs/ClaimPriceInput";
 import { CreatorInput } from "./Inputs/CreatorInput";
@@ -42,114 +42,130 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
   };
 
   return (
-    <Card className="relative flex flex-col gap-8 p-8">
-      <div className="absolute top-3 right-3 flex flex-row items-start justify-between gap-1">
-        <Button
-          className="gap-2"
-          onClick={toggleEditing}
-          size="sm"
-          variant="ghost"
-        >
-          {field.isEditing ? "Collapse" : isAdmin ? "Edit" : "See Phase"}
-          {field.isEditing ? (
-            <ChevronUpIcon className="size-4" />
-          ) : (
-            <ChevronDownIcon className="size-4" />
-          )}
-        </Button>
-        <AdminOnly contract={contract}>
-          <Button
-            className="gap-2 text-red-300"
-            disabled={isPending}
-            onClick={onRemove}
-            size="sm"
-            variant="ghost"
-          >
-            Remove <XIcon className="size-4" />
-          </Button>
-        </AdminOnly>
-      </div>
-
-      <div className="mt-4 flex flex-col gap-2 md:mt-0">
-        <div className="flex flex-row items-center gap-3">
-          <p className="font-bold text-lg text-muted-foreground">
-            {ClaimConditionTypeData[claimConditionType].name}
-          </p>
-          {isActive && (
-            <Badge className="rounded-lg p-1.5" variant="success">
-              Currently active
-            </Badge>
-          )}
-        </div>
-
-        <p className="text-muted-foreground">
-          {ClaimConditionTypeData[claimConditionType].description}
-        </p>
-      </div>
-
-      {!field.isEditing ? (
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-          <div className="flex flex-col">
-            <p className="font-bold text-muted-foreground">Phase start</p>
-            <p className="text-muted-foreground">
-              {field.startTime?.toLocaleString()}
-            </p>
-          </div>
-          <div className="flex flex-col">
-            <p className="font-bold text-muted-foreground">
-              {isErc20 ? "Tokens" : "NFTs"} to drop
-            </p>
-            <p className="text-muted-foreground capitalize">
-              {field.maxClaimableSupply}
-            </p>
-          </div>
-          <PricePreview
-            contractChainId={contract.chain.id}
-            currencyAddress={field.currencyAddress}
-            price={field.price}
-          />
-          <div className="flex flex-col">
-            <p className="font-bold text-muted-foreground">Limit per wallet</p>
-            {claimConditionType === "specific" ? (
-              <p>Set in the snapshot</p>
-            ) : claimConditionType === "creator" ? (
-              <p>Unlimited</p>
-            ) : (
-              <p className="text-muted-foreground capitalize">
-                {field.maxClaimablePerWallet}
-              </p>
+    <DynamicHeight transition="height 0.3s ease">
+      <div className="border border-border rounded-lg bg-card relative">
+        <div className="p-4 lg:p-6">
+          <div className="mb-4">
+            {isActive && (
+              <div className="lg:absolute lg:right-6 lg:top-6 mb-4 border-b pb-4 border-dashed lg:border-none lg:pb-0">
+                <Badge
+                  variant="secondary"
+                  className="h-auto py-1.5 border border-border bg-background gap-1.5"
+                >
+                  <div className="size-2 bg-primary rounded-full" />
+                  Currently Active
+                </Badge>
+              </div>
             )}
+
+            <h3 className="font-semibold text-lg tracking-tight text-foreground mb-0.5">
+              {ClaimConditionTypeData[claimConditionType].name}
+            </h3>
+            <p className="text-muted-foreground text-sm max-w-xl">
+              {ClaimConditionTypeData[claimConditionType].description}
+            </p>
           </div>
-        </div>
-      ) : (
-        <>
-          <CustomFormGroup>
-            {/* Phase Name Input / Form Title */}
-            {isMultiPhase ? <PhaseNameInput /> : null}
-            <PhaseStartTimeInput />
-          </CustomFormGroup>
 
-          <CreatorInput
-            creatorAddress={
-              (field.snapshot?.[0] as { address: string })?.address
-            }
-          />
+          {!field.isEditing && (
+            <div className="flex flex-col gap-4 md:flex-row md:gap-12 text-sm">
+              {/* Phase start */}
+              <div className="space-y-0.5">
+                <p className="font-medium text-foreground">Phase start</p>
+                <p className="text-muted-foreground">
+                  {field.startTime
+                    ? formatDate(field.startTime, "MMM d, yyyy hh:mm a")
+                    : "N/A"}
+                </p>
+              </div>
 
-          <CustomFormGroup>
-            <MaxClaimableSupplyInput />
-            <ClaimPriceInput contractChainId={contract.chain.id} />
-          </CustomFormGroup>
+              {/* Tokens to drop */}
+              <div className="space-y-0.5">
+                <p className="font-medium text-foreground">
+                  {isErc20 ? "Tokens" : "NFTs"} to drop
+                </p>
+                <p className="text-muted-foreground capitalize">
+                  {field.maxClaimableSupply}
+                </p>
+              </div>
 
-          {claimConditionType === "specific" ||
-          claimConditionType === "creator" ? null : (
-            <CustomFormGroup>
-              <MaxClaimablePerWalletInput />
-            </CustomFormGroup>
+              {/* Price */}
+              <PricePreview
+                contractChainId={contract.chain.id}
+                currencyAddress={field.currencyAddress}
+                price={field.price}
+              />
+
+              {/* Limit per wallet */}
+              <div className="space-y-0.5">
+                <p className="font-medium text-foreground">Limit per wallet</p>
+                {claimConditionType === "specific" ? (
+                  <p className="text-muted-foreground"> Set in the snapshot</p>
+                ) : claimConditionType === "creator" ? (
+                  <p className="text-muted-foreground">Unlimited</p>
+                ) : (
+                  <p className="text-muted-foreground capitalize">
+                    {field.maxClaimablePerWallet}
+                  </p>
+                )}
+              </div>
+            </div>
           )}
 
-          <ClaimerSelection />
-        </>
-      )}
-    </Card>
+          {field.isEditing && (
+            <div className="space-y-6">
+              {/* Phase Name Input / Form Title */}
+              {isMultiPhase ? <PhaseNameInput /> : null}
+              <PhaseStartTimeInput />
+
+              <CreatorInput
+                creatorAddress={
+                  (field.snapshot?.[0] as { address: string })?.address
+                }
+              />
+
+              <MaxClaimableSupplyInput />
+              <ClaimPriceInput contractChainId={contract.chain.id} />
+
+              {claimConditionType === "specific" ||
+              claimConditionType === "creator" ? null : (
+                <MaxClaimablePerWalletInput />
+              )}
+
+              <ClaimerSelection />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-row items-start justify-end gap-3 border-t border-dashed p-4 lg:px-6 py-5">
+          <Button
+            className="gap-2 rounded-full"
+            onClick={toggleEditing}
+            size="sm"
+            variant="outline"
+          >
+            <ChevronDownIcon
+              className={cn(
+                "size-3.5 transition-transform text-muted-foreground",
+                field.isEditing && "rotate-180",
+              )}
+            />
+            {field.isEditing ? "Collapse" : isAdmin ? "Edit" : "Expand"}
+          </Button>
+
+          {isAdmin && (
+            <Button
+              className="gap-2 rounded-full"
+              disabled={isPending}
+              onClick={onRemove}
+              size="sm"
+              variant="outline"
+            >
+              <XIcon className="size-3.5 text-muted-foreground" />
+              Remove
+            </Button>
+          )}
+        </div>
+      </div>
+    </DynamicHeight>
   );
 };

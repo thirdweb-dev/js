@@ -1,47 +1,40 @@
-import { Box, Flex } from "@chakra-ui/react";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { CurrencySelector } from "@/components/blocks/CurrencySelector";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { cn } from "@/lib/utils";
 import { PriceInput } from "../../price-input";
 import { useClaimConditionsFormContext } from "..";
-import { CustomFormControl } from "../common";
 
 /**
  * Allows the user to select how much they want to charge to claim each NFT
  */
 export const ClaimPriceInput = (props: { contractChainId: number }) => {
-  const {
-    formDisabled,
-    isErc20,
-    form,
-    phaseIndex,
-    field,
-    isColumn,
-    claimConditionType,
-  } = useClaimConditionsFormContext();
+  const { formDisabled, isErc20, form, phaseIndex, field, claimConditionType } =
+    useClaimConditionsFormContext();
 
   if (claimConditionType === "creator") {
     return null;
   }
 
   return (
-    <CustomFormControl
-      disabled={formDisabled}
-      error={
+    <FormFieldSetup
+      isRequired={false}
+      errorMessage={
         form.getFieldState(`phases.${phaseIndex}.price`, form.formState).error
+          ?.message
       }
       label={`How much do you want to charge to claim each ${
         isErc20 ? "token" : "NFT"
       }?`}
     >
-      <Flex flexDir={{ base: "column", md: "row" }} gap={2}>
-        <Box minW="70px" w={{ base: "100%", md: "50%" }}>
-          <PriceInput
-            onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
-            value={field.price?.toString() || ""}
-            w="full"
-          />
-        </Box>
-        <Box w={{ base: "100%", md: isColumn ? "50%" : "100%" }}>
+      <div className={cn("flex flex-col md:flex-row gap-3")}>
+        <PriceInput
+          onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
+          value={field.price?.toString() || ""}
+          disabled={formDisabled}
+          className="max-w-48"
+        />
+        <div className="grow max-w-md">
           <CurrencySelector
             contractChainId={props.contractChainId}
             isDisabled={formDisabled}
@@ -53,8 +46,8 @@ export const ClaimPriceInput = (props: { contractChainId: number }) => {
             }
             value={field?.currencyAddress || NATIVE_TOKEN_ADDRESS}
           />
-        </Box>
-      </Flex>
-    </CustomFormControl>
+        </div>
+      </div>
+    </FormFieldSetup>
   );
 };
