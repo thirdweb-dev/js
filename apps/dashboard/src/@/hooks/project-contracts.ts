@@ -10,8 +10,13 @@ export function useAddContractToProject() {
       projectId: string;
       contractAddress: string;
       chainId: string;
-      deploymentType: "asset" | undefined;
-      contractType: "DropERC20" | "DropERC721" | "DropERC1155" | undefined;
+      deploymentType: "asset" | "marketplace" | undefined;
+      contractType:
+        | "DropERC20"
+        | "DropERC721"
+        | "DropERC1155"
+        | "MarketplaceV3"
+        | undefined;
     }) => {
       const res = await apiServerProxy({
         body: JSON.stringify({

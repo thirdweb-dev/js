@@ -48,7 +48,7 @@ export function ContractTable(props: {
   teamId: string;
   projectId: string;
   client: ThirdwebClient;
-  variant: "asset" | "contract";
+  variant: "token" | "contract" | "marketplace";
   teamSlug: string;
   projectSlug: string;
 }) {
@@ -76,7 +76,7 @@ export function ContractTableUI(props: {
   pageSize: number;
   removeContractFromProject: (contractId: string) => Promise<void>;
   client: ThirdwebClient;
-  variant: "asset" | "contract";
+  variant: "token" | "contract" | "marketplace";
   teamSlug: string;
   projectSlug: string;
 }) {
@@ -143,7 +143,7 @@ export function ContractTableUI(props: {
           <TableHeader className="z-0">
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Type</TableHead>
+              {props.variant !== "marketplace" && <TableHead>Type</TableHead>}
               <TableHead className="tracking-normal">
                 <NetworkFilterCell
                   chainId={
@@ -163,7 +163,7 @@ export function ContractTableUI(props: {
                 <TableHead>Contract Address</TableHead>
               )}
 
-              {props.variant === "asset" && <TableHead> Token Page</TableHead>}
+              {props.variant === "token" && <TableHead> Token Page</TableHead>}
 
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -188,23 +188,25 @@ export function ContractTableUI(props: {
                     />
                   </TableCell>
 
-                  <TableCell>
-                    {contract.contractType &&
-                    props.variant === "asset" &&
-                    contractTypeToAssetTypeRecord[contract.contractType] ? (
-                      <ContractTypeCellUI
-                        name={
-                          contractTypeToAssetTypeRecord[contract.contractType]
-                        }
-                      />
-                    ) : (
-                      <ContractTypeCell
-                        chainId={contract.chainId}
-                        client={props.client}
-                        contractAddress={contract.contractAddress}
-                      />
-                    )}
-                  </TableCell>
+                  {props.variant !== "marketplace" && (
+                    <TableCell>
+                      {contract.contractType &&
+                      props.variant === "token" &&
+                      contractTypeToAssetTypeRecord[contract.contractType] ? (
+                        <ContractTypeCellUI
+                          name={
+                            contractTypeToAssetTypeRecord[contract.contractType]
+                          }
+                        />
+                      ) : (
+                        <ContractTypeCell
+                          chainId={contract.chainId}
+                          client={props.client}
+                          contractAddress={contract.contractAddress}
+                        />
+                      )}
+                    </TableCell>
+                  )}
 
                   <TableCell>
                     <ChainNameCell
@@ -224,7 +226,7 @@ export function ContractTableUI(props: {
                     </TableCell>
                   )}
 
-                  {props.variant === "asset" && (
+                  {props.variant === "token" && (
                     <TableCell>
                       <Button asChild size="sm" variant="ghost">
                         <Link
@@ -261,11 +263,8 @@ export function ContractTableUI(props: {
         {contracts.length === 0 && (
           <div className="flex h-[350px] items-center justify-center text-muted-foreground">
             <div className="text-center">
-              {props.variant === "asset" ? (
-                <p className="mb-3">No tokens found</p>
-              ) : (
-                <p className="mb-3">No contracts found</p>
-              )}
+              <p className="mb-3">No {props.variant}s</p>
+
               {props.variant === "contract" && (
                 <Button asChild className="bg-background" variant="outline">
                   <Link

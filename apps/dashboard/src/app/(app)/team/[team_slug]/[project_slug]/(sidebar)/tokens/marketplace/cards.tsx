@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
+import { ArrowDownToLineIcon, StoreIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -21,7 +21,7 @@ export function Cards(props: {
   const [importModalOpen, setImportModalOpen] = useState(false);
 
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <ImportModal
         client={props.client}
         isOpen={importModalOpen}
@@ -35,32 +35,25 @@ export function Cards(props: {
         projectSlug={props.projectSlug}
         teamId={props.teamId}
         teamSlug={props.teamSlug}
-        type="token"
+        type="marketplace"
       />
 
       <CardLink
-        description="Launch your own ERC-20 coin"
-        href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/token`}
-        icon={CoinsIcon}
-        title="Create Coin"
+        description="Launch your own marketplace to buy and sell NFTs"
+        href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/marketplace/create`}
+        icon={StoreIcon}
+        title="Create Marketplace"
       />
 
       <CardLink
-        description="Launch your own NFT collection"
-        href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/nft`}
-        icon={ImagesIcon}
-        title="Create NFT Collection"
-      />
-
-      <CardLink
-        description="Import coins or NFTs you own to the project"
+        description="Import marketplace contract to your project"
         href={undefined}
         icon={ArrowDownToLineIcon}
         onClick={() => {
           reportAssetImportStarted();
           setImportModalOpen(true);
         }}
-        title="Import Existing Token"
+        title="Import Marketplace"
       />
     </div>
   );

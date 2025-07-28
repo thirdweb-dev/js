@@ -15,7 +15,7 @@ import { tryCatch } from "@/utils/try-catch";
 
 export function StorageErrorPlanUpsell(props: {
   teamSlug: string;
-  trackingCampaign: "create-coin" | "create-nft";
+  trackingCampaign: "create-coin" | "create-nft" | "create-marketplace";
   onRetry: () => void;
 }) {
   const [isPlanUpdated, setIsPlanUpdated] = useState(false);

@@ -40,7 +40,7 @@ type ImportModalProps = {
   projectSlug: string;
   teamSlug: string;
   client: ThirdwebClient;
-  type: "contract" | "asset";
+  type: "contract" | "token" | "marketplace";
   onSuccess?: () => void;
 };
 
@@ -60,7 +60,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
       >
         <DialogHeader className="p-6">
           <DialogTitle className="font-semibold text-2xl tracking-tight">
-            Import {props.type === "contract" ? "Contract" : "Token"}
+            Import {props.type}
           </DialogTitle>
           <DialogDescription>
             Import a deployed contract in your project
@@ -103,7 +103,7 @@ function ImportForm(props: {
   teamSlug: string;
   projectSlug: string;
   client: ThirdwebClient;
-  type: "contract" | "asset";
+  type: "contract" | "token" | "marketplace";
   onSuccess?: () => void;
 }) {
   const router = useDashboardRouter();
@@ -197,7 +197,7 @@ function ImportForm(props: {
               <FormItem>
                 <FormLabel>Contract Address</FormLabel>
                 <FormControl>
-                  <Input placeholder="0x..." {...field} />
+                  <Input placeholder="0x..." {...field} className="bg-card" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -211,6 +211,8 @@ function ImportForm(props: {
               chainId={form.watch("chainId")}
               client={props.client}
               disableChainId
+              disableDeprecated
+              className="bg-card"
               onChange={(v) => form.setValue("chainId", v)}
               side="top"
             />

@@ -271,22 +271,6 @@ export function reportAssetBuyFailed(properties: {
 
 /**
  * ### Why do we need to report this event?
- * - To track number of asset creation started from the assets page
- * - To track which asset types are being created the most
- *
- * ### Who is responsible for this event?
- * @MananTank
- */
-export function reportAssetCreationStarted(properties: {
-  assetType: "nft" | "coin";
-}) {
-  posthog.capture("asset creation started", {
-    assetType: properties.assetType,
-  });
-}
-
-/**
- * ### Why do we need to report this event?
  * - To track number of assets imported successfully from the assets page
  *
  * ### Who is responsible for this event?
@@ -386,9 +370,35 @@ export function reportAssetCreationFailed(
   });
 }
 
+/**
+ * ### Why do we need to report this event?
+ * - To track number of successful asset creations
+ * - To track which asset types are being created the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportMarketCreationSuccessful() {
+  posthog.capture("market creation successful");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of failed marketplace creations
+ * - To track the errors that users encounter when trying to create a marketplace
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportMarketCreationFailed(properties: { error: string }) {
+  posthog.capture("market creation failed", {
+    error: properties.error,
+  });
+}
+
 type UpsellParams = {
   content: "storage-limit";
-  campaign: "create-coin" | "create-nft";
+  campaign: "create-coin" | "create-nft" | "create-marketplace";
   sku: Exclude<ProductSKU, null>;
 };
 
