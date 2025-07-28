@@ -1,5 +1,18 @@
 # thirdweb
 
+## 5.105.22
+
+### Patch Changes
+
+- [#7732](https://github.com/thirdweb-dev/js/pull/7732) [`1cbbbc3`](https://github.com/thirdweb-dev/js/commit/1cbbbc3c12763c9fae3af8a7fe6490383e0cad0d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve EIP5792 support
+
+- [#7729](https://github.com/thirdweb-dev/js/pull/7729) [`58dbe90`](https://github.com/thirdweb-dev/js/commit/58dbe90b930a215684871ff45e2dd9abd1d1f1d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to onchain nonce in 7702 execution
+
+- [#7710](https://github.com/thirdweb-dev/js/pull/7710) [`e92d8f9`](https://github.com/thirdweb-dev/js/commit/e92d8f921a4b620e731e8916e4c145711c87f5fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add contract filtering to Insight.getOwnedNFTs and getOwnedTokens
+
+- Updated dependencies [[`e92d8f9`](https://github.com/thirdweb-dev/js/commit/e92d8f921a4b620e731e8916e4c145711c87f5fa)]:
+  - @thirdweb-dev/insight@1.1.1
+
 ## 5.105.21
 
 ### Patch Changes
