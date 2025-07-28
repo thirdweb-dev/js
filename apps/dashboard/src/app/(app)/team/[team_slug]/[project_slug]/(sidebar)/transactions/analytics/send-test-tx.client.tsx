@@ -292,7 +292,7 @@ export function SendTestTransaction(props: {
 
   return (
     <div className="mt-3 w-full rounded-md border bg-background p-6">
-      <TryItOut />
+      <TryItOut useEngineAPI={false} />
       <div className="mt-6 flex flex-col gap-2 md:flex-row md:justify-end md:gap-2">
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
