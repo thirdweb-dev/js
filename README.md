@@ -15,37 +15,150 @@
 
 <p align="center"><strong>All-in-one web3 SDK for Browser, Node and Mobile apps</strong></p>
 
-## Features
+## Core Package
 
-- Support for React & React-Native
-- First party support for [Embedded Wallets](https://portal.thirdweb.com/wallets) (social/email login)
-- First party support for [Account Abstraction](https://portal.thirdweb.com/wallets/sponsor-gas)
-- Instant connection to any chain with RPC Edge integration
-- Integrated IPFS upload/download
-- UI Components for connection, transactions, nft rendering
-- High level contract extensions for interacting with common standards
+#### [`thirdweb`](./packages/thirdweb/README.md)
+
+The main SDK package providing all-in-one web3 functionality for Browser, Node, and Mobile applications.
+
+```bash
+npm install thirdweb
+```
+
+**Features:**
+
+- Type-safe contract and transaction APIs
+- In-app wallets with social/email login
+- Account abstraction (ERC4337/EIP7702) support
+- 500+ external wallets supported
+- Built in infra (RPC, bundler, paymaster, indexer)
+- React hooks and UI components
 - Automatic ABI resolution
+- IPFS upload/download
+- Cross-platform support (Web, React Native)
 
-## Library Comparison
+### Documentation
 
-|                                           | thirdweb | Wagmi + Viem       | Ethers@6 |
-| ----------------------------------------- | -------- | ------------------ | -------- |
-| Type safe contract API                    | ✅       | ✅                 | ✅       |
-| Type safe wallet API                      | ✅       | ✅                 | ✅       |
-| EVM utils                                 | ✅       | ✅                 | ✅       |
-| RPC for any EVM                           | ✅       | ⚠️ public RPC only | ❌       |
-| Automatic ABI Resolution                  | ✅       | ❌                 | ❌       |
-| IPFS Upload/Download                      | ✅       | ❌                 | ❌       |
-| Embedded wallet (email/ social login)     | ✅       | ⚠️ via 3rd party   | ❌       |
-| Account abstraction (ERC4337) support     | ✅       | ⚠️ via 3rd party   | ❌       |
-| Web3 wallet connectors                    | ✅       | ✅                 | ❌       |
-| Local wallet creation                     | ✅       | ✅                 | ✅       |
-| Auth (SIWE)                               | ✅       | ✅                 | ❌       |
-| Extensions functions for common standards | ✅       | ✅                 | ❌       |
-| React Hooks                               | ✅       | ✅                 | ❌       |
-| React UI components                       | ✅       | ❌                 | ❌       |
-| React Native Hooks                        | ✅       | ✅                 | ❌       |
-| React Native UI Components                | ✅       | ❌                 | ❌       |
+Visit the [developer portal](https://portal.thirdweb.com) for full documentation.
+
+### 🚀 Quick Start
+
+#### For React Applications
+
+```bash
+npm install thirdweb
+```
+
+```typescript
+import { createThirdwebClient } from "thirdweb";
+import { ConnectButton, useActiveAccount } from "thirdweb/react";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
+
+function App() {
+  const account = useActiveAccount();
+  console.log("Connected as", account?.address);
+
+  return <ConnectButton client={client} />;
+}
+```
+
+For React Native Applications, you'll also need to install the `@thirdweb-dev/react-native-adapter` package and import it at app startup for polyfills.
+
+#### For Backend Applications
+
+```bash
+npm install thirdweb
+```
+
+```typescript
+import { createThirdwebClient, Engine } from "thirdweb";
+
+const client = createThirdwebClient({
+  secretKey: "YOUR_SECRET_KEY",
+});
+
+const wallet = Engine.serverWallet({
+  client,
+  address: "0x...",
+});
+
+const transaction = transfer({
+  contract: getContract({
+    client,
+    address: "0x...", // token contract
+    chain: defineChain(1),
+  }),
+  to: "0x...", // recipient
+  amount: "0.01", // amount in tokens
+});
+
+await wallet.enqueueTransaction({
+  transaction,
+});
+```
+
+## Adapters
+
+#### [`@thirdweb-dev/react-native-adapter`](./packages/react-native-adapter/README.md)
+
+Required polyfills and configuration for running the thirdweb SDK in React Native applications.
+
+```bash
+npm install @thirdweb-dev/react-native-adapter
+```
+
+#### [`@thirdweb-dev/wagmi-adapter`](./packages/wagmi-adapter/README.md)
+
+Integration layer for using thirdweb's in-app wallets with wagmi.
+
+```bash
+npm install @thirdweb-dev/wagmi-adapter
+```
+
+## Type safe API wrappers
+
+#### [`@thirdweb-dev/api`](./packages/api/README.md)
+
+TypeScript SDK for thirdweb's API, combining all of thirdweb products.
+
+```bash
+npm install @thirdweb-dev/api
+```
+
+#### [`@thirdweb-dev/engine`](./packages/engine/README.md)
+
+TypeScript SDK for Engine, thirdweb's backend onchain executor service.
+
+```bash
+npm install @thirdweb-dev/engine
+```
+
+#### [`@thirdweb-dev/insight`](./packages/insight/README.md)
+
+TypeScript SDK for Insight, thirdweb's multichain indexer service.
+
+```bash
+npm install @thirdweb-dev/insight
+```
+
+#### [`@thirdweb-dev/vault-sdk`](./packages/vault-sdk/README.md)
+
+SDK for interacting with Vault, thirdweb's secure key management service.
+
+```bash
+npm install @thirdweb-dev/vault-sdk
+```
+
+#### [`@thirdweb-dev/nebula`](./packages/nebula/README.md)
+
+TypeScript SDK for Nebula, thirdweb's AI agent service.
+
+```bash
+npm install @thirdweb-dev/nebula
+```
 
 ## Contributing
 
@@ -55,7 +168,8 @@ See our [open source page](https://thirdweb.com/open-source) for more informatio
 
 ## Additional Resources
 
-- [Documentation](https://portal.thirdweb.com/typescript/v5)
+- [Dashboard](https://thirdweb.com/login)
+- [Documentation](https://portal.thirdweb.com/)
 - [Templates](https://thirdweb.com/templates)
 - [YouTube](https://www.youtube.com/c/thirdweb)
 
