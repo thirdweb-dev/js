@@ -3,6 +3,7 @@ import {
   getTypesForEIP712Domain,
   type SignTypedDataParameters,
   serializeTypedData,
+  stringify,
   validateTypedData,
 } from "viem";
 import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
@@ -22,6 +23,10 @@ import {
 } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parse-typed-data.js";
 import type { InjectedSupportedWalletIds } from "../__generated__/wallet-ids.js";
+import { toGetCallsStatusResponse } from "../eip5792/get-calls-status.js";
+import { toGetCapabilitiesResult } from "../eip5792/get-capabilities.js";
+import { toProviderCallParams } from "../eip5792/send-calls.js";
+import type { GetCallsStatusRawResponse } from "../eip5792/types.js";
 import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
@@ -299,6 +304,64 @@ function createAccount({
         { retryCount: 0 },
       );
       return result;
+    },
+    async sendCalls(options) {
+      try {
+        const { callParams, chain } = await toProviderCallParams(
+          options,
+          account,
+        );
+        const callId = await provider.request({
+          method: "wallet_sendCalls",
+          params: callParams,
+        });
+        if (callId && typeof callId === "object" && "id" in callId) {
+          return { chain, client, id: callId.id };
+        }
+        return { chain, client, id: callId };
+      } catch (error) {
+        if (/unsupport|not support/i.test((error as Error).message)) {
+          throw new Error(
+            `${id} errored calling wallet_sendCalls, with error: ${error instanceof Error ? error.message : stringify(error)}`,
+          );
+        }
+        throw error;
+      }
+    },
+    async getCallsStatus(options) {
+      try {
+        const rawResponse = (await provider.request({
+          method: "wallet_getCallsStatus",
+          params: [options.id],
+        })) as GetCallsStatusRawResponse;
+        return toGetCallsStatusResponse(rawResponse);
+      } catch (error) {
+        if (/unsupport|not support/i.test((error as Error).message)) {
+          throw new Error(
+            `${id} does not support wallet_getCallsStatus, reach out to them directly to request EIP-5792 support.`,
+          );
+        }
+        throw error;
+      }
+    },
+    async getCapabilities(options) {
+      const chainId = options.chainId;
+      try {
+        const result = await provider.request({
+          method: "wallet_getCapabilities",
+          params: [getAddress(account.address)],
+        });
+        return toGetCapabilitiesResult(result, chainId);
+      } catch (error: unknown) {
+        if (
+          /unsupport|not support|not available/i.test((error as Error).message)
+        ) {
+          return {
+            message: `${id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+          };
+        }
+        throw error;
+      }
     },
   };
 

@@ -1,5 +1,4 @@
 import { PlusIcon } from "lucide-react";
-import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ExternalLinksInput } from "./external-links-input";
@@ -12,35 +11,26 @@ export const ExternalLinksFieldset = () => {
     name: "externalLinks",
   });
 
-  // FIXME: all of this logic needs to be reworked
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (fields.length === 0) {
-      append(
-        {
-          name: "",
-          url: "",
-        },
-        { shouldFocus: false },
-      );
-    }
-  }, [fields, append]);
-
   return (
-    <fieldset className="flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h3 className="font-semibold text-xl tracking-tight">Resources</h3>
-        <p className="text-muted-foreground">
+    <fieldset>
+      <div>
+        <h3 className="font-semibold text-xl tracking-tight mb-1">Resources</h3>
+        <p className="text-muted-foreground text-sm mb-5">
           Provide links to docs, usage guides etc. for the contract.
         </p>
       </div>
       <div className="flex flex-col gap-4">
         {fields.map((item, index) => (
-          <ExternalLinksInput index={index} key={item.id} remove={remove} />
+          <ExternalLinksInput
+            index={index}
+            key={item.id}
+            remove={remove}
+            disableRemove={fields.length === 1}
+          />
         ))}
         <div>
           <Button
-            className="gap-2"
+            className="gap-2 bg-card rounded-full"
             onClick={() =>
               append({
                 name: "",
@@ -51,7 +41,7 @@ export const ExternalLinksFieldset = () => {
             type="button"
             variant="outline"
           >
-            <PlusIcon className="size-5" />
+            <PlusIcon className="size-4" />
             Add Resource
           </Button>
         </div>

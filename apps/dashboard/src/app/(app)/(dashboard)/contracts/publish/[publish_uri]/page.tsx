@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
@@ -74,22 +73,20 @@ export default async function PublishContractPage(
 
   return (
     <div className="container flex max-w-[1130px] flex-col gap-8 py-8">
-      <ChakraProviderSetup>
-        <ContractPublishForm
-          client={userThirdwebClient}
-          isLoggedIn={!!token}
-          onPublishSuccess={async () => {
-            "use server";
-            // we are pretty brutal here and simply invalidate ALL published contracts (for everyone!) and versions no matter what
-            // TODO: we can be more granular here and only invalidate the specific contract and version etc
-            revalidatePath(
-              "/(dashboard)/published-contract/[publisher]/[contract_id]",
-              "layout",
-            );
-          }}
-          publishMetadata={publishMetadata}
-        />
-      </ChakraProviderSetup>
+      <ContractPublishForm
+        client={userThirdwebClient}
+        isLoggedIn={!!token}
+        onPublishSuccess={async () => {
+          "use server";
+          // we are pretty brutal here and simply invalidate ALL published contracts (for everyone!) and versions no matter what
+          // TODO: we can be more granular here and only invalidate the specific contract and version etc
+          revalidatePath(
+            "/(dashboard)/published-contract/[publisher]/[contract_id]",
+            "layout",
+          );
+        }}
+        publishMetadata={publishMetadata}
+      />
     </div>
   );
 }

@@ -13,13 +13,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { cn } from "@/lib/utils";
 
-export function PublishedContractBreadcrumbs() {
+export function PublishedContractBreadcrumbs(props: { className?: string }) {
   const pathname = usePathname() || "";
   const segments = pathname.split("/").filter((segment) => segment !== "");
 
   return (
-    <Breadcrumb className="border-border border-b px-6 py-4">
+    <Breadcrumb className={cn("py-4", props.className)}>
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink aria-label="Explore" asChild>

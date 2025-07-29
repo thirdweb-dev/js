@@ -1,4 +1,3 @@
-import { FormControl, useBreakpointValue } from "@chakra-ui/react";
 import type { AbiParameter } from "abitype";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -7,6 +6,7 @@ import { SolidityInput } from "@/components/solidity-inputs";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { InlineCode } from "@/components/ui/inline-code";
 import { Switch } from "@/components/ui/switch";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { getTemplateValuesForType } from "@/lib/deployment/template-values";
 import { RefInputImplFieldset } from "./ref-contract-impl-input/ref-input-impl-fieldset";
 
@@ -19,7 +19,7 @@ export const ImplementationParamsFieldset: React.FC<
 > = ({ implParams, client }) => {
   const form = useFormContext();
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useIsMobile();
 
   const [isCustomInputEnabled, setIsCustomInputEnabled] = useState(
     Array(implParams.length).fill(false),
@@ -119,25 +119,23 @@ export const ImplementationParamsFieldset: React.FC<
                 </div>
 
                 {!isCustomInputEnabled[idx] ? (
-                  <FormControl>
-                    <SolidityInput
-                      className="!bg-background !text-sm placeholder:!text-sm"
-                      client={client}
-                      placeholder={
-                        isMobile ||
-                        paramTemplateValues?.[0]?.value ===
-                          "{{trusted_forwarders}}"
-                          ? "Pre-filled value."
-                          : "This value will be pre-filled in the deploy form."
-                      }
-                      solidityType={param.type}
-                      {...form.register(
-                        `implConstructorParams.${
-                          param.name ? param.name : "*"
-                        }.defaultValue`,
-                      )}
-                    />
-                  </FormControl>
+                  <SolidityInput
+                    className="!bg-background !text-sm placeholder:!text-sm"
+                    client={client}
+                    placeholder={
+                      isMobile ||
+                      paramTemplateValues?.[0]?.value ===
+                        "{{trusted_forwarders}}"
+                        ? "Pre-filled value."
+                        : "This value will be pre-filled in the deploy form."
+                    }
+                    solidityType={param.type}
+                    {...form.register(
+                      `implConstructorParams.${
+                        param.name ? param.name : "*"
+                      }.defaultValue`,
+                    )}
+                  />
                 ) : (
                   <RefInputImplFieldset client={client} param={param} />
                 )}

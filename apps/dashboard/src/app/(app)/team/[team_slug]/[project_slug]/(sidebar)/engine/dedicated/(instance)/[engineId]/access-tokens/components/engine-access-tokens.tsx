@@ -1,14 +1,11 @@
 "use client";
 
-import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { Heading } from "chakra/heading";
-import { Link } from "chakra/link";
-import { Text } from "chakra/text";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { InlineCode } from "@/components/ui/inline-code";
+import { TabButtons } from "@/components/ui/tabs";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   useEngineAccessTokens,
   useEngineKeypairs,
@@ -39,38 +36,28 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
   );
 
   return (
-    <Flex flexDir="column" gap={4}>
-      <Flex flexDir="column" gap={2}>
-        <Heading size="title.md">Access Tokens</Heading>
-      </Flex>
+    <div>
+      <h2 className="text-2xl font-semibold tracking-tight mb-1">
+        Access Tokens
+      </h2>
 
       {supportsKeyPairAuth && (
-        <ButtonGroup size="sm" spacing={2} variant="ghost">
-          <Button
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            isActive={selected === "standard"}
-            onClick={() => setSelected("standard")}
-            rounded="lg"
-            type="button"
-          >
-            Standard
-          </Button>
-          <Button
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            isActive={selected === "keypair"}
-            onClick={() => setSelected("keypair")}
-            rounded="lg"
-            type="button"
-          >
-            Keypair Authentication
-          </Button>
-        </ButtonGroup>
+        <TabButtons
+          containerClassName="mb-4 mt-3"
+          tabClassName="!text-sm"
+          tabs={[
+            {
+              name: "Standard",
+              onClick: () => setSelected("standard"),
+              isActive: selected === "standard",
+            },
+            {
+              name: "Keypair Authentication",
+              onClick: () => setSelected("keypair"),
+              isActive: selected === "keypair",
+            },
+          ]}
+        />
       )}
 
       {selected === "standard" ? (
@@ -85,7 +72,7 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
           instanceUrl={instanceUrl}
         />
       ) : null}
-    </Flex>
+    </div>
   );
 };
 
@@ -104,18 +91,16 @@ const StandardAccessTokensPanel = ({
   });
 
   return (
-    <>
-      <Text>
+    <div>
+      <p className="text-sm text-muted-foreground mb-4">
         Access tokens allow API access to Engine.{" "}
-        <Link
-          color="primary.500"
+        <UnderlineLink
           href="https://portal.thirdweb.com/engine/features/access-tokens"
-          isExternal
+          target="_blank"
         >
           Learn more about access tokens
-        </Link>
-        .
-      </Text>
+        </UnderlineLink>
+      </p>
 
       <AccessTokensTable
         accessTokens={accessTokens.data ?? []}
@@ -125,13 +110,20 @@ const StandardAccessTokensPanel = ({
         isFetched={accessTokens.isFetched}
         isPending={accessTokens.isPending}
       />
-      <AddAccessTokenButton authToken={authToken} instanceUrl={instanceUrl} />
 
-      <Flex direction="column" gap={2} mt={16}>
-        <Heading size="title.md">Authenticate with your access token</Heading>
-        <Text>
-          Set the <InlineCode code="authorization" /> header.
-        </Text>
+      <div className="flex justify-end mt-4">
+        <AddAccessTokenButton authToken={authToken} instanceUrl={instanceUrl} />
+      </div>
+
+      <div className="mt-16">
+        <div className="mb-3">
+          <h3 className="text-lg font-semibold mb-1">
+            Authenticate with your access token
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Set the <InlineCode code="authorization" /> header.
+          </p>
+        </div>
         <CodeClient
           code={`const resp = fetch("<engine_url>/backend-wallet/get-all", {
   headers: {
@@ -140,8 +132,8 @@ const StandardAccessTokensPanel = ({
 });`}
           lang="ts"
         />
-      </Flex>
-    </>
+      </div>
+    </div>
   );
 };
 
@@ -159,20 +151,19 @@ const KeypairAuthenticationPanel = ({
 
   return (
     <>
-      <Text>
+      <p className="text-sm text-muted-foreground mb-4">
         Keypair authentication allows your app to generate short-lived access
         tokens.
         <br />
         They are securely signed by your backend and verified with a public key.{" "}
-        <Link
-          color="primary.500"
+        <UnderlineLink
           href="https://portal.thirdweb.com/engine/features/keypair-authentication"
-          isExternal
+          target="_blank"
         >
           Learn more about keypair authentication
-        </Link>
+        </UnderlineLink>
         .
-      </Text>
+      </p>
 
       <KeypairsTable
         authToken={authToken}
@@ -181,14 +172,19 @@ const KeypairAuthenticationPanel = ({
         isPending={keypairs.isPending}
         keypairs={keypairs.data || []}
       />
-      <AddKeypairButton authToken={authToken} instanceUrl={instanceUrl} />
 
-      <Flex direction="column" gap={2} mt={16}>
-        <Heading size="title.md">Authenticate with your access token</Heading>
+      <div className="flex justify-end mt-4">
+        <AddKeypairButton authToken={authToken} instanceUrl={instanceUrl} />
+      </div>
 
-        <Text>
+      <div className="flex flex-col gap-2 mt-16">
+        <h3 className="text-lg font-medium">
+          Authenticate with your access token
+        </h3>
+
+        <p className="text-sm text-muted-foreground">
           Set the <InlineCode code="authorization" /> header.
-        </Text>
+        </p>
         <CodeClient
           code={`import jsonwebtoken from "jsonwebtoken";
 
@@ -209,7 +205,7 @@ const resp = fetch("<engine_url>/backend-wallet/get-all", {
 });`}
           lang="ts"
         />
-      </Flex>
+      </div>
     </>
   );
 };

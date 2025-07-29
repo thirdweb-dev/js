@@ -28,7 +28,7 @@ type TransactionButtonProps = Omit<ButtonProps, "variant"> & {
   transactionCount: number | undefined; // support for unknown number of tx count
   isPending: boolean;
   txChainID: number;
-  variant?: "destructive" | "primary" | "default";
+  variant?: "destructive" | "primary" | "default" | "outline";
   isLoggedIn: boolean;
   checkBalance?: boolean;
   client: ThirdwebClient;

@@ -1,24 +1,6 @@
-import {
-  Flex,
-  FormControl,
-  Input,
-  InputGroup,
-  InputRightAddon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Select,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { FormHelperText, FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import {
   DownloadIcon,
   ExternalLinkIcon,
@@ -29,25 +11,51 @@ import {
   UploadIcon,
 } from "lucide-react";
 import Link from "next/link";
-import QRCode from "qrcode";
+import { useTheme } from "next-themes";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { QRCode } from "react-qrcode-logo";
 import { toast } from "sonner";
 import { getAddress, type ThirdwebClient } from "thirdweb";
-import { shortenAddress } from "thirdweb/utils";
+import { isAddress, shortenAddress } from "thirdweb/utils";
+import { z } from "zod";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
-import { FormItem } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { EngineBackendWalletOptions } from "@/constants/engine";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
@@ -57,7 +65,35 @@ import {
 } from "@/hooks/useEngine";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { engineKeys } from "@/query-keys/cache-keys";
+import { parseError } from "@/utils/errorParser";
 import { prettyPrintCurrency } from "./utils";
+
+// Validation schemas
+const editWalletSchema = z.object({
+  label: z.string().min(1, "Label is required").trim(),
+});
+
+const sendFundsSchema = z.object({
+  toAddress: z
+    .string()
+    .min(1, "Recipient address is required")
+    .refine(
+      (val) => {
+        if (isAddress(val)) {
+          return true;
+        }
+
+        return false;
+      },
+      {
+        message: "Invalid wallet address",
+      },
+    ),
+  amount: z.coerce.number().min(0, "Amount must be greater than 0"),
+});
+
+type EditWalletFormValues = z.infer<typeof editWalletSchema>;
+type SendFundsFormValues = z.infer<typeof sendFundsSchema>;
 
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
@@ -137,10 +173,10 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   chainId,
   client,
 }) => {
-  const editDisclosure = useDisclosure();
-  const receiveDisclosure = useDisclosure();
-  const sendDisclosure = useDisclosure();
-  const deleteDisclosure = useDisclosure();
+  const [editOpen, setEditOpen] = useState(false);
+  const [receiveOpen, setReceiveOpen] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const columns = useMemo(() => {
@@ -157,9 +193,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
       columnHelper.accessor("label", {
         cell: (cell) => {
           return (
-            <Text isTruncated maxW={300}>
-              {cell.getValue()}
-            </Text>
+            <div className="truncate max-w-[300px]">{cell.getValue()}</div>
           );
         },
         header: "Label",
@@ -228,7 +262,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             icon: <PencilIcon className="size-4" />,
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
-              editDisclosure.onOpen();
+              setEditOpen(true);
             },
             text: "Edit",
           },
@@ -236,7 +270,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             icon: <DownloadIcon className="size-4" />,
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
-              receiveDisclosure.onOpen();
+              setReceiveOpen(true);
             },
             text: "Receive funds",
           },
@@ -244,7 +278,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             icon: <UploadIcon className="size-4" />,
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
-              sendDisclosure.onOpen();
+              setSendOpen(true);
             },
             text: "Send funds",
           },
@@ -253,7 +287,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             isDestructive: true,
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
-              deleteDisclosure.onOpen();
+              setDeleteOpen(true);
             },
             text: "Delete",
           },
@@ -263,39 +297,46 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         title="backend wallets"
       />
 
-      {selectedBackendWallet && editDisclosure.isOpen && (
-        <EditModal
-          authToken={authToken}
-          backendWallet={selectedBackendWallet}
-          client={client}
-          disclosure={editDisclosure}
-          instanceUrl={instanceUrl}
-        />
+      {selectedBackendWallet && (
+        <Dialog open={editOpen} onOpenChange={setEditOpen}>
+          <DialogContent className="p-0 gap-0">
+            <EditModalContent
+              authToken={authToken}
+              backendWallet={selectedBackendWallet}
+              client={client}
+              onOpenChange={setEditOpen}
+              instanceUrl={instanceUrl}
+            />
+          </DialogContent>
+        </Dialog>
       )}
-      {selectedBackendWallet && receiveDisclosure.isOpen && (
+      {selectedBackendWallet && (
         <ReceiveFundsModal
           backendWallet={selectedBackendWallet}
           client={client}
-          disclosure={receiveDisclosure}
+          open={receiveOpen}
+          onOpenChange={setReceiveOpen}
         />
       )}
-      {selectedBackendWallet && sendDisclosure.isOpen && (
+      {selectedBackendWallet && (
         <SendFundsModal
           authToken={authToken}
           backendWallets={wallets}
           chainId={chainId}
           client={client}
-          disclosure={sendDisclosure}
+          open={sendOpen}
+          onOpenChange={setSendOpen}
           fromWallet={selectedBackendWallet}
           instanceUrl={instanceUrl}
         />
       )}
-      {selectedBackendWallet && deleteDisclosure.isOpen && (
+      {selectedBackendWallet && (
         <DeleteModal
           authToken={authToken}
           backendWallet={selectedBackendWallet}
           client={client}
-          disclosure={deleteDisclosure}
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
           instanceUrl={instanceUrl}
         />
       )}
@@ -303,30 +344,35 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
   );
 };
 
-const EditModal = ({
+function EditModalContent({
   backendWallet,
-  disclosure,
+  onOpenChange,
   instanceUrl,
   authToken,
   client,
 }: {
   backendWallet: BackendWallet;
-  disclosure: UseDisclosureReturn;
+  onOpenChange: (open: boolean) => void;
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
-}) => {
+}) {
   const updateBackendWallet = useEngineUpdateBackendWallet({
     authToken,
     instanceUrl,
   });
 
-  const [label, setLabel] = useState(backendWallet.label ?? "");
+  const form = useForm<EditWalletFormValues>({
+    resolver: zodResolver(editWalletSchema),
+    defaultValues: {
+      label: backendWallet.label ?? "",
+    },
+  });
 
-  const onClick = async () => {
+  const onSubmit = async (data: EditWalletFormValues) => {
     const promise = updateBackendWallet.mutateAsync(
       {
-        label,
+        label: data.label,
         walletAddress: backendWallet.address,
       },
       {
@@ -334,7 +380,7 @@ const EditModal = ({
           console.error(error);
         },
         onSuccess: () => {
-          disclosure.onClose();
+          onOpenChange(false);
         },
       },
     );
@@ -346,115 +392,143 @@ const EditModal = ({
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Update Backend Wallet</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormControl>
-              <FormLabel>Wallet Address</FormLabel>
+    <div>
+      <DialogHeader className="p-4 lg:p-6">
+        <DialogTitle>Update Backend Wallet</DialogTitle>
+      </DialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-6 px-4 lg:px-6 pb-6">
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-medium">Wallet Address</h3>
               <WalletAddress
                 address={backendWallet.address}
                 client={client}
-                shortenAddress={false}
+                iconClassName="size-4"
+                className="h-auto py-0"
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Input
-                onChange={(e) => setLabel(e.target.value)}
-                placeholder="Enter a description for this backend wallet"
-                type="text"
-                value={label}
-              />
-            </FormControl>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="label"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Label</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter a description for this backend wallet"
+                      type="text"
+                      className="bg-card"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-        </ModalBody>
-
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} variant="outline">
-            Cancel
-          </Button>
-          <Button onClick={onClick} type="submit">
-            Save
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          <div className="flex justify-end gap-3 p-4 lg:p-6 border-t bg-card rounded-b-lg">
+            <Button onClick={() => onOpenChange(false)} variant="outline">
+              Cancel
+            </Button>
+            <Button type="submit" className="gap-2">
+              {updateBackendWallet.isPending && <Spinner className="size-4" />}
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
-};
+}
 
-const ReceiveFundsModal = ({
+function ReceiveFundsModal({
   backendWallet,
-  disclosure,
-  client,
+  open,
+  onOpenChange,
 }: {
   backendWallet: BackendWallet;
-  disclosure: UseDisclosureReturn;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   client: ThirdwebClient;
-}) => {
-  const qrCodeBase64Query = useQuery({
-    // only run this if we have a backendWallet address
-    enabled: !!backendWallet.address,
-    // start out with empty string
-    placeholderData: "",
-    queryFn: async () => {
-      return new Promise<string>((resolve, reject) => {
-        QRCode.toDataURL(
-          backendWallet.address,
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          (error: any, dataUrl: string) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(dataUrl);
-            }
-          },
-        );
-      });
-    },
-    queryKey: ["engine", "receive-funds-qr-code", backendWallet.address],
-  });
+}) {
+  // const qrCodeBase64Query = useQuery({
+  //   // only run this if we have a backendWallet address
+  //   enabled: !!backendWallet.address,
+  //   // start out with empty string
+  //   placeholderData: "",
+  //   queryFn: async () => {
+  //     return new Promise<string>((resolve, reject) => {
+  //       QRCode.toDataURL(
+  //         backendWallet.address,
+  //         // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  //         (error: any, dataUrl: string) => {
+  //           if (error) {
+  //             reject(error);
+  //           } else {
+  //             resolve(dataUrl);
+  //           }
+  //         },
+  //       );
+  //     });
+  //   },
+  //   queryKey: ["engine", "receive-funds-qr-code", backendWallet.address],
+  // });
+
+  const qrCodeWidth = 300;
+  const isMobile = useIsMobile();
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Receive Funds</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4 pb-8">
-            <Text textAlign="left" w="full">
-              Fund this address or QR code:
-            </Text>
-            <WalletAddress
-              address={backendWallet.address}
-              client={client}
-              shortenAddress={false}
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt="QR code for receiving funds"
-              className="mx-auto flex w-[200px] rounded-lg"
-              src={qrCodeBase64Query.data}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="!w-full bg-white dark:bg-black"
+        style={
+          isMobile
+            ? undefined
+            : {
+                maxWidth: `${qrCodeWidth + 2 * 24}px`,
+              }
+        }
+      >
+        <DialogHeader>
+          <DialogTitle>Receive Funds</DialogTitle>
+          <DialogDescription>Send funds to this address</DialogDescription>
+        </DialogHeader>
+
+        <div className="flex justify-center">
+          <div className="border rounded-lg overflow-hidden">
+            <QRCode
+              value={backendWallet.address}
+              qrStyle="dots"
+              size={isMobile ? 300 : qrCodeWidth - 20}
+              eyeRadius={80}
+              bgColor={isDarkMode ? "hsl(0 0% 0%)" : "hsl(0 0% 100%)"}
+              fgColor={isDarkMode ? "hsl(0 0% 100%)" : "hsl(0 0% 0%)"}
             />
           </div>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
-};
+        </div>
 
-interface SendFundsInput {
-  toAddress: string;
-  amount: number;
+        <CopyTextButton
+          textToCopy={backendWallet.address}
+          textToShow={shortenAddress(backendWallet.address)}
+          tooltip="Copy address"
+          copyIconPosition="right"
+          variant="outline"
+          className="font-mono py-3 px-3 w-full bg-card"
+        />
+      </DialogContent>
+    </Dialog>
+  );
 }
+
 const SendFundsModal = ({
   fromWallet,
   backendWallets,
-  disclosure,
+  open,
+  onOpenChange,
   instanceUrl,
   authToken,
   chainId,
@@ -462,13 +536,20 @@ const SendFundsModal = ({
 }: {
   fromWallet: BackendWallet;
   backendWallets: BackendWallet[];
-  disclosure: UseDisclosureReturn;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   instanceUrl: string;
   authToken: string;
   chainId: number;
   client: ThirdwebClient;
 }) => {
-  const form = useForm<SendFundsInput>();
+  const form = useForm<SendFundsFormValues>({
+    resolver: zodResolver(sendFundsSchema),
+    defaultValues: {
+      toAddress: "",
+      amount: 0,
+    },
+  });
   const sendTokens = useEngineSendTokens({
     authToken,
     instanceUrl,
@@ -481,14 +562,14 @@ const SendFundsModal = ({
     instanceUrl,
   });
   const chain = idToChain.get(chainId);
-  const toWalletDisclosure = useDisclosure();
+  const [toWalletOpen, setToWalletOpen] = useState(false);
 
   if (!backendWalletBalance) {
     return null;
   }
 
-  const onSubmit = async (data: SendFundsInput) => {
-    const promise = sendTokens.mutateAsync(
+  const onSubmit = async (data: SendFundsFormValues) => {
+    sendTokens.mutateAsync(
       {
         amount: data.amount,
         chainId: chainId,
@@ -497,131 +578,171 @@ const SendFundsModal = ({
       },
       {
         onSuccess: () => {
-          disclosure.onClose();
+          onOpenChange(false);
+          toast.success("Successfully sent a request to send funds.");
+        },
+        onError: (error) => {
+          toast.error("Failed to send tokens.", {
+            description: parseError(error),
+          });
+          console.error(error);
         },
       },
     );
-
-    toast.promise(promise, {
-      error: "Failed to send tokens.",
-      success: "Successfully sent a request to send funds.",
-    });
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent
-        as="form"
-        className="!bg-background rounded-lg border border-border"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <ModalHeader>Send Funds</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormControl>
-              <FormLabel>From</FormLabel>
-              <WalletAddress
-                address={fromWallet.address}
-                client={client}
-                shortenAddress={false}
-              />
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel>To</FormLabel>
-              {toWalletDisclosure.isOpen ? (
-                <Input
-                  {...form.register("toAddress", { required: true })}
-                  placeholder="Enter a wallet address"
-                />
-              ) : (
-                <Select {...form.register("toAddress", { required: true })}>
-                  <option disabled hidden selected value="">
-                    Select a backend wallet
-                  </option>
-                  {backendWallets
-                    .filter((wallet) => wallet.address !== fromWallet.address)
-                    .map((wallet) => (
-                      <option key={wallet.address} value={wallet.address}>
-                        {shortenAddress(wallet.address)}
-                        {wallet.label && ` (${wallet.label})`}
-                      </option>
-                    ))}
-                </Select>
-              )}
-              <FormHelperText textAlign="right">
-                <Button
-                  onClick={() => {
-                    form.resetField("toAddress");
-                    toWalletDisclosure.onToggle();
-                  }}
-                  variant="link"
-                >
-                  {toWalletDisclosure.isOpen
-                    ? "Or send to a backend wallet"
-                    : "Or send to a different wallet"}
-                </Button>
-              </FormHelperText>
-            </FormControl>
-            <FormControl isRequired>
-              <FormLabel>Amount</FormLabel>
-              <InputGroup>
-                <Input
-                  max={backendWalletBalance.displayValue}
-                  placeholder="Enter the amount to send"
-                  step="any"
-                  type="number"
-                  {...form.register("amount", { required: true })}
-                />
-                <InputRightAddon>
-                  {chain?.nativeCurrency.symbol}
-                </InputRightAddon>
-              </InputGroup>
-              <FormHelperText textAlign="right">
-                Current amount:{" "}
-                {prettyPrintCurrency({
-                  amount: backendWalletBalance.displayValue,
-                  symbol: backendWalletBalance.symbol,
-                })}
-              </FormHelperText>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Chain</FormLabel>
-              <Flex align="center" gap={2}>
-                <ChainIconClient
-                  className="size-3"
-                  client={client}
-                  src={chain?.icon?.url}
-                />
-                <Text>{chain?.name}</Text>
-              </Flex>
-            </FormControl>
-          </div>
-        </ModalBody>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Send Funds</DialogTitle>
+          <DialogDescription>Send funds to a backend wallet</DialogDescription>
+        </DialogHeader>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} variant="outline">
-            Cancel
-          </Button>
-          <Button disabled={!form.formState.isValid} type="submit">
-            Send
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4 px-4 lg:px-6 pb-8">
+              <div className="space-y-2">
+                <h3 className="text-sm text-foreground">From</h3>
+                <WalletAddress
+                  address={fromWallet.address}
+                  client={client}
+                  iconClassName="size-4"
+                  className="h-auto py-0"
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="toAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>To</FormLabel>
+                    <FormControl>
+                      {toWalletOpen ? (
+                        <Input
+                          placeholder="Enter a wallet address"
+                          {...field}
+                        />
+                      ) : (
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="bg-card">
+                            <SelectValue placeholder="Select a backend wallet" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {backendWallets
+                              .filter(
+                                (wallet) =>
+                                  wallet.address !== fromWallet.address,
+                              )
+                              .map((wallet) => (
+                                <SelectItem
+                                  key={wallet.address}
+                                  value={wallet.address}
+                                >
+                                  {shortenAddress(wallet.address)}
+                                  {wallet.label && ` (${wallet.label})`}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </FormControl>
+                    <Button
+                      onClick={() => {
+                        form.resetField("toAddress");
+                        setToWalletOpen(!toWalletOpen);
+                      }}
+                      variant="link"
+                      className="py-0 h-auto px-0 text-muted-foreground "
+                      type="button"
+                    >
+                      {toWalletOpen
+                        ? "Or send to a backend wallet"
+                        : "Or send to a different wallet"}
+                    </Button>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          step="any"
+                          type="number"
+                          {...field}
+                          className="bg-card"
+                        />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                          {chain?.nativeCurrency.symbol}
+                        </div>
+                      </div>
+                    </FormControl>
+                    <div className="text-right text-sm text-muted-foreground">
+                      Current amount:{" "}
+                      {prettyPrintCurrency({
+                        amount: backendWalletBalance.displayValue,
+                        symbol: backendWalletBalance.symbol,
+                      })}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="space-y-2">
+                <h3 className="text-sm text-foreground">Chain</h3>
+                <div className="flex items-center gap-2">
+                  <ChainIconClient
+                    className="size-3"
+                    client={client}
+                    src={chain?.icon?.url}
+                  />
+                  <span className="text-sm">{chain?.name}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 justify-end border-t bg-card p-4 lg:p-6 rounded-b-lg">
+              <Button onClick={() => onOpenChange(false)} variant="outline">
+                Cancel
+              </Button>
+              <Button
+                disabled={!form.formState.isValid}
+                type="submit"
+                className="gap-2"
+              >
+                {sendTokens.isPending && <Spinner className="size-4" />}
+                Send
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 function DeleteModal({
   backendWallet,
-  disclosure,
+  open,
+  onOpenChange,
   instanceUrl,
   authToken,
   client,
 }: {
   backendWallet: BackendWallet;
-  disclosure: UseDisclosureReturn;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
@@ -636,54 +757,56 @@ function DeleteModal({
   const [ackDeletion, setAckDeletion] = useState(false);
 
   const onClick = () => {
-    const promise = deleteBackendWallet.mutateAsync(
+    deleteBackendWallet.mutateAsync(
       { walletAddress: backendWallet.address },
       {
         onError: (error) => {
+          toast.error("Failed to delete backend wallet.", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          disclosure.onClose();
+          toast.success("Successfully deleted backend wallet.");
+          onOpenChange(false);
         },
       },
     );
-
-    toast.promise(promise, {
-      error: "Failed to delete backend wallet.",
-      success: "Successfully deleted backend wallet.",
-    });
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Delete Backend Wallet</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormItem>
-              <FormLabel>Wallet Type</FormLabel>
-              <div>
-                {
-                  EngineBackendWalletOptions.find(
-                    (opt) => opt.key === backendWallet.type,
-                  )?.name
-                }
-              </div>
-            </FormItem>
-            <FormItem>
-              <FormLabel>Wallet Address</FormLabel>
-              <WalletAddress
-                address={backendWallet.address}
-                client={client}
-                shortenAddress={false}
-              />
-            </FormItem>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Delete Backend Wallet</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this backend wallet?
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 px-4 lg:px-6 pb-8">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium">Wallet Type</h3>
+            <Badge variant="outline" className="py-1 text-sm">
+              {
+                EngineBackendWalletOptions.find(
+                  (opt) => opt.key === backendWallet.type,
+                )?.name
+              }
+            </Badge>
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium">Wallet Address</h3>
+            <WalletAddress
+              address={backendWallet.address}
+              client={client}
+              iconClassName="size-4"
+              className="h-auto py-1"
+            />
           </div>
 
           {isLocalWallet && (
-            <Alert className="mt-4" variant="warning">
+            <Alert variant="warning">
               <TriangleAlertIcon className="!text-warning-text size-4" />
               <AlertTitle>This action is irreversible.</AlertTitle>
 
@@ -699,10 +822,10 @@ function DeleteModal({
               </AlertDescription>
             </Alert>
           )}
-        </ModalBody>
+        </div>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} variant="outline">
+        <div className="flex gap-3 justify-end border-t bg-card p-4 lg:p-6">
+          <Button onClick={() => onOpenChange(false)} variant="outline">
             Close
           </Button>
           <Button
@@ -715,8 +838,8 @@ function DeleteModal({
             {deleteBackendWallet.isPending && <Spinner className="size-4" />}
             Delete
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

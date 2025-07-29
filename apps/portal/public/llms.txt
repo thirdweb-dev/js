@@ -1017,7 +1017,7 @@
 * [getProfiles](https://portal.thirdweb.com/references/typescript/v5/getProfiles): Gets the linked profiles for the connected in-app or ecosystem wallet.
 * [getUserEmail](https://portal.thirdweb.com/references/typescript/v5/getUserEmail): Retrieves the authenticated user email for the active in-app wallet.
 * [getUserPhoneNumber](https://portal.thirdweb.com/references/typescript/v5/getUserPhoneNumber): Retrieves the authenticated user phone number for the active embedded wallet.
-* [inAppWallet](https://portal.thirdweb.com/references/typescript/v5/inAppWallet): Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure).
+* [inAppWallet](https://portal.thirdweb.com/references/typescript/v5/inAppWallet): Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/wallets/users).
 * [linkProfile](https://portal.thirdweb.com/references/typescript/v5/linkProfile): Connects a new profile (and new authentication method) to the current user.
 * [preAuthenticate](https://portal.thirdweb.com/references/typescript/v5/preAuthenticate): Pre-authenticates the user based on the provided authentication strategy. Use this function to send a verification code to the user's email or phone number.
 * [privateKeyToAccount](https://portal.thirdweb.com/references/typescript/v5/privateKeyToAccount): Get an `Account` object from a private key.

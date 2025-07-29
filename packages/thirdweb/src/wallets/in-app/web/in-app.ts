@@ -1,7 +1,9 @@
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Wallet } from "../../interfaces/wallet.js";
 import { createInAppWallet } from "../core/wallet/in-app-core.js";
-import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
+import type {
+  InAppWallet,
+  InAppWalletCreationOptions,
+} from "../core/wallet/types.js";
 
 /**
  * Creates an app scoped wallet for users based on various authentication methods. Full list of available authentication methods [here](https://portal.thirdweb.com/connect/wallet/sign-in-methods/configure).
@@ -297,12 +299,30 @@ import type { InAppWalletCreationOptions } from "../core/wallet/types.js";
  * });
  * ```
  *
+ * ### Get the auth token for the wallet
+ *
+ * You can get the auth token for the wallet by calling `wallet.getAuthToken()`.
+ *
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ *
+ * const wallet = inAppWallet();
+ *
+ * await wallet.connect({
+ *   client,
+ *   strategy: "google",
+ * });
+ *
+ * const authToken = await wallet.getAuthToken(); // this will return a JWT token that can be used to authenticate the user in the backend
+ * console.log(authToken);
+ * ```
+ *
  * @returns The created in-app wallet.
  * @wallet
  */
 export function inAppWallet(
   createOptions?: InAppWalletCreationOptions,
-): Wallet<"inApp"> {
+): InAppWallet {
   return createInAppWallet({
     connectorFactory: async (client: ThirdwebClient) => {
       const { InAppWebConnector } = await import("./lib/web-connector.js");
@@ -313,5 +333,5 @@ export function inAppWallet(
       });
     },
     createOptions,
-  }) as Wallet<"inApp">;
+  }) as InAppWallet;
 }

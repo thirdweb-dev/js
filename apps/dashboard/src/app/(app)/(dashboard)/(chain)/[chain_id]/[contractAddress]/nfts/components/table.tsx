@@ -2,46 +2,32 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 
-import {
-  Flex,
-  IconButton,
-  Select,
-  Skeleton,
-  Spinner,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
 import * as Sentry from "@sentry/nextjs";
-import {
-  ArrowRightIcon,
-  ChevronFirstIcon,
-  ChevronLastIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
-import {
-  type CellProps,
-  type Column,
-  usePagination,
-  useTable,
-} from "react-table";
-import type { NFT, ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { UnexpectedValueErrorMessage } from "@/components/blocks/error-fallbacks/unexpect-value-error-message";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { MediaCell } from "@/components/contracts/media-cell";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
@@ -52,120 +38,25 @@ interface ContractOverviewNFTGetAllProps {
   tokenByIndex: boolean;
   projectMeta: ProjectMeta | undefined;
 }
-export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
+
+export function NFTGetAllTable({
   contract,
   isErc721,
   tokenByIndex,
   projectMeta,
-}) => {
-  // if it's not erc721, it's erc1155
+}: ContractOverviewNFTGetAllProps) {
   const isErc1155 = !isErc721;
 
-  const router = useDashboardRouter();
-
-  const tableColumns = useMemo(() => {
-    const cols: Column<NFT>[] = [
-      {
-        accessor: (row) =>
-          row.id?.toString().length > 8
-            ? `${row.id.toString().slice(0, 4)}...${row.id.toString().slice(-4)}`
-            : row.id?.toString(),
-        Cell: (cell: CellProps<NFT, string>) => <p>{cell.value}</p>,
-        Header: "Token Id",
-      },
-      {
-        accessor: (row) => row.metadata,
-        Cell: (cell: CellProps<NFT, NFT["metadata"]>) => (
-          <MediaCell cell={cell} client={contract.client} />
-        ),
-        Header: "Media",
-      },
-      {
-        accessor: (row) => row.metadata.name,
-        Cell: (cell: CellProps<NFT, string>) => {
-          if (typeof cell.value !== "string") {
-            return (
-              <UnexpectedValueErrorMessage
-                className="w-[300px] py-3"
-                description="Name is not a string"
-                title="Invalid Name"
-                value={cell.value}
-              />
-            );
-          }
-
-          return (
-            <p className="line-clamp-1 text-muted-foreground text-sm">
-              {cell.value}
-            </p>
-          );
-        },
-        Header: "Name",
-      },
-      {
-        accessor: (row) => row.metadata.description,
-        Cell: (cell: CellProps<NFT, string>) => {
-          if (cell.value && typeof cell.value !== "string") {
-            return (
-              <UnexpectedValueErrorMessage
-                className="w-[300px] py-3"
-                description="Description is not a string"
-                title="Invalid description"
-                value={cell.value}
-              />
-            );
-          }
-
-          return (
-            <p
-              className={cn(
-                "line-clamp-4 max-w-[200px] whitespace-normal text-muted-foreground text-sm",
-                { italic: !cell.value },
-              )}
-            >
-              {cell.value || "No description"}
-            </p>
-          );
-        },
-        Header: "Description",
-      },
-    ];
-    if (isErc721) {
-      cols.push({
-        accessor: (row) => row.owner,
-        Cell: (cell: CellProps<NFT, string>) => (
-          <WalletAddress address={cell.value} client={contract.client} />
-        ),
-        Header: "Owner",
-      });
-    }
-    if (isErc1155) {
-      cols.push({
-        accessor: (row) => row,
-        Cell: (cell: CellProps<NFT, number>) => {
-          if (cell.row.original.type === "ERC1155") {
-            return (
-              <p className="line-clamp-4 font-mono text-base">
-                {cell.row.original.supply.toString()}
-              </p>
-            );
-          }
-        },
-        Header: "Circulating Supply",
-      });
-    }
-    return cols;
-  }, [isErc721, isErc1155, contract.client]);
-
-  const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 5;
 
   const getNFTsQuery = useReadContract(
     isErc1155 ? ERC1155Ext.getNFTs : ERC721Ext.getNFTs,
     {
       contract,
-      count: queryParams.count,
+      count: pageSize,
       includeOwners: true,
-      start: queryParams.start,
+      start: currentPage * pageSize,
       tokenByIndex,
     },
   );
@@ -202,226 +93,231 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     return Number(computedSupply);
   }, [totalSupplyQuery?.data, nextTokenIdToMintQuery?.data]);
 
-  const querySuccess =
-    nextTokenIdToMintQuery.isSuccess || totalSupplyQuery.isSuccess;
-  const queryLoading =
-    nextTokenIdToMintQuery.isPending || totalSupplyQuery.isPending;
+  const totalPages = Math.max(Math.ceil(safeTotalCount / pageSize), 1);
 
   const chainSlug = useChainSlug(contract.chain.id);
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns: tableColumns,
-      data: getNFTsQuery.data || [],
-      initialState: {
-        pageIndex: 0,
-        pageSize: queryParams.count,
-      },
-      manualPagination: true,
-      pageCount: Math.max(
-        Math.ceil(safeTotalCount / (queryParams.count || 1)),
-        1,
-      ),
-    },
-    usePagination,
-  );
-
-  // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    setQueryParams({ count: pageSize, start: pageIndex * pageSize });
-  }, [pageIndex, pageSize]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page - 1);
+  };
 
   return (
-    <Flex direction="column" gap={4}>
-      <TableContainer
-        className="relative rounded-lg border border-border bg-card"
-        maxW="100%"
-      >
+    <div className="border rounded-lg overflow-hidden">
+      <TableContainer className="border-0">
         {getNFTsQuery.isFetching && (
-          <Spinner
-            color="primary"
-            position="absolute"
-            right={4}
-            size="xs"
-            top={2}
-          />
+          <div className="absolute right-4 top-2">
+            <Spinner className="h-4 w-4" />
+          </div>
         )}
-        <Table {...getTableProps()}>
-          <Thead className="!bg-background">
-            {headerGroups.map((headerGroup, headerGroupIndex) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-              <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
-                {headerGroup.headers.map((column, columnIndex) => (
-                  <Th
-                    {...column.getHeaderProps()}
-                    border="none"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={columnIndex}
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Token Id</TableHead>
+              <TableHead>Media</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
+              {isErc721 && <TableHead>Owner</TableHead>}
+              {isErc1155 && <TableHead>Circulating Supply</TableHead>}
+              {/* Need to add an empty header for the drawer button */}
+              <TableHead />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {getNFTsQuery.isFetching &&
+              Array.from({ length: pageSize }).map((_, index) => (
+                <SkeletonRow
+                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                  key={index}
+                  isErc721={isErc721}
+                  isErc1155={isErc1155}
+                />
+              ))}
+
+            {!getNFTsQuery.isFetching &&
+              (getNFTsQuery.data || []).map((row, _rowIndex) => {
+                const failedToLoad = !row.tokenURI;
+
+                const path = buildContractPagePath({
+                  chainIdOrSlug: chainSlug.toString(),
+                  contractAddress: contract.address,
+                  projectMeta,
+                  subpath: `/nfts/${row.id.toString()}`,
+                });
+
+                return (
+                  <TableRow
+                    key={row.id}
+                    linkBox
+                    className={cn(
+                      "bg-card hover:bg-accent/50 cursor-pointer",
+                      failedToLoad && "opacity-30 pointer-events-none",
+                    )}
                   >
-                    <p className="text-muted-foreground">
-                      {column.render("Header")}
-                    </p>
-                  </Th>
-                ))}
-                {/* Need to add an empty header for the drawer button */}
-                <Th border="none" key="drawer" />
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody
-            {...getTableBodyProps()}
-            className="!bg-card"
-            position="relative"
-          >
-            {page.map((row, rowIndex) => {
-              const failedToLoad = !row.original.tokenURI;
-              prepareRow(row);
-              return (
-                <Tr
-                  {...row.getRowProps()}
-                  _last={{ borderBottomWidth: 0 }}
-                  borderBottomWidth={1}
-                  borderColor="borderColor"
-                  className="bg-card hover:bg-accent/50"
-                  cursor={failedToLoad ? "not-allowed" : "pointer"}
-                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                  key={rowIndex}
-                  onClick={() => {
-                    const tokenId = row.original.id;
-                    if (!tokenId && tokenId !== 0n) {
-                      return;
-                    }
-
-                    const path = buildContractPagePath({
-                      chainIdOrSlug: chainSlug.toString(),
-                      contractAddress: contract.address,
-                      projectMeta,
-                      subpath: `/nfts/${tokenId.toString()}`,
-                    });
-
-                    router.push(path, {
-                      scroll: true,
-                    });
-                  }}
-                  opacity={failedToLoad ? 0.3 : 1}
-                  pointerEvents={failedToLoad ? "none" : "auto"}
-                  role="group"
-                  style={{ cursor: "pointer" }}
-                >
-                  {row.cells.map((cell, cellIndex) => {
-                    return (
-                      <Td
-                        {...cell.getCellProps()}
-                        borderBottomWidth="inherit"
-                        borderColor="borderColor"
-                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                        key={cellIndex}
-                        maxW="sm"
+                    {/* Token Id */}
+                    <TableCell className="max-w-sm">
+                      <Link
+                        href={path}
+                        className="before:absolute before:inset-0"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        <ErrorBoundary FallbackComponent={NFTCellErrorBoundary}>
-                          {cell.render("Cell")}
-                        </ErrorBoundary>
-                      </Td>
-                    );
-                  })}
-                  <Td borderBottomWidth="inherit" borderColor="borderColor">
-                    {!failedToLoad && <ArrowRightIcon className="size-4" />}
-                  </Td>
-                </Tr>
-              );
-            })}
-            {getNFTsQuery.isPlaceholderData && (
-              <Flex
-                _dark={{ bg: "whiteAlpha.50" }}
-                align="flex-end"
-                backdropFilter="blur(5px)"
-                bg="blackAlpha.100"
-                borderRadius="md"
-                bottom={0}
-                justify="center"
-                left={0}
-                p={8}
-                position="absolute"
-                right={0}
-                top={0}
-                zIndex="above"
-              >
-                <Flex align="center" gap={4}>
-                  <Spinner size="sm" />
-                  <p className="text-lg">Fetching new page</p>
-                </Flex>
-              </Flex>
-            )}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      <div className="flex w-full items-center justify-center">
-        <div className="flex flex-row items-center gap-1">
-          <IconButton
-            aria-label="first page"
-            icon={<ChevronFirstIcon className="size-4" />}
-            isDisabled={!canPreviousPage || queryLoading}
-            onClick={() => gotoPage(0)}
-          />
-          <IconButton
-            aria-label="previous page"
-            icon={<ChevronLeftIcon className="size-4" />}
-            isDisabled={!canPreviousPage || queryLoading}
-            onClick={() => previousPage()}
-          />
-          <p className="whitespace-nowrap">
-            Page <strong>{pageIndex + 1}</strong> of{" "}
-            <Skeleton as="span" display="inline" isLoaded={querySuccess}>
-              <strong>{pageCount}</strong>
-            </Skeleton>
-          </p>
-          <IconButton
-            aria-label="next page"
-            icon={<ChevronRightIcon className="size-4" />}
-            isDisabled={!canNextPage || queryLoading}
-            onClick={() => nextPage()}
-          />
-          <IconButton
-            aria-label="last page"
-            icon={<ChevronLastIcon className="size-4" />}
-            isDisabled={!canNextPage || queryLoading}
-            onClick={() => gotoPage(pageCount - 1)}
-          />
+                        {row.id?.toString().length > 8
+                          ? `${row.id.toString().slice(0, 4)}...${row.id.toString().slice(-4)}`
+                          : row.id?.toString()}
+                      </Link>
+                    </TableCell>
 
-          <Select
-            isDisabled={queryLoading}
-            onChange={(e) => {
-              setPageSize(Number.parseInt(e.target.value as string, 10));
-            }}
-            value={pageSize}
-          >
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="250">250</option>
-            <option value="500">500</option>
-          </Select>
-        </div>
+                    {/* Media */}
+                    <TableCell className="max-w-sm">
+                      <NFTMediaWithEmptyState
+                        className="pointer-events-none"
+                        client={contract.client}
+                        height="120px"
+                        metadata={row.metadata}
+                        requireInteraction
+                        width="120px"
+                      />
+                    </TableCell>
+
+                    {/* Name */}
+                    <TableCell className="max-w-sm">
+                      <ErrorBoundary FallbackComponent={NFTCellErrorBoundary}>
+                        {typeof row.metadata.name !== "string" ? (
+                          <UnexpectedValueErrorMessage
+                            className="w-[300px] py-3"
+                            description="Name is not a string"
+                            title="Invalid Name"
+                            value={row.metadata.name}
+                          />
+                        ) : (
+                          <p className="line-clamp-1 text-muted-foreground text-sm">
+                            {row.metadata.name}
+                          </p>
+                        )}
+                      </ErrorBoundary>
+                    </TableCell>
+
+                    {/* Description */}
+                    <TableCell className="max-w-sm">
+                      <ErrorBoundary FallbackComponent={NFTCellErrorBoundary}>
+                        {row.metadata.description &&
+                        typeof row.metadata.description !== "string" ? (
+                          <UnexpectedValueErrorMessage
+                            className="w-[300px] py-3"
+                            description="Description is not a string"
+                            title="Invalid description"
+                            value={row.metadata.description}
+                          />
+                        ) : (
+                          <p
+                            className={cn(
+                              "line-clamp-4 max-w-[200px] whitespace-normal text-muted-foreground text-sm",
+                              { italic: !row.metadata.description },
+                            )}
+                          >
+                            {row.metadata.description || "No description"}
+                          </p>
+                        )}
+                      </ErrorBoundary>
+                    </TableCell>
+
+                    {/* Owner (ERC721 only) */}
+                    {isErc721 && (
+                      <TableCell className="max-w-sm">
+                        {row.owner ? (
+                          <WalletAddress
+                            address={row.owner}
+                            client={contract.client}
+                          />
+                        ) : (
+                          <p className="text-muted-foreground">Not owned</p>
+                        )}
+                      </TableCell>
+                    )}
+
+                    {/* Circulating Supply (ERC1155 only) */}
+                    {isErc1155 && (
+                      <TableCell className="max-w-sm">
+                        {row.type === "ERC1155" && (
+                          <p className="line-clamp-4 font-mono text-base">
+                            {row.supply.toString()}
+                          </p>
+                        )}
+                      </TableCell>
+                    )}
+
+                    {/* arrow  */}
+                    <TableCell>
+                      <ArrowUpRightIcon className="size-4" />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+
+        {!getNFTsQuery.isFetching && getNFTsQuery.data?.length === 0 && (
+          <div className="flex items-center justify-center py-20 text-muted-foreground w-full text-sm">
+            No NFTs found
+          </div>
+        )}
+      </TableContainer>
+      <div className="p-6 border-t bg-card">
+        <PaginationButtons
+          activePage={currentPage + 1}
+          totalPages={totalPages}
+          onPageClick={handlePageChange}
+        />
       </div>
-    </Flex>
+    </div>
   );
-};
+}
+
+function SkeletonRow({
+  isErc721,
+  isErc1155,
+}: {
+  isErc721: boolean;
+  isErc1155: boolean;
+}) {
+  return (
+    <TableRow>
+      {/* Token Id */}
+      <TableCell className="max-w-sm">
+        <Skeleton className="h-6 w-16" />
+      </TableCell>
+      {/* Media */}
+      <TableCell className="max-w-sm">
+        <Skeleton className="size-[120px]" />
+      </TableCell>
+      {/* Name */}
+      <TableCell className="max-w-sm">
+        <Skeleton className="h-6 w-24" />
+      </TableCell>
+      {/* Description */}
+      <TableCell className="max-w-sm">
+        <Skeleton className="h-6 w-32" />
+      </TableCell>
+      {/* Owner (ERC721 only) */}
+      {isErc721 && (
+        <TableCell className="max-w-sm">
+          <Skeleton className="h-6 w-40" />
+        </TableCell>
+      )}
+      {/* Circulating Supply (ERC1155 only) */}
+      {isErc1155 && (
+        <TableCell className="max-w-sm">
+          <Skeleton className="h-6 w-20" />
+        </TableCell>
+      )}
+      {/* Drawer button */}
+      <TableCell>
+        <Skeleton className="h-4 w-4" />
+      </TableCell>
+    </TableRow>
+  );
+}
 
 function NFTCellErrorBoundary(errorProps: FallbackProps) {
   // eslint-disable-next-line no-restricted-syntax

@@ -115,9 +115,6 @@ const SENTRY_OPTIONS: SentryBuildOptions = {
 const FRAMER_ADDITIONAL_LANGUAGES = ["es"];
 
 const baseNextConfig: NextConfig = {
-  compiler: {
-    emotion: true,
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },

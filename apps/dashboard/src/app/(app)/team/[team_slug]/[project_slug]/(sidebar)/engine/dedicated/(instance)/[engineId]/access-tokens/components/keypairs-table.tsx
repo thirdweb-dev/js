@@ -1,43 +1,29 @@
-import {
-  Flex,
-  FormControl,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button } from "chakra/button";
-import { FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { TWTable } from "@/components/blocks/TWTable";
+import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { type Keypair, useEngineRemoveKeypair } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { toDateTimeLocal } from "@/utils/date-utils";
-
-interface KeypairsTableProps {
-  instanceUrl: string;
-  keypairs: Keypair[];
-  isPending: boolean;
-  isFetched: boolean;
-  authToken: string;
-}
+import { parseError } from "@/utils/errorParser";
 
 const columnHelper = createColumnHelper<Keypair>();
 
 const columns = [
   columnHelper.accessor("label", {
     cell: (cell) => {
-      return <Text>{cell.getValue()}</Text>;
+      return <span>{cell.getValue()}</span>;
     },
     header: "Label",
   }),
@@ -63,26 +49,32 @@ const columns = [
   }),
   columnHelper.accessor("algorithm", {
     cell: (cell) => {
-      return <Text>{cell.getValue()}</Text>;
+      return <span>{cell.getValue()}</span>;
     },
     header: "Type",
   }),
   columnHelper.accessor("createdAt", {
     cell: (cell) => {
-      return <Text>{toDateTimeLocal(cell.getValue())}</Text>;
+      return <span>{toDateTimeLocal(cell.getValue())}</span>;
     },
     header: "Added At",
   }),
 ];
 
-export const KeypairsTable: React.FC<KeypairsTableProps> = ({
+export function KeypairsTable({
   instanceUrl,
   keypairs,
   isPending,
   isFetched,
   authToken,
-}) => {
-  const removeDisclosure = useDisclosure();
+}: {
+  instanceUrl: string;
+  keypairs: Keypair[];
+  isPending: boolean;
+  isFetched: boolean;
+  authToken: string;
+}) {
+  const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
   const [selectedKeypair, setSelectedKeypair] = useState<Keypair>();
 
   return (
@@ -98,7 +90,7 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
             isDestructive: true,
             onClick: (keypair) => {
               setSelectedKeypair(keypair);
-              removeDisclosure.onOpen();
+              setIsRemoveDialogOpen(true);
             },
             text: "Remove",
           },
@@ -106,99 +98,93 @@ export const KeypairsTable: React.FC<KeypairsTableProps> = ({
         title="public keys"
       />
 
-      {selectedKeypair && removeDisclosure.isOpen && (
-        <RemoveModal
+      {selectedKeypair && (
+        <RemoveDialog
           authToken={authToken}
-          disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
           keypair={selectedKeypair}
+          isOpen={isRemoveDialogOpen}
+          onOpenChange={setIsRemoveDialogOpen}
         />
       )}
     </>
   );
-};
+}
 
-const RemoveModal = ({
+function RemoveDialog({
   keypair,
-  disclosure,
   instanceUrl,
   authToken,
+  isOpen,
+  onOpenChange,
 }: {
   keypair: Keypair;
-  disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
-}) => {
-  const { mutate: revokeKeypair } = useEngineRemoveKeypair({
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const removeKeypairMutation = useEngineRemoveKeypair({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully removed public key",
-    "Failed to remove public key",
-  );
-
   const onClick = () => {
-    revokeKeypair(
+    removeKeypairMutation.mutate(
       { hash: keypair.hash },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to remove public key.", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Public key removed successfully.");
+          onOpenChange(false);
         },
       },
     );
   };
 
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Remove Keypair</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <Text>Are you sure you want to remove this keypair?</Text>
-            <Text>
-              Access tokens signed by the private key for this keypair will no
-              longer be valid.
-            </Text>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6 border-b border-dashed">
+          <DialogTitle>Remove Keypair</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to remove this keypair? Access tokens signed
+            by the private key for this keypair will no longer be valid.
+          </DialogDescription>
+        </DialogHeader>
 
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Text>{keypair.label}</Text>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Type</FormLabel>
-              <Text>{keypair.algorithm}</Text>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Public Key</FormLabel>
-              <Flex overflowX="scroll">
-                <Text fontFamily="mono" fontSize="small" whiteSpace="pre-line">
-                  {keypair.publicKey}
-                </Text>
-              </Flex>
-            </FormControl>
+        <div className="flex flex-col gap-4 overflow-hidden px-4 lg:px-6 pb-8 pt-6">
+          <div className="space-y-1.">
+            <h3 className="text-sm font-medium">Label</h3>
+            <p className="text-sm text-muted-foreground">{keypair.label}</p>
           </div>
-        </ModalBody>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium">Type</h3>
+            <p className="text-sm text-muted-foreground">{keypair.algorithm}</p>
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="text-sm font-medium">Public Key</h3>
+            <PlainTextCodeBlock code={keypair.publicKey} />
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 p-4 lg:p-6 bg-card border-t">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={onClick} type="submit">
+          <Button variant="destructive" onClick={onClick} className="gap-2">
+            {removeKeypairMutation.isPending && <Spinner className="size-4" />}
             Remove
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
+}

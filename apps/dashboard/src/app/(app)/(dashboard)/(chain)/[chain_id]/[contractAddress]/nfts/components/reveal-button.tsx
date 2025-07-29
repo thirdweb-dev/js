@@ -1,7 +1,6 @@
 "use client";
 
-import { FormControl, Input, Select } from "@chakra-ui/react";
-import { FormErrorMessage, FormLabel } from "chakra/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,9 +8,26 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { getBatchesToReveal, reveal } from "thirdweb/extensions/erc721";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import * as z from "zod";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -20,29 +36,35 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { parseError } from "@/utils/errorParser";
 
-interface NFTRevealButtonProps {
-  contract: ThirdwebContract;
-  isLoggedIn: boolean;
-}
+const revealFormSchema = z.object({
+  batchId: z.string().min(1, "Please select a batch"),
+  password: z.string().min(1, "Password is required"),
+});
 
-const REVEAL_FORM_ID = "reveal-form";
+type RevealFormData = z.infer<typeof revealFormSchema>;
 
-export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
+export function NFTRevealButton({
   contract,
   isLoggedIn,
-}) => {
+}: {
+  contract: ThirdwebContract;
+  isLoggedIn: boolean;
+}) {
   const batchesQuery = useReadContract(getBatchesToReveal, {
     contract,
   });
 
   const sendTxMutation = useSendAndConfirmTransaction();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm<{ batchId: string; password: string }>();
+  const form = useForm<RevealFormData>({
+    resolver: zodResolver(revealFormSchema),
+    defaultValues: {
+      batchId: "",
+      password: "",
+    },
+  });
 
   const [open, setOpen] = useState(false);
 
@@ -67,6 +89,27 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
     );
   }
 
+  const onSubmit = async (data: RevealFormData) => {
+    const tx = reveal({
+      batchId: BigInt(data.batchId),
+      contract,
+      password: data.password,
+    });
+
+    await sendTxMutation.mutateAsync(tx, {
+      onError: (error) => {
+        toast.error("Failed to reveal batch", {
+          description: parseError(error),
+        });
+        console.error(error);
+      },
+      onSuccess: () => {
+        toast.success("Batch revealed successfully");
+        setOpen(false);
+      },
+    });
+  };
+
   return (
     <MinterOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
@@ -75,80 +118,80 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
             <EyeIcon className="size-4" /> Reveal NFTs
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+        <SheetContent className="!w-full lg:!max-w-lg">
           <SheetHeader>
             <SheetTitle className="text-left">Reveal batch</SheetTitle>
           </SheetHeader>
-          <form
-            className="mt-10 flex flex-col gap-6"
-            id={REVEAL_FORM_ID}
-            onSubmit={handleSubmit((data) => {
-              const tx = reveal({
-                batchId: BigInt(data.batchId),
-                contract,
-                password: data.password,
-              });
-
-              const promise = sendTxMutation.mutateAsync(tx, {
-                onError: (error) => {
-                  console.error(error);
-                },
-                onSuccess: () => {
-                  setOpen(false);
-                },
-              });
-
-              toast.promise(promise, {
-                error: "Failed to reveal batch",
-                loading: "Revealing batch",
-                success: "Batch revealed successfully",
-              });
-            })}
-          >
-            <FormControl isInvalid={!!errors.password} isRequired mr={4}>
-              <FormLabel>Select a batch</FormLabel>
-              <Select {...register("batchId")} autoFocus>
-                {batchesQuery.data.map((batch) => (
-                  <option
-                    disabled={batch.batchUri === "0x"}
-                    key={batch.batchId.toString()}
-                    value={batch.batchId.toString()}
-                  >
-                    {batch.placeholderMetadata?.name ||
-                      batch.batchId.toString()}{" "}
-                    {batch.batchUri === "0x" && "(REVEALED)"}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.password} isRequired mr={4}>
-              <FormLabel>Password</FormLabel>
-              <Input
-                {...register("password")}
-                autoFocus
-                placeholder="The one you used to upload this batch"
-                type="password"
-              />
-              <FormErrorMessage>{errors?.password?.message}</FormErrorMessage>
-            </FormControl>
-          </form>
-          <div className="mt-4 flex justify-end">
-            <TransactionButton
-              client={contract.client}
-              disabled={!isDirty}
-              form={REVEAL_FORM_ID}
-              isLoggedIn={isLoggedIn}
-              isPending={sendTxMutation.isPending}
-              transactionCount={1}
-              txChainID={contract.chain.id}
-              type="submit"
+          <Form {...form}>
+            <form
+              className="mt-4 space-y-6"
+              onSubmit={form.handleSubmit(onSubmit)}
             >
-              Reveal NFTs
-            </TransactionButton>
-          </div>
+              <FormField
+                control={form.control}
+                name="batchId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select a batch</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="bg-card">
+                          <SelectValue placeholder="Select a batch" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {batchesQuery.data.map((batch) => (
+                          <SelectItem
+                            disabled={batch.batchUri === "0x"}
+                            key={batch.batchId.toString()}
+                            value={batch.batchId.toString()}
+                          >
+                            {batch.placeholderMetadata?.name ||
+                              batch.batchId.toString()}{" "}
+                            {batch.batchUri === "0x" && "(REVEALED)"}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="The one you used to upload this batch"
+                        type="password"
+                        className="bg-card"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end">
+                <TransactionButton
+                  client={contract.client}
+                  isLoggedIn={isLoggedIn}
+                  isPending={sendTxMutation.isPending}
+                  transactionCount={1}
+                  txChainID={contract.chain.id}
+                  type="submit"
+                >
+                  Reveal NFTs
+                </TransactionButton>
+              </div>
+            </form>
+          </Form>
         </SheetContent>
       </Sheet>
     </MinterOnly>
   );
-};
+}

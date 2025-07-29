@@ -4,24 +4,14 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { encode } from "../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import { type Address, getAddress } from "../../utils/address.js";
+import { getAddress } from "../../utils/address.js";
 import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
-import { stringify } from "../../utils/json.js";
 import {
   type PromisedObject,
   resolvePromisedValue,
 } from "../../utils/promise/resolve-promised-value.js";
 import type { OneOf, Prettify } from "../../utils/type-utils.js";
-import {
-  type CoinbaseWalletCreationOptions,
-  isCoinbaseSDKWallet,
-} from "../coinbase/coinbase-web.js";
-import { isInAppWallet } from "../in-app/core/wallet/index.js";
-import { getInjectedProvider } from "../injected/index.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
-import type { Wallet } from "../interfaces/wallet.js";
-import { isSmartWallet } from "../smart/index.js";
-import { isWalletConnect } from "../wallet-connect/controller.js";
+import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { WalletId } from "../wallet-types.js";
 import type {
   EIP5792Call,
@@ -129,19 +119,7 @@ export type SendCallsResult = Prettify<{
 export async function sendCalls<const ID extends WalletId>(
   options: SendCallsOptions<ID>,
 ): Promise<SendCallsResult> {
-  const {
-    wallet,
-    calls,
-    capabilities,
-    version = "2.0.0",
-    chain = wallet.getChain(),
-  } = options;
-
-  if (!chain) {
-    throw new Error(
-      `Cannot send calls, no active chain found for wallet: ${wallet.id}`,
-    );
-  }
+  const { wallet, chain } = options;
 
   const account = wallet.getAccount();
   if (!account) {
@@ -154,16 +132,43 @@ export async function sendCalls<const ID extends WalletId>(
   if (!firstCall) {
     throw new Error("No calls to send");
   }
-  const client = firstCall.client;
 
-  // These conveniently operate the same
-  if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
-    const { inAppWalletSendCalls } = await import(
-      "../in-app/core/eip5972/in-app-wallet-calls.js"
-    );
-    const id = await inAppWalletSendCalls({ account, calls });
-    return { chain, client, id, wallet };
+  const callChain = firstCall.chain || chain;
+
+  if (wallet.getChain()?.id !== callChain.id) {
+    await wallet.switchChain(callChain);
   }
+
+  // check internal implementations
+  if (account.sendCalls) {
+    const { wallet: _, ...optionsWithoutWallet } = options;
+    const result = await account.sendCalls(optionsWithoutWallet);
+    return {
+      ...result,
+      wallet,
+    };
+  }
+
+  throw new Error(
+    `Cannot send calls, wallet ${wallet.id} does not support EIP-5792`,
+  );
+}
+
+export async function toProviderCallParams(
+  options: Omit<SendCallsOptions, "wallet">,
+  account: Account,
+): Promise<{ callParams: ViemWalletSendCallsParameters; chain: Chain }> {
+  const firstCall = options.calls[0];
+  if (!firstCall) {
+    throw new Error("No calls to send");
+  }
+
+  const {
+    calls,
+    capabilities,
+    version = "2.0.0",
+    chain = firstCall.chain,
+  } = options;
 
   const preparedCalls: EIP5792Call[] = await Promise.all(
     calls.map(async (call) => {
@@ -178,18 +183,26 @@ export async function sendCalls<const ID extends WalletId>(
         resolvePromisedValue(value),
       ]);
 
+      if (_to) {
+        return {
+          data: _data as Hex,
+          to: getAddress(_to),
+          value:
+            typeof _value === "bigint" || typeof _value === "number"
+              ? numberToHex(_value)
+              : undefined,
+        };
+      }
+
       return {
         data: _data as Hex,
-        to: _to as Address,
-        value:
-          typeof _value === "bigint" || typeof _value === "number"
-            ? numberToHex(_value)
-            : undefined,
+        to: undefined,
+        value: undefined,
       };
     }),
   );
 
-  const injectedWalletCallParams: WalletSendCallsParameters = [
+  const injectedWalletCallParams: ViemWalletSendCallsParameters = [
     {
       // see: https://eips.ethereum.org/EIPS/eip-5792#wallet_sendcalls
       atomicRequired: options.atomicRequired ?? false,
@@ -201,36 +214,5 @@ export async function sendCalls<const ID extends WalletId>(
     },
   ];
 
-  if (isWalletConnect(wallet)) {
-    throw new Error("sendCalls is not yet supported for Wallet Connect");
-  }
-
-  let provider: Ethereum;
-  if (isCoinbaseSDKWallet(wallet)) {
-    const { getCoinbaseWebProvider } = await import(
-      "../coinbase/coinbase-web.js"
-    );
-    const config = wallet.getConfig() as CoinbaseWalletCreationOptions;
-    provider = (await getCoinbaseWebProvider(config)) as Ethereum;
-  } else {
-    provider = getInjectedProvider(wallet.id);
-  }
-
-  try {
-    const callId = await provider.request({
-      method: "wallet_sendCalls",
-      params: injectedWalletCallParams as ViemWalletSendCallsParameters, // The viem type definition is slightly different
-    });
-    if (typeof callId === "object" && "id" in callId) {
-      return { chain, client, id: callId.id, wallet };
-    }
-    return { chain, client, id: callId, wallet };
-  } catch (error) {
-    if (/unsupport|not support/i.test((error as Error).message)) {
-      throw new Error(
-        `${wallet.id} errored calling wallet_sendCalls, with error: ${error instanceof Error ? error.message : stringify(error)}`,
-      );
-    }
-    throw error;
-  }
+  return { callParams: injectedWalletCallParams, chain };
 }

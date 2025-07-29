@@ -1,46 +1,42 @@
 "use client";
 
-import { Heading } from "chakra/heading";
-import { Link } from "chakra/link";
-import { Text } from "chakra/text";
 import type { ThirdwebClient } from "thirdweb";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useEngineRelayer } from "@/hooks/useEngine";
 import { AddRelayerButton } from "./add-relayer-button";
 import { RelayersTable } from "./relayers-table";
 
-interface EngineRelayerProps {
-  instanceUrl: string;
-  authToken: string;
-  client: ThirdwebClient;
-}
-
-export const EngineRelayer: React.FC<EngineRelayerProps> = ({
+export function EngineRelayer({
   instanceUrl,
   authToken,
   client,
-}) => {
+}: {
+  instanceUrl: string;
+  authToken: string;
+  client: ThirdwebClient;
+}) {
   const relayers = useEngineRelayer({
     authToken,
     instanceUrl,
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <Heading size="title.md">Relayers</Heading>
-        <Text>
-          Use relayers to submit transactions from your backend wallets on
-          behalf of your users.{" "}
-          <Link
-            color="primary.500"
-            href="https://portal.thirdweb.com/engine/features/relayers"
-            isExternal
-          >
-            Learn more about relayers
-          </Link>
-          .
-        </Text>
-      </div>
+    <div>
+      <h2 className="text-2xl font-semibold tracking-tight mb-1">Relayers</h2>
+      <p className="text-muted-foreground text-sm">
+        Use relayers to submit transactions from your backend wallets on behalf
+        of your users.{" "}
+        <UnderlineLink
+          href="https://portal.thirdweb.com/engine/features/relayers"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more about relayers
+        </UnderlineLink>
+        .
+      </p>
+
+      <div className="h-4" />
 
       <RelayersTable
         authToken={authToken}
@@ -50,11 +46,16 @@ export const EngineRelayer: React.FC<EngineRelayerProps> = ({
         isPending={relayers.isPending}
         relayers={relayers.data || []}
       />
-      <AddRelayerButton
-        authToken={authToken}
-        client={client}
-        instanceUrl={instanceUrl}
-      />
+
+      <div className="h-4" />
+
+      <div className="flex justify-end">
+        <AddRelayerButton
+          authToken={authToken}
+          client={client}
+          instanceUrl={instanceUrl}
+        />
+      </div>
     </div>
   );
-};
+}

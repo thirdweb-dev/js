@@ -1,40 +1,32 @@
 "use client";
 
-import { Divider, Flex, GridItem, List, ListItem } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { LinkButton } from "chakra/button";
-import { Card } from "chakra/card";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { format } from "date-fns";
 import {
   BookOpenTextIcon,
   CalendarDaysIcon,
   ExternalLinkIcon,
-  PencilIcon,
   ServerIcon,
   ShieldCheckIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
-import { PublisherHeader } from "@/components//contract-components/publisher/publisher-header";
+import { PublisherLink } from "@/components//contract-components/publisher/publisher-header";
 import { MarkdownRenderer } from "@/components/blocks/markdown-renderer";
 import type { PublishedContractWithVersion } from "@/components/contract-components/fetch-contracts-with-versions";
 import { ContractFunctionsOverview } from "@/components/contracts/functions/contract-functions";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   usePublishedContractEvents,
   usePublishedContractFunctions,
 } from "@/hooks/contract-hooks";
 import { correctAndUniqueLicenses } from "@/lib/licenses";
-import { replaceIpfsUrl } from "@/lib/sdk";
+import { publicIPFSGateway } from "@/lib/sdk";
+import { cn } from "@/lib/utils";
 
-interface ExtendedPublishedContract extends PublishedContractWithVersion {
+type ExtendedPublishedContract = PublishedContractWithVersion & {
   name: string;
   displayName?: string;
   description?: string;
@@ -43,21 +35,19 @@ interface ExtendedPublishedContract extends PublishedContractWithVersion {
   tags?: string[];
   logo?: string;
   audit?: string;
-}
+};
 
-interface PublishedContractProps {
-  publishedContract: ExtendedPublishedContract;
-  isLoggedIn: boolean;
-  client: ThirdwebClient;
-}
-
-export const PublishedContract: React.FC<PublishedContractProps> = ({
+export function PublishedContract({
   publishedContract,
   isLoggedIn,
   client,
-}) => {
-  const address = useActiveAccount()?.address;
-
+  maxWidthClassName,
+}: {
+  publishedContract: ExtendedPublishedContract;
+  isLoggedIn: boolean;
+  client: ThirdwebClient;
+  maxWidthClassName?: string;
+}) {
   const contractFunctions = usePublishedContractFunctions(publishedContract);
   const contractEvents = usePublishedContractEvents(publishedContract);
 
@@ -108,164 +98,143 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
   );
 
   return (
-    <>
-      <GridItem colSpan={{ base: 12, md: 9 }}>
-        <Flex flexDir="column" gap={6}>
-          {address === publishedContract.publisher && (
-            <LinkButton
-              href={`/contracts/publish/${encodeURIComponent(
-                publishedContract.publishMetadataUri.replace("ipfs://", ""),
-              )}`}
-              leftIcon={<PencilIcon className="size-3" />}
-              ml="auto"
-              size="sm"
-              variant="outline"
-            >
-              Edit
-            </LinkButton>
-          )}
-          {publishedContract?.readme && (
-            <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
-              <MarkdownRenderer markdownText={publishedContract?.readme} />
-            </Card>
-          )}
-
-          {publishedContract?.changelog && (
-            <Card as={Flex} flexDir="column" gap={2} p={0}>
-              <Heading pb={2} pt={5} px={6} size="title.sm">
-                {publishedContract?.version} Release Notes
-              </Heading>
-              <Divider />
-
-              <MarkdownRenderer
-                className="px-6 pt-2 pb-5"
-                markdownText={publishedContract?.changelog}
-              />
-            </Card>
-          )}
-          {contractFunctions && (
-            <Card p={0}>
-              <ContractFunctionsOverview
-                abi={publishedContract?.abi}
-                events={contractEvents}
-                functions={contractFunctions}
-                isLoggedIn={isLoggedIn}
-                sources={sources.data}
-              />
-            </Card>
-          )}
-        </Flex>
-      </GridItem>
-
-      <GridItem colSpan={{ base: 12, md: 3 }}>
-        <Flex flexDir="column" gap={6}>
-          {publishedContract.publisher && (
-            <PublisherHeader
+    <div>
+      {/* right side content moved below changelog */}
+      {publishedContract.publisher && (
+        <div className="border-b py-6">
+          <div
+            className={cn(
+              "flex flex-col md:flex-row lg:items-center gap-6 justify-between flex-wrap",
+              maxWidthClassName,
+            )}
+          >
+            <PublisherLink
               client={client}
               wallet={publishedContract.publisher}
             />
-          )}
 
-          <Separator />
-
-          <div className="flex flex-col gap-4">
-            <h4 className="font-semibold text-xl tracking-tight">Details</h4>
-            <List as={Flex} flexDir="column" gap={5}>
+            <ul className="flex flex-col md:flex-row gap-8 lg:items-center lg:gap-6">
+              {/* timestamp */}
               {publishedContract.publishTimestamp && (
-                <ListItem>
-                  <Flex alignItems="flex-start" gap={3}>
-                    <CalendarDaysIcon className="size-5 text-muted-foreground" />
-                    <Flex direction="column" gap={1}>
-                      <Heading as="h5" size="label.sm">
-                        Publish Date
-                      </Heading>
-                      <Text lineHeight={1.2} size="body.md">
-                        {publishDate}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </ListItem>
+                <li className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-full border bg-card">
+                    <CalendarDaysIcon className="size-4 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-1.5 [&>*]:leading-none">
+                    <h5 className="text-sm font-medium">Publish Date</h5>
+                    <p className="text-sm text-muted-foreground">
+                      {publishDate}
+                    </p>
+                  </div>
+                </li>
               )}
+
+              {/* audit */}
               {publishedContract?.audit && (
-                <ListItem>
-                  <Flex alignItems="flex-start" gap={3}>
-                    <ShieldCheckIcon className="size-5 text-green-500" />
-                    <Flex direction="column" gap={1}>
-                      <Heading as="h5" size="label.sm">
-                        Audit Report
-                      </Heading>
-                      <Text lineHeight={1.2} size="body.md">
-                        <Link
-                          className="text-link-foreground hover:text-foreground"
-                          href={replaceIpfsUrl(publishedContract.audit, client)}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          View Audit Report
-                        </Link>
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </ListItem>
+                <li>
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-full border bg-card">
+                      <ShieldCheckIcon className="size-4 text-muted-foreground" />
+                    </div>
+                    <div className="space-y-1.5 [&>*]:leading-none">
+                      <h5 className="text-sm font-medium">Audit Report</h5>
+                      <Link
+                        href={publicIPFSGateway(publishedContract.audit)}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                        className="flex items-center gap-2 text-sm hover:underline leading-none text-muted-foreground hover:text-foreground"
+                      >
+                        View Audit Report
+                        <ExternalLinkIcon className="size-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </li>
               )}
-              <ListItem>
-                <Flex alignItems="flex-start" gap={3}>
-                  <BookOpenTextIcon className="size-5 text-muted-foreground" />
-                  <Flex direction="column" gap={1}>
-                    <Heading as="h5" size="label.sm">
-                      License
-                      {licenses.length > 1 ? "s" : ""}
-                    </Heading>
-                    <Text lineHeight={1.2} size="body.md">
-                      {licenses.join(", ") || "None"}
-                    </Text>
-                  </Flex>
-                </Flex>
-              </ListItem>
+
+              {/* license */}
+              <li className="flex items-center gap-2.5">
+                <div className="p-2 rounded-full border bg-card">
+                  <BookOpenTextIcon className="size-4 text-muted-foreground" />
+                </div>
+                <div className="space-y-1.5 [&>*]:leading-none">
+                  <h5 className="text-sm font-medium">
+                    License{licenses.length > 1 ? "s" : ""}
+                  </h5>
+                  <p className="text-sm text-muted-foreground">
+                    {licenses.join(", ") || "None"}
+                  </p>
+                </div>
+              </li>
+
               {(publishedContract?.isDeployableViaProxy &&
                 hasImplementationAddresses) ||
               (publishedContract?.isDeployableViaFactory &&
                 hasFactoryAddresses) ? (
-                <ListItem>
-                  <Flex alignItems="flex-start" gap={2}>
-                    <ServerIcon className="size-5 text-muted-foreground" />
-                    <Flex direction="column" gap={1}>
-                      <Heading as="h5" size="label.sm">
-                        {publishedContract?.isDeployableViaFactory
-                          ? "Factory"
-                          : "Proxy"}{" "}
-                        Enabled
-                      </Heading>
-                    </Flex>
-                  </Flex>
-                </ListItem>
+                <li className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-full border bg-card">
+                    <ServerIcon className="size-4 text-muted-foreground" />
+                  </div>
+                  <h5 className="text-sm font-medium">
+                    {publishedContract?.isDeployableViaFactory
+                      ? "Factory"
+                      : "Proxy"}{" "}
+                    Enabled
+                  </h5>
+                </li>
               ) : null}
-            </List>
+            </ul>
           </div>
+        </div>
+      )}
 
-          <Separator />
+      <div className={cn("py-8 space-y-8", maxWidthClassName)}>
+        {/* main content */}
+        <div className="space-y-6">
+          {/* readme */}
+          {publishedContract?.readme && (
+            <div className="overflow-hidden">
+              <MarkdownRenderer markdownText={publishedContract?.readme} />
+            </div>
+          )}
 
-          <Button asChild className="w-full gap-2 bg-card" variant="outline">
-            <Link
-              href="https://portal.thirdweb.com/contracts/publish/overview"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more about Publish{" "}
-              <ExternalLinkIcon className="size-4 text-muted-foreground" />
-            </Link>
-          </Button>
-        </Flex>
-      </GridItem>
-    </>
+          {/* changelog */}
+          {publishedContract?.changelog && (
+            <div className="overflow-hidden">
+              <div className="border-b border-dashed pb-3 mb-3">
+                <h3 className="text-lg font-semibold">
+                  {publishedContract?.version} Release Notes
+                </h3>
+              </div>
+              <MarkdownRenderer
+                markdownText={publishedContract?.changelog}
+                p={{
+                  className: "text-sm leading-6",
+                }}
+              />
+            </div>
+          )}
+
+          {contractFunctions && (
+            <ContractFunctionsOverview
+              abi={publishedContract?.abi}
+              events={contractEvents}
+              functions={contractFunctions}
+              isLoggedIn={isLoggedIn}
+              sources={sources.data}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
-};
+}
 
-// TODO: find a place to put this
 type ContractSource = {
   filename: string;
   source: string;
 };
+
 async function fetchSourceFilesFromMetadata(
   publishedMetadata: ExtendedPublishedContract,
   client: ThirdwebClient,

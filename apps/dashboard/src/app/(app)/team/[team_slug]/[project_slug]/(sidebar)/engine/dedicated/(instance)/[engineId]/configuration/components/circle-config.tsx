@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SaveIcon } from "lucide-react";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
@@ -58,55 +59,61 @@ export const CircleConfig: React.FC<CircleConfigProps> = ({
   const circleApiKeyId = useId();
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <p className="text-muted-foreground">
-          Circle wallets require an API Key from your Circle account with
-          sufficient permissions. Created wallets are stored in your AWS
-          account. Configure your Circle API Key to use Circle wallets. Learn
-          more about{" "}
-          <Link
-            className="text-link-foreground hover:text-foreground"
-            href="https://portal.thirdweb.com/engine/features/backend-wallets#circle-wallet"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            how to get an API Key
-          </Link>
-          .
-        </p>
-      </div>
-
+    <div className="bg-card rounded-lg border mb-8">
       <Form {...form}>
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FormFieldSetup
-            errorMessage={
-              form.getFieldState("circleApiKey", form.formState).error?.message
-            }
-            htmlFor={circleApiKeyId}
-            isRequired
-            label="Circle API Key"
-            tooltip={null}
-          >
-            <Input
-              autoComplete="off"
-              id={circleApiKeyId}
-              placeholder="TEST_API_KEY:..."
-              type="password"
-              {...form.register("circleApiKey")}
-            />
-          </FormFieldSetup>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="p-4 lg:p-6">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold mb-1">Credentials</h2>
 
-          <div className="flex items-center justify-end gap-4">
+              <p className="text-muted-foreground text-sm">
+                Circle wallets require an API Key from your Circle account with
+                sufficient permissions. <br /> Created wallets are stored in
+                your AWS account. Configure your Circle API Key to use Circle
+                wallets. Learn more about{" "}
+                <UnderlineLink
+                  href="https://portal.thirdweb.com/engine/features/backend-wallets#circle-wallet"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  how to get an API Key
+                </UnderlineLink>
+                .
+              </p>
+            </div>
+
+            <FormFieldSetup
+              errorMessage={
+                form.getFieldState("circleApiKey", form.formState).error
+                  ?.message
+              }
+              htmlFor={circleApiKeyId}
+              isRequired
+              label="Circle API Key"
+              tooltip={null}
+            >
+              <Input
+                autoComplete="off"
+                id={circleApiKeyId}
+                placeholder="TEST_API_KEY:..."
+                type="password"
+                {...form.register("circleApiKey")}
+              />
+            </FormFieldSetup>
+          </div>
+
+          <div className="flex items-center justify-end gap-4 border-t border-dashed px-4 py-4 lg:px-6">
             <Button
-              className="min-w-28 gap-2"
-              disabled={isPending}
+              className="gap-2"
+              disabled={isPending || !form.formState.isDirty}
+              size="sm"
               type="submit"
             >
-              {isPending && <Spinner className="size-4" />}
+              {isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <SaveIcon className="size-4" />
+              )}
               Save
             </Button>
           </div>

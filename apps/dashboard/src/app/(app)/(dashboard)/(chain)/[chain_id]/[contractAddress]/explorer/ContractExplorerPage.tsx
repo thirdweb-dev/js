@@ -3,7 +3,7 @@ import { CircleAlertIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractFunctionsFromAbi } from "@/components/contract-components/getContractFunctionsFromAbi";
-import { ContractFunctionsOverview } from "@/components/contracts/functions/contract-functions";
+import { ContractFunctionsPanel } from "@/components/contracts/functions/contract-function";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ContractExplorePageProps {
@@ -34,13 +34,12 @@ export const ContractExplorerPage: React.FC<ContractExplorePageProps> = ({
 
   const functions = getContractFunctionsFromAbi(abi);
   return (
-    <div className="flex h-[70vh] flex-col ">
+    <div className="flex h-[70vh] flex-col">
       {functions && functions.length > 0 ? (
-        <ContractFunctionsOverview
+        <ContractFunctionsPanel
           contract={contract}
-          functions={functions}
+          fnsOrEvents={functions}
           isLoggedIn={isLoggedIn}
-          onlyFunctions
         />
       ) : (
         <div className="flex flex-col items-center justify-center gap-2 bg-card text-center">

@@ -1,15 +1,4 @@
-import {
-  Flex,
-  FormControl,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Tooltip,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { FormErrorMessage, FormLabel } from "chakra/form";
-import { BanIcon, PlusIcon, TrashIcon, UploadIcon, XIcon } from "lucide-react";
+import { PlusIcon, TrashIcon, XIcon } from "lucide-react";
 import { useEffect } from "react";
 import {
   type ArrayPath,
@@ -25,7 +14,16 @@ import {
   type WatchObserver,
 } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
-import { FileInput } from "@/components/blocks/FileInput";
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 type OptionalPropertiesInput = {
   [key: string]: string | number;
@@ -46,17 +44,15 @@ interface IPropertiesFormControlProps<
   client: ThirdwebClient;
 }
 
-export const PropertiesFormControl = <
+export function PropertiesFormControl<
   TFieldValues extends IPropertyFieldValues,
 >({
   control,
-  register,
   watch,
   errors,
   setValue,
-  client,
-}: React.PropsWithChildren<IPropertiesFormControlProps<TFieldValues>>) => {
-  const { fields, append, remove, replace } = useFieldArray({
+}: React.PropsWithChildren<IPropertiesFormControlProps<TFieldValues>>) {
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "attributes" as ArrayPath<TFieldValues>,
   });
@@ -72,19 +68,7 @@ export const PropertiesFormControl = <
 
   return (
     <div className="flex flex-col gap-4">
-      <Flex align="center" direction="row" justify="space-between">
-        <FormLabel m={0}>Attributes</FormLabel>
-        <Button
-          colorScheme="red"
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          onClick={() => replace([{ trait_type: "", value: "" } as any])}
-          rightIcon={<BanIcon className="size-4" />}
-          size="xs"
-          variant="outline"
-        >
-          Reset
-        </Button>
-      </Flex>
+      <FormLabel>Attributes</FormLabel>
       {fields.map((field, index) => {
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         const keyError = (errors as any)?.attributes?.[index]?.trait_type
@@ -92,102 +76,108 @@ export const PropertiesFormControl = <
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         const valueError = (errors as any)?.attributes?.[index]?.value
           ?.message as string | undefined;
-        const isInvalid = !!(keyError || valueError);
+        const _isInvalid = !!(keyError || valueError);
 
         return (
           <div className="flex flex-row items-center gap-2" key={field.id}>
-            <FormControl
-              className="flex flex-row items-start gap-3"
-              isInvalid={isInvalid}
-            >
-              <FormControl isInvalid={!!keyError}>
-                <Input
-                  {...register(
-                    `attributes.${index}.trait_type` as Path<TFieldValues>,
-                  )}
-                  placeholder="trait_type"
-                />
-                <FormErrorMessage>{keyError}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!valueError}>
-                {watch(
-                  `attributes.${index}.value` as unknown as WatchObserver<TFieldValues>,
-                ) instanceof File ? (
-                  <InputGroup>
-                    <Input
-                      isDisabled
-                      value={
-                        watch(`attributes.${index}.value` as Path<TFieldValues>)
-                          .name
-                      }
-                    />
-                    <InputRightElement>
-                      <TrashIcon
-                        className="size-4 cursor-pointer text-red-300 hover:text-red-200"
-                        onClick={() =>
-                          setValue(
-                            `attributes.${index}.value` as Path<TFieldValues>,
-                            "" as PathValue<TFieldValues, Path<TFieldValues>>,
-                          )
-                        }
+            <div className="flex flex-row items-start gap-3 flex-1">
+              <FormField
+                control={control}
+                name={`attributes.${index}.trait_type` as Path<TFieldValues>}
+                render={({ field: traitField }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      <Input
+                        {...traitField}
+                        placeholder="trait_type"
+                        className={cn(
+                          "bg-card",
+                          keyError && "border-destructive",
+                        )}
                       />
-                    </InputRightElement>
-                  </InputGroup>
-                ) : (
-                  <InputGroup>
-                    <Input
-                      {...register(
-                        `attributes.${index}.value` as Path<TFieldValues>,
-                      )}
-                      placeholder="value"
-                    />
-                    <InputRightElement>
-                      <Tooltip label="Upload file" shouldWrapChildren>
-                        <FileInput
-                          client={client}
-                          setValue={(file) => {
-                            setValue(
-                              `attributes.${index}.value` as Path<TFieldValues>,
-                              file as PathValue<
-                                TFieldValues,
-                                Path<TFieldValues>
-                              >,
-                            );
-                          }}
-                        >
-                          <UploadIcon className="size-4 text-muted-foreground" />
-                        </FileInput>
-                      </Tooltip>
-                    </InputRightElement>
-                  </InputGroup>
+                    </FormControl>
+                    {keyError && <FormMessage>{keyError}</FormMessage>}
+                  </FormItem>
                 )}
-                <FormErrorMessage>{valueError}</FormErrorMessage>
-              </FormControl>
-            </FormControl>
-            <IconButton
-              aria-label="remove key value pair"
-              colorScheme="red"
-              icon={<XIcon />}
+              />
+
+              <FormField
+                control={control}
+                name={`attributes.${index}.value` as Path<TFieldValues>}
+                render={({ field: valueField }) => (
+                  <FormItem className="flex-1">
+                    <FormControl>
+                      {watch(
+                        `attributes.${index}.value` as unknown as WatchObserver<TFieldValues>,
+                      ) instanceof File ? (
+                        <div className="relative">
+                          <Input
+                            disabled
+                            value={
+                              watch(
+                                `attributes.${index}.value` as Path<TFieldValues>,
+                              ).name
+                            }
+                            className="pr-10 bg-card"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                            onClick={() =>
+                              setValue(
+                                `attributes.${index}.value` as Path<TFieldValues>,
+                                "" as PathValue<
+                                  TFieldValues,
+                                  Path<TFieldValues>
+                                >,
+                              )
+                            }
+                          >
+                            <TrashIcon className="size-4 text-muted-foreground hover:text-destructive" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <Input
+                            {...valueField}
+                            placeholder="value"
+                            className={`pr-10 bg-card ${valueError ? "border-destructive" : ""}`}
+                          />
+                        </div>
+                      )}
+                    </FormControl>
+                    {valueError && <FormMessage>{valueError}</FormMessage>}
+                  </FormItem>
+                )}
+              />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="rounded-full p-0 size-10 bg-card"
               onClick={() => remove(index)}
-              size="xs"
-              variant="ghost"
-            />
+            >
+              <XIcon className="size-4" />
+            </Button>
           </div>
         );
       })}
       <div className="flex flex-row gap-2">
         <Button
-          colorScheme="purple"
-          leftIcon={<PlusIcon className="size-5" />}
+          className="rounded-full"
           onClick={() =>
             // biome-ignore lint/suspicious/noExplicitAny: FIXME
             append({ trait_type: undefined, value: undefined } as any)
           }
           size="sm"
         >
+          <PlusIcon className="size-4 mr-2" />
           Add Row
         </Button>
       </div>
     </div>
   );
-};
+}

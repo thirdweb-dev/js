@@ -1,6 +1,6 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
 import { useClaimConditionsFormContext } from "..";
-import { CustomFormControl } from "../common";
 
 /**
  * Allows the user to select how many NFTs will be dropped in a phase
@@ -21,13 +21,13 @@ export const MaxClaimableSupplyInput: React.FC = () => {
   }
 
   return (
-    <CustomFormControl
-      disabled={formDisabled}
-      error={
+    <FormFieldSetup
+      isRequired={true}
+      errorMessage={
         form.getFieldState(
           `phases.${phaseIndex}.maxClaimableSupply`,
           form.formState,
-        ).error
+        ).error?.message
       }
       label={`How many ${
         isErc20 ? "tokens" : "NFTs"
@@ -45,6 +45,6 @@ export const MaxClaimableSupplyInput: React.FC = () => {
         }
         value={field.maxClaimableSupply?.toString() || "0"}
       />
-    </CustomFormControl>
+    </FormFieldSetup>
   );
 };

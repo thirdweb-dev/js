@@ -1,20 +1,24 @@
 import type { Abi } from "abitype";
-import { Select } from "chakra-react-select";
 import { useMemo } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-interface AbiSelectorProps {
-  abi: Abi;
-  defaultValue: string;
-  value: string;
-  onChange: (fn: string) => void;
-}
-
-export const AbiSelector: React.FC<AbiSelectorProps> = ({
+export function AbiSelector({
   abi,
   value,
   defaultValue,
   onChange,
-}) => {
+}: {
+  abi: Abi;
+  defaultValue: string;
+  value: string;
+  onChange: (fn: string) => void;
+}) {
   const options = useMemo(() => {
     return abi
       .filter((f) => f.type === "function")
@@ -26,24 +30,17 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
   }, [abi]);
 
   return (
-    <div className="flex w-full flex-row items-center gap-2">
-      <Select
-        chakraStyles={{
-          container: (provided) => ({
-            ...provided,
-            width: "full",
-          }),
-        }}
-        defaultValue={options.find((o) => o.value === defaultValue)}
-        onChange={(selectedFn) => {
-          if (selectedFn) {
-            onChange((selectedFn as { label: string; value: string }).value);
-          }
-        }}
-        options={options}
-        placeholder="Select function"
-        value={options.find((o) => o.value === value)}
-      />
-    </div>
+    <Select value={value} onValueChange={onChange} defaultValue={defaultValue}>
+      <SelectTrigger className="w-full bg-card">
+        <SelectValue placeholder="Select function" />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
-};
+}

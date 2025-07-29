@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  Flex,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
 import type { Abi, AbiEvent, AbiFunction } from "abitype";
-import { Heading } from "chakra/heading";
+import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { SourcesPanel } from "@/components/contract-components/shared/sources-panel";
 import type { SourceFile } from "@/components/contract-components/types";
 import { CodeOverview } from "@/components/contracts/code-overview";
+import { TabButtons } from "@/components/ui/tabs";
 import { ContractFunctionsPanel } from "./contract-function";
 
 interface ContractFunctionsOverview {
@@ -22,9 +15,10 @@ interface ContractFunctionsOverview {
   contract?: ThirdwebContract;
   sources?: SourceFile[];
   abi?: Abi;
-  onlyFunctions?: boolean;
   isLoggedIn: boolean;
 }
+
+type Tab = "functions" | "events" | "code" | "sources";
 
 export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   functions,
@@ -32,93 +26,85 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   contract,
   sources,
   abi,
-  onlyFunctions,
   isLoggedIn,
 }) => {
-  if (onlyFunctions) {
-    return (
-      <Flex flexDir="column" gap={2} height="100%">
-        {functions && functions.length > 0 && (
-          <ContractFunctionsPanel
-            contract={contract}
-            fnsOrEvents={functions}
-            isLoggedIn={isLoggedIn}
-          />
-        )}
-      </Flex>
-    );
-  }
+  const [activeTab, setActiveTab] = useState<Tab | undefined>(() => {
+    if (functions && functions.length > 0) return "functions";
+    if (events && events.length > 0) return "events";
+    if (abi) return "code";
+    if (sources && sources.length > 0) return "sources";
+    return undefined;
+  });
+
+  // Tab index: 0 = Functions, 1 = Events, 2 = Code, 3 = Sources
+  const tabOptions = [
+    ...(functions && functions.length > 0
+      ? [
+          {
+            name: "Functions",
+            onClick: () => setActiveTab("functions"),
+            isActive: activeTab === "functions",
+          },
+        ]
+      : []),
+    ...(events && events.length > 0
+      ? [
+          {
+            name: "Events",
+            onClick: () => setActiveTab("events"),
+            isActive: activeTab === "events",
+          },
+        ]
+      : []),
+    ...(abi
+      ? [
+          {
+            name: "Code",
+            onClick: () => setActiveTab("code"),
+            isActive: activeTab === "code",
+          },
+        ]
+      : []),
+    ...(sources && sources.length > 0
+      ? [
+          {
+            name: "Sources",
+            onClick: () => setActiveTab("sources"),
+            isActive: activeTab === "sources",
+          },
+        ]
+      : []),
+  ];
 
   return (
-    <Flex flexDir="column" gap={2} w="100%">
-      <Tabs colorScheme="gray" isLazy lazyBehavior="keepMounted">
-        <TabList borderBottomColor="borderColor" borderBottomWidth="1px" px={0}>
-          {functions && functions.length > 0 ? (
-            <Tab>
-              <Heading color="inherit" my={1} size="label.lg">
-                Functions
-              </Heading>
-            </Tab>
-          ) : null}
-          {events?.length ? (
-            <Tab>
-              <Heading color="inherit" my={1} size="label.lg">
-                Events
-              </Heading>
-            </Tab>
-          ) : null}
-          {abi && (
-            <Tab>
-              <Heading color="inherit" my={1} size="label.lg">
-                Code
-              </Heading>
-            </Tab>
-          )}
-          {sources && sources?.length > 0 && (
-            <Tab>
-              <Heading color="inherit" my={1} size="label.lg">
-                Sources
-              </Heading>
-            </Tab>
-          )}
-        </TabList>
-        <TabPanels py={2}>
-          {functions && functions.length > 0 ? (
-            <TabPanel h="40rem">
-              <ContractFunctionsPanel
-                contract={contract}
-                fnsOrEvents={functions}
-                isLoggedIn={isLoggedIn}
-              />
-            </TabPanel>
-          ) : null}
-          {events && events?.length > 0 ? (
-            <TabPanel>
-              <ContractFunctionsPanel
-                contract={contract}
-                fnsOrEvents={events}
-                isLoggedIn={isLoggedIn}
-              />
-            </TabPanel>
-          ) : null}
-          {abi && (
-            <TabPanel>
-              <div className="flex flex-col gap-6">
-                <CodeOverview
-                  abi={abi}
-                  chainId={contract?.chain.id || 1}
-                  noSidebar
-                />
-              </div>
-            </TabPanel>
-          )}
-          {(sources || abi) && (
-            <TabPanel>
-              <SourcesPanel abi={abi} sources={sources} />
-            </TabPanel>
-          )}
-        </TabPanels>
-      </Tabs>
-    </Flex>
+    <div>
+      <TabButtons tabs={tabOptions} />
+      <div className="pt-4">
+        {functions && functions.length > 0 && activeTab === "functions" && (
+          <div className="h-[70vh]">
+            <ContractFunctionsPanel
+              contract={contract}
+              fnsOrEvents={functions}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
+        )}
+        {events && events.length > 0 && activeTab === "events" && (
+          <div className="h-[70vh]">
+            <ContractFunctionsPanel
+              contract={contract}
+              fnsOrEvents={events}
+              isLoggedIn={isLoggedIn}
+            />
+          </div>
+        )}
+        {abi && activeTab === "code" && (
+          <CodeOverview abi={abi} chainId={contract?.chain.id || 1} noSidebar />
+        )}
+        {sources && sources.length > 0 && activeTab === "sources" && (
+          <SourcesPanel abi={abi} sources={sources} />
+        )}
+      </div>
+    </div>
   );
 };

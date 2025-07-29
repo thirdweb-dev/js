@@ -1,8 +1,7 @@
-import { FormControl } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { FormErrorMessage, FormLabel } from "chakra/form";
 import type { ThirdwebClient } from "thirdweb";
 import invariant from "tiny-invariant";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { getModuleInstalledParams } from "./getModuleInstalledParams";
 import type { InstallModuleForm } from "./ModuleForm";
@@ -48,14 +47,14 @@ export function ModuleInstallParams(props: {
           const formFieldKey = `moduleInstallFormParams.${param.name}` as const;
 
           return (
-            <FormControl
-              isInvalid={
-                !!form.getFieldState(formFieldKey, form.formState).error
-              }
-              isRequired
+            <FormFieldSetup
               key={formFieldKey}
+              isRequired
+              label={param.name}
+              errorMessage={
+                form.getFieldState(formFieldKey, form.formState).error?.message
+              }
             >
-              <FormLabel> {param.name}</FormLabel>
               <SolidityInput
                 // @ts-expect-error - old types, need to update
                 solidityComponents={
@@ -66,13 +65,7 @@ export function ModuleInstallParams(props: {
                 {...form.register(formFieldKey)}
                 isDisabled={props.disableInputs}
               />
-              <FormErrorMessage>
-                {
-                  form.getFieldState(formFieldKey, form.formState).error
-                    ?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
+            </FormFieldSetup>
           );
         })}
       </div>

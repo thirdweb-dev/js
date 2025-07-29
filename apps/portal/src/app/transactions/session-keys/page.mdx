@@ -7,7 +7,7 @@ Session keys enable secure transaction execution on behalf of smart accounts wit
 Before you begin, ensure you have:
 - A thirdweb client configured
 - A frontend application
-- A [server wallet](/connect/wallet/server)
+- A [server wallet](/wallets/server)
 
 ## Frontend Setup
 
@@ -145,7 +145,6 @@ const serverWallet = Engine.serverWallet({
     smartAccountAddress: smartAccount.address,
     type: "ERC4337",
   },
-  vaultAccessToken: process.env.VAULT_TOKEN as string, // Your vault access token
 });
 ```
 

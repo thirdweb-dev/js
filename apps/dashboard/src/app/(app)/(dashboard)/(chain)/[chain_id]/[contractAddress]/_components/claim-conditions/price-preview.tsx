@@ -24,12 +24,12 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
   );
 
   return (
-    <div className="flex flex-col text-muted-foreground">
-      <p className="font-bold">Default price</p>
+    <div className="flex flex-col space-y-0.5">
+      <p className="font-medium text-foreground">Default price</p>
       {Number(price) === 0 ? (
-        <p>Free</p>
+        <p className="text-muted-foreground text-sm">Free</p>
       ) : (
-        <p>
+        <p className="text-muted-foreground text-sm">
           {price}{" "}
           {foundCurrency
             ? foundCurrency.symbol

@@ -1,0 +1,47 @@
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+} from "@doc";
+import {
+	EngineIcon,
+} from "@/icons";
+
+# Contract Transactions
+
+Query all transactions for any deployed contract on any EVM chain.
+
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="http">
+    ### Get Contract Transactions
+
+    You can fetch all transactions for a contract using the [contract transactions API](https://api.thirdweb.com/reference#tag/contracts/get/v1/contracts/{address}/transactions).
+
+    ```http
+    GET /v1/contracts/{address}/transactions?chainId=<chain_id>&decode=true
+    Host: api.thirdweb.com
+    x-secret-key: <project-secret-key>
+    ```
+
+    Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
+
+    #### Parameters
+
+    - `address` - The contract address
+    - `chainId` - The chain ID where the contract is deployed
+    - `decode` - Whether to decode the transaction data (optional, defaults to false)
+
+    #### Response
+
+    The API returns a list of transactions that have interacted with the specified contract, including transaction details and decoded function calls when `decode=true` is specified.
+
+  </TabsContent>
+</Tabs>

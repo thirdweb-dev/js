@@ -1,137 +1,299 @@
-import { UploadIcon } from "lucide-react";
+import { useState } from "react";
 import { InlineCode } from "@/components/ui/inline-code";
-import { UnorderedList } from "@/components/ui/List/List";
-import { cn } from "@/lib/utils";
+import { TabButtons } from "@/components/ui/tabs";
+import { DownloadableCode } from "../blocks/code/downloadable-code";
+import { DropZone } from "../blocks/drop-zone/drop-zone";
 
 interface UploadStepProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  getRootProps: any;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  getInputProps: any;
   hasFailed: boolean;
-  isDragActive: boolean;
+  onDrop: (acceptedFiles: File[]) => void;
+  reset: () => void;
 }
 
-export const UploadStep: React.FC<UploadStepProps> = ({
-  getRootProps,
-  hasFailed,
-  isDragActive,
-  getInputProps,
-}) => {
+export function UploadStep(props: UploadStepProps) {
+  const [tab, setTab] = useState<"csv" | "json">("csv");
+
   return (
-    <div className="flex flex-col items-center gap-8 md:flex-row">
-      <div className="relative aspect-square w-full md:w-1/2">
-        <div
-          className={cn(
-            "flex h-full cursor-pointer rounded-md border border-border hover:border-blue-500",
-            hasFailed ? "bg-red-200" : "bg-background",
-          )}
-          {...getRootProps()}
-        >
-          <input {...getInputProps()} />
-          <div className="m-auto flex flex-col p-6">
-            <UploadIcon
-              className={cn(
-                "mx-auto mb-2 size-8",
-                hasFailed ? "text-red-500" : "text-gray-600",
-              )}
+    <div className="container px-0 max-w-3xl">
+      <h2 className="text-2xl font-semibold tracking-tight mb-4">
+        Upload NFTs
+      </h2>
+
+      <DropZone
+        className="w-full py-24"
+        onDrop={props.onDrop}
+        isError={props.hasFailed}
+        title={props.hasFailed ? "Invalid files" : "Upload files"}
+        description={
+          props.hasFailed
+            ? "Make sure the uploaded files follow the requirements mentioned below"
+            : "Drag and drop the files or folder"
+        }
+        resetButton={{
+          label: "Reset",
+          onClick: props.reset,
+        }}
+        accept={undefined}
+      />
+
+      <div className="h-8" />
+
+      <div className="w-full">
+        <TabButtons
+          tabs={[
+            {
+              isActive: tab === "csv",
+              name: "CSV",
+              onClick: () => setTab("csv"),
+            },
+            {
+              isActive: tab === "json",
+              name: "JSON",
+              onClick: () => setTab("json"),
+            },
+          ]}
+        />
+
+        <div className="h-6" />
+
+        <div className="space-y-8">
+          <Section title="Uploading Files">
+            <p>
+              Make sure to drag and drop the {tab === "csv" ? "CSV" : "JSON"}{" "}
+              and the assets at the same time or upload a folder with all the
+              files in it.
+            </p>
+
+            <p>
+              Asset names <em>must</em> be sequential 0,1,2,3...n.[extension].
+              It doesn't matter at what number you begin. Example: 131.png,
+              132.png etc.
+            </p>
+
+            <p>
+              Images and other file types can be used in combination. They both
+              have to follow the asset naming convention above. Example: 0.png
+              and 0.mp4, 1.png and 1.glb etc.
+            </p>
+          </Section>
+
+          <Section title={`${tab === "csv" ? "CSV" : "JSON"} File Format`}>
+            <p>
+              The {tab === "csv" ? "CSV" : "JSON"} file must have a{" "}
+              <InlineCode code="name" /> {tab === "csv" ? "column" : "property"}
+              , which defines the name of the NFT
+            </p>
+
+            <p>
+              Other optional {tab === "csv" ? "columns" : "properties"} are{" "}
+              <InlineCode code="description" />,{" "}
+              <InlineCode code="background_color" />,{" "}
+              <InlineCode code="external_url" />,{" "}
+              <InlineCode code="animation_url" />,{" "}
+              {tab === "json" && (
+                <>
+                  ,
+                  <InlineCode code="attributes" />
+                </>
+              )}{" "}
+              and <InlineCode code="supply" />
+              {". "}
+              {tab === "csv" &&
+                "All other columns will be treated as Attributes. For example: See 'eyes', 'nose' below."}
+            </p>
+
+            <DownloadableCode
+              code={tab === "csv" ? csv_example_basic : json_example_basic}
+              fileNameWithExtension={
+                tab === "csv" ? "example.csv" : "example.json"
+              }
+              lang={tab === "csv" ? "csv" : "json"}
             />
-            {isDragActive ? (
-              <p className="text-center text-muted-foreground">
-                Drop the files here
-              </p>
-            ) : (
-              <p
-                className={cn(
-                  "text-center leading-[1.2]",
-                  hasFailed ? "text-red-500" : "text-muted-foreground",
-                )}
-              >
-                {hasFailed
-                  ? `No valid CSV or JSON file found. Please make sure your NFT metadata includes at least a "name" field and try again.`
-                  : "Drag & Drop files or folders here, or click to select files"}
-              </p>
-            )}
-          </div>
+          </Section>
+
+          <Section title="Map your assets to NFTs">
+            <p>
+              If you want to map your media files to your NFTs, you can add the
+              name of your files to the <InlineCode code="image" /> and{" "}
+              <InlineCode code="animation_url" />{" "}
+              {tab === "csv" ? "columns" : "properties"}.{" "}
+              <DownloadableCode
+                code={
+                  tab === "csv"
+                    ? csv_with_image_number_example
+                    : json_with_image_number_example
+                }
+                fileNameWithExtension={
+                  tab === "csv"
+                    ? "example-with-maps.csv"
+                    : "example-with-maps.json"
+                }
+                lang={tab === "csv" ? "csv" : "json"}
+              />
+            </p>
+          </Section>
+
+          <Section title="Using asset links instead of uploading assets">
+            <p>
+              When uploading files, assets will be uploaded and pinned to IPFS
+              automatically. If you already have the files uploaded elsewhere,
+              you can specify the IPFS or HTTP(s) links in the{" "}
+              <InlineCode code="image" /> and/or{" "}
+              <InlineCode code="animation_url" />{" "}
+              {tab === "csv" ? "columns" : "properties"}. instead of uploading
+              the assets and just upload a single{" "}
+              {tab === "csv" ? "CSV" : "JSON"} file.
+              <DownloadableCode
+                code={
+                  tab === "csv"
+                    ? csv_with_image_link_example
+                    : json_with_image_link_example
+                }
+                fileNameWithExtension={
+                  tab === "csv"
+                    ? "example-with-ipfs.csv"
+                    : "example-with-ipfs.json"
+                }
+                lang={tab === "csv" ? "csv" : "json"}
+              />
+            </p>
+          </Section>
         </div>
-      </div>
-      <div className="flex w-full flex-col gap-2 md:w-1/2">
-        <p className="text-lg">Requirements</p>
-        <UnorderedList>
-          <li>
-            Files <em>must</em> contain one .csv or .json file with metadata. -{" "}
-            <a
-              className="text-link-foreground hover:text-foreground"
-              download
-              href="/assets/examples/example.csv"
-            >
-              Download example.csv
-            </a>
-            .{" "}
-            <a
-              className="text-link-foreground hover:text-foreground"
-              download
-              href="/assets/examples/example.json"
-            >
-              Download example.json
-            </a>
-            .
-          </li>
-          <li>
-            The csv <em>must</em> have a <InlineCode code="name" /> column,
-            which defines the name of the NFT.
-          </li>
-          <li>
-            Asset names <em>must</em> be sequential 0,1,2,3...n.[extension]. It
-            doesn&apos;t matter at what number you begin. (Example:{" "}
-            <InlineCode code="131.png" />, <InlineCode code="132.png" />
-            ).
-          </li>
-          <li>
-            Make sure to drag and drop the CSV/JSON and the images{" "}
-            <strong>at the same time</strong>.
-          </li>
-        </UnorderedList>
-        <p className="mt-4 text-lg">Options</p>
-        <UnorderedList>
-          <li>
-            Images and other file types can be used in combination.
-            <br />
-            <small>
-              They both have to follow the asset naming convention above.
-              (Example: <InlineCode code="0.png" /> and{" "}
-              <InlineCode code="0.mp4" />,<InlineCode code="1.png" /> and{" "}
-              <InlineCode code="1.glb" />, etc.)
-            </small>
-          </li>
-          <li>
-            When uploading files, we will upload them and pin them to IPFS
-            automatically for you. If you already have the files uploaded, you
-            can add an <InlineCode code="image" /> and/or
-            <InlineCode code="animation_url" /> column and add the IPFS hashes
-            there.{" "}
-            <a
-              className="text-link-foreground hover:text-foreground"
-              download
-              href="/assets/examples/example-with-ipfs.csv"
-            >
-              Download example.csv
-            </a>
-          </li>
-          <li>
-            If you want to make your media files map to your NFTs, you can add
-            the name of your files to the <InlineCode code="image" /> and
-            <InlineCode code="animation_url" /> column.{" "}
-            <a
-              className="text-link-foreground hover:text-foreground"
-              download
-              href="/assets/examples/example-with-maps.csv"
-            >
-              Download example.csv
-            </a>
-          </li>
-        </UnorderedList>
       </div>
     </div>
   );
-};
+}
+
+function Section(props: { title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <h2 className="mb-1 font-medium text-base text-foreground">
+        {props.title}
+      </h2>
+      <div className="space-y-1.5 text-muted-foreground leading-relaxed">
+        {props.children}
+      </div>
+    </section>
+  );
+}
+
+const csv_example_basic = `\
+name,description,background_color,eyes,nose
+Token 0 Name,Token 0 Description,#0098EE,red,green
+Token 1 Name,Token 1 Description,#0098EE,blue,yellow`;
+
+const json_example_basic = `\
+[
+  {
+    "name": "Token 0 Name",
+    "description": "Token 0 Description",
+    "background_color": "#0098EE",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "red"
+      },
+      {
+        "trait_type": "nose",
+        "value": "green"
+      }
+    ]
+  },
+  {
+    "name": "Token 1 Name",
+    "description": "Token 1 Description",
+    "background_color": "#0098EE",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "blue"
+      },
+      {
+        "trait_type": "nose",
+        "value": "yellow"
+      }
+    ]
+  }
+]`;
+
+const csv_with_image_link_example = `\
+name,description,image,animation_url,background_color,eyes,nose
+Token 0 Name,Token 0 Description,ipfs://ipfsHash/0,ipfs://ipfsHash/0,#0098EE,red,green
+Token 1 Name,Token 1 Description,ipfs://ipfsHash/1,ipfs://ipfsHash/1,#0098EE,blue,yellow`;
+
+const json_with_image_link_example = `\
+[
+  {
+    "name": "Token 0 Name",
+    "description": "Token 0 Description",
+    "image": "ipfs://ipfsHash/0",
+    "animation_url": "ipfs://ipfsHash/0",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "red"
+      },
+      {
+        "trait_type": "nose",
+        "value": "green"
+      }
+    ]
+  },
+  {
+    "name": "Token 1 Name",
+    "description": "Token 1 Description",
+    "image": "ipfs://ipfsHash/1",
+    "animation_url": "ipfs://ipfsHash/1",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "blue"
+      },
+      {
+        "trait_type": "nose",
+        "value": "yellow"
+      }
+    ]
+  }
+]`;
+
+const csv_with_image_number_example = `\
+name,description,image,animation_url,background_color,eyes,nose
+Token 0 Name,Token 0 Description,0.png,0.mp4,#0098EE,red,green
+Token 1 Name,Token 1 Description,1.png,1.mp4,#0098EE,blue,yellow`;
+
+const json_with_image_number_example = `\
+[
+  {
+    "name": "Token 0 Name",
+    "description": "Token 0 Description",
+    "image": "0.png",
+    "animation_url": "0.mp4",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "red"
+      },
+      {
+        "trait_type": "nose",
+        "value": "green"
+      }
+    ]
+  },
+  {
+    "name": "Token 1 Name",
+    "description": "Token 1 Description",
+    "image": "1.png",
+    "animation_url": "1.mp4",
+    "attributes": [
+      {
+        "trait_type": "eyes",
+        "value": "blue"
+      },
+      {
+        "trait_type": "nose",
+        "value": "yellow"
+      }
+    ]
+  }
+]`;

@@ -1,14 +1,5 @@
-import { getAddress } from "../../utils/address.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import {
-  type CoinbaseWalletCreationOptions,
-  isCoinbaseSDKWallet,
-} from "../coinbase/coinbase-web.js";
-import { isInAppWallet } from "../in-app/core/wallet/index.js";
-import { getInjectedProvider } from "../injected/index.js";
-import type { Ethereum } from "../interfaces/ethereum.js";
 import type { Wallet } from "../interfaces/wallet.js";
-import { isWalletConnect } from "../wallet-connect/controller.js";
 import type { WalletId } from "../wallet-types.js";
 import type { WalletCapabilities, WalletCapabilitiesRecord } from "./types.js";
 
@@ -52,64 +43,32 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
     };
   }
 
-  if (wallet.id === "smart") {
-    const { smartWalletGetCapabilities } = await import(
-      "../smart/lib/smart-wallet-capabilities.js"
-    );
-    return smartWalletGetCapabilities({ wallet });
+  if (account.getCapabilities) {
+    return account.getCapabilities({ chainId });
   }
 
-  if (isInAppWallet(wallet)) {
-    const { inAppWalletGetCapabilities } = await import(
-      "../in-app/core/eip5972/in-app-wallet-capabilities.js"
-    );
-    return inAppWalletGetCapabilities({ wallet });
-  }
+  throw new Error(
+    `Failed to get capabilities, wallet ${wallet.id} does not support EIP-5792`,
+  );
+}
 
-  // TODO: Add Wallet Connect support
-  if (isWalletConnect(wallet)) {
-    return {
-      message: "getCapabilities is not yet supported with Wallet Connect",
-    };
-  }
-
-  let provider: Ethereum;
-  if (isCoinbaseSDKWallet(wallet)) {
-    const { getCoinbaseWebProvider } = await import(
-      "../coinbase/coinbase-web.js"
-    );
-    const config = wallet.getConfig() as CoinbaseWalletCreationOptions;
-    provider = (await getCoinbaseWebProvider(config)) as Ethereum;
-  } else {
-    provider = getInjectedProvider(wallet.id);
-  }
-
-  try {
-    const result = await provider.request({
-      method: "wallet_getCapabilities",
-      params: [getAddress(account.address)],
-    });
-    const capabilities = {} as WalletCapabilitiesRecord<
-      WalletCapabilities,
-      number
-    >;
-    for (const [chainId, capabilities_] of Object.entries(result)) {
-      capabilities[Number(chainId)] = {};
-      const capabilitiesCopy = {} as WalletCapabilities;
-      for (const [key, value] of Object.entries(capabilities_)) {
-        capabilitiesCopy[key] = value;
-      }
-      capabilities[Number(chainId)] = capabilitiesCopy;
+export function toGetCapabilitiesResult(
+  result: Record<string, WalletCapabilities>,
+  chainId?: number,
+): GetCapabilitiesResult {
+  const capabilities = {} as WalletCapabilitiesRecord<
+    WalletCapabilities,
+    number
+  >;
+  for (const [chainId, capabilities_] of Object.entries(result)) {
+    capabilities[Number(chainId)] = {};
+    const capabilitiesCopy = {} as WalletCapabilities;
+    for (const [key, value] of Object.entries(capabilities_)) {
+      capabilitiesCopy[key] = value;
     }
-    return (
-      typeof chainId === "number" ? capabilities[chainId] : capabilities
-    ) as never;
-  } catch (error: unknown) {
-    if (/unsupport|not support|not available/i.test((error as Error).message)) {
-      return {
-        message: `${wallet.id} does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
-      };
-    }
-    throw error;
+    capabilities[Number(chainId)] = capabilitiesCopy;
   }
+  return (
+    typeof chainId === "number" ? capabilities[chainId] : capabilities
+  ) as never;
 }

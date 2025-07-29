@@ -6,74 +6,74 @@ const staticSidebarLinks: SidebarLink[] = [
     isCollapsible: false,
     links: [
       {
-        href: "/connect/sign-in/button",
+        href: "/wallets/sign-in/button",
         name: "ConnectButton",
       },
       {
-        href: "/connect/sign-in/embed",
+        href: "/wallets/sign-in/embed",
         name: "ConnectEmbed",
       },
       {
-        href: "/connect/sign-in/headless",
+        href: "/wallets/sign-in/headless",
         name: "Headless Connect",
       },
       {
-        href: "/connect/in-app-wallet",
+        href: "/wallets/in-app-wallet",
         name: "In-App Wallets",
       },
       {
-        href: "/connect/in-app-wallet/ecosystem",
+        href: "/wallets/in-app-wallet/ecosystem",
         name: "Ecosystem Wallets",
       },
       {
-        href: "/connect/account-abstraction/sponsor",
+        href: "/wallets/account-abstraction/eip-4337",
         name: "EIP-4337",
       },
       {
-        href: "/connect/account-abstraction/7702",
+        href: "/wallets/account-abstraction/eip-7702",
         name: "EIP-7702",
       },
       {
-        href: "/connect/account-abstraction/5792",
+        href: "/wallets/account-abstraction/eip-5792",
         name: "EIP-5792",
       },
       {
-        href: "/connect/account-abstraction/native-aa",
+        href: "/wallets/account-abstraction/native-aa",
         name: "Native AA (zkSync)",
       },
       {
-        href: "/connect/auth",
+        href: "/wallets/auth",
         name: "Auth",
       },
       {
-        href: "/connect/social",
+        href: "/wallets/social",
         name: "Social",
       },
       {
-        href: "/connect/blockchain-api",
+        href: "/wallets/blockchain-api",
         name: "Blockchain API",
       },
       {
         expanded: false,
         links: [
           {
-            href: "/connect/ui",
+            href: "/wallets/headless/account-components",
             name: "Account",
           },
           {
-            href: "/connect/ui/nft",
+            href: "/wallets/headless/nft-components",
             name: "NFT",
           },
           {
-            href: "/connect/ui/token",
+            href: "/wallets/headless/token-components",
             name: "Token",
           },
           {
-            href: "/connect/ui/chain",
+            href: "/wallets/headless/chain-components",
             name: "Chain",
           },
           {
-            href: "/connect/ui/wallet",
+            href: "/wallets/headless/wallet-components",
             name: "Wallet",
           },
         ],
@@ -89,23 +89,23 @@ const universalBridgeSidebarLinks: SidebarLink = {
   isCollapsible: false,
   links: [
     {
-      href: "/connect/pay",
+      href: "/payments/ui-components",
       name: "UI Component",
     },
     {
-      href: "/connect/pay/fund-wallet",
+      href: "/payments/fund-wallet",
       name: "Buy Crypto",
     },
     {
-      href: "/connect/pay/commerce",
+      href: "/payments/commerce",
       name: "Checkout",
     },
     {
-      href: "/connect/pay/transactions",
+      href: "/payments/transactions",
       name: "Transactions",
     },
     {
-      href: "/connect/pay/backend",
+      href: "/payments/backend",
       name: "Backend API",
     },
   ],
@@ -117,15 +117,15 @@ const engineSidebarLinks: SidebarLink = {
   isCollapsible: false,
   links: [
     {
-      href: "/engine/airdrop",
+      href: "/transactions/airdrop-tokens",
       name: "Airdrop",
     },
     {
-      href: "/engine/minting",
+      href: "/transactions/mint-tokens",
       name: "Mint NFTs",
     },
     {
-      href: "/engine/webhooks",
+      href: "/transactions/webhooks",
       name: "Webhooks",
     },
   ],

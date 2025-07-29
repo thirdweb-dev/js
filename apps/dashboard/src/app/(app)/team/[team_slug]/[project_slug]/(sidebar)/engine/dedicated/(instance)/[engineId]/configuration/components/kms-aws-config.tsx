@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SaveIcon } from "lucide-react";
 import { useId } from "react";
 import { useForm } from "react-hook-form";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import {
   type EngineInstance,
   type SetWalletConfigInput,
@@ -74,102 +75,116 @@ export const KmsAwsConfig: React.FC<KmsAwsConfigProps> = ({
   const awsSecretKeyId = useId();
 
   return (
-    <Form {...form}>
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <p className="text-muted-foreground">
-          AWS KMS wallets require credentials from your Amazon Web Services
-          account with sufficient permissions to manage KMS keys. Wallets are
-          stored in KMS keys on your AWS account.
-        </p>
-        <p className="text-muted-foreground">
-          For help and more advanced use cases,{" "}
-          <Link
-            className="text-link-foreground hover:text-foreground"
-            href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            learn more about using AWS KMS wallets
-          </Link>
-          .
-        </p>
+    <div className="bg-card rounded-lg border mb-8">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="p-4 lg:p-6 ">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold mb-1">Credentials</h2>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <FormFieldSetup
-            errorMessage={
-              form.getFieldState("awsRegion", form.formState).error?.message
-            }
-            htmlFor="aws-region"
-            isRequired
-            label="Region"
-            tooltip={null}
-          >
-            <Input
-              autoComplete="off"
-              id={awsRegionId}
-              placeholder="us-west-2"
-              type="text"
-              {...form.register("awsRegion")}
-            />
-          </FormFieldSetup>
+              <p className="text-muted-foreground mb-1 text-sm">
+                AWS KMS wallets require credentials from your Amazon Web
+                Services account with sufficient permissions to manage KMS keys.{" "}
+                <br />
+                Wallets are stored in KMS keys on your AWS account.
+              </p>
+              <p className="text-muted-foreground text-sm">
+                For help and more advanced use cases,{" "}
+                <UnderlineLink
+                  href="https://portal.thirdweb.com/infrastructure/engine/features/backend-wallets"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  learn more about using AWS KMS wallets
+                </UnderlineLink>
+              </p>
+            </div>
 
-          <FormFieldSetup
-            errorMessage={
-              form.getFieldState("awsAccessKeyId", form.formState).error
-                ?.message
-            }
-            htmlFor={awsAccessKeyId}
-            isRequired
-            label="Access Key"
-            tooltip={null}
-          >
-            <Input
-              autoComplete="off"
-              id={awsAccessKeyId}
-              placeholder="AKIA..."
-              type="text"
-              {...form.register("awsAccessKeyId")}
-            />
-          </FormFieldSetup>
+            <div className="space-y-4">
+              <FormFieldSetup
+                errorMessage={
+                  form.getFieldState("awsRegion", form.formState).error?.message
+                }
+                htmlFor="aws-region"
+                isRequired
+                label="Region"
+                tooltip={null}
+              >
+                <Input
+                  autoComplete="off"
+                  id={awsRegionId}
+                  placeholder="us-west-2"
+                  type="text"
+                  {...form.register("awsRegion")}
+                />
+              </FormFieldSetup>
 
-          <FormFieldSetup
-            errorMessage={
-              form.getFieldState("awsSecretAccessKey", form.formState).error
-                ?.message
-            }
-            htmlFor={awsSecretKeyId}
-            isRequired
-            label="Secret Key"
-            tooltip={null}
-          >
-            <Input
-              autoComplete="off"
-              id={awsSecretKeyId}
-              placeholder="UW7A..."
-              type="text"
-              {...form.register("awsSecretAccessKey")}
-            />
-            <FormDescription className="pt-2">
-              This will not be shown again.
-            </FormDescription>
-          </FormFieldSetup>
-        </div>
+              <FormFieldSetup
+                errorMessage={
+                  form.getFieldState("awsAccessKeyId", form.formState).error
+                    ?.message
+                }
+                htmlFor={awsAccessKeyId}
+                isRequired
+                label="Access Key"
+                tooltip={null}
+              >
+                <Input
+                  autoComplete="off"
+                  id={awsAccessKeyId}
+                  placeholder="AKIA..."
+                  type="text"
+                  {...form.register("awsAccessKeyId")}
+                />
+              </FormFieldSetup>
 
-        <div className="flex items-center justify-end gap-4">
-          {!supportsMultipleWalletTypes && (
-            <p className="text-destructive-text text-sm">
-              This will clear other credentials.
-            </p>
-          )}
-          <Button className="min-w-28 gap-2" disabled={isPending} type="submit">
-            {isPending && <Spinner className="size-4" />}
-            Save
-          </Button>
-        </div>
-      </form>
-    </Form>
+              <FormFieldSetup
+                errorMessage={
+                  form.getFieldState("awsSecretAccessKey", form.formState).error
+                    ?.message
+                }
+                htmlFor={awsSecretKeyId}
+                isRequired
+                label="Secret Key"
+                tooltip={null}
+              >
+                <Input
+                  autoComplete="off"
+                  id={awsSecretKeyId}
+                  placeholder="UW7A..."
+                  type="text"
+                  {...form.register("awsSecretAccessKey")}
+                />
+                <FormDescription className="pt-2">
+                  Secret key will not be shown again. Please save your secret
+                  key in a secure location
+                </FormDescription>
+              </FormFieldSetup>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-4 border-t border-dashed px-4 py-4 lg:px-6">
+            {!supportsMultipleWalletTypes && (
+              <p className="text-destructive-text text-sm">
+                This will clear other credentials.
+              </p>
+            )}
+            <Button
+              className="gap-2"
+              disabled={isPending || !form.formState.isDirty}
+              size="sm"
+              type="submit"
+            >
+              {isPending ? (
+                <Spinner className="size-4" />
+              ) : (
+                <SaveIcon className="size-4" />
+              )}
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };

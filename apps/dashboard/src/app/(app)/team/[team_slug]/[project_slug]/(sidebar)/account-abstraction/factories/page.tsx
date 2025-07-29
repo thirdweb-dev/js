@@ -11,7 +11,6 @@ import { getTeamBySlug } from "@/api/team";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Button } from "@/components/ui/button";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { loginRedirect } from "@/utils/redirects";
@@ -80,13 +79,6 @@ function YourFactoriesSection(props: {
           </h3>
           <p className="text-muted-foreground text-sm">
             Deploy your own account factories to create smart wallets.{" "}
-            <UnderlineLink
-              href="https://portal.thirdweb.com/connect/account-abstraction/factories"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more{" "}
-            </UnderlineLink>
           </p>
         </div>
 

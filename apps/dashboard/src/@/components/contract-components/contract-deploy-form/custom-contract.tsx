@@ -1,9 +1,6 @@
 "use client";
-import { Flex, FormControl } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { verifyContract } from "app/(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/ContractSourcesPage";
-import { FormHelperText, FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import {
   ArrowUpFromLineIcon,
   CircleAlertIcon,
@@ -27,6 +24,7 @@ import {
   reportContractDeployed,
   reportContractDeployFailed,
 } from "@/analytics/report";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { NetworkSelectorButton } from "@/components/misc/NetworkSelectorButton";
 import { SolidityInput } from "@/components/solidity-inputs";
 import {
@@ -932,14 +930,17 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
           <Fieldset legend="Deploy Options">
             <div className="flex flex-col gap-6">
               {/* Chain */}
-              <FormControl isRequired>
-                <FormLabel>Chain</FormLabel>
-
-                <p className="mb-3 text-muted-foreground text-sm">
-                  Select a network to deploy this contract on. We recommend
-                  starting with a testnet
-                </p>
-
+              <FormFieldSetup
+                isRequired
+                label="Chain"
+                errorMessage={undefined}
+                helperText={
+                  <span>
+                    Select a network to deploy this contract on. We recommend
+                    starting with a testnet
+                  </span>
+                }
+              >
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-col gap-4 md:flex-row">
                     <NetworkSelectorButton
@@ -953,7 +954,6 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           : metadata?.networksForDeployment?.networksEnabled
                       }
                     />
-
                     <Button asChild variant="outline">
                       <Link
                         className="gap-3"
@@ -967,12 +967,11 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     </Button>
                   </div>
                 </div>
-              </FormControl>
+              </FormFieldSetup>
 
               {metadata?.deployType === "standard" && (
                 <>
                   {/* Deterministic deploy */}
-
                   <div className="flex flex-col gap-3">
                     <CheckboxWithLabel>
                       <Checkbox
@@ -1006,16 +1005,21 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
                   {/*  Optional Salt Input */}
                   {isCreate2Deployment && (
-                    <FormControl>
-                      <Flex alignItems="center" my={1}>
-                        <FormLabel display="flex" flex="1" mb={0}>
-                          <Flex alignItems="baseline" gap={1}>
-                            Optional Salt Input
-                            <Text size="label.sm">(saltForCreate2)</Text>
-                          </Flex>
-                        </FormLabel>
-                        <FormHelperText mt={0}>string</FormHelperText>
-                      </Flex>
+                    <FormFieldSetup
+                      isRequired={false}
+                      label={
+                        <span className="flex items-center gap-1">
+                          Optional Salt Input
+                          <span className="font-normal text-muted-foreground text-xs">
+                            (saltForCreate2)
+                          </span>
+                        </span>
+                      }
+                      errorMessage={
+                        form.getFieldState("saltForCreate2", form.formState)
+                          .error?.message
+                      }
+                    >
                       <SolidityInput
                         solidityType="string"
                         {...form.register("saltForCreate2")}
@@ -1034,7 +1038,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                           Include deployer wallet address in salt (recommended)
                         </span>
                       </CheckboxWithLabel>
-                    </FormControl>
+                    </FormFieldSetup>
                   )}
                 </>
               )}

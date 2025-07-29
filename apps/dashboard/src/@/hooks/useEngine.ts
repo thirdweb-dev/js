@@ -1223,7 +1223,7 @@ export function useEngineUpdateAccessToken(params: {
   });
 }
 
-export type CreateWebhookInput = {
+type CreateWebhookInput = {
   url: string;
   name: string;
   eventType: string;

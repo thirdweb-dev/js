@@ -1,8 +1,6 @@
 "use client";
 
-import { FormControl, Input, Select, Skeleton, Spacer } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FormErrorMessage, FormLabel } from "chakra/form";
 import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,8 +24,18 @@ import {
   toFunctionSelector,
 } from "thirdweb/utils";
 import type { Account } from "thirdweb/wallets";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TransactionButton } from "@/components/tx-button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   useAllVersions,
   usePublishedContractsQuery,
@@ -65,7 +73,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
       version: "latest",
     },
   });
-  const { register, watch, formState, resetField, reset } = form;
+  const { register, watch, formState, resetField, reset, setValue } = form;
   const { contract, account } = props;
   const { errors } = formState;
 
@@ -143,10 +151,6 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const onSubmit = async () => {
     installMutation.mutate();
   };
-
-  const moduleContractInputProps = register("moduleContract", {
-    required: "Module name is required",
-  });
 
   const selectedModule = modulesOnly?.find(
     (x) => x.contractId === watch("moduleContract"),
@@ -267,62 +271,65 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         }}
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <FormControl isInvalid={!!errors.publisherAddress}>
-            <FormLabel>Publisher</FormLabel>
+          <FormFieldSetup
+            htmlFor="publisherAddress"
+            label="Publisher"
+            errorMessage={errors.publisherAddress?.message}
+            isRequired={true}
+          >
             <Input
-              bg="backgroundHighlight"
+              id="publisherAddress"
               disabled={installMutation.isPending}
               placeholder="Publisher address"
               {...register("publisherAddress", {
                 required: "Publisher address is required",
               })}
             />
-            <FormErrorMessage>
-              {errors.publisherAddress?.message}
-            </FormErrorMessage>
-          </FormControl>
+          </FormFieldSetup>
 
-          <FormControl
-            isInvalid={
-              !!errors.moduleContract || isModuleCompatibleQuery.data === false
+          <FormFieldSetup
+            htmlFor="moduleContract"
+            label="Module Name"
+            errorMessage={
+              !isModuleCompatibleQuery.isFetching &&
+              isModuleCompatibleQuery.data === false
+                ? "Module is not compatible"
+                : errors.moduleContract?.message
             }
             isRequired={true}
           >
-            <FormLabel>Module Name</FormLabel>
-            <Skeleton
-              borderRadius="lg"
-              isLoaded={!!modulesOnly.length || !isFetching}
-            >
+            {!modulesOnly.length && isFetching ? (
+              <Skeleton className="h-10 w-full rounded-md" />
+            ) : (
               <Select
-                bg="backgroundHighlight"
                 disabled={
                   installMutation.isPending ||
                   modulesOnly?.length === 0 ||
                   isPending
                 }
-                {...moduleContractInputProps}
-                onChange={(e) => {
+                value={watch("moduleContract")}
+                onValueChange={(value) => {
+                  setValue("moduleContract", value);
                   // reset version when module changes
                   resetField("version");
-                  moduleContractInputProps.onChange(e);
                 }}
-                placeholder={
-                  modulesOnly.length === 0 ? "No modules" : "Select module"
-                }
               >
-                {modulesOnly.map(({ contractId }) => (
-                  <option key={contractId} value={contractId}>
-                    {contractId}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={
+                      modulesOnly.length === 0 ? "No modules" : "Select module"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {modulesOnly.map(({ contractId }) => (
+                    <SelectItem key={contractId} value={contractId}>
+                      {contractId}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
-            </Skeleton>
-            <FormErrorMessage fontWeight={500}>
-              {!isModuleCompatibleQuery.isFetching &&
-                isModuleCompatibleQuery.data === false &&
-                "Module is not compatible"}
-              {errors.moduleContract?.message}
-            </FormErrorMessage>
+            )}
 
             {isModuleCompatibleQuery.isFetching && selectedModule && (
               <div className="mt-2 flex items-center gap-1.5 text-link-foreground">
@@ -338,13 +345,18 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                 </p>
               </div>
             )}
-          </FormControl>
+          </FormFieldSetup>
 
-          <FormControl isInvalid={!!errors.version} isRequired={true}>
-            <FormLabel>Module Version</FormLabel>
-            <Skeleton borderRadius="lg" isLoaded={!allVersions.isFetching}>
+          <FormFieldSetup
+            htmlFor="version"
+            label="Module Version"
+            errorMessage={errors.version?.message}
+            isRequired={true}
+          >
+            {allVersions.isFetching ? (
+              <Skeleton className="h-10 w-full rounded-md" />
+            ) : (
               <Select
-                bg="backgroundHighlight"
                 disabled={
                   !allVersions.data ||
                   allVersions.isPending ||
@@ -352,25 +364,33 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
                   installMutation.isPending ||
                   isModuleCompatibleQuery.isFetching
                 }
-                w="full"
-                {...register("version", {
-                  required: "Version is required",
-                })}
+                value={watch("version")}
+                onValueChange={(value) => setValue("version", value)}
               >
-                <option value="latest">Latest</option>
-                {allVersions?.data?.map(({ version }) => (
-                  <option key={version} value={version}>
-                    {version}
-                  </option>
-                ))}
+                <SelectTrigger>
+                  <SelectValue placeholder="Select version" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="latest">Latest</SelectItem>
+                  {allVersions?.data?.map(({ version }) => {
+                    if (!version) {
+                      return null;
+                    }
+
+                    return (
+                      <SelectItem key={version} value={version}>
+                        {version}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
               </Select>
-            </Skeleton>
-            <FormErrorMessage>{errors.version?.message}</FormErrorMessage>
-          </FormControl>
+            )}
+          </FormFieldSetup>
         </div>
 
         {moduleInstallParams.isFetching ? (
-          <Skeleton h="80px" mt={4} />
+          <Skeleton className="h-20 w-full mt-4" />
         ) : (
           moduleInstallParams.data &&
           !isModuleCompatibleQuery.isFetching &&
@@ -383,7 +403,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
           )
         )}
 
-        <Spacer h={5} />
+        <div className="h-5" />
 
         {/* Submit */}
         <div className="flex justify-end">

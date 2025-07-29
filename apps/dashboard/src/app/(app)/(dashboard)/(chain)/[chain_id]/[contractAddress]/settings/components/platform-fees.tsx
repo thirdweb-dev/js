@@ -1,11 +1,7 @@
 "use client";
-import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import {
   getPlatformFeeInfo,
@@ -21,9 +17,18 @@ import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { TransactionButton } from "@/components/tx-button";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AddressOrEnsSchema, BasisPointsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
+import { parseError } from "@/utils/errorParser";
 import { SettingDetectedState } from "./detected-state";
 
 // @internal
@@ -38,7 +43,7 @@ const CommonPlatformFeeSchema = z.object({
   platform_fee_recipient: AddressOrEnsSchema,
 });
 
-export const SettingsPlatformFees = ({
+export function SettingsPlatformFees({
   contract,
   detectedState,
   isLoggedIn,
@@ -46,7 +51,7 @@ export const SettingsPlatformFees = ({
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
-}) => {
+}) {
   const address = useActiveAccount()?.address;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
@@ -63,114 +68,110 @@ export const SettingsPlatformFees = ({
     values: platformFeeInfo,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Platform fee settings updated",
-    "Error updating platform fee settings",
-    contract,
-  );
-
   return (
-    <Card overflow="hidden" p={0} position="relative">
+    <div className="relative overflow-hidden bg-card border rounded-lg">
       <SettingDetectedState detectedState={detectedState} type="platformFee" />
-      <Flex
-        as="form"
-        direction="column"
-        onSubmit={form.handleSubmit((data) => {
-          const transaction = setPlatformFeeInfo({
-            contract,
-            platformFeeBps: BigInt(data.platform_fee_basis_points),
-            platformFeeRecipient: data.platform_fee_recipient,
-          });
-          sendAndConfirmTx.mutate(transaction, {
-            onError: (error) => {
-              console.error(error);
-              onError(error);
-            },
-            onSuccess: () => {
-              form.reset(data);
-              onSuccess();
-            },
-          });
-        })}
-      >
-        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
-          <Heading size="title.sm">Platform fee</Heading>
-          <Text fontStyle="italic" size="body.md">
-            The wallet address that should receive the revenue from platform
-            fees.
-          </Text>
-          <Flex direction={{ base: "column", md: "row" }} gap={4}>
-            <FormControl
-              isDisabled={!address}
-              isInvalid={
-                !!form.getFieldState("platform_fee_recipient", form.formState)
-                  .error
-              }
-            >
-              <FormLabel>Recipient Address</FormLabel>
-              <SolidityInput
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit((data) => {
+            const transaction = setPlatformFeeInfo({
+              contract,
+              platformFeeBps: BigInt(data.platform_fee_basis_points),
+              platformFeeRecipient: data.platform_fee_recipient,
+            });
+            sendAndConfirmTx.mutate(transaction, {
+              onError: (error) => {
+                toast.error("Error updating platform fee settings", {
+                  description: parseError(error),
+                });
+                console.error(error);
+              },
+              onSuccess: () => {
+                form.reset(data);
+                toast.success("Platform fee settings updated");
+              },
+            });
+          })}
+        >
+          <div className="p-4 md:p-6">
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold tracking-tight">
+                Platform fee
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                The wallet address that should receive the revenue from platform
+                fees
+              </p>
+            </div>
+
+            {platformFeesQuery.isPending ? (
+              <Skeleton className="h-[74px] w-full" />
+            ) : (
+              <div className="flex flex-col lg:flex-row gap-4 w-full">
+                <FormField
+                  control={form.control}
+                  name="platform_fee_recipient"
+                  render={({ field }) => (
+                    <FormItem className="grow max-w-md">
+                      <FormLabel>Recipient Address</FormLabel>
+                      <FormControl>
+                        <SolidityInput
+                          client={contract.client}
+                          formContext={form}
+                          className="bg-background"
+                          solidityType="address"
+                          disabled={!address || sendAndConfirmTx.isPending}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="platform_fee_basis_points"
+                  render={() => (
+                    <FormItem className="md:max-w-[200px]">
+                      <FormLabel>Percentage</FormLabel>
+                      <FormControl>
+                        <BasisPointsInput
+                          disabled={sendAndConfirmTx.isPending}
+                          onChange={(value) =>
+                            form.setValue("platform_fee_basis_points", value, {
+                              shouldValidate: true,
+                            })
+                          }
+                          value={form.watch("platform_fee_basis_points")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+          </div>
+
+          <AdminOnly contract={contract}>
+            <div className="p-4 lg:px-6 py-3 border-t border-dashed flex justify-end">
+              <TransactionButton
+                variant="default"
+                size="sm"
                 client={contract.client}
-                formContext={form}
-                solidityType="address"
-                {...form.register("platform_fee_recipient")}
-                disabled={!address || sendAndConfirmTx.isPending}
-              />
-              <FormErrorMessage>
-                {
-                  form.getFieldState("platform_fee_recipient", form.formState)
-                    .error?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl
-              isDisabled={!address}
-              isInvalid={
-                !!form.getFieldState(
-                  "platform_fee_basis_points",
-                  form.formState,
-                ).error
-              }
-              maxW={{ base: "100%", md: "200px" }}
-            >
-              <FormLabel>Percentage</FormLabel>
-              <BasisPointsInput
-                disabled={sendAndConfirmTx.isPending}
-                onChange={(value) =>
-                  form.setValue("platform_fee_basis_points", value, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                  })
-                }
-                value={form.watch("platform_fee_basis_points")}
-              />
-              <FormErrorMessage>
-                {
-                  form.getFieldState(
-                    "platform_fee_basis_points",
-                    form.formState,
-                  ).error?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-          </Flex>
-        </Flex>
-        <AdminOnly contract={contract}>
-          <TransactionButton
-            className="!rounded-t-none rounded-xl"
-            client={contract.client}
-            disabled={platformFeesQuery.isPending || !form.formState.isDirty}
-            isLoggedIn={isLoggedIn}
-            isPending={sendAndConfirmTx.isPending}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
-          >
-            {sendAndConfirmTx.isPending
-              ? "Updating Platform Fee Settings"
-              : "Update Platform Fee Settings"}
-          </TransactionButton>
-        </AdminOnly>
-      </Flex>
-    </Card>
+                disabled={!form.formState.isDirty}
+                isLoggedIn={isLoggedIn}
+                isPending={sendAndConfirmTx.isPending}
+                transactionCount={undefined}
+                txChainID={contract.chain.id}
+                type="submit"
+              >
+                Save
+              </TransactionButton>
+            </div>
+          </AdminOnly>
+        </form>
+      </Form>
+    </div>
   );
-};
+}

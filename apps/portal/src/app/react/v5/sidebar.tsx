@@ -51,7 +51,7 @@ export const sidebar: SideBar = {
           name: "Ecosystems Wallets",
         },
         {
-          href: "/connect/external-wallets",
+          href: "/wallets/external-wallets",
           name: "External Wallets",
         },
         {

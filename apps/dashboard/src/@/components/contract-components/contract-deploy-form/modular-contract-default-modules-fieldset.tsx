@@ -1,8 +1,7 @@
-import { FormControl } from "@chakra-ui/react";
-import { FormErrorMessage, FormLabel } from "chakra/form";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
@@ -104,14 +103,15 @@ function RenderModule(props: {
             `moduleData.${module.name}.${param.name}` as const;
 
           return (
-            <FormControl
-              isInvalid={
-                !!form.getFieldState(formFieldKey, form.formState).error
-              }
-              isRequired
+            <FormFieldSetup
               key={formFieldKey}
+              htmlFor={formFieldKey}
+              label={param.name}
+              isRequired={true}
+              errorMessage={
+                form.getFieldState(formFieldKey, form.formState).error?.message
+              }
             >
-              <FormLabel> {param.name}</FormLabel>
               <SolidityInput
                 client={props.client}
                 // @ts-expect-error - old types, need to update
@@ -119,13 +119,7 @@ function RenderModule(props: {
                 solidityType={param.type}
                 {...form.register(formFieldKey)}
               />
-              <FormErrorMessage>
-                {
-                  form.getFieldState(formFieldKey, form.formState).error
-                    ?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
+            </FormFieldSetup>
           );
         })}
       </div>

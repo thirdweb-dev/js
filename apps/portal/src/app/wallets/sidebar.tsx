@@ -12,6 +12,11 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
+    {
+      href: "https://playground.thirdweb.com/",
+      icon: <ExternalLinkIcon />,
+      name: "Playground",
+    },
     { separator: true },
     {
       isCollapsible: false,
@@ -29,7 +34,11 @@ export const sidebar: SideBar = {
           name: "External Wallets",
         },
         {
-          href: `${walletSlug}/sponsor-gas`,
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "Ecosystem Wallets",
+        },
+        {
+          href: `/transactions/sponsor`,
           name: "Sponsor Gas",
         },
         {
@@ -102,22 +111,12 @@ export const sidebar: SideBar = {
       name: "Resources",
       links: [
         {
-          href: "https://playground.thirdweb.com/",
-          icon: <ExternalLinkIcon />,
-          name: "Playground",
-        },
-        {
-          href: "https://thirdweb.com/templates",
-          icon: <ExternalLinkIcon />,
-          name: "Templates",
-        },
-        {
-          href: `${walletSlug}/ecosystem/set-up`,
-          name: "Ecosystem Wallets",
-        },
-        {
           href: `${walletSlug}/security`,
           name: "Security",
+        },
+        {
+          href: "/vault",
+          name: "Vault",
         },
         {
           href: `${walletSlug}/faq`,

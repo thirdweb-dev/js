@@ -3,7 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { wait } from "../../../../utils/promise/wait.js";
 import { formatWalletConnectUrl } from "../../../../utils/url.js";
-import { isAndroid, isIOS, isMobile } from "../../../../utils/web/isMobile.js";
+import { isMobile } from "../../../../utils/web/isMobile.js";
 import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -47,35 +47,23 @@ export const WalletConnectConnection: React.FC<{
         client: props.client,
         walletConnect: {
           onDisplayUri(uri) {
-            const preferNative =
-              walletInfo.mobile.native || walletInfo.mobile.universal;
             try {
               if (isMobile()) {
-                if (isAndroid()) {
-                  if (preferNative) {
-                    openWindow(
-                      formatWalletConnectUrl(preferNative, uri).redirect,
-                    );
-                  }
-                } else if (isIOS()) {
-                  if (preferNative) {
-                    openWindow(
-                      formatWalletConnectUrl(preferNative, uri).redirect,
-                    );
-                  }
+                const mobileAppLink =
+                  walletInfo.mobile.native || walletInfo.mobile.universal;
+                if (mobileAppLink) {
+                  openWindow(
+                    formatWalletConnectUrl(mobileAppLink, uri).redirect,
+                  );
                 } else {
-                  const preferUniversal =
-                    walletInfo.mobile.universal || walletInfo.mobile.native;
-                  if (preferUniversal) {
-                    openWindow(
-                      formatWalletConnectUrl(preferUniversal, uri).redirect,
-                    );
-                  }
+                  // on android, wc:// links show the app picker
+                  openWindow(uri);
                 }
               } else {
                 setQrCodeUri(uri);
               }
-            } catch {
+            } catch (e) {
+              console.error(e);
               setErrorConnecting(true);
             }
           },
@@ -216,28 +204,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
           chain: props.chain,
           client: props.client,
           onDisplayUri(uri) {
-            const platformUris = {
-              android: walletInfo.mobile.universal || "",
-              ios: walletInfo.mobile.native || "",
-              other: walletInfo.mobile.universal || "",
-            };
-
             setQrCodeUri(uri);
-            if (isMobile()) {
-              if (isAndroid()) {
-                openWindow(
-                  `${platformUris.android}wc?uri=${encodeURIComponent(uri)}`,
-                );
-              } else if (isIOS()) {
-                openWindow(
-                  `${platformUris.ios}wc?uri=${encodeURIComponent(uri)}`,
-                );
-              } else {
-                openWindow(
-                  `${platformUris.other}wc?uri=${encodeURIComponent(uri)}`,
-                );
-              }
-            }
           },
           optionalChains: props.chains,
           projectId: props.walletConnect?.projectId,
@@ -253,8 +220,6 @@ export const WalletConnectStandaloneConnection: React.FC<{
     }
   }, [
     props.walletConnect,
-    walletInfo.mobile.native,
-    walletInfo.mobile.universal,
     wallet,
     props.chain,
     props.client,

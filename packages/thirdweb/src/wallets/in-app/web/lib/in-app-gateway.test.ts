@@ -38,7 +38,7 @@ describe
         strategy: "backend",
         walletSecret: "test-secret",
       });
-      authToken = wallet.getAuthToken?.();
+      authToken = wallet.getAuthToken();
       expect(authToken).toBeDefined();
     });
 
@@ -59,7 +59,7 @@ describe
           ],
           signingOptions: {
             from: account.address,
-            type: "eoa",
+            type: "EOA",
           },
         },
         bodySerializer: stringify,
@@ -69,7 +69,7 @@ describe
         },
       });
 
-      const signatureResult = signResult.data?.result?.results[0];
+      const signatureResult = signResult.data?.result[0];
       if (signatureResult && "result" in signatureResult) {
         expect(signatureResult.result.signature).toEqual(rawSignature);
       } else {
@@ -79,7 +79,7 @@ describe
       }
     });
 
-    it("should queue a 4337 transaction", async () => {
+    it("should queue a 7702 transaction", async () => {
       const body = {
         executionOptions: {
           chainId: sepolia.id,
@@ -120,7 +120,7 @@ describe
         transactionId: txId,
       });
 
-      console.log(tx);
+      console.log(tx.transactionHash);
       expect(tx.transactionHash).toBeDefined();
     });
   });

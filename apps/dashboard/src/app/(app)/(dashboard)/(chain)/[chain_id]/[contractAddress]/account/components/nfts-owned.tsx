@@ -44,8 +44,12 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({
       projectMeta={projectMeta}
     />
   ) : isWalletNFTsLoading ? null : error ? (
-    <p>Failed to fetch NFTs for this account: {error}</p>
+    <p className="text-sm text-muted-foreground">
+      Failed to fetch NFTs for this account: {error}
+    </p>
   ) : (
-    <p>This account doesn&apos;t own any NFTs.</p>
+    <p className="text-sm text-muted-foreground">
+      This account doesn't own any NFTs
+    </p>
   );
 };

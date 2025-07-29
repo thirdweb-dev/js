@@ -51,8 +51,14 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
     <ListerOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" {...restButtonProps} disabled={!address}>
-            {createText} <PlusIcon className="ml-2 size-5" />
+          <Button
+            {...restButtonProps}
+            disabled={!address}
+            className="gap-2"
+            size="sm"
+          >
+            <PlusIcon className="size-4" />
+            {createText}
           </Button>
         </SheetTrigger>
         <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">

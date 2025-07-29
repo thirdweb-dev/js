@@ -66,14 +66,19 @@ const projectRoute = "/team/:team_slug/:project_slug";
 
 const projectPageRedirects = [
   {
-    destination: `${projectRoute}/universal-bridge/:path*`,
+    destination: `${projectRoute}/payments/:path*`,
     permanent: false,
     source: `${projectRoute}/connect/pay/:path*`,
   },
   {
-    destination: `${projectRoute}/universal-bridge/:path*`,
+    destination: `${projectRoute}/payments/:path*`,
     permanent: false,
     source: `${projectRoute}/connect/universal-bridge/:path*`,
+  },
+  {
+    destination: `${projectRoute}/payments/:path*`,
+    permanent: false,
+    source: `${projectRoute}/universal-bridge/:path*`,
   },
   {
     destination: `${projectRoute}/account-abstraction/:path*`,
@@ -375,11 +380,21 @@ async function redirects() {
       permanent: false,
       source: "/template/:slug",
     },
-    // redirect /connect/pay to /universal-bridge
+    // redirect /connect/pay to /payments
     {
-      destination: "/universal-bridge",
-      permanent: false,
+      destination: "/payments",
+      permanent: true,
       source: "/connect/pay",
+    },
+    {
+      destination: "/payments",
+      permanent: true,
+      source: "/universal-bridge",
+    },
+    {
+      destination: "/payments/:slug",
+      permanent: true,
+      source: "/universal-bridge/:slug",
     },
     // PREVIOUS CAMPAIGNS
     {

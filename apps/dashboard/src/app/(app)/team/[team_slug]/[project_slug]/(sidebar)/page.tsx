@@ -373,7 +373,7 @@ async function AsyncAppHighlightsCard(props: {
 
   return (
     <EmptyStateCard
-      link="https://portal.thirdweb.com/connect/quickstart"
+      link="https://portal.thirdweb.com/wallets"
       metric="Wallets"
     />
   );
@@ -395,7 +395,7 @@ async function AsyncWalletDistributionCard(props: {
     <WalletDistributionCard data={walletConnections} />
   ) : (
     <EmptyStateCard
-      link="https://portal.thirdweb.com/connect/quickstart"
+      link="https://portal.thirdweb.com/wallets"
       metric="Wallets"
     />
   );
@@ -423,7 +423,7 @@ function AppHighlightsCard({
       emptyContent: (
         <EmptyStateContent
           description="Your app hasn't collected any fees yet."
-          link={`/team/${params.team_slug}/${params.project_slug}/connect/universal-bridge/settings`}
+          link={`/team/${params.team_slug}/${params.project_slug}/payments/settings`}
           metric="Fees"
         />
       ),
@@ -436,7 +436,7 @@ function AppHighlightsCard({
       emptyContent: (
         <EmptyStateContent
           description="Onramp, swap, and bridge with thirdweb's Payments."
-          link="https://portal.thirdweb.com/connect/pay/overview"
+          link="https://portal.thirdweb.com/payments"
           metric="Payments"
         />
       ),

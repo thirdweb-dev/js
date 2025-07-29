@@ -10,13 +10,6 @@ module.exports = {
     "plugin:storybook/recommended",
   ],
   overrides: [
-    // disable restricted imports in chakra
-    {
-      files: "src/chakra/**/*",
-      rules: {
-        "no-restricted-imports": ["off"],
-      },
-    },
     // allow direct PostHog imports inside analytics helpers
     {
       files: "src/@/analytics/**/*",
@@ -91,60 +84,6 @@ module.exports = {
       "error",
       {
         paths: [
-          {
-            // these are provided by chakra folder, so we don't want to import them from chakra directly
-            importNames: [
-              "Card",
-              "Button",
-              "Checkbox",
-              "Badge",
-              "Drawer",
-              "Heading",
-              "Text",
-              "FormLabel",
-              "FormHelperText",
-              "FormErrorMessage",
-              "MenuGroup",
-              "VStack",
-              "HStack",
-              "AspectRatio",
-              "useToast",
-              "useClipboard",
-              "Badge",
-              "Stack",
-              // also the types
-              "ButtonProps",
-              "BadgeProps",
-              "DrawerProps",
-              "HeadingProps",
-              "TextProps",
-              "FormLabelProps",
-              "HelpTextProps",
-              "MenuGroupProps",
-              "MenuItemProps",
-              "AspectRatioProps",
-              "BadgeProps",
-              "StackProps",
-            ],
-            message:
-              'import component from "chakra" folder instead if you have to use chakra component, But use shadcn component otherwise',
-            name: "@chakra-ui/react",
-          },
-          {
-            message:
-              "Import from `@chakra-ui/react` instead of `@chakra-ui/layout`.",
-            name: "@chakra-ui/layout",
-          },
-          {
-            message:
-              "Import from `@chakra-ui/react` instead of `@chakra-ui/button`.",
-            name: "@chakra-ui/button",
-          },
-          {
-            message:
-              "Import from `@chakra-ui/react` instead of `@chakra-ui/menu`.",
-            name: "@chakra-ui/menu",
-          },
           {
             importNames: ["useRouter"],
             message:

@@ -23,16 +23,16 @@ const suggestedLinks: { title: string; href: string }[] = [
     title: "TypeScript SDK",
   },
   {
-    href: "/connect",
-    title: "Connect",
+    href: "/wallets",
+    title: "Wallets",
   },
   {
     href: "/contracts",
     title: "Contracts",
   },
   {
-    href: "/engine",
-    title: "Engine",
+    href: "/transactions",
+    title: "Transactions",
   },
   {
     href: "/payments",
@@ -46,7 +46,7 @@ type Tag =
   | "Unity"
   | "TypeScript"
   | "Wallet SDK"
-  | "Connect"
+  | "Wallets"
   | "Reference"
   | "Python"
   | "Contracts"
@@ -56,7 +56,8 @@ type Tag =
   | "Solidity"
   | "Payments"
   | "Glossary"
-  | "Engine";
+  | "Engine"
+  | "Transactions";
 
 function SearchModalContent(props: { closeModal: () => void }) {
   const [input, setInput] = useState("");
@@ -392,24 +393,14 @@ function getTagsFromHref(href: string): Tag[] | undefined {
     }
     return ["React Native"];
   }
-  if (href.includes("/react/v4")) {
-    if (href.includes("/references")) {
-      return ["Reference", "React"];
-    }
-    return ["React"];
-  }
+
   if (href.includes("/typescript/v4")) {
     if (href.includes("/references")) {
       return ["Reference", "TypeScript"];
     }
     return ["TypeScript"];
   }
-  if (href.includes("/wallet-sdk/v2")) {
-    if (href.includes("/references")) {
-      return ["Reference", "Wallet SDK"];
-    }
-    return ["Wallet SDK"];
-  }
+
   if (href.includes("/unity")) {
     return ["Unity"];
   }
@@ -422,11 +413,14 @@ function getTagsFromHref(href: string): Tag[] | undefined {
   if (href.includes("/react/v5")) {
     return ["React"];
   }
-  if (href.includes("/connect")) {
-    return ["Connect"];
+  if (href.includes("/wallets")) {
+    return ["Wallets"];
   }
   if (href.includes("/engine")) {
     return ["Engine"];
+  }
+  if (href.includes("/transactions")) {
+    return ["Transactions"];
   }
   if (href.includes("/infrastructure")) {
     return ["Infra"];

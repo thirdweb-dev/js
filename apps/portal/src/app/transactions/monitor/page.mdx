@@ -24,8 +24,6 @@ export const metadata = createMetadata({
 
 Monitor and get notified about transactions in your application, both on your project dashboard and programmatically.
 
----
-
 <Tabs defaultValue="http">
 	<TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
@@ -43,12 +41,13 @@ Monitor and get notified about transactions in your application, both on your pr
   You can track the status of transactions sent via the [transactions API](https://engine.thirdweb.com/reference) using its transaction id.
 
 ```http
-GET /v1/transactions?id=<transaction-id>
+GET /v1/transactions/{transactionId}
+Host: api.thirdweb.com
 Content-Type: application/json
 x-secret-key: <your-project-secret-key>
 ```
 
-You can also search transactions by `from` or `status`.
+You can also list and search multiple transactions by with the [`/transactions` endpoint](https://api.thirdweb.com/reference#tag/transactions/get/v1/transactions).
 
   </TabsContent>
 

@@ -1,28 +1,28 @@
 "use client";
 
+import { SplitIcon } from "lucide-react";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useSplitDistributeFunds } from "@/hooks/useSplit";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 import type { Balance } from "../ContractSplitPage";
 
-interface DistributeButtonProps {
-  contract: ThirdwebContract;
-  balances: Balance[];
-  balancesIsPending: boolean;
-  balancesIsError: boolean;
-  isLoggedIn: boolean;
-}
-
-export const DistributeButton: React.FC<DistributeButtonProps> = ({
+export const DistributeButton = ({
   contract,
   balances,
   balancesIsPending,
   balancesIsError,
   isLoggedIn,
-  ...restButtonProps
+}: {
+  contract: ThirdwebContract;
+  balances: Balance[];
+  balancesIsPending: boolean;
+  balancesIsError: boolean;
+  isLoggedIn: boolean;
 }) => {
   const validBalances = balances.filter(
     (item) => item.balance !== "0" && item.balance !== "0.0",
@@ -44,19 +44,16 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   const mutation = useSplitDistributeFunds(contract);
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Funds splitted successfully",
-    "Failed to process transaction",
-  );
-
   const distributeFunds = () => {
     mutation.mutate(undefined, {
       onError: (error) => {
+        toast.error("Failed to process transaction", {
+          description: parseError(error),
+        });
         console.error(error);
-        onError(error);
       },
       onSuccess: () => {
-        onSuccess();
+        toast.success("Funds splitted successfully");
       },
     });
   };
@@ -71,7 +68,6 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
         transactionCount={undefined}
         // if we fail to get the balances, we can't know how many transactions there are going to be
         txChainID={contract.chain.id}
-        {...restButtonProps}
       >
         Distribute Funds
       </TransactionButton>
@@ -80,9 +76,12 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
 
   if (numTransactions === 0) {
     return (
-      <Button disabled variant="primary" {...restButtonProps}>
-        Nothing to distribute
-      </Button>
+      <ToolTipLabel label="Nothing to distribute">
+        <Button disabled variant="default" size="sm" className="gap-2">
+          <SplitIcon className="size-3.5" />
+          Distribute Funds
+        </Button>
+      </ToolTipLabel>
     );
   }
 
@@ -93,9 +92,11 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
       isPending={mutation.isPending}
       onClick={distributeFunds}
       transactionCount={numTransactions}
-      {...restButtonProps}
       txChainID={contract.chain.id}
+      variant="default"
+      size="sm"
     >
+      <SplitIcon className="size-3.5" />
       Distribute Funds
     </TransactionButton>
   );

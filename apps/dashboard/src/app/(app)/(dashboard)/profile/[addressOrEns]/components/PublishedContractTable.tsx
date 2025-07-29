@@ -19,7 +19,8 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { PublishedContractDetails } from "@/hooks/contract-hooks";
 import { replaceDeployerAddress } from "@/lib/publisher-utils";
-import { replaceIpfsUrl } from "@/lib/sdk";
+import { publicIPFSGateway } from "@/lib/sdk";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 interface PublishedContractTableProps {
   contractDetails: ContractDataInput[];
@@ -62,7 +63,14 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
             fallback={
               <div className="size-8 rounded-full border border-border bg-muted" />
             }
-            src={cell.value ? replaceIpfsUrl(cell.value, props.client) : ""}
+            src={
+              cell.value
+                ? resolveSchemeWithErrorHandler({
+                    client: props.client,
+                    uri: cell.value,
+                  })
+                : ""
+            }
           />
         ),
         Header: "Logo",
@@ -116,7 +124,7 @@ export function PublishedContractTable(props: PublishedContractTableProps) {
                 >
                   <Link
                     aria-label="View Contract Audit"
-                    href={replaceIpfsUrl(cell.value.audit, props.client)}
+                    href={publicIPFSGateway(cell.value.audit)}
                     onClick={(e) => {
                       e.stopPropagation();
                     }}

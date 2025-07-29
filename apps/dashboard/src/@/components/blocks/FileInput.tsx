@@ -1,4 +1,3 @@
-import { FilePreview } from "@app/team/[team_slug]/[project_slug]/(sidebar)/tokens/create/_common/file-preview";
 import { FilePlusIcon, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 import {
@@ -8,6 +7,7 @@ import {
   useDropzone,
 } from "react-dropzone";
 import type { ThirdwebClient } from "thirdweb";
+import { FilePreview } from "@/components/blocks/file-preview";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

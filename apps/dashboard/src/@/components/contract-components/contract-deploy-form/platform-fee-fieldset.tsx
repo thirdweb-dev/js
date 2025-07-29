@@ -1,8 +1,8 @@
-import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
 import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -78,30 +78,28 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
             </FormFieldSetup>
           </>
         ) : isMarketplace ? (
-          <p className="mb-3 pt-4 text-muted-foreground text-sm italic">
+          <p className="text-muted-foreground text-sm leading-relaxed">
             A 2.5% platform fee is deducted from each sale to support ongoing
-            platform operations and improvements.{" "}
-            <Link
-              className="text-blue-500 underline"
+            platform operations and improvements. <br />
+            <UnderlineLink
               href={"https://thirdweb.com/pricing"}
               rel="noopener noreferrer"
               target="_blank"
             >
               See fee breakdown on pricing page.
-            </Link>
+            </UnderlineLink>
           </p>
         ) : (
-          <p className="mb-3 pt-4 text-muted-foreground text-sm italic">
+          <p className="text-muted-foreground text-sm leading-relaxed">
             A 2.5% platform fee is deducted from each primary sale price to
-            support ongoing platform operations and improvements.{" "}
-            <Link
-              className="text-blue-500 underline"
+            support ongoing platform operations and improvements. <br />
+            <UnderlineLink
               href={"https://thirdweb.com/pricing"}
               rel="noopener noreferrer"
               target="_blank"
             >
               See fee breakdown on pricing page.
-            </Link>
+            </UnderlineLink>
           </p>
         )}
       </div>

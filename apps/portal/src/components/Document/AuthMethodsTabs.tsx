@@ -3,11 +3,12 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { getSocialIcon } from "thirdweb/wallets/in-app";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DotNetIcon,
+  EngineIcon,
   ReactIcon,
   TypeScriptIcon,
   UnityIcon,
@@ -34,6 +35,7 @@ type AuthMethod =
   | "auth_endpoint";
 
 type Platform =
+  | "http"
   | "typescript"
   | "react"
   | "react-native"
@@ -67,32 +69,110 @@ const authMethods: { id: AuthMethod; label: string; description: string }[] = [
   },
 ];
 
-const platforms: { id: Platform; label: string; icon: React.ComponentType }[] =
-  [
-    { id: "typescript", label: "TypeScript", icon: TypeScriptIcon },
-    { id: "react", label: "React", icon: ReactIcon },
-    { id: "react-native", label: "React Native", icon: ReactIcon },
-    { id: "dotnet", label: ".NET", icon: DotNetIcon },
-    { id: "unity", label: "Unity", icon: UnityIcon },
-    { id: "unreal", label: "Unreal Engine", icon: UnrealEngineIcon },
-  ];
+const allPlatforms: {
+  id: Platform;
+  label: string;
+  icon: React.ComponentType;
+}[] = [
+  { id: "http", label: "HTTP", icon: EngineIcon },
+  { id: "typescript", label: "TypeScript", icon: TypeScriptIcon },
+  { id: "react", label: "React", icon: ReactIcon },
+  { id: "react-native", label: "React Native", icon: ReactIcon },
+  { id: "dotnet", label: ".NET", icon: DotNetIcon },
+  { id: "unity", label: "Unity", icon: UnityIcon },
+  { id: "unreal", label: "Unreal Engine", icon: UnrealEngineIcon },
+];
 
-const getCodeSnippet = (authMethod: AuthMethod, platform: Platform): string => {
+// Get platforms based on selected auth method
+const getPlatformsForAuth = (authMethod: AuthMethod) => {
+  // Only show HTTP tab for email and phone
+  if (authMethod === "email" || authMethod === "phone") {
+    return allPlatforms;
+  }
+  // For other auth methods, exclude HTTP
+  return allPlatforms.filter((platform) => platform.id !== "http");
+};
+
+const getCodeSnippet = (
+  authMethod: AuthMethod,
+  platform: Platform,
+): string[] => {
   switch (platform) {
+    case "http":
+      return getHTTPSnippet(authMethod);
     case "typescript":
-      return getTypeScriptSnippet(authMethod);
+      return [getTypeScriptSnippet(authMethod)];
     case "react":
-      return getReactSnippet(authMethod);
+      return [getReactSnippet(authMethod)];
     case "react-native":
-      return getReactSnippet(authMethod);
+      return [getReactSnippet(authMethod)];
     case "dotnet":
-      return getDotNetSnippet(authMethod);
+      return [getDotNetSnippet(authMethod)];
     case "unity":
-      return getUnitySnippet(authMethod);
+      return [getUnitySnippet(authMethod)];
     case "unreal":
-      return getUnrealSnippet(authMethod);
+      return [getUnrealSnippet(authMethod)];
     default:
-      return "";
+      return [""];
+  }
+};
+
+const getHTTPSnippet = (authMethod: AuthMethod): string[] => {
+  switch (authMethod) {
+    case "email":
+      return [
+        `# Send a login code to the user
+POST https://api.thirdweb.com/v1/wallets/user/code
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "email",
+  "email": "user@example.com"
+}`,
+        `# Verify the code and authenticate the user
+POST https://api.thirdweb.com/v1/wallets/user/code/verify
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "email",
+  "email": "user@example.com",
+  "code": "123456"
+}
+
+// Response includes wallet address and JWT token
+// Use the JWT token for subsequent API calls`,
+      ];
+
+    case "phone":
+      return [
+        `# Send a login code to the user
+POST https://api.thirdweb.com/v1/wallets/user/code
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "phone",
+  "phone": "+1234567890"
+}`,
+        `# Verify the code and authenticate the user
+POST https://api.thirdweb.com/v1/wallets/user/code/verify
+Content-Type: application/json
+x-client-id: <your-project-client-id>
+
+{
+  "type": "phone",
+  "phone": "+1234567890",
+  "code": "123456"
+}
+
+// Response includes wallet address and JWT token
+// Use the JWT token for subsequent API calls`,
+      ];
+
+    default:
+      return [""];
   }
 };
 
@@ -739,12 +819,32 @@ const getUnrealSnippet = (authMethod: AuthMethod): string => {
 
 function AuthMethodsTabsContent() {
   const [selectedAuth, setSelectedAuth] = useState<AuthMethod>("email");
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(
+    null,
+  );
+  const platforms = useMemo(
+    () => getPlatformsForAuth(selectedAuth),
+    [selectedAuth],
+  );
+
+  // Reset platform selection when platforms change
+  const currentPlatform = useMemo(() => {
+    const defaultPlatform = platforms[0]?.id || "typescript";
+    // If currently selected platform is not available in new platforms, reset to first available
+    if (
+      !selectedPlatform ||
+      !platforms.find((p) => p.id === selectedPlatform)
+    ) {
+      return defaultPlatform;
+    }
+    return selectedPlatform;
+  }, [platforms, selectedPlatform]);
 
   return (
     <div className="space-y-6">
       {/* Auth Method Selection */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-lg font-semibold mb-4 text-foreground">
           1. Choose Authentication Method
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -754,10 +854,11 @@ function AuthMethodsTabsContent() {
               key={method.id}
               onClick={() => setSelectedAuth(method.id)}
               className={cn(
-                "flex items-center gap-3 p-3 rounded-lg border text-left transition-colors",
+                "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground text-sm rounded-lg hover:bg-violet-800/15",
                 selectedAuth === method.id
-                  ? "bg-blue-50 border-blue-300 text-blue-900"
-                  : "bg-card hover:bg-muted border-border",
+                  ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
+                  : "",
+                "flex flex-row justify-start items-start gap-3",
               )}
             >
               <img
@@ -765,12 +866,7 @@ function AuthMethodsTabsContent() {
                 className="size-5 shrink-0"
                 src={getSocialIcon(method.id)}
               />
-              <div className="min-w-0 flex-1">
-                <div className="font-medium">{method.label}</div>
-                <div className="text-sm text-muted-foreground truncate">
-                  {method.description}
-                </div>
-              </div>
+              <div className="font-medium">{method.label}</div>
             </button>
           ))}
         </div>
@@ -778,8 +874,13 @@ function AuthMethodsTabsContent() {
 
       {/* Platform Tabs */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">2. Select Platform</h3>
-        <Tabs defaultValue="typescript">
+        <h3 className="text-lg font-semibold mb-4 text-foreground">
+          2. Select Platform
+        </h3>
+        <Tabs
+          value={currentPlatform}
+          onValueChange={(value) => setSelectedPlatform(value as Platform)}
+        >
           <TabsList>
             {platforms.map((platform) => {
               const IconComponent = platform.icon;
@@ -812,17 +913,26 @@ function AuthMethodsTabsContent() {
                       authentication with {platform.label}
                     </h4>
                   </div>
-                  <div className="relative">
-                    <CodeClient
-                      code={getCodeSnippet(selectedAuth, platform.id)}
-                      lang={
-                        platform.id === "dotnet" || platform.id === "unity"
-                          ? "csharp"
-                          : "typescript"
-                      }
-                      loader={<CodeLoading />}
-                      className="text-sm"
-                    />
+                  <div className="relative space-y-4">
+                    {getCodeSnippet(selectedAuth, platform.id).map(
+                      (code, index) => (
+                        <CodeClient
+                          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                          key={index}
+                          code={code}
+                          lang={
+                            platform.id === "http"
+                              ? "http"
+                              : platform.id === "dotnet" ||
+                                  platform.id === "unity"
+                                ? "csharp"
+                                : "typescript"
+                          }
+                          loader={<CodeLoading />}
+                          className="text-sm"
+                        />
+                      ),
+                    )}
                   </div>
                 </div>
               </TabsContent>

@@ -10,39 +10,37 @@ import {
 import { useReadContract } from "thirdweb/react";
 import { MarketplaceTable } from "../../components/marketplace-table";
 
-interface EnglishAuctionsTableProps {
+export function EnglishAuctionsTable(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
-
-const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
-
-export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
-  contract,
-  isLoggedIn,
-}) => {
-  const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
+  cta: React.ReactNode;
+}) {
+  const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
   const getAllQueryResult = useReadContract(getAllAuctions, {
-    contract,
+    contract: props.contract,
     count: BigInt(queryParams.count),
     start: queryParams.start,
   });
   const getValidQueryResult = useReadContract(getAllValidAuctions, {
-    contract,
+    contract: props.contract,
     count: BigInt(queryParams.count),
     start: queryParams.start,
   });
-  const totalCountQuery = useReadContract(totalAuctions, { contract });
+  const totalCountQuery = useReadContract(totalAuctions, {
+    contract: props.contract,
+  });
 
   return (
     <MarketplaceTable
-      contract={contract}
+      contract={props.contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
-      isLoggedIn={isLoggedIn}
+      isLoggedIn={props.isLoggedIn}
       queryParams={queryParams}
       setQueryParams={setQueryParams}
       totalCountQuery={totalCountQuery}
+      cta={props.cta}
+      title="English Auctions"
     />
   );
-};
+}

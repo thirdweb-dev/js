@@ -1,5 +1,3 @@
-// @ts-check
-
 const unrealEngineRedirects = {
   "/unreal-engine/blueprints/private-key-wallet":
     "unreal-engine/blueprints/in-app-wallet",
@@ -206,7 +204,7 @@ const reactRedirects = {
 };
 
 const solidityRedirects = {
-  "/interact/overview": "/connect/blockchain-api",
+  "/interact/overview": "/wallets",
   "/solidity": "/contracts/build",
   "/solidity/base-contract/erc721delayedreveal":
     "/contracts/build/base-contracts/erc-721/delayed-reveal",
@@ -339,6 +337,13 @@ const solidityRedirects = {
   "/solidity/extensions/primarysale":
     "/contracts/build/extensions/general/PrimarySale",
   "/solidity/extensions/royalty": "/contracts/build/extensions/general/Royalty",
+
+  // contracts -> tokens
+  "/contracts/deploy/overview": "/contracts/deploy",
+  "/contracts/deploy/reference": "/contracts/deploy",
+  "/contracts/deploy/deploy-contract": "/contracts/deploy",
+  "/contracts/build": "/tokens/build",
+  "/contracts/build/:path*": "/tokens/build/:path*",
 };
 
 const extensionsTable = "/typescript/v4/extensions#all-available-extensions";
@@ -540,98 +545,89 @@ const unityRedirects = {
 
 const walletRedirects = {
   //auth
-  "/auth": "/connect/auth",
-  "/auth/client-frameworks/react": "/connect/auth/client-frameworks/react",
-  "/auth/client-frameworks/react-native":
-    "/connect/auth/client-frameworks/react-native",
-  "/auth/faqs": "/connect/auth/faq",
-  "/auth/getting-started": "/connect/auth/get-started",
-  "/auth/how-auth-works": "/connect/auth/how-it-works",
-  "/auth/how-auth-works/auth-api": "/connect/auth/how-it-works/api",
-  "/auth/how-auth-works/json-web-tokens": "/connect/auth/how-it-works/jwt",
-  "/auth/how-auth-works/sign-in-with-wallet": "/connect/auth/how-it-works/siwe",
-  "/auth/integrations/firebase": "/connect/auth/integrations/firebase",
-  "/auth/integrations/next-auth": "/connect/auth/integrations/next-auth",
-  "/auth/integrations/supabase": "/connect/auth/integrations/supabase",
-  "/auth/server-frameworks/express": "/connect/auth/server-frameworks/express",
-  "/auth/server-frameworks/next": "/connect/auth/server-frameworks/next",
-  "/auth/wallet-configuration": "/connect/auth/wallet-configuration",
+  "/auth": "/wallets/auth",
+  "/auth/client-frameworks/react": "/wallets",
+  "/auth/client-frameworks/react-native": "/wallets",
+  "/auth/faqs": "/wallets/auth",
+  "/auth/getting-started": "/wallets/auth",
+  "/auth/how-auth-works": "/wallets/auth",
+  "/auth/how-auth-works/auth-api": "/wallets/auth",
+  "/auth/how-auth-works/json-web-tokens": "/wallets/auth",
+  "/auth/how-auth-works/sign-in-with-wallet": "/wallets/auth",
+  "/auth/integrations/firebase": "/wallets/auth",
+  "/auth/integrations/next-auth": "/wallets/auth",
+  "/auth/integrations/supabase": "/wallets/auth",
+  "/auth/server-frameworks/express": "/wallets/auth",
+  "/auth/server-frameworks/next": "/wallets/auth",
+  "/auth/wallet-configuration": "/wallets/auth",
   //connect
-  "/connect/architecture": "/connect",
-  "/connect/auth/client-frameworks/react": "/connect/auth",
-  "/connect/auth/client-frameworks/react-native": "/connect/auth",
-  "/connect/auth/faqs": "/connect/auth",
-  "/connect/auth/get-started": "/connect/auth",
-  "/connect/auth/how-it-works": "/connect/auth",
-  "/connect/auth/how-it-works/api": "/connect/auth",
-  "/connect/auth/how-it-works/jwt": "/connect/auth",
-  "/connect/auth/how-it-works/siwe": "/connect/auth",
-  "/connect/auth/integrations/firebase": "/connect/auth",
-  "/connect/auth/integrations/next-auth": "/connect/auth",
-  "/connect/auth/integrations/supabase": "/connect/auth",
-  "/connect/auth/server-frameworks/express": "/connect/auth",
-  "/connect/auth/server-frameworks/next": "/connect/auth",
-  "/connect/auth/wallet-configuration": "/connect/auth",
-  "/connect/connect-wallet": "/connect/connect",
-  "/connect/connect-wallet/auth": "/connect/sign-in",
-  "/connect/connect-wallet/button-title": "/connect/sign-in",
-  "/connect/connect-wallet/class-name": "/connect/sign-in",
-  "/connect/connect-wallet/custom-button": "/connect/sign-in",
-  "/connect/connect-wallet/custom-ui": "/connect/sign-in/custom-ui",
-  "/connect/connect-wallet/drop-down-positions": "/connect/sign-in",
-  "/connect/connect-wallet/hide-testnet-faucet": "/connect/sign-in",
-  "/connect/connect-wallet/modal-size": "/connect/sign-in",
-  "/connect/connect-wallet/modal-title": "/connect/sign-in",
-  "/connect/connect-wallet/privacy-policy": "/connect/sign-in",
-  "/connect/connect-wallet/switch-chain": "/connect/sign-in",
-  "/connect/connect-wallet/terms-of-service": "/connect/sign-in",
-  "/connect/connect-wallet/theme": "/connect/sign-in",
-  "/connect/connect-wallet/wallet-providers": "/connect/connect",
-  "/connect/connect-wallet/welcome-screen": "/connect/sign-in",
-  "/connect/ecosystem/ecosystem-premissions":
-    "/connect/wallet/ecosystem/permissions",
+  "/connect/architecture": "/wallets",
+  "/connect/auth/client-frameworks/react": "/wallets/auth",
+  "/connect/auth/client-frameworks/react-native": "/wallets/auth",
+  "/connect/auth/faqs": "/wallets/auth",
+  "/connect/auth/get-started": "/wallets/auth",
+  "/connect/auth/how-it-works": "/wallets/auth",
+  "/connect/auth/how-it-works/api": "/wallets/auth",
+  "/connect/auth/how-it-works/jwt": "/wallets/auth",
+  "/connect/auth/how-it-works/siwe": "/wallets/auth",
+  "/connect/auth/integrations/firebase": "/wallets/auth",
+  "/connect/auth/integrations/next-auth": "/wallets/auth",
+  "/connect/auth/integrations/supabase": "/wallets/auth",
+  "/connect/auth/server-frameworks/express": "/wallets/auth",
+  "/connect/auth/server-frameworks/next": "/wallets/auth",
+  "/connect/auth/wallet-configuration": "/wallets/auth",
+  "/connect/connect-wallet": "/wallets",
+  "/connect/connect-wallet/auth": "/wallets",
+  "/connect/connect-wallet/button-title": "/wallets",
+  "/connect/connect-wallet/class-name": "/wallets",
+  "/connect/connect-wallet/custom-button": "/wallets",
+  "/connect/connect-wallet/custom-ui": "/wallets",
+  "/connect/connect-wallet/drop-down-positions": "/wallets",
+  "/connect/connect-wallet/hide-testnet-faucet": "/wallets",
+  "/connect/connect-wallet/modal-size": "/wallets",
+  "/connect/connect-wallet/modal-title": "/wallets",
+  "/connect/connect-wallet/privacy-policy": "/wallets",
+  "/connect/connect-wallet/switch-chain": "/wallets",
+  "/connect/connect-wallet/terms-of-service": "/wallets",
+  "/connect/connect-wallet/theme": "/wallets",
+  "/connect/connect-wallet/wallet-providers": "/wallets",
+  "/connect/connect-wallet/welcome-screen": "/wallets",
+  "/connect/ecosystem/ecosystem-premissions": "/wallets/ecosystem/set-up",
 
-  "/connect/ecosystem/faq": "/connect/wallet/faq",
-  "/connect/ecosystem/get-started": "/connect/wallet/get-started",
-  "/connect/ecosystem/integrating-partners":
-    "/connect/wallet/ecosystem/integrating-partners",
-  "/connect/ecosystem/overview": "/connect/wallet/overview",
-  "/connect/ecosystem/pregenerate-wallets":
-    "/connect/wallet/pregenerate-wallets",
-  "/connect/ecosystem/security": "/connect/wallet/security",
-  "/connect/ecosystem/wallet-explorer": "/connect/wallet/ecosystem/portal",
-  "/connect/faqs": "/connect/sign-in",
-  "/connect/in-app-wallet/faqs": "/connect/wallet/faq",
-  "/connect/in-app-wallet/get-started": "/connect/wallet/get-started",
+  "/connect/ecosystem/faq": "/wallets/faq",
+  "/connect/ecosystem/get-started": "/wallets",
+  "/connect/ecosystem/integrating-partners": "/wallets/ecosystem/set-up",
+  "/connect/ecosystem/overview": "/wallets/ecosystem/set-up",
+  "/connect/ecosystem/pregenerate-wallets": "/wallets",
+  "/connect/ecosystem/security": "/wallets/security",
+  "/connect/ecosystem/wallet-explorer": "/wallets/ecosystem/set-up",
+  "/connect/faqs": "/wallets/faq",
+  "/connect/in-app-wallet/faqs": "/wallets/faq",
+  "/connect/in-app-wallet/get-started": "/wallets",
   "/connect/in-app-wallet/guides/export-private-key":
-    "/connect/wallet/user-management/export-private-key",
-  "/connect/in-app-wallet/guides/get-user-details":
-    "/connect/wallet/user-management/get-user-profiles",
+    "/wallets/export-private-key",
+  "/connect/in-app-wallet/guides/get-user-details": "/wallets/get-users",
   "/connect/in-app-wallet/guides/link-multiple-profiles":
-    "/connect/wallet/user-management/link-multiple-identity",
+    "/wallets/link-profiles",
   "/connect/in-app-wallet/guides/retrieve-linked-profiles":
-    "/connect/wallet/user-management/get-user-profiles",
+    "/wallets/get-users",
 
-  "/connect/in-app-wallet/overview": "/connect/wallet/overview",
-  "/connect/in-app-wallet/security": "/connect/wallet/security",
-  "/connect/sign-in": "/connect/sign-in/overview",
-  "/connect/sign-in/ConnectButton": "/connect/wallet/get-started",
-  "/connect/sign-in/ConnectEmbed": "/connect/wallet/get-started",
-  "/connect/sign-in/Custom-UI": "/connect/wallet/get-started",
-  "/connect/sign-in/methods/email-and-phone":
-    "/connect/wallet/sign-in-methods/configure",
-  "/connect/sign-in/methods/external-wallets":
-    "/connect/wallet/sign-in-methods/external-wallets",
-  "/connect/sign-in/methods/guest-mode":
-    "/connect/wallet/sign-in-methods/guest",
-  "/connect/sign-in/methods/social-logins":
-    "/connect/wallet/sign-in-methods/configure",
+  "/connect/in-app-wallet/overview": "/wallets",
+  "/connect/in-app-wallet/security": "/wallets/security",
+  "/connect/sign-in": "/wallets/auth",
+  "/connect/sign-in/ConnectButton": "/wallets",
+  "/connect/sign-in/ConnectEmbed": "/wallets",
+  "/connect/sign-in/Custom-UI": "/wallets",
+  "/connect/sign-in/methods/email-and-phone": "/wallets/users",
+  "/connect/sign-in/methods/external-wallets": "/wallets/external-wallets",
+  "/connect/sign-in/methods/guest-mode": "/wallets",
+  "/connect/sign-in/methods/social-logins": "/wallets/users",
 
-  "/connect/sign-in/overview": "/connect/wallet/overview",
-  "/connect/usage-with-react-native-sdk": "/connect/sign-in",
-  "/connect/usage-with-react-sdk": "/connect/sign-in",
-  "/connect/usage-with-typescript-sdk": "/connect/sign-in",
-  "/connect/usage-with-unity-sdk": "/connect/sign-in",
+  "/connect/sign-in/overview": "/wallets/auth",
+  "/connect/usage-with-react-native-sdk": "/wallets",
+  "/connect/usage-with-react-sdk": "/wallets",
+  "/connect/usage-with-typescript-sdk": "/wallets",
+  "/connect/usage-with-unity-sdk": "/wallets",
 
   //embedded wallet
   "/embedded-wallet": "/wallets/embedded-wallet/overview",
@@ -712,6 +708,7 @@ const walletRedirects = {
 
 const paymentRedirects = {
   "/pay": "/payments",
+  "/pay/:path*": "/payments",
   "/checkouts": "/payments",
   "/checkouts/api-reference": "/payments/nft-checkout/api-reference",
   "/checkouts/checkout-link": "/payments/nft-checkout/checkout-link",
@@ -732,16 +729,15 @@ const paymentRedirects = {
   "/checkouts/translations": "/payments/nft-checkout/translations",
   "/checkouts/webhooks": "/payments/nft-checkout/webhooks",
   "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server":
-    "/connect/in-app-wallet/guides/get-user-details",
-  "/connect/in-app-wallet/how-it-works": "/connect/in-app-wallet/security",
-  "/connect/pay/build-a-custom-experience":
-    "/connect/pay/guides/build-a-custom-experience",
-  "/connect/pay/buy-with-crypto": "/connect/pay/overview",
-  "/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
-  "/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
-  "/connect/pay/buy-with-fiat": "/connect/pay/overview",
-  "/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
-  "/connect/pay/guides/enable-test-mode": "/connect/pay/testing-pay",
+    "/wallets/get-users",
+  "/connect/in-app-wallet/how-it-works": "/wallets/security",
+  "/connect/pay/build-a-custom-experience": "/payments/products",
+  "/connect/pay/buy-with-crypto": "/payments",
+  "/connect/pay/buy-with-crypto/fee-sharing": "/payments",
+  "/connect/pay/buy-with-crypto/overview": "/payments",
+  "/connect/pay/buy-with-fiat": "/payments",
+  "/connect/pay/enable-test-mode": "/payments",
+  "/connect/pay/guides/enable-test-mode": "/payments",
 };
 
 const contractRedirects = {
@@ -917,15 +913,14 @@ const glossaryRedirects = {
 
 const otherRedirects = {
   "/api-keys": "/account/api-keys",
-  "/connect/account-abstraction": "/connect/account-abstraction/overview",
+  "/connect/account-abstraction": "/wallets/sponsor-gas",
   // connect
-  "/connect/connect": "/connect/sign-in",
-  "/connect/ecosystems/:path*": "/connect/wallet/overview",
+  "/connect/connect": "/wallets",
   "/connect/embedded-wallet/how-to/get-embedded-wallet-details-on-server":
     "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server",
   "/connect/in-app-wallet/how-to/get-in-app-wallet-details-on-server":
     "/connect/in-app-wallet/guides/get-in-app-wallet-details-on-server",
-  "/connect/smart-wallet/:path*": "/connect/account-abstraction/:path*",
+  "/connect/smart-wallet/:path*": "/wallets/sponsor-gas",
   "/connect/wallet/sign-in-methods/overview":
     "/connect/wallet/sign-in-methods/configure",
   "/contractkit/:path*": "/contracts",
@@ -1014,13 +1009,17 @@ const otherRedirects = {
     "/unity/wallets/providers/in-app-wallet",
   "/unity/wallets/providers/smart-wallet":
     "/unity/wallets/providers/account-abstraction",
-  "/wallet/get-started/overview": "/connect/wallet/overview",
+  "/wallet/get-started/overview": "/wallets",
   // connect > wallets
   "/connect": "/wallets",
+  "/connect/auth": "/wallets/auth",
   "/connect/wallet/sign-in-methods/configure": "/wallets/users",
   "/connect/wallet/server": "/wallets/server",
   "/connect/account-abstraction/get-started": "/wallets/sponsor-gas",
   "/connect/account-abstraction/:path*": "/wallets/sponsor-gas",
+  "/connect/pay/:path*": "/payments",
+  "/connect/ecosystems/:path*": "/wallets/ecosystem/set-up",
+  "/connect/:path*": "/wallets",
   "/wallets/in-app-wallet/custom-auth/configuration": "/wallets/custom-auth",
   "/connect/wallets/user-management/link-multiple-identity":
     "/wallets/link-profiles",
@@ -1029,7 +1028,7 @@ const otherRedirects = {
   "/wallets/wallet/server": "/wallets/server",
   "/wallets/wallet/sign-in-methods/configure": "/wallets/users",
   // account abstraction rename
-  "/wallets/smart-wallet/:path*": "/connect/account-abstraction/:path*",
+  "/wallets/smart-wallet/:path*": "/wallets/sponsor-gas",
   "/web3-api/:path*": "/infrastructure/engine/overview",
 };
 
@@ -1045,41 +1044,36 @@ const v4ToV5Redirects = {
   "/react-native/v0/:path*": "/react-native/v5",
   "/react/v4": "/react/v5",
   "/react/v4/:path*": "/react/v5",
-  "/references/wallets": "/connect/external-wallets",
-  "/references/wallets/:path*": "/connect/external-wallets",
+  "/references/wallets": "/wallets/external-wallets",
+  "/references/wallets/:path*": "/wallets/external-wallets",
   "/storage-sdk/v2": "/typescript/v5/storage",
   "/storage-sdk/v2/:path*": "/typescript/v5/storage",
   "/typescript/v4": "/typescript/v5",
   "/typescript/v4/:path*": "/typescript/v5",
   "/unity/v4": "/unity/v5",
   "/unity/v4/:path*": "/unity/v5",
-  "/wallet-sdk/:path*": "/connect",
+  "/wallet-sdk/:path*": "/wallets",
 };
 
 const payRedirects = {
-  "/connect/pay/customization/connectbutton":
-    "/pay/customization/connectbutton",
-  "/connect/pay/customization/payembed": "/pay/customization/payembed",
-  "/connect/pay/customization/send-transaction":
-    "/pay/customization/send-transaction",
-  "/connect/pay/faqs": "/pay/faqs",
-  "/connect/pay/fees": "/pay/fees",
-  "/connect/pay/get-started": "/pay/get-started",
-  "/connect/pay/guides/accept-direct-payments":
-    "/pay/guides/accept-direct-payments",
-  "/connect/pay/guides/build-a-custom-experience":
-    "/pay/guides/build-a-custom-experience",
-  "/connect/pay/guides/cross-chain-swapping":
-    "/pay/guides/cross-chain-swapping",
-  "/connect/pay/onramp-providers": "/pay/onramp-providers",
-  "/connect/pay/overview": "/pay",
-  "/connect/pay/testing-pay": "/pay/testing-pay",
-  "/connect/pay/webhooks": "/pay/webhooks",
+  "/connect/pay/customization/connectbutton": "/payments/products",
+  "/connect/pay/customization/payembed": "/payments/products",
+  "/connect/pay/customization/send-transaction": "/payments",
+  "/connect/pay/faqs": "/payments",
+  "/connect/pay/fees": "/payments",
+  "/connect/pay/get-started": "/payments",
+  "/connect/pay/guides/accept-direct-payments": "/payments",
+  "/connect/pay/guides/build-a-custom-experience": "/payments",
+  "/connect/pay/guides/cross-chain-swapping": "/payments",
+  "/connect/pay/onramp-providers": "/payments",
+  "/connect/pay/overview": "/payments",
+  "/connect/pay/testing-pay": "/payments",
+  "/connect/pay/webhooks": "/payments/webhooks",
 };
 
 const walletRefactorRedirects = {
-  "/typescript/v5/supported-wallets": "/connect/external-wallets",
-  "/typescript/v5/supported-wallets/:path*": "/connect/external-wallets/:path*",
+  "/typescript/v5/supported-wallets": "/wallets/external-wallets",
+  "/typescript/v5/supported-wallets/:path*": "/wallets/external-wallets",
 };
 
 /**

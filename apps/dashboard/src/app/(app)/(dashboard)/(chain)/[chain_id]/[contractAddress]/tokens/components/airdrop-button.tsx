@@ -1,10 +1,7 @@
 "use client";
 
 import { DropletIcon } from "lucide-react";
-import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import { balanceOf } from "thirdweb/extensions/erc20";
-import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,42 +12,26 @@ import {
 } from "@/components/ui/sheet";
 import { TokenAirdropForm } from "./airdrop-form";
 
-interface TokenAirdropButtonProps {
+export function TokenAirdropButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
-
-export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
-  contract,
-  isLoggedIn,
-  ...restButtonProps
-}) => {
-  const address = useActiveAccount()?.address;
-  const tokenBalanceQuery = useReadContract(balanceOf, {
-    address: address || "",
-    contract,
-    queryOptions: { enabled: !!address },
-  });
-  const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
-  const [open, setOpen] = useState(false);
+}) {
   return (
-    <Sheet onOpenChange={setOpen} open={open}>
+    <Sheet>
       <SheetTrigger asChild>
-        <Button
-          variant="primary"
-          {...restButtonProps}
-          className="gap-2"
-          disabled={!hasBalance}
-        >
-          <DropletIcon size={16} /> Airdrop
+        <Button className="gap-2">
+          <DropletIcon className="size-4" /> Airdrop
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
-        <SheetHeader>
+      <SheetContent className="!w-full lg:!max-w-3xl flex flex-col gap-0">
+        <SheetHeader className="mb-4">
           <SheetTitle className="text-left">Airdrop tokens</SheetTitle>
         </SheetHeader>
-        <TokenAirdropForm contract={contract} isLoggedIn={isLoggedIn} />
+        <TokenAirdropForm
+          contract={props.contract}
+          isLoggedIn={props.isLoggedIn}
+        />
       </SheetContent>
     </Sheet>
   );
-};
+}

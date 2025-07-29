@@ -1,35 +1,93 @@
-# Listening to Events
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+} from "@doc";
+import {
+	ReactIcon,
+	TypeScriptIcon,
+	EngineIcon,
+} from "@/icons";
 
-The recommended way to listen to contract events is to use the [`getContractEvents`](/references/typescript/v5/getContractEvents) function and passing a prepared event with the Solidity event signature and the params. This is type-safe based on the Solidity event signature you define. You can get your desired contract event signature from the solidity code directly.
+# Contract Events
 
-```ts
-import { getContractEvents, prepareEvent } from "thirdweb";
+Query and listen to contract events for any deployed contract on any EVM chain.
 
-const myEvent = prepareEvent({
-  signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
-});
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+  </TabsList>
 
-const events = await getContractEvents({
-  contract: myContract,
-  events: [myEvent],
-});
-```
+  <TabsContent value="http">
+    ### Get Contract Events
 
-### Using standard event definitions
+    You can fetch contract events using the [contract events API](https://api.thirdweb.com/reference#tag/contracts/get/v1/contracts/{address}/events).
 
-You can also use the standard event definitions from the SDK to define the events you want to listen to.
+    ```http
+    GET /v1/contracts/{address}/events?chainId=<chain_id>&decode=true
+    Host: api.thirdweb.com
+    x-secret-key: <project-secret-key>
+    ```
 
-```ts
-import { getContractEvents } from "thirdweb";
-import { transferEvent } from "thirdweb/extensions/erc20";
+    Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
 
-const events = await getContractEvents({
-  contract: myContract,
-  events: [transferEvent()],
-});
-```
+    #### Parameters
 
-### Generating all read functions and events for a deployed contract
+    - `address` - The contract address
+    - `chainId` - The chain ID where the contract is deployed
+    - `decode` - Whether to decode the event data (optional, defaults to false)
+
+    #### Response
+
+    The API returns a list of events that have been emitted by the specified contract, including event details and decoded function calls when `decode=true` is specified.
+
+  </TabsContent>
+
+  <TabsContent value="typescript">
+    ### Get Contract Events
+
+    You can listen to contract events using the [`getContractEvents`](/references/typescript/v5/getContractEvents) function and passing a prepared event with the Solidity event signature and the params.
+
+    ```ts
+    import { getContractEvents, prepareEvent } from "thirdweb";
+
+    const myEvent = prepareEvent({
+      signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
+    });
+
+    const events = await getContractEvents({
+      contract: myContract,
+      events: [myEvent],
+    });
+    ```
+
+    ### Using standard event definitions
+
+    You can also use the standard event definitions from the SDK to define the events you want to listen to.
+
+    ```ts
+    import { getContractEvents } from "thirdweb";
+    import { transferEvent } from "thirdweb/extensions/erc20";
+
+    const events = await getContractEvents({
+      contract: myContract,
+      events: [transferEvent()],
+    });
+    ```
+
+    ### Generating all read functions and events for a deployed contract
 
 Using the CLI, you can generate optimized functions for all the possible calls to a contract. This saves you time and precomputes all the necessary encoding.
 
@@ -38,3 +96,66 @@ npx thirdweb generate <contractId>/<contractAddress>
 ```
 
 Read more on how to [generate extension functions using the CLI](/contracts/generate).
+
+  </TabsContent>
+
+  <TabsContent value="react">
+    ### Listen to Events
+
+    You can listen to contract events using the [`useContractEvents`](/references/typescript/v5/useContractEvents) hook. This hook will automatically poll for new events and update the component state.
+
+    ```jsx
+    import { useContractEvents } from "thirdweb/react";
+    import { prepareEvent } from "thirdweb";
+     
+    const myEvent = prepareEvent({
+      signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
+    });
+     
+    function YourComponent() {
+      const { data: contractEvents } = useContractEvents({
+        contract,
+        events: [myEvent],
+      });
+
+      return (
+        <div>
+          {contractEvents?.map((event, index) => (
+            <div key={index}>
+              Event: {event.eventName}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    ```
+
+    ### Using standard event definitions
+
+    You can also use the standard event definitions from the SDK.
+
+    ```jsx
+    import { useContractEvents } from "thirdweb/react";
+    import { transferEvent } from "thirdweb/extensions/erc20";
+     
+    function YourComponent() {
+      const { data: contractEvents } = useContractEvents({
+        contract,
+        events: [transferEvent()],
+      });
+
+      return (
+        <div>
+          {contractEvents?.map((event, index) => (
+            <div key={index}>
+              Transfer from {event.args.from} to {event.args.to}
+            </div>
+          ))}
+        </div>
+      );
+    }
+    ```
+
+  </TabsContent>
+
+</Tabs>

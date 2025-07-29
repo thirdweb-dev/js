@@ -1,4 +1,3 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
@@ -59,32 +58,30 @@ export default async function Layout(props: {
   }
 
   return (
-    <ChakraProviderSetup>
-      <div className="flex grow flex-col">
-        <EngineInstanceHeader
-          instance={instance}
-          rootPath={engineRootLayoutPath}
-          teamSlug={params.team_slug}
-        />
+    <div className="flex grow flex-col">
+      <EngineInstanceHeader
+        instance={instance}
+        rootPath={engineRootLayoutPath}
+        teamSlug={params.team_slug}
+      />
 
-        <EngineSidebarLayout
+      <EngineSidebarLayout
+        engineId={params.engineId}
+        projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
+      >
+        <EnsureEnginePermission
+          accountId={account.id}
+          authToken={authToken}
           engineId={params.engineId}
+          instance={instance}
           projectSlug={params.project_slug}
           teamSlug={params.team_slug}
         >
-          <EnsureEnginePermission
-            accountId={account.id}
-            authToken={authToken}
-            engineId={params.engineId}
-            instance={instance}
-            projectSlug={params.project_slug}
-            teamSlug={params.team_slug}
-          >
-            <div>{props.children}</div>
-          </EnsureEnginePermission>
-        </EngineSidebarLayout>
-      </div>
-    </ChakraProviderSetup>
+          <div>{props.children}</div>
+        </EnsureEnginePermission>
+      </EngineSidebarLayout>
+    </div>
   );
 }
 

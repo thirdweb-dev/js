@@ -269,7 +269,6 @@ function TokenInfoUI(props: {
                     className="h-auto py-0 text-sm"
                     client={props.contract.client}
                     iconClassName="hidden"
-                    preventOpenOnFocus
                   />
                 </div>
               ) : (

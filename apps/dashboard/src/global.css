@@ -195,14 +195,6 @@ input:-webkit-autofill:active {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
-/* Remove this when chakra is removed */
-/* Make chakra modals have same z-index as shadcn dialog */
-body {
-  --chakra-zIndices-modal: 50;
-  --chakra-zIndices-overlay: 50;
-  --chakra-colors-chakra-border-color: hsl(var(--border));
-}
-
 * {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;

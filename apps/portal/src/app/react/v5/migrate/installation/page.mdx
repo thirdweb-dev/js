@@ -1,15 +1,15 @@
 import {
-  ArticleCard,
-  GithubTemplateCard,
-  Grid,
-  ExpandableGrid,
-  createMetadata,
-  OpenSourceCard,
-  Stack,
-  Steps,
-  Step,
-  InstallTabs,
-  Callout
+	ArticleCard,
+	GithubTemplateCard,
+	Grid,
+	ExpandableGrid,
+	createMetadata,
+	OpenSourceCard,
+	Stack,
+	Steps,
+	Step,
+	InstallTabs,
+	Callout
 } from "@doc";
 
 [Migrate from React v4](/react/v5/migrate)
@@ -81,10 +81,10 @@ import { ThirdwebProvider } from "thirdweb/react"; // v5
 
 ### Connecting wallets
 
-Similar to v4's `ConnectWallet` component, the latest version has the [`ConnectButton`](/connect/sign-in/ConnectButton) component which has the same functionality.
+Similar to v4's `ConnectWallet` component, the latest version has the [`ConnectButton`](/references/typescript/v5/ConnectButton) component which has the same functionality.
 
 However, unlike with v4 where the number of supported wallets is limited (about 20), and adding more wallets mean your app becomes heavier,
-the SDK v5 supports [over 300 wallets](/connect/external-wallets) with virtually no impact to your application.
+the SDK v5 supports [over 300 wallets](/wallets/external-wallets) with virtually no impact to your application.
 
 Here's how you use the new `ConnectButton`:
 
@@ -99,7 +99,7 @@ const client = createThirdwebClient({
 <ConnectButton client={client} />
 ```
 
-To learn more about the new `ConnectButton`, head over to the [Playground](https://playground.thirdweb.com/connect/sign-in/button).
+To learn more about the new `ConnectButton`, head over to the [Playground](/connect/sign-in/button).
 
 Notice how you are passing the thirdweb client to the component itself and not to the `ThirdwebProvider` like in v4?
 By not putting every config inside the context wrapper, we were able to make the SDK v5 much more lightweight since you only load what you need!

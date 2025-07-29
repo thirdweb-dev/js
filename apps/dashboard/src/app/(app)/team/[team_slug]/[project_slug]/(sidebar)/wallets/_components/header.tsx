@@ -11,7 +11,7 @@ export async function InAppWalletsHeader() {
         their users wallets. <br /> Email login, social login, and
         bring-your-own auth supported.{" "}
         <UnderlineLink
-          href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
+          href="https://portal.thirdweb.com/wallets/users"
           rel="noopener noreferrer"
           target="_blank"
         >

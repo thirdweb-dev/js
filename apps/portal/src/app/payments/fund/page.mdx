@@ -1,0 +1,92 @@
+import {
+  Callout,
+  createMetadata,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  ArticleIconCard
+} from "@doc";
+import {
+  ReactIcon,
+} from "@/icons";
+import { ZapIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Fund Wallet",
+    icon: "payments",
+  },
+  title: "Fund Wallet",
+  description: "Fund wallets with crypto using the BuyWidget.",
+});
+
+# Fund wallets
+
+Fund wallets with crypto using the `BuyWidget`.
+
+<Tabs defaultValue="react">
+  <TabsList>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+  </TabsList>
+
+<TabsContent value="react">
+
+### Fund a wallet with the `BuyWidget`
+
+```tsx
+import { BuyWidget } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { base } from "thirdweb/chains";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
+
+function ProductPage() {
+  return (
+    <div>
+      <h1>Fund Wallet</h1>
+      <p>Top your wallet with crypto</p>
+
+      <BuyWidget
+        client={client}
+        chain={base}
+        token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" // USDC on Base
+        amount="5" // top up 5 USDC by default (user can change this)
+        name="Fund Wallet"
+        description="Top up your wallet with crypto"
+        onSuccess={() => {
+          alert("Top up successful!");
+          // Redirect or update UI
+        }}
+      />
+    </div>
+  );
+}
+```
+
+The BuyWidget handles the complete payment flow, supporting both crypto and fiat payments across 50+ chains.
+</TabsContent>
+</Tabs>
+
+## View it in action:  
+
+<ArticleIconCard
+  title="Fund Wallet Live Demo"
+  description="Top up your wallet with crypto using the BuyWidget"
+  icon={ReactIcon}
+  href="https://playground.thirdweb.com/connect/pay/transactions"
+/>
+
+## Going Further
+
+- [Custom Payment Data](/payments/custom-data) - Attach metadata to payments
+- [Webhooks](/payments/webhooks) - Get notified when payments complete
+
+## API Reference
+
+- [BuyWidget](/references/typescript/v5/BuyWidget)

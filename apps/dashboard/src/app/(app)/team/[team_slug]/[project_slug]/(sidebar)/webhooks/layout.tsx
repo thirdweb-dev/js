@@ -49,7 +49,7 @@ export default async function WebhooksLayout(props: {
             },
             {
               name: "Payments",
-              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+              path: `/team/${params.team_slug}/${params.project_slug}/payments/webhooks`,
             },
           ]}
           scrollableClassName="container max-w-7xl"
@@ -63,7 +63,7 @@ export default async function WebhooksLayout(props: {
             },
             {
               name: "Payments",
-              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+              path: `/team/${params.team_slug}/${params.project_slug}/payments/webhooks`,
             },
           ]}
           scrollableClassName="container max-w-7xl"
