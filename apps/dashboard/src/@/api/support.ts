@@ -61,7 +61,7 @@ export async function createSupportTicket(params: {
       try {
         const siwaUrl = process.env.NEXT_PUBLIC_SIWA_URL;
         if (siwaUrl) {
-          await fetch(`${siwaUrl}/v1/chat/feedback`, {
+          const res = await fetch(`${siwaUrl}/v1/chat/feedback`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -73,6 +73,12 @@ export async function createSupportTicket(params: {
               feedbackRating: ESCALATION_FEEDBACK_RATING,
             }),
           });
+
+          if (!res.ok) {
+            // Log error but don't fail the ticket creation
+            const errorMessage = await res.text();
+            console.error("Failed to escalate to SIWA feedback:", errorMessage);
+          }
         }
       } catch (error) {
         // Log error but don't fail the ticket creation
