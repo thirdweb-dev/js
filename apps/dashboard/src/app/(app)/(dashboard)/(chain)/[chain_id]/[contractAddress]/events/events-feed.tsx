@@ -1,58 +1,47 @@
 "use client";
 
-import {
-  Accordion,
-  AccordionButton,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  ButtonGroup,
-  Divider,
-  Flex,
-  FormControl,
-  LightMode,
-  List,
-  Select,
-  SimpleGrid,
-  Spinner,
-  Switch,
-  Tooltip,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { Card } from "chakra/card";
-import { FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
-import { ChevronDownIcon, CircleHelpIcon, CopyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useId, useMemo, useState } from "react";
-import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { stringify } from "thirdweb/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { CodeClient } from "@/components/ui/code/code.client";
+import { Label } from "@/components/ui/label";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { type InternalTransaction, useActivity } from "@/hooks/useActivity";
-import { useClipboard } from "@/hooks/useClipboard";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
-import { buildContractPagePath } from "../_utils/contract-page-path";
 
-interface EventsFeedProps {
-  contract: ThirdwebContract;
-  projectMeta: ProjectMeta | undefined;
-}
-
-export const EventsFeed: React.FC<EventsFeedProps> = ({
+export function EventsFeed({
   contract,
   projectMeta,
-}) => {
+}: {
+  contract: ThirdwebContract;
+  projectMeta: ProjectMeta | undefined;
+}) {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const allEvents = useActivity(contract, autoUpdate);
   const searchParams = useSearchParams();
   const event = searchParams?.get("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
   const chainSlug = useChainSlug(contract.chain.id);
-  const router = useDashboardRouter();
 
   const eventTypes = useMemo(
     () =>
@@ -79,319 +68,231 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({
   const autoUpdateId = useId();
 
   return (
-    <Flex flexDirection="column" gap={6}>
-      <Flex align="center" justify="space-between" w="full">
-        <Flex alignItems="center" gap={4}>
-          <Heading flexShrink={0} size="title.sm">
+    <div>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-4 mb-4">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+          <h2 className="text-2xl tracking-tight font-semibold flex-shrink-0">
             Latest Transactions
-          </Heading>
+          </h2>
           <Select
-            onChange={(e) => {
-              const val = e.target.value;
-
-              if (eventTypes.includes(val)) {
-                const path = buildContractPagePath({
-                  chainIdOrSlug: chainSlug.toString(),
-                  contractAddress: contract.address,
-                  projectMeta,
-                  subpath:
-                    e.target.value === "all"
-                      ? "/events"
-                      : `/events?event=${val}`,
-                });
-
-                router.push(path);
-                setSelectedEvent(val);
-              }
-            }}
             value={selectedEvent}
-            w="50%"
+            onValueChange={(val) => {
+              setSelectedEvent(val);
+            }}
           >
-            <option value="all">All</option>
-            {eventTypes.map((eventType) => (
-              <option key={eventType} value={eventType}>
-                {eventType}
-              </option>
-            ))}
+            <SelectTrigger className="rounded-full bg-card">
+              <SelectValue placeholder="Select event type" />
+            </SelectTrigger>
+            <SelectContent className="rounded-lg">
+              <SelectItem value="all">All</SelectItem>
+              {eventTypes.map((eventType) => (
+                <SelectItem key={eventType} value={eventType}>
+                  {eventType}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
-        </Flex>
-        <div>
-          <FormControl alignItems="center" display="flex">
-            <FormLabel htmlFor={autoUpdateId} mb="0">
-              Auto-Update
-            </FormLabel>
-            <LightMode>
-              <Switch
-                id={autoUpdateId}
-                isChecked={autoUpdate}
-                onChange={() => setAutoUpdate((val) => !val)}
-              />
-            </LightMode>
-          </FormControl>
         </div>
-      </Flex>
-      <Card overflow="hidden" p={0}>
-        <SimpleGrid
-          _dark={{ bg: "whiteAlpha.50" }}
-          bg="blackAlpha.50"
-          borderBottomWidth="1px"
-          borderColor="borderColor"
-          columns={12}
-          gap={2}
-          padding={4}
-        >
-          <Heading gridColumn="span 4" size="label.md">
-            Transaction Hash
-          </Heading>
-          <Heading gridColumn="span 5" size="label.md">
-            Events
-          </Heading>
-          <Heading gridColumn="span 3" size="label.md">
-            Block Number
-          </Heading>
-        </SimpleGrid>
+        <div className="flex items-center space-x-3">
+          <Label htmlFor={autoUpdateId} className="mb-0">
+            Auto-Update
+          </Label>
+          <Switch
+            id={autoUpdateId}
+            checked={autoUpdate}
+            onCheckedChange={() => setAutoUpdate((val) => !val)}
+          />
+        </div>
+      </div>
 
-        <List overflow="auto">
-          {filteredEvents.length === 0 && (
-            <div className="flex items-center justify-center py-4">
-              <Flex align="center" gap={2}>
-                {autoUpdate && <Spinner size="sm" speed="0.69s" />}
-                <Text fontStyle="italic" size="body.md">
-                  {autoUpdate ? "listening for events" : "no events to show"}
-                </Text>
-              </Flex>
-            </div>
-          )}
-          <Accordion allowMultiple defaultIndex={[]}>
-            {filteredEvents?.slice(0, 10).map((e) => (
-              <EventsFeedItem
-                chainSlug={chainSlug}
-                contractAddress={contract.address}
-                key={e.transactionHash}
-                projectMeta={projectMeta}
-                setSelectedEvent={setSelectedEvent}
-                transaction={e}
-              />
-            ))}
-          </Accordion>
-        </List>
-      </Card>
-    </Flex>
+      {/* table */}
+      <ScrollShadow className="overflow-x-auto rounded-lg border">
+        <div className="bg-card min-w-[800px]">
+          {/* table title */}
+          <div className="grid grid-cols-12 gap-2 bg-background border-b uppercase tracking-wider text-xs text-muted-foreground [&>*]:px-6 [&>*]:py-4">
+            <h3 className="col-span-3">Transaction Hash</h3>
+            <h3 className="col-span-6">Events</h3>
+            <h3 className="col-span-3">Block Number</h3>
+          </div>
+
+          {/* table body */}
+          <div className="overflow-auto">
+            {filteredEvents.length === 0 && (
+              <div className="flex items-center justify-center py-4">
+                <div className="flex items-center gap-2">
+                  {autoUpdate && <Spinner className="w-4 h-4" />}
+                  <span className="text-sm italic">
+                    {autoUpdate ? "listening for events" : "no events to show"}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <Accordion type="multiple" defaultValue={[]}>
+              {filteredEvents?.slice(0, 10).map((e) => (
+                <EventsFeedItem
+                  chainSlug={chainSlug}
+                  contractAddress={contract.address}
+                  key={e.transactionHash}
+                  projectMeta={projectMeta}
+                  setSelectedEvent={setSelectedEvent}
+                  transaction={e}
+                />
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      </ScrollShadow>
+    </div>
   );
-};
+}
 
-interface EventsFeedItemProps {
+function EventsFeedItem({
+  transaction,
+  setSelectedEvent,
+}: {
   transaction: InternalTransaction;
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
   chainSlug: string | number;
   projectMeta: ProjectMeta | undefined;
-}
-
-const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
-  transaction,
-  setSelectedEvent,
-  contractAddress,
-  chainSlug,
-  projectMeta,
-}) => {
-  const { onCopy } = useClipboard(transaction.transactionHash);
-  const router = useDashboardRouter();
-
+}) {
   return (
     <AccordionItem
-      _first={{ borderTop: "none" }}
-      borderBottom="none"
-      borderColor="borderColor"
+      value={transaction.transactionHash}
+      className="border-b border-border relative last:border-b-0"
     >
-      <AccordionButton padding={0}>
-        <SimpleGrid
-          _last={{ borderBottomWidth: 0 }}
-          alignItems="center"
-          as="li"
-          borderBottomWidth="1px"
-          borderColor="borderColor"
-          columns={12}
-          gap={2}
-          overflow="hidden"
-          padding={4}
-        >
-          <Box gridColumn="span 3">
-            <div className="flex flex-row items-center gap-3">
-              <Tooltip
-                bg="transparent"
-                boxShadow="none"
-                label={
-                  <Card bgColor="backgroundHighlight" px={4} py={2}>
-                    <Text size="label.sm">
-                      Copy transaction hash to clipboard
-                    </Text>
-                  </Card>
-                }
-                p={0}
-              >
-                <Button
-                  bg="transparent"
-                  onClick={() => {
-                    onCopy();
-                    toast.info("Transaction hash copied.");
-                  }}
-                  size="sm"
-                >
-                  <CopyIcon className="size-4" />
-                </Button>
-              </Tooltip>
-              <Text fontFamily="mono" noOfLines={1}>
-                {transaction.transactionHash.slice(0, 32)}...
-              </Text>
-            </div>
-          </Box>
+      <AccordionTrigger className="py-0 hover:no-underline hover:bg-accent/50 [&>svg]:absolute [&>svg]:right-6 [&>svg]:top-[22px]">
+        <div className="grid grid-cols-12 gap-2 items-center overflow-hidden w-full [&>*]:py-4 [&>*]:px-6">
+          {/* col 1 */}
+          <div className="col-span-3">
+            <CopyTextButton
+              textToShow={`${transaction.transactionHash.slice(0, 6)}...${transaction.transactionHash.slice(-4)}`}
+              textToCopy={transaction.transactionHash}
+              tooltip="Copy transaction hash"
+              copyIconPosition="right"
+              className="font-mono -translate-x-1"
+              variant="ghost"
+            />
+          </div>
 
-          <Box gridColumn="span 1" />
-
-          <ButtonGroup
-            flexWrap="wrap"
-            gap={2}
-            gridColumn="span 5"
-            size="sm"
-            spacing={0}
-            variant="outline"
-          >
+          {/* col 2 */}
+          <div className="col-span-6 flex flex-wrap gap-2">
             {transaction.events.slice(0, 2).map((e, idx) => (
               <Button
-                as="span"
-                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                variant="outline"
+                size="sm"
+                // biome-ignore lint/suspicious/noArrayIndexKey: ok
                 key={idx}
+                className="rounded-full h-auto py-1 text-xs px-2.5"
                 onClick={(ev) => {
                   ev.stopPropagation();
-                  const path = buildContractPagePath({
-                    chainIdOrSlug: chainSlug.toString(),
-                    contractAddress: contractAddress,
-                    projectMeta,
-                    subpath: `/events?event=${e.eventName}`,
-                  });
-
-                  router.push(path);
                   setSelectedEvent(e.eventName);
                 }}
               >
                 {e.eventName}
               </Button>
             ))}
+
             {transaction.events.length > 2 && (
-              <Button as="span" pointerEvents="none">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled
+                className="rounded-full h-auto py-1 text-xs px-2.5"
+              >
                 + {transaction.events.length - 2}
               </Button>
             )}
-          </ButtonGroup>
-
-          <Box gridColumn="span 3">
-            <div className="flex flex-row justify-between gap-2">
-              <Text fontFamily="mono" noOfLines={1}>
-                {transaction.blockNumber}
-              </Text>
-              <div>
-                <ChevronDownIcon className="size-4" />
-              </div>
-            </div>
-          </Box>
-        </SimpleGrid>
-      </AccordionButton>
-      <AccordionPanel>
-        <Card>
-          <div className="flex flex-col gap-4">
-            <Heading fontWeight="bold" size="subtitle.sm">
-              Transaction Data
-            </Heading>
-
-            <Divider />
-
-            <TransactionData
-              description={`
-                  A transaction hash is a unique 66 character identifier
-                  that is generated whenever a transaction is executed.
-                `}
-              name="Transaction Hash"
-              value={transaction.transactionHash}
-            />
-
-            <TransactionData
-              description={`
-                  The number of the block in which the transaction was recorded.
-                  Block confirmation indicate how many blocks since the transaction was validated.
-                `}
-              name="Block Number"
-              value={transaction.blockNumber}
-            />
-
-            <Heading fontWeight="bold" pt={6} size="subtitle.sm">
-              Event Data
-            </Heading>
-
-            <Divider />
-
-            {transaction.events.map((event, idx, arr) => (
-              <Fragment
-                key={`${transaction.transactionHash}_${event.logIndex}`}
-              >
-                <SimpleGrid columns={12} gap={2}>
-                  <Box gridColumn="span 3">
-                    <Text fontWeight="bold">{event.eventName}</Text>
-                  </Box>
-                  <Box gridColumn="span 9">
-                    <CodeClient
-                      code={stringify(event.args, null, 2)}
-                      lang="json"
-                    />
-                  </Box>
-                </SimpleGrid>
-
-                {arr.length - 1 === idx ? null : <Divider />}
-              </Fragment>
-            ))}
           </div>
-        </Card>
-      </AccordionPanel>
+
+          {/* col 3 */}
+          <div className="col-span-3 text-left text-sm">
+            <CopyTextButton
+              textToShow={transaction.blockNumber.toString()}
+              textToCopy={transaction.blockNumber.toString()}
+              tooltip="Copy block number"
+              variant="ghost"
+              copyIconPosition="right"
+            />
+          </div>
+        </div>
+      </AccordionTrigger>
+
+      <AccordionContent className="bg-background border-t border-dashed p-6">
+        <div className="space-y-4">
+          <TransactionData
+            name="Transaction Hash"
+            value={
+              <CopyTextButton
+                textToShow={`${transaction.transactionHash.slice(0, 6)}...${transaction.transactionHash.slice(-4)}`}
+                textToCopy={transaction.transactionHash}
+                tooltip="Copy transaction hash"
+                copyIconPosition="right"
+                variant="ghost"
+                className="font-mono -translate-x-1"
+              />
+            }
+          />
+
+          <div className="border-t border-dashed" />
+
+          <TransactionData
+            name="Block Number"
+            value={
+              <CopyTextButton
+                textToShow={transaction.blockNumber.toString()}
+                textToCopy={transaction.blockNumber.toString()}
+                tooltip="Copy block number"
+                variant="ghost"
+                copyIconPosition="right"
+              />
+            }
+          />
+
+          <div className="border-t border-dashed" />
+
+          {transaction.events.map((event, idx, arr) => (
+            <Fragment key={`${transaction.transactionHash}_${event.logIndex}`}>
+              <div className="grid grid-cols-12 gap-2">
+                <div className="col-span-3">
+                  <Badge variant="outline" className="text-sm font-normal">
+                    {event.eventName}
+                  </Badge>
+                </div>
+                <div className="col-span-9 px-4">
+                  <CodeClient
+                    code={stringify(event.args, null, 2)}
+                    lang="json"
+                  />
+                </div>
+              </div>
+
+              {arr.length - 1 === idx ? null : (
+                <div className="border-t border-dashed" />
+              )}
+            </Fragment>
+          ))}
+        </div>
+      </AccordionContent>
     </AccordionItem>
   );
-};
-
-interface TransactionDataProps {
-  name: string;
-  value: bigint | string;
-  description: string;
 }
 
-const TransactionData: React.FC<TransactionDataProps> = ({
+function TransactionData({
   name,
   value,
-  description,
-}) => {
+}: {
+  name: string;
+  value: React.ReactNode;
+}) {
   return (
-    <>
-      <SimpleGrid columns={12} gap={2}>
-        <div className="col-span-3 flex flex-row items-center gap-2">
-          <Tooltip
-            bg="transparent"
-            boxShadow="none"
-            label={
-              <Card bgColor="backgroundHighlight" px={4} py={2}>
-                <Text size="label.sm">{description}</Text>
-              </Card>
-            }
-            p={0}
-          >
-            <div className="flex items-center justify-center">
-              <CircleHelpIcon className="size-4 text-gray-600" />
-            </div>
-          </Tooltip>
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-3 flex items-center">
+        <span className="font-medium">{name}</span>
+      </div>
 
-          <Text fontWeight="bold">{name}</Text>
-        </div>
-
-        <Text gridColumn="span 9">{value.toString()}</Text>
-      </SimpleGrid>
-      <Divider />
-    </>
+      <span className="col-span-9 px-4">{value}</span>
+    </div>
   );
-};
+}
