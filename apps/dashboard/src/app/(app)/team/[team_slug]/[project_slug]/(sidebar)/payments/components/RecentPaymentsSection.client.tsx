@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRightIcon, CreditCardIcon } from "lucide-react";
 import Link from "next/link";
@@ -12,6 +11,7 @@ import {
 } from "@/api/universal-bridge/developer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { EmptyState } from "./EmptyState";
 import { TableRow } from "./PaymentsTableRow";

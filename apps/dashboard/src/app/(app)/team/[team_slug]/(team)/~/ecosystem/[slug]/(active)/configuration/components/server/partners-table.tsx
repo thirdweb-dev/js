@@ -1,5 +1,5 @@
-import { Link } from "chakra/link";
 import { PencilIcon, Trash2Icon } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "@/api/ecosystems";
 import { Button } from "@/components/ui/button";
