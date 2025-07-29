@@ -26,15 +26,15 @@ const staticSidebarLinks: SidebarLink[] = [
         name: "Ecosystem Wallets",
       },
       {
-        href: "/wallets/account-abstraction/sponsor",
+        href: "/wallets/account-abstraction/eip-4337",
         name: "EIP-4337",
       },
       {
-        href: "/wallets/account-abstraction/7702",
+        href: "/wallets/account-abstraction/eip-7702",
         name: "EIP-7702",
       },
       {
-        href: "/wallets/account-abstraction/5792",
+        href: "/wallets/account-abstraction/eip-5792",
         name: "EIP-5792",
       },
       {

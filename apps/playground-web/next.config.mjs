@@ -111,6 +111,21 @@ const nextConfig = {
         destination: "/transactions/webhooks",
         permanent: false,
       },
+      {
+        source: "/wallets/account-abstraction/sponsor",
+        destination: "/wallets/account-abstraction/eip-4337",
+        permanent: false,
+      },
+      {
+        source: "/wallets/account-abstraction/7702",
+        destination: "/wallets/account-abstraction/eip-7702",
+        permanent: false,
+      },
+      {
+        source: "/wallets/account-abstraction/5792",
+        destination: "/wallets/account-abstraction/eip-5792",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {
