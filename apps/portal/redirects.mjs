@@ -865,6 +865,9 @@ const infrastructureRedirects = {
   "/storage/how-storage-works": "/infrastructure/storage/how-storage-works",
   "/storage/upload-to-ipfs":
     "/infrastructure/storage/how-to-use-storage/upload-files-to-ipfs",
+  
+  // deprecated infrastructure storage pages - redirect to typescript v5 storage functions
+  "/infrastructure/storage/:path*": "/references/typescript/v5/functions#storage",
 };
 
 const glossaryRedirects = {
