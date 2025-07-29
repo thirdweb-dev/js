@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.24
+
+### Patch Changes
+
+- [#7745](https://github.com/thirdweb-dev/js/pull/7745) [`c717eaa`](https://github.com/thirdweb-dev/js/commit/c717eaadae09c65b2f651145f1279ba876c90ace) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Faster payment widget quote discovery
+
 ## 5.105.23
 
 ### Patch Changes
