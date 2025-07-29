@@ -123,30 +123,28 @@ export async function connectWC(
     optionalChains: optionalChains,
   });
 
-  if (!provider.session) {
-    // For UniversalProvider, we need to connect with namespaces
-    await provider.connect({
-      ...(wcOptions?.pairingTopic
-        ? { pairingTopic: wcOptions?.pairingTopic }
-        : {}),
-      namespaces: {
-        [NAMESPACE]: {
-          chains: chainsToRequest,
-          events: ["chainChanged", "accountsChanged"],
-          methods: [
-            "eth_sendTransaction",
-            "eth_signTransaction",
-            "eth_sign",
-            "personal_sign",
-            "eth_signTypedData",
-            "wallet_switchEthereumChain",
-            "wallet_addEthereumChain",
-          ],
-          rpcMap,
-        },
+  // For UniversalProvider, we need to connect with namespaces
+  await provider.connect({
+    ...(wcOptions?.pairingTopic
+      ? { pairingTopic: wcOptions?.pairingTopic }
+      : {}),
+    namespaces: {
+      [NAMESPACE]: {
+        chains: chainsToRequest,
+        events: ["chainChanged", "accountsChanged"],
+        methods: [
+          "eth_sendTransaction",
+          "eth_signTransaction",
+          "eth_sign",
+          "personal_sign",
+          "eth_signTypedData",
+          "wallet_switchEthereumChain",
+          "wallet_addEthereumChain",
+        ],
+        rpcMap,
       },
-    });
-  }
+    },
+  });
 
   setRequestedChainsIds(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
@@ -223,9 +221,14 @@ export async function autoConnectWC(
     sessionHandler,
   );
 
+  if (!provider.session) {
+    await provider.disconnect();
+    throw new Error("No wallet connect session found on provider.");
+  }
+
   // For UniversalProvider, get accounts from enable() method
-  const addresses = await provider.enable();
-  const address = addresses[0];
+  const namespaceAccounts = provider.session?.namespaces?.[NAMESPACE]?.accounts;
+  const address = namespaceAccounts?.[0]?.split(":")[2];
 
   if (!address) {
     throw new Error("No accounts found on provider.");
