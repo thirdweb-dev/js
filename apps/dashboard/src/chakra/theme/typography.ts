@@ -37,17 +37,3 @@ export type TextBase = Exclude<
 >;
 
 export type TextSizes = `${TextBase}.${TypographySize}`;
-
-export type LabelBase = Exclude<
-  TypographyBase,
-  "display" | "title" | "subtitle" | "body"
->;
-
-export type LabelSizes = `${LabelBase}.${TypographySize}`;
-
-export type BodyBase = Exclude<
-  TypographyBase,
-  "display" | "title" | "subtitle" | "label"
->;
-
-export type BodySizes = `${BodyBase}.${TypographySize}`;

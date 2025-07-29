@@ -1,5 +1,4 @@
 import { AccountAbstractionSettingsPage } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/settings/SponsorshipPolicies";
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
@@ -53,15 +52,13 @@ export default async function Page(props: {
   }
 
   return (
-    <ChakraProviderSetup>
-      <AccountAbstractionSettingsPage
-        bundlerService={bundlerService}
-        client={client}
-        project={project}
-        teamId={team.id}
-        teamSlug={team.slug}
-        validTeamPlan={getValidTeamPlan(team)}
-      />
-    </ChakraProviderSetup>
+    <AccountAbstractionSettingsPage
+      bundlerService={bundlerService}
+      client={client}
+      project={project}
+      teamId={team.id}
+      teamSlug={team.slug}
+      validTeamPlan={getValidTeamPlan(team)}
+    />
   );
 }
