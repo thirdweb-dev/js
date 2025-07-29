@@ -1,9 +1,9 @@
 "use client";
 
-import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { Button } from "chakra/button";
+import { RotateCcwIcon } from "lucide-react";
 import { useMemo } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import {
   useActiveAccount,
@@ -11,12 +11,14 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { ROLE_DESCRIPTION_MAP } from "@/constants/mappings";
 import {
   createSetAllRoleMembersTx,
   getAllRoleMembers,
 } from "@/hooks/contract-ui/permissions";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 import { ContractPermission } from "./contract-permission";
 
 type PermissionFormContext = {
@@ -48,78 +50,91 @@ export function Permissions({
     values: transformedQueryData,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Permissions updated",
-    "Failed to update permissions",
-  );
-
   const roles = useMemo(() => {
     return Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP);
   }, [allRoleMembers.data]);
 
   return (
-    <FormProvider {...form}>
-      <Flex
-        as="form"
-        direction="column"
-        gap={4}
-        onSubmit={form.handleSubmit((d) => {
+    <Form {...form}>
+      <form
+        className="bg-card rounded-lg border"
+        onSubmit={form.handleSubmit((values) => {
           if (!account) {
-            onError(new Error("Wallet not connected!"));
+            toast.error("Wallet not connected!");
             return;
           }
+
+          // remove empty values
+          const cleanedValues: { [k: string]: string[] } = {};
+
+          for (const k in values) {
+            const originalValue = values[k];
+            if (originalValue) {
+              const cleanedValue: string[] = [];
+              for (const v of originalValue) {
+                if (v !== "") {
+                  cleanedValue.push(v);
+                }
+              }
+              cleanedValues[k] = cleanedValue;
+            }
+          }
+
           const tx = createSetAllRoleMembersTx({
             account,
             contract,
-            roleMemberMap: d,
+            roleMemberMap: cleanedValues,
           });
+
           sendTx.mutate(tx, {
             onError: (error) => {
-              onError(error);
+              toast.error("Failed to update permissions", {
+                description: parseError(error),
+              });
             },
             onSuccess: () => {
-              form.reset(d);
-              onSuccess();
+              toast.success("Permissions updated successfully");
             },
           });
         })}
       >
-        {roles.map((role) => {
-          return (
-            <ContractPermission
-              contract={contract}
-              description={ROLE_DESCRIPTION_MAP[role] || ""}
-              isPending={allRoleMembers.isPending}
-              key={role}
-              role={role}
-            />
-          );
-        })}
-        <ButtonGroup justifyContent="flex-end">
+        <div>
+          {roles.map((role) => {
+            return (
+              <ContractPermission
+                contract={contract}
+                description={ROLE_DESCRIPTION_MAP[role] || ""}
+                isPending={allRoleMembers.isPending}
+                key={role}
+                role={role}
+              />
+            );
+          })}
+        </div>
+
+        <div className="flex justify-end gap-3 p-4 lg:p-6">
           <Button
-            borderRadius="md"
-            isDisabled={
-              !allRoleMembers.data ||
-              sendTx.isPending ||
-              !form.formState.isDirty
-            }
+            variant="outline"
+            disabled={!allRoleMembers.data || sendTx.isPending}
             onClick={() => form.reset(allRoleMembers.data)}
+            className="gap-2 bg-background"
           >
+            <RotateCcwIcon className="size-4 text-muted-foreground" />
             Reset
           </Button>
           <TransactionButton
             client={contract.client}
-            disabled={!form.formState.isDirty}
             isLoggedIn={isLoggedIn}
             isPending={sendTx.isPending}
-            transactionCount={1}
+            transactionCount={undefined}
             txChainID={contract.chain.id}
             type="submit"
+            variant="default"
           >
             {sendTx.isPending ? "Updating permissions" : "Update permissions"}
           </TransactionButton>
-        </ButtonGroup>
-      </Flex>
-    </FormProvider>
+        </div>
+      </form>
+    </Form>
   );
 }

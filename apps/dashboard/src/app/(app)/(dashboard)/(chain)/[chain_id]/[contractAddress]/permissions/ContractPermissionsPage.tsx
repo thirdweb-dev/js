@@ -56,5 +56,15 @@ export function ContractPermissionsPage({
     );
   }
 
-  return <Permissions contract={contract} isLoggedIn={isLoggedIn} />;
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold tracking-tight mb-0.5">
+        Permissions
+      </h2>
+      <p className="text-muted-foreground mb-6">
+        View and manage the permissions for this contract
+      </p>
+      <Permissions contract={contract} isLoggedIn={isLoggedIn} />
+    </div>
+  );
 }

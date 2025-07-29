@@ -1,222 +1,109 @@
-import {
-  Flex,
-  FormControl,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { FormErrorMessage } from "chakra/form";
-import { Text } from "chakra/text";
-import {
-  ClipboardPasteIcon,
-  CopyIcon,
-  InfoIcon,
-  PlusIcon,
-  TrashIcon,
-} from "lucide-react";
-import { useState } from "react";
+import { InfoIcon, PlusIcon, XIcon } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { toast } from "sonner";
-import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import {
-  AdminOnly,
-  AdminOrSelfOnly,
-} from "@/components/contracts/roles/admin-only";
-import { DelayedDisplay } from "@/components/misc/delayed-display";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useClipboard } from "@/hooks/useClipboard";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { AdminOrSelfOnly } from "@/components/contracts/roles/admin-only";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-interface PermissionEditorProps {
-  role: string;
-  contract: ThirdwebContract;
-}
-
-export const PermissionEditor: React.FC<PermissionEditorProps> = ({
+export const PermissionEditor = ({
   role,
   contract,
+  isUserAdmin,
+}: {
+  role: string;
+  contract: ThirdwebContract;
+  isUserAdmin: boolean;
 }) => {
-  const {
-    control,
-    watch,
-    formState: { isSubmitting },
-  } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
-    control,
+  const form = useFormContext();
+  const formFields = useFieldArray({
+    control: form.control,
     name: role,
   });
-  const [address, setAddress] = useState("");
-
-  const members = watch(role) || [];
-  const isDisabled = !isAddress(address) || members.includes(address);
-
-  const addAddress = () => {
-    if (isDisabled) {
-      return;
-    }
-
-    append(address);
-    setAddress("");
-  };
 
   return (
-    <div className="flex flex-col gap-2">
-      {!fields?.length && (
-        <DelayedDisplay delay={100}>
-          <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px]">
-            <InfoIcon className="size-6 text-orange-400" />
-            <Text color="orange.800">
-              {role === "asset"
-                ? "No asset contracts are permitted to be listed on this marketplace."
-                : "Nobody has this permission for this contract."}
-            </Text>
-          </div>
-        </DelayedDisplay>
+    <div className="space-y-4">
+      {formFields.fields.length === 0 && (
+        <Alert variant="warning" className="bg-background">
+          <InfoIcon className="size-5" />
+          <AlertTitle>
+            {role === "asset"
+              ? "No asset contracts are permitted to be listed on this marketplace"
+              : "Nobody has this permission for this contract"}
+          </AlertTitle>
+        </Alert>
       )}
-      {fields?.map((field, index) => (
-        <PermissionAddress
-          contract={contract}
-          isSubmitting={isSubmitting}
-          key={field.id}
-          member={watch(`${role}.${index}`)}
-          removeAddress={() => remove(index)}
-          role={role}
-        />
-      ))}
-      <AdminOnly contract={contract}>
-        <FormControl
-          isDisabled={isSubmitting}
-          isInvalid={address && isDisabled}
-        >
-          <InputGroup>
-            <InputLeftAddon border="none" p={0}>
-              <ToolTipLabel label="Paste address from clipboard">
-                <IconButton
-                  aria-label="paste address"
-                  borderLeftRadius="md"
-                  borderRadius="sm"
-                  height="100%"
-                  icon={<ClipboardPasteIcon className="size-4" />}
-                  onClick={() => {
-                    navigator.clipboard
-                      .readText()
-                      .then((text) => {
-                        setAddress(text);
-                        return void 0;
-                      })
-                      .catch((error) => {
-                        console.error(error);
-                        toast.error("Failed to paste from clipboard");
-                      });
-                  }}
-                  width="100%"
-                />
-              </ToolTipLabel>
-            </InputLeftAddon>
-            <Input
-              fontFamily="mono"
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder={ZERO_ADDRESS}
-              px={2}
-              value={address}
-              variant="filled"
+
+      {formFields.fields.length > 0 && (
+        <div className="space-y-3">
+          {formFields.fields?.map((field, index) => (
+            <PermissionAddress
+              contract={contract}
+              isSubmitting={form.formState.isSubmitting}
+              key={field.id}
+              member={form.watch(`${role}.${index}`)}
+              removeAddress={() => formFields.remove(index)}
+              role={role}
+              index={index}
+              isUserAdmin={isUserAdmin}
             />
-            <InputRightAddon border="none" p={0}>
+          ))}
+
+          {isUserAdmin && (
+            <div className="flex">
               <Button
-                alignItems="center"
-                borderLeftRadius="none"
-                borderRightRadius="md"
-                colorScheme="primary"
-                height="100%"
-                isDisabled={isDisabled}
-                justifyContent="center"
-                leftIcon={<PlusIcon className="size-4" />}
-                onClick={addAddress}
+                variant="outline"
+                onClick={() => formFields.append("")}
                 size="sm"
-                width="100%"
+                className="gap-2 rounded-full bg-background"
               >
+                <PlusIcon className="size-3.5" />
                 Add Address
               </Button>
-            </InputRightAddon>
-          </InputGroup>
-          <FormErrorMessage>
-            {members.includes(address)
-              ? "Address already has this role"
-              : !isAddress(address)
-                ? "Not a valid address"
-                : ""}
-          </FormErrorMessage>
-        </FormControl>
-      </AdminOnly>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-interface PermissionAddressProps {
+const PermissionAddress = ({
+  member,
+  removeAddress,
+  isSubmitting,
+  contract,
+  index,
+  role,
+  isUserAdmin,
+}: {
   role: string;
   member: string;
   removeAddress: () => void;
   isSubmitting: boolean;
   contract: ThirdwebContract;
-}
-
-const PermissionAddress: React.FC<PermissionAddressProps> = ({
-  member,
-  removeAddress,
-  isSubmitting,
-  contract,
+  index: number;
+  isUserAdmin: boolean;
 }) => {
-  const { onCopy } = useClipboard(member);
+  const form = useFormContext();
 
   return (
-    <Flex align="center" gap={0}>
-      <InputGroup>
-        <InputLeftAddon border="none" p={0}>
-          <ToolTipLabel label="Copy address to clipboard">
-            <IconButton
-              aria-label="copy address"
-              borderLeftRadius="md"
-              borderRadius="sm"
-              height="100%"
-              icon={<CopyIcon className="size-4" />}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onCopy();
-                toast.info("Address copied.");
-              }}
-              width="100%"
-            />
-          </ToolTipLabel>
-        </InputLeftAddon>
-        <Input
-          defaultValue={member}
-          fontFamily="mono"
-          px={2}
-          variant="filled"
-        />
-        <AdminOrSelfOnly contract={contract} self={member}>
-          <InputRightAddon border="none" p={0}>
-            <Button
-              alignItems="center"
-              borderLeftRadius="none"
-              borderRightRadius="md"
-              colorScheme="red"
-              height="100%"
-              isDisabled={isSubmitting}
-              justifyContent="center"
-              leftIcon={<TrashIcon className="size-3" />}
-              onClick={removeAddress}
-              size="sm"
-              width="100%"
-            >
-              Remove
-            </Button>
-          </InputRightAddon>
-        </AdminOrSelfOnly>
-      </InputGroup>
-    </Flex>
+    <div className="flex gap-3 max-w-xl">
+      <Input
+        {...form.register(`${role}.${index}`)}
+        className="font-mono grow bg-background disabled:opacity-100"
+        disabled={isSubmitting || !isUserAdmin}
+        placeholder={ZERO_ADDRESS}
+      />
+      <AdminOrSelfOnly contract={contract} self={member}>
+        <Button
+          variant="outline"
+          className="rounded-full size-10 p-0 bg-background shrink-0"
+          onClick={removeAddress}
+        >
+          <XIcon className="size-4" />
+        </Button>
+      </AdminOrSelfOnly>
+    </div>
   );
 };
