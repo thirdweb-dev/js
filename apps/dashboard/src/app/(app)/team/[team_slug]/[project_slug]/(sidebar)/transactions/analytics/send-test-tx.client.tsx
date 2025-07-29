@@ -314,6 +314,7 @@ export function SendTestTransaction(props: {
                 `/team/${props.teamSlug}/${props.project.slug}/transactions`,
               );
             } else {
+              localStorage.setItem("engineFtuxCompleted", "true");
               router.refresh();
             }
           }}

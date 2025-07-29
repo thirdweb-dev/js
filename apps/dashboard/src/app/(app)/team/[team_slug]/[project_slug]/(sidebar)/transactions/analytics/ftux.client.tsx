@@ -19,6 +19,8 @@ interface Props {
 }
 
 export const EngineChecklist: React.FC<Props> = (props) => {
+  const ftuxCompleted = localStorage.getItem("engineFtuxCompleted") === "true";
+
   const finalSteps = useMemo(() => {
     const steps: Step[] = [];
     steps.push({
@@ -46,7 +48,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
           wallets={props.wallets}
         />
       ),
-      completed: props.hasTransactions,
+      completed: props.hasTransactions || ftuxCompleted,
       description:
         "Engine handles gas fees, and is designed for scale, speed and security. Send a test transaction to see it in action",
       showCompletedChildren: false,
@@ -62,6 +64,7 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     props.teamSlug,
     props.client,
     props.isManagedVault,
+    ftuxCompleted,
   ]);
 
   const isComplete = useMemo(
