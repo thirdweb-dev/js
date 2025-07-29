@@ -4,8 +4,6 @@ import {
   Button as ChakraButton,
   type ButtonProps as ChakraButtonProps,
   forwardRef,
-  IconButton,
-  type IconButtonProps,
   LightMode,
   Link,
   useButtonGroup,
@@ -15,9 +13,8 @@ import {
   letterSpacings,
   lineHeights,
 } from "chakra/theme/typography";
-import { CheckIcon, CopyIcon, ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import { forwardRef as reactForwardRef } from "react";
-import { useClipboard } from "@/hooks/useClipboard";
 import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
@@ -125,36 +122,3 @@ export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
 );
 
 LinkButton.displayName = "LinkButton";
-
-interface Legacy_CopyButtonProps extends IconButtonProps {
-  value: string;
-}
-
-export const Legacy_CopyButton = forwardRef<Legacy_CopyButtonProps, "button">(
-  ({ value, ...restButtonProps }, ref) => {
-    const { onCopy, hasCopied } = useClipboard(value);
-
-    const copy = (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      onCopy();
-    };
-
-    return (
-      <IconButton
-        borderRadius="md"
-        colorScheme="whiteAlpha"
-        icon={
-          hasCopied ? <CheckIcon className="text-success-text" /> : <CopyIcon />
-        }
-        onClick={copy}
-        ref={ref}
-        size="sm"
-        variant="ghost"
-        {...restButtonProps}
-      />
-    );
-  },
-);
-
-Legacy_CopyButton.displayName = "Legacy_CopyButton";
