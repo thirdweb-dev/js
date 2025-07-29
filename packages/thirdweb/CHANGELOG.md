@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.23
+
+### Patch Changes
+
+- [#7746](https://github.com/thirdweb-dev/js/pull/7746) [`4f38198`](https://github.com/thirdweb-dev/js/commit/4f38198ae110bf89479109e3e099ea94ddfd774e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve walletConnect connection and auto-connection flow
+
 ## 5.105.22
 
 ### Patch Changes

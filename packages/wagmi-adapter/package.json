@@ -55,5 +55,5 @@
   "type": "module",
   "types": "./dist/types/exports/thirdweb.d.ts",
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "0.2.119"
+  "version": "0.2.120"
 }
