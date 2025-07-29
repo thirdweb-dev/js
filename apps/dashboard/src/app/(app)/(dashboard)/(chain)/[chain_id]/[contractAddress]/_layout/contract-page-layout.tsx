@@ -1,5 +1,4 @@
 import { DeprecatedAlert } from "@app/(dashboard)/(chain)/[chain_id]/[contractAddress]/_layout/DeprecatedAlert";
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { SidebarLink } from "@/components/blocks/Sidebar";
@@ -36,7 +35,7 @@ export function ContractPageLayout(props: {
   } = props;
 
   return (
-    <ChakraProviderSetup>
+    <div>
       <div className="border-border border-b py-8">
         <div className="container flex flex-col gap-4">
           <div className="flex flex-col justify-between gap-4 md:flex-row">
@@ -67,6 +66,6 @@ export function ContractPageLayout(props: {
         {props.children}
         <div className="h-20" />
       </SidebarLayout>
-    </ChakraProviderSetup>
+    </div>
   );
 }

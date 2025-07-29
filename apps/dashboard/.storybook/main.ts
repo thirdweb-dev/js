@@ -20,11 +20,6 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
   },
-  refs: {
-    "@chakra-ui/react": {
-      disable: true,
-    },
-  },
   staticDirs: ["../public"],
   features: {
     experimentalRSC: true,

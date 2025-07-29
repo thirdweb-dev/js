@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  Flex,
-  SimpleGrid,
-  Spinner,
-  Stat,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react";
-import { Card } from "chakra/card";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
@@ -24,6 +13,17 @@ import {
   useReadContract,
   useWalletBalance,
 } from "thirdweb/react";
+import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useSplitBalances } from "@/hooks/useSplit";
 import { shortenIfAddress } from "@/utils/usedapp-external";
@@ -42,10 +42,7 @@ interface SplitPageProps {
   isLoggedIn: boolean;
 }
 
-export const ContractSplitPage: React.FC<SplitPageProps> = ({
-  contract,
-  isLoggedIn,
-}) => {
+export function ContractSplitPage({ contract, isLoggedIn }: SplitPageProps) {
   const address = useActiveAccount()?.address;
   const { idToChain } = useAllChainsData();
   const chainId = contract.chain.id;
@@ -104,120 +101,127 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     );
   }, [allRecipientsPercentages, balances, address]);
 
+  const isPending = balanceQuery.isPending || nativeBalanceQuery.isPending;
+
   return (
-    <Flex direction="column" gap={6}>
-      <Flex align="center" direction="row" justify="space-between">
-        <Heading size="title.sm">Balances</Heading>
-        <Flex gap={4}>
-          <DistributeButton
-            balances={balances as Balance[]}
-            balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
-            balancesIsPending={
-              balanceQuery.isPending || nativeBalanceQuery.isPending
-            }
-            contract={contract}
-            isLoggedIn={isLoggedIn}
-          />
-        </Flex>
-      </Flex>
-      <div className="flex flex-col gap-8">
-        <Flex flexDir="column" gap={4}>
-          <SimpleGrid columns={{ base: 2, md: 4 }} spacing={{ base: 3, md: 6 }}>
-            <Card as={Stat}>
-              <StatLabel mb={{ base: 1, md: 0 }}>
-                {nativeBalanceQuery.data?.symbol}
-              </StatLabel>
-              <StatNumber>{nativeBalanceQuery?.data?.displayValue}</StatNumber>
-              {shareOfBalancesForConnectedWallet[ZERO_ADDRESS] && (
-                <StatNumber>
-                  <Text size="body.md">
-                    <Text as="span" size="label.md">
-                      Your Share:
-                    </Text>{" "}
-                    {shareOfBalancesForConnectedWallet[ZERO_ADDRESS]}
-                  </Text>
-                </StatNumber>
-              )}
-            </Card>
-            {balanceQuery.isPending ? (
-              <div className="flex items-center justify-center">
-                <Spinner />
-              </div>
-            ) : (
-              (balanceQuery?.data || [])
+    <div>
+      {/* header */}
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center justify-between mb-6 lg:mb-3">
+        <h2 className="text-2xl font-semibold tracking-tight">Balances</h2>
+        <DistributeButton
+          balances={balances as Balance[]}
+          balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
+          balancesIsPending={
+            balanceQuery.isPending || nativeBalanceQuery.isPending
+          }
+          contract={contract}
+          isLoggedIn={isLoggedIn}
+        />
+      </div>
+
+      {/* balances */}
+      <div className="flex flex-col gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+          {isPending ? (
+            new Array(4).fill(null).map((_, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: ok
+              <Skeleton key={index} className="h-[86px]" />
+            ))
+          ) : (
+            <>
+              <BalanceCard
+                symbol={nativeBalanceQuery.data?.symbol || "Native Token"}
+                displayValue={nativeBalanceQuery?.data?.displayValue || "0"}
+                userShare={shareOfBalancesForConnectedWallet[ZERO_ADDRESS]}
+              />
+
+              {(balanceQuery?.data || [])
                 ?.filter((bl) => bl.name !== "Native Token")
                 ?.map((balance) => (
-                  <Card as={Stat} key={balance.token_address} maxWidth="2xs">
-                    <StatLabel as={Heading} size="label.lg">
-                      {balance.name === "Native Token"
+                  <BalanceCard
+                    key={balance.token_address}
+                    symbol={
+                      balance.name === "Native Token"
                         ? v4Chain?.nativeCurrency.symbol || "Native Token"
                         : balance.symbol ||
-                          shortenIfAddress(balance.token_address)}
-                    </StatLabel>
-                    <StatNumber>
-                      <Text size="body.md">{balance.display_balance}</Text>
-                    </StatNumber>
-                    {shareOfBalancesForConnectedWallet[
-                      balance.token_address
-                    ] && (
-                      <StatNumber>
-                        <Text size="body.md">
-                          <Text as="span" size="label.md">
-                            Your Share:
-                          </Text>{" "}
-                          {
-                            shareOfBalancesForConnectedWallet[
-                              balance.token_address
-                            ]
-                          }
-                        </Text>
-                      </StatNumber>
-                    )}
-                  </Card>
-                ))
-            )}
-          </SimpleGrid>
-          {balanceQuery.isError && (
-            <Text color="red.500">
-              {(balanceQuery?.error as Error).message === "Invalid chain!"
-                ? "Showing ERC20 balances for this network is not currently supported. You can distribute ERC20 funds from the Explorer tab."
-                : "Error loading balances"}
-            </Text>
+                          shortenIfAddress(balance.token_address)
+                    }
+                    displayValue={balance.display_balance}
+                    userShare={
+                      shareOfBalancesForConnectedWallet[balance.token_address]
+                    }
+                  />
+                ))}
+            </>
           )}
-          <Text fontStyle="italic">
-            The Split can receive funds in the native token or in any ERC20.
-            Balances may take a couple of minutes to display after being
-            received.
-            <br />
-            {/* We currently use Moralis and high chances are they don't recognize all ERC20 tokens in the contract */}
-            If you are looking to distribute an ERC20 token and it's not being
-            recognized on this page, you can manually call the `distribute`
-            method in the Explorer page
-          </Text>
-        </Flex>
-
-        <div className="flex flex-col gap-2">
-          <Heading mb="8px" size="label.lg">
-            Split Recipients
-          </Heading>
-          {(allRecipientsPercentages || []).map((split) => (
-            <Card key={split.address}>
-              <Text>
-                <Text as="span" size="label.md">
-                  Address:
-                </Text>{" "}
-                {split.address}
-              </Text>
-              <Text>
-                <Text as="span" size="label.md">
-                  Percentage:
-                </Text>{" "}
-                {split.splitPercentage}%
-              </Text>
-            </Card>
-          ))}
         </div>
+
+        {balanceQuery.isError && (
+          <p className="text-red-500">
+            {(balanceQuery?.error as Error).message === "Invalid chain!"
+              ? "Showing ERC20 balances for this network is not currently supported. You can distribute ERC20 funds from the Explorer tab."
+              : "Error loading balances"}
+          </p>
+        )}
+
+        <p className="text-sm text-muted-foreground">
+          The Split can receive funds in the native token or in any ERC20.
+          Balances may take a couple of minutes to display after being received.
+          <br />
+          {/* We currently use Moralis and high chances are they don't recognize all ERC20 tokens in the contract */}
+          If you are looking to distribute an ERC20 token and it's not being
+          recognized on this page, you can manually call the `distribute` method
+          in the Explorer page
+        </p>
       </div>
-    </Flex>
+
+      {/* recipients e */}
+      <div>
+        <h3 className="text-lg font-semibold mb-2">Split Recipients</h3>
+        <TableContainer>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Address</TableHead>
+                <TableHead>Percentage</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {(allRecipientsPercentages || []).map((split) => (
+                <TableRow key={split.address}>
+                  <TableCell>
+                    <WalletAddress
+                      address={split.address}
+                      client={contract.client}
+                    />
+                  </TableCell>
+                  <TableCell>{split.splitPercentage}%</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
   );
-};
+}
+
+function BalanceCard(props: {
+  symbol: string;
+  displayValue: string;
+  userShare: string | undefined;
+}) {
+  return (
+    <div className="p-4 border rounded-lg bg-card space-y-1">
+      <div className="text-xl font-semibold">
+        {props.displayValue} {props.symbol}
+      </div>
+      {props.userShare && (
+        <div className="text-sm">
+          <span className="text-sm font-medium">Your Share:</span>{" "}
+          {props.userShare}
+        </div>
+      )}
+    </div>
+  );
+}
