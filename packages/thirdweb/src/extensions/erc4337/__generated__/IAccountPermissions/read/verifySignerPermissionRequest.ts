@@ -31,60 +31,60 @@ export type VerifySignerPermissionRequestParams = {
 export const FN_SELECTOR = "0xa9082d84" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "req",
     components: [
       {
-        name: "signer",
         type: "address",
+        name: "signer",
       },
       {
-        name: "isAdmin",
         type: "uint8",
+        name: "isAdmin",
       },
       {
-        name: "approvedTargets",
         type: "address[]",
+        name: "approvedTargets",
       },
       {
-        name: "nativeTokenLimitPerTransaction",
         type: "uint256",
+        name: "nativeTokenLimitPerTransaction",
       },
       {
+        type: "uint128",
         name: "permissionStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "permissionEndTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "reqValidityStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "reqValidityEndTimestamp",
-        type: "uint128",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "req",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "success",
     type: "bool",
+    name: "success",
   },
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 

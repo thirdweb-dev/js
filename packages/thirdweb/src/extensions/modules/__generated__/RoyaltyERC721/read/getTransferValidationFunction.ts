@@ -8,12 +8,12 @@ export const FN_SELECTOR = "0x0d705df6" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "functionSignature",
     type: "bytes4",
+    name: "functionSignature",
   },
   {
-    name: "isViewFunction",
     type: "bool",
+    name: "isViewFunction",
   },
 ] as const;
 

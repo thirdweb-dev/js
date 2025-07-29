@@ -16,14 +16,14 @@ export type IdOfParams = {
 export const FN_SELECTOR = "0xd94fe832" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "fid",
     type: "uint256",
+    name: "fid",
   },
 ] as const;
 

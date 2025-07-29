@@ -34,7 +34,7 @@ export type RuleDeletedEventFilters = Partial<{
  */
 export function ruleDeletedEvent(filters: RuleDeletedEventFilters = {}) {
   return prepareEvent({
-    filters,
     signature: "event RuleDeleted(bytes32 indexed ruleId)",
+    filters,
   });
 }

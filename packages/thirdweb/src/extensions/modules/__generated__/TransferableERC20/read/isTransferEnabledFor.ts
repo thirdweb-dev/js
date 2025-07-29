@@ -16,8 +16,8 @@ export type IsTransferEnabledForParams = {
 export const FN_SELECTOR = "0x735d0538" as const;
 const FN_INPUTS = [
   {
-    name: "target",
     type: "address",
+    name: "target",
   },
 ] as const;
 const FN_OUTPUTS = [

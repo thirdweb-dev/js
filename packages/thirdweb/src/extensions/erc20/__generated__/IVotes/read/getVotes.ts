@@ -16,8 +16,8 @@ export type GetVotesParams = {
 export const FN_SELECTOR = "0x9ab24eb0" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x098144d4" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "validator",
     type: "address",
+    name: "validator",
   },
 ] as const;
 

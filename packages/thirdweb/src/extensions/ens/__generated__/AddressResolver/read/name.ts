@@ -16,8 +16,8 @@ export type NameParams = {
 export const FN_SELECTOR = "0x691f3431" as const;
 const FN_INPUTS = [
   {
-    name: "name",
     type: "bytes32",
+    name: "name",
   },
 ] as const;
 const FN_OUTPUTS = [

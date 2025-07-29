@@ -19,8 +19,8 @@ export type GetModuleTypesParams = {
 export const FN_SELECTOR = "0xc5dcd896" as const;
 const FN_INPUTS = [
   {
-    name: "moduleAddress",
     type: "address",
+    name: "moduleAddress",
   },
 ] as const;
 const FN_OUTPUTS = [

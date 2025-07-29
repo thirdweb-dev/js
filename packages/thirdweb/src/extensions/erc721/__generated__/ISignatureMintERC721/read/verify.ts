@@ -32,64 +32,64 @@ export type VerifyParams = {
 export const FN_SELECTOR = "0xde903774" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "payload",
     components: [
       {
+        type: "address",
         name: "to",
-        type: "address",
       },
       {
+        type: "address",
         name: "royaltyRecipient",
-        type: "address",
       },
       {
+        type: "uint256",
         name: "royaltyBps",
-        type: "uint256",
       },
       {
+        type: "address",
         name: "primarySaleRecipient",
-        type: "address",
       },
       {
-        name: "uri",
         type: "string",
+        name: "uri",
       },
       {
-        name: "price",
         type: "uint256",
+        name: "price",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
+        type: "uint128",
         name: "validityStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "validityEndTimestamp",
-        type: "uint128",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "payload",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "success",
     type: "bool",
+    name: "success",
   },
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 

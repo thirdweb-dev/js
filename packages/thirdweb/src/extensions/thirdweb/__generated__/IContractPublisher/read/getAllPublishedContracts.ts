@@ -19,36 +19,36 @@ export type GetAllPublishedContractsParams = {
 export const FN_SELECTOR = "0xaf8db690" as const;
 const FN_INPUTS = [
   {
-    name: "publisher",
     type: "address",
+    name: "publisher",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "published",
     components: [
       {
+        type: "string",
         name: "contractId",
-        type: "string",
       },
       {
-        name: "publishTimestamp",
         type: "uint256",
+        name: "publishTimestamp",
       },
       {
-        name: "publishMetadataUri",
         type: "string",
+        name: "publishMetadataUri",
       },
       {
-        name: "bytecodeHash",
         type: "bytes32",
+        name: "bytecodeHash",
       },
       {
-        name: "implementation",
         type: "address",
+        name: "implementation",
       },
     ],
-    name: "published",
-    type: "tuple[]",
   },
 ] as const;
 

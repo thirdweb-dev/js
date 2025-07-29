@@ -16,8 +16,8 @@ export type ContenthashParams = {
 export const FN_SELECTOR = "0xbc1c58d1" as const;
 const FN_INPUTS = [
   {
-    name: "name",
     type: "bytes32",
+    name: "name",
   },
 ] as const;
 const FN_OUTPUTS = [

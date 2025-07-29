@@ -16,14 +16,14 @@ export type MaxWithdrawParams = {
 export const FN_SELECTOR = "0xce96cb77" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "maxAssets",
     type: "uint256",
+    name: "maxAssets",
   },
 ] as const;
 

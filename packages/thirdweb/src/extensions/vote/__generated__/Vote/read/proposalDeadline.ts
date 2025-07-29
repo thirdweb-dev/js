@@ -19,8 +19,8 @@ export type ProposalDeadlineParams = {
 export const FN_SELECTOR = "0xc01f9e37" as const;
 const FN_INPUTS = [
   {
-    name: "proposalId",
     type: "uint256",
+    name: "proposalId",
   },
 ] as const;
 const FN_OUTPUTS = [

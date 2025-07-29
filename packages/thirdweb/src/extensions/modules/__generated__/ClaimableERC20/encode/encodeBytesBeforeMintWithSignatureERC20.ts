@@ -23,34 +23,34 @@ export type EncodeBytesBeforeMintWithSignatureERC20Params = {
 export const FN_SELECTOR = "0x3f4a1bb6" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "params",
     components: [
       {
+        type: "uint48",
         name: "startTimestamp",
-        type: "uint48",
       },
       {
+        type: "uint48",
         name: "endTimestamp",
-        type: "uint48",
       },
       {
-        name: "currency",
         type: "address",
+        name: "currency",
       },
       {
+        type: "uint256",
         name: "maxMintPerWallet",
-        type: "uint256",
       },
       {
+        type: "uint256",
         name: "pricePerUnit",
-        type: "uint256",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "params",
-    type: "tuple",
   },
 ] as const;
 

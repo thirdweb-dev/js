@@ -16,14 +16,14 @@ export type MaxDepositParams = {
 export const FN_SELECTOR = "0x402d267d" as const;
 const FN_INPUTS = [
   {
-    name: "receiver",
     type: "address",
+    name: "receiver",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "maxAssets",
     type: "uint256",
+    name: "maxAssets",
   },
 ] as const;
 

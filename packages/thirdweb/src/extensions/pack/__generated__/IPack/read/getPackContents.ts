@@ -16,36 +16,36 @@ export type GetPackContentsParams = {
 export const FN_SELECTOR = "0x8d4c446a" as const;
 const FN_INPUTS = [
   {
-    name: "_packId",
     type: "uint256",
+    name: "_packId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "contents",
     components: [
       {
-        name: "assetContract",
         type: "address",
+        name: "assetContract",
       },
       {
-        name: "tokenType",
         type: "uint8",
+        name: "tokenType",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
       },
       {
-        name: "totalAmount",
         type: "uint256",
+        name: "totalAmount",
       },
     ],
-    name: "contents",
-    type: "tuple[]",
   },
   {
-    name: "perUnitAmounts",
     type: "uint256[]",
+    name: "perUnitAmounts",
   },
 ] as const;
 

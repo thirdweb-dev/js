@@ -16,8 +16,8 @@ export type NoncesParams = {
 export const FN_SELECTOR = "0x7ecebe00" as const;
 const FN_INPUTS = [
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

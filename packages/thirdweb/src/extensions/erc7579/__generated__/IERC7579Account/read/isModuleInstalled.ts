@@ -24,16 +24,16 @@ export type IsModuleInstalledParams = {
 export const FN_SELECTOR = "0x112d3a7d" as const;
 const FN_INPUTS = [
   {
-    name: "moduleTypeId",
     type: "uint256",
+    name: "moduleTypeId",
   },
   {
-    name: "module",
     type: "address",
+    name: "module",
   },
   {
-    name: "additionalContext",
     type: "bytes",
+    name: "additionalContext",
   },
 ] as const;
 const FN_OUTPUTS = [

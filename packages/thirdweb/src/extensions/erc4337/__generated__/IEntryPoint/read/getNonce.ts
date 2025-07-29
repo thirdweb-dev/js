@@ -17,18 +17,18 @@ export type GetNonceParams = {
 export const FN_SELECTOR = "0x35567e1a" as const;
 const FN_INPUTS = [
   {
-    name: "sender",
     type: "address",
+    name: "sender",
   },
   {
-    name: "key",
     type: "uint192",
+    name: "key",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "nonce",
     type: "uint256",
+    name: "nonce",
   },
 ] as const;
 

@@ -17,12 +17,12 @@ export type TotalKeysParams = {
 export const FN_SELECTOR = "0x6840b75e" as const;
 const FN_INPUTS = [
   {
-    name: "fid",
     type: "uint256",
+    name: "fid",
   },
   {
-    name: "state",
     type: "uint8",
+    name: "state",
   },
 ] as const;
 const FN_OUTPUTS = [

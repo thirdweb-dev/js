@@ -16,23 +16,23 @@ export type TokenDataOfParams = {
 export const FN_SELECTOR = "0xc0da9bcd" as const;
 const FN_INPUTS = [
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
     components: [
       {
-        name: "owner",
         type: "address",
+        name: "owner",
       },
       {
-        name: "mintTimestamp",
         type: "uint96",
+        name: "mintTimestamp",
       },
     ],
-    type: "tuple",
   },
 ] as const;
 

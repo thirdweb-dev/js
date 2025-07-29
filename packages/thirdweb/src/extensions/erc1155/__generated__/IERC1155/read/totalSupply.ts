@@ -16,8 +16,8 @@ export type TotalSupplyParams = {
 export const FN_SELECTOR = "0xbd85b039" as const;
 const FN_INPUTS = [
   {
-    name: "id",
     type: "uint256",
+    name: "id",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -20,12 +20,12 @@ export type GetContentURIParams = {
 export const FN_SELECTOR = "0xb5a31496" as const;
 const FN_INPUTS = [
   {
-    name: "profileId",
     type: "uint256",
+    name: "profileId",
   },
   {
-    name: "pubId",
     type: "uint256",
+    name: "pubId",
   },
 ] as const;
 const FN_OUTPUTS = [

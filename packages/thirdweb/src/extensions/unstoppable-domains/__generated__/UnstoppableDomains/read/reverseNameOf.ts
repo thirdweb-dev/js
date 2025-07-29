@@ -16,14 +16,14 @@ export type ReverseNameOfParams = {
 export const FN_SELECTOR = "0xbebec6b4" as const;
 const FN_INPUTS = [
   {
-    name: "addr",
     type: "address",
+    name: "addr",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "reverseUri",
     type: "string",
+    name: "reverseUri",
   },
 ] as const;
 

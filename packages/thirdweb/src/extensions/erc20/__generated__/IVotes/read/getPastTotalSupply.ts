@@ -19,8 +19,8 @@ export type GetPastTotalSupplyParams = {
 export const FN_SELECTOR = "0x8e539e8c" as const;
 const FN_INPUTS = [
   {
-    name: "blockNumber",
     type: "uint256",
+    name: "blockNumber",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -19,8 +19,8 @@ export type SupportsInterfaceParams = {
 export const FN_SELECTOR = "0x01ffc9a7" as const;
 const FN_INPUTS = [
   {
-    name: "interfaceID",
     type: "bytes4",
+    name: "interfaceID",
   },
 ] as const;
 const FN_OUTPUTS = [

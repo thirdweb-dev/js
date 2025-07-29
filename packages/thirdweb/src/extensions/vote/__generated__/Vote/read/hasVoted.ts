@@ -20,12 +20,12 @@ export type HasVotedParams = {
 export const FN_SELECTOR = "0x43859632" as const;
 const FN_INPUTS = [
   {
-    name: "proposalId",
     type: "uint256",
+    name: "proposalId",
   },
   {
-    name: "account",
     type: "address",
+    name: "account",
   },
 ] as const;
 const FN_OUTPUTS = [

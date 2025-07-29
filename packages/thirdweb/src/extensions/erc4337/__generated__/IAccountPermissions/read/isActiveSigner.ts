@@ -16,8 +16,8 @@ export type IsActiveSignerParams = {
 export const FN_SELECTOR = "0x7dff5a79" as const;
 const FN_INPUTS = [
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 const FN_OUTPUTS = [

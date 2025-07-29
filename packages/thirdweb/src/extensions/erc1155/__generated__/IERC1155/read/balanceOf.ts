@@ -17,12 +17,12 @@ export type BalanceOfParams = {
 export const FN_SELECTOR = "0x00fdd58e" as const;
 const FN_INPUTS = [
   {
-    name: "_owner",
     type: "address",
+    name: "_owner",
   },
   {
-    name: "tokenId",
     type: "uint256",
+    name: "tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -16,28 +16,28 @@ export type GetAllParams = {
 export const FN_SELECTOR = "0xeb077342" as const;
 const FN_INPUTS = [
   {
-    name: "_deployer",
     type: "address",
+    name: "_deployer",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple[]",
+    name: "allDeployments",
     components: [
       {
-        name: "deploymentAddress",
         type: "address",
+        name: "deploymentAddress",
       },
       {
-        name: "chainId",
         type: "uint256",
+        name: "chainId",
       },
       {
-        name: "metadataURI",
         type: "string",
+        name: "metadataURI",
       },
     ],
-    name: "allDeployments",
-    type: "tuple[]",
   },
 ] as const;
 

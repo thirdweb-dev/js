@@ -16,8 +16,8 @@ export type CanUpdatePackParams = {
 export const FN_SELECTOR = "0xb0381b08" as const;
 const FN_INPUTS = [
   {
-    name: "_key",
     type: "uint256",
+    name: "_key",
   },
 ] as const;
 const FN_OUTPUTS = [

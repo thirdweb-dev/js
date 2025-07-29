@@ -26,40 +26,40 @@ export type VerifyParams = {
 export const FN_SELECTOR = "0xc4376dd7" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "req",
     components: [
       {
+        type: "uint128",
         name: "validityStartTimestamp",
-        type: "uint128",
       },
       {
+        type: "uint128",
         name: "validityEndTimestamp",
-        type: "uint128",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
       {
-        name: "data",
         type: "bytes",
+        name: "data",
       },
     ],
-    name: "req",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "success",
     type: "bool",
+    name: "success",
   },
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 

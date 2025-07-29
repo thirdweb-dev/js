@@ -17,22 +17,22 @@ export type GetFeeInfoParams = {
 export const FN_SELECTOR = "0x85b49ad0" as const;
 const FN_INPUTS = [
   {
-    name: "_proxy",
     type: "address",
+    name: "_proxy",
   },
   {
-    name: "_type",
     type: "uint256",
+    name: "_type",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "recipient",
     type: "address",
+    name: "recipient",
   },
   {
-    name: "bps",
     type: "uint256",
+    name: "bps",
   },
 ] as const;
 
