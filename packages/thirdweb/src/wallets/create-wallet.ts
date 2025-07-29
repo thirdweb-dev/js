@@ -2,8 +2,10 @@ import { trackConnect } from "../analytics/track/connect.js";
 import type { Chain } from "../chains/types.js";
 import { getCachedChainIfExists } from "../chains/utils.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
+import { formatWalletConnectUrl } from "../utils/url.js";
 import { isMobile } from "../utils/web/isMobile.js";
 import { openWindow } from "../utils/web/openWindow.js";
+import { getWalletInfo } from "./__generated__/getWalletInfo.js";
 import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
@@ -313,43 +315,63 @@ export function createWallet<const ID extends WalletId>(
                   ...wcOptions,
                   walletConnect: {
                     ...wcOptions.walletConnect,
-                    onDisplayUri: wcOptions.walletConnect?.showQrModal
-                      ? async (uri) => {
-                          // Check if we're in a browser environment
-                          if (
-                            typeof window !== "undefined" &&
-                            typeof document !== "undefined"
-                          ) {
-                            try {
-                              const { createQROverlay } = await import(
-                                "./wallet-connect/qr-overlay.js"
-                              );
+                    onDisplayUri:
+                      wcOptions.walletConnect?.onDisplayUri ||
+                      (async (uri) => {
+                        // Check if we're in a browser environment
+                        if (
+                          typeof window !== "undefined" &&
+                          typeof document !== "undefined"
+                        ) {
+                          // on mobile, open the wallet app via deeplink
+                          if (isMobile()) {
+                            const walletInfo = await getWalletInfo(id);
 
-                              // Clean up any existing overlay
-                              if (qrOverlay) {
-                                qrOverlay.destroy();
-                              }
-
-                              // Create new QR overlay
-                              qrOverlay = createQROverlay(uri, {
-                                theme:
-                                  wcOptions.walletConnect?.qrModalOptions
-                                    ?.themeMode ?? "dark",
-                                qrSize: 280,
-                                showCloseButton: true,
-                                onCancel: () => {
-                                  wcOptions.walletConnect?.onCancel?.();
-                                },
-                              });
-                            } catch (error) {
-                              console.error(
-                                "Failed to create QR overlay:",
-                                error,
+                            const mobileAppLink =
+                              walletInfo.mobile.native ||
+                              walletInfo.mobile.universal;
+                            if (mobileAppLink) {
+                              openWindow(
+                                formatWalletConnectUrl(mobileAppLink, uri)
+                                  .redirect,
                               );
+                            } else {
+                              // on android, wc:// links show the app picker
+                              openWindow(uri);
                             }
+                            return;
+                          }
+
+                          try {
+                            // on desktop, create a QR overlay
+                            const { createQROverlay } = await import(
+                              "./wallet-connect/qr-overlay.js"
+                            );
+
+                            // Clean up any existing overlay
+                            if (qrOverlay) {
+                              qrOverlay.destroy();
+                            }
+
+                            // Create new QR overlay
+                            qrOverlay = createQROverlay(uri, {
+                              theme:
+                                wcOptions.walletConnect?.qrModalOptions
+                                  ?.themeMode ?? "dark",
+                              qrSize: 280,
+                              showCloseButton: true,
+                              onCancel: () => {
+                                wcOptions.walletConnect?.onCancel?.();
+                              },
+                            });
+                          } catch (error) {
+                            console.error(
+                              "Failed to create QR overlay:",
+                              error,
+                            );
                           }
                         }
-                      : undefined,
+                      }),
                   },
                 },
                 emitter,

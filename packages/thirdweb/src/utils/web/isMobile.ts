@@ -3,7 +3,7 @@ import { detectOS } from "../detect-platform.js";
 /**
  * @internal
  */
-export function isAndroid(): boolean {
+function isAndroid(): boolean {
   // can only detect if useragent is defined
   if (typeof navigator === "undefined") {
     return false;
@@ -15,7 +15,7 @@ export function isAndroid(): boolean {
 /**
  * @internal
  */
-export function isIOS(): boolean {
+function isIOS(): boolean {
   // can only detect if useragent is defined
   if (typeof navigator === "undefined") {
     return false;
