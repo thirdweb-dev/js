@@ -1,9 +1,7 @@
 import {
   FormErrorMessage as ChakraFormErrorMessage,
   type FormErrorMessageProps as ChakraFormErrorMessageProps,
-  FormHelperText as ChakraFormHelperText,
   type FormLabelProps as ChakraFormLabelprops,
-  type TextProps as ChakraHelperTextProps,
   FormLabel as FormLabelText,
 } from "@chakra-ui/react";
 import {
@@ -31,27 +29,6 @@ export const FormLabel: ComponentWithChildren<FormLabelProps> = ({
 
   return (
     <FormLabelText
-      fontSize={convertFontSizeToCSSVar(size)}
-      fontWeight={fontWeights[base]}
-      letterSpacing={letterSpacings[base]}
-      lineHeight={lineHeights[base]}
-      {...restProps}
-    />
-  );
-};
-
-interface FormHelperTextProps extends Omit<ChakraHelperTextProps, "size"> {
-  size?: BodySizes;
-}
-
-export const FormHelperText: ComponentWithChildren<FormHelperTextProps> = ({
-  size = "body.sm",
-  ...restProps
-}) => {
-  const [base] = size.split(".") as [BodyBase, TypographySize];
-
-  return (
-    <ChakraFormHelperText
       fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
       letterSpacing={letterSpacings[base]}

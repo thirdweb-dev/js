@@ -5,7 +5,6 @@ import {
   type ButtonProps as ChakraButtonProps,
   forwardRef,
   LightMode,
-  Link,
   useButtonGroup,
 } from "@chakra-ui/react";
 import {
@@ -13,9 +12,6 @@ import {
   letterSpacings,
   lineHeights,
 } from "chakra/theme/typography";
-import { ExternalLinkIcon } from "lucide-react";
-import { forwardRef as reactForwardRef } from "react";
-import { ChakraNextLink } from "./link";
 import { convertFontSizeToCSSVar } from "./utils/typography";
 
 const buttonSizesMap = {
@@ -80,45 +76,3 @@ export const Button = forwardRef<ButtonProps, "button">(
     );
   },
 );
-
-interface LinkButtonProps extends ButtonProps {
-  href: string;
-  isExternal?: boolean;
-  noIcon?: true;
-}
-
-export const LinkButton = reactForwardRef<HTMLButtonElement, LinkButtonProps>(
-  ({ href, isExternal, noIcon, children, ...restButtonProps }, ref) => {
-    if (isExternal) {
-      return (
-        <Button
-          as={Link}
-          href={href}
-          isExternal
-          ref={ref}
-          rightIcon={
-            noIcon ? undefined : <ExternalLinkIcon className="size-4" />
-          }
-          textDecoration="none!important"
-          {...restButtonProps}
-        >
-          {children}
-        </Button>
-      );
-    }
-
-    return (
-      <Button
-        as={ChakraNextLink}
-        href={href}
-        ref={ref}
-        {...restButtonProps}
-        textDecoration="none!important"
-      >
-        {children}
-      </Button>
-    );
-  },
-);
-
-LinkButton.displayName = "LinkButton";
