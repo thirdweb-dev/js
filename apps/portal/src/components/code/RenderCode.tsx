@@ -1,6 +1,6 @@
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 import { cn } from "../../lib/utils";
 import { CopyButton } from "../ui/CopyButton";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
 
 export function RenderCode(props: {
   code: string;

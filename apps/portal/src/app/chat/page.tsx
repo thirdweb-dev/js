@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 export default function ChatPage() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="m-auto flex h-[calc(100vh-4rem)] w-full flex-col overflow-hidden lg:size-[calc(100vh-8rem)]">
+      <div className="flex h-[calc(100vh-65px)] flex-col overflow-hidden lg:h-[calc(100vh-102px)]">
         <Chat />
       </div>
     </QueryClientProvider>

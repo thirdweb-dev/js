@@ -1,10 +1,11 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import {
   ArrowUpIcon,
-  MessageCircleIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
+  UserIcon,
 } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import {
@@ -15,11 +16,15 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "sonner";
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { Button } from "@/components/ui/button";
-import { LoadingDots } from "@/components/ui/LoadingDots";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Toaster } from "@/components/ui/sonner";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { ThirdwebIcon } from "@/icons/thirdweb";
+import { Spinner } from "../ui/Spinner/Spinner";
 import { getChatResponse, sendFeedback } from "./api";
 
 interface Message {
@@ -43,18 +48,30 @@ function ChatEmptyState({
   onPromptClick: (prompt: string) => void;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 py-16 text-center">
-      <MessageCircleIcon className="size-16" />
+    <div className="flex grow flex-col items-center justify-center">
+      {/* tw logo */}
+      <div className="mb-6 flex justify-center">
+        <div className="rounded-full border p-1 bg-muted/20">
+          <div className="rounded-full border p-2 bg-inverted">
+            <ThirdwebIcon
+              isMonoChrome
+              className="size-7 text-inverted-foreground"
+            />
+          </div>
+        </div>
+      </div>
 
-      <h2 className="font-semibold text-3xl text-foreground">
-        How can I help you <br />
-        build onchain today?
-      </h2>
+      {/* title */}
+      <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl mb-8">
+        How can I help you <br className="max-sm:hidden" />
+        today?
+      </h1>
 
+      {/* prompts */}
       <div className="flex w-full max-w-md flex-col items-center justify-center space-y-3">
         {predefinedPrompts.map((prompt) => (
           <Button
-            className="h-auto w-full justify-start whitespace-normal p-4 text-left"
+            className="rounded-full text-xs sm:text-sm truncate bg-card w-fit h-auto py-1.5 whitespace-pre-wrap font-normal text-muted-foreground"
             key={prompt}
             onClick={() => onPromptClick(prompt)}
             variant="outline"
@@ -70,7 +87,7 @@ function ChatEmptyState({
 export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
   const posthog = usePostHog();
   const [conversationId, setConversationId] = useState<string | undefined>(
     undefined,
@@ -140,10 +157,9 @@ export function Chat() {
   );
 
   useEffect(() => {
-    if (lastMessageRef.current && messages.length > 0) {
-      lastMessageRef.current.scrollIntoView({
+    if (scrollAnchorRef.current && messages.length > 0) {
+      scrollAnchorRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "start",
       });
     }
   }, [messages.length]);
@@ -161,113 +177,191 @@ export function Chat() {
     }
   };
 
-  const handleFeedback = async (messageId: string, feedback: 1 | -1) => {
-    if (!conversationId) return; // Don't send feedback if no conversation
-
-    try {
-      await sendFeedback(conversationId, feedback);
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === messageId ? { ...msg, feedback } : msg,
-        ),
-      );
-    } catch (_e) {
-      // Optionally handle error
-    }
-  };
-
   return (
-    <div className="mx-auto flex size-full flex-col overflow-hidden lg:min-w-[800px] lg:max-w-5xl">
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="container flex max-h-full  flex-col grow overflow-hidden lg:max-w-4xl pb-6">
+      <Toaster richColors />
+      <div className="relative flex max-h-full flex-1 flex-col overflow-hidden">
         {messages.length === 0 ? (
           <ChatEmptyState onPromptClick={handleSendMessage} />
         ) : (
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                className={cn(
-                  "flex",
-                  message.role === "user" ? "justify-end" : "justify-start",
-                )}
-                key={message.id}
-                ref={index === messages.length - 1 ? lastMessageRef : null}
-              >
-                <div
-                  className={cn(
-                    "max-w-[100%] rounded-lg p-3",
-                    message.role === "user"
-                      ? "bg-muted text-muted-foreground"
-                      : "bg-transparent",
-                  )}
-                >
-                  {message.role === "assistant" && message.isLoading ? (
-                    <LoadingDots />
-                  ) : (
-                    <>
-                      <StyledMarkdownRenderer
-                        isMessagePending={false}
-                        text={message.content}
-                        type={message.role}
-                      />
-                      {message.role === "assistant" && !message.isLoading && (
-                        <div className="mt-2 flex gap-2">
-                          {!message.feedback && (
-                            <>
-                              <button
-                                aria-label="Thumbs up"
-                                className="text-muted-foreground transition-colors hover:text-green-500"
-                                onClick={() => handleFeedback(message.id, 1)}
-                                type="button"
-                              >
-                                <ThumbsUpIcon className="size-5" />
-                              </button>
-                              <button
-                                aria-label="Thumbs down"
-                                className="text-muted-foreground transition-colors hover:text-red-500"
-                                onClick={() => handleFeedback(message.id, -1)}
-                                type="button"
-                              >
-                                <ThumbsDownIcon className="size-5" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ScrollShadow
+            className="flex-1"
+            scrollableClassName="max-h-full overscroll-contain"
+            shadowColor="hsl(var(--background))"
+            shadowClassName="z-[1]"
+          >
+            <div className="space-y-8 pt-10 pb-16">
+              {messages.map((message) => (
+                <RenderMessage
+                  conversationId={conversationId}
+                  message={message}
+                  key={message.id}
+                />
+              ))}
+            </div>
+            <div ref={scrollAnchorRef} />
+          </ScrollShadow>
         )}
       </div>
-      <div className="p-4">
-        <div className="relative rounded-lg bg-muted text-muted-foreground">
-          <AutoResizeTextarea
-            className="min-h-[100px] resize-none bg-transparent pt-4 pr-20 pl-4"
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask AI Assistant..."
-            rows={2}
-            value={input}
-          />
-          <Button
-            className="-translate-y-1/2 absolute top-1/2 right-2"
-            disabled={!input.trim()}
-            onClick={() => {
-              const currentInput = input;
-              setInput("");
-              handleSendMessage(currentInput);
-            }}
-            type="submit"
-            variant={"primary"}
-          >
-            <ArrowUpIcon />
-          </Button>
-        </div>
+
+      <div className="relative z-stickyTop">
+        <AutoResizeTextarea
+          className="min-h-[120px] rounded-xl bg-card"
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Ask AI Assistant..."
+          rows={2}
+          value={input}
+        />
+        <Button
+          className="absolute bottom-3 right-3 disabled:opacity-100 !h-auto w-auto shrink-0 gap-2 p-2"
+          disabled={!input.trim()}
+          onClick={() => {
+            const currentInput = input;
+            setInput("");
+            handleSendMessage(currentInput);
+          }}
+          type="submit"
+          size="sm"
+          variant="default"
+        >
+          <ArrowUpIcon className="size-4" />
+        </Button>
       </div>
     </div>
   );
+}
+
+const aiIcon = (
+  <div className="rounded-full size-7 lg:size-9 border shrink-0 flex items-center justify-center bg-inverted">
+    <ThirdwebIcon
+      className="size-3 lg:size-4 text-inverted-foreground"
+      isMonoChrome
+    />
+  </div>
+);
+
+const userIcon = (
+  <div className="rounded-full size-7 lg:size-9 border bg-card shrink-0 flex items-center justify-center translate-y-1">
+    <UserIcon className="size-3 lg:size-4 text-muted-foreground" />
+  </div>
+);
+
+function RenderAIResponse(props: {
+  conversationId: string | undefined;
+  message: Message;
+}) {
+  const thumbsUpFeedbackMutation = useMutation({
+    mutationFn: () => {
+      if (!props.conversationId) {
+        throw new Error("No conversation ID");
+      }
+      return sendFeedback(props.conversationId, 1);
+    },
+  });
+
+  const thumbsDownFeedbackMutation = useMutation({
+    mutationFn: () => {
+      if (!props.conversationId) {
+        throw new Error("No conversation ID");
+      }
+      return sendFeedback(props.conversationId, -1);
+    },
+  });
+
+  return (
+    <div className="flex items-start gap-3.5">
+      {aiIcon}
+      <div className="flex-1 min-w-0 overflow-hidden">
+        <StyledMarkdownRenderer
+          text={props.message.content}
+          type="assistant"
+          isMessagePending={false}
+        />
+
+        {props.conversationId && (
+          <div className="mt-4 flex gap-2">
+            <Button
+              aria-label="Thumbs up"
+              onClick={() => {
+                const promise = thumbsUpFeedbackMutation.mutateAsync();
+                toast.promise(promise, {
+                  success: "Feedback sent",
+                  error: "Failed to send feedback",
+                });
+              }}
+              type="button"
+              className="size-8 p-0 rounded-lg bg-card"
+              variant="outline"
+            >
+              {thumbsUpFeedbackMutation.isPending ? (
+                <Spinner className="size-3.5" />
+              ) : (
+                <ThumbsUpIcon className="size-3.5" />
+              )}
+            </Button>
+            <Button
+              aria-label="Thumbs down"
+              className="size-8 p-0 rounded-lg bg-card"
+              onClick={() => {
+                const promise = thumbsDownFeedbackMutation.mutateAsync();
+                toast.promise(promise, {
+                  success: "Feedback sent",
+                  error: "Failed to send feedback",
+                });
+              }}
+              type="button"
+              variant="outline"
+            >
+              {thumbsDownFeedbackMutation.isPending ? (
+                <Spinner className="size-3.5" />
+              ) : (
+                <ThumbsDownIcon className="size-3.5" />
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RenderMessage(props: {
+  message: Message;
+  conversationId: string | undefined;
+}) {
+  if (props.message.role === "user") {
+    return (
+      <div className="flex items-start gap-3.5">
+        {userIcon}
+        <div className="px-3.5 py-2 rounded-xl border bg-card relative">
+          <StyledMarkdownRenderer
+            text={props.message.content}
+            type="user"
+            isMessagePending={false}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (props.message.role === "assistant" && props.message.isLoading) {
+    return (
+      <div className="flex items-center gap-3.5">
+        {aiIcon}
+        <TextShimmer text="Thinking..." className="text-sm md:text-base" />
+      </div>
+    );
+  }
+
+  if (props.message.role === "assistant" && !props.message.isLoading) {
+    return (
+      <RenderAIResponse
+        conversationId={props.conversationId}
+        message={props.message}
+      />
+    );
+  }
 }
 
 function StyledMarkdownRenderer(props: {
@@ -277,15 +371,16 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      className="[&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
+      className="text-sm md:text-base text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0 leading-relaxed"
       code={{
-        className: "bg-transparent",
+        className: "bg-card",
         ignoreFormattingErrors: true,
       }}
       inlineCode={{ className: "border-none" }}
+      li={{ className: "text-foreground leading-relaxed" }}
       markdownText={props.text}
       p={{
-        className: props.type === "assistant" ? "" : "leading-normal",
+        className: "text-foreground leading-relaxed",
       }}
       skipHtml
     />

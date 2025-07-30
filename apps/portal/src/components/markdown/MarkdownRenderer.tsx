@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { onlyText } from "react-children-utilities"; // Assuming this dependency is available
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Assuming this dependency is available
@@ -15,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"; // Adjusted path for portal
+import { UnderlineLink } from "@/components/ui/underline-link";
 import { cn } from "@/lib/utils"; // Adjusted path for portal
 
 // Helper function to remove the 'node' prop before spreading
@@ -53,13 +53,15 @@ export const MarkdownRenderer: React.FC<{
       <ReactMarkdown
         components={{
           a: (props) => (
-            <Link
+            <UnderlineLink
               href={props.href ?? "#"}
+              rel="noopener noreferrer"
               target="_blank"
               {...cleanedProps(props)}
-              className="mt-4 text-blue-600 underline visited:text-purple-600 hover:text-blue-800" // Example portal link style
+              className="mt-4"
             />
           ),
+
           code: ({ className: inheritedClassName, children, ...props }) => {
             const codeStr = onlyText(children);
 
@@ -111,57 +113,60 @@ export const MarkdownRenderer: React.FC<{
             <h2
               className={cn(
                 commonHeadingClassName,
-                "mb-3 border-border border-b pb-2 text-xl md:text-2xl", // Sorted
+                "mb-3 border-dashed border-b pb-2 text-xl md:text-2xl",
               )}
               {...cleanedProps(props)}
             />
           ),
+
           h2: (props) => (
             <h3
               {...cleanedProps(props)}
               className={cn(
                 commonHeadingClassName,
-                "mt-8 mb-3 border-border border-b pb-2 text-lg md:text-xl", // Sorted
+                "mt-8 mb-3 border-dashed border-b pb-2 text-lg md:text-xl",
               )}
             />
           ),
+
           h3: (props) => (
             <h4
               {...cleanedProps(props)}
               className={cn(
                 commonHeadingClassName,
-                "mt-4 text-base md:text-lg", // Consider portal styles
+                "mt-4 text-base md:text-lg",
               )}
             />
           ),
+
           h4: (props) => (
             <h5
               {...cleanedProps(props)}
-              className={cn(commonHeadingClassName, "mt-4 text-lg")} // Consider portal styles
+              className={cn(commonHeadingClassName, "mt-4 text-lg")}
             />
           ),
+
           h5: (props) => (
             <h6
               {...cleanedProps(props)}
-              className={cn(commonHeadingClassName, "mt-4 text-lg")} // Consider portal styles
+              className={cn(commonHeadingClassName, "mt-4 text-lg")}
             />
           ),
+
           h6: (props) => (
             <p
               {...cleanedProps(props)}
-              className={cn(commonHeadingClassName, "mt-4 text-lg")} // Consider portal styles
+              className={cn(commonHeadingClassName, "mt-4 text-lg")}
             />
           ),
+
           hr: (props) => (
-            <hr
-              {...cleanedProps(props)}
-              className="my-5 border-border bg-border"
-            /> // Consider portal styles
+            <hr {...cleanedProps(props)} className="my-5 bg-border" />
           ),
           li: ({ children: c, ...props }) => (
             <li
               className={cn(
-                "mb-1.5 text-muted-foreground leading-loose [&>p]:m-0",
+                "text-muted-foreground leading-relaxed [&>p]:m-0",
                 markdownProps.li?.className,
               )}
               {...cleanedProps(props)}
@@ -171,14 +176,15 @@ export const MarkdownRenderer: React.FC<{
           ),
           ol: (props) => (
             <ol
-              className="mb-4 list-outside list-decimal pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
+              className="mb-4 list-outside list-decimal pl-4 space-y-2 [&>li]:first:mt-2"
               {...cleanedProps(props)}
             />
           ),
+
           p: (props) => (
             <p
               className={cn(
-                "mb-4 text-muted-foreground leading-loose",
+                "mb-3 text-muted-foreground leading-7",
                 markdownProps.p?.className,
               )}
               {...cleanedProps(props)}
@@ -187,6 +193,7 @@ export const MarkdownRenderer: React.FC<{
           strong(props) {
             return <strong className="font-medium" {...cleanedProps(props)} />;
           },
+
           table: (props) => (
             <div className="mb-6">
               <TableContainer>
@@ -195,9 +202,11 @@ export const MarkdownRenderer: React.FC<{
             </div>
           ),
           tbody: (props) => <TableBody {...cleanedProps(props)} />,
+
           td: (props) => (
             <TableCell {...cleanedProps(props)} className="text-left" />
           ),
+
           th: ({ children: c, ...props }) => (
             <TableHead
               {...cleanedProps(props)}
@@ -208,12 +217,14 @@ export const MarkdownRenderer: React.FC<{
           ),
           thead: (props) => <TableHeader {...cleanedProps(props)} />,
           tr: (props) => <TableRow {...cleanedProps(props)} />,
-          ul: (props) => (
-            <ul
-              className="mb-4 list-outside list-disc pl-5 [&_ol_li:first-of-type]:mt-1.5 [&_ul_li:first-of-type]:mt-1.5"
-              {...cleanedProps(props)}
-            />
-          ),
+          ul: (props) => {
+            return (
+              <ul
+                className="mb-4 list-outside list-disc pl-4 space-y-2 [&>li]:first:mt-2"
+                {...cleanedProps(props)}
+              />
+            );
+          },
         }}
         remarkPlugins={[remarkGfm]}
         skipHtml={markdownProps.skipHtml}

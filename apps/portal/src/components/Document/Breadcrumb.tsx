@@ -8,7 +8,6 @@ type Crumb = {
 
 export function Breadcrumb(props: { crumbs: Crumb[] }) {
   return (
-    // biome-ignore lint/nursery/useUniqueElementIds: this acts as a target for hrefs
     <nav className="mb-6" data-noindex id="bradcrumb">
       <ul className="flex flex-wrap items-center gap-1 text-sm">
         {props.crumbs.map((crumb, i) => {
