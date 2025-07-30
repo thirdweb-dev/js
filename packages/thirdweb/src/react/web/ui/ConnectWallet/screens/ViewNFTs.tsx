@@ -127,6 +127,9 @@ export function ViewNFTsContent(props: {
         chains: [activeChain],
         client: props.client,
         ownerAddress: activeAccount.address,
+        contractAddresses: props.supportedNFTs?.[activeChain.id]?.map((nft) =>
+          nft.toLowerCase(),
+        ),
       });
 
       return result
@@ -139,20 +142,19 @@ export function ViewNFTsContent(props: {
           };
         });
     },
-    queryKey: ["nfts", activeChain?.id, activeAccount?.address],
+    queryKey: [
+      "nfts",
+      activeChain?.id,
+      activeAccount?.address,
+      props.supportedNFTs,
+    ],
   });
 
   if (!activeChain?.id || !activeAccount?.address) {
     return null;
   }
 
-  const filteredNFTs = props.supportedNFTs?.[activeChain.id]
-    ? nftQuery.data?.filter((nft) =>
-        props.supportedNFTs?.[activeChain.id]
-          ?.map((supportedNFTAddress) => supportedNFTAddress.toLowerCase())
-          .includes(nft.address.toLowerCase()),
-      )
-    : nftQuery.data;
+  const filteredNFTs = nftQuery.data;
 
   return (
     <>

@@ -13,6 +13,7 @@ import type { SupportedFiatCurrency } from "../../../pay/convert/type.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../transaction/utils.js";
+import { stringify } from "../../../utils/json.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
@@ -180,9 +181,7 @@ export function useTransactionDetails({
     },
     queryKey: [
       "transaction-details",
-      transaction.to,
-      transaction.chain.id,
-      transaction.erc20Value?.toString(),
+      stringify(transaction),
       hasSponsoredTransactions,
     ],
   });
