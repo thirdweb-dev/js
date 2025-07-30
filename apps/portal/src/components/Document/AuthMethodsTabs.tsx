@@ -914,22 +914,24 @@ function AuthMethodsTabsContent() {
                     </h4>
                   </div>
                   <div className="relative space-y-4">
-                    {getCodeSnippet(selectedAuth, platform.id).map((code) => (
-                      <CodeClient
-                        key={platform.id}
-                        code={code}
-                        lang={
-                          platform.id === "http"
-                            ? "http"
-                            : platform.id === "dotnet" ||
-                                platform.id === "unity"
-                              ? "csharp"
-                              : "typescript"
-                        }
-                        loader={<CodeLoading />}
-                        className="text-sm"
-                      />
-                    ))}
+                    {getCodeSnippet(selectedAuth, platform.id).map(
+                      (code, i) => (
+                        <CodeClient
+                          key={`${platform.id}-${i}`}
+                          code={code}
+                          lang={
+                            platform.id === "http"
+                              ? "http"
+                              : platform.id === "dotnet" ||
+                                  platform.id === "unity"
+                                ? "csharp"
+                                : "typescript"
+                          }
+                          loader={<CodeLoading />}
+                          className="text-sm"
+                        />
+                      ),
+                    )}
                   </div>
                 </div>
               </TabsContent>

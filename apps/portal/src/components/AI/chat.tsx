@@ -1,6 +1,10 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from "@tanstack/react-query";
 import {
   ArrowUpIcon,
   ThumbsDownIcon,
@@ -40,6 +44,8 @@ const predefinedPrompts = [
   "How do I deploy a DropERC1155 contract in typescript?",
   "How do I send a transaction in Unity?",
 ];
+
+const queryClient = new QueryClient();
 
 // Empty State Component
 function ChatEmptyState({
@@ -156,13 +162,16 @@ export function Chat() {
     [conversationId, posthog],
   );
 
+  const lastMessageLength = messages[messages.length - 1]?.content.length ?? 0;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: need both the number of messages and the last message length to trigger the scroll
   useEffect(() => {
     if (scrollAnchorRef.current && messages.length > 0) {
       scrollAnchorRef.current.scrollIntoView({
         behavior: "smooth",
       });
     }
-  }, [messages.length]);
+  }, [messages.length, lastMessageLength]);
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -178,57 +187,59 @@ export function Chat() {
   };
 
   return (
-    <div className="container flex max-h-full  flex-col grow overflow-hidden lg:max-w-4xl pb-6">
-      <Toaster richColors />
-      <div className="relative flex max-h-full flex-1 flex-col overflow-hidden">
-        {messages.length === 0 ? (
-          <ChatEmptyState onPromptClick={handleSendMessage} />
-        ) : (
-          <ScrollShadow
-            className="flex-1"
-            scrollableClassName="max-h-full overscroll-contain"
-            shadowColor="hsl(var(--background))"
-            shadowClassName="z-[1]"
-          >
-            <div className="space-y-8 pt-10 pb-16">
-              {messages.map((message) => (
-                <RenderMessage
-                  conversationId={conversationId}
-                  message={message}
-                  key={message.id}
-                />
-              ))}
-            </div>
-            <div ref={scrollAnchorRef} />
-          </ScrollShadow>
-        )}
-      </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="flex max-h-full flex-col grow overflow-hidden">
+        <Toaster richColors />
+        <div className="relative flex max-h-full flex-1 flex-col overflow-hidden px-4">
+          {messages.length === 0 ? (
+            <ChatEmptyState onPromptClick={handleSendMessage} />
+          ) : (
+            <ScrollShadow
+              className="flex-1"
+              scrollableClassName="max-h-full overscroll-contain"
+              shadowColor="hsl(var(--background))"
+              shadowClassName="z-[1]"
+            >
+              <div className="space-y-8 pt-6 pb-16">
+                {messages.map((message) => (
+                  <RenderMessage
+                    conversationId={conversationId}
+                    message={message}
+                    key={message.id}
+                  />
+                ))}
+              </div>
+              <div ref={scrollAnchorRef} />
+            </ScrollShadow>
+          )}
+        </div>
 
-      <div className="relative z-stickyTop">
-        <AutoResizeTextarea
-          className="min-h-[120px] rounded-xl bg-card"
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Ask AI Assistant..."
-          rows={2}
-          value={input}
-        />
-        <Button
-          className="absolute bottom-3 right-3 disabled:opacity-100 !h-auto w-auto shrink-0 gap-2 p-2"
-          disabled={!input.trim()}
-          onClick={() => {
-            const currentInput = input;
-            setInput("");
-            handleSendMessage(currentInput);
-          }}
-          type="submit"
-          size="sm"
-          variant="default"
-        >
-          <ArrowUpIcon className="size-4" />
-        </Button>
+        <div className="relative z-stickyTop">
+          <AutoResizeTextarea
+            className="min-h-[120px] rounded-xl border-x-0 border-b-0 rounded-t-none bg-card focus-visible:ring-0 focus-visible:ring-offset-0"
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask AI Assistant..."
+            rows={2}
+            value={input}
+          />
+          <Button
+            className="absolute bottom-3 right-3 disabled:opacity-100 !h-auto w-auto shrink-0 gap-2 p-2"
+            disabled={!input.trim()}
+            onClick={() => {
+              const currentInput = input;
+              setInput("");
+              handleSendMessage(currentInput);
+            }}
+            type="submit"
+            size="sm"
+            variant="default"
+          >
+            <ArrowUpIcon className="size-4" />
+          </Button>
+        </div>
       </div>
-    </div>
+    </QueryClientProvider>
   );
 }
 
@@ -272,7 +283,7 @@ function RenderAIResponse(props: {
   return (
     <div className="flex items-start gap-3.5">
       {aiIcon}
-      <div className="flex-1 min-w-0 overflow-hidden">
+      <div className="flex-1 min-w-0 overflow-hidden fade-in-0 duration-300 animate-in">
         <StyledMarkdownRenderer
           text={props.message.content}
           type="assistant"
@@ -334,7 +345,7 @@ function RenderMessage(props: {
     return (
       <div className="flex items-start gap-3.5">
         {userIcon}
-        <div className="px-3.5 py-2 rounded-xl border bg-card relative">
+        <div className="px-3.5 py-2 rounded-xl border bg-card relative fade-in-0 duration-300 animate-in">
           <StyledMarkdownRenderer
             text={props.message.content}
             type="user"
@@ -349,7 +360,9 @@ function RenderMessage(props: {
     return (
       <div className="flex items-center gap-3.5">
         {aiIcon}
-        <TextShimmer text="Thinking..." className="text-sm md:text-base" />
+        <div className="fade-in-0 duration-300 animate-in">
+          <TextShimmer text="Thinking..." className="text-sm" />
+        </div>
       </div>
     );
   }
@@ -371,7 +384,7 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      className="text-sm md:text-base text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0 leading-relaxed"
+      className="text-sm text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0 leading-relaxed"
       code={{
         className: "bg-card",
         ignoreFormattingErrors: true,

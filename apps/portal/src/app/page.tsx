@@ -1,8 +1,8 @@
-import { BotIcon, MessageCircleIcon, WebhookIcon, ZapIcon } from "lucide-react";
+import { BotIcon, WebhookIcon, ZapIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
-import { Button } from "@/components/ui/button";
+import { ChatButton } from "../components/AI/chat-button";
 import {
   DotNetIcon,
   ExternalLinkIcon,
@@ -18,6 +18,7 @@ import { InsightIcon } from "../icons/products/InsightIcon";
 import { PlaygroundIcon } from "../icons/products/PlaygroundIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
+
 export default function Page() {
   return (
     <main className="container max-w-5xl grow pb-20" data-noindex>
@@ -44,12 +45,7 @@ function Hero() {
             Development framework for building onchain apps, games, and agents.
           </p>
           <div className="flex">
-            <Button className="flex items-center gap-2" asChild>
-              <Link href="/chat">
-                <MessageCircleIcon className="size-4" />
-                Ask AI
-              </Link>
-            </Button>
+            <ChatButton />
           </div>
         </div>
       </div>
