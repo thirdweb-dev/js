@@ -30,7 +30,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { InlineCode } from "@/components/ui/inline-code";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -414,14 +413,13 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
           )}
 
           {error ? (
-            <>
-              <h3 className="text-sm font-medium">Error</h3>
-              <InlineCode
-                className="relative w-full whitespace-pre-wrap rounded-md border border-border p-4 text-red-500"
-                //  biome-ignore lint/suspicious/noExplicitAny: FIXME
-                code={formatError(error as any)}
+            <div>
+              <h3 className="text-sm font-medium mb-2">Error</h3>
+              <PlainTextCodeBlock
+                className="text-red-500 bg-background"
+                code={formatError(error)}
               />
-            </>
+            </div>
           ) : readLoading ? (
             <Skeleton className="h-20 w-full rounded-lg" />
           ) : formattedResponseData ? (
