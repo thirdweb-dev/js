@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.25
+
+### Patch Changes
+
+- [#7761](https://github.com/thirdweb-dev/js/pull/7761) [`d35b6fc`](https://github.com/thirdweb-dev/js/commit/d35b6fc1fe320c55cddfe3080dc5b66a3d605514) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix CheckoutWidget transaction invalidation and fix nft filtering in connect UI
+
 ## 5.105.24
 
 ### Patch Changes
