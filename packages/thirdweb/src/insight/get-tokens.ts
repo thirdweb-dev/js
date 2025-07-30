@@ -26,7 +26,7 @@ export async function getOwnedTokens(args: {
   client: ThirdwebClient;
   chains: Chain[];
   ownerAddress: string;
-  tokenAddress?: string;
+  tokenAddresses?: string[];
   queryOptions?: Omit<
     GetV1TokensData["query"],
     "owner_address" | "chain_id" | "chain"
@@ -46,7 +46,7 @@ export async function getOwnedTokens(args: {
     import("../utils/json.js"),
   ]);
 
-  const { client, chains, ownerAddress, tokenAddress, queryOptions } = args;
+  const { client, chains, ownerAddress, tokenAddresses, queryOptions } = args;
 
   await assertInsightEnabled(chains);
 
@@ -57,7 +57,8 @@ export async function getOwnedTokens(args: {
     limit: 50,
     metadata: "true",
     owner_address: [ownerAddress],
-    token_address: tokenAddress ? [tokenAddress] : undefined,
+    token_address: tokenAddresses ? tokenAddresses : undefined,
+    sort_by: "balance",
   };
 
   const result = await getV1Tokens({
