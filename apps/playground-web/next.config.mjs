@@ -113,17 +113,37 @@ const nextConfig = {
       },
       {
         source: "/wallets/account-abstraction/sponsor",
-        destination: "/wallets/account-abstraction/eip-4337",
+        destination: "/account-abstraction/eip-4337",
         permanent: false,
       },
       {
         source: "/wallets/account-abstraction/7702",
-        destination: "/wallets/account-abstraction/eip-7702",
+        destination: "/account-abstraction/eip-7702",
         permanent: false,
       },
       {
         source: "/wallets/account-abstraction/5792",
-        destination: "/wallets/account-abstraction/eip-5792",
+        destination: "/account-abstraction/eip-5792",
+        permanent: false,
+      },
+      {
+        source: "/wallets/account-abstraction/native-aa",
+        destination: "/account-abstraction/native-aa",
+        permanent: false,
+      },
+      {
+        source: "/wallets/headless/token-components",
+        destination: "/tokens/token-components",
+        permanent: false,
+      },
+      {
+        source: "/wallets/headless/nft-components",
+        destination: "/tokens/nft-components",
+        permanent: false,
+      },
+      {
+        source: "/wallets/in-app-wallet/ecosystem",
+        destination: "/wallets/ecosystem-wallet",
         permanent: false,
       },
     ];

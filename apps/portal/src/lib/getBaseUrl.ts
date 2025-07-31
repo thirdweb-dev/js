@@ -1,5 +1,5 @@
 function getVercelEnv(): "production" | "preview" | "development" {
-  const onVercel = process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV;
+  const onVercel = process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_ENV;
 
   // localhost
   if (!onVercel) {

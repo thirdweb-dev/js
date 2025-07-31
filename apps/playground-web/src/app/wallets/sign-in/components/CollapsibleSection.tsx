@@ -1,5 +1,5 @@
 import { CustomAccordion } from "@/components/ui/CustomAccordion";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export function CollapsibleSection(props: {
   children: React.ReactNode;
@@ -10,13 +10,13 @@ export function CollapsibleSection(props: {
 }) {
   return (
     <CustomAccordion
-      activeTriggerClassName="bg-card text-foreground "
+      activeTriggerClassName="bg-accent/50 text-foreground"
       chevronClassName="size-5"
       chevronPosition="right"
       containerClassName="border-none"
       defaultOpen={props.defaultOpen}
       trigger={
-        <span className="flex items-center gap-3 font-semibold text-lg tracking-tight">
+        <span className="flex items-center gap-3 font-medium text-base tracking-tight">
           <props.icon className="size-5" />
           {props.title}
         </span>

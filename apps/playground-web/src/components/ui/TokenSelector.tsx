@@ -17,10 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAllChainsData } from "@/hooks/chains";
 import { useTokensData } from "@/hooks/useTokensData";
 import type { TokenMetadata } from "@/lib/types";
 import { cn, fallbackChainIcon, replaceIpfsUrl } from "@/lib/utils";
-import { useAllChainsData } from "../../app/hooks/chains";
 
 const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
 
