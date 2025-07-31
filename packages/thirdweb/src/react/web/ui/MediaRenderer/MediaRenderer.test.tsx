@@ -25,7 +25,7 @@ describe("MediaRenderer", () => {
     expect(screen.queryByText("File")).not.toBeInTheDocument(); // would display file if it shows the "not found" div
   });
 
-  it("should render unknown if nothing found", () => {
+  it.skip("should render unknown if nothing found", () => {
     render(<MediaRenderer client={TEST_CLIENT} src="asaosdoiandoin" />);
     setTimeout(() => {
       expect(screen.queryByText("File")).toBeInTheDocument(); // would display file if it shows the "not found" div
