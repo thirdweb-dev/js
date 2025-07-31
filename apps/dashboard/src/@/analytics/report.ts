@@ -428,3 +428,31 @@ export function reportUpsellClicked(properties: UpsellParams) {
 export function reportPaymentCardClick(properties: { id: string }) {
   posthog.capture("payment card clicked", properties);
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track payment link usage
+ *
+ * ### Who is responsible for this event?
+ * @greg
+ */
+export function reportPaymentLinkVisited(properties: {
+  linkId: string;
+  clientId: string;
+}) {
+  posthog.capture("payment link visited", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track payment link usage
+ *
+ * ### Who is responsible for this event?
+ * @greg
+ */
+export function reportPaymentLinkCompleted(properties: {
+  linkId: string;
+  clientId: string;
+}) {
+  posthog.capture("payment link completed", properties);
+}

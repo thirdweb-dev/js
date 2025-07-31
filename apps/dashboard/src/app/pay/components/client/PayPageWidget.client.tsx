@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { createThirdwebClient, NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
 import { AutoConnect, CheckoutWidget } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { reportPaymentLinkCompleted } from "@/analytics/report";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 
 export function PayPageWidget({
@@ -60,6 +61,12 @@ export function PayPageWidget({
         onSuccess={() => {
           if (!redirectUri) return;
           const url = new URL(redirectUri);
+          if (paymentLinkId && clientId) {
+            reportPaymentLinkCompleted({
+              linkId: paymentLinkId,
+              clientId: clientId,
+            });
+          }
           return window.open(url.toString());
         }}
         paymentLinkId={paymentLinkId}
