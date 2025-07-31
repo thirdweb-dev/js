@@ -3,6 +3,7 @@ import * as ox__AbiError from "ox/AbiError";
 import { resolveContractAbi } from "../../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { Hex } from "../encoding/hex.js";
+import { AbiError } from "ox";
 
 /**
  * Decodes an error.
@@ -32,6 +33,10 @@ export async function decodeError<abi extends ox__Abi.Abi>(options: {
       `No ABI found for contract ${contract.address} on chain ${contract.chain.id}`,
     );
   }
-  const abiError = ox__AbiError.fromAbi(abi, data) as ox__AbiError.AbiError;
+  const err = abi.filter((i) => i.type === "error" && AbiError.getSelector(i) === data.slice(0, 10))
+  const abiError = err[0] as ox__AbiError.AbiError;
+  if (!abiError) {
+    throw new Error(`No ABI function found for selector ${data.slice(0, 10)}`);
+  }
   return ox__AbiError.decode(abiError, data);
 }
