@@ -32,7 +32,11 @@ export async function decodeFunctionData<abi extends ox__Abi.Abi>(options: {
       `No ABI found for contract ${contract.address} on chain ${contract.chain.id}`,
     );
   }
-  const fn = abi.filter((i) => i.type === "function" && ox__AbiFunction.getSelector(i) === data.slice(0, 10))
+  const fn = abi.filter(
+    (i) =>
+      i.type === "function" &&
+      ox__AbiFunction.getSelector(i) === data.slice(0, 10),
+  );
   const abiFunction = fn[0] as ox__AbiFunction.AbiFunction;
   if (!abiFunction) {
     throw new Error(`No ABI function found for selector ${data.slice(0, 10)}`);
