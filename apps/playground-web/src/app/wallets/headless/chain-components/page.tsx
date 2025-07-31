@@ -1,28 +1,33 @@
-import type { Metadata } from "next";
+import { LinkIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import {
   ChainIconExample,
   ChainNameExample,
 } from "@/components/headless-ui/chain-examples";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description: "Headless UI components for rendering chain name and icon",
-  metadataBase,
-  title: "Chain Components",
-};
+const title = "Chain Components";
+const description = "Headless UI components for rendering chain name and icon";
+
+export const metadata = createMetadata({
+  title,
+  description,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
+        icon={LinkIcon}
         containerClassName="space-y-12"
-        description={
-          <>Headless UI components for rendering chain name and icon</>
-        }
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/react/v5/components/onchain#chains?utm_source=playground"
-        title="Chain Components"
       >
         <ChainIconExample />
         <ChainNameExample />

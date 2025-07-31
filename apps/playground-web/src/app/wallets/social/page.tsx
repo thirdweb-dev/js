@@ -1,29 +1,33 @@
-import type { Metadata } from "next";
+import { GlobeIcon } from "lucide-react";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { SocialProfiles } from "@/components/social/social-profiles";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
-import { PageLayout } from "../../../components/blocks/APIHeader";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "Retrieve any user's onchain identity from popular protocols like ENS, Lens, Farcaster, and more.",
-  metadataBase,
-  title: "Social APIs | thirdweb Connect",
-};
+const title = "Social Profiles";
+const description =
+  "Enhance wallet authentication and context about user profiles with social identity data from ENS, Lens, and Farcaster";
+const ogDescription =
+  "Enhance wallet authentication with social identity data from ENS, Lens, and Farcaster. Gain context-rich profiles on user login.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Gain context about your users and their profiles across other apps
-            as soon as they sign into your app.
-          </>
-        }
+        icon={GlobeIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets?utm_source=playground"
-        title="Get any user's onchain identity" // TODO: update this once we have Social API docs
       >
         <UserProfiles />
       </PageLayout>

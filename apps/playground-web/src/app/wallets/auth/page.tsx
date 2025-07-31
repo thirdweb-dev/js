@@ -1,33 +1,34 @@
-import type { Metadata } from "next";
+import { LockIcon } from "lucide-react";
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
 import { SmartAccountAuthPreview } from "@/components/auth/smart-account-auth";
 import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
 import { BasicAuthHookPreview } from "../../../components/auth/basic-auth-hook";
 import { PageLayout } from "../../../components/blocks/APIHeader";
+import { createMetadata } from "../../../lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "Authenticate users to your backend using only their wallet. This is a secure and easy way to authenticate users without requiring them to create an additional account.",
-  metadataBase,
-  title: "Auth | thirdweb Connect",
-};
+const title = "Authentication (SIWE)";
+const description =
+  "Add secure wallet authentication to your app using SIWE and JWT. Authenticate users without passwords via Sign-In with Ethereum and backend token validation";
+
+export const metadata = createMetadata({
+  description,
+  title,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Authenticate users to your backend using only their wallet. This is
-            a secure and easy way to authenticate users without requiring them
-            to create an additional account.
-          </>
-        }
+        icon={LockIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/typescript/v5/auth?utm_source=playground"
-        title="Auth"
       >
         <div className="flex flex-col gap-14">
           <BasicAuth />

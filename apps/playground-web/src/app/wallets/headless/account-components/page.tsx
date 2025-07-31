@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { CircleUserIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import {
   AccountAvatarExample,
@@ -7,27 +7,29 @@ import {
   AccountNameExample,
 } from "@/components/headless-ui/account-examples";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "Headless components for rendering account information like ENS name, ENS avatar, account balance and more",
-  metadataBase,
-  title: "Account Components",
-};
+const title = "Account Components";
+const description =
+  "Headless components for rendering account information like ENS name, ENS avatar, account balance and more";
+
+export const metadata = createMetadata({
+  title,
+  description,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Headless components for rendering account information like ENS name,
-            ENS avatar, account balance and more
-          </>
-        }
+        icon={CircleUserIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/react/v5/components/account?utm_source=playground"
-        title="Account Components"
       >
         <div className="space-y-16">
           <AccountNameExample />

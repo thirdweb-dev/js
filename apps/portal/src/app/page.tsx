@@ -1,8 +1,9 @@
-import { BotIcon, WebhookIcon, ZapIcon } from "lucide-react";
+import { ArrowUpRightIcon, BotIcon, WebhookIcon, ZapIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
 import { ChatButton } from "../components/AI/chat-button";
+import { Button } from "../components/ui/button";
 import {
   DotNetIcon,
   ExternalLinkIcon,
@@ -44,8 +45,18 @@ function Hero() {
           <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
             Development framework for building onchain apps, games, and agents.
           </p>
-          <div className="flex">
+          <div className="flex gap-3">
             <ChatButton />
+            <Button
+              asChild
+              className="flex items-center gap-2 rounded-full bg-card"
+              variant="outline"
+            >
+              <Link href="https://playground.thirdweb.com">
+                Playground
+                <ArrowUpRightIcon className="size-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -250,7 +261,7 @@ function SDKCard(props: {
         <props.icon className="size-4 shrink-0" />
       </div>
       <div className="flex flex-col">
-        <h3 className="font-medium text-base text-foreground mb-0.5">
+        <h3 className="font-semibold text-base text-foreground mb-0.5">
           <Link
             href={props.href}
             target={props.href.includes("http") ? "_blank" : undefined}

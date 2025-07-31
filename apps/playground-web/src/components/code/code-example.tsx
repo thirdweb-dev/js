@@ -23,11 +23,11 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
   return (
     <div className="relative z-0">
       {header && (
-        <div className="mb-4 space-y-0.5">
-          <h2 className="font-semibold text-2xl tracking-tight">
+        <div className="mb-4">
+          <h2 className="font-semibold text-xl tracking-tight capitalize">
             {header.title}
           </h2>
-          <p className="max-w-3xl text-muted-foreground ">
+          <p className="max-w-4xl text-muted-foreground text-balance text-sm md:text-base">
             {header.description}
           </p>
         </div>
@@ -44,7 +44,7 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
         <div className="flex grow flex-col">
           <TabName icon={EyeIcon} name="Preview" />
           <ClientOnly
-            className="relative grid h-full min-h-[300px] place-items-center bg-background py-20"
+            className="relative grid h-full min-h-[300px] place-items-center bg-card py-20"
             ssr={null}
           >
             {preview}

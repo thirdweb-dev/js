@@ -1,28 +1,33 @@
-import type { Metadata } from "next";
+import { CreditCardIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { BuyMerchPreview } from "@/components/pay/direct-payment";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
-  metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Payments",
-};
+const title = "Checkout Component";
+const description =
+  "Enable purchase of any service or goods with fiat or cryptocurrency and setup notifications on every sale to ship goods, activate services, and more";
+const ogDescription =
+  "Accept fiat or crypto payments on any chain—direct to your wallet. Instant checkout, webhook support, and full control over post-sale actions.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "payments",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Let your users pay for any service with fiat or crypto on any chain.
-          </>
-        }
+        icon={CreditCardIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/payments?utm_source=playground"
-        title="Commerce payments with fiat or crypto"
       >
         <BuyMerch />
       </PageLayout>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { ArrowLeftRightIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import {
@@ -6,28 +6,32 @@ import {
   PayTransactionPreview,
 } from "@/components/pay/transaction-button";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "The easiest way for users to transact in your app. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
-  metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Pay",
-};
+const title = "Onchain Transaction Component";
+const description =
+  "Enable seamless onchain transactions for any contract with fiat or crypto with amounts calculated and automatic execution after funds are confirmed.";
+const ogDescription =
+  "Power onchain transactions with fiat or crypto payments. Automatically calculate costs and run the transaction post onramp or token swap.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "payments",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
+        icon={ArrowLeftRightIcon}
         containerClassName="space-y-12"
-        description={
-          <>
-            Let your users pay for onchain transactions with fiat or crypto on
-            any chain.
-          </>
-        }
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
-        title="Onchain transactions with fiat or crypto"
+        title={title}
       >
         <BuyOnchainAsset />
         <NoFundsPopup />
