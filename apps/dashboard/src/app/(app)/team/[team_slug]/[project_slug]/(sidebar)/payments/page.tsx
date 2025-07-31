@@ -45,6 +45,8 @@ export default async function Page(props: {
           client={client}
           projectClientId={project.publishableKey}
           teamId={project.teamId}
+          projectSlug={params.project_slug}
+          teamSlug={params.team_slug}
         />
         <div className="h-12" />
         <QuickStartSection
