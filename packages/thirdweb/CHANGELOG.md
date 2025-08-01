@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.105.26
+
+### Patch Changes
+
+- [#7775](https://github.com/thirdweb-dev/js/pull/7775) [`b86d520`](https://github.com/thirdweb-dev/js/commit/b86d520f3c05c4c3741d9f3071f40d13cebe24dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle mobile deeplinks for transactions via WalletConnect
+
+- [#7767](https://github.com/thirdweb-dev/js/pull/7767) [`e4ba47b`](https://github.com/thirdweb-dev/js/commit/e4ba47bd1e4bc5aee4ca1e0bedd583dc9e33d30e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix decodeFunction and decodeError functions
+
+- [#7766](https://github.com/thirdweb-dev/js/pull/7766) [`58787a2`](https://github.com/thirdweb-dev/js/commit/58787a28f362d168a72a6eb462930ad7de4b87f2) Thanks [@alecananian](https://github.com/alecananian)! - Fixed `useContractEvents` persisting previous data when filters change
+
 ## 5.105.25
 
 ### Patch Changes
