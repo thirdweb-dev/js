@@ -99,7 +99,6 @@ export function RecentPaymentsSection(props: {
             >
               <Link
                 href={`/team/${props.teamSlug}/${props.projectSlug}/payments/links`}
-                target="_blank"
               >
                 Create Payment Link
                 <ArrowRightIcon className="size-4" />

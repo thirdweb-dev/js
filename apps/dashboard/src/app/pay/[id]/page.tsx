@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
-import { reportPaymentLinkVisited } from "@/analytics/report";
 import { getPaymentLink } from "@/api/universal-bridge/links";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PayPageWidget } from "../components/client/PayPageWidget.client";
@@ -31,11 +30,6 @@ export default async function PayPage({
 
   const paymentLink = await getPaymentLink({
     paymentId: id,
-  });
-
-  reportPaymentLinkVisited({
-    linkId: id,
-    clientId: paymentLink.clientId,
   });
 
   const tokenContract = getContract({

@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
@@ -10,6 +9,7 @@ import {
   reportOnboardingStarted,
 } from "@/analytics/report";
 import type { Team } from "@/api/team";
+import { useEffectOnce } from "@/hooks/useEffectOnce";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { updateTeam } from "../../../(app)/team/[team_slug]/(team)/~/settings/general/updateTeam";
 import { InviteTeamMembersUI } from "./InviteTeamMembers";
@@ -23,9 +23,9 @@ export function TeamInfoForm(props: {
   const router = useDashboardRouter();
 
   // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
+  useEffectOnce(() => {
     reportOnboardingStarted();
-  }, []);
+  });
 
   return (
     <TeamInfoFormUI

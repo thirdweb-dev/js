@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Bridge, toUnits } from "thirdweb";
 import { checksumAddress } from "thirdweb/utils";
 import z from "zod";
+import { reportPaymentLinkCreated } from "@/analytics/report";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
 import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
@@ -91,7 +92,7 @@ export function CreatePaymentLinkButton(
         throw new Error("Invalid recipient address.");
       }
 
-      await createPaymentLink({
+      const result = await createPaymentLink({
         clientId: props.clientId,
         teamId: props.teamId,
         intent: {
@@ -102,7 +103,8 @@ export function CreatePaymentLinkButton(
         },
         title: values.title,
       });
-      return null;
+
+      return result;
     },
     onSuccess: () => {
       toast.success("Payment link created successfully.");
@@ -153,7 +155,12 @@ export function CreatePaymentLinkButton(
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit((values) =>
               createMutation.mutateAsync(values, {
-                onSuccess: () => {
+                onSuccess: (result) => {
+                  reportPaymentLinkCreated({
+                    linkId: result.id,
+                    clientId: props.clientId,
+                  });
+
                   setOpen(false);
                   form.reset();
                   form.clearErrors();
