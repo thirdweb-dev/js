@@ -17,6 +17,7 @@ import {
   type PaymentMethod,
   usePaymentMachine,
 } from "../../../core/machines/paymentMachine.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import en from "../ConnectWallet/locale/en.js";
 import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
@@ -128,6 +129,7 @@ export interface BridgeOrchestratorProps {
    * @default true
    */
   showThirdwebBranding?: boolean;
+  supportedTokens?: SupportedTokens;
 }
 
 export function BridgeOrchestrator({
@@ -144,6 +146,7 @@ export function BridgeOrchestrator({
   presetOptions,
   paymentMethods = ["crypto", "card"],
   showThirdwebBranding = true,
+  supportedTokens,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -313,6 +316,7 @@ export function BridgeOrchestrator({
             paymentMethods={paymentMethods}
             receiverAddress={state.context.receiverAddress}
             currency={uiOptions.currency}
+            supportedTokens={supportedTokens}
           />
         )}
 

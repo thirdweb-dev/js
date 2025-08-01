@@ -409,6 +409,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        supportedTokens={props.supportedTokens}
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}

@@ -369,6 +369,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         receiverAddress={props.seller}
         showThirdwebBranding={props.showThirdwebBranding}
         uiOptions={bridgeDataQuery.data.data}
+        supportedTokens={props.supportedTokens}
       />
     );
   }

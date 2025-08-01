@@ -10,13 +10,7 @@ import {
 import { shortenAddress } from "thirdweb/utils";
 import { Badge } from "@/components/ui/badge";
 import { Img } from "@/components/ui/Img";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SelectWithSearch } from "@/components/ui/select-with-search";
 import { useAllChainsData } from "@/hooks/chains";
 import { useTokensData } from "@/hooks/useTokensData";
 import type { TokenMetadata } from "@/lib/types";
@@ -85,12 +79,41 @@ export function TokenSelector(props: {
     return value;
   }, [tokens]);
 
+  const options = useMemo(() => {
+    return tokens.map((token) => ({
+      label: token.symbol,
+      value: `${token.chainId}:${token.address}`,
+    }));
+  }, [tokens]);
+
   const selectedValue = props.selectedToken
     ? `${props.selectedToken.chainId}:${props.selectedToken.address}`
     : undefined;
 
+  const searchFn = useCallback(
+    (option: { label: string; value: string }, searchValue: string) => {
+      const token = addressChainToToken.get(option.value);
+      if (!token) {
+        return false;
+      }
+
+      const searchLower = searchValue.toLowerCase();
+      return (
+        token.symbol.toLowerCase().includes(searchLower) ||
+        token.name.toLowerCase().includes(searchLower) ||
+        token.address.toLowerCase().includes(searchLower)
+      );
+    },
+    [addressChainToToken],
+  );
+
   const renderTokenOption = useCallback(
-    (token: TokenMetadata) => {
+    (option: { label: string; value: string }) => {
+      const token = addressChainToToken.get(option.value);
+      if (!token) {
+        return option.label;
+      }
+
       const resolvedSrc = token.iconUri
         ? replaceIpfsUrl(token.iconUri, props.client)
         : fallbackChainIcon;
@@ -121,11 +144,13 @@ export function TokenSelector(props: {
         </div>
       );
     },
-    [props.disableAddress, props.client],
+    [props.disableAddress, props.client, addressChainToToken],
   );
 
   return (
-    <Select
+    <SelectWithSearch
+      className={cn("w-full", props.className)}
+      closeOnSelect={true}
       disabled={tokensQuery.isLoading || props.disabled}
       onValueChange={(tokenAddress) => {
         const token = addressChainToToken.get(tokenAddress);
@@ -134,27 +159,17 @@ export function TokenSelector(props: {
         }
         props.onChange(token);
       }}
+      options={options}
+      overrideSearchFn={searchFn}
+      placeholder={
+        tokensQuery.isLoading
+          ? "Loading Tokens..."
+          : props.placeholder || "Select Token"
+      }
+      renderOption={renderTokenOption}
+      searchPlaceholder="Search by Symbol, Name or Address"
+      showCheck={false}
       value={selectedValue}
-    >
-      <SelectTrigger className={cn("w-full", props.className)}>
-        <SelectValue
-          placeholder={
-            tokensQuery.isLoading
-              ? "Loading Tokens..."
-              : props.placeholder || "Select Token"
-          }
-        />
-      </SelectTrigger>
-      <SelectContent>
-        {tokens.map((token) => {
-          const value = `${token.chainId}:${token.address}`;
-          return (
-            <SelectItem key={value} value={value}>
-              {renderTokenOption(token)}
-            </SelectItem>
-          );
-        })}
-      </SelectContent>
-    </Select>
+    />
   );
 }

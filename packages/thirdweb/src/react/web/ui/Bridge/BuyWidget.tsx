@@ -398,6 +398,7 @@ export function BuyWidget(props: BuyWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        supportedTokens={props.supportedTokens}
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}
