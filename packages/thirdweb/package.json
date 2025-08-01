@@ -402,6 +402,9 @@
       ],
       "wallets/*": [
         "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "insight": [
+        "./dist/types/exports/insight.d.ts"
       ]
     }
   },
