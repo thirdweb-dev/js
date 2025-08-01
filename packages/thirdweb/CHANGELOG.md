@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.27
+
+### Patch Changes
+
+- [#7774](https://github.com/thirdweb-dev/js/pull/7774) [`e1ad7da`](https://github.com/thirdweb-dev/js/commit/e1ad7daf5401c4ddd3661eceed15e8c4f481d28e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `thirdweb/insight` import typescript error
+
 ## 5.105.26
 
 ### Patch Changes
