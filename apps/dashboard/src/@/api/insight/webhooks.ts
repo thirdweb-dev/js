@@ -41,12 +41,6 @@ export interface WebhookFilters {
   };
 }
 
-interface CreateWebhookPayload {
-  name: string;
-  webhook_url: string;
-  filters: WebhookFilters;
-}
-
 interface WebhooksListResponse {
   data: WebhookResponse[];
   error?: string;
@@ -57,55 +51,9 @@ interface WebhookSingleResponse {
   error?: string;
 }
 
-interface TestWebhookPayload {
-  webhook_url: string;
-  type?: "event" | "transaction";
-}
-
-interface TestWebhookResponse {
-  success: boolean;
-  error?: string;
-}
-
 type SupportedWebhookChainsResponse =
   | { chains: Array<number> }
   | { error: string };
-
-export async function createWebhook(
-  payload: CreateWebhookPayload,
-  clientId: string,
-): Promise<WebhookSingleResponse> {
-  try {
-    const authToken = await getAuthToken();
-    const response = await fetch(
-      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks`,
-      {
-        body: JSON.stringify(payload),
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-          "x-client-id": clientId,
-        },
-        method: "POST",
-      },
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return {
-        data: null,
-        error: `Failed to create webhook: ${errorText}`,
-      };
-    }
-
-    return (await response.json()) as WebhookSingleResponse;
-  } catch (error) {
-    return {
-      data: null,
-      error: `Network or parsing error: ${error instanceof Error ? error.message : "Unknown error"}`,
-    };
-  }
-}
 
 export async function getWebhooks(
   clientId: string,
@@ -170,42 +118,6 @@ export async function deleteWebhook(
     return {
       data: null,
       error: `Network or parsing error: ${error instanceof Error ? error.message : "Unknown error"}`,
-    };
-  }
-}
-
-export async function testWebhook(
-  payload: TestWebhookPayload,
-  clientId: string,
-): Promise<TestWebhookResponse> {
-  try {
-    const authToken = await getAuthToken();
-    const response = await fetch(
-      `https://${THIRDWEB_INSIGHT_API_DOMAIN}/v1/webhooks/test`,
-      {
-        body: JSON.stringify(payload),
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-          "x-client-id": clientId,
-        },
-        method: "POST",
-      },
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return {
-        error: `Failed to test webhook: ${errorText}`,
-        success: false,
-      };
-    }
-
-    return (await response.json()) as TestWebhookResponse;
-  } catch (error) {
-    return {
-      error: `Network or parsing error: ${error instanceof Error ? error.message : "Unknown error"}`,
-      success: false,
     };
   }
 }
