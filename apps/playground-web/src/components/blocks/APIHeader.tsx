@@ -26,10 +26,10 @@ export function PageHeader(props: {
             </div>
           </div>
 
-          <h1 className="mb-0.5 font-semibold text-3xl tracking-tight">
+          <h1 className="mb-1 font-bold text-3xl tracking-tight">
             {props.title}
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground max-w-4xl">
+          <p className="text-sm md:text-base text-balance text-muted-foreground max-w-5xl">
             {props.description}
           </p>
         </div>

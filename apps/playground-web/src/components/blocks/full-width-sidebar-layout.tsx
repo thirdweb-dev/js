@@ -2,7 +2,7 @@
 
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
-import { Suspense, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -29,9 +29,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { useFullPath } from "../../hooks/full-path";
 import { ThirdwebIcon } from "../../icons/ThirdwebMiniLogo";
 import { ThemeToggle } from "../ThemeToggle";
+import { FullPathSuspense } from "./full-path-suspense";
 
 type ShadcnSidebarBaseLink = {
   href: string;
@@ -58,12 +58,27 @@ export type ShadcnSidebarLink =
       links: ShadcnSidebarLink[];
     };
 
-export function FullWidthSidebarLayout(props: {
+type FullWidthSidebarLayoutProps = {
   contentSidebarLinks: ShadcnSidebarLink[];
   footerSidebarLinks?: ShadcnSidebarLink[];
   children: React.ReactNode;
   className?: string;
-}) {
+  fullPath: string;
+};
+
+export function FullWidthSidebarLayout(
+  props: Omit<FullWidthSidebarLayoutProps, "fullPath">,
+) {
+  return (
+    <FullPathSuspense
+      render={(fullPath) => (
+        <FullWidthSidebarLayoutInner {...props} fullPath={fullPath} />
+      )}
+    />
+  );
+}
+
+function FullWidthSidebarLayoutInner(props: FullWidthSidebarLayoutProps) {
   const { contentSidebarLinks, children, footerSidebarLinks } = props;
   const sidebar = useSidebar();
 
@@ -99,12 +114,18 @@ export function FullWidthSidebarLayout(props: {
         <SidebarSeparator />
 
         <SidebarContent className="p-2 no-scrollbar">
-          <RenderSidebarMenu links={contentSidebarLinks} />
+          <RenderSidebarMenu
+            links={contentSidebarLinks}
+            fullPath={props.fullPath}
+          />
         </SidebarContent>
 
         {footerSidebarLinks && (
           <SidebarFooter className="pb-3 pt-0">
-            <RenderSidebarMenu links={footerSidebarLinks} />
+            <RenderSidebarMenu
+              links={footerSidebarLinks}
+              fullPath={props.fullPath}
+            />
             <ThemeToggle />
           </SidebarFooter>
         )}
@@ -128,6 +149,7 @@ export function FullWidthSidebarLayout(props: {
 
         <MobileSidebarTrigger
           links={[...contentSidebarLinks, ...(footerSidebarLinks || [])]}
+          fullPath={props.fullPath}
         />
 
         <main className="flex min-w-0 grow flex-col max-sm:w-full">
@@ -138,16 +160,12 @@ export function FullWidthSidebarLayout(props: {
   );
 }
 
-function MobileSidebarTrigger(props: { links: ShadcnSidebarLink[] }) {
-  return (
-    <Suspense fallback={null}>
-      <MobileSidebarTriggerInner links={props.links} />
-    </Suspense>
-  );
-}
-
-function MobileSidebarTriggerInner(props: { links: ShadcnSidebarLink[] }) {
-  const activeLink = useActiveShadcnSidebarLink(props.links);
+function MobileSidebarTrigger(props: {
+  links: ShadcnSidebarLink[];
+  fullPath: string;
+}) {
+  const { links, fullPath } = props;
+  const activeLink = useActiveShadcnSidebarLink({ links, fullPath });
 
   return (
     <div className="flex items-center gap-3 border-b px-4 py-4 lg:hidden">
@@ -169,19 +187,21 @@ function MobileSidebarTriggerInner(props: { links: ShadcnSidebarLink[] }) {
   );
 }
 
-function useActiveShadcnSidebarLink(links: ShadcnSidebarLink[]) {
-  const pathname = useFullPath();
-
+function useActiveShadcnSidebarLink(params: {
+  links: ShadcnSidebarLink[];
+  fullPath: string;
+}) {
+  const { links, fullPath } = params;
   const activeLink = useMemo(() => {
     const isActive = (link: ShadcnSidebarLink): boolean => {
       if ("href" in link) {
         // Handle exact match
         if (link.exactMatch) {
-          return link.href === pathname;
+          return link.href === fullPath;
         }
 
         // Handle prefix match (ensure we don't match partial paths)
-        return pathname.startsWith(link.href);
+        return fullPath.startsWith(link.href);
       }
 
       if ("links" in link) {
@@ -192,23 +212,25 @@ function useActiveShadcnSidebarLink(links: ShadcnSidebarLink[]) {
     };
 
     return links.find(isActive);
-  }, [links, pathname]);
+  }, [links, fullPath]);
 
   return activeLink;
 }
 
-function useIsSubnavActive(links: ShadcnSidebarLink[]) {
-  const pathname = useFullPath();
-
+function useIsSubnavActive(params: {
+  links: ShadcnSidebarLink[];
+  fullPath: string;
+}) {
+  const { links, fullPath } = params;
   const isSubnavActive = useMemo(() => {
     const isActive = (link: ShadcnSidebarLink): boolean => {
       if ("href" in link) {
         // Handle exact match
         if (link.exactMatch) {
-          return link.href === pathname;
+          return link.href === fullPath;
         }
 
-        return pathname.startsWith(link.href);
+        return fullPath.startsWith(link.href);
       }
 
       if ("links" in link) {
@@ -219,7 +241,7 @@ function useIsSubnavActive(links: ShadcnSidebarLink[]) {
     };
 
     return links.some(isActive);
-  }, [links, pathname]);
+  }, [links, fullPath]);
 
   return isSubnavActive;
 }
@@ -227,24 +249,17 @@ function useIsSubnavActive(links: ShadcnSidebarLink[]) {
 function RenderSidebarGroup(props: {
   sidebarLinks: ShadcnSidebarLink[];
   groupName: string;
-}) {
-  return (
-    <Suspense fallback={null}>
-      <RenderSidebarGroupInner {...props} />
-    </Suspense>
-  );
-}
-
-function RenderSidebarGroupInner(props: {
-  sidebarLinks: ShadcnSidebarLink[];
-  groupName: string;
+  fullPath: string;
 }) {
   return (
     <SidebarGroup className="p-0">
       <SidebarMenuItem>
         <SidebarGroupLabel> {props.groupName}</SidebarGroupLabel>
         <SidebarGroupContent>
-          <RenderSidebarMenu links={props.sidebarLinks} />
+          <RenderSidebarMenu
+            links={props.sidebarLinks}
+            fullPath={props.fullPath}
+          />
         </SidebarGroupContent>
       </SidebarMenuItem>
     </SidebarGroup>
@@ -254,20 +269,13 @@ function RenderSidebarGroupInner(props: {
 function RenderSidebarSubmenu(props: {
   links: ShadcnSidebarLink[];
   subMenu: Omit<ShadcnSidebarBaseLink, "href" | "exactMatch">;
+  fullPath: string;
 }) {
-  return (
-    <Suspense fallback={null}>
-      <RenderSidebarSubmenuInner {...props} />
-    </Suspense>
-  );
-}
-
-function RenderSidebarSubmenuInner(props: {
-  links: ShadcnSidebarLink[];
-  subMenu: Omit<ShadcnSidebarBaseLink, "href" | "exactMatch">;
-}) {
+  const isSubnavActive = useIsSubnavActive({
+    links: props.links,
+    fullPath: props.fullPath,
+  });
   const sidebar = useSidebar();
-  const isSubnavActive = useIsSubnavActive(props.links);
   const [_open, setOpen] = useState<boolean | undefined>(undefined);
   const open = _open === undefined ? isSubnavActive : _open;
 
@@ -319,6 +327,7 @@ function RenderSidebarSubmenuInner(props: {
                           className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground px-2 py-1.5 rounded-lg w-full"
                           exactMatch={link.exactMatch}
                           href={link.href}
+                          fullPath={props.fullPath}
                           onClick={() => {
                             sidebar.setOpenMobile(false);
                           }}
@@ -335,6 +344,7 @@ function RenderSidebarSubmenuInner(props: {
                       <RenderSidebarSubmenu
                         key={`submenu_${link.subMenu.label}_${index}`}
                         links={link.links}
+                        fullPath={props.fullPath}
                         subMenu={link.subMenu}
                       />
                     );
@@ -346,6 +356,7 @@ function RenderSidebarSubmenuInner(props: {
                         key={`group_${link.group}_${index}`}
                         groupName={link.group}
                         sidebarLinks={link.links}
+                        fullPath={props.fullPath}
                       />
                     );
                   }
@@ -361,7 +372,10 @@ function RenderSidebarSubmenuInner(props: {
   );
 }
 
-function RenderSidebarMenu(props: { links: ShadcnSidebarLink[] }) {
+function RenderSidebarMenu(props: {
+  links: ShadcnSidebarLink[];
+  fullPath: string;
+}) {
   const sidebar = useSidebar();
 
   // Add null check for links
@@ -382,6 +396,7 @@ function RenderSidebarMenu(props: { links: ShadcnSidebarLink[] }) {
                   className="flex items-center gap-2 text-muted-foreground text-sm hover:bg-accent"
                   exactMatch={link.exactMatch}
                   href={link.href}
+                  fullPath={props.fullPath}
                   onClick={() => {
                     sidebar.setOpenMobile(false);
                   }}
@@ -412,6 +427,7 @@ function RenderSidebarMenu(props: { links: ShadcnSidebarLink[] }) {
               key={`submenu_${link.subMenu.label}_${idx}`}
               links={link.links}
               subMenu={link.subMenu}
+              fullPath={props.fullPath}
             />
           );
         }
@@ -423,6 +439,7 @@ function RenderSidebarMenu(props: { links: ShadcnSidebarLink[] }) {
               groupName={link.group}
               sidebarLinks={link.links}
               key={`group_${link.group}_${idx}`}
+              fullPath={props.fullPath}
             />
           );
         }

@@ -51,7 +51,11 @@ return (
 );
 };`}
       lang="tsx"
-      preview={<StyledConnectEmbed />}
+      preview={
+        <div className="overflow-hidden max-w-full px-3">
+          <StyledConnectEmbed />
+        </div>
+      }
     />
   );
 }

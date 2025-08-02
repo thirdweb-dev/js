@@ -185,7 +185,7 @@ export function RightSection(props: {
             // TODO: should show the expanded connected modal here instead
             connectButton
           ) : (
-            <div className="relative">
+            <div className="relative overflow-hidden">
               <ConnectEmbed
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
@@ -197,7 +197,7 @@ export function RightSection(props: {
                 }
                 auth={connectOptions.enableAuth ? playgroundAuth : undefined}
                 autoConnect={false}
-                className="shadow-xl"
+                className="shadow-xl !max-w-full"
                 client={THIRDWEB_CLIENT}
                 header={{
                   title: connectOptions.modalTitle,

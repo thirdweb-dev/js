@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
 import { cn } from "@/lib/utils";
-import { useFullPath } from "../../hooks/full-path";
 
-export type NavButtonProps = {
+export type NavLinkProps = {
   className?: string;
   activeClassName?: string;
   href: string;
@@ -13,20 +11,14 @@ export type NavButtonProps = {
   onClick?: () => void;
 };
 
-export function NavLink(props: React.PropsWithChildren<NavButtonProps>) {
-  return (
-    <Suspense>
-      <NavLinkInner {...props} />
-    </Suspense>
-  );
-}
-
-function NavLinkInner(props: React.PropsWithChildren<NavButtonProps>) {
-  const pathname = useFullPath();
-
+export function NavLink(
+  props: React.PropsWithChildren<NavLinkProps> & {
+    fullPath: string;
+  },
+) {
   const isActive = props.exactMatch
-    ? pathname === props.href
-    : pathname.startsWith(props.href);
+    ? props.fullPath === props.href
+    : props.fullPath.startsWith(props.href);
 
   return (
     <Link
