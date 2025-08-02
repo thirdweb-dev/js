@@ -28,18 +28,25 @@ export function getUrlToken():
   if ((authCookie || authResultString) && walletId) {
     const authResult = (() => {
       if (authResultString) {
-        params.delete("authResult");
         return JSON.parse(decodeURIComponent(authResultString));
       }
     })();
-    params.delete("walletId");
-    params.delete("authProvider");
-    params.delete("authCookie");
-    window.history.pushState(
-      {},
-      "",
-      `${window.location.pathname}?${params.toString()}`,
-    );
+
+    // Only remove thirdweb-specific parameters, preserving custom ones
+    const thirdwebParams = ["authResult", "walletId", "authProvider", "authCookie"];
+    const updatedParams = new URLSearchParams(queryString);
+    
+    thirdwebParams.forEach(param => {
+      updatedParams.delete(param);
+    });
+
+    // Update the URL with only the custom parameters preserved
+    const newUrl = updatedParams.toString() 
+      ? `${window.location.pathname}?${updatedParams.toString()}`
+      : window.location.pathname;
+    
+    window.history.pushState({}, "", newUrl);
+    
     return { authCookie, authProvider, authResult, walletId };
   }
   return undefined;
