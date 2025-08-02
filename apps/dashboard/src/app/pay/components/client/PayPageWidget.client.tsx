@@ -62,24 +62,16 @@ export function PayPageWidget({
         image={image}
         name={name}
         onSuccess={() => {
+          reportPaymentLinkBuySuccessful();
+
           if (!redirectUri) return;
           const url = new URL(redirectUri);
-          if (paymentLinkId && clientId) {
-            reportPaymentLinkBuySuccessful({
-              linkId: paymentLinkId,
-              clientId: clientId,
-            });
-          }
           return window.open(url.toString());
         }}
         onError={(error) => {
-          if (paymentLinkId && clientId) {
-            reportPaymentLinkBuyFailed({
-              linkId: paymentLinkId,
-              clientId: clientId,
-              errorMessage: error.message,
-            });
-          }
+          reportPaymentLinkBuyFailed({
+            errorMessage: error.message,
+          });
         }}
         paymentLinkId={paymentLinkId}
         purchaseData={purchaseData}

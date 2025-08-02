@@ -435,11 +435,8 @@ export function reportPaymentLinkCreated(properties: {
  * ### Who is responsible for this event?
  * @greg
  */
-export function reportPaymentLinkBuySuccessful(properties: {
-  linkId: string;
-  clientId: string;
-}) {
-  posthog.capture("payment link buy successful", properties);
+export function reportPaymentLinkBuySuccessful() {
+  posthog.capture("payment link buy successful");
 }
 
 /**
@@ -451,8 +448,6 @@ export function reportPaymentLinkBuySuccessful(properties: {
  * @greg
  */
 export function reportPaymentLinkBuyFailed(properties: {
-  linkId: string;
-  clientId: string;
   errorMessage: string;
 }) {
   posthog.capture("payment link buy failed", properties);
