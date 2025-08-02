@@ -2,7 +2,6 @@ import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getProject } from "@/api/projects";
 import { Button } from "@/components/ui/button";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { CreatePaymentLinkButton } from "./components/CreatePaymentLinkButton.client";
 import { PaymentLinksTable } from "./components/PaymentLinksTable.client";
 
@@ -27,14 +26,7 @@ export default async function Page(props: {
             Payment Links
           </h2>
           <p className="text-muted-foreground text-sm">
-            Get notified for Bridge, Swap and Onramp events.{" "}
-            <UnderlineLink
-              href="https://portal.thirdweb.com/payments/webhooks"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </UnderlineLink>
+            Make money in any token instantly with hosted payment links
           </p>
         </div>
         <CreatePaymentLinkButton

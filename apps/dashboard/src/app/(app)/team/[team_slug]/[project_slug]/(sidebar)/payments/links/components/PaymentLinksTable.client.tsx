@@ -191,8 +191,10 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
                       <CopyButton
                         tooltip={false}
                         label="Copy"
-                        variant="outline"
+                        variant="ghost"
                         text={paymentLink.link}
+                        iconClassName="size-3.5"
+                        className="-translate-x-2"
                       />
                     </TableCell>
                     <TableCell className="text-center">
@@ -202,7 +204,7 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
                         paymentLinkId={paymentLink.id}
                       >
                         <Button size="icon" variant="ghost">
-                          <TrashIcon className="size-5" strokeWidth={1} />
+                          <TrashIcon className="size-4" strokeWidth={1} />
                         </Button>
                       </DeletePaymentLinkButton>
                     </TableCell>

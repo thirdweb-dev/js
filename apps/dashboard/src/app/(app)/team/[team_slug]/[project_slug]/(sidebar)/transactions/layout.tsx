@@ -53,9 +53,11 @@ function TransactionsLayout(props: {
                 </Link>
               </div>
             </div>
-            <Link href={`${projectLayoutPath}/engine/dedicated`}>
-              <Button variant="outline">View Dedicated Engine</Button>
-            </Link>
+            <Button variant="outline" asChild className="rounded-full">
+              <Link href={`${projectLayoutPath}/engine/dedicated`}>
+                View Dedicated Engine
+              </Link>
+            </Button>
           </div>
         </div>
 

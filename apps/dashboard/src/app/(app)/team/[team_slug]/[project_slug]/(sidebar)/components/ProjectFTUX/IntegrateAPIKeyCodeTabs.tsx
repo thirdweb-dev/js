@@ -6,10 +6,10 @@ import { TabButtons } from "@/components/ui/tabs";
 type TabKey = "ts" | "react" | "react-native" | "dotnet" | "unity" | "unreal";
 
 const tabNames: Record<TabKey, string> = {
-  dotnet: ".NET",
+  ts: "TypeScript",
   react: "React",
   "react-native": "React Native",
-  ts: "TypeScript",
+  dotnet: ".NET",
   unity: "Unity",
   unreal: "Unreal Engine",
 };
