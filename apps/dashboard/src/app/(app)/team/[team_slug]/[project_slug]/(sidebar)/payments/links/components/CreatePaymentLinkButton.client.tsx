@@ -1,6 +1,5 @@
 "use client";
 
-import { resolveAddressAndEns } from "@app/(dashboard)/profile/[addressOrEns]/resolveAddressAndEns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinkIcon } from "lucide-react";
@@ -37,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { parseErrorToMessage } from "@/utils/errorParser";
+import { resolveAddressAndEns } from "@/utils/resolveAddressAndEns";
 
 const formSchema = z.object({
   chainId: z.number(),

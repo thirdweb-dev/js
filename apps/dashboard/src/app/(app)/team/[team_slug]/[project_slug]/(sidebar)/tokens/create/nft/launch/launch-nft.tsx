@@ -18,7 +18,7 @@ import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { FilePreview } from "@/components/blocks/file-preview";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import type { MultiStepState } from "@/components/blocks/multi-step-status/multi-step-status";

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { UpsellWrapper } from "@/components/blocks/upsell-wrapper";
 
 export default async function Layout(props: {

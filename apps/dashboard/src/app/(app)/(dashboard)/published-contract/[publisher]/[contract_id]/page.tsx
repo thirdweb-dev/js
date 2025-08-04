@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
+import { getRawAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { PublishedContract } from "@/components/contracts/published-contract";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { getRawAccount } from "../../../../account/settings/getAccount";
 import { PublishedActions } from "../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../components/contract-header";
 import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
+import { PublishedContract } from "./components/published-contract";
 import { getPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type PublishedContractDeployPageProps = {

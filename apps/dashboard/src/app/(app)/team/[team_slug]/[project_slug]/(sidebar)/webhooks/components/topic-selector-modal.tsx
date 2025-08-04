@@ -6,7 +6,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { keccak256, toFunctionSelector } from "thirdweb/utils";
-import type { Topic } from "@/api/webhook-configs";
+import type { Topic } from "@/api/project/webhook-configs";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SignatureSelector } from "@/components/blocks/SignatureSelector";
 import {

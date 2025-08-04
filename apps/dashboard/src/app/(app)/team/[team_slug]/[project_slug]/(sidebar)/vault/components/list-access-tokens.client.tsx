@@ -4,7 +4,7 @@ import { listAccessTokens, revokeAccessToken } from "@thirdweb-dev/vault-sdk";
 import { Loader2Icon, LockIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {

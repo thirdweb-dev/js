@@ -1,12 +1,12 @@
 import { notFound, redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { getWebhookLatency, getWebhookRequests } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getWebhookConfigs } from "@/api/webhook-configs";
+import { getProject } from "@/api/project/projects";
+import { getWebhookConfigs } from "@/api/project/webhook-configs";
 import { getFiltersFromSearchParams } from "@/lib/time";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { WebhooksAnalytics } from "./components/WebhooksAnalytics";
 
 export default async function WebhooksAnalyticsPage(props: {

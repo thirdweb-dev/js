@@ -1,6 +1,6 @@
 "use client";
 
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";

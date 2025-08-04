@@ -1,6 +1,6 @@
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CreateVaultAccountButton } from "./create-vault-account.client";
 import ListAccessTokens from "./list-access-tokens.client";

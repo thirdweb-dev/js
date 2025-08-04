@@ -14,11 +14,11 @@ import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import { useActiveAccount } from "thirdweb/react";
 import { toFunctionSelector } from "thirdweb/utils";
+import { getContractFunctionsFromAbi } from "@/api/contract/getContractFunctionsFromAbi";
 import {
   type CodeEnvironment,
   CodeSegment,
 } from "@/components/blocks/code/code-segment.client";
-import { getContractFunctionsFromAbi } from "@/components/contract-components/getContractFunctionsFromAbi";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TabButtons } from "@/components/ui/tabs";

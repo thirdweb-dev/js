@@ -5,7 +5,7 @@ import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
-} from "@/components/contract-components/fetch-contracts-with-versions";
+} from "@/api/contract/fetch-contracts-with-versions";
 import { ZERO_FEE_VERSIONS } from "@/constants/fee-config";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { PublishedContractBreadcrumbs } from "../[publisher]/[contract_id]/components/breadcrumbs.client";

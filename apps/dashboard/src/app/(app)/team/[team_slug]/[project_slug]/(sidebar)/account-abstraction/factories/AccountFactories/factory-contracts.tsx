@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebClient } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import type { ProjectContract } from "@/api/getProjectContracts";
+import type { ProjectContract } from "@/api/project/getProjectContracts";
 import { ContractNameCell } from "@/components/contract-components/tables/cells";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { SkeletonContainer } from "@/components/ui/skeleton";

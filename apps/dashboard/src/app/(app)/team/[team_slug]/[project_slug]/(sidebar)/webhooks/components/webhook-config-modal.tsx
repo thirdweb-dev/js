@@ -14,7 +14,7 @@ import {
   testDestinationUrl,
   updateWebhookConfig,
   type WebhookConfig,
-} from "@/api/webhook-configs";
+} from "@/api/project/webhook-configs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

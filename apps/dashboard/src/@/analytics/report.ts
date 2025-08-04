@@ -1,7 +1,7 @@
 "use client";
 import posthog from "posthog-js";
 
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import type { ProductSKU } from "../types/billing";
 
 // ----------------------------

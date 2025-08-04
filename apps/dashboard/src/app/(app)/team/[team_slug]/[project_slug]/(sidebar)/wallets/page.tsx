@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import type { Range } from "@/components/analytics/date-range-selector";
 import { InAppWalletAnalytics } from "./analytics/chart";
 import { InAppWalletsSummary } from "./analytics/chart/Summary";

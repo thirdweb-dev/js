@@ -1,5 +1,5 @@
 import { getEcosystemWalletUsage } from "@/api/analytics";
-import type { Partner } from "@/api/ecosystems";
+import type { Partner } from "@/api/team/ecosystems";
 import {
   getLastNDaysRange,
   type Range,

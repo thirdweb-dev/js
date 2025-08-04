@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookies";
+import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { setCookie } from "@/utils/cookie";
 
 export function SaveLastUsedProject(props: {

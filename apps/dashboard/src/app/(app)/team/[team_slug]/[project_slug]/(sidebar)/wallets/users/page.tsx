@@ -1,7 +1,7 @@
-import { InAppWalletUsersPageContent } from "@app/team/[team_slug]/[project_slug]/(sidebar)/wallets/users/components";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
+import { InAppWalletUsersPageContent } from "@/components/in-app-wallet-users-content/in-app-wallet-users-content";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 

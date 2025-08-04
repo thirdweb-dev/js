@@ -1,5 +1,5 @@
-import { getValidAccount } from "@app/account/settings/getAccount";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {

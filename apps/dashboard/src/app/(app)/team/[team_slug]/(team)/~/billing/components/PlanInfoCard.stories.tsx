@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { addDays } from "date-fns";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { teamStub, teamSubscriptionsStub } from "@/storybook/stubs";
 import { BadgeContainer } from "@/storybook/utils";
 import { PlanInfoCardUI } from "./PlanInfoCard";

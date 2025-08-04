@@ -16,7 +16,7 @@ import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
   predictSmartAccountAddress,
 } from "thirdweb/wallets/smart";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAddress } from "@/components/blocks/wallet-address";

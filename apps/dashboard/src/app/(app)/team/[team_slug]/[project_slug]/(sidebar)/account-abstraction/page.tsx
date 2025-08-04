@@ -2,15 +2,15 @@ import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getUserOpUsage } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import {
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { AccountAbstractionAnalytics } from "./AccountAbstractionAnalytics";
 import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
+import { AccountAbstractionAnalytics } from "./aa-analytics";
 import { searchParamLoader } from "./search-params";
 
 interface PageParams {

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { AdvancedSection } from "./components/AdvancedSection.client";

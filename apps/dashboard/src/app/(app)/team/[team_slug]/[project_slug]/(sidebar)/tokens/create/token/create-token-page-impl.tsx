@@ -24,7 +24,7 @@ import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,

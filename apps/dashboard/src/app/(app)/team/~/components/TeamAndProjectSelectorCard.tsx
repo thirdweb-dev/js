@@ -2,8 +2,8 @@
 
 import { BoxIcon, ChevronRightIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
-import type { PartialProject } from "@/api/getProjectContracts";
-import type { Team } from "@/api/team";
+import type { PartialProject } from "@/api/project/getProjectContracts";
+import type { Team } from "@/api/team/get-team";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";

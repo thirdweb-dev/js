@@ -1,14 +1,14 @@
 import { ArrowUpDownIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { getMembers } from "@/api/team-members";
+import { getValidAccount } from "@/api/account/get-account";
+import { getMembers } from "@/api/team/team-members";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { getChain } from "../../../../../../../(dashboard)/(chain)/utils";
-import { getValidAccount } from "../../../../../../../account/settings/getAccount";
 import { DeployInfrastructureForm } from "../_components/deploy-infrastructure-form.client";
 
 export default async function DeployInfrastructureOnChainPage(props: {

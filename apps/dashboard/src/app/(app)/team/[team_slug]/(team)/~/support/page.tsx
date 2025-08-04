@@ -1,7 +1,7 @@
 import { XIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { UpsellContent } from "@/components/blocks/upsell-wrapper";
 import { tryCatch } from "@/utils/try-catch";
 import { SupportsCaseList } from "./_components/case-list";

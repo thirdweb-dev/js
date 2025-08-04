@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "thirdweb";
-import type { Topic } from "@/api/webhook-configs";
+import type { Topic } from "@/api/project/webhook-configs";
 import { WebhookConfigModal } from "./webhook-config-modal";
 
 interface CreateWebhookConfigModalProps {

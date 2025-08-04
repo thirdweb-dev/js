@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { LAST_USED_TEAM_ID } from "@/constants/cookies";
+import { LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { setCookie } from "@/utils/cookie";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "./consts";
 

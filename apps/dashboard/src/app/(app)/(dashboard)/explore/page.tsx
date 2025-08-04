@@ -1,9 +1,9 @@
-import { ContractRow } from "@app/(dashboard)/explore/components/contract-row";
-import { DeployUpsellCard } from "@app/(dashboard)/explore/components/upsells/deploy-your-own";
-import { PublishUpsellCard } from "@app/(dashboard)/explore/components/upsells/publish-submit";
-import { EXPLORE_PAGE_DATA } from "@app/(dashboard)/explore/data";
 import type { Metadata } from "next";
 import { Fragment } from "react";
+import { ContractRow } from "./components/contract-row";
+import { DeployUpsellCard } from "./components/upsells/deploy-your-own";
+import { PublishUpsellCard } from "./components/upsells/publish-submit";
+import { EXPLORE_PAGE_DATA } from "./data";
 
 const title = "List of smart contracts for EVM Developers";
 const description =

@@ -1,7 +1,8 @@
 import { format, parseISO } from "date-fns";
 import { InfoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { getTeamBySlug } from "@/api/team";
+import { getValidAccount } from "@/api/account/get-account";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { getBilledUsage } from "@/api/usage/billing-preview";
 import { UpsellContent } from "@/components/blocks/upsell-wrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -14,7 +15,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import {
   formatPrice,
   UsageCategoryDetails,

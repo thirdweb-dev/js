@@ -1,4 +1,4 @@
-import { getRawAccount } from "../../../../../account/settings/getAccount";
+import { getRawAccount } from "@/api/account/get-account";
 import type { PublicContractPageParams } from "../types";
 import { SharedContractSettingsPage } from "./shared-settings-page";
 

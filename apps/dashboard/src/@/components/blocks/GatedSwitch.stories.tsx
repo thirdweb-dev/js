@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { useState } from "react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Label } from "@/components/ui/label";
 import {
   Select,

@@ -3,7 +3,7 @@
 import { ArrowRightIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { MarkdownRenderer } from "@/components/blocks/markdown-renderer";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";

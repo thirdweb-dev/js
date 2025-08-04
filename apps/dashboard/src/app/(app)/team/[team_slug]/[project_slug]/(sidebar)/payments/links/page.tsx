@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
 import { CreatePaymentLinkButton } from "./components/CreatePaymentLinkButton.client";
 import { PaymentLinksTable } from "./components/PaymentLinksTable.client";

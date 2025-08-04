@@ -2,7 +2,7 @@ import type { Abi } from "abitype";
 import { CircleAlertIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { getContractFunctionsFromAbi } from "@/components/contract-components/getContractFunctionsFromAbi";
+import { getContractFunctionsFromAbi } from "@/api/contract/getContractFunctionsFromAbi";
 import { ContractFunctionsPanel } from "@/components/contracts/functions/contract-function";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 

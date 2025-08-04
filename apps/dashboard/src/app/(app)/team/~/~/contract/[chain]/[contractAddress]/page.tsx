@@ -1,18 +1,18 @@
 import { notFound, redirect } from "next/navigation";
 import { getAddress } from "thirdweb";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
 import {
   getContractImportedProjects,
   type PartialProject,
-} from "@/api/getProjectContracts";
-import { getProjects } from "@/api/projects";
-import { getTeams, type Team } from "@/api/team";
+} from "@/api/project/getProjectContracts";
+import { getProjects } from "@/api/project/projects";
+import { getTeams, type Team } from "@/api/team/get-team";
 import { AppFooter } from "@/components/footers/app-footer";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { fetchChain } from "@/utils/fetchChain";
 import { loginRedirect } from "@/utils/redirects";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { TeamHeader } from "../../../../../components/TeamHeader/team-header";
 import {
   ImportAndSelectProjectForContract,

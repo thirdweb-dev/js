@@ -1,17 +1,17 @@
 import { notFound } from "next/navigation";
 import { isAddress } from "thirdweb";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { getRawAccount } from "@/api/account/get-account";
 import {
   getAuthTokenWalletAddress,
   getUserThirdwebClient,
 } from "@/api/auth-token";
-import { fetchPublishedContractVersions } from "@/components/contract-components/fetch-contracts-with-versions";
-import { PublishedContract } from "@/components/contracts/published-contract";
+import { fetchPublishedContractVersions } from "@/api/contract/fetch-contracts-with-versions";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { getRawAccount } from "../../../../../account/settings/getAccount";
 import { PublishedActions } from "../../../components/contract-actions-published.client";
 import { DeployContractHeader } from "../../../components/contract-header";
 import { PublishedContractBreadcrumbs } from "../components/breadcrumbs.client";
+import { PublishedContract } from "../components/published-contract";
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {

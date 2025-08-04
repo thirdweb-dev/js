@@ -7,7 +7,7 @@ import {
   checkDomainVerification,
   createDomainVerification,
   type VerifiedDomainResponse,
-} from "@/api/verified-domain";
+} from "@/api/team/verified-domain";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";

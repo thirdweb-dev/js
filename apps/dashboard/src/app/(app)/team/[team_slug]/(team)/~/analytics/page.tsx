@@ -13,7 +13,7 @@ import {
   getWalletConnections,
   getWalletUsers,
 } from "@/api/analytics";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import {
   type DurationId,
   getLastNDaysRange,

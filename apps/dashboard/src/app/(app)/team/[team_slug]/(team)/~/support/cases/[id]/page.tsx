@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { tryCatch } from "@/utils/try-catch";
 import { SupportCaseDetails } from "../../_components/SupportCaseDetails";
 import { getSupportTicket } from "../../apis/tickets";

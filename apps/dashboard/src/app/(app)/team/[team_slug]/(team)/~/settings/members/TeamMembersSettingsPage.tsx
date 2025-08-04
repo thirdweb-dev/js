@@ -3,10 +3,10 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { apiServerProxy } from "@/actions/proxies";
-import { sendTeamInvites } from "@/actions/sendTeamInvite";
-import type { Team } from "@/api/team";
-import type { TeamInvite } from "@/api/team-invites";
-import type { TeamMember } from "@/api/team-members";
+import { sendTeamInvites } from "@/actions/team/sendTeamInvite";
+import type { Team } from "@/api/team/get-team";
+import type { TeamInvite } from "@/api/team/team-invites";
+import type { TeamMember } from "@/api/team/team-members";
 import { TabButtons } from "@/components/ui/tabs";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { InviteSection, type RecommendedMember } from "./InviteSection";

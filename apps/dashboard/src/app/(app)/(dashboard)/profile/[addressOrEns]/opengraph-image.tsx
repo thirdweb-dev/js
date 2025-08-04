@@ -4,10 +4,10 @@ import { resolveAvatar } from "thirdweb/extensions/ens";
 import { GradientBlobbie } from "@/components/blocks/avatar/GradientBlobbie";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { resolveAddressAndEns } from "@/utils/resolveAddressAndEns";
 /* eslint-disable @next/next/no-img-element */
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { shortenIfAddress } from "@/utils/usedapp-external";
-import { resolveAddressAndEns } from "./resolveAddressAndEns";
 
 export const runtime = "edge";
 

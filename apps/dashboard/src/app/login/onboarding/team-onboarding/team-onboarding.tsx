@@ -3,12 +3,12 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { apiServerProxy } from "@/actions/proxies";
-import { sendTeamInvites } from "@/actions/sendTeamInvite";
+import { sendTeamInvites } from "@/actions/team/sendTeamInvite";
 import {
   reportOnboardingCompleted,
   reportOnboardingStarted,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { useEffectOnce } from "@/hooks/useEffectOnce";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { updateTeam } from "../../../(app)/team/[team_slug]/(team)/~/settings/general/updateTeam";

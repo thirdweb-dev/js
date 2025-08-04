@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { ResponsiveSuspense } from "responsive-rsc";
-import type { WebhookConfig } from "@/api/webhook-configs";
+import type { WebhookConfig } from "@/api/project/webhook-configs";
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";

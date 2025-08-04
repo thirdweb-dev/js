@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { type Fee, updateFee } from "@/api/universal-bridge/developer";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import {

@@ -1,9 +1,9 @@
-import { DeprecatedAlert } from "@app/(dashboard)/(chain)/[chain_id]/[contractAddress]/_layout/DeprecatedAlert";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import type { SidebarLink } from "@/components/blocks/Sidebar";
 import { SidebarLayout } from "@/components/blocks/SidebarLayout";
-import type { MinimalTeamsAndProjects } from "@/components/contract-components/contract-deploy-form/add-to-project-card";
+import { DeprecatedAlert } from "@/components/contracts/DeprecatedAlert";
+import type { MinimalTeamsAndProjects } from "@/components/contracts/import-contract/types";
 import type { DashboardContractMetadata } from "@/hooks/useDashboardContractMetadata";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { ContractMetadata } from "./contract-metadata";

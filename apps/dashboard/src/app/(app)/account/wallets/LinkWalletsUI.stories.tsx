@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { LinkedWallet } from "@/api/linked-wallets";
+import type { LinkedWallet } from "@/api/account/linked-wallets";
 import {
   BadgeContainer,
   mobileViewport,

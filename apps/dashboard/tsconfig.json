@@ -13,11 +13,7 @@
     "moduleResolution": "node",
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
-    "paths": {
-      "@app/*": ["app/(app)/*"],
-      "tw-components": ["tw-components"],
-      "tw-components/*": ["tw-components/*"]
-    },
+
     "plugins": [
       {
         "name": "next"

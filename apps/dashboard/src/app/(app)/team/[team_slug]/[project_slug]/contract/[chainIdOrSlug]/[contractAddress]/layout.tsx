@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
+import { getProjects } from "@/api/project/projects";
+import { getTeams } from "@/api/team/get-team";
 import { AppFooter } from "@/components/footers/app-footer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ErrorProvider } from "@/contexts/error-handler";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { SharedContractLayout } from "../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/shared-layout";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../../../components/TeamHeader/team-header-logged-in.client";
 import { SaveLastUsedProject } from "../../../(sidebar)/components/SaveLastUsedProject";
 import type { ProjectContractPageParams } from "./types";

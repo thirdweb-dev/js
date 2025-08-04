@@ -1,7 +1,7 @@
 "use client";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import type { Partner } from "@/api/ecosystems";
+import type { Partner } from "@/api/team/ecosystems";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { DocLink } from "@/components/blocks/DocLink";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";

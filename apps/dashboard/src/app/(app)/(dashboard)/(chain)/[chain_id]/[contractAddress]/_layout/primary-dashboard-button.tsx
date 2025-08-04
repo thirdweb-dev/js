@@ -11,10 +11,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Chain, ThirdwebClient } from "thirdweb";
-import {
-  AddToProjectSelector,
-  type MinimalTeamsAndProjects,
-} from "@/components/contract-components/contract-deploy-form/add-to-project-card";
+import { AddToProjectSelector } from "@/components/contracts/import-contract/add-to-project-selector";
+import type { MinimalTeamsAndProjects } from "@/components/contracts/import-contract/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {

@@ -2,8 +2,8 @@
 
 import type { ThirdwebClient } from "thirdweb";
 import { Img } from "@/components/blocks/Img";
+import { fallbackChainIcon } from "@/constants/chain";
 import { cn } from "@/lib/utils";
-import { fallbackChainIcon } from "@/utils/chain-icons";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
 type ImageProps = React.ComponentProps<"img">;

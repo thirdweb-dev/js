@@ -4,7 +4,7 @@ import { formatDate, formatDistanceToNow } from "date-fns";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,

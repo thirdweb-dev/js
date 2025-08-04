@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { revalidatePathAction } from "@/actions/revalidate";
-import { createSupportTicket } from "@/api/support";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { createSupportTicket } from "../apis/support";
 import { SupportForm_SelectInput } from "./shared/SupportForm_SelectInput";
 
 // Dynamic imports for contact forms using named exports

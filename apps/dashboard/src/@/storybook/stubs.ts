@@ -1,6 +1,6 @@
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
-import type { TeamSubscription } from "@/api/team-subscription";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
+import type { TeamSubscription } from "@/api/team/team-subscription";
 import type { Account } from "@/hooks/useApi";
 
 export function projectStub(id: string, teamId: string) {

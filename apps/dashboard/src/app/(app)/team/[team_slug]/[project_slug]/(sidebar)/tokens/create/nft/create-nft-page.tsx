@@ -27,7 +27,7 @@ import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { parseError } from "@/utils/errorParser";
 import type { CreateNFTCollectionAllValues } from "./_common/form";

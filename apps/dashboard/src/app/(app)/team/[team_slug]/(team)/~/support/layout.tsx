@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { SupportHeader } from "./_components/SupportHeader";
 
 export default async function Layout(props: {

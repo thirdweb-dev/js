@@ -20,7 +20,7 @@ import {
   isProjectActive,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject, type Project } from "@/api/projects";
+import { getProject, type Project } from "@/api/project/projects";
 import {
   type DurationId,
   getLastNDaysRange,

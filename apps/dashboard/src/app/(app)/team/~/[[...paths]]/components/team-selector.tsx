@@ -1,7 +1,7 @@
 import { ChevronRightIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 

@@ -3,7 +3,7 @@ import {
   getWebhooks,
   type WebhookResponse,
 } from "@/api/insight/webhooks";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
 import { ContractsWebhooksTable } from "../components/WebhooksTable";

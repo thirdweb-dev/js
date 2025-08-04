@@ -1,7 +1,7 @@
 "use client";
 
-import { AuthorizedWalletsTable } from "@app/account/devices/AuthorizedWalletsTable";
 import { useAuthorizedWallets } from "@/hooks/useApi";
+import { AuthorizedWalletsTable } from "./AuthorizedWalletsTable";
 
 // TODO - fetch the authorized wallets server side
 

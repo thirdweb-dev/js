@@ -6,14 +6,14 @@ import { useMemo } from "react";
 import type { ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { getContract, resolveContractAbi } from "thirdweb/contract";
 import { isAddress, isValidENSName } from "thirdweb/utils";
-import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
-import { resolveEns } from "@/lib/ens";
 import {
   fetchPublishedContractVersions,
   type PublishedContractWithVersion,
-} from "../components/contract-components/fetch-contracts-with-versions";
-import { fetchPublishedContracts } from "../components/contract-components/fetchPublishedContracts";
-import { fetchPublishedContractsFromDeploy } from "../components/contract-components/fetchPublishedContractsFromDeploy";
+} from "@/api/contract/fetch-contracts-with-versions";
+import { fetchPublishedContracts } from "@/api/contract/fetchPublishedContracts";
+import { fetchPublishedContractsFromDeploy } from "@/api/contract/fetchPublishedContractsFromDeploy";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import { resolveEns } from "@/lib/ens";
 
 export function useAllVersions(
   publisherAddress: string | undefined,

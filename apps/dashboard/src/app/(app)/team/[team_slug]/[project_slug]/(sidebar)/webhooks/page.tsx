@@ -1,12 +1,15 @@
 import { notFound, redirect } from "next/navigation";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { getWebhookSummary } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getSupportedWebhookChains } from "@/api/insight/webhooks";
-import { getProject } from "@/api/projects";
-import { getAvailableTopics, getWebhookConfigs } from "@/api/webhook-configs";
+import { getProject } from "@/api/project/projects";
+import {
+  getAvailableTopics,
+  getWebhookConfigs,
+} from "@/api/project/webhook-configs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { WebhooksOverview } from "./components/overview";
 
 export default async function WebhooksPage(props: {

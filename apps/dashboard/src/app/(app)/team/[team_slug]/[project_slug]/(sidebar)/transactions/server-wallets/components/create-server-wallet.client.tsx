@@ -5,7 +5,7 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { engineCloudProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

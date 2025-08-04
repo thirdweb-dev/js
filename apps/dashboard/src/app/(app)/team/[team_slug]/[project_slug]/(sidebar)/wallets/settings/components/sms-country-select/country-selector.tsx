@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: EXPECTED */
 
 import { CheckIcon, MinusIcon } from "lucide-react";
-import type { SMSCountryTiers } from "@/api/sms";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import type { SMSCountryTiers } from "../../api/sms";
 import {
   countryNames,
   countryPrefixes,

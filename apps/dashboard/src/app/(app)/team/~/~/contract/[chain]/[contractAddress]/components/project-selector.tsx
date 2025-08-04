@@ -1,8 +1,8 @@
 "use client";
 
 import type { ThirdwebClient } from "thirdweb";
-import type { PartialProject } from "@/api/getProjectContracts";
-import type { Team } from "@/api/team";
+import type { PartialProject } from "@/api/project/getProjectContracts";
+import type { Team } from "@/api/team/get-team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ProjectAndTeamSelectorCard } from "../../../../../components/TeamAndProjectSelectorCard";

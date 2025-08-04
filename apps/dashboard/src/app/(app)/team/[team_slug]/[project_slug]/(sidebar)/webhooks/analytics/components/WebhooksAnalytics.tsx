@@ -1,4 +1,4 @@
-import type { WebhookConfig } from "@/api/webhook-configs";
+import type { WebhookConfig } from "@/api/project/webhook-configs";
 import type {
   WebhookLatencyStats,
   WebhookRequestStats,

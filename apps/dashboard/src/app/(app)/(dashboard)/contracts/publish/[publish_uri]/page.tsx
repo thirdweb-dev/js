@@ -1,11 +1,14 @@
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { fetchDeployMetadata } from "thirdweb/contract";
-import { getUserThirdwebClient } from "@/api/auth-token";
-import { ContractPublishForm } from "@/components/contract-components/contract-publish-form";
-import { getActiveAccountCookie, getJWTCookie } from "@/constants/cookie";
+import {
+  getAuthToken,
+  getAuthTokenWalletAddress,
+  getUserThirdwebClient,
+} from "@/api/auth-token";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { getLatestPublishedContractsWithPublisherMapping } from "../../../published-contract/[publisher]/[contract_id]/utils/getPublishedContractsWithPublisherMapping";
+import { ContractPublishForm } from "./contract-publish-form";
 
 type DirectDeployPageProps = {
   params: Promise<{
@@ -35,7 +38,7 @@ export default async function PublishContractPage(
 
   const pathname = `/contracts/publish/${params.publish_uri}`;
 
-  const address = await getActiveAccountCookie();
+  const address = await getAuthTokenWalletAddress();
   if (!address) {
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }
@@ -62,7 +65,7 @@ export default async function PublishContractPage(
     }
   }
 
-  const token = await getJWTCookie(address);
+  const token = await getAuthToken();
   if (!token) {
     redirect(`/login?next=${encodeURIComponent(pathname)}`);
   }

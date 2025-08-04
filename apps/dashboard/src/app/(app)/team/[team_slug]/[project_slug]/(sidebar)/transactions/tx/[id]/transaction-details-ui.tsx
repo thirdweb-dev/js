@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { hexToNumber, isHex, type ThirdwebClient, toEther } from "thirdweb";
 import { stringify } from "thirdweb/utils";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

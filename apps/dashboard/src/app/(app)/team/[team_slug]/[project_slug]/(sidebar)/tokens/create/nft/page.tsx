@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { CreateAssetPageHeader } from "../_common/PageHeader";

@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
-import { getMemberByAccountId } from "@/api/team-members";
-import { checkDomainVerification } from "@/api/verified-domain";
+import { getTeamBySlug } from "@/api/team/get-team";
+import { getMemberByAccountId } from "@/api/team/team-members";
+import { checkDomainVerification } from "@/api/team/verified-domain";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { TeamGeneralSettingsPage } from "./general/TeamGeneralSettingsPage";
 
 export default async function Page(props: {

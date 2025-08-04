@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProjects } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
-import { getTeamSubscriptions } from "@/api/team-subscription";
+import { getProjects } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
+import { getTeamSubscriptions } from "@/api/team/team-subscription";
+import { SponsoredTransactionsTable } from "@/components/sponsored-transactions-table/SponsoredTransactionsTable";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
-import { SponsoredTransactionsTable } from "../overview/components/SponsoredTransactionsTable";
 
 export default async function Page(props: {
   params: Promise<{

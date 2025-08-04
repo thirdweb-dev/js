@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { getStripeBalance } from "@/actions/stripe-actions";
-import { getTeamBySlug, type Team } from "@/api/team";
-import { getMemberByAccountId } from "@/api/team-members";
-import { getTeamSubscriptions } from "@/api/team-subscription";
-import { CreditsInfoCard } from "@/components/billing/PlanCard";
-import { Coupons } from "@/components/billing/SubscriptionCoupons/Coupons";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
+import { getValidAccount } from "@/api/account/get-account";
+import { getTeamBySlug, type Team } from "@/api/team/get-team";
+import { getMemberByAccountId } from "@/api/team/team-members";
+import { getTeamSubscriptions } from "@/api/team/team-subscription";
+import { Coupons } from "./components/coupons/Coupons";
 import { CreditBalanceSection } from "./components/credit-balance-section.client";
+import { CreditsInfoCard } from "./components/PlanCard";
 import { PlanInfoCardClient } from "./components/PlanInfoCard.client";
 
 export default async function Page(props: {

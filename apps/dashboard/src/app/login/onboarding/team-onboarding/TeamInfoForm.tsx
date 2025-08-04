@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useDebounce } from "use-debounce";
 import { z } from "zod";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { FileInput } from "@/components/blocks/FileInput";
 import { Button } from "@/components/ui/button";
 import {

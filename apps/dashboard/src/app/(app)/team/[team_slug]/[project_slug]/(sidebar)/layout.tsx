@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProject, getProjects, type Project } from "@/api/projects";
-import { getTeamBySlug, getTeams } from "@/api/team";
+import { getProject, getProjects, type Project } from "@/api/project/projects";
+import { getTeamBySlug, getTeams } from "@/api/team/get-team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { siwaExamplePrompts } from "@/constants/siwa-example-prompts";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-logged-in.client";
 import { StaffModeNotice } from "../../(team)/_components/StaffModeNotice";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";

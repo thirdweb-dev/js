@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import type { PartialProject } from "@/api/getProjectContracts";
+import type { PartialProject } from "@/api/project/getProjectContracts";
 import { projectStub, teamStub } from "@/storybook/stubs";
 import { storybookLog, storybookThirdwebClient } from "@/storybook/utils";
 import { ProjectAndTeamSelectorCard } from "./TeamAndProjectSelectorCard";

@@ -15,8 +15,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { z } from "zod";
-import type { Team } from "@/api/team";
-import type { TeamAccountRole } from "@/api/team-members";
+import type { Team } from "@/api/team/get-team";
+import type { TeamAccountRole } from "@/api/team/team-members";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { Button } from "@/components/ui/button";
 import {

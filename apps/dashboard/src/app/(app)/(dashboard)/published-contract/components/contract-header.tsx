@@ -1,7 +1,7 @@
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
-import type { PublishedContractWithVersion } from "@/components/contract-components/fetch-contracts-with-versions";
+import type { PublishedContractWithVersion } from "@/api/contract/fetch-contracts-with-versions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ModuleList } from "../[publisher]/[contract_id]/components/module-list.client";
