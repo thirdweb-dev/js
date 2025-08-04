@@ -1,0 +1,46 @@
+import { Step, Steps, DocImage, createMetadata } from "@doc";
+import TokenDeployment from "../assets/token_deployment.png";
+import ConfigureCoin from "./assets/configure_coin.png";
+import DistributeCoin from "./assets/distribute_coin.png";
+
+export const metadata = createMetadata({
+    image: {
+        title: "Deploy an ERC-20 token",
+        icon: "contracts",
+    },
+    title: "Deploy an ERC-20 token | thirdweb Documentation",
+    description:
+        "Learn how to deploy an ERC-20 token using thirdweb's dashboard or programmatically through the SDK.",
+});
+
+# Deploy an ERC-20 token
+
+Learn how to deploy an ERC-20 token using thirdweb's dashboard or programmatically through the SDK. This guide will walk you through the steps to create, configure, and deploy your own ERC-20 token.
+
+## Deploying through the dashboard
+
+<Steps>
+  <Step title="Create a project">
+    Go to the [thirdweb dashboard](https://thirdweb.com/) and create a new project or use an existing one.
+  </Step>
+  <Step title="Select Tokens">
+    Navigate to the Tokens section and select Create Coin
+    <DocImage src={TokenDeployment} alt="Token deployment screen on thirdweb dashboard" />
+  </Step>
+  <Step title="Configure Token">
+    Determine a token name, symbol,and chain. You may also optionally set up an image or logo, social links, and a description for your token.
+    <DocImage src={ConfigureCoin} alt="Configure token screen on thirdweb dashboard" />
+  </Step>
+  <Step title="Configure Distribution">
+    Determine the total supply of your token and how it will be distributed. Unless specified through the airdrop or sale options, the total supply will be minted on the deployer's wallet.
+    <DocImage src={DistributeCoin} alt="Distribute token screen on thirdweb dashboard" />
+  </Step>
+    <Step title="Deploy Token">
+    Confirm your configuration and select the "Launch" button to deploy your ERC-20 token to the blockchain.
+  </Step>
+
+</Steps>
+
+## Deploying programmatically
+
+Coming soon

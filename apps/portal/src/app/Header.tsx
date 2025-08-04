@@ -47,6 +47,10 @@ const links = [
     href: "/tokens",
     name: "Tokens",
   },
+  {
+    href: "/insight",
+    name: "Insight",
+  },
 ];
 
 const toolLinks = [

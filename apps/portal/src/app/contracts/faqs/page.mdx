@@ -1,0 +1,40 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Contracts FAQs | thirdweb Documentation",
+	description:
+		"Frequently asked questions about thirdweb's contracts, including deployment, compatibility, and security.",
+	image: {
+		title: "Contracts FAQs",
+		icon: "contracts",
+	},
+});
+
+# Contracts FAQs
+
+<Details summary="Can I use thirdweb tools with my existing contract?">
+Yes, thirdweb’s contract dashboard, deployment tools, and SDKs / APIs are compatible with non-thirdweb contracts. 
+
+You can use thirdweb's deploy tool to deploy any contract that has not been deployed to any compatible EVM chain.
+
+For any already deployed contracts, you can use the thirdweb dashboard to import them and manage
+
+</Details>
+
+<Details summary="Are thirdweb contracts audited?">
+Yes, thirdweb pre-built contracts are audited by third-party security firms. You can see the attached
+audit reports for each contract linked on the contract page on Explore. 
+</Details>
+
+<Details summary="Why can I no longer deploy a pack contract?">
+Pack contracts were officially deprecated after the Pectra release from Ethereum. The pack contract implementation is incompatible with the Pectra update, which introduced breaking changes to the Ethereum protocol. As a result, support for pack contracts has been removed from thirdweb's deployment tools to ensure compatibility and security.
+
+If you need similar functionality, consider using:
+- **Edition Drop contracts** for distributing multiple quantities of NFTs
+- **Marketplace contracts** for trading and bundle functionality
+- **Custom smart contracts** built with our modular contract framework
+
+For existing pack contracts, they will continue to function on-chain, but new deployments are no longer supported.
+</Details>
+
+

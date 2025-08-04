@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, ZapIcon } from "lucide-react";
+import { CodeIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import {
   DotNetIcon,
@@ -17,11 +17,6 @@ export const sidebar: SideBar = {
       href: slug,
       name: "Get Started",
       icon: <ZapIcon />,
-    },
-    {
-      href: "https://playground.thirdweb.com/",
-      icon: <ExternalLinkIcon />,
-      name: "Playground",
     },
     { separator: true },
     {
@@ -47,21 +42,6 @@ export const sidebar: SideBar = {
           href: `${slug}/deploy`,
           name: "Deploy Contracts",
         },
-        /**
-         * TODO
-         {
-          href: `${slug}/encode`,
-          name: "Encode Data",
-        },
-        {
-          href: `${slug}/decode`,
-          name: "Decode Data",
-        },
-        {
-          href: `${slug}/fetch-abis`,
-          name: "Fetch ABIs",
-        },
-         */
       ],
       name: "Guides",
     },
@@ -70,17 +50,22 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: "/references/typescript/v5/functions#transactions",
+          href: "https://api.thirdweb.com/reference#tag/contracts",
+          icon: <CodeIcon />,
+          name: "HTTP API",
+        },
+        {
+          href: "/references/typescript/v5/functions#contract",
           icon: <TypeScriptIcon />,
           name: "TypeScript",
         },
         {
-          href: "/references/typescript/v5/hooks#transactions",
+          href: "/references/typescript/v5/functions#contract",
           icon: <ReactIcon />,
           name: "React",
         },
         {
-          href: "/references/typescript/v5/hooks#transactions",
+          href: "/references/typescript/v5/functions#contract",
           icon: <ReactIcon />,
           name: "React Native",
         },
@@ -101,6 +86,36 @@ export const sidebar: SideBar = {
         },
       ],
       name: "API References",
+    },
+    { separator: true },
+    {
+      isCollapsible: false,
+      links: [
+        {
+          href: `${slug}/security`,
+          name: "Security",
+        },
+        {
+          href: `${slug}/troubleshoot`,
+          name: "Troubleshoot",
+        },
+        {
+          href: `${slug}/faqs`,
+          name: "FAQ",
+        },
+      ],
+      name: "Resources",
+    },
+    { separator: true },
+    {
+      isCollapsible: true,
+      links: [
+        {
+          href: `${slug}/modular-contracts`,
+          name: "Modular Contracts",
+        },
+      ],
+      name: "Archive",
     },
   ],
 };

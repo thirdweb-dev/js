@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
@@ -72,6 +72,11 @@ export const sidebar: SideBar = {
     {
       isCollapsible: false,
       links: [
+        {
+          href: "https://api.thirdweb.com/reference#tag/wallets",
+          icon: <CodeIcon />,
+          name: "HTTP API",
+        },
         {
           href: "/references/typescript/v5",
           icon: <TypeScriptIcon />,

@@ -1,0 +1,42 @@
+import { OpenSourceCard, Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Modular Contracts | thirdweb Documentation",
+	description:
+		"Build custom smart contracts with thirdweb Modular Contracts. Add features like royalties, permissions, and drops using prebuilt, audited modules.",
+	image: {
+		title: "Modular Contracts",
+		icon: "contracts",
+	},
+});
+
+# Modular Contracts
+
+Modular contracts is an open source framework that enables the creation of highly customizable and upgradeable smart contracts. Modular contracts is designed to encompass a broad number of use cases without compromising on the ease and security of creating smart contracts with thirdweb.
+
+Modular contracts are composed of two components:
+
+- Core Contract: smart contracts that serve as the foundation of the modular contract
+- Module Contract: smart contracts that are installed on top of the core contract
+
+You can think of Modular Contracts like building bricks. Pick a core, install modules, and swap them out to enable different functionality.
+
+<OpenSourceCard title="Modular Contracts" href="https://github.com/thirdweb-dev/modular-contracts" />
+
+### Modular Contracts FAQ
+
+<Details summary="Is Modular Contracts actively maintained by thirdweb?">
+Modular Contracts is no longer actively maintained with dedicated engineering resources from thirdweb. However, we are happy to answer questions about the framework and provide support to existing modular contract users.
+</Details>
+
+<Details summary="What are modular contracts good for?">
+Modular contracts pattern is useful in the context of sharing core or modular contracts with other teams / developers while giving them control over the contract. 
+It is useful for creating a contract where you need to upgrade the core contract by adding new functionality through modules. 
+</Details>
+
+### Additional Resources
+
+- [Modular Contracts Repository](https://github.com/thirdweb-dev/modular-contracts).
+- [Modular Contracts Design Documentation](https://github.com/thirdweb-dev/modular-contracts/blob/dev/design-document.md)
+- [Modular Contracts 101 | Build Upgradeable Smart Contracts Like Lego Blocks](https://www.youtube.com/watch?v=4YE0WljSpiQ&t=9s)
+- [Modular Contracts SDK: Build Core & Modules from Scratch (Advanced Guide)](https://www.youtube.com/watch?v=ZoOk41y4f_k&t=29s)
