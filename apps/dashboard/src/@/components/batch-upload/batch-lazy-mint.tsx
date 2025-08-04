@@ -324,7 +324,6 @@ function SelectReveal(props: {
       {canCreateDelayedRevealBatch && (
         <TabButtons
           containerClassName="mb-8"
-          tabClassName="!text-sm"
           tabs={[
             {
               name: "Reveal upon mint",

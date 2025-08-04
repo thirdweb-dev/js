@@ -56,7 +56,7 @@ export function TabLinks(props: {
                 <Link
                   aria-disabled={tab.isDisabled}
                   className={cn(
-                    "relative h-auto rounded-lg px-3 font-normal text-muted-foreground text-sm lg:text-sm",
+                    "relative inline-flex h-auto items-center gap-1.5 rounded-lg font-medium hover:bg-accent !px-3",
                     !tab.isActive && !tab.isDisabled && "hover:text-foreground",
                     tab.isDisabled && "pointer-events-none",
                     tab.isActive && "!text-foreground",
@@ -125,7 +125,7 @@ export function TabButtons(props: {
               >
                 <Button
                   className={cn(
-                    "relative inline-flex h-auto items-center gap-1.5 rounded-lg px-2 font-medium text-sm hover:bg-accent lg:px-3 lg:text-base",
+                    "relative inline-flex h-auto items-center gap-1.5 rounded-lg font-medium hover:bg-accent !px-3",
                     !tab.isActive &&
                       "text-muted-foreground hover:text-foreground",
                     tab.isDisabled && "cursor-not-allowed opacity-50",

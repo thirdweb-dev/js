@@ -64,8 +64,6 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           {isInsightSupported ? (
             <>
               <TabButtons
-                tabClassName="text-sm gap-2 !text-sm"
-                tabContainerClassName="gap-0.5"
                 tabs={LISTING_MODES.map((mode) => ({
                   isActive: mode === listingMode,
                   name: mode,

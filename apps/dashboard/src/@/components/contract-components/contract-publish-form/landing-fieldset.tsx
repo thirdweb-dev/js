@@ -144,7 +144,6 @@ export function LandingFieldset({
         </p>
 
         <TabButtons
-          tabClassName="!text-sm"
           tabs={[
             {
               name: "Write",
@@ -226,7 +225,6 @@ export function LandingFieldset({
                 </p>
               )}
               <TabButtons
-                tabClassName="!text-sm"
                 tabs={[
                   {
                     name: "Write",

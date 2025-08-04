@@ -338,7 +338,6 @@ function TokenInfoUI(props: {
             {props.type === "erc1155" && (
               <div className="border-t border-dashed pt-2">
                 <TabButtons
-                  tabClassName="!text-sm"
                   tabs={[
                     {
                       isActive: tab === "traits",

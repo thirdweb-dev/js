@@ -27,7 +27,6 @@ export function BuyWidgetFTUX(props: {
 
       <div className="p-4 pt-2">
         <TabButtons
-          tabClassName="!text-sm"
           tabs={[
             {
               isActive: tab === "embed",

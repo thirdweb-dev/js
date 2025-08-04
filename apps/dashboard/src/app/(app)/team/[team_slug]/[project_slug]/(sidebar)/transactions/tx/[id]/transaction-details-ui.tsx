@@ -384,7 +384,6 @@ function TransactionParametersCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <TabButtons
-          tabClassName="!text-sm"
           tabs={[
             {
               isActive: activeTab === "decoded",

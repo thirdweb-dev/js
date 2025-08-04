@@ -22,7 +22,6 @@ export function IntegrateAPIKeyCodeTabs(props: {
   return (
     <div>
       <TabButtons
-        tabClassName="!text-sm"
         tabs={Object.entries(tabNames).map(([key, name]) => ({
           isActive: tab === key,
           name,

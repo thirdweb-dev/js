@@ -60,7 +60,6 @@ export function TeamMembersSettingsPage(props: {
       <div className="h-10" />
 
       <TabButtons
-        tabClassName="!text-sm"
         tabs={[
           {
             isActive: manageTab === "members",

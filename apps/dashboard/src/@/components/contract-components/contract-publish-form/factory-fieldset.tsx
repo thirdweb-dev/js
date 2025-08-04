@@ -30,7 +30,6 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
       </p>
 
       <TabButtons
-        tabClassName="!text-sm font-semibold"
         tabs={[
           {
             name: "Default Factory",

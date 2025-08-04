@@ -743,7 +743,6 @@ export function CodeOverview(props: {
                   <div className="bg-background">
                     <TabButtons
                       tabs={tabList}
-                      tabClassName="!text-sm"
                       tabContainerClassName="px-3 pt-2"
                     />
                   </div>
