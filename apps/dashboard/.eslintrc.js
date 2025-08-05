@@ -96,6 +96,12 @@ module.exports = {
             name: "posthog-js",
           },
         ],
+        patterns: [
+          {
+            group: ["**/../@/**"],
+            message: "Use absolute imports instead. Example: '@/foo/bar..'",
+          },
+        ],
       },
     ],
     "no-restricted-syntax": [
