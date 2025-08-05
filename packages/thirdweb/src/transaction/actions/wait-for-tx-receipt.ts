@@ -72,7 +72,7 @@ export function waitForReceipt(
           unwatch();
           reject(
             new Error(
-              `Transaction not found after ${maxBlocksWaitTime} blocks`,
+              `Transaction receipt for ${transactionHash} not found after ${maxBlocksWaitTime} blocks`,
             ),
           );
           return;
