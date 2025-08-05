@@ -57,12 +57,30 @@ You will be asked to enter the following values
 
 ### Usage example
 
-<Tabs defaultValue="typescript">
+<Tabs defaultValue="http">
 <TabsList>
+	<TabsTrigger value="http">HTTP</TabsTrigger>
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
 	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="dotnet">.NET</TabsTrigger>
 </TabsList>
+
+<TabsContent value="http">
+
+```http
+POST https://api.thirdweb.com/v1/wallets/user/generic-auth
+Content-Type: application/json
+x-client-id: <your-client-id>
+x-ecosystem-id: <your-ecosystem-id> (optional)
+x-ecosystem-partner-id: <your-ecosystem-partner-id> (optional)
+
+{
+	"type": "jwt",
+	"jwt": "<your-jwt>"
+}
+```
+
+</TabsContent>
 
 <TabsContent value="react">
 
@@ -81,7 +99,7 @@ const handlePostLogin = async () => {
 		wallet.connect({
 			client,
 			strategy: "jwt",
-			jwt: "<your-jwt-token>",
+			jwt: "<your-jwt>",
 		});
 		return wallet;
 	});
@@ -107,7 +125,7 @@ const wallet = inAppWallet();
 const account = await wallet.connect({
 	client,
 	strategy: "jwt",
-	jwt: "<your-jwt-token>",
+	jwt: "<your-jwt>",
 });
 
 // use the account to send transactions
@@ -122,7 +140,7 @@ using Thirdweb;
 
 var client = ThirdwebClient.Create(clientId: "your-client-id");
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
-var address = await wallet.LoginWithCustomAuth(jwt: "<your-jwt-token>");
+var address = await wallet.LoginWithCustomAuth(jwt: "<your-jwt>");
 ```
 
 </TabsContent>
@@ -170,12 +188,32 @@ You can also pass a list of headers. These headers will be sent with every reque
 
 Once you've logged in with your own auth, you can pass the user's JWT to the in-app wallet to authenticate and connect.
 
-<Tabs defaultValue="typescript">
+<Tabs defaultValue="http">
 <TabsList>
+	<TabsTrigger value="http">HTTP</TabsTrigger>
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
 	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="dotnet">.NET</TabsTrigger>
 </TabsList>
+
+<TabsContent value="http">
+
+```http
+POST https://api.thirdweb.com/v1/wallets/user/generic-auth
+Content-Type: application/json
+x-client-id: <your-client-id>
+x-ecosystem-id: <your-ecosystem-id> (optional)
+x-ecosystem-partner-id: <your-ecosystem-partner-id> (optional)
+
+{
+	"type": "auth-payload",
+	"payload": "<your-auth-payload>"
+}
+```
+
+
+
+</TabsContent>
 
 <TabsContent value="react">
 
@@ -213,8 +251,6 @@ const MyComponent = () => {
 </TabsContent>
 
 <TabsContent value="typescript">
-
-In other frameworks, use your own instance of the wallet to authenticate and connect.
 
 ```typescript
 import { inAppWallet } from "thirdweb/wallets";
