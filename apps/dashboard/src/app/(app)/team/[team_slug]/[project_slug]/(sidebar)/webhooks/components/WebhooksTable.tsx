@@ -2,23 +2,22 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { PlayIcon, TrashIcon } from "lucide-react";
+import { AlertTriangleIcon, TrashIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import type { ThirdwebClient } from "thirdweb";
 import {
   deleteWebhook,
   type WebhookFilters,
   type WebhookResponse,
 } from "@/api/insight/webhooks";
+import type { Project } from "@/api/projects";
 import { TWTable } from "@/components/blocks/TWTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTestWebhook } from "../hooks/useTestWebhook";
-import { CreateContractWebhookButton } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
 
 function getEventType(filters: WebhookFilters): string {
@@ -41,27 +40,24 @@ function maskWebhookSecret(secret: string): string {
 
 interface WebhooksTableProps {
   webhooks: WebhookResponse[];
-  projectClientId: string;
-  supportedChainIds: number[];
-  client: ThirdwebClient;
+  project: Project;
 }
 
 export function ContractsWebhooksTable({
   webhooks,
-  projectClientId,
-  client,
-  supportedChainIds,
+  project,
 }: WebhooksTableProps) {
   const [isDeleting, setIsDeleting] = useState<Record<string, boolean>>({});
-  const { testWebhookEndpoint, isTestingMap } = useTestWebhook(projectClientId);
   const router = useDashboardRouter();
 
-  const handleDeleteWebhook = async (webhookId: string) => {
+  const webhooksPath = `/team/${project.teamId}/${project.slug}/webhooks`;
+
+  const _handleDeleteWebhook = async (webhookId: string) => {
     if (isDeleting[webhookId]) return;
 
     try {
       setIsDeleting((prev) => ({ ...prev, [webhookId]: true }));
-      await deleteWebhook(webhookId, projectClientId);
+      await deleteWebhook(webhookId, project.publishableKey);
       toast.success("Webhook deleted successfully");
       router.refresh();
     } catch (error) {
@@ -77,41 +73,31 @@ export function ContractsWebhooksTable({
     }
   };
 
-  const handleTestWebhook = async (webhook: WebhookResponse) => {
-    const filterType = getEventType(webhook.filters);
-    if (filterType === "Unknown") {
-      toast.error("Cannot test webhook", {
-        description:
-          "This webhook does not have a valid event type (event or transaction).",
-      });
-      return;
-    }
-    await testWebhookEndpoint(
-      webhook.webhook_url,
-      filterType.toLowerCase() as "event" | "transaction",
-      webhook.id,
-    );
-  };
-
   const columns: ColumnDef<WebhookResponse>[] = [
     {
       accessorKey: "name",
-      cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <span className="max-w-40 truncate" title={row.original.name}>
-            {row.original.name}
-          </span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const webhook = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <span
+              className="max-w-40 truncate text-muted-foreground"
+              title={webhook.name}
+            >
+              {webhook.name}
+            </span>
+          </div>
+        );
+      },
       header: "Name",
     },
     {
       accessorKey: "filters",
       cell: ({ getValue }) => {
         const filters = getValue() as WebhookFilters;
-        if (!filters) return <span>-</span>;
+        if (!filters) return <span className="text-muted-foreground">-</span>;
         const eventType = getEventType(filters);
-        return <span>{eventType}</span>;
+        return <span className="text-muted-foreground">{eventType}</span>;
       },
       header: "Event Type",
     },
@@ -121,7 +107,9 @@ export function ContractsWebhooksTable({
         const url = getValue() as string;
         return (
           <div className="flex items-center gap-2">
-            <span className="max-w-60 truncate">{url}</span>
+            <span className="max-w-60 truncate text-muted-foreground">
+              {url}
+            </span>
             <CopyTextButton
               className="flex h-6 w-6 items-center justify-center"
               copyIconPosition="right"
@@ -171,7 +159,7 @@ export function ContractsWebhooksTable({
         return (
           <div className="flex flex-col">
             <RelativeTime date={date} />
-            <span className="text-muted-foreground text-xs">
+            <span className="text-muted-foreground text-xs opacity-50">
               {formattedDate}
             </span>
           </div>
@@ -181,12 +169,10 @@ export function ContractsWebhooksTable({
     },
     {
       accessorKey: "suspended_at",
-      cell: ({ row }) => {
-        const webhook = row.original;
-        const isSuspended = Boolean(webhook.suspended_at);
+      cell: () => {
         return (
-          <Badge variant={isSuspended ? "destructive" : "default"}>
-            {isSuspended ? "Suspended" : "Active"}
+          <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+            Deprecated
           </Badge>
         );
       },
@@ -200,24 +186,10 @@ export function ContractsWebhooksTable({
         return (
           <div className="flex items-center justify-end gap-2">
             <Button
-              aria-label={`Test webhook ${webhook.name}`}
-              className="h-8 w-8"
-              disabled={isTestingMap[webhook.id] || isDeleting[webhook.id]}
-              onClick={() => handleTestWebhook(webhook)}
-              size="icon"
-              variant="outline"
-            >
-              {isTestingMap[webhook.id] ? (
-                <Spinner className="h-4 w-4" />
-              ) : (
-                <PlayIcon className="h-4 w-4" />
-              )}
-            </Button>
-            <Button
               aria-label={`Delete webhook ${webhook.name}`}
               className="h-8 w-8 text-red-500 hover:border-red-700 hover:text-red-700"
               disabled={isDeleting[webhook.id]}
-              onClick={() => handleDeleteWebhook(webhook.id)}
+              onClick={() => _handleDeleteWebhook(webhook.id)}
               size="icon"
               variant="outline"
             >
@@ -250,20 +222,36 @@ export function ContractsWebhooksTable({
 
   return (
     <div className="w-full">
+      {/* Deprecation Notice */}
+      <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <div className="flex items-start gap-3">
+          <AlertTriangleIcon className="h-5 w-5 text-amber-600 mt-0.5" />
+          <div className="flex-1">
+            <h3 className="text-sm font-medium text-amber-800">
+              Legacy Webhooks (Deprecated)
+            </h3>
+            <p className="mt-1 text-sm text-amber-700">
+              Contract webhooks are deprecated, but will continue to work for
+              the time being. New unified webhooks are available in the{" "}
+              <Link
+                className="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 hover:bg-blue-100 transition-colors"
+                href={webhooksPath}
+              >
+                Webhooks
+              </Link>{" "}
+              section.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <TWTable
         columns={columns}
         data={sortedWebhooks}
         isFetched={true}
         isPending={false}
-        title="Webhooks"
+        title="Legacy Webhooks"
       />
-      <div className="mt-4 flex justify-end">
-        <CreateContractWebhookButton
-          client={client}
-          projectClientId={projectClientId}
-          supportedChainIds={supportedChainIds}
-        />
-      </div>
     </div>
   );
 }
