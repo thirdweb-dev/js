@@ -4,7 +4,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "dependencies": {
-    "@aws-sdk/client-kms": "3.592.0",
+    "@aws-sdk/client-kms": "3.859.0",
     "@aws-sdk/client-lambda": "3.592.0",
     "@aws-sdk/credential-providers": "3.592.0",
     "@mobile-wallet-protocol/client": "1.0.0"
