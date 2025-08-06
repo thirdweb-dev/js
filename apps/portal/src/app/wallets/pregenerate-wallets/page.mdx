@@ -7,7 +7,7 @@ export const metadata = createMetadata({
 		icon: "wallets",
 	},
 	title: "Pregenerate Wallets | thirdweb",
-	description: "Create wallets before users sign up with thirdweb’s wallet pregeneration. Pre-fund with tokens, NFTs, or game assets to enable smooth onboarding and asset claiming.",
+	description: "Create wallets before users sign up with thirdweb's wallet pregeneration. Pre-fund with tokens, NFTs, or game assets to enable smooth onboarding and asset claiming.",
 });
 
 # Pregenerate Wallets
@@ -35,21 +35,34 @@ You can distribute assets to wallets before users claim them, enabling:
 
 To pregenerate an in-app or ecosystem wallet wallet, you can make a `POST` request to the following endpoint:
 
-```
-https://in-app-wallet.thirdweb.com/api/v1/pregenerate
+```http
+POST https://api.thirdweb.com/v1/wallets/user/pregenerate
+Content-Type: application/json
+x-secret-key: <your-secret-key>
+x-ecosystem-id: <your-ecosystem-id> (optional)
+x-ecosystem-partner-id: <your-ecosystem-partner-id> (optional)
+
+{
+  "type": "email",
+  "email": "user@example.com"
+}
 ```
 
 ## Request Body
 
 The request body should be a JSON object with the following parameters:
 
-- `strategy`: The strategy for wallet generation
-- `email` or `phone` or `userId`: The user identifier associated with the wallet to be generated
+- `type`: The type of wallet identifier to pregenerate a wallet for: 
+  - Email based: `email`, `google`, `facebook`, `discord`
+  - Phone based: `phone`
+  - Wallet based: `signer`
+  - User ID based: `custom_jwt` or `custom_auth_endpoint`
+- `email` or `phone` or `userId` or `walletAddress`: The user identifier associated with the wallet to be generated
 
 ### Email based wallets
 
 ```
-{ strategy: "email", email: "user@example.com" }
+{ type: "email", email: "user@example.com" }
 ```
 
 When the user logs in with any method associated with that email (including google, facebook, discord auth), they will get access to the same pregenerated wallet.
@@ -57,13 +70,13 @@ When the user logs in with any method associated with that email (including goog
 ### Phone based wallets
 
 ```
-{ strategy: "phone", phone: "+1321123321" }
+{ type: "phone", phone: "+1321123321" }
 ```
 
 ### Custom user id based wallets
 
 ```
-{ strategy: "custom_auth_endpoint", userId: "some_user_id" }
+{ type: "custom_auth_endpoint", userId: "some_user_id" }
 ```
 
 {/* TODO: update link when custom auth documentation has been updated */}
@@ -83,13 +96,13 @@ You need to include the following headers:
 Here's an example curl command to pregenerate a thirdweb wallet for the user `user@example.com`:
 
 ```bash
-curl -X POST 'https://in-app-wallet.thirdweb.com/api/v1/pregenerate' \
+curl -X POST 'https://api.thirdweb.com/v1/wallets/user/pregenerate' \
   -H 'x-ecosystem-id: ecosystem.example-eco-123' \
   -H 'x-ecosystem-partner-id: 1415d24e-c7b0-4fce-846e-740841ef2c32' \
-  -H 'x-secret-key: 9f8e7d6c5b4a3f2e1d0c9b8a7ffge434b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7' \
+  -H 'x-secret-key: <your-project-secret-key>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "strategy": "email",
+    "type": "email",
     "email": "user@example.com"
   }'
 ```
@@ -107,9 +120,10 @@ A successful API call returns a JSON object in the following format:
 
 ```json
 {
-  "wallet": {
+  "result": {
       "address": "string",
       "createdAt": "string",
+      "profile": "object[]"
   }
 }
 ```
