@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { getAddress, type ThirdwebClient } from "thirdweb";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { z } from "zod";
+import { reportFundWalletOpened } from "@/analytics/report";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -268,6 +269,7 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
               setReceiveOpen(true);
+              reportFundWalletOpened();
             },
             text: "Fund wallet",
           },

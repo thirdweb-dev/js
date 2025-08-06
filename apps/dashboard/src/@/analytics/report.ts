@@ -467,3 +467,39 @@ export function reportAssetPageview(properties: {
 }) {
   posthog.capture("asset pageview", properties);
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the usage of fund wallet modal
+ * - To create a funnel "fund wallet modal opened" -> "fund wallet buy successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletOpened() {
+  posthog.capture("fund wallet opened");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of successful fund wallet buys
+ * - To create a funnel "fund wallet modal opened" -> "fund wallet buy successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletSuccessful() {
+  posthog.capture("fund wallet successful");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of failed fund wallet buys
+ * - To track the errors that users encounter when trying to buy from a fund wallet modal
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletFailed(params: { errorMessage: string }) {
+  posthog.capture("fund wallet failed", params);
+}

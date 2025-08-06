@@ -9,6 +9,10 @@ import type { ThirdwebClient } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { CheckoutWidget, useActiveWalletChain } from "thirdweb/react";
 import { z } from "zod";
+import {
+  reportFundWalletFailed,
+  reportFundWalletSuccessful,
+} from "@/analytics/report";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Button } from "@/components/ui/button";
@@ -252,6 +256,14 @@ function FundWalletModalContent(props: FundWalletModalProps) {
               className="!w-full !max-w-full !min-w-0 !rounded-b-none !border-none"
               theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
               name={props.checkoutWidgetTitle}
+              onSuccess={() => {
+                reportFundWalletSuccessful();
+              }}
+              onError={(error) => {
+                reportFundWalletFailed({
+                  errorMessage: error.message,
+                });
+              }}
             />
           </div>
 
