@@ -223,3 +223,33 @@ export const NoImageLight: Story = {
     },
   },
 };
+
+export const CustomButtonLabel: Story = {
+  args: {
+    theme: "dark",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story: "Example showcasing custom button label functionality. The button shows 'Purchase Now' instead of the default 'Buy Now' text.",
+      },
+    },
+  },
+};
+
+export const CustomButtonLabelLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: DIRECT_PAYMENT_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version with custom button label 'Purchase Now'.",
+      },
+    },
+  },
+};

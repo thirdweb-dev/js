@@ -180,6 +180,11 @@ export type BuyWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -335,6 +340,7 @@ export function BuyWidget(props: BuyWidgetProps) {
             },
             mode: "fund_wallet",
             currency: props.currency || "USD",
+            buttonLabel: props.buttonLabel,
           },
           type: "success",
         };
@@ -364,6 +370,8 @@ export function BuyWidget(props: BuyWidgetProps) {
             title: props.title,
           },
           mode: "fund_wallet",
+          currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
         },
         type: "success",
       };

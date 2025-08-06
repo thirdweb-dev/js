@@ -684,7 +684,7 @@ type TransactionUIOptions = Extract<UIOptions, { mode: "transaction" }>;
 
 // UI Options for FundWallet mode
 export const FUND_WALLET_UI_OPTIONS: Record<
-  "ethDefault" | "ethWithAmount" | "usdcDefault" | "uniLarge",
+  "ethDefault" | "ethWithAmount" | "usdcDefault" | "uniLarge" | "customButton",
   FundWalletUIOptions
 > = {
   ethDefault: {
@@ -718,11 +718,21 @@ export const FUND_WALLET_UI_OPTIONS: Record<
     initialAmount: "5",
     mode: "fund_wallet" as const,
   },
+  customButton: {
+    destinationToken: ETH,
+    initialAmount: "0.01",
+    metadata: {
+      description: "Test custom button label for funding",
+      title: "Custom Fund Wallet",
+    },
+    mode: "fund_wallet" as const,
+    buttonLabel: "Add Funds Now",
+  },
 };
 
 // UI Options for DirectPayment mode
 export const DIRECT_PAYMENT_UI_OPTIONS: Record<
-  "digitalArt" | "concertTicket" | "subscription" | "sneakers" | "credits",
+  "digitalArt" | "concertTicket" | "subscription" | "sneakers" | "credits" | "customButton",
   DirectPaymentUIOptions
 > = {
   concertTicket: {
@@ -794,11 +804,26 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       token: USDC,
     },
   },
+  customButton: {
+    metadata: {
+      description: "Test custom button label functionality",
+      image: PRODUCT_METADATA.digitalArt.image,
+      title: "Custom Button Test",
+    },
+    mode: "direct_payment" as const,
+    buttonLabel: "Purchase Now",
+    paymentInfo: {
+      amount: "0.05",
+      feePayer: "sender" as const,
+      sellerAddress: RECEIVER_ADDRESSES.primary,
+      token: ETH,
+    },
+  },
 };
 
 // UI Options for Transaction mode
 export const TRANSACTION_UI_OPTIONS: Record<
-  "ethTransfer" | "erc20Transfer" | "contractInteraction",
+  "ethTransfer" | "erc20Transfer" | "contractInteraction" | "customButton",
   TransactionUIOptions
 > = {
   contractInteraction: {
@@ -823,6 +848,15 @@ export const TRANSACTION_UI_OPTIONS: Record<
       title: "Execute Transaction",
     },
     mode: "transaction" as const,
+    transaction: ethTransferTransaction,
+  },
+  customButton: {
+    metadata: {
+      description: "Test custom button label for transactions",
+      title: "Custom Transaction",
+    },
+    mode: "transaction" as const,
+    buttonLabel: "Execute Now",
     transaction: ethTransferTransaction,
   },
 };
