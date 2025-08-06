@@ -12,6 +12,7 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
+  ToolTipLabel,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -21,6 +22,7 @@ import {
   useAllEmbeddedWallets,
   useEmbeddedWallets,
 } from "@/hooks/useEmbeddedWallets";
+import { CopyTextButton } from "../ui/CopyTextButton";
 import { AdvancedSearchInput } from "./AdvancedSearchInput";
 import { SearchResults } from "./SearchResults";
 import { searchUsers } from "./searchUsers";
@@ -57,7 +59,24 @@ export function InAppWalletUsersPageContent(
       columnHelper.accessor("linkedAccounts", {
         cell: (cell) => {
           const identifier = getUserIdentifier(cell.getValue());
-          return <span className="text-sm">{identifier}</span>;
+
+          if (!identifier) {
+            return "N/A";
+          }
+
+          return (
+            <CopyTextButton
+              textToShow={
+                identifier.length > 30
+                  ? `${identifier.slice(0, 30)}...`
+                  : identifier
+              }
+              textToCopy={identifier}
+              tooltip="Copy User Identifier"
+              copyIconPosition="left"
+              variant="ghost"
+            />
+          );
         },
         enableColumnFilter: true,
         header: "User Identifier",
@@ -77,7 +96,7 @@ export function InAppWalletUsersPageContent(
         cell: (cell) => {
           const externalWallets = getExternalWallets(cell.getValue());
           if (externalWallets.length === 0) {
-            return <span className="text-muted-foreground text-xs">None</span>;
+            return <span className="text-muted-foreground text-sm">None</span>;
           }
           return (
             <div className="space-y-1">
@@ -111,9 +130,14 @@ export function InAppWalletUsersPageContent(
             return;
           }
           return (
-            <span className="text-sm">
-              {format(new Date(value), "MMM dd, yyyy")}
-            </span>
+            <ToolTipLabel
+              label={format(new Date(value), "MMM dd, yyyy 'at' h:mm:ss a zzz")}
+              hoverable
+            >
+              <span className="text-sm">
+                {format(new Date(value), "MMM dd, yyyy")}
+              </span>
+            </ToolTipLabel>
           );
         },
         header: "Created",
@@ -215,7 +239,7 @@ export function InAppWalletUsersPageContent(
         return {
           address: row.wallets[0]?.address || "Uninitialized",
           created: row.wallets[0]?.createdAt
-            ? format(new Date(row.wallets[0].createdAt), "MMM dd, yyyy")
+            ? new Date(row.wallets[0].createdAt).toISOString()
             : "Wallet not created yet",
           external_wallets: externalWalletAddresses || "None",
           login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
@@ -243,7 +267,7 @@ export function InAppWalletUsersPageContent(
       <div className="flex flex-col gap-4">
         {/* Top section */}
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex flex-col md:flex-row lg:items-center justify-end gap-3">
             <div className="w-full max-w-lg">
               <AdvancedSearchInput
                 onSearch={handleSearch}
@@ -253,10 +277,9 @@ export function InAppWalletUsersPageContent(
               />
             </div>
             <Button
-              className="gap-2"
+              className="gap-2 bg-card"
               disabled={wallets.length === 0 || isPending}
               onClick={downloadCSV}
-              size="sm"
               variant="outline"
             >
               {isPending && <Spinner className="size-4" />}
