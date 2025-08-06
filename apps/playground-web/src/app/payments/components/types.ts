@@ -41,6 +41,7 @@ export type BridgeComponentsPlaygroundOptions = {
     title: string | undefined;
     image: string | undefined;
     description: string | undefined;
+    buttonLabel: string | undefined;
 
     buyTokenAddress?: Address;
     buyTokenAmount: string;

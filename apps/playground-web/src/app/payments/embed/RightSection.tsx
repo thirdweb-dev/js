@@ -66,6 +66,7 @@ export function RightSection(props: {
         tokenAddress={props.options.payOptions.buyTokenAddress}
         currency={props.options.payOptions.currency}
         showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
+        {...(props.options.payOptions.buttonLabel && { buttonLabel: props.options.payOptions.buttonLabel })}
       />
     );
   }
@@ -91,6 +92,7 @@ export function RightSection(props: {
         tokenAddress={props.options.payOptions.buyTokenAddress}
         currency={props.options.payOptions.currency}
         showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
+        {...(props.options.payOptions.buttonLabel && { buttonLabel: props.options.payOptions.buttonLabel })}
       />
     );
   }
@@ -112,6 +114,7 @@ export function RightSection(props: {
         })}
         currency={props.options.payOptions.currency}
         showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
+        {...(props.options.payOptions.buttonLabel && { buttonLabel: props.options.payOptions.buttonLabel })}
       />
     );
   }

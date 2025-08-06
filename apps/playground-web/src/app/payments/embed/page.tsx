@@ -13,6 +13,7 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
     buyTokenChain: arbitrum,
     description: "",
     image: "",
+    buttonLabel: "",
     paymentMethods: ["crypto", "card"],
     sellerAddress: "0x0000000000000000000000000000000000000000",
     title: "",

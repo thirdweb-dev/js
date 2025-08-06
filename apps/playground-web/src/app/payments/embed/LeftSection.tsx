@@ -73,6 +73,7 @@ export function LeftSection(props: {
   const modalTitleId = useId();
   const modalTitleIconId = useId();
   const modalDescriptionId = useId();
+  const buttonLabelId = useId();
   const themeId = useId();
   const cryptoPaymentId = useId();
   const cardPaymentId = useId();
@@ -484,6 +485,26 @@ export function LeftSection(props: {
               }
               placeholder="Your own description here"
               value={options.payOptions.description}
+            />
+          </div>
+
+          {/* Button Label */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={buttonLabelId}>Button Label</Label>
+            <Input
+              className="bg-card"
+              id={buttonLabelId}
+              onChange={(e) =>
+                setOptions((v) => ({
+                  ...v,
+                  payOptions: {
+                    ...payOptions,
+                    buttonLabel: e.target.value,
+                  },
+                }))
+              }
+              placeholder="Custom button text (optional)"
+              value={options.payOptions.buttonLabel}
             />
           </div>
         </div>
