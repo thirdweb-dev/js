@@ -106,8 +106,8 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
-      name: "Archive",
-      isCollapsible: true,
+      name: "Advanced",
+      isCollapsible: false,
       links: [
         {
           href: `/engine/v3`,
