@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.105.27
+
+### Patch Changes
+
+- [#7803](https://github.com/thirdweb-dev/js/pull/7803) [`fd4414b`](https://github.com/thirdweb-dev/js/commit/fd4414b451bf07d8a165f0dee9c71d2a1bea1812) Thanks [@MananTank](https://github.com/MananTank)! - Update `getTotalClaimedSupply` and `getTotalUnclaimedSupply` erc721 extensions to consider `startTokenId` if the contract has `startTokenId` set.
+
+- [#7789](https://github.com/thirdweb-dev/js/pull/7789) [`9a3ebe1`](https://github.com/thirdweb-dev/js/commit/9a3ebe1cb1e937d40477019c71e163cc1837a99e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add transaction hash to max wait time error
+
+- [#7785](https://github.com/thirdweb-dev/js/pull/7785) [`e5326c4`](https://github.com/thirdweb-dev/js/commit/e5326c43a9bf2aed665907760c48e43e2310cd74) Thanks [@alecananian](https://github.com/alecananian)! - Added `useSiweAuth` to the React Native exports
+
+- [#7774](https://github.com/thirdweb-dev/js/pull/7774) [`e1ad7da`](https://github.com/thirdweb-dev/js/commit/e1ad7daf5401c4ddd3661eceed15e8c4f481d28e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `thirdweb/insight` import typescript error
+
 ## 5.105.26
 
 ### Patch Changes
