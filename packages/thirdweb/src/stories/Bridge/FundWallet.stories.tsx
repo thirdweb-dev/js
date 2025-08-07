@@ -204,7 +204,8 @@ export const CustomButtonLabel: Story = {
     backgrounds: { default: "dark" },
     docs: {
       description: {
-        story: "Example showcasing custom button label functionality. The button shows 'Add Funds Now' instead of the default 'Buy [amount] [symbol]' text.",
+        story:
+          "Example showcasing custom button label functionality. The button shows 'Add Funds Now' instead of the default 'Buy [amount] [symbol]' text.",
       },
     },
   },

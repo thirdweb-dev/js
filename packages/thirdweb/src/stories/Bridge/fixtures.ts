@@ -732,7 +732,12 @@ export const FUND_WALLET_UI_OPTIONS: Record<
 
 // UI Options for DirectPayment mode
 export const DIRECT_PAYMENT_UI_OPTIONS: Record<
-  "digitalArt" | "concertTicket" | "subscription" | "sneakers" | "credits" | "customButton",
+  | "digitalArt"
+  | "concertTicket"
+  | "subscription"
+  | "sneakers"
+  | "credits"
+  | "customButton",
   DirectPaymentUIOptions
 > = {
   concertTicket: {

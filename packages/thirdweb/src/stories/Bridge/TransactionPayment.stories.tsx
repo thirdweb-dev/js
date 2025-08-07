@@ -178,7 +178,8 @@ export const CustomButtonLabel: Story = {
     backgrounds: { default: "dark" },
     docs: {
       description: {
-        story: "Example showcasing custom button label functionality. The button shows 'Execute Now' instead of the default 'Execute [functionName]' text.",
+        story:
+          "Example showcasing custom button label functionality. The button shows 'Execute Now' instead of the default 'Execute [functionName]' text.",
       },
     },
   },

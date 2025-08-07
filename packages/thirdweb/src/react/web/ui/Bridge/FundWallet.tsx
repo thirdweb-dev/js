@@ -336,13 +336,16 @@ export function FundWallet({
           }}
           variant="primary"
         >
-          {uiOptions.buttonLabel || `Buy ${amount} ${uiOptions.destinationToken.symbol}`}
+          {uiOptions.buttonLabel ||
+            `Buy ${amount} ${uiOptions.destinationToken.symbol}`}
         </Button>
       ) : (
         <ConnectButton
           client={client}
           connectButton={{
-            label: uiOptions.buttonLabel || `Buy ${amount} ${uiOptions.destinationToken.symbol}`,
+            label:
+              uiOptions.buttonLabel ||
+              `Buy ${amount} ${uiOptions.destinationToken.symbol}`,
           }}
           theme={theme}
           {...connectOptions}
