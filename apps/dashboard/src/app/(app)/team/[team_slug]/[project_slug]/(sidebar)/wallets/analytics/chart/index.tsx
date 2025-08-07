@@ -34,6 +34,7 @@ type AsyncInAppWalletAnalyticsProps = Omit<
 > & {
   teamId: string;
   projectId: string;
+  authToken: string;
 };
 
 async function AsyncInAppWalletAnalytics(
@@ -41,13 +42,16 @@ async function AsyncInAppWalletAnalytics(
 ) {
   const range = props.range ?? getLastNDaysRange("last-120");
 
-  const stats = await getInAppWalletUsage({
-    from: range.from,
-    period: props.interval,
-    projectId: props.projectId,
-    teamId: props.teamId,
-    to: range.to,
-  }).catch((error) => {
+  const stats = await getInAppWalletUsage(
+    {
+      from: range.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: range.to,
+    },
+    props.authToken,
+  ).catch((error) => {
     console.error(error);
     return [];
   });

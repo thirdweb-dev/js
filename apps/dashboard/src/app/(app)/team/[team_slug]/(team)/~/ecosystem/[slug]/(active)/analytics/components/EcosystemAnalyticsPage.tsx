@@ -18,6 +18,7 @@ export async function EcosystemAnalyticsPage({
   range,
   partners,
   defaultRange,
+  authToken,
 }: {
   ecosystemSlug: string;
   teamId: string;
@@ -25,6 +26,7 @@ export async function EcosystemAnalyticsPage({
   range: Range;
   defaultRange: DurationId;
   partners: Partner[];
+  authToken: string;
 }) {
   return (
     <div>
@@ -40,6 +42,7 @@ export async function EcosystemAnalyticsPage({
         <AsyncEcosystemWalletsSummary
           ecosystemSlug={ecosystemSlug}
           teamId={teamId}
+          authToken={authToken}
         />
       </Suspense>
 
@@ -66,6 +69,7 @@ export async function EcosystemAnalyticsPage({
           partners={partners}
           range={range}
           teamId={teamId}
+          authToken={authToken}
         />
       </ResponsiveSuspense>
     </div>
@@ -75,24 +79,31 @@ export async function EcosystemAnalyticsPage({
 async function AsyncEcosystemWalletsSummary(props: {
   ecosystemSlug: string;
   teamId: string;
+  authToken: string;
 }) {
-  const { ecosystemSlug, teamId } = props;
+  const { ecosystemSlug, teamId, authToken } = props;
 
-  const allTimeStatsPromise = getEcosystemWalletUsage({
-    ecosystemSlug,
-    from: new Date(2022, 0, 1),
-    period: "all",
-    teamId,
-    to: new Date(),
-  });
+  const allTimeStatsPromise = getEcosystemWalletUsage(
+    {
+      ecosystemSlug,
+      from: new Date(2022, 0, 1),
+      period: "all",
+      teamId,
+      to: new Date(),
+    },
+    authToken,
+  );
 
-  const monthlyStatsPromise = getEcosystemWalletUsage({
-    ecosystemSlug,
-    from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-    period: "month",
-    teamId,
-    to: new Date(),
-  });
+  const monthlyStatsPromise = getEcosystemWalletUsage(
+    {
+      ecosystemSlug,
+      from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      period: "month",
+      teamId,
+      to: new Date(),
+    },
+    authToken,
+  );
 
   const [allTimeStats, monthlyStats] = await Promise.all([
     allTimeStatsPromise,
@@ -114,16 +125,20 @@ async function AsyncEcosystemWalletUsersAnalytics(props: {
   interval: "day" | "week";
   range: Range;
   partners: Partner[];
+  authToken: string;
 }) {
-  const { ecosystemSlug, teamId, interval, range, partners } = props;
+  const { ecosystemSlug, teamId, interval, range, partners, authToken } = props;
 
-  const stats = await getEcosystemWalletUsage({
-    ecosystemSlug,
-    from: range.from,
-    period: interval,
-    teamId,
-    to: range.to,
-  }).catch(() => null);
+  const stats = await getEcosystemWalletUsage(
+    {
+      ecosystemSlug,
+      from: range.from,
+      period: interval,
+      teamId,
+      to: range.to,
+    },
+    authToken,
+  ).catch(() => null);
 
   return (
     <EcosystemWalletUsersAnalyticsUI

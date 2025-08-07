@@ -61,6 +61,7 @@ export default async function Page(props: {
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <EcosystemAnalyticsPage
+        authToken={authToken}
         ecosystemSlug={ecosystem.slug}
         interval={interval}
         defaultRange={defaultRange}

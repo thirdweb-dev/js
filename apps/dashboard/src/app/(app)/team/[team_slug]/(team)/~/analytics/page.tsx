@@ -15,6 +15,7 @@ import {
   getWalletConnections,
   getWalletUsers,
 } from "@/api/analytics";
+import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team/get-team";
 import type {
   DurationId,
@@ -28,6 +29,7 @@ import type {
   UserOpStats,
   WalletStats,
 } from "@/types/analytics";
+import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardWithChainMapping } from "../../_components/transaction-card-with-chain-mapping";
@@ -52,6 +54,12 @@ export default async function TeamOverviewPage(props: {
     props.params,
     props.searchParams,
   ]);
+
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    loginRedirect(`/team/${params.team_slug}/~/analytics`);
+  }
 
   const team = await getTeamBySlug(params.team_slug);
 
@@ -91,6 +99,7 @@ export default async function TeamOverviewPage(props: {
               fallback={<LoadingChartState className="h-[458px] border" />}
             >
               <AsyncTeamHighlightsCard
+                authToken={authToken}
                 selectedChartQueryParam="appHighlights"
                 interval={interval}
                 range={range}
@@ -108,7 +117,11 @@ export default async function TeamOverviewPage(props: {
                 fallback={<LoadingChartState className="h-[431px] border" />}
                 searchParamsUsed={["from", "to"]}
               >
-                <AsyncWalletDistributionCard range={range} teamId={team.id} />
+                <AsyncWalletDistributionCard
+                  range={range}
+                  teamId={team.id}
+                  authToken={authToken}
+                />
               </ResponsiveSuspense>
 
               <ResponsiveSuspense
@@ -118,6 +131,7 @@ export default async function TeamOverviewPage(props: {
                 <AsyncAuthMethodDistributionCard
                   range={range}
                   teamId={team.id}
+                  authToken={authToken}
                 />
               </ResponsiveSuspense>
             </div>
@@ -133,6 +147,7 @@ export default async function TeamOverviewPage(props: {
             >
               <AsyncTransactionsChartCard
                 selectedChartQueryParam="client_transactions"
+                authToken={authToken}
                 interval={interval}
                 range={range}
                 selectedChart={
@@ -149,6 +164,7 @@ export default async function TeamOverviewPage(props: {
               searchParamsUsed={["from", "to", "interval", "userOpUsage"]}
             >
               <AsyncTotalSponsoredCard
+                authToken={authToken}
                 selectedChartQueryParam="userOpUsage"
                 interval={interval}
                 range={range}
@@ -173,21 +189,28 @@ async function AsyncTeamHighlightsCard(props: {
   interval: "day" | "week";
   selectedChart: string | undefined;
   selectedChartQueryParam: string;
+  authToken: string;
 }) {
   const [walletUserStatsTimeSeries, universalBridgeUsage] =
     await Promise.allSettled([
-      getWalletUsers({
-        from: props.range.from,
-        period: props.interval,
-        teamId: props.teamId,
-        to: props.range.to,
-      }),
-      getUniversalBridgeUsage({
-        from: props.range.from,
-        period: props.interval,
-        teamId: props.teamId,
-        to: props.range.to,
-      }),
+      getWalletUsers(
+        {
+          from: props.range.from,
+          period: props.interval,
+          teamId: props.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
+      getUniversalBridgeUsage(
+        {
+          from: props.range.from,
+          period: props.interval,
+          teamId: props.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
     ]);
 
   if (
@@ -216,13 +239,17 @@ async function AsyncTeamHighlightsCard(props: {
 async function AsyncWalletDistributionCard(props: {
   teamId: string;
   range: Range;
+  authToken: string;
 }) {
-  const walletConnections = await getWalletConnections({
-    from: props.range.from,
-    period: "all",
-    teamId: props.teamId,
-    to: props.range.to,
-  }).catch(() => undefined);
+  const walletConnections = await getWalletConnections(
+    {
+      from: props.range.from,
+      period: "all",
+      teamId: props.teamId,
+      to: props.range.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
 
   return walletConnections && walletConnections.length > 0 ? (
     <WalletDistributionCard data={walletConnections} />
@@ -237,13 +264,17 @@ async function AsyncWalletDistributionCard(props: {
 async function AsyncAuthMethodDistributionCard(props: {
   teamId: string;
   range: Range;
+  authToken: string;
 }) {
-  const inAppWalletUsage = await getInAppWalletUsage({
-    from: props.range.from,
-    period: "all",
-    teamId: props.teamId,
-    to: props.range.to,
-  }).catch(() => undefined);
+  const inAppWalletUsage = await getInAppWalletUsage(
+    {
+      from: props.range.from,
+      period: "all",
+      teamId: props.teamId,
+      to: props.range.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
 
   return inAppWalletUsage && inAppWalletUsage.length > 0 ? (
     <AuthMethodDistributionCard data={inAppWalletUsage} />
@@ -261,21 +292,28 @@ async function AsyncTransactionsChartCard(props: {
   interval: "day" | "week";
   selectedChart: string | undefined;
   selectedChartQueryParam: string;
+  authToken: string;
 }) {
   const [clientTransactionsTimeSeries, clientTransactions] =
     await Promise.allSettled([
-      getClientTransactions({
-        from: props.range.from,
-        period: props.interval,
-        teamId: props.teamId,
-        to: props.range.to,
-      }),
-      getClientTransactions({
-        from: props.range.from,
-        period: "all",
-        teamId: props.teamId,
-        to: props.range.to,
-      }),
+      getClientTransactions(
+        {
+          from: props.range.from,
+          period: props.interval,
+          teamId: props.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
+      getClientTransactions(
+        {
+          from: props.range.from,
+          period: "all",
+          teamId: props.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
     ]);
 
   return clientTransactionsTimeSeries.status === "fulfilled" &&
@@ -301,20 +339,27 @@ async function AsyncTotalSponsoredCard(props: {
   interval: "day" | "week";
   selectedChart: string | undefined;
   selectedChartQueryParam: string;
+  authToken: string;
 }) {
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
-    getUserOpUsage({
-      from: props.range.from,
-      period: props.interval,
-      teamId: props.teamId,
-      to: props.range.to,
-    }),
-    getUserOpUsage({
-      from: props.range.from,
-      period: "all",
-      teamId: props.teamId,
-      to: props.range.to,
-    }),
+    getUserOpUsage(
+      {
+        from: props.range.from,
+        period: props.interval,
+        teamId: props.teamId,
+        to: props.range.to,
+      },
+      props.authToken,
+    ),
+    getUserOpUsage(
+      {
+        from: props.range.from,
+        period: "all",
+        teamId: props.teamId,
+        to: props.range.to,
+      },
+      props.authToken,
+    ),
   ]);
 
   return userOpUsageTimeSeries.status === "fulfilled" &&

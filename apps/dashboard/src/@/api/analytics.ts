@@ -1,6 +1,8 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
+import { normalizeTime } from "@/lib/time";
 import type {
   AnalyticsQueryParams,
   EcosystemWalletStats,
@@ -16,7 +18,6 @@ import type {
   WebhookRequestStats,
   WebhookSummaryStats,
 } from "@/types/analytics";
-import { getAuthToken } from "./auth-token";
 import { getChains } from "./chain";
 
 export interface InsightChainStats {
@@ -54,16 +55,20 @@ export interface RpcUsageTypeStats {
   count: number;
 }
 
-async function fetchAnalytics(
-  input: string | URL,
-  init?: RequestInit,
-): Promise<Response> {
-  const token = await getAuthToken();
-  if (!token) {
-    throw new Error("You are not authorized to perform this action");
-  }
+function normalizedParams<T extends { from?: Date; to?: Date }>(params: T): T {
+  return {
+    ...params,
+    from: params.from ? normalizeTime(params.from) : undefined,
+    to: params.to ? normalizeTime(params.to) : undefined,
+  };
+}
 
-  const [pathname, searchParams] = input.toString().split("?");
+async function fetchAnalytics(params: {
+  authToken: string;
+  url: string | URL;
+  init?: RequestInit;
+}): Promise<Response> {
+  const [pathname, searchParams] = params.url.toString().split("?");
   if (!pathname) {
     throw new Error("Invalid input, no pathname provided");
   }
@@ -86,10 +91,10 @@ async function fetchAnalytics(
   }
 
   return fetch(analyticsServiceUrl, {
-    ...init,
+    ...params.init,
     headers: {
-      Authorization: `Bearer ${token}`,
-      ...init?.headers,
+      Authorization: `Bearer ${params.authToken}`,
+      ...params.init?.headers,
     },
   });
 }
@@ -119,193 +124,316 @@ function buildSearchParams(params: AnalyticsQueryParams): URLSearchParams {
   return searchParams;
 }
 
-export async function getWalletConnections(
+const cached_getWalletConnections = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<WalletStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/sdk/wallet-connects?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch wallet connections, ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as WalletStats[];
+  },
+  ["getWalletConnections"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getWalletConnections(
   params: AnalyticsQueryParams,
-): Promise<WalletStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/sdk/wallet-connects?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch wallet connections, ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as WalletStats[];
+  authToken: string,
+) {
+  return cached_getWalletConnections(normalizedParams(params), authToken);
 }
 
-export async function getInAppWalletUsage(
+const cached_getInAppWalletUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<InAppWalletStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/wallet/connects?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch in-app wallet usage, ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as InAppWalletStats[];
+  },
+  ["getInAppWalletUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getInAppWalletUsage(
   params: AnalyticsQueryParams,
-): Promise<InAppWalletStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/wallet/connects?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch in-app wallet usage, ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as InAppWalletStats[];
+  authToken: string,
+) {
+  return cached_getInAppWalletUsage(normalizedParams(params), authToken);
 }
 
-export async function getUserOpUsage(
+const cached_getUserOpUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<UserOpStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/bundler/usage?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch user ops usage: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as UserOpStats[];
+  },
+  ["getUserOpUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getUserOpUsage(
   params: AnalyticsQueryParams,
-): Promise<UserOpStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/bundler/usage?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch user ops usage: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as UserOpStats[];
+  authToken: string,
+) {
+  return cached_getUserOpUsage(normalizedParams(params), authToken);
 }
 
-export async function getAggregateUserOpUsage(
-  params: Omit<AnalyticsQueryParams, "period">,
-): Promise<UserOpStats> {
-  const [userOpStats, chains] = await Promise.all([
-    getUserOpUsage({ ...params, period: "all" }),
-    getChains(),
-  ]);
-  // Aggregate stats across wallet types
-  return userOpStats.reduce(
-    (acc, curr) => {
-      // Skip testnets from the aggregated stats
-      if (curr.chainId) {
-        const chain = chains.data.find(
-          (c) => c.chainId.toString() === curr.chainId,
-        );
-        if (chain?.testnet) {
-          return acc;
+const cached_getAggregateUserOpUsage = unstable_cache(
+  async (
+    params: Omit<AnalyticsQueryParams, "period">,
+    authToken: string,
+  ): Promise<UserOpStats> => {
+    const [userOpStats, chains] = await Promise.all([
+      getUserOpUsage({ ...params, period: "all" }, authToken),
+      getChains(),
+    ]);
+
+    // Aggregate stats across wallet types
+    return userOpStats.reduce(
+      (acc, curr) => {
+        // Skip testnets from the aggregated stats
+        if (curr.chainId) {
+          const chain = chains.data.find(
+            (c) => c.chainId.toString() === curr.chainId,
+          );
+          if (chain?.testnet) {
+            return acc;
+          }
         }
-      }
 
-      acc.successful += curr.successful;
-      acc.failed += curr.failed;
-      acc.sponsoredUsd += curr.sponsoredUsd;
-      return acc;
-    },
-    {
-      date: (params.from || new Date()).toISOString(),
-      failed: 0,
-      sponsoredUsd: 0,
-      successful: 0,
-    },
-  );
-}
-
-export async function getClientTransactions(
-  params: AnalyticsQueryParams,
-): Promise<TransactionStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/sdk/contract-transactions?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch client transactions stats: ${res?.status} - ${res.statusText} - ${reason}`,
+        acc.successful += curr.successful;
+        acc.failed += curr.failed;
+        acc.sponsoredUsd += curr.sponsoredUsd;
+        return acc;
+      },
+      {
+        date: (params.from || new Date()).toISOString(),
+        failed: 0,
+        sponsoredUsd: 0,
+        successful: 0,
+      },
     );
-    return [];
-  }
+  },
+  ["getAggregateUserOpUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
 
-  const json = await res.json();
-  return json.data as TransactionStats[];
+export function getAggregateUserOpUsage(
+  params: Omit<AnalyticsQueryParams, "period">,
+  authToken: string,
+) {
+  return cached_getAggregateUserOpUsage(normalizedParams(params), authToken);
 }
 
-export async function getRpcMethodUsage(
+const cached_getClientTransactions = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<TransactionStats[]> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/sdk/contract-transactions?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch client transactions stats: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as TransactionStats[];
+  },
+  ["getClientTransactions"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getClientTransactions(
   params: AnalyticsQueryParams,
-): Promise<RpcMethodStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/rpc/evm-methods?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch RPC method usage");
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as RpcMethodStats[];
+  authToken: string,
+) {
+  return cached_getClientTransactions(normalizedParams(params), authToken);
 }
 
-export async function getRpcUsageByType(
+const cached_getRpcMethodUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<RpcMethodStats[]> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/rpc/evm-methods?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      console.error("Failed to fetch RPC method usage");
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as RpcMethodStats[];
+  },
+  ["getRpcMethodUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getRpcMethodUsage(
   params: AnalyticsQueryParams,
-): Promise<RpcUsageTypeStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/rpc/usage-types?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch RPC usage");
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as RpcUsageTypeStats[];
+  authToken: string,
+) {
+  return cached_getRpcMethodUsage(normalizedParams(params), authToken);
 }
 
-export async function getWalletUsers(
+const cached_getRpcUsageByType = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<RpcUsageTypeStats[]> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/rpc/usage-types?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      console.error("Failed to fetch RPC usage");
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as RpcUsageTypeStats[];
+  },
+  ["getRpcUsageByType"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getRpcUsageByType(
   params: AnalyticsQueryParams,
-): Promise<WalletUserStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/sdk/wallet-connects/users?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
+  authToken: string,
+) {
+  return cached_getRpcUsageByType(normalizedParams(params), authToken);
+}
 
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch wallet user stats: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
+const cached_getWalletUsers = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<WalletUserStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/sdk/wallet-connects/users?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
 
-  const json = await res.json();
-  return json.data as WalletUserStats[];
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch wallet user stats: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as WalletUserStats[];
+  },
+  ["getWalletUsers"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getWalletUsers(
+  params: AnalyticsQueryParams,
+  authToken: string,
+) {
+  return cached_getWalletUsers(normalizedParams(params), authToken);
 }
 
 type ActiveStatus = {
@@ -320,41 +448,49 @@ type ActiveStatus = {
   ecosystemWallet: boolean;
 };
 
-export async function isProjectActive(params: {
-  teamId: string;
-  projectId: string;
-}): Promise<ActiveStatus> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/active-usage?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
+export const isProjectActive = unstable_cache(
+  async (params: {
+    teamId: string;
+    projectId: string;
+    authToken: string;
+  }): Promise<ActiveStatus> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken: params.authToken,
+      url: `v2/active-usage?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
 
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch project active status: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return {
-      bundler: false,
-      ecosystemWallet: false,
-      inAppWallet: false,
-      insight: false,
-      nebula: false,
-      pay: false,
-      rpc: false,
-      sdk: false,
-      storage: false,
-    } as ActiveStatus;
-  }
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch project active status: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return {
+        bundler: false,
+        ecosystemWallet: false,
+        inAppWallet: false,
+        insight: false,
+        nebula: false,
+        pay: false,
+        rpc: false,
+        sdk: false,
+        storage: false,
+      } as ActiveStatus;
+    }
 
-  const json = await res.json();
-  return json.data as ActiveStatus;
-}
+    const json = await res.json();
+    return json.data as ActiveStatus;
+  },
+  ["isProjectActive"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
 
-export async function getEcosystemWalletUsage(args: {
+type EcosystemWalletUsageParams = {
   teamId: string;
   ecosystemSlug: string;
   ecosystemPartnerId?: string;
@@ -362,267 +498,458 @@ export async function getEcosystemWalletUsage(args: {
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
-}) {
-  const {
-    ecosystemSlug,
-    ecosystemPartnerId,
-    teamId,
-    projectId,
-    from,
-    to,
-    period,
-  } = args;
+};
 
-  const searchParams = new URLSearchParams();
-  // required params
-  searchParams.append("ecosystemSlug", ecosystemSlug);
-  searchParams.append("teamId", teamId);
+const cached_getEcosystemWalletUsage = unstable_cache(
+  async (args: EcosystemWalletUsageParams, authToken: string) => {
+    const {
+      ecosystemSlug,
+      ecosystemPartnerId,
+      teamId,
+      projectId,
+      from,
+      to,
+      period,
+    } = args;
 
-  // optional params
-  if (ecosystemPartnerId) {
-    searchParams.append("ecosystemPartnerId", ecosystemPartnerId);
-  }
-  if (projectId) {
-    searchParams.append("projectId", projectId);
-  }
-  if (from) {
-    searchParams.append("from", from.toISOString());
-  }
-  if (to) {
-    searchParams.append("to", to.toISOString());
-  }
-  if (period) {
-    searchParams.append("period", period);
-  }
-  const res = await fetchAnalytics(
-    `v2/wallet/connects?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
+    const searchParams = new URLSearchParams();
+    // required params
+    searchParams.append("ecosystemSlug", ecosystemSlug);
+    searchParams.append("teamId", teamId);
 
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch ecosystem wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return null;
-  }
+    // optional params
+    if (ecosystemPartnerId) {
+      searchParams.append("ecosystemPartnerId", ecosystemPartnerId);
+    }
+    if (projectId) {
+      searchParams.append("projectId", projectId);
+    }
+    if (from) {
+      searchParams.append("from", from.toISOString());
+    }
+    if (to) {
+      searchParams.append("to", to.toISOString());
+    }
+    if (period) {
+      searchParams.append("period", period);
+    }
 
-  const json = await res.json();
+    const res = await fetchAnalytics({
+      authToken: authToken,
+      url: `v2/wallet/connects?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
 
-  return json.data as EcosystemWalletStats[];
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch ecosystem wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return null;
+    }
+
+    const json = await res.json();
+
+    return json.data as EcosystemWalletStats[];
+  },
+  ["getEcosystemWalletUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getEcosystemWalletUsage(
+  params: EcosystemWalletUsageParams,
+  authToken: string,
+) {
+  return cached_getEcosystemWalletUsage(normalizedParams(params), authToken);
 }
 
-export async function getUniversalBridgeUsage(args: {
+type UniversalBridgeUsageParams = {
   teamId: string;
   projectId?: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
-}) {
-  const searchParams = buildSearchParams(args);
-  const res = await fetchAnalytics(`v2/universal?${searchParams.toString()}`, {
-    method: "GET",
-  });
+};
 
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch universal bridge stats: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
+const cached_getUniversalBridgeUsage = unstable_cache(
+  async (args: UniversalBridgeUsageParams, authToken: string) => {
+    const searchParams = buildSearchParams(args);
 
-  const json = await res.json();
-  return json.data as UniversalBridgeStats[];
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/universal?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch universal bridge stats: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as UniversalBridgeStats[];
+  },
+  ["getUniversalBridgeUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getUniversalBridgeUsage(
+  params: UniversalBridgeUsageParams,
+  authToken: string,
+) {
+  return cached_getUniversalBridgeUsage(normalizedParams(params), authToken);
 }
 
-export async function getUniversalBridgeWalletUsage(args: {
+type UniversalBridgeWalletUsageParams = {
   teamId: string;
   projectId: string;
   from?: Date;
   to?: Date;
   period?: "day" | "week" | "month" | "year" | "all";
-}) {
-  const searchParams = buildSearchParams(args);
-  const res = await fetchAnalytics(
-    `v2/universal/wallets?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
+};
+
+const cached_getUniversalBridgeWalletUsage = unstable_cache(
+  async (args: UniversalBridgeWalletUsageParams, authToken: string) => {
+    const searchParams = buildSearchParams(args);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/universal/wallets?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch universal bridge wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as UniversalBridgeWalletStats[];
+  },
+  ["getUniversalBridgeWalletUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getUniversalBridgeWalletUsage(
+  params: UniversalBridgeWalletUsageParams,
+  authToken: string,
+) {
+  return cached_getUniversalBridgeWalletUsage(
+    normalizedParams(params),
+    authToken,
   );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    console.error(
-      `Failed to fetch universal bridge wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
-    );
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as UniversalBridgeWalletStats[];
 }
 
-export async function getEngineCloudMethodUsage(
+const cached_getEngineCloudMethodUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<EngineCloudStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/engine-cloud/requests?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      console.error("Failed to fetch Engine Cloud method usage");
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as EngineCloudStats[];
+  },
+  ["getEngineCloudMethodUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getEngineCloudMethodUsage(
   params: AnalyticsQueryParams,
-): Promise<EngineCloudStats[]> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/engine-cloud/requests?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    console.error("Failed to fetch Engine Cloud method usage");
-    return [];
-  }
-
-  const json = await res.json();
-  return json.data as EngineCloudStats[];
+  authToken: string,
+) {
+  return cached_getEngineCloudMethodUsage(normalizedParams(params), authToken);
 }
 
-export async function getWebhookSummary(
+const cached_getWebhookSummary = unstable_cache(
+  async (
+    params: AnalyticsQueryParams & { webhookId: string },
+    authToken: string,
+  ): Promise<{ data: WebhookSummaryStats[] } | { error: string }> => {
+    const searchParams = buildSearchParams(params);
+    searchParams.append("webhookId", params.webhookId);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/webhook/summary?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+    if (!res.ok) {
+      const reason = await res.text();
+      return { error: reason };
+    }
+
+    return (await res.json()) as { data: WebhookSummaryStats[] };
+  },
+  ["getWebhookSummary"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getWebhookSummary(
   params: AnalyticsQueryParams & { webhookId: string },
-): Promise<{ data: WebhookSummaryStats[] } | { error: string }> {
-  const searchParams = buildSearchParams(params);
-  searchParams.append("webhookId", params.webhookId);
-
-  const res = await fetchAnalytics(
-    `v2/webhook/summary?${searchParams.toString()}`,
-  );
-  if (!res.ok) {
-    const reason = await res.text();
-    return { error: reason };
-  }
-
-  return (await res.json()) as { data: WebhookSummaryStats[] };
+  authToken: string,
+) {
+  return cached_getWebhookSummary(normalizedParams(params), authToken);
 }
 
-export async function getWebhookRequests(
+const cached_getWebhookRequests = unstable_cache(
+  async (
+    params: AnalyticsQueryParams & { webhookId?: string },
+    authToken: string,
+  ): Promise<{ data: WebhookRequestStats[] } | { error: string }> => {
+    const searchParams = buildSearchParams(params);
+    if (params.webhookId) {
+      searchParams.append("webhookId", params.webhookId);
+    }
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/webhook/requests?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+    if (!res.ok) {
+      const reason = await res.text();
+      return { error: reason };
+    }
+
+    return (await res.json()) as { data: WebhookRequestStats[] };
+  },
+  ["getWebhookRequests"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getWebhookRequests(
   params: AnalyticsQueryParams & { webhookId?: string },
-): Promise<{ data: WebhookRequestStats[] } | { error: string }> {
-  const searchParams = buildSearchParams(params);
-  if (params.webhookId) {
-    searchParams.append("webhookId", params.webhookId);
-  }
-
-  const res = await fetchAnalytics(
-    `v2/webhook/requests?${searchParams.toString()}`,
-  );
-  if (!res.ok) {
-    const reason = await res.text();
-    return { error: reason };
-  }
-
-  return (await res.json()) as { data: WebhookRequestStats[] };
+  authToken: string,
+) {
+  return cached_getWebhookRequests(normalizedParams(params), authToken);
 }
 
-export async function getWebhookLatency(
+const cached_getWebhookLatency = unstable_cache(
+  async (
+    params: AnalyticsQueryParams & { webhookId?: string },
+    authToken: string,
+  ): Promise<{ data: WebhookLatencyStats[] } | { error: string }> => {
+    const searchParams = buildSearchParams(params);
+    if (params.webhookId) {
+      searchParams.append("webhookId", params.webhookId);
+    }
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/webhook/latency?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+    if (!res.ok) {
+      const reason = await res.text();
+      return { error: reason };
+    }
+
+    return (await res.json()) as { data: WebhookLatencyStats[] };
+  },
+  ["getWebhookLatency"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getWebhookLatency(
   params: AnalyticsQueryParams & { webhookId?: string },
-): Promise<{ data: WebhookLatencyStats[] } | { error: string }> {
-  const searchParams = buildSearchParams(params);
-  if (params.webhookId) {
-    searchParams.append("webhookId", params.webhookId);
-  }
-  const res = await fetchAnalytics(
-    `v2/webhook/latency?${searchParams.toString()}`,
-  );
-  if (!res.ok) {
-    const reason = await res.text();
-    return { error: reason };
-  }
-
-  return (await res.json()) as { data: WebhookLatencyStats[] };
+  authToken: string,
+) {
+  return cached_getWebhookLatency(normalizedParams(params), authToken);
 }
 
-export async function getInsightChainUsage(
+const cached_getInsightChainUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<{ data: InsightChainStats[] } | { errorMessage: string }> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/insight/usage/by-chain?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      const errMsg = `Failed to fetch Insight chain usage: ${res?.status} - ${res.statusText} - ${reason}`;
+      console.error(errMsg);
+      return { errorMessage: errMsg };
+    }
+
+    const json = await res.json();
+    return { data: json.data as InsightChainStats[] };
+  },
+  ["getInsightChainUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getInsightChainUsage(
   params: AnalyticsQueryParams,
-): Promise<{ data: InsightChainStats[] } | { errorMessage: string }> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/insight/usage/by-chain?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    const errMsg = `Failed to fetch Insight chain usage: ${res?.status} - ${res.statusText} - ${reason}`;
-    console.error(errMsg);
-    return { errorMessage: errMsg };
-  }
-
-  const json = await res.json();
-  return { data: json.data as InsightChainStats[] };
+  authToken: string,
+) {
+  return cached_getInsightChainUsage(normalizedParams(params), authToken);
 }
 
-export async function getInsightStatusCodeUsage(
+const cached_getInsightStatusCodeUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<{ data: InsightStatusCodeStats[] } | { errorMessage: string }> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/insight/usage/by-status-code?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      const errMsg = `Failed to fetch Insight status code usage: ${res?.status} - ${res.statusText} - ${reason}`;
+      console.error(errMsg);
+      return { errorMessage: errMsg };
+    }
+
+    const json = await res.json();
+    return { data: json.data as InsightStatusCodeStats[] };
+  },
+  ["getInsightStatusCodeUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getInsightStatusCodeUsage(
   params: AnalyticsQueryParams,
-): Promise<{ data: InsightStatusCodeStats[] } | { errorMessage: string }> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/insight/usage/by-status-code?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    const errMsg = `Failed to fetch Insight status code usage: ${res?.status} - ${res.statusText} - ${reason}`;
-    console.error(errMsg);
-    return { errorMessage: errMsg };
-  }
-
-  const json = await res.json();
-  return { data: json.data as InsightStatusCodeStats[] };
+  authToken: string,
+) {
+  return cached_getInsightStatusCodeUsage(normalizedParams(params), authToken);
 }
 
-export async function getInsightEndpointUsage(
+const cached_getInsightEndpointUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<{ data: InsightEndpointStats[] } | { errorMessage: string }> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/insight/usage/by-endpoint?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      const errMsg = `Failed to fetch Insight endpoint usage: ${res?.status} - ${res.statusText} - ${reason}`;
+      console.error(errMsg);
+      return { errorMessage: errMsg };
+    }
+
+    const json = await res.json();
+    return { data: json.data as InsightEndpointStats[] };
+  },
+  ["getInsightEndpointUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getInsightEndpointUsage(
   params: AnalyticsQueryParams,
-): Promise<{ data: InsightEndpointStats[] } | { errorMessage: string }> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/insight/usage/by-endpoint?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    const errMsg = `Failed to fetch Insight endpoint usage: ${res?.status} - ${res.statusText} - ${reason}`;
-    console.error(errMsg);
-    return { errorMessage: errMsg };
-  }
-
-  const json = await res.json();
-  return { data: json.data as InsightEndpointStats[] };
+  authToken: string,
+) {
+  return cached_getInsightEndpointUsage(normalizedParams(params), authToken);
 }
 
-export async function getInsightUsage(
+const cached_getInsightUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<{ data: InsightUsageStats[] } | { errorMessage: string }> => {
+    const searchParams = buildSearchParams(params);
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/insight/usage?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      const errMsg = `Failed to fetch Insight usage: ${res?.status} - ${res.statusText} - ${reason}`;
+      console.error(errMsg);
+      return { errorMessage: errMsg };
+    }
+
+    const json = await res.json();
+    return { data: json.data as InsightUsageStats[] };
+  },
+  ["getInsightUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getInsightUsage(
   params: AnalyticsQueryParams,
-): Promise<{ data: InsightUsageStats[] } | { errorMessage: string }> {
-  const searchParams = buildSearchParams(params);
-  const res = await fetchAnalytics(
-    `v2/insight/usage?${searchParams.toString()}`,
-    {
-      method: "GET",
-    },
-  );
-
-  if (res?.status !== 200) {
-    const reason = await res?.text();
-    const errMsg = `Failed to fetch Insight usage: ${res?.status} - ${res.statusText} - ${reason}`;
-    console.error(errMsg);
-    return { errorMessage: errMsg };
-  }
-
-  const json = await res.json();
-  return { data: json.data as InsightUsageStats[] };
+  authToken: string,
+) {
+  return cached_getInsightUsage(normalizedParams(params), authToken);
 }

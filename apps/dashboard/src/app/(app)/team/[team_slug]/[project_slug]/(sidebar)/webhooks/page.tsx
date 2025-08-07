@@ -80,14 +80,17 @@ export default async function WebhooksPage(props: {
   // Fetch metrics for all webhooks in parallel
   const webhookMetrics = await Promise.all(
     webhookConfigs.map(async (config) => {
-      const metricsResult = await getWebhookSummary({
-        from: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        period: "day",
-        projectId: project.id,
-        teamId: project.teamId, // 24 hours ago
-        to: new Date(),
-        webhookId: config.id,
-      });
+      const metricsResult = await getWebhookSummary(
+        {
+          from: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          period: "day",
+          projectId: project.id,
+          teamId: project.teamId, // 24 hours ago
+          to: new Date(),
+          webhookId: config.id,
+        },
+        authToken,
+      );
 
       return {
         metrics:

@@ -3,19 +3,24 @@ import { getClientTransactions } from "@/api/analytics";
 import type { AnalyticsQueryParams } from "@/types/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
-export async function TransactionsChartCardAsync(
-  props: AnalyticsQueryParams & {
-    selectedChartQueryParam: string;
-    selectedChart: string | undefined;
-    client: ThirdwebClient;
-  },
-) {
+export async function TransactionsChartCardAsync(props: {
+  params: AnalyticsQueryParams;
+  client: ThirdwebClient;
+  selectedChartQueryParam: string;
+  selectedChart: string | undefined;
+  authToken: string;
+}) {
+  const { params, authToken, client, selectedChart, selectedChartQueryParam } =
+    props;
   const [data, aggregatedData] = await Promise.all([
-    getClientTransactions(props),
-    getClientTransactions({
-      ...props,
-      period: "all",
-    }),
+    getClientTransactions(params, authToken),
+    getClientTransactions(
+      {
+        ...params,
+        period: "all",
+      },
+      authToken,
+    ),
   ]);
 
   if (!aggregatedData.length) {
@@ -25,10 +30,10 @@ export async function TransactionsChartCardAsync(
   return (
     <TransactionsChartsUI
       aggregatedData={aggregatedData}
-      client={props.client}
+      client={client}
       data={data}
-      selectedChart={props.selectedChart}
-      selectedChartQueryParam={props.selectedChartQueryParam}
+      selectedChart={selectedChart}
+      selectedChartQueryParam={selectedChartQueryParam}
     />
   );
 }

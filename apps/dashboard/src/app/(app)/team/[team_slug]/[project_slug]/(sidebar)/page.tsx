@@ -91,6 +91,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
   });
 
   const activeStatus = await isProjectActive({
+    authToken,
     projectId: project.id,
     teamId: project.teamId,
   });
@@ -124,6 +125,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
         ) : (
           <div className="container flex max-w-7xl grow flex-col">
             <ProjectAnalytics
+              authToken={authToken}
               client={client}
               interval={interval}
               params={params}
@@ -147,8 +149,10 @@ async function ProjectAnalytics(props: {
   interval: "day" | "week";
   searchParams: PageSearchParams;
   client: ThirdwebClient;
+  authToken: string;
 }) {
-  const { project, params, range, interval, searchParams, client } = props;
+  const { project, params, range, interval, searchParams, client, authToken } =
+    props;
 
   return (
     <div className="flex grow flex-col gap-6">
@@ -157,6 +161,7 @@ async function ProjectAnalytics(props: {
         searchParamsUsed={["from", "to", "interval", "appHighlights"]}
       >
         <AsyncAppHighlightsCard
+          authToken={authToken}
           client={client}
           interval={interval}
           params={params}
@@ -176,14 +181,22 @@ async function ProjectAnalytics(props: {
           fallback={<LoadingChartState className="h-[431px] border" />}
           searchParamsUsed={["from", "to", "interval"]}
         >
-          <AsyncWalletDistributionCard project={project} range={range} />
+          <AsyncWalletDistributionCard
+            project={project}
+            range={range}
+            authToken={authToken}
+          />
         </ResponsiveSuspense>
 
         <ResponsiveSuspense
           fallback={<LoadingChartState className="h-[431px] border" />}
           searchParamsUsed={["from", "to", "interval"]}
         >
-          <AsyncAuthMethodDistributionCard project={project} range={range} />
+          <AsyncAuthMethodDistributionCard
+            project={project}
+            range={range}
+            authToken={authToken}
+          />
         </ResponsiveSuspense>
       </div>
 
@@ -193,16 +206,20 @@ async function ProjectAnalytics(props: {
       >
         <TransactionsChartCardAsync
           client={client}
-          from={range.from}
-          period={interval}
+          params={{
+            from: range.from,
+            period: interval,
+            projectId: project.id,
+            teamId: project.teamId,
+            to: range.to,
+          }}
+          authToken={authToken}
           selectedChart={
             typeof searchParams.client_transactions === "string"
               ? searchParams.client_transactions
               : undefined
           }
           selectedChartQueryParam="client_transactions"
-          teamId={project.teamId}
-          to={range.to}
         />
       </ResponsiveSuspense>
 
@@ -220,6 +237,7 @@ async function ProjectAnalytics(props: {
               : undefined
           }
           selectedChartQueryParam="totalSponsored"
+          authToken={authToken}
         />
       </ResponsiveSuspense>
 
@@ -228,11 +246,14 @@ async function ProjectAnalytics(props: {
         searchParamsUsed={["from", "to", "interval"]}
       >
         <RpcMethodBarChartCardAsync
-          from={range.from}
-          period={interval}
-          projectId={project.id}
-          teamId={project.teamId}
-          to={range.to}
+          params={{
+            from: range.from,
+            period: interval,
+            projectId: project.id,
+            teamId: project.teamId,
+            to: range.to,
+          }}
+          authToken={authToken}
         />
       </ResponsiveSuspense>
 
@@ -241,11 +262,14 @@ async function ProjectAnalytics(props: {
         searchParamsUsed={["from", "to", "interval"]}
       >
         <EngineCloudChartCardAsync
-          from={range.from}
-          period={interval}
-          projectId={project.id}
-          teamId={project.teamId}
-          to={range.to}
+          params={{
+            from: range.from,
+            period: interval,
+            projectId: project.id,
+            teamId: project.teamId,
+            to: range.to,
+          }}
+          authToken={authToken}
         />
       </ResponsiveSuspense>
     </div>
@@ -258,22 +282,29 @@ export async function AsyncTotalSponsoredCard(props: {
   interval: "day" | "week";
   selectedChart: string | undefined;
   selectedChartQueryParam: string;
+  authToken: string;
 }) {
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
-    getUserOpUsage({
-      from: props.range.from,
-      period: props.interval,
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    }),
-    getUserOpUsage({
-      from: props.range.from,
-      period: "all",
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    }),
+    getUserOpUsage(
+      {
+        from: props.range.from,
+        period: props.interval,
+        projectId: props.project.id,
+        teamId: props.project.teamId,
+        to: props.range.to,
+      },
+      props.authToken,
+    ),
+    getUserOpUsage(
+      {
+        from: props.range.from,
+        period: "all",
+        projectId: props.project.id,
+        teamId: props.project.teamId,
+        to: props.range.to,
+      },
+      props.authToken,
+    ),
   ]);
 
   return userOpUsageTimeSeries.status === "fulfilled" &&
@@ -298,14 +329,18 @@ export async function AsyncTotalSponsoredCard(props: {
 async function AsyncAuthMethodDistributionCard(props: {
   project: Project;
   range: Range;
+  authToken: string;
 }) {
-  const inAppWalletUsage = await getInAppWalletUsage({
-    from: props.range.from,
-    period: "all",
-    projectId: props.project.id,
-    teamId: props.project.teamId,
-    to: props.range.to,
-  }).catch(() => undefined);
+  const inAppWalletUsage = await getInAppWalletUsage(
+    {
+      from: props.range.from,
+      period: "all",
+      projectId: props.project.id,
+      teamId: props.project.teamId,
+      to: props.range.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
 
   return inAppWalletUsage && inAppWalletUsage.length > 0 ? (
     <AuthMethodDistributionCard data={inAppWalletUsage} />
@@ -325,23 +360,30 @@ async function AsyncAppHighlightsCard(props: {
   selectedChart: string | undefined;
   client: ThirdwebClient;
   params: PageParams;
+  authToken: string;
 }) {
   const [walletUserStatsTimeSeries, universalBridgeUsage] =
     await Promise.allSettled([
-      getWalletUsers({
-        from: props.range.from,
-        period: props.interval,
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-        to: props.range.to,
-      }),
-      getUniversalBridgeUsage({
-        from: props.range.from,
-        period: props.interval,
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-        to: props.range.to,
-      }),
+      getWalletUsers(
+        {
+          from: props.range.from,
+          period: props.interval,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
+      getUniversalBridgeUsage(
+        {
+          from: props.range.from,
+          period: props.interval,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
     ]);
 
   if (
@@ -380,14 +422,18 @@ async function AsyncAppHighlightsCard(props: {
 async function AsyncWalletDistributionCard(props: {
   project: Project;
   range: Range;
+  authToken: string;
 }) {
-  const walletConnections = await getWalletConnections({
-    from: props.range.from,
-    period: "all",
-    projectId: props.project.id,
-    teamId: props.project.teamId,
-    to: props.range.to,
-  }).catch(() => undefined);
+  const walletConnections = await getWalletConnections(
+    {
+      from: props.range.from,
+      period: "all",
+      projectId: props.project.id,
+      teamId: props.project.teamId,
+      to: props.range.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
 
   return walletConnections && walletConnections.length > 0 ? (
     <WalletDistributionCard data={walletConnections} />

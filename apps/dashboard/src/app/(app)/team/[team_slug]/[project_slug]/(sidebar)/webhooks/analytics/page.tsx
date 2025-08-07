@@ -90,14 +90,17 @@ export default async function WebhooksAnalyticsPage(props: {
   const webhookId = selectedWebhookId === "all" ? undefined : selectedWebhookId;
   const [requestsData, latencyData] = await Promise.all([
     (async () => {
-      const res = await getWebhookRequests({
-        from: range.from,
-        period: interval,
-        projectId: project.id,
-        teamId: project.teamId,
-        to: range.to,
-        webhookId,
-      });
+      const res = await getWebhookRequests(
+        {
+          from: range.from,
+          period: interval,
+          projectId: project.id,
+          teamId: project.teamId,
+          to: range.to,
+          webhookId,
+        },
+        authToken,
+      );
       if ("error" in res) {
         console.error("Failed to fetch webhook requests:", res.error);
         return [];
@@ -105,14 +108,17 @@ export default async function WebhooksAnalyticsPage(props: {
       return res.data;
     })(),
     (async () => {
-      const res = await getWebhookLatency({
-        from: range.from,
-        period: interval,
-        projectId: project.id,
-        teamId: project.teamId,
-        to: range.to,
-        webhookId,
-      });
+      const res = await getWebhookLatency(
+        {
+          from: range.from,
+          period: interval,
+          projectId: project.id,
+          teamId: project.teamId,
+          to: range.to,
+          webhookId,
+        },
+        authToken,
+      );
       if ("error" in res) {
         console.error("Failed to fetch webhook latency:", res.error);
         return [];

@@ -52,6 +52,7 @@ export default async function Page(props: {
           projectClientId={project.publishableKey}
           projectId={project.id}
           range={range}
+          authToken={authToken}
           teamId={project.teamId}
         />
         <div className="h-10" />

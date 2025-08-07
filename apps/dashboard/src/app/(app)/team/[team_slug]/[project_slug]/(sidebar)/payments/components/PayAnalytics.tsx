@@ -26,6 +26,7 @@ export async function PayAnalytics(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
+  authToken: string;
 }) {
   const { projectId, teamId, range, interval } = props;
 
@@ -37,23 +38,29 @@ export async function PayAnalytics(props: {
           month: "short" as const,
         };
 
-  const volumeDataPromise = getUniversalBridgeUsage({
-    from: range.from,
-    period: interval,
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  }).catch((error) => {
+  const volumeDataPromise = getUniversalBridgeUsage(
+    {
+      from: range.from,
+      period: interval,
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  ).catch((error) => {
     console.error(error);
     return [];
   });
-  const walletDataPromise = getUniversalBridgeWalletUsage({
-    from: range.from,
-    period: interval,
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  }).catch((error) => {
+  const walletDataPromise = getUniversalBridgeWalletUsage(
+    {
+      from: range.from,
+      period: interval,
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  ).catch((error) => {
     console.error(error);
     return [];
   });

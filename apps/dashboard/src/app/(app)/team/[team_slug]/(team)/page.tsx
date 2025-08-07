@@ -38,7 +38,10 @@ export default async function Page(props: {
   });
 
   const projects = await getProjects(params.team_slug);
-  const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
+  const projectsWithTotalWallets = await getProjectsWithAnalytics(
+    projects,
+    authToken,
+  );
 
   return (
     <div className="flex grow flex-col">
@@ -78,6 +81,7 @@ export default async function Page(props: {
 
 async function getProjectsWithAnalytics(
   projects: Project[],
+  authToken: string,
 ): Promise<Array<ProjectWithAnalytics>> {
   return Promise.all(
     projects.map(async (project) => {
@@ -85,13 +89,16 @@ async function getProjectsWithAnalytics(
         const today = new Date();
         const thirtyDaysAgo = subDays(today, 30);
 
-        const data = await getWalletConnections({
-          from: thirtyDaysAgo,
-          period: "all",
-          projectId: project.id,
-          teamId: project.teamId,
-          to: today,
-        });
+        const data = await getWalletConnections(
+          {
+            from: thirtyDaysAgo,
+            period: "all",
+            projectId: project.id,
+            teamId: project.teamId,
+            to: today,
+          },
+          authToken,
+        );
 
         let uniqueWalletsConnected = 0;
         for (const d of data) {

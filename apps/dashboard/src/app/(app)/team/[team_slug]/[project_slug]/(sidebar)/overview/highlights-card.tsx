@@ -67,7 +67,7 @@ export function ProjectHighlightsCard(props: {
       activeChart={
         selectedChart && selectedChart in chartConfig
           ? (selectedChart as keyof AggregatedMetrics)
-          : "totalVolume"
+          : "activeUsers"
       }
       aggregateFn={(_data, key) => {
         if (key === "activeUsers") {
