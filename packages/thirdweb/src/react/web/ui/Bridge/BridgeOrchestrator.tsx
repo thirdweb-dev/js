@@ -288,6 +288,7 @@ export function BridgeOrchestrator({
           client={client}
           connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
+          sendEvent={send}
           showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />

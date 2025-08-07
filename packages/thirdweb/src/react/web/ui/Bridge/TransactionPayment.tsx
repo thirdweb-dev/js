@@ -20,6 +20,7 @@ import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { useTransactionDetails } from "../../../core/hooks/useTransactionDetails.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import type { PaymentMachineEvent } from "../../../core/machines/paymentMachine.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { Container, Line } from "../components/basic.js";
@@ -49,6 +50,11 @@ export interface TransactionPaymentProps {
   onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
+   * Send arbitrary payment events for UI flow control
+   */
+  sendEvent: (event: PaymentMachineEvent) => void;
+
+  /**
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
@@ -64,6 +70,7 @@ export function TransactionPayment({
   uiOptions,
   client,
   onContinue,
+  sendEvent,
   connectOptions,
   showThirdwebBranding = true,
 }: TransactionPaymentProps) {
@@ -375,6 +382,18 @@ export function TransactionPayment({
                   transactionDataQuery.data.tokenInfo,
                   getAddress(activeAccount.address),
                 );
+                return;
+              }
+
+              // If the user has enough to pay, skip the payment step altogether
+              if (
+                userBalance &&
+                Number(userBalance) >=
+                  Number(transactionDataQuery.data.totalCost)
+              ) {
+                sendEvent({
+                  type: "CONTINUE_TO_TRANSACTION",
+                });
                 return;
               }
 

@@ -218,7 +218,7 @@ type UIOptionsResult =
  * @example
  * ### Default configuration
  *
- * By default, the `TransactionWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+ * By default, the `TransactionWidget` component allows users to fund their wallets with crypto or fiat on any of the supported chains.
  *
  * ```tsx
  * <TransactionWidget
