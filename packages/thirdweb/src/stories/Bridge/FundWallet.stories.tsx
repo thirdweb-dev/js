@@ -194,3 +194,34 @@ export const LargeAmountLight: Story = {
     },
   },
 };
+
+export const CustomButtonLabel: Story = {
+  args: {
+    theme: "dark",
+    uiOptions: FUND_WALLET_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Example showcasing custom button label functionality. The button shows 'Add Funds Now' instead of the default 'Buy [amount] [symbol]' text.",
+      },
+    },
+  },
+};
+
+export const CustomButtonLabelLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: FUND_WALLET_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version with custom button label 'Add Funds Now'.",
+      },
+    },
+  },
+};

@@ -186,6 +186,11 @@ export type CheckoutWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -310,6 +315,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
           },
           mode: "direct_payment",
           currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
           paymentInfo: {
             amount: props.amount,
             feePayer: props.feePayer === "seller" ? "receiver" : "sender",

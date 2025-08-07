@@ -189,6 +189,11 @@ export type TransactionWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -349,6 +354,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
       return {
         data: {
           currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
           metadata: {
             description: props.description,
             image: props.image,

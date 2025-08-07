@@ -112,7 +112,7 @@ export function TransactionPayment({
     transactionDataQuery.data?.functionInfo?.functionName || "Contract Call";
   const isLoading = transactionDataQuery.isLoading || chainMetadata.isLoading;
 
-  const buttonLabel = `Execute ${functionName}`;
+  const buttonLabel = uiOptions.buttonLabel || `Execute ${functionName}`;
 
   if (isLoading) {
     return (

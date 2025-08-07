@@ -42,6 +42,7 @@ export type UIOptions = Prettify<
       image?: string;
     };
     currency?: SupportedFiatCurrency;
+    buttonLabel?: string;
   } & (
     | {
         mode: "fund_wallet";
