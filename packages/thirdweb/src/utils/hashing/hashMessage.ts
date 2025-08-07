@@ -3,6 +3,7 @@ import type { Hex } from "../encoding/hex.js";
 import { stringToBytes, toBytes } from "../encoding/to-bytes.js";
 import type { SignableMessage } from "../types.js";
 import { keccak256 } from "./keccak256.js";
+import { hashMessage as viemHashMessage } from "viem";
 
 const presignMessagePrefix = "\x19Ethereum Signed Message:\n";
 type To = "hex" | "bytes";
@@ -27,6 +28,10 @@ export function hashMessage<TTo extends To = "hex">(
   message: SignableMessage,
   to_?: TTo,
 ): HashMessage<TTo> {
+  console.log("hashMessage", {
+    message,
+    to_,
+  });
   const messageBytes = (() => {
     if (typeof message === "string") {
       return stringToBytes(message);
@@ -39,5 +44,12 @@ export function hashMessage<TTo extends To = "hex">(
   const prefixBytes = stringToBytes(
     `${presignMessagePrefix}${messageBytes.length}`,
   );
-  return keccak256(ox__Bytes.concat(prefixBytes, messageBytes), to_);
+  const ours = keccak256(ox__Bytes.concat(prefixBytes, messageBytes), to_);
+
+  const viem = viemHashMessage(message, to_);
+
+  console.log("ours", ours);
+  console.log("viem", viem);
+
+  return ours;
 }

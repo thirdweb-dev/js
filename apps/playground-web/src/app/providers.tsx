@@ -5,6 +5,8 @@ import type { ThemeProviderProps } from "next-themes";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type * as React from "react";
 
+import "@sophon-labs/account-eip6963/mainnet";
+
 const queryClient = new QueryClient();
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {

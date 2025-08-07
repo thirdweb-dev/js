@@ -9,6 +9,7 @@ import {
   logout,
 } from "@/app/wallets/auth/server/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
+import { defineChain } from "thirdweb";
 
 export function AuthButton() {
   return (
@@ -17,10 +18,11 @@ export function AuthButton() {
         doLogin: (params) => login(params),
         doLogout: () => logout(),
         getLoginPayload: ({ address }) =>
-          generatePayload({ address, chainId: 84532 }),
+          generatePayload({ address, chainId: 50104 }),
         isLoggedIn: (address) => isLoggedIn(address),
       }}
       client={THIRDWEB_CLIENT}
+      chain={defineChain(50104)}
       wallets={[
         inAppWallet({
           auth: {

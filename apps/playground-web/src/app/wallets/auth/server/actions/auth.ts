@@ -24,7 +24,9 @@ export async function generatePayload(options: GenerateLoginPayloadParams) {
 }
 
 export async function login(payload: VerifyLoginPayloadParams) {
+  console.log("payload", payload);
   const verifiedPayload = await thirdwebAuth.verifyPayload(payload);
+  console.log("verifiedPayload", verifiedPayload);
   if (verifiedPayload.valid) {
     const jwt = await thirdwebAuth.generateJWT({
       payload: verifiedPayload.payload,

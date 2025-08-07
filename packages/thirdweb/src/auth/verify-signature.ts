@@ -3,10 +3,11 @@ import * as ox__Secp256k1 from "ox/Secp256k1";
 import * as ox__Signature from "ox/Signature";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { type Hex, isHex } from "../utils/encoding/hex.js";
+import { type Hex, isHex, stringToHex } from "../utils/encoding/hex.js";
 import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { verifyHash } from "./verify-hash.js";
+import { recoverAddress, verifyMessage } from "viem";
 
 type Message = Prettify<
   | string
@@ -48,10 +49,26 @@ export async function verifyEOASignature(options: VerifyEOASignatureParams) {
     return false;
   }
 
+  const viewm = await verifyMessage({
+    message: options.message,
+    signature: options.signature,
+    address: options.address,
+  });
+
+  const viemRecoveredAddress = await recoverAddress({
+    hash: messageHash,
+    signature: options.signature,
+  });
+
+  console.log("viewm", viewm);
+  console.log("viemRecoveredAddress", viemRecoveredAddress);
+
   const recoveredAddress = ox__Secp256k1.recoverAddress({
     payload: messageHash,
     signature: ox__Signature.fromHex(options.signature),
   });
+
+  console.log("recoveredAddress", recoveredAddress);
 
   if (recoveredAddress.toLowerCase() === options.address.toLowerCase()) {
     return true;
@@ -111,7 +128,8 @@ export async function verifyContractWalletSignature({
   client,
   accountFactory,
 }: VerifyContractWalletSignatureParams) {
-  const messageHash = hashMessage(message);
+  // FIXME undo stringToHex, but this is what fixes sophon
+  const messageHash = hashMessage(stringToHex(message as string));
 
   const parsedSignature = (() => {
     if (ox__Bytes.validate(signature)) {
@@ -167,6 +185,7 @@ export async function verifySignature(options: VerifySignatureParams) {
     // no-op, we skip to contract signature check
   }
   if (isVerifyContractWalletSignatureParams(options)) {
+    console.log("isVerifyContractWalletSignatureParams");
     try {
       return await verifyContractWalletSignature(options);
     } catch (err) {

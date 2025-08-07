@@ -86,6 +86,8 @@ export async function verifyHash({
     }),
   );
 
+  console.log("isDeployed", isDeployed);
+
   if (isDeployed) {
     const validEip1271 = await verifyEip1271Signature({
       contract: getContract({
@@ -194,6 +196,13 @@ export async function verifyEip1271Signature({
       contract,
       hash,
       signature,
+    });
+    console.log("result", {
+      hash,
+      address: contract.address,
+      chain: contract.chain.id,
+      signature,
+      result,
     });
     return result === EIP_1271_MAGIC_VALUE;
   } catch (err) {

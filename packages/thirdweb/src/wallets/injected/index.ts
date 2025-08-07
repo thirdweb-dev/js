@@ -5,6 +5,8 @@ import {
   serializeTypedData,
   stringify,
   validateTypedData,
+  verifyMessage,
+  hashMessage,
 } from "viem";
 import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
 import {
@@ -12,7 +14,7 @@ import {
   trackTransaction,
 } from "../../analytics/track/transaction.js";
 import type { Chain } from "../../chains/types.js";
-import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
+import { defineChain, getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
@@ -34,6 +36,8 @@ import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type { WalletId } from "../wallet-types.js";
 import { injectedProvider } from "./mipdStore.js";
+import { verifyEip1271Signature } from "../../auth/verify-hash.js";
+import { getContract } from "../../contract/contract.js";
 
 // TODO: save the provider in data
 export function getInjectedProvider(walletId: WalletId) {
@@ -250,6 +254,11 @@ function createAccount({
         throw new Error("Provider not setup");
       }
 
+      console.log("signMessage", {
+        message,
+        address: account.address,
+      });
+
       const messageToSign = (() => {
         if (typeof message === "string") {
           return stringToHex(message);
@@ -260,10 +269,32 @@ function createAccount({
         return message.raw;
       })();
 
-      return await provider.request({
+      const signature = await provider.request({
         method: "personal_sign",
         params: [messageToSign, getAddress(account.address)],
       });
+      console.log("signature", {
+        messageToSign,
+        address: account.address,
+        signature,
+      });
+      const isValid = await verifyEip1271Signature({
+        contract: getContract({
+          address: account.address,
+          chain: defineChain(50104),
+          client: client,
+        }),
+        hash: hashMessage(stringToHex(message as string)),
+        signature: signature as Hex,
+      });
+      console.log("isValid 1271", isValid);
+      const viemValidSignature = await verifyMessage({
+        message,
+        signature,
+        address: account.address,
+      });
+      console.log("valid signature from viem", viemValidSignature);
+      return signature as Hex;
     },
     async signTypedData(typedData) {
       if (!provider || !account.address) {
