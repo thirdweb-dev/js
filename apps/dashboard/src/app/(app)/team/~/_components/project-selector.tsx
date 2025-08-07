@@ -5,7 +5,7 @@ import type { PartialProject } from "@/api/project/getProjectContracts";
 import type { Team } from "@/api/team/get-team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { ProjectAndTeamSelectorCard } from "../../../../../components/TeamAndProjectSelectorCard";
+import { ProjectAndTeamSelectorCard } from "./TeamAndProjectSelectorCard";
 
 export function SelectProjectForContract(props: {
   chainSlug: string;
@@ -72,6 +72,30 @@ export function ImportAndSelectProjectForContract(props: {
 
         router.push(
           `/team/${selection.team.slug}/${selection.project.slug}/contract/${props.chainSlug}/${props.contractAddress}`,
+        );
+      }}
+      teamAndProjects={props.teamAndProjects}
+    />
+  );
+}
+
+export function GenericProjectSelector(props: {
+  client: ThirdwebClient;
+  paths: string[] | undefined;
+  description: React.ReactNode | undefined;
+  teamAndProjects: {
+    team: Team;
+    projects: PartialProject[];
+  }[];
+}) {
+  const router = useDashboardRouter();
+  return (
+    <ProjectAndTeamSelectorCard
+      client={props.client}
+      description={props.description}
+      onSelect={(selection) => {
+        router.push(
+          `/team/${selection.team.slug}/${selection.project.slug}${props.paths?.length ? `/${props.paths.join("/")}` : ""}`,
         );
       }}
       teamAndProjects={props.teamAndProjects}

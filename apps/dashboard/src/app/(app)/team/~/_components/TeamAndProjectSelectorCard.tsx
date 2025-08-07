@@ -16,7 +16,7 @@ export function ProjectAndTeamSelectorCard(props: {
     projects: PartialProject[];
   }[];
   client: ThirdwebClient;
-  description: React.ReactNode;
+  description: React.ReactNode | undefined;
   onSelect: (selected: { team: Team; project: PartialProject }) => void;
 }) {
   const teamAndProjects = props.teamAndProjects.filter(
@@ -31,10 +31,14 @@ export function ProjectAndTeamSelectorCard(props: {
         <div className="mb-2 self-start rounded-full border p-2">
           <BoxIcon className="size-5 text-muted-foreground" />
         </div>
-        <h1 className="mb-0.5 font-semibold text-xl tracking-tight">
-          Select a project
-        </h1>
-        <p className="text-muted-foreground text-sm">{props.description}</p>
+        <div className="space-y-0.5">
+          <h1 className="font-semibold text-xl tracking-tight">
+            Select a project
+          </h1>
+          {props.description && (
+            <p className="text-muted-foreground text-sm">{props.description}</p>
+          )}
+        </div>
       </div>
 
       <div
