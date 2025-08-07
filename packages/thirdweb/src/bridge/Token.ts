@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../client/client.js";
-import { getThirdwebDomains } from "../utils/domains.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { ApiError } from "./types/Errors.js";
 import type { Token } from "./types/Token.js";
@@ -133,7 +133,7 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
     options;
 
   const clientFetch = getClientFetch(client);
-  const url = new URL(`${getThirdwebDomains().bridge}/v1/tokens`);
+  const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/tokens`);
 
   if (chainId !== null && chainId !== undefined) {
     url.searchParams.set("chainId", chainId.toString());
@@ -229,7 +229,7 @@ export async function add(options: add.Options): Promise<add.Result> {
   const { client, chainId, tokenAddress } = options;
 
   const clientFetch = getClientFetch(client);
-  const url = `${getThirdwebDomains().bridge}/v1/tokens`;
+  const url = `${getThirdwebBaseUrl("bridge")}/v1/tokens`;
 
   const requestBody = {
     chainId,
