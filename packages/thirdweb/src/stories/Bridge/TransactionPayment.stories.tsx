@@ -29,6 +29,7 @@ const TransactionPaymentWithTheme = (
 const meta = {
   args: {
     client: storyClient,
+    sendEvent: (_event) => {},
     onContinue: (_amount, _token, _receiverAddress) => {},
     theme: "dark",
     uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,

@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import type { PaymentMachineEvent } from "src/react/core/machines/paymentMachine.js";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
@@ -21,6 +20,7 @@ import { useChainMetadata } from "../../../core/hooks/others/useChainQuery.js";
 import { useTransactionDetails } from "../../../core/hooks/useTransactionDetails.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import type { PaymentMachineEvent } from "../../../core/machines/paymentMachine.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { Container, Line } from "../components/basic.js";
