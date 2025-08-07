@@ -1,9 +1,11 @@
-import {
-  EmptyStateCard,
-  EmptyStateContent,
-} from "app/(app)/team/components/Analytics/EmptyStateCard";
+import { EmptyStateCard } from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
+import {
+  ResponsiveSearchParamsProvider,
+  ResponsiveSuspense,
+} from "responsive-rsc";
+import { defineChain } from "thirdweb";
+import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getClientTransactions,
@@ -14,30 +16,32 @@ import {
   getWalletUsers,
 } from "@/api/analytics";
 import { getTeamBySlug } from "@/api/team/get-team";
-import {
-  type DurationId,
-  getLastNDaysRange,
-  type Range,
+import type {
+  DurationId,
+  Range,
 } from "@/components/analytics/date-range-selector";
 import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
+import { getFiltersFromSearchParams } from "@/lib/time";
 import type {
   InAppWalletStats,
-  UniversalBridgeStats,
+  UserOpStats,
   WalletStats,
-  WalletUserStats,
 } from "@/types/analytics";
-import { AnalyticsHeader } from "../../../../components/Analytics/AnalyticsHeader";
-import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
 import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
-import { TransactionsChartCardUI } from "../../_components/TransactionsCard";
+import { TransactionsChartCardWithChainMapping } from "../../_components/transaction-card-with-chain-mapping";
+import { TeamHighlightsCard } from "./highlights-card";
 
 type SearchParams = {
-  usersChart?: string;
-  from?: string;
-  to?: string;
-  type?: string;
-  interval?: string;
+  usersChart?: string | string[];
+  from?: string | string[];
+  to?: string | string[];
+  type?: string | string[];
+  interval?: string | string[];
+  client_transactions?: string | string[];
+  appHighlights?: string | string[];
+  userOpUsage?: string | string[];
 };
 
 export default async function TeamOverviewPage(props: {
@@ -55,84 +59,120 @@ export default async function TeamOverviewPage(props: {
     redirect("/team");
   }
 
-  const interval = (searchParams.interval as "day" | "week") ?? "week";
-  const rangeType = (searchParams.type as DurationId) || "last-120";
-  const range: Range = {
-    from: new Date(searchParams.from ?? getLastNDaysRange("last-120").from),
-    to: new Date(searchParams.to ?? getLastNDaysRange("last-120").to),
-    type: rangeType,
-  };
+  const defaultRange: DurationId = "last-30";
+  const { range, interval } = getFiltersFromSearchParams({
+    defaultRange,
+    from: searchParams.from,
+    interval: searchParams.interval,
+    to: searchParams.to,
+  });
 
   return (
-    <div className="flex grow flex-col">
-      <div className="border-b">
-        <AnalyticsHeader
-          interval={interval}
-          range={range}
-          showRangeSelector={true}
-          title="Analytics"
-        />
-      </div>
-
-      <div className="flex grow flex-col justify-between gap-10 container max-w-7xl pt-8 pb-16">
-        <div className="flex grow flex-col gap-6">
-          <Suspense
-            fallback={<LoadingChartState className="h-[458px] border" />}
-          >
-            <AsyncAppHighlightsCard
-              interval={interval}
-              range={range}
-              searchParams={searchParams}
-              teamId={team.id}
-            />
-          </Suspense>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <Suspense
-              fallback={<LoadingChartState className="h-[431px] border" />}
-            >
-              <AsyncWalletDistributionCard range={range} teamId={team.id} />
-            </Suspense>
-
-            <Suspense
-              fallback={<LoadingChartState className="h-[431px] border" />}
-            >
-              <AsyncAuthMethodDistributionCard range={range} teamId={team.id} />
-            </Suspense>
+    <ResponsiveSearchParamsProvider value={searchParams}>
+      <div className="flex grow flex-col">
+        {/* header */}
+        <div className="border-b">
+          <div className="container max-w-7xl flex flex-col items-start gap-3 py-10 md:flex-row md:items-center">
+            <div className="flex-1">
+              <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
+                Analytics
+              </h1>
+            </div>
+            <div className="max-sm:w-full">
+              <ResponsiveTimeFilters defaultRange={defaultRange} />
+            </div>
           </div>
+        </div>
 
-          <Suspense
-            fallback={<LoadingChartState className="h-[458px] border" />}
-          >
-            <AsyncTransactionsChartCard
-              interval={interval}
-              range={range}
-              searchParams={searchParams}
-              teamId={team.id}
-            />
-          </Suspense>
+        <div className="flex grow flex-col justify-between gap-10 container max-w-7xl pt-8 pb-16">
+          <div className="flex grow flex-col gap-6">
+            <ResponsiveSuspense
+              searchParamsUsed={["appHighlights", "from", "to", "interval"]}
+              fallback={<LoadingChartState className="h-[458px] border" />}
+            >
+              <AsyncTeamHighlightsCard
+                selectedChartQueryParam="appHighlights"
+                interval={interval}
+                range={range}
+                selectedChart={
+                  typeof searchParams.appHighlights === "string"
+                    ? searchParams.appHighlights
+                    : undefined
+                }
+                teamId={team.id}
+              />
+            </ResponsiveSuspense>
 
-          <Suspense
-            fallback={<LoadingChartState className="h-[458px] border" />}
-          >
-            <AsyncTotalSponsoredCard
-              interval={interval}
-              range={range}
-              searchParams={searchParams}
-              teamId={team.id}
-            />
-          </Suspense>
+            <div className="grid gap-6 md:grid-cols-2">
+              <ResponsiveSuspense
+                fallback={<LoadingChartState className="h-[431px] border" />}
+                searchParamsUsed={["from", "to"]}
+              >
+                <AsyncWalletDistributionCard range={range} teamId={team.id} />
+              </ResponsiveSuspense>
+
+              <ResponsiveSuspense
+                fallback={<LoadingChartState className="h-[431px] border" />}
+                searchParamsUsed={["from", "to"]}
+              >
+                <AsyncAuthMethodDistributionCard
+                  range={range}
+                  teamId={team.id}
+                />
+              </ResponsiveSuspense>
+            </div>
+
+            <ResponsiveSuspense
+              fallback={<LoadingChartState className="h-[458px] border" />}
+              searchParamsUsed={[
+                "from",
+                "to",
+                "interval",
+                "client_transactions",
+              ]}
+            >
+              <AsyncTransactionsChartCard
+                selectedChartQueryParam="client_transactions"
+                interval={interval}
+                range={range}
+                selectedChart={
+                  typeof searchParams.client_transactions === "string"
+                    ? searchParams.client_transactions
+                    : undefined
+                }
+                teamId={team.id}
+              />
+            </ResponsiveSuspense>
+
+            <ResponsiveSuspense
+              fallback={<LoadingChartState className="h-[458px] border" />}
+              searchParamsUsed={["from", "to", "interval", "userOpUsage"]}
+            >
+              <AsyncTotalSponsoredCard
+                selectedChartQueryParam="userOpUsage"
+                interval={interval}
+                range={range}
+                selectedChart={
+                  typeof searchParams.userOpUsage === "string"
+                    ? searchParams.userOpUsage
+                    : undefined
+                }
+                teamId={team.id}
+              />
+            </ResponsiveSuspense>
+          </div>
         </div>
       </div>
-    </div>
+    </ResponsiveSearchParamsProvider>
   );
 }
 
-async function AsyncAppHighlightsCard(props: {
+async function AsyncTeamHighlightsCard(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
-  searchParams: SearchParams;
+  selectedChart: string | undefined;
+  selectedChartQueryParam: string;
 }) {
   const [walletUserStatsTimeSeries, universalBridgeUsage] =
     await Promise.allSettled([
@@ -156,13 +196,12 @@ async function AsyncAppHighlightsCard(props: {
     walletUserStatsTimeSeries.value.some((w) => w.totalUsers !== 0)
   ) {
     return (
-      <div className="">
-        <AppHighlightsCard
-          searchParams={props.searchParams}
-          userStats={walletUserStatsTimeSeries.value}
-          volumeStats={universalBridgeUsage.value}
-        />
-      </div>
+      <TeamHighlightsCard
+        selectedChart={props.selectedChart}
+        userStats={walletUserStatsTimeSeries.value}
+        selectedChartQueryParam={props.selectedChartQueryParam}
+        volumeStats={universalBridgeUsage.value}
+      />
     );
   }
 
@@ -220,7 +259,8 @@ async function AsyncTransactionsChartCard(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
-  searchParams: SearchParams;
+  selectedChart: string | undefined;
+  selectedChartQueryParam: string;
 }) {
   const [clientTransactionsTimeSeries, clientTransactions] =
     await Promise.allSettled([
@@ -241,10 +281,11 @@ async function AsyncTransactionsChartCard(props: {
   return clientTransactionsTimeSeries.status === "fulfilled" &&
     clientTransactions.status === "fulfilled" &&
     clientTransactions.value.length > 0 ? (
-    <TransactionsChartCardUI
+    <TransactionsChartCardWithChainMapping
+      selectedChartQueryParam={props.selectedChartQueryParam}
       aggregatedData={clientTransactions.value}
       data={clientTransactionsTimeSeries.value}
-      searchParams={props.searchParams}
+      selectedChart={props.selectedChart}
     />
   ) : (
     <EmptyStateCard
@@ -258,7 +299,8 @@ async function AsyncTotalSponsoredCard(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
-  searchParams: SearchParams;
+  selectedChart: string | undefined;
+  selectedChartQueryParam: string;
 }) {
   const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
     getUserOpUsage({
@@ -278,129 +320,16 @@ async function AsyncTotalSponsoredCard(props: {
   return userOpUsageTimeSeries.status === "fulfilled" &&
     userOpUsage.status === "fulfilled" &&
     userOpUsage.value.length > 0 ? (
-    <TotalSponsoredChartCardUI
+    <AsyncTotalSponsoredChartCard
       aggregatedData={userOpUsage.value}
       data={userOpUsageTimeSeries.value}
-      searchParams={props.searchParams}
+      selectedChart={props.selectedChart}
+      selectedChartQueryParam={props.selectedChartQueryParam}
     />
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
       metric="Account Abstraction"
-    />
-  );
-}
-
-type AggregatedMetrics = {
-  activeUsers: number;
-  newUsers: number;
-  totalVolume: number;
-  feesCollected: number;
-};
-
-type TimeSeriesMetrics = AggregatedMetrics & {
-  date: string;
-};
-
-function processTimeSeriesData(
-  userStats: WalletUserStats[],
-  volumeStats: UniversalBridgeStats[],
-): TimeSeriesMetrics[] {
-  const metrics: TimeSeriesMetrics[] = [];
-
-  for (const stat of userStats) {
-    const volume = volumeStats
-      .filter(
-        (v) =>
-          new Date(v.date).toISOString() ===
-            new Date(stat.date).toISOString() && v.status === "completed",
-      )
-      .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
-
-    const fees = volumeStats
-      .filter(
-        (v) =>
-          new Date(v.date).toISOString() ===
-            new Date(stat.date).toISOString() && v.status === "completed",
-      )
-      .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
-
-    metrics.push({
-      activeUsers: stat.totalUsers ?? 0,
-      date: stat.date,
-      feesCollected: fees,
-      newUsers: stat.newUsers ?? 0,
-      totalVolume: volume,
-    });
-  }
-
-  return metrics;
-}
-
-function AppHighlightsCard({
-  userStats,
-  volumeStats,
-  searchParams,
-}: {
-  userStats: WalletUserStats[];
-  volumeStats: UniversalBridgeStats[];
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  const timeSeriesData = processTimeSeriesData(userStats, volumeStats);
-
-  const chartConfig = {
-    activeUsers: { color: "hsl(var(--chart-1))", label: "Active Users" },
-    feesCollected: {
-      color: "hsl(var(--chart-4))",
-      emptyContent: (
-        <EmptyStateContent
-          description="Your apps haven't collected any fees yet."
-          link={"https://portal.thirdweb.com/payments"}
-          metric="Fees"
-        />
-      ),
-      isCurrency: true,
-      label: "Fee Revenue",
-    },
-    newUsers: { color: "hsl(var(--chart-3))", label: "New Users" },
-    totalVolume: {
-      color: "hsl(var(--chart-2))",
-      emptyContent: (
-        <EmptyStateContent
-          description="Onramp, swap, and bridge with thirdweb's Payments."
-          link="https://portal.thirdweb.com/payments"
-          metric="Payments"
-        />
-      ),
-      isCurrency: true,
-      label: "Total Volume",
-    },
-  } as const;
-
-  return (
-    <CombinedBarChartCard
-      activeChart={
-        (searchParams?.appHighlights as keyof AggregatedMetrics) ??
-        "totalVolume"
-      }
-      aggregateFn={(_data, key) => {
-        if (key === "activeUsers") {
-          return Math.max(...timeSeriesData.map((d) => d[key]));
-        }
-        return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
-      }}
-      chartConfig={chartConfig}
-      data={timeSeriesData}
-      existingQueryParams={searchParams}
-      queryKey="appHighlights"
-      title="App Highlights"
-      trendFn={(data, key) =>
-        data.filter((d) => (d[key] as number) > 0).length >= 2
-          ? ((data[data.length - 2]?.[key] as number) ?? 0) /
-              ((data[0]?.[key] as number) ?? 0) -
-            1
-          : undefined
-      }
     />
   );
 }
@@ -443,6 +372,52 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
         value: uniqueWalletsConnected,
       }))}
       title="Social Authentication"
+    />
+  );
+}
+
+async function AsyncTotalSponsoredChartCard(props: {
+  data: UserOpStats[];
+  aggregatedData: UserOpStats[];
+  selectedChart: string | undefined;
+  className?: string;
+  onlyMainnet?: boolean;
+  title?: string;
+  selectedChartQueryParam: string;
+  description?: string;
+}) {
+  const chains = await Promise.all(
+    props.data.map(
+      (item) =>
+        // eslint-disable-next-line no-restricted-syntax
+        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
+    ),
+  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
+
+  const processedAggregatedData = {
+    mainnet: props.aggregatedData
+      .filter(
+        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
+      )
+      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+    testnet: props.aggregatedData
+      .filter(
+        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
+      )
+      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
+    total: props.aggregatedData.reduce(
+      (acc, curr) => acc + curr.sponsoredUsd,
+      0,
+    ),
+  };
+
+  return (
+    <TotalSponsoredChartCardUI
+      chains={chains}
+      processedAggregatedData={processedAggregatedData}
+      selectedChart={props.selectedChart}
+      selectedChartQueryParam={props.selectedChartQueryParam}
+      data={props.data}
     />
   );
 }

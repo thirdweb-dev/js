@@ -1,27 +1,12 @@
-import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { getClientTransactions } from "@/api/analytics";
-import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import type { AnalyticsQueryParams } from "@/types/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
-export function TransactionsCharts(
+export async function TransactionsChartCardAsync(
   props: AnalyticsQueryParams & {
-    searchParams: { [key: string]: string | string[] | undefined };
-    client: ThirdwebClient;
-  },
-) {
-  return (
-    // TODO: Add better LoadingChartState
-    <Suspense fallback={<LoadingChartState className="h-[458px] border" />}>
-      <TransactionsChartCardAsync {...props} />
-    </Suspense>
-  );
-}
-
-async function TransactionsChartCardAsync(
-  props: AnalyticsQueryParams & {
-    searchParams: { [key: string]: string | string[] | undefined };
+    selectedChartQueryParam: string;
+    selectedChart: string | undefined;
     client: ThirdwebClient;
   },
 ) {
@@ -42,7 +27,8 @@ async function TransactionsChartCardAsync(
       aggregatedData={aggregatedData}
       client={props.client}
       data={data}
-      searchParams={props.searchParams}
+      selectedChart={props.selectedChart}
+      selectedChartQueryParam={props.selectedChartQueryParam}
     />
   );
 }

@@ -3,29 +3,29 @@ import { getChainMetadata } from "thirdweb/chains";
 import { fetchDashboardContractMetadata } from "@/hooks/useDashboardContractMetadata";
 import type { TransactionStats } from "@/types/analytics";
 import { PieChartCard } from "../../../../../components/Analytics/PieChartCard";
-import { TransactionsChartCardUI } from "../../../../(team)/_components/TransactionsCard";
+import { TransactionsChartCardWithChainMapping } from "../../../../(team)/_components/transaction-card-with-chain-mapping";
 
-export function TransactionsChartsUI({
-  data,
-  aggregatedData,
-  searchParams,
-  client,
-}: {
+export function TransactionsChartsUI(props: {
   data: TransactionStats[];
   aggregatedData: TransactionStats[];
-  searchParams: { [key: string]: string | string[] | undefined };
+  selectedChartQueryParam: string;
   client: ThirdwebClient;
+  selectedChart: string | undefined;
 }) {
   return (
     <>
-      <TransactionsChartCardUI
-        aggregatedData={aggregatedData}
-        data={data}
-        searchParams={searchParams}
+      <TransactionsChartCardWithChainMapping
+        aggregatedData={props.aggregatedData}
+        data={props.data}
+        selectedChartQueryParam={props.selectedChartQueryParam}
+        selectedChart={props.selectedChart}
       />
       <div className="grid gap-6 md:grid-cols-2">
-        <ChainDistributionCard data={aggregatedData} />
-        <ContractDistributionCard client={client} data={aggregatedData} />
+        <ChainDistributionCard data={props.aggregatedData} />
+        <ContractDistributionCard
+          client={props.client}
+          data={props.aggregatedData}
+        />
       </div>
     </>
   );

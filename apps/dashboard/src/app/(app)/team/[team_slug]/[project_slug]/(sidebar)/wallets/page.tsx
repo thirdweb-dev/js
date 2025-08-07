@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
+import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getProject } from "@/api/project/projects";
-import type { Range } from "@/components/analytics/date-range-selector";
+import type { DurationId } from "@/components/analytics/date-range-selector";
+import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
+import { getFiltersFromSearchParams } from "@/lib/time";
 import { InAppWalletAnalytics } from "./analytics/chart";
 import { InAppWalletsSummary } from "./analytics/chart/Summary";
 
@@ -18,20 +21,13 @@ export default async function Page(props: {
     props.params,
   ]);
 
-  const range =
-    searchParams.from && searchParams.to
-      ? {
-          from: new Date(searchParams.from),
-          to: new Date(searchParams.to),
-          type: searchParams.type ?? "last-120",
-        }
-      : undefined;
-
-  const interval: "day" | "week" = ["day", "week"].includes(
-    searchParams.interval ?? "",
-  )
-    ? (searchParams.interval as "day" | "week")
-    : "week";
+  const defaultRange: DurationId = "last-30";
+  const { range, interval } = getFiltersFromSearchParams({
+    defaultRange,
+    from: searchParams.from,
+    interval: searchParams.interval,
+    to: searchParams.to,
+  });
 
   const project = await getProject(params.team_slug, params.project_slug);
 
@@ -40,15 +36,19 @@ export default async function Page(props: {
   }
 
   return (
-    <div>
-      <InAppWalletsSummary projectId={project.id} teamId={project.teamId} />
-      <div className="h-10" />
-      <InAppWalletAnalytics
-        interval={interval}
-        projectId={project.id}
-        range={range as Range}
-        teamId={project.teamId}
-      />
-    </div>
+    <ResponsiveSearchParamsProvider value={searchParams}>
+      <div>
+        <InAppWalletsSummary projectId={project.id} teamId={project.teamId} />
+        <div className="h-10" />
+        <ResponsiveTimeFilters defaultRange={defaultRange} />
+        <div className="h-6" />
+        <InAppWalletAnalytics
+          interval={interval}
+          projectId={project.id}
+          range={range}
+          teamId={project.teamId}
+        />
+      </div>
+    </ResponsiveSearchParamsProvider>
   );
 }

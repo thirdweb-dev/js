@@ -1,37 +1,53 @@
-import { defineChain } from "thirdweb";
-import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
+"use client";
+import { useSetResponsiveSearchParams } from "responsive-rsc";
+import type { ChainMetadata } from "thirdweb/chains";
 import { cn } from "@/lib/utils";
 import type { TransactionStats } from "@/types/analytics";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 import { EmptyAccountAbstractionChartContent } from "../../[project_slug]/(sidebar)/account-abstraction/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 
-export async function TransactionsChartCardUI({
+const chartConfig = {
+  mainnet: {
+    color: "hsl(var(--chart-1))",
+    label: "Mainnet Chains",
+  },
+  testnet: {
+    color: "hsl(var(--chart-2))",
+    label: "Testnet Chains",
+  },
+  total: {
+    color: "hsl(var(--chart-3))",
+    label: "All Chains",
+  },
+};
+
+export function TransactionsChartCardUI({
   data,
-  aggregatedData,
-  searchParams,
   className,
   onlyMainnet,
   title,
   description,
+  selectedChart,
+  selectedChartQueryParam,
+  chains,
+  processedAggregatedData,
 }: {
   data: TransactionStats[];
-  aggregatedData: TransactionStats[];
-  searchParams?: { [key: string]: string | string[] | undefined };
   className?: string;
   onlyMainnet?: boolean;
   title?: string;
+  selectedChartQueryParam: string;
+  selectedChart: string | undefined;
   description?: string;
+  chains: ChainMetadata[];
+  processedAggregatedData: {
+    mainnet: number;
+    testnet: number;
+    total: number;
+  };
 }) {
-  const uniqueChainIds = [
-    ...new Set(data.map((item) => item.chainId).filter(Boolean)),
-  ];
-  const chains = await Promise.all(
-    uniqueChainIds.map((chainId) =>
-      // eslint-disable-next-line no-restricted-syntax
-      getChainMetadata(defineChain(Number(chainId))).catch(() => undefined),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
+  const setResponsiveSearchParams = useSetResponsiveSearchParams();
 
   // Process data to combine by date and chain type
   const dateMap = new Map<string, { mainnet: number; testnet: number }>();
@@ -57,35 +73,6 @@ export async function TransactionsChartCardUI({
     }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const processedAggregatedData = {
-    mainnet: aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.count, 0),
-    testnet: aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.count, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.count, 0),
-  };
-
-  const chartConfig = {
-    mainnet: {
-      color: "hsl(var(--chart-1))",
-      label: "Mainnet Chains",
-    },
-    testnet: {
-      color: "hsl(var(--chart-2))",
-      label: "Testnet Chains",
-    },
-    total: {
-      color: "hsl(var(--chart-3))",
-      label: "All Chains",
-    },
-  };
-
   if (onlyMainnet) {
     const filteredData = timeSeriesData.filter((d) => d.mainnet > 0);
     return (
@@ -107,15 +94,22 @@ export async function TransactionsChartCardUI({
   return (
     <CombinedBarChartCard
       activeChart={
-        (searchParams?.client_transactions as keyof typeof chartConfig) ??
-        "mainnet"
+        selectedChart && selectedChart in chartConfig
+          ? (selectedChart as keyof typeof chartConfig)
+          : "mainnet"
       }
       aggregateFn={(_data, key) => processedAggregatedData[key]}
       chartConfig={chartConfig}
       className={className}
+      onSelect={(key) => {
+        setResponsiveSearchParams((v) => {
+          return {
+            ...v,
+            [selectedChartQueryParam]: key,
+          };
+        });
+      }}
       data={timeSeriesData}
-      existingQueryParams={searchParams}
-      queryKey="client_transactions"
       title={title || "Transactions"}
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>
