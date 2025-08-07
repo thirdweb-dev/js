@@ -1,0 +1,61 @@
+import type { InAppWalletLocale } from "./types.js";
+
+export default {
+  createPassword: {
+    confirmation: "我已保存密码",
+    failedToSetPassword: "设置密码失败",
+    inputPlaceholder: "输入您的密码",
+    instruction:
+      "为您的账户设置密码。从新设备连接时需要此密码。",
+    saveInstruction: "请务必保存密码",
+    submitButton: "设置密码",
+    title: "创建密码",
+  },
+  emailLoginScreen: {
+    enterCodeSendTo: "输入发送至以下地址的验证码",
+    enterRecoveryCode:
+      "输入您首次注册时发送至邮箱的恢复码",
+    failedToSendCode: "发送验证码失败",
+    invalidCode: "验证码无效",
+    invalidCodeOrRecoveryCode: "验证码或恢复码无效",
+    newDeviceDetected: "检测到新设备",
+    resendCode: "重新发送验证码",
+    sendingCode: "正在发送验证码",
+    title: "登录",
+    verify: "验证",
+  },
+  emailPlaceholder: "邮箱地址",
+  emailRequired: "邮箱地址为必填项",
+  enterPassword: {
+    inputPlaceholder: "输入您的密码",
+    instruction: "输入您账户的密码",
+    submitButton: "验证",
+    title: "输入密码",
+    wrongPassword: "密码错误",
+  },
+  invalidEmail: "邮箱地址无效",
+  invalidPhone: "手机号码无效",
+  linkWallet: "关联钱包",
+  loginAsGuest: "以访客身份继续",
+  maxAccountsExceeded:
+    "账户数量已达上限。请联系应用开发者。",
+  or: "或",
+  passkey: "通行密钥",
+  phonePlaceholder: "手机号码",
+  phoneRequired: "手机号码为必填项",
+  signIn: "登录",
+  signInWithApple: "Apple",
+  signInWithDiscord: "Discord",
+  signInWithEmail: "使用邮箱登录",
+  signInWithFacebook: "Facebook",
+  signInWithGoogle: "Google",
+  signInWithPhone: "使用手机号登录",
+  signInWithWallet: "使用钱包登录",
+  socialLoginScreen: {
+    failed: "登录失败",
+    instruction: "在弹出窗口中登录您的账户",
+    retry: "重试",
+    title: "登录",
+  },
+  submitEmail: "继续",
+} satisfies InAppWalletLocale;
