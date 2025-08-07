@@ -70,7 +70,7 @@ export interface PaymentMachineContext {
 /**
  * Events that can be sent to the payment machine
  */
-type PaymentMachineEvent =
+export type PaymentMachineEvent =
   | {
       type: "DESTINATION_CONFIRMED";
       destinationToken: Token;
@@ -230,6 +230,8 @@ export function usePaymentMachine(
             if (event.type === "DESTINATION_CONFIRMED")
               return "methodSelection";
             if (event.type === "ERROR_OCCURRED") return "error";
+            if (event.type === "CONTINUE_TO_TRANSACTION")
+              return "post-buy-transaction";
             break;
 
           case "methodSelection":

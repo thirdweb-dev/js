@@ -64,7 +64,6 @@ export function useTransactionDetails({
   return useQuery({
     enabled: !!transaction.to && !!chainMetadata.data,
     queryFn: async (): Promise<TransactionDetails> => {
-      // Create contract instance for metadata fetching
       const contract = getContract({
         address: transaction.to as string,
         chain: transaction.chain,
@@ -84,7 +83,7 @@ export function useTransactionDetails({
           client,
           erc20Value?.tokenAddress || NATIVE_TOKEN_ADDRESS,
           transaction.chain.id,
-        ).catch(() => null),
+        ),
         hasSponsoredTransactions
           ? 0n
           : getTransactionGasCost(transaction).catch(() => null),

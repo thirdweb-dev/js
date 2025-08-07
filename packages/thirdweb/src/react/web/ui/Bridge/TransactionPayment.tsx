@@ -1,5 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import type { PaymentMachineEvent } from "src/react/core/machines/paymentMachine.js";
 import type { Token } from "../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
@@ -49,6 +50,11 @@ export interface TransactionPaymentProps {
   onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
+   * Send arbitrary payment events for UI flow control
+   */
+  sendEvent: (event: PaymentMachineEvent) => void;
+
+  /**
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
@@ -64,6 +70,7 @@ export function TransactionPayment({
   uiOptions,
   client,
   onContinue,
+  sendEvent,
   connectOptions,
   showThirdwebBranding = true,
 }: TransactionPaymentProps) {
@@ -375,6 +382,18 @@ export function TransactionPayment({
                   transactionDataQuery.data.tokenInfo,
                   getAddress(activeAccount.address),
                 );
+                return;
+              }
+
+              // If the user has enough to pay, skip the payment step altogether
+              if (
+                userBalance &&
+                Number(userBalance) >=
+                  Number(transactionDataQuery.data.totalCost)
+              ) {
+                sendEvent({
+                  type: "CONTINUE_TO_TRANSACTION",
+                });
                 return;
               }
 
