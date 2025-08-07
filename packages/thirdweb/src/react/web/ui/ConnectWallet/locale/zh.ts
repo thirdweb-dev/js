@@ -11,7 +11,7 @@ const connectLocaleZh: ConnectLocale = {
   buy: "购买",
   confirmInWallet: "在钱包中确认",
   connectAWallet: "连接钱包",
-  connectedToSmartWallet: "智能账户",
+  connectedToSmartWallet: "智能钱包",
   connecting: "连接中",
   continueAsGuest: "以访客身份继续",
   copyAddress: "复制地址",
@@ -51,7 +51,7 @@ const connectLocaleZh: ConnectLocale = {
   newToWallets: "刚接触钱包？",
   or: "或",
   passkeys: {
-    linkPasskey: "关联通行密钥",
+    linkPasskey: "添加通行密钥",
     title: "通行密钥",
   },
   payTransactions: "法币交易",
@@ -108,7 +108,7 @@ const connectLocaleZh: ConnectLocale = {
   viewFunds: {
     title: "查看资产",
     viewAssets: "查看资产",
-    viewNFTs: "查看 NFT",
+    viewNFTs: "查看NFT资产",
     viewTokens: "查看代币",
   },
   walletTransactions: "钱包交易",
