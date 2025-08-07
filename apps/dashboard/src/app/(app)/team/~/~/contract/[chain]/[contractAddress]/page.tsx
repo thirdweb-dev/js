@@ -17,7 +17,7 @@ import { TeamHeader } from "../../../../../components/TeamHeader/team-header";
 import {
   ImportAndSelectProjectForContract,
   SelectProjectForContract,
-} from "./components/project-selector";
+} from "../../../../_components/project-selector";
 
 export default async function Page(props: {
   params: Promise<{

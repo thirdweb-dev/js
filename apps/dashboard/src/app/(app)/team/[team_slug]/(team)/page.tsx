@@ -67,6 +67,7 @@ export default async function Page(props: {
           <FreePlanUpsellBannerUI highlightPlan="growth" teamSlug={team.slug} />
         ) : (
           <DismissibleAlert
+            preserveState={true}
             description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
             localStorageId={`${team.id}-engines-alert`}
             title="Looking for Engines?"

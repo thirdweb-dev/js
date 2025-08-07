@@ -503,3 +503,17 @@ export function reportFundWalletSuccessful() {
 export function reportFundWalletFailed(params: { errorMessage: string }) {
   posthog.capture("fund wallet failed", params);
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the conversion rate of the users choosing to create a token from new flow instead of the old flow
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenUpsellClicked(params: {
+  assetType: "nft" | "coin";
+  pageType: "explore" | "deploy-contract";
+}) {
+  posthog.capture("token upsell clicked", params);
+}
