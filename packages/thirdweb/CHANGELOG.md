@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.29
+
+### Patch Changes
+
+- [#7809](https://github.com/thirdweb-dev/js/pull/7809) [`c0948fb`](https://github.com/thirdweb-dev/js/commit/c0948fb9fe71b6403ac08f84e4c6f30bdbea8e3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle environments where process is not defined
+
 ## 5.105.28
 
 ### Patch Changes
