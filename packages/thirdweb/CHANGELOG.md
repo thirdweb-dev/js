@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.28
+
+### Patch Changes
+
+- [#7805](https://github.com/thirdweb-dev/js/pull/7805) [`621c1de`](https://github.com/thirdweb-dev/js/commit/621c1de62e486b8698d9bd38fabde73fef9f7de5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add ability to override button label for all payment widgets
+
 ## 5.105.27
 
 ### Patch Changes
