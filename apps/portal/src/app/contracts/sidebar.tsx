@@ -45,7 +45,20 @@ export const sidebar: SideBar = {
       ],
       name: "Guides",
     },
-    { separator: true },
+    {
+      isCollapsible: true,
+      links: [
+        {
+          href: `${slug}/arbitrum-stylus/stylus-contract`,
+          name: "Deploy Stylus Contract",
+        },
+        {
+          href: `${slug}/arbitrum-stylus/airdrop-contract`,
+          name: "Stylus Airdrop Contract",
+        },
+      ],
+      name: "Arbitrum Stylus",
+    },
     {
       isCollapsible: false,
       links: [
