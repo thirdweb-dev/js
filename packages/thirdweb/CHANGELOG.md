@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.30
+
+### Patch Changes
+
+- [#7813](https://github.com/thirdweb-dev/js/pull/7813) [`e114b2c`](https://github.com/thirdweb-dev/js/commit/e114b2c4f98aa9470afffcd5f809953bb69c5c4f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Skips payment selection in the TransactionWidget if the user's balance is sufficient to complete the transaction.
+
 ## 5.105.29
 
 ### Patch Changes
