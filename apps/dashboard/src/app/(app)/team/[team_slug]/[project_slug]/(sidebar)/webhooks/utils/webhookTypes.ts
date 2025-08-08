@@ -73,7 +73,7 @@ export const webhookFormSchema = z
       .max(100, { message: "Name must be at most 100 characters long" }),
     params: z.record(z.unknown()).optional(),
     secret: z.string().optional(),
-    sigHash: z.string().optional(),
+    sigHash: z.union([z.string(), z.array(z.string())]).optional(),
     sigHashAbi: z.string().optional(),
     toAddresses: z
       .string()

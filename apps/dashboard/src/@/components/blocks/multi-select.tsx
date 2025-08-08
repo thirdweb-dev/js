@@ -64,6 +64,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
       popoverContentClassName,
       showSelectedValuesInModal = false,
       customSearchInput,
+      customTrigger,
       ...props
     },
     ref,
@@ -144,13 +145,18 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
     // scroll to top when options change
     const popoverElRef = useRef<HTMLDivElement>(null);
 
+    // Filter out customTrigger from props to avoid passing it to Button
+    const buttonProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key !== "customTrigger"),
+    ) as React.ButtonHTMLAttributes<HTMLButtonElement>;
+
     return (
       <Popover modal onOpenChange={setIsPopoverOpen} open={isPopoverOpen}>
         <PopoverTrigger asChild>
-          {props.customTrigger || (
+          {customTrigger || (
             <Button
               ref={ref}
-              {...props}
+              {...buttonProps}
               className={cn(
                 "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-border bg-inherit p-3 hover:bg-inherit",
                 className,
