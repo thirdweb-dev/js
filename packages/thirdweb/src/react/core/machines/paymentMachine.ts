@@ -70,7 +70,7 @@ export interface PaymentMachineContext {
 /**
  * Events that can be sent to the payment machine
  */
-export type PaymentMachineEvent =
+type PaymentMachineEvent =
   | {
       type: "DESTINATION_CONFIRMED";
       destinationToken: Token;
