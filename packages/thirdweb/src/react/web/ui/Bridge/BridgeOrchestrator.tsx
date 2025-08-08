@@ -288,7 +288,7 @@ export function BridgeOrchestrator({
           client={client}
           connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
-          sendEvent={send}
+          onExecuteTransaction={() => send({ type: "CONTINUE_TO_TRANSACTION" })}
           showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />
