@@ -63,7 +63,7 @@ export type UIOptions = Prettify<
   )
 >;
 
-interface BridgeOrchestratorProps {
+export interface BridgeOrchestratorProps {
   /**
    * UI configuration and mode
    */
