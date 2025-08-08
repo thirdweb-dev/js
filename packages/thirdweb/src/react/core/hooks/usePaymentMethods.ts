@@ -112,13 +112,13 @@ export function usePaymentMethods(options: {
         .sort((a, b) => {
           return (
             Number.parseFloat(
-              toTokens(b.quote.originAmount, b.originToken.decimals),
-            ) *
-              (b.originToken.prices.USD || 1) -
-            Number.parseFloat(
               toTokens(a.quote.originAmount, a.originToken.decimals),
             ) *
-              (a.originToken.prices.USD || 1)
+              (a.originToken.prices.USD || 1) -
+            Number.parseFloat(
+              toTokens(b.quote.originAmount, b.originToken.decimals),
+            ) *
+              (b.originToken.prices.USD || 1)
           );
         });
 
