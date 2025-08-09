@@ -7,11 +7,7 @@ import {
 } from "@/components/contracts/contract-card/contract-card";
 import type { ExploreCategory } from "../../data";
 
-interface ContractRowProps {
-  category: ExploreCategory;
-}
-
-export function ContractRow({ category }: ContractRowProps) {
+export function ContractRow({ category }: { category: ExploreCategory }) {
   return (
     <section>
       {/* Title, Description + View all link */}

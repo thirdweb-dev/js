@@ -1,19 +1,20 @@
 import { moduleToBase64 } from "app/(app)/(dashboard)/published-contract/utils/module-base-64";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
+import { resolveAvatar } from "thirdweb/extensions/ens";
 import { fetchPublishedContractVersion } from "@/api/contract/fetch-contracts-with-versions";
-import { ClientOnly } from "@/components/blocks/client-only";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { resolveEns } from "@/lib/ens";
 import { replaceDeployerAddress } from "@/lib/publisher-utils";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { ContractPublisher } from "./contract-publisher";
 
-interface ContractCardProps {
+type ContractCardProps = {
   publisher: string;
   contractId: string;
   titleOverride?: string;
@@ -29,7 +30,7 @@ interface ContractCardProps {
     moduleId: string;
     version?: string;
   }[];
-}
+};
 
 function getContractUrl(
   {
@@ -74,6 +75,72 @@ function getContractUrl(
   return replaceDeployerAddress(pathName);
 }
 
+const cached_fetchPublishedContractVersion = unstable_cache(
+  async (publisher: string, contractId: string, version: string = "latest") => {
+    const result = await fetchPublishedContractVersion(
+      publisher,
+      contractId,
+      serverThirdwebClient,
+      version,
+    ).catch(() => null);
+
+    if (!result) {
+      return null;
+    }
+
+    const publisherEnsAndAvatar = result.publisher
+      ? await cached_resolvePublisherEnsAndAvatar(result.publisher)
+      : undefined;
+
+    // Note: Do not return BigInt - it can't be serialized and cached by unstable_cache and will throw an error
+    return {
+      name: result.name,
+      displayName: result.displayName,
+      description: result.description,
+      publisher: {
+        address: result.publisher,
+        ensName: publisherEnsAndAvatar?.ensName,
+        ensAvatar: publisherEnsAndAvatar?.ensAvatar,
+      },
+      version: result.version,
+      audit: result.audit,
+    };
+  },
+  ["fetchPublishedContractVersion"],
+  {
+    revalidate: 3600, // 1 hour
+  },
+);
+
+const cached_resolvePublisherEnsAndAvatar = unstable_cache(
+  async (_addressOrEns: string) => {
+    const addressOrEns = replaceDeployerAddress(_addressOrEns);
+    const [ensNameInfo, ensAvatar] = await Promise.allSettled([
+      resolveEns(addressOrEns, serverThirdwebClient),
+      resolveAvatar({
+        client: serverThirdwebClient,
+        name: addressOrEns,
+      }),
+    ]);
+
+    return {
+      ensName:
+        ensNameInfo.status === "fulfilled"
+          ? ensNameInfo.value?.ensName
+          : undefined,
+      address:
+        ensNameInfo.status === "fulfilled"
+          ? ensNameInfo.value?.address
+          : undefined,
+      ensAvatar: ensAvatar.status === "fulfilled" ? ensAvatar.value : undefined,
+    };
+  },
+  ["resolvePublisherEnsAndAvatar"],
+  {
+    revalidate: 3600, // 1 hour
+  },
+);
+
 export async function ContractCard({
   publisher,
   contractId,
@@ -83,12 +150,11 @@ export async function ContractCard({
   modules = [],
   isBeta,
 }: ContractCardProps) {
-  const publishedContractResult = await fetchPublishedContractVersion(
+  const publishedContractResult = await cached_fetchPublishedContractVersion(
     publisher,
     contractId,
-    serverThirdwebClient,
     version,
-  ).catch(() => null);
+  );
 
   if (!publishedContractResult) {
     return null;
@@ -186,13 +252,12 @@ export async function ContractCard({
           !modules?.length && "mt-auto",
         )}
       >
-        {publishedContractResult.publisher && (
-          <ClientOnly ssr={<Skeleton className="size-5 rounded-full" />}>
-            <ContractPublisher
-              addressOrEns={publishedContractResult.publisher}
-              client={getClientThirdwebClient()}
-            />
-          </ClientOnly>
+        {publishedContractResult.publisher.address && (
+          <ContractPublisher
+            address={publishedContractResult.publisher.address}
+            ensName={publishedContractResult.publisher.ensName || undefined}
+            ensAvatar={publishedContractResult.publisher.ensAvatar || undefined}
+          />
         )}
 
         <div className="flex items-center justify-between">

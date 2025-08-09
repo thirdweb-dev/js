@@ -1,53 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
-import {
-  AccountAddress,
-  AccountAvatar,
-  AccountBlobbie,
-  AccountName,
-  AccountProvider,
-} from "thirdweb/react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { replaceDeployerAddress } from "@/lib/publisher-utils";
+import { Blobbie } from "thirdweb/react";
+import { Img } from "@/components/blocks/Img";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { shortenIfAddress } from "@/utils/usedapp-external";
 
-interface ContractPublisherProps {
-  addressOrEns: string;
-  client: ThirdwebClient;
-}
-
-export const ContractPublisher: React.FC<ContractPublisherProps> = ({
-  addressOrEns,
-  client,
-}) => {
+export function ContractPublisher(props: {
+  ensName: string | undefined;
+  address: string;
+  ensAvatar: string | undefined;
+}) {
+  const displayName = props.ensName || props.address;
   return (
-    <AccountProvider address={addressOrEns} client={client}>
-      <Link
-        className="flex shrink-0 items-center gap-1.5 hover:underline"
-        href={replaceDeployerAddress(`/${addressOrEns}`)}
-      >
-        <AccountAvatar
-          className="size-5 rounded-full object-cover"
-          fallbackComponent={<AccountBlobbie className="size-5 rounded-full" />}
-          loadingComponent={<Skeleton className="size-5 rounded-full" />}
-        />
+    <Link
+      className="flex shrink-0 items-center gap-1.5 hover:underline"
+      href={`/${displayName}`}
+      target="_blank"
+    >
+      <Img
+        className="size-5 rounded-full object-cover"
+        src={
+          resolveSchemeWithErrorHandler({
+            client: getClientThirdwebClient(),
+            uri: props.ensAvatar,
+          }) || ""
+        }
+        fallback={<Blobbie address={props.address} />}
+      />
 
-        <AccountName
-          className="text-xs"
-          fallbackComponent={
-            <AccountAddress
-              className="text-xs"
-              formatFn={(addr) =>
-                shortenIfAddress(replaceDeployerAddress(addr))
-              }
-            />
-          }
-          formatFn={(name) => replaceDeployerAddress(name)}
-          loadingComponent={<Skeleton className="h-4 w-40" />}
-        />
-      </Link>
-    </AccountProvider>
+      <span className="text-xs"> {shortenIfAddress(displayName)}</span>
+    </Link>
   );
-};
+}
