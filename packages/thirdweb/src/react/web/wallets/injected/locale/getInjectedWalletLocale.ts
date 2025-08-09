@@ -27,6 +27,8 @@ export async function getInjectedWalletLocale(
     case "pt_BR": {
       return (await import("./br.js")).default;
     }
+    case "zh_CN":
+      return (await import("./zh.js")).default;
     default:
       return (await import("./en.js")).default;
   }

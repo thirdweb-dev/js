@@ -47,6 +47,10 @@ const locales: {
     id: "fr_FR",
     name: "French",
   },
+  {
+    id: "zh_CN",
+    name: "Chinese (Simplified)",
+  },
 ];
 
 export function LocaleFormControl(props: {
