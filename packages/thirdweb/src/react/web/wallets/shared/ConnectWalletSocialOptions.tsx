@@ -118,6 +118,7 @@ export const ConnectWalletSocialOptions = (
     telegram: "Telegram",
     twitch: "Twitch",
     x: "X",
+    tiktok: "TikTok",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({

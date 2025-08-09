@@ -48,6 +48,7 @@ const authOptions = [
   "google",
   "facebook",
   "x",
+  "tiktok",
   "discord",
   "farcaster",
   "telegram",

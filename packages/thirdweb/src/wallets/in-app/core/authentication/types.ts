@@ -102,6 +102,7 @@ export type AuthProvider =
   | "Discord"
   | "Coinbase"
   | "X"
+  | "TikTok"
   | "Line"
   | "Twitch"
   | "Steam"
