@@ -37,6 +37,9 @@ import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type TransactionWidgetProps = {
+  /**
+   * Customize the supported tokens that users can pay with.
+   */
   supportedTokens?: SupportedTokens;
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -230,6 +233,30 @@ type UIOptionsResult =
  *   })}
  *   amount="0.1"
  *  />
+ * ```
+ *
+ * ### Customize the supported tokens
+ *
+ * You can customize the supported tokens that users can pay with by passing a `supportedTokens` object to the `TransactionWidget` component.
+ *
+ * ```tsx
+ * <TransactionWidget
+ *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *   })}
+ *   supportedTokens={{
+ *     [8453]: [
+ *       {
+ *         address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ *         name: "USDC",
+ *         symbol: "USDC",
+ *       },
+ *     ],
+ *   }}
+ * />
  * ```
  *
  * ### Customize the UI
