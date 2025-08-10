@@ -192,6 +192,7 @@ export function BridgeOrchestrator({
   // Handle errors
   const handleError = useCallback(
     (error: Error) => {
+      console.error(error);
       onError?.(error);
       send({ error, type: "ERROR_OCCURRED" });
     },

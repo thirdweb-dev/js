@@ -93,32 +93,15 @@ export function usePaymentMethods(options: {
         type: "wallet" as const,
         quote: s.quote,
       }));
-      const insufficientBalanceQuotes = validTokenQuotes
-        .filter((s) => s.balance < s.quote.originAmount)
-        .sort((a, b) => {
-          return (
-            Number.parseFloat(
-              toTokens(a.quote.originAmount, a.originToken.decimals),
-            ) *
-              (a.originToken.prices.USD || 1) -
-            Number.parseFloat(
-              toTokens(b.quote.originAmount, b.originToken.decimals),
-            ) *
-              (b.originToken.prices.USD || 1)
-          );
-        });
+
       const sufficientBalanceQuotes = validTokenQuotes
-        .filter((s) => s.balance >= s.quote.originAmount)
+        .filter((s) => !!s.originToken.prices.USD)
         .sort((a, b) => {
           return (
-            Number.parseFloat(
-              toTokens(a.quote.originAmount, a.originToken.decimals),
-            ) *
-              (a.originToken.prices.USD || 1) -
-            Number.parseFloat(
-              toTokens(b.quote.originAmount, b.originToken.decimals),
-            ) *
-              (b.originToken.prices.USD || 1)
+            Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
+              (b.originToken.prices.USD || 1) -
+            Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
+              (a.originToken.prices.USD || 1)
           );
         });
 
@@ -133,15 +116,14 @@ export function usePaymentMethods(options: {
           )
         : [];
       const finalQuotes = supportedTokens
-        ? [...sufficientBalanceQuotes, ...insufficientBalanceQuotes].filter(
-            (q) =>
-              tokensToInclude.find(
-                (t) =>
-                  t.chainId === q.originToken.chainId &&
-                  t.address === q.originToken.address,
-              ),
+        ? sufficientBalanceQuotes.filter((q) =>
+            tokensToInclude.find(
+              (t) =>
+                t.chainId === q.originToken.chainId &&
+                t.address.toLowerCase() === q.originToken.address.toLowerCase(),
+            ),
           )
-        : [...sufficientBalanceQuotes, ...insufficientBalanceQuotes];
+        : sufficientBalanceQuotes;
       return finalQuotes;
     },
     queryKey: [
