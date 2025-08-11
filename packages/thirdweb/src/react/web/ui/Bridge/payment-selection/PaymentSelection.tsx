@@ -292,6 +292,7 @@ export function PaymentSelection({
             onPaymentMethodSelected={handlePaymentMethodSelected}
             paymentMethods={suitableTokenPaymentMethods}
             paymentMethodsLoading={paymentMethodsLoading}
+            currency={currency}
           />
         )}
 
