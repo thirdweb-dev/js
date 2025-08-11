@@ -5,7 +5,10 @@ import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
-import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
+import {
+  formatCurrencyAmount,
+  formatTokenAmount,
+} from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -90,12 +93,8 @@ function PaymentMethodTokenRow({
               size="sm"
               style={{ fontWeight: 600, textWrap: "nowrap" }}
             >
-              {new Intl.NumberFormat(navigator.language, {
-                style: "currency",
-                currency: currency,
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }).format(
+              {formatCurrencyAmount(
+                currency || "USD",
                 Number(
                   formatTokenAmount(
                     paymentMethod.balance,

@@ -12,6 +12,7 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useBuyWithFiatQuotesForProviders } from "../../../../core/hooks/pay/useBuyWithFiatQuotesForProviders.js";
+import { formatCurrencyAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
@@ -164,12 +165,10 @@ export function FiatProviderSelection({
                         size="sm"
                         style={{ fontWeight: 500 }}
                       >
-                        {new Intl.NumberFormat(navigator.language, {
-                          style: "currency",
-                          currency: currency,
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }).format(quote.currencyAmount)}
+                        {formatCurrencyAmount(
+                          currency || "US",
+                          quote.currencyAmount,
+                        )}
                       </Text>
                       <Text color="secondaryText" size="xs">
                         {formatNumber(
