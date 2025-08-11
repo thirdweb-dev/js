@@ -20,8 +20,8 @@ export function QuickStartSection({
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <FeatureCard
-          title="Create Payment Links"
-          description="Create shareable URLs to receive any token in seconds."
+          title="Create Payments"
+          description="Create hosted payment UIs to receive any token in seconds."
           icon={LinkIcon}
           id="payment_links"
           color="violet"
@@ -59,7 +59,7 @@ export function QuickStartSection({
         />
         <FeatureCard
           title="UI Components"
-          description="Instantly add payments to your React app with prebuild components."
+          description="Instantly add payments to your React app with prebuilt components."
           icon={CodeIcon}
           id="components"
           color="violet"

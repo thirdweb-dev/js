@@ -23,10 +23,10 @@ export default async function Page(props: {
       <div className="w-full flex flex-col md:flex-row justify-between gap-4 items-start">
         <div>
           <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-            Payment Links
+            Create a Payment
           </h2>
           <p className="text-muted-foreground text-sm">
-            Make money in any token instantly with hosted payment links
+            Make money in any token instantly with a hosted payments UI.
           </p>
         </div>
         <CreatePaymentLinkButton
@@ -36,7 +36,7 @@ export default async function Page(props: {
         >
           <Button className="gap-1" variant="default" size="sm">
             <PlusIcon className="size-4" />
-            Create Payment Link
+            Create Payment
           </Button>
         </CreatePaymentLinkButton>
       </div>
