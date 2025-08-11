@@ -1,6 +1,7 @@
 "use client";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
@@ -21,6 +22,7 @@ interface TokenSelectionProps {
   destinationToken: Token;
   destinationAmount: bigint;
   feePayer?: "sender" | "receiver";
+  currency?: SupportedFiatCurrency;
 }
 
 // Individual payment method token row component
@@ -31,12 +33,14 @@ interface PaymentMethodTokenRowProps {
   client: ThirdwebClient;
   onPaymentMethodSelected: (paymentMethod: PaymentMethod) => void;
   feePayer?: "sender" | "receiver";
+  currency?: SupportedFiatCurrency;
 }
 
 function PaymentMethodTokenRow({
   paymentMethod,
   client,
   onPaymentMethodSelected,
+  currency,
 }: PaymentMethodTokenRowProps) {
   const theme = useCustomTheme();
 
@@ -44,6 +48,7 @@ function PaymentMethodTokenRow({
   const hasEnoughBalance = displayOriginAmount
     ? paymentMethod.balance >= displayOriginAmount
     : false;
+  const currencyPrice = paymentMethod.originToken.prices[currency || "USD"];
 
   return (
     <Button
@@ -79,26 +84,34 @@ function PaymentMethodTokenRow({
           gap="3xs"
           style={{ alignItems: "flex-end", flex: 1 }}
         >
-          <Text
-            color="primaryText"
-            size="sm"
-            style={{ fontWeight: 600, textWrap: "nowrap" }}
-          >
-            {formatTokenAmount(
-              displayOriginAmount,
-              paymentMethod.originToken.decimals,
-            )}{" "}
-            {paymentMethod.originToken.symbol}
-          </Text>
-          <Container flex="row" gap="3xs">
-            <Text color="secondaryText" size="xs">
-              Balance:{" "}
+          {currencyPrice && (
+            <Text
+              color="primaryText"
+              size="sm"
+              style={{ fontWeight: 600, textWrap: "nowrap" }}
+            >
+              {new Intl.NumberFormat(navigator.language, {
+                style: "currency",
+                currency: currency,
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(
+                Number(
+                  formatTokenAmount(
+                    paymentMethod.balance,
+                    paymentMethod.originToken.decimals,
+                  ),
+                ) * currencyPrice,
+              )}
             </Text>
+          )}
+          <Container flex="row" gap="3xs">
             <Text color={hasEnoughBalance ? "success" : "danger"} size="xs">
               {formatTokenAmount(
                 paymentMethod.balance,
                 paymentMethod.originToken.decimals,
-              )}
+              )}{" "}
+              {paymentMethod.originToken.symbol}
             </Text>
           </Container>
         </Container>
@@ -116,6 +129,7 @@ export function TokenSelection({
   destinationToken,
   destinationAmount,
   feePayer,
+  currency,
 }: TokenSelectionProps) {
   const theme = useCustomTheme();
 
@@ -210,7 +224,7 @@ export function TokenSelection({
   return (
     <>
       <Text color="primaryText" size="md">
-        Select payment token
+        Your token balances
       </Text>
       <Spacer y="sm" />
       <Container
@@ -233,6 +247,7 @@ export function TokenSelection({
               key={`${method.originToken.address}-${method.originToken.chainId}`}
               onPaymentMethodSelected={onPaymentMethodSelected}
               paymentMethod={method}
+              currency={currency}
             />
           ))}
       </Container>

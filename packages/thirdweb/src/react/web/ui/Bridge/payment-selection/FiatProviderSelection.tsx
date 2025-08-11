@@ -164,12 +164,12 @@ export function FiatProviderSelection({
                         size="sm"
                         style={{ fontWeight: 500 }}
                       >
-                        $
-                        {quote.currencyAmount.toLocaleString(undefined, {
-                          maximumFractionDigits: 2,
+                        {new Intl.NumberFormat(navigator.language, {
+                          style: "currency",
+                          currency: currency,
                           minimumFractionDigits: 2,
-                        })}{" "}
-                        {quote.currency}
+                          maximumFractionDigits: 2,
+                        }).format(quote.currencyAmount)}
                       </Text>
                       <Text color="secondaryText" size="xs">
                         {formatNumber(
