@@ -1,5 +1,5 @@
 import { Callout } from "@doc";
-import { createMetadata, ArticleIconCard, Stack } from "@doc";
+import { createMetadata, ArticleIconCard, Stack, OpenApiEndpoint } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TypeScriptIcon } from "@/icons";
 
@@ -33,6 +33,8 @@ GET /v1/wallets/user?email=user@example.com
 Host: api.thirdweb.com
 x-secret-key: <your-secret-key>
 ```
+
+<OpenApiEndpoint path="/v1/wallets/user" method="GET" />
 
 ### Query Parameters
 

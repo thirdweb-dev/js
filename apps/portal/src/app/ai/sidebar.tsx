@@ -13,8 +13,8 @@ export const sidebar: SideBar = {
           icon: <ZapIcon />,
         },
         {
-          name: "Response Handling",
-          href: "/ai/chat/handling-responses",
+          name: "Streaming Responses",
+          href: "/ai/chat/streaming",
         },
         {
           name: "API Reference",

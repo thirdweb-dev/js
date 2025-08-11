@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
 import { TypeScriptIcon, EngineIcon } from "@/icons";
 import { createMetadata } from "@doc";
 
@@ -33,27 +33,9 @@ Server wallets are wallets that are managed by your own application, like a trea
 
 Once created, you can use your server wallet by passing it as the `from` field of the [thirdweb API](https://api.thirdweb.com/reference#tag/transactions/post/v1/transactions).
 
-### Create a new Server Wallet Programmatically
+<OpenApiEndpoint path="/v1/wallets/server" method="POST" />
 
-```http
-POST /v1/wallets/server
-Host: api.thirdweb.com
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
-
-{
-    "identifier": "My Server Wallet"
-}
-```
-
-### List all Server Wallets
-
-```http
-GET /v1/wallets/server
-Host: api.thirdweb.com
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
-```
+<OpenApiEndpoint path="/v1/wallets/server" method="GET" />
 
   </TabsContent>
 

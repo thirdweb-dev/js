@@ -10,6 +10,8 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	OpenApiEndpoint,
+	Stack,
 } from "@doc";
 import {
 	ReactIcon,
@@ -77,56 +79,10 @@ Create user or server wallets, authenticate with your backend, connect to extern
 
 You can use the [thirdweb API](https://api.thirdweb.com/reference) to create user wallets.
 
-Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
+Once authenticated, the auth endpoints will return the wallet address and a JWT token for usage with the rest of the API.
 
-#### Send a login code to the user
-
-```http
-POST /v1/wallets/user/code
-Host: api.thirdweb.com
-Content-Type: application/json
-x-client-id: <your-project-client-id>
-
-{
-  "type": "email",
-  "email": "user@example.com"
-}
-```
-
-#### Verify the code and authenticate the user
-
-```http
-POST /v1/wallets/user/code/verify
-Host: api.thirdweb.com
-Content-Type: application/json
-x-client-id: <your-project-client-id>
-
-{
-  "type": "email",
-  "email": "user@example.com",
-  "code": "123456",
-}
-```
-
-Once authenticated, the endpoint will return the wallet address and a JWT token for usage with the rest of the API.
-
-</TabsContent>
-
-<TabsContent value="server">
-  You can create a server wallet with your project secret key and an identifier for the wallet:
-
-  ```http
-  POST /v1/wallets/server
-  Host: api.thirdweb.com
-  Content-Type: application/json
-  x-secret-key: <your-project-secret-key>
-
-  {
-    "identifier": "treasury-wallet", // your identifier
-  }
-  ```
-
-  This will return the server wallet address to use with the rest of the API. If the wallet already exists, the same wallet will be returned.
+<OpenApiEndpoint path="/v1/wallets/user/code" method="POST" />
+<OpenApiEndpoint path="/v1/wallets/user/code/verify" method="POST" />
 
 </TabsContent>
 

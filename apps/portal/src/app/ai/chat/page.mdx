@@ -1,23 +1,20 @@
-import { EndpointMetadata } from "./EndpointMetadata";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@doc";
+import { Tabs, TabsContent, TabsList, TabsTrigger, OpenApiEndpoint } from "@doc";
 
 # Chat API
 
-The thirdweb AI chat API is a standard OpenAI-compatible chat completion API that allows you to interact with the thirdweb AI model, specialized for blockchain interactions.
-
-The thirdweb proprietary model is optimized for blockchain interactions and can:
+The thirdweb AI chat API is a standard OpenAI-compatible chat completion API that allows you to interact with the thirdweb AI model, optimized for blockchain interactions.
 
 - Query real-time data from the blockchain
 - Analyze transactions
 - Fetch token balances, prices and metadata
 - Prepare any contract call or transaction for signing
-- Prepare swaps from any token pair
+- Prepare swaps from/to any token pair
 - Deploy contracts
 - Generate images
-- Search the web for information
+- Search the web
 - And more!
 
-You can use the API with the API directly, or with any OpenAI-compatible client library.
+You can use the API with the HTTP API directly, or with any OpenAI-compatible client library.
 
 <Tabs defaultValue="api">
   <TabsList>
@@ -25,7 +22,7 @@ You can use the API with the API directly, or with any OpenAI-compatible client 
     <TabsTrigger value="openai">OpenAI Client</TabsTrigger>
   </TabsList>
   <TabsContent value="api">
-    <EndpointMetadata />
+    <OpenApiEndpoint path="/ai/chat" method="POST" specUrl="https://api.thirdweb-dev.com/openapi.json" />
   </TabsContent>
   <TabsContent value="openai">
 
@@ -51,3 +48,8 @@ print(chat_completion)
 ```
   </TabsContent>
 </Tabs>
+
+### Going further
+
+- [Handle streaming responses](/ai/chat/streaming)
+- [Full API Reference](https://api.thirdweb-dev.com/reference#tag/ai/post/ai/chat)
