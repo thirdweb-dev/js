@@ -1,0 +1,145 @@
+# Response Handling
+
+## Streamed vs non-streamed responses
+
+- **Streamed Responses**: This method streams data in real-time, providing immediate feedback as the response is generated. Set the `stream` parameter to `true` in your request, the API delivers responses via Server-Sent Events (SSE).
+- **Non-Streamed Responses**: When the `stream` parameter is set to `false`, the API returns the complete response in a single JSON payload after processing is complete.
+
+## Handling Streamed Responses
+
+For `stream:true`, you'll need to handle the following event types:
+
+- `init`: Initializes the stream and provides session information
+- `presence`: Provides backend status updates about worker processing
+- `delta`: Contains chunks of the response message text
+- `action`: Contains blockchain transaction or action data
+- `image`: Contains image data
+- `context`: Contains context data
+- `error`: Contains error information if something goes wrong
+
+**Example SSE Stream:**
+
+```http
+event: init
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "init",
+  "source": "model",
+}
+
+event: presence
+data: {
+  "session_id": "c238c379-9875-4729-afb2-bf3c26081e24",
+  "request_id": "8b0e733a-89fd-4585-8fac-b4334208eada",
+  "source": "model",
+  "type": "presence",
+  "data": "Need to convert 0.00001 ETH to wei, then prepare native transfer to `0x2247d5d238d0f9d37184d8332aE0289d1aD9991b`."
+}
+
+event: presence
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "presence",
+  "source": "model",
+  "data": "Now that I have the wei value (10,000,000,000,000), I will prepare a native transfer to the recipient."
+}
+
+event: delta
+data: {"v": "To send 0.0001 ETH on the Sepolia network"}
+
+event: delta
+data: {"v": " to the address associated with"}
+
+event: action
+data: {
+  "session_id": "f4b45429-9570-4ee8-8c8f-8b267429915a",
+  "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
+  "type": "sign_transaction",
+  "source": "executor",
+  "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
+}
+```
+
+### TypeScript Example
+
+We recommend using the `fetch-event-stream` package to handle the event stream in TypeScript. This gives you an easy way to handle each event type.
+
+```jsx
+import { stream } from "fetch-event-stream";
+
+const events = await stream(`https://api.thirdweb.com/ai/chat`, {
+	body: JSON.stringify({
+		messages: [
+			{
+				role: "user",
+				content: "Transfer 10 USDC to vitalik.eth",
+			},
+		],
+	}),
+	headers: {
+		"Content-Type": "application/json",
+		"x-secret-key": "<your-secret-key>",
+	},
+	method: "POST",
+});
+
+// process the event stream
+for await (const event of events) {
+	if (!event.data) {
+		continue;
+	}
+	switch (event.event) {
+		case "init": {
+			console.log("Init event", event.data);
+            // handle init event (session id and request id)
+			break;
+		}
+		case "presence": {
+			console.log("Presence event", event.data);
+            // handle intermediate thinking steps
+			break;
+		}
+		case "delta": {
+			console.log("Delta event", event.data);
+            // handle delta event (streamed output text response)
+			break;
+		}
+		case "action": {
+			const data = JSON.parse(event.data);
+
+			// handle transaction signing
+			if (data.type === "sign_transaction") {
+				const transactionData = JSON.parse(data.data);
+				console.log("Sign transaction event", transactionData);
+			}
+
+			// handle swap signing
+			if (data.type === "sign_swap") {
+				const swapData = JSON.parse(data.data);
+				console.log("Sign swap event", swapData);
+			}
+
+			break;
+		}
+		case "image": {
+			const data = JSON.parse(event.data);
+			// handle image rendering
+			console.log("Image data", data);
+			break;
+		}
+		case "context": {
+			console.log("Context event", event.data);
+			// handle context changes (chain ids, wallet address, etc)
+			break;
+		}
+		case "error": {
+			console.log("Error event", event.data);
+			// handle error event (error message)
+			break;
+		}
+	}
+}
+```
+

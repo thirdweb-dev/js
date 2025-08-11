@@ -143,6 +143,10 @@ const apisLinks = [
 
 const aiLinks = [
   {
+    href: "/ai/chat",
+    name: "Chat API",
+  },
+  {
     href: "/ai/mcp",
     name: "MCP",
   },

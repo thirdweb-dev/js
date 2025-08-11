@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
-import { Details } from "../Details";
 import { Heading } from "../Heading";
 import { Paragraph } from "../Paragraph";
 import { RequestExample } from "./RequestExample";
@@ -12,12 +11,22 @@ export type APIParameter =
       required: false;
       description: React.ReactNode;
       type?: string;
-      example?: string | boolean | number | object;
+      example?:
+        | string
+        | boolean
+        | number
+        | object
+        | Array<string | boolean | number | object>;
     }
   | {
       name: string;
       required: true;
-      example: string;
+      example:
+        | string
+        | boolean
+        | number
+        | object
+        | Array<string | boolean | number | object>;
       description: React.ReactNode;
       type?: string;
     };
@@ -37,7 +46,7 @@ type ApiEndpointMeta = {
 };
 
 export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
-  const { request, responseExamples } = props.metadata;
+  const { responseExamples } = props.metadata;
 
   const requestExamples: Array<{
     lang: "javascript" | "bash";
@@ -65,30 +74,12 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   return (
     <div>
       <div>
-        <div className="mb-5 flex flex-col gap-3 border-b pb-5">
-          <Heading anchorId="title" className="mb-0" level={1}>
+        <div className="flex flex-col gap-3">
+          <Heading anchorId="title" className="mb-0" level={2}>
             {props.metadata.title}
           </Heading>
           <Paragraph className="mb-0">{props.metadata.description}</Paragraph>
         </div>
-
-        {/* Headers */}
-        {request.headers.length > 0 && (
-          <ParameterSection parameters={request.headers} title="Headers" />
-        )}
-
-        {/* Path parameters */}
-        {request.pathParameters.length > 0 && (
-          <ParameterSection
-            parameters={request.pathParameters}
-            title="Path parameters"
-          />
-        )}
-
-        {/* Body  */}
-        {request.bodyParameters.length > 0 && (
-          <ParameterSection parameters={request.bodyParameters} title="Body" />
-        )}
       </div>
 
       <div>
@@ -158,61 +149,61 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   );
 }
 
-function ParameterSection(props: {
-  title: string;
-  parameters: APIParameter[];
-}) {
-  return (
-    <div className="mb-5">
-      <Heading
-        anchorClassName="m-0 mb-2"
-        anchorId={props.title}
-        className="text-lg md:text-lg"
-        level={2}
-      >
-        {props.title}
-      </Heading>
-      <div className="flex flex-col">
-        {props.parameters
-          .sort((a, b) => {
-            if (a.required === b.required) {
-              return 0;
-            }
-            return a.required ? -1 : 1;
-          })
-          .map((param) => (
-            <ParameterItem key={param.name} param={param} />
-          ))}
-      </div>
-    </div>
-  );
-}
+// function ParameterSection(props: {
+//   title: string;
+//   parameters: APIParameter[];
+// }) {
+//   return (
+//     <div className="mb-5">
+//       <Heading
+//         anchorClassName="m-0 mb-2"
+//         anchorId={props.title}
+//         className="text-lg md:text-lg"
+//         level={2}
+//       >
+//         {props.title}
+//       </Heading>
+//       <div className="flex flex-col">
+//         {props.parameters
+//           .sort((a, b) => {
+//             if (a.required === b.required) {
+//               return 0;
+//             }
+//             return a.required ? -1 : 1;
+//           })
+//           .map((param) => (
+//             <ParameterItem key={param.name} param={param} />
+//           ))}
+//       </div>
+//     </div>
+//   );
+// }
 
-function ParameterItem({ param }: { param: APIParameter }) {
-  return (
-    <Details
-      accordionItemClassName="my-1"
-      accordionTriggerClassName="font-mono"
-      summary={param.name}
-      tags={param.required ? ["Required"] : []}
-    >
-      <div className={"flex flex-col gap-2"}>
-        <Paragraph>{param.description}</Paragraph>
-        {param.type && (
-          <div className="rounded-lg border">
-            <h4 className="border-b p-3 text-sm"> Type </h4>
-            <CodeBlock
-              className="border-none"
-              code={param.type}
-              containerClassName="mb-0"
-              lang="typescript"
-            />
-          </div>
-        )}
-      </div>
-    </Details>
-  );
-}
+// function ParameterItem({ param }: { param: APIParameter }) {
+//   return (
+//     <Details
+//       accordionItemClassName="my-1"
+//       accordionTriggerClassName="font-mono"
+//       summary={param.name}
+//       tags={param.required ? ["Required"] : []}
+//     >
+//       <div className={"flex flex-col gap-2"}>
+//         <Paragraph>{param.description}</Paragraph>
+//         {param.type && (
+//           <div className="rounded-lg border">
+//             <h4 className="border-b p-3 text-sm"> Type </h4>
+//             <CodeBlock
+//               className="border-none"
+//               code={param.type}
+//               containerClassName="mb-0"
+//               lang="typescript"
+//             />
+//           </div>
+//         )}
+//       </div>
+//     </Details>
+//   );
+// }
 
 function createCurlCommand(params: { metadata: ApiEndpointMeta }) {
   const url = `${params.metadata.origin}${params.metadata.path}`;
