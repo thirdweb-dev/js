@@ -116,7 +116,7 @@ export function PaymentLinkForm() {
 
         const url = `${window.location.origin}/pay?${params.toString()}`;
         setPaymentUrl(url);
-        toast.success("Payment link created!");
+        toast.success("Payment created!");
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -188,7 +188,7 @@ export function PaymentLinkForm() {
             <CreditCardIcon className="size-5 sm:size-6" />
           </div>
           <CardTitle className="text-center sm:text-left">
-            Create a Payment Link
+            Create a Payment
           </CardTitle>
         </div>
       </CardHeader>

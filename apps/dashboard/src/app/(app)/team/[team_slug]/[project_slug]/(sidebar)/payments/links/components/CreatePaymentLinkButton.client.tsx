@@ -107,7 +107,7 @@ export function CreatePaymentLinkButton(
       return result;
     },
     onSuccess: () => {
-      toast.success("Payment link created successfully.");
+      toast.success("Payment created successfully.");
       return queryClient.invalidateQueries({
         queryKey: ["payment-links", props.clientId, props.teamId],
       });
@@ -169,7 +169,7 @@ export function CreatePaymentLinkButton(
             )}
           >
             <DialogHeader>
-              <DialogTitle>Create a Payment Link</DialogTitle>
+              <DialogTitle>Create a Payment</DialogTitle>
               <DialogDescription>
                 Get paid in any token on any chain.
               </DialogDescription>
