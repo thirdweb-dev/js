@@ -1,4 +1,3 @@
-import Markdown from "react-markdown";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
@@ -42,6 +41,7 @@ export type ApiEndpointMeta = {
   request: {
     pathParameters: APIParameter[];
     headers: APIParameter[];
+    queryParameters: APIParameter[];
     bodyParameters: APIParameter[];
   };
   responseExamples: Record<string, string>;
@@ -75,13 +75,6 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-3">
-        <Heading anchorId="title" className="mb-0" level={2}>
-          {props.metadata.title}
-        </Heading>
-        <Markdown>{props.metadata.description as string}</Markdown>
-      </div>
-
       <div>
         <Heading anchorId="request" className="text-lg lg:text-lg" level={2}>
           Request
@@ -106,27 +99,33 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
             method={props.metadata.method}
           />
         </div>
-        {/* 
-          TODO: add this back in but as a collapsible section, along with query params
+
         <div className="mt-4">
-					{request.headers.length > 0 && (
-						<ParameterSection parameters={request.headers} title="Headers" />
-					)}
+          {request.headers.length > 0 && (
+            <ParameterSection parameters={request.headers} title="Headers" />
+          )}
 
-					{request.pathParameters.length > 0 && (
-						<ParameterSection
-							parameters={request.pathParameters}
-							title="Path parameters"
-						/>
-					)}
+          {request.pathParameters.length > 0 && (
+            <ParameterSection
+              parameters={request.pathParameters}
+              title="Path Parameters"
+            />
+          )}
 
-					{request.bodyParameters.length > 0 && (
-						<ParameterSection
-							parameters={request.bodyParameters}
-							title="Body"
-						/>
-					)}
-				</div> */}
+          {request.queryParameters.length > 0 && (
+            <ParameterSection
+              parameters={request.queryParameters}
+              title="Query Parameters"
+            />
+          )}
+
+          {request.bodyParameters.length > 0 && (
+            <ParameterSection
+              parameters={request.bodyParameters}
+              title="Request Body"
+            />
+          )}
+        </div>
       </div>
 
       <div>
@@ -200,20 +199,55 @@ function ParameterItem({ param }: { param: APIParameter }) {
     <Details
       accordionItemClassName="my-1"
       accordionTriggerClassName="font-mono"
-      summary={param.name}
+      summary={
+        <div className="flex items-center gap-2">
+          <span>{param.name}</span>
+          {param.type && (
+            <span className="text-xs text-muted-foreground px-1.5 py-0.5 bg-muted rounded">
+              {param.type}
+            </span>
+          )}
+        </div>
+      }
       tags={param.required ? ["Required"] : []}
     >
-      <div className={"flex flex-col gap-2"}>
-        <Paragraph>{param.description}</Paragraph>
+      <div className={"flex flex-col gap-3"}>
+        {param.description && (
+          <div>
+            <h5 className="text-sm font-medium mb-1">Description</h5>
+            <Paragraph className="text-sm">{param.description}</Paragraph>
+          </div>
+        )}
+
         {param.type && (
-          <div className="rounded-lg border">
-            <h4 className="border-b p-3 text-sm"> Type </h4>
-            <CodeBlock
-              className="border-none"
-              code={param.type}
-              containerClassName="mb-0"
-              lang="typescript"
-            />
+          <div>
+            <h5 className="text-sm font-medium mb-1">Type</h5>
+            <div className="rounded-lg border">
+              <CodeBlock
+                className="border-none"
+                code={param.type}
+                containerClassName="mb-0"
+                lang="typescript"
+              />
+            </div>
+          </div>
+        )}
+
+        {param.example !== undefined && (
+          <div>
+            <h5 className="text-sm font-medium mb-1">Example</h5>
+            <div className="rounded-lg border">
+              <CodeBlock
+                className="border-none"
+                code={
+                  typeof param.example === "object"
+                    ? JSON.stringify(param.example, null, 2)
+                    : String(param.example)
+                }
+                containerClassName="mb-0"
+                lang={typeof param.example === "object" ? "json" : "text"}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -222,8 +256,18 @@ function ParameterItem({ param }: { param: APIParameter }) {
 }
 
 function createCurlCommand(params: { metadata: ApiEndpointMeta }) {
-  const url = `${params.metadata.origin}${params.metadata.path}`;
+  let url = `${params.metadata.origin}${params.metadata.path}`;
   const bodyObj: Record<string, string | number | boolean | object> = {};
+
+  // Add query parameters to URL
+  const queryParams = params.metadata.request.queryParameters
+    .filter((q) => q.example !== undefined)
+    .map((q) => `${q.name}=${encodeURIComponent(String(q.example))}`)
+    .join("&");
+
+  if (queryParams) {
+    url += `?${queryParams}`;
+  }
 
   const headers = params.metadata.request.headers
     .filter((h) => h.example !== undefined)
@@ -256,7 +300,17 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   const headersObj: Record<string, string | number | boolean | object> = {};
   const bodyObj: Record<string, string | number | boolean | object> = {};
   const { request } = params.metadata;
-  const url = `${params.metadata.origin}${params.metadata.path}`;
+  let url = `${params.metadata.origin}${params.metadata.path}`;
+
+  // Add query parameters to URL
+  const queryParams = request.queryParameters
+    .filter((q) => q.example !== undefined)
+    .map((q) => `${q.name}=${encodeURIComponent(String(q.example))}`)
+    .join("&");
+
+  if (queryParams) {
+    url += `?${queryParams}`;
+  }
 
   for (const param of request.headers) {
     if (param.example !== undefined) {
@@ -281,7 +335,7 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   }
 
   if (Object.keys(bodyObj).length > 0) {
-    fetchOptions.body = bodyObj;
+    fetchOptions.body = JSON.stringify(bodyObj);
   }
 
   return `fetch('${url}', ${JSON.stringify(fetchOptions, null, 2)})`;

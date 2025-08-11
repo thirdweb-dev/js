@@ -86,7 +86,7 @@ interface OpenApiEndpointProps {
   specUrl?: string;
   path: string;
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  requestBodyOverride?: Record<string, any>;
+  requestBodyOverride?: Record<string, unknown>;
   responseExampleOverride?: Record<string, string>;
 }
 
@@ -101,7 +101,27 @@ const fetchOpenApiSpec = cache(async (url: string): Promise<OpenApiSpec> => {
   return response.json();
 });
 
+// Helper function to get example values based on type
+function getExampleForType(type?: string): unknown {
+  switch (type) {
+    case "string":
+      return "string";
+    case "number":
+    case "integer":
+      return 0;
+    case "boolean":
+      return true;
+    case "array":
+      return [];
+    case "object":
+      return {};
+    default:
+      return undefined;
+  }
+}
+
 // Recursively generate example values from OpenAPI schema
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateExampleFromSchema(schema: any, visited = new Set()): any {
   // Prevent infinite recursion with circular references
   if (visited.has(schema)) {
@@ -174,6 +194,7 @@ function generateExampleFromSchema(schema: any, visited = new Set()): any {
         return [];
 
       case "object": {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const obj: Record<string, any> = {};
 
         if (schema.properties) {
@@ -220,6 +241,7 @@ function generateExampleFromSchema(schema: any, visited = new Set()): any {
       default:
         // Handle allOf, oneOf, anyOf
         if (schema.allOf && Array.isArray(schema.allOf)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const merged: Record<string, any> = {};
           for (const subSchema of schema.allOf) {
             const subExample = generateExampleFromSchema(subSchema, visited);
@@ -263,7 +285,7 @@ function transformOpenApiToApiEndpointMeta(
   spec: OpenApiSpec,
   path: string,
   method: string,
-  requestBodyOverride?: Record<string, any>,
+  requestBodyOverride?: Record<string, unknown>,
   responseExampleOverride?: Record<string, string>,
 ): ApiEndpointMeta {
   const pathItem = spec.paths[path];
@@ -289,10 +311,13 @@ function transformOpenApiToApiEndpointMeta(
       const apiParam: APIParameter = {
         name: param.name,
         description: param.description || "",
-        type: param.schema?.type,
+        type: param.schema?.type || "string",
         required: param.required || false,
         example:
-          param.example || param.schema?.example || param.schema?.default,
+          param.example ||
+          param.schema?.example ||
+          param.schema?.default ||
+          getExampleForType(param.schema?.type),
       } as APIParameter;
 
       switch (param.in) {
@@ -328,12 +353,42 @@ function transformOpenApiToApiEndpointMeta(
     const content = operation.requestBody.content;
     const jsonContent = content["application/json"];
 
-    const example =
-      jsonContent?.schema?.example || jsonContent?.schema?.examples?.[0];
+    if (jsonContent?.schema?.properties) {
+      const required = jsonContent.schema.required || [];
 
-    if (example) {
-      // If there's a global example but no properties, try to extract from example
-      if (typeof example === "object" && example !== null) {
+      for (const [propName, propSchema] of Object.entries(
+        jsonContent.schema.properties,
+      )) {
+        const prop = propSchema as {
+          type?: string;
+          description?: string;
+          example?: string | number | boolean | object;
+          format?: string;
+          enum?: (string | number | boolean)[];
+        };
+
+        // Generate example if not provided
+        let example = prop.example;
+        if (example === undefined) {
+          example = generateExampleFromSchema(prop);
+        }
+
+        const apiParam: APIParameter = {
+          name: propName,
+          description: prop.description || "",
+          type: prop.type || "string",
+          required: required.includes(propName),
+          example: example,
+        } as APIParameter;
+
+        bodyParameters.push(apiParam);
+      }
+    } else {
+      // Fallback: try to generate from the schema example
+      const example =
+        jsonContent?.schema?.example || jsonContent?.schema?.examples?.[0];
+
+      if (example && typeof example === "object" && example !== null) {
         for (const [key, value] of Object.entries(example)) {
           const apiParam: APIParameter = {
             name: key,
@@ -344,23 +399,6 @@ function transformOpenApiToApiEndpointMeta(
 
           bodyParameters.push(apiParam);
         }
-      }
-    } else if (jsonContent?.schema?.properties) {
-      const required = jsonContent.schema.required || [];
-
-      for (const [propName, propSchema] of Object.entries(
-        jsonContent.schema.properties,
-      )) {
-        const prop = propSchema as any;
-        const apiParam: APIParameter = {
-          name: propName,
-          description: prop.description || "",
-          type: prop.type,
-          required: required.includes(propName),
-          example: prop.example,
-        } as APIParameter;
-
-        bodyParameters.push(apiParam);
       }
     }
   }
@@ -397,13 +435,14 @@ function transformOpenApiToApiEndpointMeta(
 
   return {
     title: operation.summary || `${method.toUpperCase()} ${path}`,
-    description: operation.description || operation.summary || "",
+    description: "", // Always empty since we don't want to show titles/descriptions
     path,
     origin: baseUrl,
     method: method.toUpperCase() as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
     request: {
       pathParameters,
       headers,
+      queryParameters,
       bodyParameters,
     },
     responseExamples,

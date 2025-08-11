@@ -34,12 +34,7 @@ export const metadata = createMetadata({
 
 # Get Started
 
-Create user or server wallets, authenticate with your backend, connect to external wallets, and more. User wallets can be created using different authentication methods:
-
-- verification code (email, phone, etc.)
-- oauth (google, apple, etc.)
-- passkey
-- sign in with ethereum
+Create wallets for your users with flexible authentication options. Choose from email/phone verification, social OAuth, passkeys, or external wallet connections.
 
 <Tabs defaultValue="http">
   <TabsList>
@@ -75,14 +70,24 @@ Create user or server wallets, authenticate with your backend, connect to extern
 
   <TabsContent value="http">
 
-### API Usage
+## API Authentication
 
-You can use the [thirdweb API](https://api.thirdweb.com/reference) to create user wallets.
+Create and authenticate user wallets using different methods:
 
-Once authenticated, the auth endpoints will return the wallet address and a JWT token for usage with the rest of the API.
+### Initiate Authentication
+Start authentication with email, phone, passkey, or social providers:
 
-<OpenApiEndpoint path="/v1/wallets/user/code" method="POST" />
-<OpenApiEndpoint path="/v1/wallets/user/code/verify" method="POST" />
+<OpenApiEndpoint path="/v1/auth/initiate" method="POST" />
+
+### Complete Authentication  
+Verify and complete the authentication process:
+
+<OpenApiEndpoint path="/v1/auth/complete" method="POST" />
+
+### Get Wallet Information
+Retrieve authenticated user's wallet details:
+
+<OpenApiEndpoint path="/v1/wallets/me" method="GET" />
 
 </TabsContent>
 
@@ -351,65 +356,16 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
   <TabsContent value="unity">
     ### Installation
 
-    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity-sdk/releases) (.unitypackage file)
+    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity/releases) (.unitypackage file)
     2. Import the package into your Unity project via Assets > Import Package > Custom Package
 
     ### Configure Client ID
 
     After importing the SDK:
 
-    1. Go to Project Settings > Thirdweb
-    2. Enter your Client ID from the thirdweb dashboard
+    1. Drag the ThirdwebManager prefab into your scene.
+    2. Enter your Client ID and Bundle ID from the thirdweb dashboard
     3. Allowlist your game's Bundle ID on the thirdweb dashboard for security
-
-    ### Initialize the SDK
-
-    Create a new script to manage wallet connections:
-
-    ```csharp
-    using Thirdweb;
-    using UnityEngine;
-    using UnityEngine.UI;
-
-    public class WalletManager : MonoBehaviour
-    {
-        private ThirdwebSDK sdk;
-        public Text walletAddressText;
-        public Button connectButton;
-
-        void Start()
-        {
-            // Client ID is set in Project Settings > Thirdweb
-            sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
-            connectButton.onClick.AddListener(ConnectWallet);
-        }
-
-        public async void ConnectWallet()
-        {
-            try {
-                // Connect with an external wallet like Coinbase Wallet
-                string address = await sdk.wallet.Connect(new WalletConnection() {
-                    provider = WalletProvider.CoinbaseWallet,
-                    chainId = 1 // Ethereum Mainnet
-                });
-
-                walletAddressText.text = "Connected: " + address;
-            }
-            catch (System.Exception e) {
-                Debug.LogError("Error connecting wallet: " + e.Message);
-            }
-        }
-    }
-    ```
-
-    ### Using the Connect Wallet Prefab
-
-    For a quicker implementation, use the provided prefab:
-
-    1. Add the `ThirdwebManager` prefab to your scene
-    2. Configure your Client ID in the inspector
-    3. Add the `ConnectWallet` prefab to your UI Canvas
-    4. Connect the prefab to your ThirdwebManager
 
     ### Implementing In-App Wallets
 
@@ -419,17 +375,13 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
     public async void ConnectWithEmail(string email)
     {
         try {
-            string address = await sdk.wallet.Connect(new WalletConnection() {
-                provider = WalletProvider.EmbeddedWallet,
-                email = email,
-                chainId = 1 // Ethereum Mainnet
-            });
-
-            walletAddressText.text = "Connected: " + address;
-
-            // Read wallet balance
-            var balance = await sdk.wallet.GetBalance();
-            Debug.Log($"Balance: {balance.DisplayValue} {balance.Symbol}");
+            var inAppWalletOptions = new InAppWalletOptions(email: "myepicemail@domain.id");
+            var options = new WalletOptions(
+                provider: WalletProvider.InAppWallet, 
+                chainId: 1, 
+                inAppWalletOptions: inAppWalletOptions
+            );
+            var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
         }
         catch (System.Exception e) {
             Debug.LogError("Error connecting wallet: " + e.Message);
@@ -454,18 +406,15 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
 
     ```csharp
     using Thirdweb;
-
-    // For client-side applications:
-    var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
-    {
-        ClientId = "YOUR_CLIENT_ID" // From thirdweb dashboard
-    });
-
-    // For server-side applications:
-    // var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
-    // {
-    //     SecretKey = Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY")
-    // });
+ 
+    // For native applications
+    var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+    
+    // For frontend applications
+    var client = ThirdwebClient.Create(clientId: "yourClientId");
+    
+    // For backend applications
+    var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
     ```
 
     ### Connect External Wallets
@@ -473,17 +422,15 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
     For .NET applications that need to interact with external wallets:
 
     ```csharp
-    // For server-side applications or wallet management
-    var privateKey = Environment.GetEnvironmentVariable("WALLET_PRIVATE_KEY"); // Never hardcode
-    var wallet = new PrivateKeyWallet(privateKey);
+    var privateKeyHex = "yourPrivateKeyHex"; // Should be securely stored and accessed
+    var wallet = await PrivateKeyWallet.Create(client, privateKeyHex);
 
-    await sdk.SetWallet(wallet);
-    var address = await sdk.Wallet.GetAddress();
+    var address = await wallet.GetAddress();
     Console.WriteLine($"Connected wallet address: {address}");
 
     // Read wallet balance
-    var balance = await sdk.Wallet.GetBalance();
-    Console.WriteLine($"Balance: {balance.DisplayValue} {balance.Symbol}");
+    var balance = await wallet.GetBalance(chainId);
+    Console.WriteLine($"Balance: {balance.ToString().ToEth()}");
     ```
 
     ### Using In-App Wallets
@@ -491,20 +438,9 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
     Create wallets with email authentication:
 
     ```csharp
-    // Create an embedded wallet with email
-    var walletOptions = new EmbeddedWalletOptions
-    {
-        Email = "user@example.com",
-        AuthProvider = AuthProvider.Email
-    };
-
-    var wallet = new EmbeddedWallet(walletOptions);
-    await sdk.SetWallet(wallet);
-
-    // Authenticate and get the wallet address
-    await wallet.Authenticate();
-    var address = await sdk.Wallet.GetAddress();
-    Console.WriteLine($"Connected with embedded wallet: {address}");
+    var wallet = await InAppWallet.Create(client: client, email: "userEmail");
+    await wallet.SendOTP(); // and fetch the otp
+    var address = await wallet.LoginWithOtp("userEnteredOTP"); // try catch and retry if needed
     ```
 
     ### Reading Contract Data
@@ -514,9 +450,9 @@ Once authenticated, the auth endpoints will return the wallet address and a JWT 
     ```csharp
     // Get a contract instance
     var contract = await ThirdwebContract.Create(
-        client: sdk.Client,
-        address: "0x...",
-        chain: Chain.Ethereum
+      client, 
+      "contractAddress", 
+      chainId, 
     );
 
     // Read a value from the contract
