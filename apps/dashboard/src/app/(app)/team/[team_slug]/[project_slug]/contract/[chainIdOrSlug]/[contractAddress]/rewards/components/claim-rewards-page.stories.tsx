@@ -22,7 +22,7 @@ const meta = {
 export default meta;
 
 const recipient = "0x8C00f3F231c88CcAc2382AaC6e09A78D4F42129d";
-const referrer = "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
+const developer = "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94";
 
 function unclaimedFeesStub(token0Amount: bigint, token1Amount: bigint) {
   return {
@@ -82,10 +82,10 @@ function Variant(props: {
 }) {
   return (
     <ClaimRewardsPageUI
-      referrerBps={5000}
+      developerBps={5000}
       chainSlug="base"
       recipient={recipient}
-      referrer={referrer}
+      developer={developer}
       client={storybookThirdwebClient}
       handleClaim={() => {}}
       isClaimPending={false}

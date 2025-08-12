@@ -113,7 +113,7 @@ export function CreateTokenAssetPage(props: {
                       params.values.pool.startingPricePerToken,
                     ),
                   }),
-                  referrerRewardBps: 1250, // 12.5%
+                  developerRewardBps: 1250, // 12.5%
                 },
               }
             : undefined,
@@ -125,7 +125,7 @@ export function CreateTokenAssetPage(props: {
           social_urls: socialUrls,
           symbol: params.values.symbol,
         },
-        referrerAddress: "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94",
+        developerAddress: "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94",
       });
 
       // add contract to project in background

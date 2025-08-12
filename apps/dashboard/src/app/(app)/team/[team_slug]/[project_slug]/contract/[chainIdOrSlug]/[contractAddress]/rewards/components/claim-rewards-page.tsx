@@ -65,30 +65,30 @@ export function ClaimRewardsPage(props: {
     <ClaimRewardsPageUI
       unclaimedFees={props.unclaimedFees}
       recipient={props.reward.recipient}
-      referrer={props.reward.referrer}
+      developer={props.reward.developer}
       handleClaim={handleClaim}
       isClaimPending={sendTx.isPending}
       client={props.assetContractClient.client}
       chain={props.assetContractClient.chain}
       chainSlug={props.chainSlug}
-      referrerBps={props.reward.referrerBps}
+      developerBps={props.reward.developerBps}
     />
   );
 }
 
-function calculateFees(referrerBps: number) {
+function calculateFees(developerBps: number) {
   // 20% of is protocol fees
-  // remaining is split between referrer and recipient
+  // remaining is split between developer and recipient
 
   const protocolFees = 20;
   const remaining = 100 - protocolFees;
 
-  const referrerPercentageFinal = (remaining * referrerBps) / 10000;
+  const developerPercentageFinal = (remaining * developerBps) / 10000;
 
   return {
     protocolFees,
-    referrerPercentage: referrerPercentageFinal,
-    recipientPercentage: 100 - protocolFees - referrerPercentageFinal,
+    developerPercentage: developerPercentageFinal,
+    recipientPercentage: 100 - protocolFees - developerPercentageFinal,
   };
 }
 
@@ -106,18 +106,18 @@ export function ClaimRewardsPageUI(props: {
     };
   };
   recipient: string;
-  referrer: string;
-  referrerBps: number;
+  developer: string;
+  developerBps: number;
   handleClaim: () => void;
   isClaimPending: boolean;
   client: ThirdwebClient;
   chain: Chain;
   chainSlug: string;
 }) {
-  const fees = calculateFees(props.referrerBps);
+  const fees = calculateFees(props.developerBps);
 
   const recipientColor = `hsl(var(--chart-1))`;
-  const referrerColor = `hsl(var(--chart-2))`;
+  const developerColor = `hsl(var(--chart-2))`;
   const protocolFeesColor = `hsl(var(--chart-3))`;
 
   const hasUnclaimedRewards =
@@ -188,10 +188,10 @@ export function ClaimRewardsPageUI(props: {
                 value: `${fees.protocolFees}%`,
               },
               {
-                label: "Referrer",
-                color: referrerColor,
-                percent: fees.referrerPercentage,
-                value: `${fees.referrerPercentage}%`,
+                label: "Developer",
+                color: developerColor,
+                percent: fees.developerPercentage,
+                value: `${fees.developerPercentage}%`,
               },
             ]}
           />
@@ -218,9 +218,9 @@ export function ClaimRewardsPageUI(props: {
             </div>
 
             <div className="border-l pl-5">
-              <p className="font-medium text-sm">Referrer</p>
+              <p className="font-medium text-sm">Developer</p>
               <WalletAddress
-                address={props.referrer}
+                address={props.developer}
                 client={props.client}
                 iconClassName="size-3"
                 className="h-auto py-1 text-sm"
@@ -228,7 +228,7 @@ export function ClaimRewardsPageUI(props: {
                   <div
                     className="size-3 rounded-full"
                     style={{
-                      backgroundColor: referrerColor,
+                      backgroundColor: developerColor,
                     }}
                   />
                 }
