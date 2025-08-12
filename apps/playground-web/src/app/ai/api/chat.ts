@@ -9,7 +9,7 @@ export type NebulaContext = {
   sessionId: string | null;
 };
 
-export type NebulaSwapData = {
+type NebulaSwapData = {
   action: string;
   transaction: {
     chainId: number;
@@ -43,7 +43,6 @@ export type NebulaSwapData = {
 
 export async function promptNebula(params: {
   message: NebulaUserMessage;
-  authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
   abortController: AbortController;
   context: undefined | NebulaContext;
@@ -65,9 +64,6 @@ export async function promptNebula(params: {
     body: JSON.stringify(body),
     headers: {
       "x-client-id": process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!,
-      // FIXME REMOVE
-      "x-secret-key":
-        "7NFrTzBN9Y2Eca6Rl60uxT3Dwew4D9YaYHjoD_3Y2GDvkaejLFiodFDcuzGJqu0mc8PVCAi9M4Y3j6Ql_ZVRyQ",
       "Content-Type": "application/json",
     },
     method: "POST",

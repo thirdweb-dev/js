@@ -1,9 +1,5 @@
 "use client";
-import {
-  ArrowRightIcon,
-  MessageCircleIcon,
-  MessageSquareXIcon,
-} from "lucide-react";
+import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defineChain, prepareTransaction, type ThirdwebClient } from "thirdweb";
@@ -35,13 +31,12 @@ import { type NebulaContext, promptNebula } from "../api/chat";
 import type {
   NebulaSessionHistoryMessage,
   NebulaUserMessage,
-  SessionInfo,
 } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { resolveSchemeWithErrorHandler } from "./resolveSchemeWithErrorHandler";
 
 // Simplified types for the playground version
-export type WalletMeta = {
+type WalletMeta = {
   walletId: string;
   address: string;
 };
@@ -62,9 +57,9 @@ type NebulaUserMessageContentItem =
       chain_id: number;
     };
 
-export type NebulaUserMessageContent = NebulaUserMessageContentItem[];
+type NebulaUserMessageContent = NebulaUserMessageContentItem[];
 
-export type ChatMessage =
+type ChatMessage =
   | {
       type: "user";
       content: NebulaUserMessageContent;
@@ -105,14 +100,14 @@ export type ChatMessage =
       };
     };
 
-export type NebulaTxData = {
+type NebulaTxData = {
   chainId: number;
   data: `0x${string}`;
   to: string;
   value?: string;
 };
 
-export type NebulaSwapData = {
+type NebulaSwapData = {
   action: string;
   transaction: {
     chainId: number;
@@ -146,17 +141,8 @@ export type NebulaSwapData = {
 };
 
 export function ChatPageContent(props: {
-  session: SessionInfo | undefined;
-  accountAddress: string;
-  authToken: string;
   client: ThirdwebClient;
   type: "landing" | "new-chat";
-  initialParams:
-    | {
-        q: string | undefined;
-        chainIds: number[];
-      }
-    | undefined;
 }) {
   const address = useActiveAccount()?.address;
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -165,23 +151,16 @@ export function ChatPageContent(props: {
 
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
-    if (props.session?.history) {
-      return parseHistoryToMessages(props.session.history);
-    }
     return [];
   });
 
   const [_contextFilters, _setContextFilters] = useState<
     NebulaContext | undefined
   >(() => {
-    const contextRes = props.session?.context;
     const value: NebulaContext = {
-      chainIds:
-        contextRes?.chain_ids ||
-        props.initialParams?.chainIds.map((x) => x.toString()) ||
-        [],
-      sessionId: props.session?.id || null,
-      walletAddress: contextRes?.wallet_address || props.accountAddress || null,
+      chainIds: [],
+      sessionId: null,
+      walletAddress: address || null,
     };
 
     return value;
@@ -203,7 +182,7 @@ export function ChatPageContent(props: {
   const shouldRunEffect = useRef(true);
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (props.session || props.initialParams?.q || !shouldRunEffect.current) {
+    if (!shouldRunEffect.current) {
       return;
     }
 
@@ -225,11 +204,7 @@ export function ChatPageContent(props: {
 
       return _contextFilters;
     });
-  }, [props.session, props.initialParams?.q]);
-
-  const [sessionId, setSessionId] = useState<string | undefined>(
-    props.session?.id,
-  );
+  }, []);
 
   const [chatAbortController, setChatAbortController] = useState<
     AbortController | undefined
@@ -282,7 +257,6 @@ export function ChatPageContent(props: {
 
         await handleNebulaPrompt({
           abortController,
-          authToken: props.authToken,
           contextFilters: contextFilters,
           message: message,
           setContextFilters,
@@ -302,38 +276,15 @@ export function ChatPageContent(props: {
         setEnableAutoScroll(false);
       }
     },
-    [contextFilters, props.authToken, setContextFilters],
+    [contextFilters, setContextFilters],
   );
 
   const hasDoneAutoPrompt = useRef(false);
 
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (
-      props.initialParams?.q &&
-      messages.length === 0 &&
-      !hasDoneAutoPrompt.current
-    ) {
-      hasDoneAutoPrompt.current = true;
-      handleSendMessage({
-        content: [
-          {
-            text: props.initialParams.q,
-            type: "text",
-          },
-        ],
-        role: "user",
-      });
-    }
-  }, [props.initialParams?.q, messages.length, handleSendMessage]);
-
   const showEmptyState =
     !userHasSubmittedMessage &&
     messages.length === 0 &&
-    !props.session &&
-    !props.initialParams?.q;
-
-  const sessionWithNoMessages = props.session && messages.length === 0;
+    !hasDoneAutoPrompt.current;
 
   const connectedWalletsMeta: WalletMeta[] = connectedWallets.map((x) => ({
     address: x.getAccount()?.address || "",
@@ -405,34 +356,16 @@ export function ChatPageContent(props: {
         <div className="flex h-full flex-col">
           {/* Chat messages area - scrollable */}
           <div className="flex-1 overflow-y-auto">
-            {sessionWithNoMessages ? (
-              <div className="container flex h-full max-w-[800px] flex-col justify-center py-8">
-                <div className="flex flex-col items-center justify-center p-4">
-                  <div className="mb-5 rounded-full border bg-card p-3">
-                    <MessageSquareXIcon className="size-6 text-muted-foreground" />
-                  </div>
-                  <p className="mb-1 text-center text-foreground">
-                    No messages found
-                  </p>
-                  <p className="text-balance text-center text-muted-foreground text-sm">
-                    This session was aborted before receiving any messages
-                  </p>
-                </div>
-              </div>
-            ) : (
-              messages.length > 0 && (
-                <SimpleChats
-                  authToken={props.authToken}
-                  className="min-w-0"
-                  client={props.client}
-                  enableAutoScroll={enableAutoScroll}
-                  isChatStreaming={isChatStreaming}
-                  messages={messages}
-                  sendMessage={handleSendMessage}
-                  sessionId={sessionId}
-                  setEnableAutoScroll={setEnableAutoScroll}
-                />
-              )
+            {messages.length > 0 && (
+              <SimpleChats
+                className="min-w-0"
+                client={props.client}
+                enableAutoScroll={enableAutoScroll}
+                isChatStreaming={isChatStreaming}
+                messages={messages}
+                sendMessage={handleSendMessage}
+                setEnableAutoScroll={setEnableAutoScroll}
+              />
             )}
           </div>
 
@@ -630,8 +563,6 @@ function SimpleChatBar(props: {
 function SimpleChats(props: {
   messages: Array<ChatMessage>;
   isChatStreaming: boolean;
-  authToken: string;
-  sessionId: string | undefined;
   className?: string;
   client: ThirdwebClient;
   setEnableAutoScroll: (enable: boolean) => void;
@@ -895,7 +826,6 @@ function getLastUsedChainIds(): string[] | null {
 async function handleNebulaPrompt(params: {
   abortController: AbortController;
   message: NebulaUserMessage;
-  authToken: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
   contextFilters: NebulaContext | undefined;
   setContextFilters: (v: NebulaContext | undefined) => void;
@@ -903,7 +833,6 @@ async function handleNebulaPrompt(params: {
   const {
     abortController,
     message,
-    authToken,
     setMessages,
     contextFilters,
     setContextFilters,
@@ -913,7 +842,6 @@ async function handleNebulaPrompt(params: {
 
   await promptNebula({
     abortController,
-    authToken,
     context: contextFilters,
     handleStream(res) {
       if (abortController.signal.aborted) {
