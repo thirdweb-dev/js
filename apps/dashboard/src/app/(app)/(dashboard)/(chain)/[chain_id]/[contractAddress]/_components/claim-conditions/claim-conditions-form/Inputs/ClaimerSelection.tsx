@@ -27,13 +27,15 @@ export const ClaimerSelection = () => {
     setOpenSnapshotIndex: setOpenIndex,
     isAdmin,
     claimConditionType,
+    phaseSnapshots,
+    setPhaseSnapshot,
   } = useClaimConditionsFormContext();
 
   const handleClaimerChange = (value: string) => {
     const val = value as "any" | "specific" | "overrides";
 
     if (val === "any") {
-      form.setValue(`phases.${phaseIndex}.snapshot`, undefined);
+      setPhaseSnapshot(phaseIndex, undefined);
     } else {
       if (val === "specific") {
         form.setValue(`phases.${phaseIndex}.maxClaimablePerWallet`, 0);
@@ -41,7 +43,7 @@ export const ClaimerSelection = () => {
       if (val === "overrides" && field.maxClaimablePerWallet !== 1) {
         form.setValue(`phases.${phaseIndex}.maxClaimablePerWallet`, 1);
       }
-      form.setValue(`phases.${phaseIndex}.snapshot`, []);
+      setPhaseSnapshot(phaseIndex, []);
       setOpenIndex(phaseIndex);
     }
   };
@@ -49,6 +51,7 @@ export const ClaimerSelection = () => {
   let helperText: React.ReactNode;
 
   const disabledSnapshotButton = isAdmin && formDisabled;
+  const snapshot = phaseSnapshots[phaseIndex];
 
   if (dropType === "specific") {
     helperText = (
@@ -87,10 +90,7 @@ export const ClaimerSelection = () => {
 
   return (
     <FormFieldSetup
-      errorMessage={
-        form.getFieldState(`phases.${phaseIndex}.snapshot`, form.formState)
-          ?.error?.message
-      }
+      errorMessage={undefined}
       helperText={helperText}
       label={label}
       isRequired={false}
@@ -117,7 +117,7 @@ export const ClaimerSelection = () => {
         )}
 
         {/* Edit or See Snapshot */}
-        {field.snapshot ? (
+        {snapshot ? (
           <div className="flex items-center gap-3">
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
@@ -133,7 +133,7 @@ export const ClaimerSelection = () => {
             <div
               className={cn(
                 "flex gap-2 items-center",
-                field.snapshot?.length === 0
+                snapshot?.length === 0
                   ? "text-muted-foreground"
                   : "text-green-600 dark:text-green-500",
                 disabledSnapshotButton ? "opacity-50" : "",
@@ -141,9 +141,8 @@ export const ClaimerSelection = () => {
             >
               <div className="size-2 bg-current rounded-full" />
               <span className="text-sm">
-                {field.snapshot?.length}{" "}
-                {field.snapshot?.length === 1 ? "address" : "addresses"} in
-                snapshot
+                {snapshot?.length}{" "}
+                {snapshot?.length === 1 ? "address" : "addresses"} in snapshot
               </span>
             </div>
           </div>
