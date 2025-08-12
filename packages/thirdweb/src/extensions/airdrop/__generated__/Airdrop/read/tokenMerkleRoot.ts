@@ -19,8 +19,8 @@ export type TokenMerkleRootParams = {
 export const FN_SELECTOR = "0x95f5c120" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "tokenAddress",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

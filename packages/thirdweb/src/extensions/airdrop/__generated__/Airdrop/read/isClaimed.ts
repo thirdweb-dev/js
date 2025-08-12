@@ -18,16 +18,16 @@ export type IsClaimedParams = {
 export const FN_SELECTOR = "0xd12acf73" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_receiver",
-  },
-  {
     type: "address",
-    name: "_token",
   },
   {
-    type: "uint256",
+    name: "_token",
+    type: "address",
+  },
+  {
     name: "_tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
