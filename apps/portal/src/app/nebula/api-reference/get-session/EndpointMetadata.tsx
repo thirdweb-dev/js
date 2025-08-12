@@ -15,10 +15,13 @@ export function EndpointMetadata() {
         method: "GET",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
+        referenceUrl:
+          "https://api.thirdweb.com/reference#tag/ai/ai/get-session",
         request: {
           bodyParameters: [],
           headers: [nebulaSecretKeyHeaderParameter],
           pathParameters: [nebulaSessionIdPathParameter],
+          queryParameters: [],
         },
         responseExamples: {
           200: nebulaFullSessionResponse,
