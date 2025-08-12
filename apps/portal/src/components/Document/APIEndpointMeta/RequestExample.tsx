@@ -1,5 +1,6 @@
 "use client";
 
+import { ExternalLinkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ExternalLinkIcon } from "lucide-react";
 
 export function RequestExample(props: {
   codeExamples: Array<{
@@ -79,7 +79,12 @@ export function RequestExample(props: {
             {props.method}
           </Badge>
           <span className="truncate font-mono text-sm">
-            <a href={props.referenceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+            <a
+              href={props.referenceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:underline"
+            >
               {props.endpointUrl}
               <ExternalLinkIcon className="size-3" />
             </a>

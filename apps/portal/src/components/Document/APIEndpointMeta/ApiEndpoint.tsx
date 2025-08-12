@@ -1,5 +1,4 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLinkIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
 import { Details } from "../Details";
@@ -111,7 +110,11 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   return (
     <div>
       <div>
-        <Heading anchorId={`request#${props.metadata.method.toLowerCase()}${props.metadata.path}`} className="text-lg lg:text-lg" level={3}>
+        <Heading
+          anchorId={`request#${props.metadata.method.toLowerCase()}${props.metadata.path}`}
+          className="text-lg lg:text-lg"
+          level={3}
+        >
           Request
         </Heading>
 
@@ -181,7 +184,11 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
       </div>
 
       <div>
-        <Heading anchorId={`response#${props.metadata.method.toLowerCase()}${props.metadata.path}`} className="text-lg lg:text-lg" level={3}>
+        <Heading
+          anchorId={`response#${props.metadata.method.toLowerCase()}${props.metadata.path}`}
+          className="text-lg lg:text-lg"
+          level={3}
+        >
           Response
         </Heading>
         <div className="overflow-hidden rounded-lg border">
