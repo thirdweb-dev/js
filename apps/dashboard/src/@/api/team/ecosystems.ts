@@ -12,6 +12,7 @@ export type AuthOption =
   | "google"
   | "facebook"
   | "x"
+  | "tiktok"
   | "discord"
   | "farcaster"
   | "telegram"
