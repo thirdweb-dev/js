@@ -36,8 +36,8 @@ export function updatedTimeUnitEvent(
   filters: UpdatedTimeUnitEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event UpdatedTimeUnit(uint256 indexed _tokenId, uint256 oldTimeUnit, uint256 newTimeUnit)",
-    filters,
   });
 }

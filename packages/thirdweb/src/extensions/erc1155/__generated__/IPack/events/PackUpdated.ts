@@ -34,8 +34,8 @@ export type PackUpdatedEventFilters = Partial<{
  */
 export function packUpdatedEvent(filters: PackUpdatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event PackUpdated(uint256 indexed packId, address recipient, uint256 totalPacksCreated)",
-    filters,
   });
 }

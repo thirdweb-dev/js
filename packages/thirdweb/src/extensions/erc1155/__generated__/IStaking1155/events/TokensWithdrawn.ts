@@ -42,8 +42,8 @@ export function tokensWithdrawnEvent(
   filters: TokensWithdrawnEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensWithdrawn(address indexed staker, uint256 indexed tokenId, uint256 amount)",
-    filters,
   });
 }

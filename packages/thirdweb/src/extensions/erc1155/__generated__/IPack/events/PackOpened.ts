@@ -40,8 +40,8 @@ export type PackOpenedEventFilters = Partial<{
  */
 export function packOpenedEvent(filters: PackOpenedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event PackOpened(uint256 indexed packId, address indexed opener, uint256 numOfPacksOpened, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 totalAmount)[] rewardUnitsDistributed)",
-    filters,
   });
 }

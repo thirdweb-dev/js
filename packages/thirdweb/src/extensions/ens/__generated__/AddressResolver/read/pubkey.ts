@@ -16,18 +16,18 @@ export type PubkeyParams = {
 export const FN_SELECTOR = "0xc8690233" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "name",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes32",
     name: "x",
+    type: "bytes32",
   },
   {
-    type: "bytes32",
     name: "y",
+    type: "bytes32",
   },
 ] as const;
 

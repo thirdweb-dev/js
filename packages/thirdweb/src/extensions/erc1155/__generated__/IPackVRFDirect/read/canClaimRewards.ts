@@ -16,8 +16,8 @@ export type CanClaimRewardsParams = {
 export const FN_SELECTOR = "0xa9b47a66" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_opener",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -20,12 +20,12 @@ export type ABIParams = {
 export const FN_SELECTOR = "0x2203ab56" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "name",
+    type: "bytes32",
   },
   {
-    type: "uint256",
     name: "contentTypes",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
