@@ -1,9 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getContract } from "thirdweb";
-import {
-  getDeployedEntrypointERC20,
-} from "thirdweb/tokens";
-import { getProject } from "@/api/projects";
+import { getDeployedEntrypointERC20 } from "thirdweb/tokens";
+import { getProject } from "@/api/project/projects";
 import { getContractPageParamsInfo } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/_utils/getContractFromParams";
 import type { ProjectContractPageParams } from "../types";
 import { ClaimRewardsPage } from "./components/claim-rewards-page";
