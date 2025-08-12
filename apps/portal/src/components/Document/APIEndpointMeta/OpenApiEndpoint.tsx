@@ -64,7 +64,8 @@ function generateExampleFromSchema(schema: any, visited = new Set()): any {
     switch (schema.type) {
       case "string":
         if (schema.enum && schema.enum.length > 0) {
-          return schema.enum[0];
+          // Join all enum values with | separator for display
+          return schema.enum.join(" | ");
         }
         if (schema.format === "date-time") {
           return new Date().toISOString();
@@ -82,6 +83,10 @@ function generateExampleFromSchema(schema: any, visited = new Set()): any {
 
       case "number":
       case "integer":
+        if (schema.enum && schema.enum.length > 0) {
+          // Join all enum values with | separator for display
+          return schema.enum.join(" | ");
+        }
         if (schema.minimum !== undefined) {
           return schema.minimum;
         }
@@ -386,7 +391,7 @@ function transformOpenApiToApiEndpointMeta(
             description: prop.description || "",
             type: prop.type,
             required: required.includes(propName),
-            example: prop.example,
+            example: prop.example || generateExampleFromSchema(prop),
           } as APIParameter;
 
           bodyParameters.push(apiParam);
