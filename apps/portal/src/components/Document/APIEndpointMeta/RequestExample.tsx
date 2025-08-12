@@ -73,7 +73,7 @@ export function RequestExample(props: {
 
   return (
     <div>
-      <div className="flex items-center justify-between border-b px-4 py-2">
+      <div className="flex-col lg:flex-row flex items-start lg:items-center justify-between border-b px-4 py-2 gap-3 lg:gap-0">
         <div className="flex min-w-0 items-center gap-3">
           <Badge className="bg-inverted text-inverted-foreground">
             {props.method}
