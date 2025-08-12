@@ -15,7 +15,10 @@ export function EndpointMetadata() {
         method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}/clear",
+        referenceUrl:
+          "https://api.thirdweb.com/reference#tag/ai/ai/clear-session",
         request: {
+          queryParameters: [],
           bodyParameters: [],
           headers: [nebulaSecretKeyHeaderParameter],
           pathParameters: [nebulaSessionIdPathParameter],

@@ -1,96 +1,139 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
+import { Details } from "../Details";
 import { Heading } from "../Heading";
-import { Paragraph } from "../Paragraph";
+import { DynamicRequestExample } from "./DynamicRequestExample";
 import { RequestExample } from "./RequestExample";
 
-export type APIParameter =
-  | {
-      name: string;
-      required: false;
-      description: React.ReactNode;
-      type?: string;
-      example?:
-        | string
-        | boolean
-        | number
-        | object
-        | Array<string | boolean | number | object>;
-    }
-  | {
-      name: string;
-      required: true;
-      example:
-        | string
-        | boolean
-        | number
-        | object
-        | Array<string | boolean | number | object>;
-      description: React.ReactNode;
-      type?: string;
-    };
+export type APIParameter = {
+  name: string;
+  required: boolean;
+  description: React.ReactNode;
+  type?: string;
+  example?:
+    | string
+    | boolean
+    | number
+    | object
+    | Array<string | boolean | number | object>;
+};
 
-type ApiEndpointMeta = {
+type RequestExampleType = {
+  title: string;
+  bodyParameters: APIParameter[];
+};
+
+export type ApiEndpointMeta = {
   title: string;
   description: React.ReactNode;
+  referenceUrl: string;
   path: string;
   origin: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   request: {
     pathParameters: APIParameter[];
     headers: APIParameter[];
+    queryParameters: APIParameter[];
     bodyParameters: APIParameter[];
+    // Support for multiple request examples (oneOf schemas)
+    requestExamples?: RequestExampleType[];
   };
   responseExamples: Record<string, string>;
 };
 
 export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
-  const { responseExamples } = props.metadata;
+  const { responseExamples, request } = props.metadata;
 
+  // If we have multiple request examples (oneOf schemas), create code examples for each
   const requestExamples: Array<{
     lang: "javascript" | "bash";
     code: string;
     label: string;
-  }> = [
-    {
-      code: createFetchCommand({
-        metadata: props.metadata,
-      }),
-      label: "Fetch",
-      lang: "javascript",
-    },
-    {
-      code: createCurlCommand({
-        metadata: props.metadata,
-      }),
-      label: "Curl",
-      lang: "bash",
-    },
-  ];
+    format: "fetch" | "curl";
+    exampleType?: string;
+    bodyParameters?: APIParameter[];
+  }> = [];
+
+  if (request.requestExamples && request.requestExamples.length > 0) {
+    // Create examples for each oneOf schema
+    for (const requestExample of request.requestExamples) {
+      const metadataWithExample = {
+        ...props.metadata,
+        request: {
+          ...request,
+          bodyParameters: requestExample.bodyParameters,
+        },
+      };
+
+      requestExamples.push(
+        {
+          code: createFetchCommand({ metadata: metadataWithExample }),
+          label: `Fetch - ${requestExample.title}`,
+          lang: "javascript",
+          format: "fetch",
+          exampleType: requestExample.title,
+          bodyParameters: requestExample.bodyParameters,
+        },
+        {
+          code: createCurlCommand({ metadata: metadataWithExample }),
+          label: `Curl - ${requestExample.title}`,
+          lang: "bash",
+          format: "curl",
+          exampleType: requestExample.title,
+          bodyParameters: requestExample.bodyParameters,
+        },
+      );
+    }
+  } else {
+    // Default single example
+    requestExamples.push(
+      {
+        code: createFetchCommand({ metadata: props.metadata }),
+        label: "Fetch",
+        lang: "javascript",
+        format: "fetch",
+        bodyParameters: request.bodyParameters,
+      },
+      {
+        code: createCurlCommand({ metadata: props.metadata }),
+        label: "Curl",
+        lang: "bash",
+        format: "curl",
+        bodyParameters: request.bodyParameters,
+      },
+    );
+  }
 
   const responseKeys = Object.keys(responseExamples);
 
   return (
     <div>
       <div>
-        <div className="flex flex-col gap-3">
-          <Heading anchorId="title" className="mb-0" level={2}>
-            {props.metadata.title}
-          </Heading>
-          <Paragraph className="mb-0">{props.metadata.description}</Paragraph>
-        </div>
-      </div>
-
-      <div>
-        <Heading anchorId="request" className="text-lg lg:text-lg" level={2}>
+        <Heading
+          anchorId={`request#${props.metadata.method.toLowerCase()}${props.metadata.path}`}
+          className="text-lg lg:text-lg"
+          level={3}
+        >
           Request
         </Heading>
-        <div className="rounded-lg border">
-          <RequestExample
-            // render <CodeBlock /> on server and pass it to client
-            codeExamples={requestExamples.map((example) => {
-              return {
+
+        {/* Use DynamicRequestExample for multiple examples, regular for single */}
+        {request.requestExamples && request.requestExamples.length > 0 ? (
+          <DynamicRequestExample
+            requestExamples={requestExamples}
+            endpointUrl={props.metadata.path}
+            referenceUrl={props.metadata.referenceUrl}
+            method={props.metadata.method}
+            pathParameters={request.pathParameters}
+            headers={request.headers}
+            queryParameters={request.queryParameters}
+            hasMultipleExamples={true}
+          />
+        ) : (
+          <div className="rounded-lg border">
+            <RequestExample
+              codeExamples={requestExamples.map((example) => ({
                 code: (
                   <CodeBlock
                     className="rounded-none border-none"
@@ -100,16 +143,52 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
                   />
                 ),
                 label: example.label,
-              };
-            })}
-            endpointUrl={props.metadata.path}
-            method={props.metadata.method}
-          />
-        </div>
+              }))}
+              endpointUrl={props.metadata.path}
+              referenceUrl={props.metadata.referenceUrl}
+              method={props.metadata.method}
+            />
+
+            {/* Parameters section inside the card */}
+            <div className="border-t">
+              {request.headers.length > 0 && (
+                <ParameterSection
+                  parameters={request.headers}
+                  title="Headers"
+                />
+              )}
+
+              {request.pathParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.pathParameters}
+                  title="Path Parameters"
+                />
+              )}
+
+              {request.queryParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.queryParameters}
+                  title="Query Parameters"
+                />
+              )}
+
+              {request.bodyParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.bodyParameters}
+                  title="Request Body"
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <div>
-        <Heading anchorId="response" className="text-lg lg:text-lg" level={2}>
+        <Heading
+          anchorId={`response#${props.metadata.method.toLowerCase()}${props.metadata.path}`}
+          className="text-lg lg:text-lg"
+          level={3}
+        >
           Response
         </Heading>
         <div className="overflow-hidden rounded-lg border">
@@ -149,68 +228,111 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   );
 }
 
-// function ParameterSection(props: {
-//   title: string;
-//   parameters: APIParameter[];
-// }) {
-//   return (
-//     <div className="mb-5">
-//       <Heading
-//         anchorClassName="m-0 mb-2"
-//         anchorId={props.title}
-//         className="text-lg md:text-lg"
-//         level={2}
-//       >
-//         {props.title}
-//       </Heading>
-//       <div className="flex flex-col">
-//         {props.parameters
-//           .sort((a, b) => {
-//             if (a.required === b.required) {
-//               return 0;
-//             }
-//             return a.required ? -1 : 1;
-//           })
-//           .map((param) => (
-//             <ParameterItem key={param.name} param={param} />
-//           ))}
-//       </div>
-//     </div>
-//   );
-// }
+function ParameterSection(props: {
+  title: string;
+  parameters: APIParameter[];
+}) {
+  return (
+    <div className="border-b last:border-b-0">
+      <Details
+        summary={
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium">{props.title}</span>
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+              {props.parameters.length}
+            </span>
+          </div>
+        }
+        accordionItemClassName="border-0 my-0"
+        accordionTriggerClassName="p-4 hover:bg-muted/50 transition-colors"
+      >
+        <div className="px-4 pb-4">
+          {props.parameters
+            .sort((a, b) => {
+              if (a.required === b.required) {
+                return 0;
+              }
+              return a.required ? -1 : 1;
+            })
+            .map((param) => (
+              <InlineParameterItem key={param.name} param={param} />
+            ))}
+        </div>
+      </Details>
+    </div>
+  );
+}
 
-// function ParameterItem({ param }: { param: APIParameter }) {
-//   return (
-//     <Details
-//       accordionItemClassName="my-1"
-//       accordionTriggerClassName="font-mono"
-//       summary={param.name}
-//       tags={param.required ? ["Required"] : []}
-//     >
-//       <div className={"flex flex-col gap-2"}>
-//         <Paragraph>{param.description}</Paragraph>
-//         {param.type && (
-//           <div className="rounded-lg border">
-//             <h4 className="border-b p-3 text-sm"> Type </h4>
-//             <CodeBlock
-//               className="border-none"
-//               code={param.type}
-//               containerClassName="mb-0"
-//               lang="typescript"
-//             />
-//           </div>
-//         )}
-//       </div>
-//     </Details>
-//   );
-// }
+function InlineParameterItem({ param }: { param: APIParameter }) {
+  return (
+    <div className="flex flex-col gap-2 p-3 bg-muted/30 rounded-lg">
+      <div className="flex items-center gap-2 flex-wrap">
+        <code className="text-foreground text-sm font-mono bg-background px-2 py-1 rounded border">
+          {param.name}
+        </code>
+        {param.type && (
+          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded">
+            {param.type}
+          </span>
+        )}
+        {param.required && (
+          <span className="text-xs text-warning-text px-2 py-1 rounded border border-warning-text">
+            Required
+          </span>
+        )}
+      </div>
+
+      {param.description && (
+        <div className="text-sm text-muted-foreground">{param.description}</div>
+      )}
+
+      {param.example !== undefined && (
+        <div className="text-sm flex flex-col gap-2">
+          <span className="text-muted-foreground">Example: </span>
+          <CodeBlock
+            code={
+              typeof param.example === "object"
+                ? JSON.stringify(param.example)
+                : String(param.example)
+            }
+            containerClassName="m-0"
+            lang="json"
+            scrollContainerClassName="max-h-[200px]"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 function createCurlCommand(params: { metadata: ApiEndpointMeta }) {
-  const url = `${params.metadata.origin}${params.metadata.path}`;
+  let url = `${params.metadata.origin}${params.metadata.path}`;
   const bodyObj: Record<string, string | number | boolean | object> = {};
 
-  const headers = params.metadata.request.headers
-    .filter((h) => h.example !== undefined)
+  // Add query parameters to URL
+  const queryParams = params.metadata.request.queryParameters
+    .filter((q) => q.example !== undefined)
+    .map((q) => `${q.name}=${encodeURIComponent(String(q.example))}`)
+    .join("&");
+
+  if (queryParams) {
+    url += `?${queryParams}`;
+  }
+
+  const displayHeaders = params.metadata.request.headers.filter(
+    (h) => h.example !== undefined,
+  );
+
+  // always show secret key header in examples
+  displayHeaders.push({
+    name: "x-secret-key",
+    example: "<your-project-secret-key>",
+    description:
+      "Project secret key - for backend usage only. Should not be used in frontend code.",
+    required: false,
+  });
+
+  const headers = displayHeaders
     .map((h) => {
       return `-H "${h.name}:${
         typeof h.example === "object" && h !== null
@@ -240,9 +362,40 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   const headersObj: Record<string, string | number | boolean | object> = {};
   const bodyObj: Record<string, string | number | boolean | object> = {};
   const { request } = params.metadata;
-  const url = `${params.metadata.origin}${params.metadata.path}`;
+  let url = `${params.metadata.origin}${params.metadata.path}`;
 
-  for (const param of request.headers) {
+  // Add query parameters to URL
+  const queryParams = request.queryParameters
+    .filter((q) => q.example !== undefined)
+    .map((q) => `${q.name}=${encodeURIComponent(String(q.example))}`)
+    .join("&");
+
+  if (queryParams) {
+    url += `?${queryParams}`;
+  }
+
+  const displayHeaders = request.headers.filter((h) => h.example !== undefined);
+
+  // always show secret key header in examples
+  if (params.metadata.path.includes("/v1/auth")) {
+    displayHeaders.push({
+      name: "x-client-id",
+      example: "<your-project-client-id>",
+      description:
+        "Project client ID - for frontend usage on authorized domains.",
+      required: false,
+    });
+  } else {
+    displayHeaders.push({
+      name: "x-secret-key",
+      example: "<your-project-secret-key>",
+      description:
+        "Project secret key - for backend usage only. Should not be used in frontend code.",
+      required: false,
+    });
+  }
+
+  for (const param of displayHeaders) {
     if (param.example !== undefined) {
       headersObj[param.name] = param.example;
     }
@@ -251,6 +404,8 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   for (const param of request.bodyParameters) {
     if (param.example !== undefined) {
       bodyObj[param.name] = param.example;
+    } else {
+      bodyObj[param.name] = param.type || "";
     }
   }
 

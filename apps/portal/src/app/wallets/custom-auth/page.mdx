@@ -5,6 +5,7 @@ import {
 	TabsContent,
 	DocImage,
 	createMetadata,
+	OpenApiEndpoint,
 } from "@doc";
 import EWCustomAuth from "./images/customauth.png";
 import EWCustomAuthdb from "./images/customauthdb.png";
@@ -67,18 +68,10 @@ You will be asked to enter the following values
 
 <TabsContent value="http">
 
-```http
-POST https://api.thirdweb.com/v1/wallets/user/generic-auth
-Content-Type: application/json
-x-client-id: <your-client-id>
-x-ecosystem-id: <your-ecosystem-id> (optional)
-x-ecosystem-partner-id: <your-ecosystem-partner-id> (optional)
-
-{
-	"type": "jwt",
-	"jwt": "<your-jwt>"
-}
-```
+<OpenApiEndpoint path="/v1/auth/complete" method="POST" requestBodyOverride={{
+	type: "jwt",
+	payload: "<your-jwt>",
+}}/>
 
 </TabsContent>
 
@@ -198,18 +191,10 @@ Once you've logged in with your own auth, you can pass the user's JWT to the in-
 
 <TabsContent value="http">
 
-```http
-POST https://api.thirdweb.com/v1/wallets/user/generic-auth
-Content-Type: application/json
-x-client-id: <your-client-id>
-x-ecosystem-id: <your-ecosystem-id> (optional)
-x-ecosystem-partner-id: <your-ecosystem-partner-id> (optional)
-
-{
-	"type": "auth-payload",
-	"payload": "<your-auth-payload>"
-}
-```
+<OpenApiEndpoint path="/v1/auth/complete" method="POST" requestBodyOverride={{
+	type: "auth-payload",
+	payload: "<your-auth-payload>",
+}} />
 
 
 

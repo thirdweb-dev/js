@@ -36,7 +36,9 @@ export function EndpointMetadata() {
         method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/execute",
+        referenceUrl: "https://api.thirdweb.com/reference#tag/ai/ai/execute",
         request: {
+          queryParameters: [],
           bodyParameters: [
             {
               description: "The message to be processed.",

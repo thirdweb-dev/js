@@ -16,6 +16,8 @@ export function EndpointMetadata() {
         method: "PUT",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
+        referenceUrl:
+          "https://api.thirdweb.com/reference#tag/ai/ai/update-session",
         request: {
           bodyParameters: [
             {
@@ -28,6 +30,7 @@ export function EndpointMetadata() {
           ],
           headers: [nebulaSecretKeyHeaderParameter],
           pathParameters: [nebulaSessionIdPathParameter],
+          queryParameters: [],
         },
         responseExamples: {
           200: nebulaFullSessionResponse,

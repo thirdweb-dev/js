@@ -10,6 +10,7 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	OpenApiEndpoint,
 } from "@doc";
 import {
 	ReactIcon,
@@ -67,89 +68,18 @@ Read, write, and deploy smart contracts on any EVM compatible blockchain.
   </TabsList>
 
   <TabsContent value="http">
-    ### Read a Contract
 
-    You can read contract data efficiently using the [contract read API](https://api.thirdweb.com/reference#tag/contracts/post/v1/contracts/read).
+    ### Read from Contracts
 
-    ```http
-    GET /v1/contracts/read
-    Host: api.thirdweb.com
-    Content-Type: application/json
-    x-client-id: <your-project-client-id>
+    You can efficiently read data from multiple functions or contracts in a single request.
 
-    {
-        "chainId": "1" // your chain id
-        "calls": [{
-          "contractAddress": "0x...",
-          "method": "function allowance(address owner, address spender)",
-          "params": ["0x...", "0x..."],
-        }],
-    }
-    ```
+    <OpenApiEndpoint path="/v1/contracts/read" method="POST" />
 
-	You can batch multiple contract reads in a single request, and the response will be an array of results or errors.
+    ### Write to Contracts
 
-  Authentication requires either `x-secret-key` (backend) or `x-client-id` (frontend) to be set in the request headers.
+    You can write multiple functions to multiple contracts on the same chain in a single request atomically, which will result in a single transaction for optimal gas efficiency.
 
-	### Write to a Contract
-
-	You can write to a contract using the [contract write API](https://api.thirdweb.com/reference#tag/contracts/post/v1/contracts/write).
-
-<Tabs defaultValue="frontend">
-      <TabsList>
-        <TabsTrigger value="frontend">Frontend</TabsTrigger>
-        <TabsTrigger value="backend">Backend</TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="frontend">
-
-      On the frontend, use your project client ID and the users's auth token to send a transaction on their behalf.
-
-      ```http
-      POST /v1/contracts/write
-      Host: api.thirdweb.com
-      Content-Type: application/json
-      x-client-id: <your-project-client-id>
-      Authorization: Bearer <user-auth-token>
-
-      {
-        "from": "0x...", // the user wallet address
-        "chainId": "1" // the chain id
-        "calls": [{
-          "contractAddress": "0x...",
-          "method": "function transfer(address to, uint256 amount)",
-          "params": ["0x...", "1000000000000000000"],
-        }],
-      }
-      ```
-
-      </TabsContent>
-
-      <TabsContent value="backend">
-
-      On the backend, use your project secret key to send a transaction from any of your server wallets.
-
-      ```http
-      POST /v1/contracts/write
-      Host: api.thirdweb.com
-    Content-Type: application/json
-    x-secret-key: <your-project-secret-key>
-
-    {
-        "from": "0x...", // your server wallet address
-        "chainId": "1" // your chain id
-        "calls": [{
-          "contractAddress": "0x...",
-          "method": "function transfer(address to, uint256 amount)",
-          "params": ["0x...", "1000000000000000000"],
-        }],
-    }
-    ```
-
-      </TabsContent>
-    </Tabs>
-
-	You can batch multiple contract writes in a single request, and the transactions will be batched atomically onchain.
+	<OpenApiEndpoint path="/v1/contracts/write" method="POST" />
 
   </TabsContent>
 

@@ -122,7 +122,7 @@ const getHTTPSnippet = (authMethod: AuthMethod): string[] => {
     case "email":
       return [
         `# Send a login code to the user
-POST https://api.thirdweb.com/v1/wallets/user/code
+POST https://api.thirdweb.com/v1/auth/initiate
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -131,7 +131,7 @@ x-client-id: <your-project-client-id>
   "email": "user@example.com"
 }`,
         `# Verify the code and authenticate the user
-POST https://api.thirdweb.com/v1/wallets/user/code/verify
+POST https://api.thirdweb.com/v1/auth/complete
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -148,7 +148,7 @@ x-client-id: <your-project-client-id>
     case "phone":
       return [
         `# Send a login code to the user
-POST https://api.thirdweb.com/v1/wallets/user/code
+POST https://api.thirdweb.com/v1/auth/initiate
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -157,7 +157,7 @@ x-client-id: <your-project-client-id>
   "phone": "+1234567890"
 }`,
         `# Verify the code and authenticate the user
-POST https://api.thirdweb.com/v1/wallets/user/code/verify
+POST https://api.thirdweb.com/v1/auth/complete
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
