@@ -17,9 +17,7 @@ export function DynamicHeight(props: {
         boxSizing: "border-box",
         height: height ? `${height}px` : "auto",
         overflow: "hidden",
-        transition:
-          props.transition ||
-          "height 210ms cubic-bezier(0.175, 0.885, 0.32, 1.1)",
+        transition: props.transition || "height 250ms ease",
       }}
     >
       <div
