@@ -9,4 +9,5 @@ export type LocaleId =
   | "de_DE"
   | "fr_FR"
   | "ru_RU"
-  | "pt_BR";
+  | "pt_BR"
+  | "zh_CN";

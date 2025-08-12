@@ -1,4 +1,4 @@
-import type { Ecosystem, Partner } from "@/api/ecosystems";
+import type { Ecosystem, Partner } from "@/api/team/ecosystems";
 
 export async function fetchPartnerDetails(args: {
   authToken: string;

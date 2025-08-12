@@ -1,3 +1,4 @@
+import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -7,10 +8,10 @@ export default async function Page() {
   try {
     const paths = await getBridgePaths();
     return (
-      <div className="container pb-20">
+      <div className="container max-w-[1400px] pb-20">
         <div className="flex flex-col justify-between md:flex-row md:gap-8">
           <div>
-            <h2 className="mb-1 font-semibold text-2xl tracking-tight">
+            <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
               thirdweb Payments REST API
             </h2>
             <p className="mb-5 text-muted-foreground">
@@ -20,8 +21,13 @@ export default async function Page() {
           </div>
 
           <Link href="https://bridge.thirdweb.com/reference" target="_blank">
-            <Button className="max-md:w-full" variant="outline">
+            <Button
+              className="max-md:w-full rounded-full gap-2"
+              variant="outline"
+              size="sm"
+            >
               View all endpoints
+              <ArrowUpRightIcon className="size-4" />
             </Button>
           </Link>
         </div>

@@ -6,7 +6,7 @@ import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";

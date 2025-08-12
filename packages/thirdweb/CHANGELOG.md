@@ -1,5 +1,67 @@
 # thirdweb
 
+## 5.105.31
+
+### Patch Changes
+
+- [#7819](https://github.com/thirdweb-dev/js/pull/7819) [`45ba811`](https://github.com/thirdweb-dev/js/commit/45ba811950fe9e85060a4c93c76c13f7f00f8292) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Sort payment quotes in ascending order
+
+- [#7807](https://github.com/thirdweb-dev/js/pull/7807) [`c672a84`](https://github.com/thirdweb-dev/js/commit/c672a84fc398730e673b40537e03ef09615106c7) Thanks [@Yash094](https://github.com/Yash094)! - Add chinese locale support
+
+- [#7824](https://github.com/thirdweb-dev/js/pull/7824) [`d52855d`](https://github.com/thirdweb-dev/js/commit/d52855dbdabf497dc72a5dbed56c55d345bac0e9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix supportedTokens address comparison
+
+## 5.105.30
+
+### Patch Changes
+
+- [#7813](https://github.com/thirdweb-dev/js/pull/7813) [`e114b2c`](https://github.com/thirdweb-dev/js/commit/e114b2c4f98aa9470afffcd5f809953bb69c5c4f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Skips payment selection in the TransactionWidget if the user's balance is sufficient to complete the transaction.
+
+## 5.105.29
+
+### Patch Changes
+
+- [#7809](https://github.com/thirdweb-dev/js/pull/7809) [`c0948fb`](https://github.com/thirdweb-dev/js/commit/c0948fb9fe71b6403ac08f84e4c6f30bdbea8e3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle environments where process is not defined
+
+## 5.105.28
+
+### Patch Changes
+
+- [#7805](https://github.com/thirdweb-dev/js/pull/7805) [`621c1de`](https://github.com/thirdweb-dev/js/commit/621c1de62e486b8698d9bd38fabde73fef9f7de5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add ability to override button label for all payment widgets
+
+## 5.105.27
+
+### Patch Changes
+
+- [#7803](https://github.com/thirdweb-dev/js/pull/7803) [`fd4414b`](https://github.com/thirdweb-dev/js/commit/fd4414b451bf07d8a165f0dee9c71d2a1bea1812) Thanks [@MananTank](https://github.com/MananTank)! - Update `getTotalClaimedSupply` and `getTotalUnclaimedSupply` erc721 extensions to consider `startTokenId` if the contract has `startTokenId` set.
+
+- [#7789](https://github.com/thirdweb-dev/js/pull/7789) [`9a3ebe1`](https://github.com/thirdweb-dev/js/commit/9a3ebe1cb1e937d40477019c71e163cc1837a99e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add transaction hash to max wait time error
+
+- [#7785](https://github.com/thirdweb-dev/js/pull/7785) [`e5326c4`](https://github.com/thirdweb-dev/js/commit/e5326c43a9bf2aed665907760c48e43e2310cd74) Thanks [@alecananian](https://github.com/alecananian)! - Added `useSiweAuth` to the React Native exports
+
+- [#7774](https://github.com/thirdweb-dev/js/pull/7774) [`e1ad7da`](https://github.com/thirdweb-dev/js/commit/e1ad7daf5401c4ddd3661eceed15e8c4f481d28e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `thirdweb/insight` import typescript error
+
+## 5.105.26
+
+### Patch Changes
+
+- [#7775](https://github.com/thirdweb-dev/js/pull/7775) [`b86d520`](https://github.com/thirdweb-dev/js/commit/b86d520f3c05c4c3741d9f3071f40d13cebe24dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle mobile deeplinks for transactions via WalletConnect
+
+- [#7767](https://github.com/thirdweb-dev/js/pull/7767) [`e4ba47b`](https://github.com/thirdweb-dev/js/commit/e4ba47bd1e4bc5aee4ca1e0bedd583dc9e33d30e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix decodeFunction and decodeError functions
+
+- [#7766](https://github.com/thirdweb-dev/js/pull/7766) [`58787a2`](https://github.com/thirdweb-dev/js/commit/58787a28f362d168a72a6eb462930ad7de4b87f2) Thanks [@alecananian](https://github.com/alecananian)! - Fixed `useContractEvents` persisting previous data when filters change
+
+## 5.105.25
+
+### Patch Changes
+
+- [#7761](https://github.com/thirdweb-dev/js/pull/7761) [`d35b6fc`](https://github.com/thirdweb-dev/js/commit/d35b6fc1fe320c55cddfe3080dc5b66a3d605514) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix CheckoutWidget transaction invalidation and fix nft filtering in connect UI
+
+## 5.105.24
+
+### Patch Changes
+
+- [#7745](https://github.com/thirdweb-dev/js/pull/7745) [`c717eaa`](https://github.com/thirdweb-dev/js/commit/c717eaadae09c65b2f651145f1279ba876c90ace) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Faster payment widget quote discovery
+
 ## 5.105.23
 
 ### Patch Changes

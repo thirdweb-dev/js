@@ -39,6 +39,7 @@ import {
   LINE_ICON,
   STEAM_ICON,
   TELEGRAM_ICON,
+  TIKTOK_ICON,
   TWITCH_ICON,
   X_ICON,
 } from "../icons/svgs.js";
@@ -67,6 +68,7 @@ const socialIcons = {
   telegram: TELEGRAM_ICON,
   twitch: TWITCH_ICON,
   x: X_ICON,
+  tiktok: TIKTOK_ICON,
 };
 
 type InAppWalletFormUIProps = {

@@ -122,7 +122,7 @@ const getHTTPSnippet = (authMethod: AuthMethod): string[] => {
     case "email":
       return [
         `# Send a login code to the user
-POST https://api.thirdweb.com/v1/wallets/user/code
+POST https://api.thirdweb.com/v1/auth/initiate
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -131,7 +131,7 @@ x-client-id: <your-project-client-id>
   "email": "user@example.com"
 }`,
         `# Verify the code and authenticate the user
-POST https://api.thirdweb.com/v1/wallets/user/code/verify
+POST https://api.thirdweb.com/v1/auth/complete
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -148,7 +148,7 @@ x-client-id: <your-project-client-id>
     case "phone":
       return [
         `# Send a login code to the user
-POST https://api.thirdweb.com/v1/wallets/user/code
+POST https://api.thirdweb.com/v1/auth/initiate
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -157,7 +157,7 @@ x-client-id: <your-project-client-id>
   "phone": "+1234567890"
 }`,
         `# Verify the code and authenticate the user
-POST https://api.thirdweb.com/v1/wallets/user/code/verify
+POST https://api.thirdweb.com/v1/auth/complete
 Content-Type: application/json
 x-client-id: <your-project-client-id>
 
@@ -365,7 +365,7 @@ function MyComponent() {
 
 // 3. Or use prebuilt UI components (ConnectButton/ConnectEmbed)
 function PrebuiltUIExample() {
-  const walletWithAuth = inAppWallet({ 
+  const walletWithAuth = inAppWallet({
     auth: { options: ["${authMethod}"] },
     metadata: {
       name: "My App",
@@ -380,9 +380,9 @@ function PrebuiltUIExample() {
   });
 
   return (
-      <ConnectButton 
+      <ConnectButton
         client={client}
-        wallets={[walletWithAuth]} 
+        wallets={[walletWithAuth]}
       />
   );
 }`;
@@ -445,7 +445,7 @@ function MyComponent() {
 }
 
 // 3. Or use prebuilt UI components (ConnectButton/ConnectEmbed)
-const walletWithAuth = inAppWallet({ 
+const walletWithAuth = inAppWallet({
     auth: { options: ["email"] },
     metadata: {
         name: "My App",
@@ -465,9 +465,9 @@ function PrebuiltUIExample() {
   console.log("Connected as:", activeAccount?.address);
 
   return (
-      <ConnectButton 
+      <ConnectButton
         client={client}
-        wallets={[walletWithAuth]} 
+        wallets={[walletWithAuth]}
       />
   );
 }`;
@@ -527,7 +527,7 @@ function MyComponent() {
 
 // 3. Or use prebuilt UI components (ConnectButton/ConnectEmbed)
 function PrebuiltUIExample() {
-  const walletWithAuth = inAppWallet({ 
+  const walletWithAuth = inAppWallet({
     auth: { options: ["phone"] },
     metadata: {
       name: "My App",
@@ -542,9 +542,9 @@ function PrebuiltUIExample() {
   });
 
   return (
-      <ConnectButton 
+      <ConnectButton
         client={client}
-        wallets={[walletWithAuth]} 
+        wallets={[walletWithAuth]}
       />
   );
 }`;
@@ -718,8 +718,8 @@ const getUnitySnippet = (authMethod: AuthMethod): string => {
         `// Email authentication
 var inAppWalletOptions = new InAppWalletOptions(email: "user@example.com");
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -731,8 +731,8 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
         `// Phone authentication
 var inAppWalletOptions = new InAppWalletOptions(phoneNumber: "+1234567890");
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -761,8 +761,8 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
         `// ${providerMap[authMethod]} OAuth
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.${providerMap[authMethod]});
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -775,8 +775,8 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
         `// Guest authentication
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Guest);
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -789,8 +789,8 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
 var externalWallet = await PrivateKeyWallet.Create(client, "your-private-key");
 var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Siwe, siweSigner: externalWallet);
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -802,8 +802,8 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
         `// ${authMethod} authentication
 var inAppWalletOptions = new InAppWalletOptions();
 var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet, 
-    chainId: 1, 
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
     inAppWalletOptions: inAppWalletOptions
 );
 var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
@@ -915,10 +915,9 @@ function AuthMethodsTabsContent() {
                   </div>
                   <div className="relative space-y-4">
                     {getCodeSnippet(selectedAuth, platform.id).map(
-                      (code, index) => (
+                      (code, i) => (
                         <CodeClient
-                          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                          key={index}
+                          key={`${platform.id}-${i}`}
                           code={code}
                           lang={
                             platform.id === "http"

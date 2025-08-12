@@ -157,7 +157,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           </div>
 
           <TabButtons
-            tabClassName="!text-sm"
             tabs={[
               {
                 isActive: tab === "Details",

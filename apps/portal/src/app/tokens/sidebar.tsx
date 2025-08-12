@@ -18,7 +18,35 @@ export const sidebar: SideBar = {
       icon: <ZapIcon />,
     },
     { separator: true },
-    // explore
+    {
+      isCollapsible: false,
+      links: [
+        {
+          isCollapsible: true,
+          links: [
+            {
+              href: `${slug}/deploy-erc20`,
+              name: "Deploy ERC-20 Token",
+            },
+            {
+              href: `${slug}/deploy-erc721`,
+              name: "Deploy ERC-721 Token",
+            },
+            {
+              href: `${slug}/deploy-erc1155`,
+              name: "Deploy ERC-1155 Token",
+            },
+          ],
+          name: "Deploy Tokens",
+        },
+        {
+          href: `${slug}/list-tokens`,
+          name: "List Tokens",
+        },
+      ],
+      name: "Guides",
+    },
+
     {
       isCollapsible: false,
       links: [
@@ -497,9 +525,15 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: "/contracts/faq",
-          name: "FAQs",
+          href: `${slug}/faq`,
+          name: "FAQ",
         },
+      ],
+      name: "Resources",
+    },
+    {
+      isCollapsible: true,
+      links: [
         {
           links: [
             {
@@ -526,7 +560,7 @@ export const sidebar: SideBar = {
           name: "Design Docs",
         },
       ],
-      name: "Resources",
+      name: "Archive",
     },
   ],
   name: "Tokens",

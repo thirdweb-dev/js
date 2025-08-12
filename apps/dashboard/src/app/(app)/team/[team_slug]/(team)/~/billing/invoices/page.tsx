@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getTeamInvoices } from "@/actions/stripe-actions";
-import { getTeamBySlug } from "@/api/team";
-import { getMemberByAccountId } from "@/api/team-members";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
+import { getValidAccount } from "@/api/account/get-account";
+import { getTeamBySlug } from "@/api/team/get-team";
+import { getMemberByAccountId } from "@/api/team/team-members";
 import { BillingFilter } from "./components/billing-filter";
 import { BillingHistory } from "./components/billing-history";
 import { searchParamLoader } from "./search-params";

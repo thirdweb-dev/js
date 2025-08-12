@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { getAbsoluteUrl } from "@/utils/vercel";
 import { AccountAbstractionLayout } from "./AccountAbstractionPage";
 

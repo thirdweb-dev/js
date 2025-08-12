@@ -1,13 +1,13 @@
-import { AccountAbstractionSettingsPage } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/settings/SponsorshipPolicies";
 import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
+import { AccountAbstractionSettingsPage } from "./SponsorshipPolicies";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { NotificationsButton } from "@/components/notifications/notification-button";
 import type { Account } from "@/hooks/useApi";

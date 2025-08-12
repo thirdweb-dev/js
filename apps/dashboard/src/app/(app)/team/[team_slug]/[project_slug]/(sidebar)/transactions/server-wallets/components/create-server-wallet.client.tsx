@@ -1,20 +1,21 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { createEoa } from "@thirdweb-dev/vault-sdk";
-import { Loader2Icon, WalletIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { engineCloudProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { initVaultClient } from "../../lib/vault.client";
 
@@ -100,19 +101,20 @@ export default function CreateServerWallet(props: {
   return (
     <>
       <Button
-        className="flex flex-row items-center gap-2"
+        className="gap-1.5 rounded-full bg-background"
+        variant="outline"
         onClick={() =>
           props.managementAccessToken
             ? setModalOpen(true)
             : router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`)
         }
-        variant={"primary"}
       >
         {isLoading ? (
-          <Loader2Icon className="size-4 animate-spin" />
+          <Spinner className="size-4" />
         ) : (
-          <WalletIcon className="size-4" />
+          <PlusIcon className="size-4 text-muted-foreground" />
         )}
+
         {props.managementAccessToken
           ? isLoading
             ? "Creating..."
@@ -121,24 +123,28 @@ export default function CreateServerWallet(props: {
       </Button>
 
       <Dialog onOpenChange={setModalOpen} open={modalOpen}>
-        <DialogContent className="p-0">
-          <DialogHeader className="px-6 pt-6">
+        <DialogContent className="p-0 gap-0">
+          <DialogHeader className="p-4 lg:p-6">
             <DialogTitle>Create server wallet</DialogTitle>
-            <DialogDescription>
-              Enter a label for your server wallet.
-            </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-4 px-6">
-            <div>
-              <Input
-                className="w-full"
-                onChange={(e) => setLabel(e.target.value)}
-                placeholder="Wallet label (optional)"
-                value={label}
-              />
-            </div>
+
+          <div className="px-4 lg:px-6 space-y-2 pb-10">
+            <Label className="text-sm font-medium" htmlFor="wallet-label">
+              Wallet Label
+            </Label>
+            <Input
+              className="bg-card"
+              id="wallet-label"
+              onChange={(e) => setLabel(e.target.value)}
+              placeholder="My Wallet"
+              value={label}
+            />
+            <p className="text-sm text-muted-foreground">
+              Adding a label will help you identify the wallet in the dashboard
+            </p>
           </div>
-          <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+
+          <div className="flex justify-end gap-3 border-t bg-card p-4 lg:p-6 rounded-b-lg">
             <Button
               disabled={isLoading}
               onClick={() => setModalOpen(false)}
@@ -149,16 +155,10 @@ export default function CreateServerWallet(props: {
             <Button
               disabled={isLoading}
               onClick={handleCreateServerWallet}
-              variant="primary"
+              className="gap-2"
             >
-              {isLoading ? (
-                <>
-                  <Loader2Icon className="mr-2 size-4 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                "Create"
-              )}
+              {isLoading && <Spinner className="size-4" />}
+              Create server wallet
             </Button>
           </div>
         </DialogContent>

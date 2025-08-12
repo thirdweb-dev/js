@@ -10,7 +10,7 @@ import {
 } from "thirdweb";
 import { useActiveWalletChain } from "thirdweb/react";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import {
   type CreateAssetFormValues,
   type TokenDistributionFormValues,

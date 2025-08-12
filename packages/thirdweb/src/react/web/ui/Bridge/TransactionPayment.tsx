@@ -49,6 +49,11 @@ export interface TransactionPaymentProps {
   onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
+   * Request to execute the transaction immediately (skips funding flow)
+   */
+  onExecuteTransaction: () => void;
+
+  /**
    * Connect options for wallet connection
    */
   connectOptions?: PayEmbedConnectOptions;
@@ -64,6 +69,7 @@ export function TransactionPayment({
   uiOptions,
   client,
   onContinue,
+  onExecuteTransaction,
   connectOptions,
   showThirdwebBranding = true,
 }: TransactionPaymentProps) {
@@ -112,7 +118,7 @@ export function TransactionPayment({
     transactionDataQuery.data?.functionInfo?.functionName || "Contract Call";
   const isLoading = transactionDataQuery.isLoading || chainMetadata.isLoading;
 
-  const buttonLabel = `Execute ${functionName}`;
+  const buttonLabel = uiOptions.buttonLabel || `Execute ${functionName}`;
 
   if (isLoading) {
     return (
@@ -375,6 +381,16 @@ export function TransactionPayment({
                   transactionDataQuery.data.tokenInfo,
                   getAddress(activeAccount.address),
                 );
+                return;
+              }
+
+              // If the user has enough to pay, skip the payment step altogether
+              if (
+                userBalance &&
+                Number(userBalance) >=
+                  Number(transactionDataQuery.data.totalCost)
+              ) {
+                onExecuteTransaction();
                 return;
               }
 

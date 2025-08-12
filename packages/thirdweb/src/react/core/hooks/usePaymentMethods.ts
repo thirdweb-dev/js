@@ -8,6 +8,7 @@ import { getClientFetch } from "../../../utils/fetch.js";
 import { toTokens, toUnits } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { PaymentMethod } from "../machines/paymentMachine.js";
+import type { SupportedTokens } from "../utils/defaultTokens.js";
 import { useActiveWallet } from "./wallets/useActiveWallet.js";
 
 /**
@@ -33,6 +34,7 @@ export function usePaymentMethods(options: {
   client: ThirdwebClient;
   payerWallet?: Wallet;
   includeDestinationToken?: boolean;
+  supportedTokens?: SupportedTokens;
 }) {
   const {
     destinationToken,
@@ -40,6 +42,7 @@ export function usePaymentMethods(options: {
     client,
     payerWallet,
     includeDestinationToken,
+    supportedTokens,
   } = options;
   const localWallet = useActiveWallet(); // TODO (bridge): get all connected wallets
   const wallet = payerWallet || localWallet;
@@ -90,36 +93,38 @@ export function usePaymentMethods(options: {
         type: "wallet" as const,
         quote: s.quote,
       }));
-      const insufficientBalanceQuotes = validTokenQuotes
-        .filter((s) => s.balance < s.quote.originAmount)
-        .sort((a, b) => {
-          return (
-            Number.parseFloat(
-              toTokens(a.quote.originAmount, a.originToken.decimals),
-            ) *
-              (a.originToken.prices.USD || 1) -
-            Number.parseFloat(
-              toTokens(b.quote.originAmount, b.originToken.decimals),
-            ) *
-              (b.originToken.prices.USD || 1)
-          );
-        });
+
       const sufficientBalanceQuotes = validTokenQuotes
-        .filter((s) => s.balance >= s.quote.originAmount)
+        .filter((s) => !!s.originToken.prices.USD)
         .sort((a, b) => {
           return (
-            Number.parseFloat(
-              toTokens(b.quote.originAmount, b.originToken.decimals),
-            ) *
+            Number.parseFloat(toTokens(b.balance, b.originToken.decimals)) *
               (b.originToken.prices.USD || 1) -
-            Number.parseFloat(
-              toTokens(a.quote.originAmount, a.originToken.decimals),
-            ) *
+            Number.parseFloat(toTokens(a.balance, a.originToken.decimals)) *
               (a.originToken.prices.USD || 1)
           );
         });
-      // Move all sufficient balance quotes to the top
-      return [...sufficientBalanceQuotes, ...insufficientBalanceQuotes];
+
+      // Filter out quotes that are not included in the supportedTokens (if provided)
+      const tokensToInclude = supportedTokens
+        ? Object.keys(supportedTokens).flatMap(
+            (c: string) =>
+              supportedTokens[Number(c)]?.map((t) => ({
+                chainId: Number(c),
+                address: t.address,
+              })) ?? [],
+          )
+        : [];
+      const finalQuotes = supportedTokens
+        ? sufficientBalanceQuotes.filter((q) =>
+            tokensToInclude.find(
+              (t) =>
+                t.chainId === q.originToken.chainId &&
+                t.address.toLowerCase() === q.originToken.address.toLowerCase(),
+            ),
+          )
+        : sufficientBalanceQuotes;
+      return finalQuotes;
     },
     queryKey: [
       "payment-methods",
@@ -128,6 +133,7 @@ export function usePaymentMethods(options: {
       destinationAmount,
       payerWallet?.getAccount()?.address,
       includeDestinationToken,
+      supportedTokens,
     ], // 5 minutes
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000,

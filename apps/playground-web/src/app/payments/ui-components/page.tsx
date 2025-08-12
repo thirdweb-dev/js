@@ -1,15 +1,23 @@
-import type { Metadata } from "next";
+import { BoxIcon } from "lucide-react";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
-import { PageLayout } from "../../../components/blocks/APIHeader";
+import { createMetadata } from "@/lib/metadata";
 import PayEmbedPlayground from "../embed/page";
 
-export const metadata: Metadata = {
-  description:
-    "The easiest way for users to transact in your app. Onramp users, pay with any token and generate revenue for each user transaction. Integrate for free.",
-  metadataBase,
-  title: "Integrate Fiat & Cross-Chain Crypto Payments | thirdweb Payments",
-};
+const title = "Crypto Payments UI Components";
+const description =
+  "Onramp, swap, & bridge over 1,000+ tokens to enable seamless crypto payments, checkouts, and transactions";
+const ogDescription =
+  "Onramp, swap, and bridge cryptocurrency with easy to implement components for purchasing crypto, checking out physical or digital goods and services, and executing onchain transactions.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "payments",
+    title,
+  },
+});
 
 export default function Page(props: {
   searchParams: Promise<{ tab: string }>;
@@ -17,14 +25,10 @@ export default function Page(props: {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Onramp users with credit card &amp; cross-chain crypto payments —
-            and generate revenue for each user transaction.
-          </>
-        }
+        icon={BoxIcon}
+        description={description}
         docsLink="https://portal.thirdweb.com/payments?utm_source=playground"
-        title="Payments UI component"
+        title={title}
       >
         <PayEmbedPlayground searchParams={props.searchParams} />
       </PageLayout>

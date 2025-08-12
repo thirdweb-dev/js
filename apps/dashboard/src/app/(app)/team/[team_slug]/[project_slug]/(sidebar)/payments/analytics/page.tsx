@@ -2,7 +2,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { PayAnalytics } from "../components/PayAnalytics";
@@ -54,6 +54,7 @@ export default async function Page(props: {
           projectId={project.id}
           range={range}
           teamId={project.teamId}
+          authToken={authToken}
         />
 
         <div className="h-10" />

@@ -1,4 +1,4 @@
-import { BookOpenIcon, PresentationIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
@@ -7,38 +7,40 @@ export function PageHeader(props: {
   title: string;
   description: React.ReactNode;
   docsLink: string;
+  icon: React.FC<{ className?: string }>;
+  containerClassName?: string;
 }) {
   return (
-    <div className="mb-8 border-b py-10">
-      <div className="container grid grid-cols-1 items-start justify-between gap-6 lg:grid-cols-[1fr_340px] lg:flex-row">
+    <div className="mb-8 border-b py-8 relative">
+      <div
+        className={cn(
+          "container max-w-7xl flex-col lg:flex-row flex items-start justify-between gap-4",
+          props.containerClassName,
+        )}
+      >
         {/* Left */}
         <div>
-          <h1 className="mb-1 font-bold text-3xl tracking-tight lg:text-4xl">
+          <div className="flex mb-4">
+            <div className="rounded-full border bg-card p-2.5">
+              <props.icon className="size-6 text-muted-foreground" />
+            </div>
+          </div>
+
+          <h1 className="mb-1 font-bold text-3xl tracking-tight">
             {props.title}
           </h1>
-          <p className="text-balance text-base text-muted-foreground">
+          <p className="text-sm md:text-base text-balance text-muted-foreground max-w-5xl">
             {props.description}
           </p>
         </div>
 
         {/* right */}
-        <div className="flex flex-col gap-3 md:flex-row">
-          <Button asChild>
-            <Link
-              href={"https://thirdweb.com/dashboard?utm_source=playground"}
-              target="_blank"
-            >
-              <PresentationIcon className="mr-2 h-4 w-4" />
-              Add instantly
-            </Link>
-          </Button>
-          <Button asChild className="bg-card" variant="outline">
-            <Link href={props.docsLink} target="_blank">
-              <BookOpenIcon className="mr-2 h-4 w-4" />
-              Documentation
-            </Link>
-          </Button>
-        </div>
+        <Button asChild className="rounded-full gap-2 px-4" size="sm">
+          <Link href={props.docsLink} target="_blank">
+            Documentation
+            <ArrowUpRightIcon className="size-4" />
+          </Link>
+        </Button>
       </div>
     </div>
   );
@@ -50,15 +52,17 @@ export function PageLayout(props: {
   docsLink: string;
   children: React.ReactNode;
   containerClassName?: string;
+  icon: React.FC<{ className?: string }>;
 }) {
   return (
     <main>
       <PageHeader
         description={props.description}
         docsLink={props.docsLink}
+        icon={props.icon}
         title={props.title}
       />
-      <div className={cn("container pb-8", props.containerClassName)}>
+      <div className={cn("container max-w-7xl pb-8", props.containerClassName)}>
         {props.children}
       </div>
     </main>

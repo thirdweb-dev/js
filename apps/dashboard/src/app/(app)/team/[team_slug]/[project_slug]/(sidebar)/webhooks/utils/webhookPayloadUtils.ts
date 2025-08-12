@@ -33,13 +33,20 @@ export function buildEventWebhookPayload(
 ): WebhookPayload {
   const eventSignatures = [];
   if (data.sigHash) {
-    eventSignatures.push({
-      abi: data.sigHashAbi || data.abi,
-      params: {},
-      sig_hash: data.sigHash.startsWith("0x")
-        ? data.sigHash
-        : keccak256(new TextEncoder().encode(data.sigHash)),
-    });
+    const sigHashes = Array.isArray(data.sigHash)
+      ? data.sigHash
+      : [data.sigHash];
+    for (const sigHash of sigHashes) {
+      if (sigHash) {
+        eventSignatures.push({
+          abi: data.sigHashAbi || data.abi,
+          params: {},
+          sig_hash: sigHash.startsWith("0x")
+            ? sigHash
+            : keccak256(new TextEncoder().encode(sigHash)),
+        });
+      }
+    }
   }
   return {
     filters: {
@@ -59,13 +66,20 @@ export function buildTransactionWebhookPayload(
 ): WebhookPayload {
   const txSignatures = [];
   if (data.sigHash) {
-    txSignatures.push({
-      abi: data.sigHashAbi || data.abi,
-      params: {},
-      sig_hash: data.sigHash.startsWith("0x")
-        ? data.sigHash
-        : toFunctionSelector(data.sigHash),
-    });
+    const sigHashes = Array.isArray(data.sigHash)
+      ? data.sigHash
+      : [data.sigHash];
+    for (const sigHash of sigHashes) {
+      if (sigHash) {
+        txSignatures.push({
+          abi: data.sigHashAbi || data.abi,
+          params: {},
+          sig_hash: sigHash.startsWith("0x")
+            ? sigHash
+            : toFunctionSelector(sigHash),
+        });
+      }
+    }
   }
   return {
     filters: {

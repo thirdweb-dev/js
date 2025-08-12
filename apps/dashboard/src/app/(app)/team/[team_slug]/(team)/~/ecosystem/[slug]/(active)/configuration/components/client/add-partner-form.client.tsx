@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import type { Ecosystem, Partner } from "@/api/ecosystems";
+import type { Ecosystem, Partner } from "@/api/team/ecosystems";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useAddPartner } from "../../hooks/use-add-partner";
 import { PartnerForm, type PartnerFormValues } from "./partner-form.client";

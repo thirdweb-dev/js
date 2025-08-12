@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 
 export default async function Layout(props: {
   children: React.ReactNode;

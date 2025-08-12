@@ -192,11 +192,11 @@ function WalletAvatar(props: {
 
   return (
     <div
-      className={cn("size-6 overflow-hidden rounded-full", props.iconClassName)}
+      className={cn("size-5 overflow-hidden rounded-full", props.iconClassName)}
     >
       {resolvedAvatarSrc ? (
         <Img
-          className={cn("size-6 object-cover", props.iconClassName)}
+          className={cn("size-5 object-cover", props.iconClassName)}
           src={resolvedAvatarSrc}
         />
       ) : (

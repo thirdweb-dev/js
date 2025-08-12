@@ -4,12 +4,12 @@ import { SplitIcon } from "lucide-react";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
+import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useSplitDistributeFunds } from "@/hooks/useSplit";
 import { parseError } from "@/utils/errorParser";
-import type { Balance } from "../ContractSplitPage";
 
 export const DistributeButton = ({
   contract,
@@ -19,14 +19,12 @@ export const DistributeButton = ({
   isLoggedIn,
 }: {
   contract: ThirdwebContract;
-  balances: Balance[];
+  balances: GetBalanceResult[];
   balancesIsPending: boolean;
   balancesIsError: boolean;
   isLoggedIn: boolean;
 }) => {
-  const validBalances = balances.filter(
-    (item) => item.balance !== "0" && item.balance !== "0.0",
-  );
+  const validBalances = balances.filter((item) => item.value !== 0n);
   const numTransactions = useMemo(() => {
     if (
       validBalances.length === 1 &&
@@ -37,9 +35,7 @@ export const DistributeButton = ({
     if (!validBalances || balancesIsPending) {
       return 0;
     }
-    return validBalances?.filter(
-      (b) => b.display_balance !== "0.0" && b.display_balance !== "0",
-    ).length;
+    return validBalances?.filter((b) => b.value !== 0n).length;
   }, [validBalances, balancesIsPending]);
 
   const mutation = useSplitDistributeFunds(contract);

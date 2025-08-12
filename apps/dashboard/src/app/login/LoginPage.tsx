@@ -11,28 +11,28 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { getRawAccountAction } from "@/actions/account/getAccount";
 import {
   doLogin,
   doLogout,
   getLoginPayload,
   isLoggedIn,
 } from "@/actions/auth-actions";
-import { getRawAccountAction } from "@/actions/getAccount";
 import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookies";
+import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { isAccountOnboardingComplete } from "@/utils/account-onboarding";
 import { deleteCookie } from "@/utils/cookie";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { isVercel } from "@/utils/vercel";
 import { ThirdwebMiniLogo } from "../(app)/components/ThirdwebMiniLogo";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "../(app)/team/components/last-visited-page/consts";
-import { isAccountOnboardingComplete } from "./onboarding/isOnboardingRequired";
 
 const LazyAccountOnboarding = lazy(
   () => import("./onboarding/account-onboarding"),

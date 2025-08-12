@@ -22,7 +22,7 @@ export function RenderCode(props: {
           props.scrollableContainerClassName,
         )}
         scrollableClassName={cn("p-4", props.scrollableClassName)}
-        shadowColor="hsl(var(--muted))"
+        shadowColor="hsl(var(--card))"
       >
         <div
           // biome-ignore lint/security/noDangerouslySetInnerHtml: we know what we're doing here

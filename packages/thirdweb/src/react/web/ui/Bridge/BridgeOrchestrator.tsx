@@ -17,6 +17,7 @@ import {
   type PaymentMethod,
   usePaymentMachine,
 } from "../../../core/machines/paymentMachine.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import en from "../ConnectWallet/locale/en.js";
 import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
@@ -41,6 +42,7 @@ export type UIOptions = Prettify<
       image?: string;
     };
     currency?: SupportedFiatCurrency;
+    buttonLabel?: string;
   } & (
     | {
         mode: "fund_wallet";
@@ -128,6 +130,7 @@ export interface BridgeOrchestratorProps {
    * @default true
    */
   showThirdwebBranding?: boolean;
+  supportedTokens?: SupportedTokens;
 }
 
 export function BridgeOrchestrator({
@@ -144,6 +147,7 @@ export function BridgeOrchestrator({
   presetOptions,
   paymentMethods = ["crypto", "card"],
   showThirdwebBranding = true,
+  supportedTokens,
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -188,6 +192,7 @@ export function BridgeOrchestrator({
   // Handle errors
   const handleError = useCallback(
     (error: Error) => {
+      console.error(error);
       onError?.(error);
       send({ error, type: "ERROR_OCCURRED" });
     },
@@ -284,6 +289,7 @@ export function BridgeOrchestrator({
           client={client}
           connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
+          onExecuteTransaction={() => send({ type: "CONTINUE_TO_TRANSACTION" })}
           showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}
         />
@@ -313,6 +319,7 @@ export function BridgeOrchestrator({
             paymentMethods={paymentMethods}
             receiverAddress={state.context.receiverAddress}
             currency={uiOptions.currency}
+            supportedTokens={supportedTokens}
           />
         )}
 

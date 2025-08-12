@@ -1,8 +1,7 @@
 import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { CreatePaymentLinkButton } from "./components/CreatePaymentLinkButton.client";
 import { PaymentLinksTable } from "./components/PaymentLinksTable.client";
 
@@ -24,17 +23,10 @@ export default async function Page(props: {
       <div className="w-full flex flex-col md:flex-row justify-between gap-4 items-start">
         <div>
           <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-            Payment Links
+            Create a Payment
           </h2>
           <p className="text-muted-foreground text-sm">
-            Get notified for Bridge, Swap and Onramp events.{" "}
-            <UnderlineLink
-              href="https://portal.thirdweb.com/payments/webhooks"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </UnderlineLink>
+            Make money in any token instantly with a hosted payments UI.
           </p>
         </div>
         <CreatePaymentLinkButton
@@ -44,7 +36,7 @@ export default async function Page(props: {
         >
           <Button className="gap-1" variant="default" size="sm">
             <PlusIcon className="size-4" />
-            Create Payment Link
+            Create Payment
           </Button>
         </CreatePaymentLinkButton>
       </div>

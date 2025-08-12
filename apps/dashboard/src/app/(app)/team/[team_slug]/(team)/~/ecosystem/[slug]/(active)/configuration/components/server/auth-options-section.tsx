@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "thirdweb";
-import type { Ecosystem } from "@/api/ecosystems";
+import type { Ecosystem } from "@/api/team/ecosystems";
 import {
   AuthOptionsForm,
   AuthOptionsFormSkeleton,

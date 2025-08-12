@@ -63,9 +63,11 @@ export function NFTDetails({
           client={contract.client}
           isPending={nftQuery.isPending}
           nfts={displayableNFTs.map((t) => ({
-            ...t,
             chainId: contract.chain.id,
             contractAddress: contract.address,
+            id: t.id.toString(),
+            metadata: t.metadata,
+            type: t.type,
           }))}
           projectMeta={projectMeta}
         />

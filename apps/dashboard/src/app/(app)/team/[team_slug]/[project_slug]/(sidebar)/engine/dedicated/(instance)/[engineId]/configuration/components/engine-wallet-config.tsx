@@ -82,7 +82,6 @@ export function EngineWalletConfig({
       </div>
 
       <TabButtons
-        tabClassName="font-medium !text-sm"
         tabs={filteredWalletOptions.map(({ key, name }) => ({
           icon:
             (key === "aws-kms" && !isAwsKmsConfigured) ||

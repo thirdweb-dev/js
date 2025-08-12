@@ -1,31 +1,34 @@
-import type { Metadata } from "next";
+import { SquircleDashedIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { HooksPreview } from "@/components/sign-in/hooks";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 import { ModalPreview } from "../../../../components/sign-in/modal";
 
-export const metadata: Metadata = {
-  description:
-    "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
-  metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
-};
+const title = "Headless Connect";
+const description =
+  "Create sign-in flow with your choice of wallets and sign-in options built custom to your branding. Use React hooks for full UI control and built-in wallet state management.";
+const ogDescription =
+  "Build a custom login flow with your choice of wallets and sign-in options. Use React hooks for full UI control and built-in wallet state management.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Create a login experience tailor-made for your app. Add your wallets
-            of choice, enable web2 sign-in options and create a modal that fits
-            your brand.
-          </>
-        }
+        icon={SquircleDashedIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets?utm_source=playground"
-        title="Headless"
       >
         <div className="flex flex-col gap-14">
           <BuildCustomUISection />

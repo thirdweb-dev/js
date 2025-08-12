@@ -11,20 +11,19 @@ import {
   UploadIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { QRCode } from "react-qrcode-logo";
 import { toast } from "sonner";
 import { getAddress, type ThirdwebClient } from "thirdweb";
 import { isAddress, shortenAddress } from "thirdweb/utils";
 import { z } from "zod";
+import { reportFundWalletOpened } from "@/analytics/report";
+import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -55,7 +54,6 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { EngineBackendWalletOptions } from "@/constants/engine";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
@@ -271,8 +269,9 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
             onClick: (wallet) => {
               setSelectedBackendWallet(wallet);
               setReceiveOpen(true);
+              reportFundWalletOpened();
             },
-            text: "Receive funds",
+            text: "Fund wallet",
           },
           {
             icon: <UploadIcon className="size-4" />,
@@ -311,9 +310,11 @@ export const BackendWalletsTable: React.FC<BackendWalletsTableProps> = ({
         </Dialog>
       )}
       {selectedBackendWallet && (
-        <ReceiveFundsModal
-          backendWallet={selectedBackendWallet}
+        <FundWalletModal
+          recipientAddress={selectedBackendWallet.address}
           client={client}
+          title="Fund backend wallet"
+          description="Send funds to the backend wallet"
           open={receiveOpen}
           onOpenChange={setReceiveOpen}
         />
@@ -440,87 +441,6 @@ function EditModalContent({
         </form>
       </Form>
     </div>
-  );
-}
-
-function ReceiveFundsModal({
-  backendWallet,
-  open,
-  onOpenChange,
-}: {
-  backendWallet: BackendWallet;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  client: ThirdwebClient;
-}) {
-  // const qrCodeBase64Query = useQuery({
-  //   // only run this if we have a backendWallet address
-  //   enabled: !!backendWallet.address,
-  //   // start out with empty string
-  //   placeholderData: "",
-  //   queryFn: async () => {
-  //     return new Promise<string>((resolve, reject) => {
-  //       QRCode.toDataURL(
-  //         backendWallet.address,
-  //         // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  //         (error: any, dataUrl: string) => {
-  //           if (error) {
-  //             reject(error);
-  //           } else {
-  //             resolve(dataUrl);
-  //           }
-  //         },
-  //       );
-  //     });
-  //   },
-  //   queryKey: ["engine", "receive-funds-qr-code", backendWallet.address],
-  // });
-
-  const qrCodeWidth = 300;
-  const isMobile = useIsMobile();
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="!w-full bg-white dark:bg-black"
-        style={
-          isMobile
-            ? undefined
-            : {
-                maxWidth: `${qrCodeWidth + 2 * 24}px`,
-              }
-        }
-      >
-        <DialogHeader>
-          <DialogTitle>Receive Funds</DialogTitle>
-          <DialogDescription>Send funds to this address</DialogDescription>
-        </DialogHeader>
-
-        <div className="flex justify-center">
-          <div className="border rounded-lg overflow-hidden">
-            <QRCode
-              value={backendWallet.address}
-              qrStyle="dots"
-              size={isMobile ? 300 : qrCodeWidth - 20}
-              eyeRadius={80}
-              bgColor={isDarkMode ? "hsl(0 0% 0%)" : "hsl(0 0% 100%)"}
-              fgColor={isDarkMode ? "hsl(0 0% 100%)" : "hsl(0 0% 0%)"}
-            />
-          </div>
-        </div>
-
-        <CopyTextButton
-          textToCopy={backendWallet.address}
-          textToShow={shortenAddress(backendWallet.address)}
-          tooltip="Copy address"
-          copyIconPosition="right"
-          variant="outline"
-          className="font-mono py-3 px-3 w-full bg-card"
-        />
-      </DialogContent>
-    </Dialog>
   );
 }
 

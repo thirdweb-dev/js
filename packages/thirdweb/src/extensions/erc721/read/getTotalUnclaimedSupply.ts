@@ -1,4 +1,5 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { startTokenId } from "../__generated__/IERC721A/read/startTokenId.js";
 import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
 
@@ -19,9 +20,12 @@ import { getTotalClaimedSupply } from "./getTotalClaimedSupply.js";
 export async function getTotalUnclaimedSupply(
   options: BaseTransactionOptions,
 ): Promise<bigint> {
-  const [nextTokenIdToMint_, totalClaimedSupply_] = await Promise.all([
-    nextTokenIdToMint(options),
-    getTotalClaimedSupply(options),
-  ]);
-  return nextTokenIdToMint_ - totalClaimedSupply_;
+  const [startTokenId_, nextTokenIdToMint_, totalClaimedSupply_] =
+    await Promise.all([
+      startTokenId(options).catch(() => 0n),
+      nextTokenIdToMint(options),
+      getTotalClaimedSupply(options),
+    ]);
+
+  return nextTokenIdToMint_ - startTokenId_ - totalClaimedSupply_;
 }

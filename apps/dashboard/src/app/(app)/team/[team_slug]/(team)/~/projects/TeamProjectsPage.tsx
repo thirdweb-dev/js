@@ -13,8 +13,8 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { LazyCreateProjectDialog } from "@/components/project/create-project-modal/LazyCreateAPIKeyDialog";

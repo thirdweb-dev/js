@@ -1,7 +1,7 @@
 "use client";
 import { AlertTriangleIcon } from "lucide-react";
 import Link from "next/link";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ProductSKU } from "@/types/billing";

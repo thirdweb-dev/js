@@ -5,6 +5,10 @@ import { useEffect } from "react";
 import { createThirdwebClient, NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
 import { AutoConnect, CheckoutWidget } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import {
+  reportPaymentLinkBuyFailed,
+  reportPaymentLinkBuySuccessful,
+} from "@/analytics/report";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 
 export function PayPageWidget({
@@ -58,9 +62,16 @@ export function PayPageWidget({
         image={image}
         name={name}
         onSuccess={() => {
+          reportPaymentLinkBuySuccessful();
+
           if (!redirectUri) return;
           const url = new URL(redirectUri);
           return window.open(url.toString());
+        }}
+        onError={(error) => {
+          reportPaymentLinkBuyFailed({
+            errorMessage: error.message,
+          });
         }}
         paymentLinkId={paymentLinkId}
         purchaseData={purchaseData}

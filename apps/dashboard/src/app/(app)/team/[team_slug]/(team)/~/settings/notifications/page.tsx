@@ -1,4 +1,4 @@
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
+import { getValidAccount } from "@/api/account/get-account";
 import { Notifications } from "./Notifications";
 
 export default async function Page(props: {

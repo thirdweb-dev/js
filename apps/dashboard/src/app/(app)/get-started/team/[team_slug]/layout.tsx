@@ -1,14 +1,14 @@
 import { differenceInDays } from "date-fns";
 import { InfoIcon } from "lucide-react";
 import { notFound } from "next/navigation";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProjects } from "@/api/projects";
-import { getTeamBySlug, getTeams } from "@/api/team";
+import { getProjects } from "@/api/project/projects";
+import { getTeamBySlug, getTeams } from "@/api/team/get-team";
 import { AppFooter } from "@/components/footers/app-footer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
-import { getValidAccount } from "../../../account/settings/getAccount";
 import { TeamHeaderLoggedIn } from "../../../team/components/TeamHeader/team-header-logged-in.client";
 
 export default async function Layout(props: {

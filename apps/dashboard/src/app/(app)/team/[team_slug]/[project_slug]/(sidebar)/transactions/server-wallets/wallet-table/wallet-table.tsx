@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import type { Wallet } from "./types";
 import { ServerWalletsTableUI } from "./wallet-table-ui.client";
 

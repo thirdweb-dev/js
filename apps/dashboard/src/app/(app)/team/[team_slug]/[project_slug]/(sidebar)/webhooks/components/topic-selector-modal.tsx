@@ -6,7 +6,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { keccak256, toFunctionSelector } from "thirdweb/utils";
-import type { Topic } from "@/api/webhook-configs";
+import type { Topic } from "@/api/project/webhook-configs";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SignatureSelector } from "@/components/blocks/SignatureSelector";
 import {
@@ -224,15 +224,18 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
           };
 
           if (formData.sigHash) {
-            filters.signatures = [
-              {
-                sig_hash: formData.sigHash.startsWith("0x")
-                  ? formData.sigHash
-                  : keccak256(new TextEncoder().encode(formData.sigHash)),
+            const sigHashes = Array.isArray(formData.sigHash)
+              ? formData.sigHash
+              : [formData.sigHash];
+            filters.signatures = sigHashes
+              .filter((hash) => hash)
+              .map((hash) => ({
+                sig_hash: hash.startsWith("0x")
+                  ? hash
+                  : keccak256(new TextEncoder().encode(hash)),
                 abi: formData.sigHashAbi || formData.abi,
                 params: {},
-              },
-            ];
+              }));
           }
 
           return { ...topic, filters };
@@ -271,15 +274,18 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
           }
 
           if (formData.sigHash) {
-            filters.signatures = [
-              {
-                sig_hash: formData.sigHash.startsWith("0x")
-                  ? formData.sigHash
-                  : toFunctionSelector(formData.sigHash),
+            const sigHashes = Array.isArray(formData.sigHash)
+              ? formData.sigHash
+              : [formData.sigHash];
+            filters.signatures = sigHashes
+              .filter((hash) => hash)
+              .map((hash) => ({
+                sig_hash: hash.startsWith("0x")
+                  ? hash
+                  : toFunctionSelector(hash),
                 abi: formData.sigHashAbi || formData.abi,
                 params: {},
-              },
-            ];
+              }));
           }
 
           return { ...topic, filters };
@@ -475,8 +481,8 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                   <FormLabel>
                                                     {topic.id ===
                                                     "contracts.event.confirmed"
-                                                      ? "Event Signature"
-                                                      : "Function Signature"}
+                                                      ? "Event Signatures"
+                                                      : "Function Signatures"}
                                                   </FormLabel>
                                                 </div>
                                                 <FormControl>
@@ -489,6 +495,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                     0 ? (
                                                     <SignatureSelector
                                                       className="block w-full max-w-90 overflow-hidden text-ellipsis"
+                                                      multiSelect={true}
                                                       onChange={(val) => {
                                                         field.onChange(val);
                                                         // If custom signature, clear ABI field
@@ -497,9 +504,20 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                             (sig) =>
                                                               sig.signature,
                                                           );
+                                                        const values =
+                                                          Array.isArray(val)
+                                                            ? val
+                                                            : [val];
+                                                        const hasCustomSignature =
+                                                          values.some(
+                                                            (v) =>
+                                                              v &&
+                                                              !known.includes(
+                                                                v,
+                                                              ),
+                                                          );
                                                         if (
-                                                          val &&
-                                                          !known.includes(val)
+                                                          hasCustomSignature
                                                         ) {
                                                           eventFilterForm.setValue(
                                                             "abi",
@@ -518,14 +536,14 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                           value: sig.signature,
                                                         }),
                                                       )}
-                                                      placeholder="Select or enter an event signature"
+                                                      placeholder="Select or enter event signatures"
                                                       setAbi={(abi) =>
                                                         eventFilterForm.setValue(
                                                           "sigHashAbi",
                                                           abi,
                                                         )
                                                       }
-                                                      value={field.value || ""}
+                                                      value={field.value || []}
                                                     />
                                                   ) : topic.id ===
                                                       "contracts.transaction.confirmed" &&
@@ -535,6 +553,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                     txAbi.signatures.length >
                                                       0 ? (
                                                     <SignatureSelector
+                                                      multiSelect={true}
                                                       onChange={(val) => {
                                                         field.onChange(val);
                                                         // If custom signature, clear ABI field
@@ -543,9 +562,20 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                             (sig) =>
                                                               sig.signature,
                                                           );
+                                                        const values =
+                                                          Array.isArray(val)
+                                                            ? val
+                                                            : [val];
+                                                        const hasCustomSignature =
+                                                          values.some(
+                                                            (v) =>
+                                                              v &&
+                                                              !known.includes(
+                                                                v,
+                                                              ),
+                                                          );
                                                         if (
-                                                          val &&
-                                                          !known.includes(val)
+                                                          hasCustomSignature
                                                         ) {
                                                           transactionFilterForm.setValue(
                                                             "abi",
@@ -564,14 +594,14 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                           value: sig.signature,
                                                         }),
                                                       )}
-                                                      placeholder="Select or enter a function signature"
+                                                      placeholder="Select or enter function signatures"
                                                       setAbi={(abi) =>
                                                         transactionFilterForm.setValue(
                                                           "sigHashAbi",
                                                           abi,
                                                         )
                                                       }
-                                                      value={field.value || ""}
+                                                      value={field.value || []}
                                                     />
                                                   ) : (
                                                     <Input
@@ -714,7 +744,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                               <FormItem className="flex flex-col">
                                                 <div className="flex items-center justify-between text-xs">
                                                   <FormLabel>
-                                                    Function Signature
+                                                    Function Signatures
                                                   </FormLabel>
                                                 </div>
                                                 <FormControl>
@@ -724,6 +754,7 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                   txAbi.signatures.length >
                                                     0 ? (
                                                     <SignatureSelector
+                                                      multiSelect={true}
                                                       onChange={(val) => {
                                                         field.onChange(val);
                                                         // If custom signature, clear ABI field
@@ -732,9 +763,20 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                             (sig) =>
                                                               sig.signature,
                                                           );
+                                                        const values =
+                                                          Array.isArray(val)
+                                                            ? val
+                                                            : [val];
+                                                        const hasCustomSignature =
+                                                          values.some(
+                                                            (v) =>
+                                                              v &&
+                                                              !known.includes(
+                                                                v,
+                                                              ),
+                                                          );
                                                         if (
-                                                          val &&
-                                                          !known.includes(val)
+                                                          hasCustomSignature
                                                         ) {
                                                           transactionFilterForm.setValue(
                                                             "abi",
@@ -753,14 +795,14 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                           value: sig.signature,
                                                         }),
                                                       )}
-                                                      placeholder="Select or enter a function signature"
+                                                      placeholder="Select or enter function signatures"
                                                       setAbi={(abi) =>
                                                         transactionFilterForm.setValue(
                                                           "sigHashAbi",
                                                           abi,
                                                         )
                                                       }
-                                                      value={field.value || ""}
+                                                      value={field.value || []}
                                                     />
                                                   ) : (
                                                     <Input
@@ -769,7 +811,15 @@ export function TopicSelectorModal(props: TopicSelectorModalProps) {
                                                       }
                                                       onChange={field.onChange}
                                                       placeholder="Fetching function signatures..."
-                                                      value={field.value}
+                                                      value={
+                                                        Array.isArray(
+                                                          field.value,
+                                                        )
+                                                          ? field.value.join(
+                                                              ", ",
+                                                            )
+                                                          : field.value || ""
+                                                      }
                                                     />
                                                   )}
                                                 </FormControl>

@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
+import { getRawAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
-import { LAST_USED_TEAM_ID } from "@/constants/cookies";
+import { getProjects } from "@/api/project/projects";
+import { getTeams } from "@/api/team/get-team";
+import { LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getRawAccount } from "../../../account/settings/getAccount";
 import { HeaderLoggedOut } from "../HeaderLoggedOut/HeaderLoggedOut";
 import { TeamHeaderLoggedIn } from "./team-header-logged-in.client";
 

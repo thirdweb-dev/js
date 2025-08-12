@@ -31,7 +31,7 @@ function TransactionsLayout(props: {
       <div className="pt-4 lg:pt-6">
         {/* header */}
         <div className="container flex max-w-7xl flex-col gap-4">
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex flex-col">
               <h1 className="mb-1 flex items-center gap-2 font-semibold text-3xl tracking-tight">
                 Transactions{" "}
@@ -53,13 +53,20 @@ function TransactionsLayout(props: {
                 </Link>
               </div>
             </div>
-            <Link href={`${projectLayoutPath}/engine/dedicated`}>
-              <Button variant="outline">View Dedicated Engine</Button>
-            </Link>
+            <Button
+              variant="outline"
+              asChild
+              className="rounded-full bg-background"
+              size="sm"
+            >
+              <Link href={`${projectLayoutPath}/engine/dedicated`}>
+                View Dedicated Engine
+              </Link>
+            </Button>
           </div>
         </div>
 
-        <div className="h-4" />
+        <div className="h-5" />
 
         {/* Nav */}
         <TabPathLinks

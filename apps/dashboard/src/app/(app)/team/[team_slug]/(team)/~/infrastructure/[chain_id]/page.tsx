@@ -1,13 +1,13 @@
 import { InfoIcon } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
-import { getChainSubscriptionForChain } from "@/api/team-subscription";
-import { formatToDollars } from "@/components/billing/formatToDollars";
+import { getChainSubscriptionForChain } from "@/api/team/team-subscription";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ChainIconClient } from "@/icons/ChainIcon";
+import { formatToDollars } from "@/utils/formatToDollars";
 import { getChain } from "../../../../../../(dashboard)/(chain)/utils";
 import { InfraServiceCard } from "./_components/service-card";
 

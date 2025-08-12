@@ -10,7 +10,8 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
-  Badge
+  Badge,
+  OpenApiEndpoint,
 } from "@doc";
 import {
   ReactIcon,
@@ -181,7 +182,27 @@ const preparedQuote = await Bridge.Buy.prepare({
   </TabsContent>
 
   <TabsContent value="http">
-    The thirdweb Payments REST API is available at `https://payments.thirdweb.com/`. See the full [API Reference](https://payments.thirdweb.com/reference) for details.
+    Use the thirdweb payments API to create and manage payments programmatically.
+
+    ### Create Payment
+
+    Create a payment for your product or service:
+
+    <OpenApiEndpoint path="/v1/payments" method="POST" />
+
+    ### Complete Payment
+
+    Complete a payment using the product ID:
+
+    <OpenApiEndpoint path="/v1/payments/{id}" method="POST" />
+
+    ### Swap Tokens
+
+    Swap tokens for optimal payment processing:
+
+    <OpenApiEndpoint path="/v1/payments/swap" method="POST" />
+
+    For more details, see the full [API Reference](https://api.thirdweb.com/reference).
   </TabsContent>
 </Tabs>
 

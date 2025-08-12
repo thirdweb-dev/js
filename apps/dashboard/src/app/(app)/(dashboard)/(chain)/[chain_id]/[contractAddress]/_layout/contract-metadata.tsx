@@ -1,6 +1,6 @@
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { fetchPublishedContractsFromDeploy } from "@/components/contract-components/fetchPublishedContractsFromDeploy";
+import { fetchPublishedContractsFromDeploy } from "@/api/contract/fetchPublishedContractsFromDeploy";
 import {
   type DashboardContractMetadata,
   fetchDashboardContractMetadata,

@@ -3,7 +3,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useTransition } from "react";
-import type { AuditLogEntry } from "@/api/audit-log";
+import type { AuditLogEntry } from "@/api/team/audit-log";
 import { Button } from "@/components/ui/button";
 import { searchParams } from "../search-params";
 import { AuditLogEntryComponent } from "./entry";

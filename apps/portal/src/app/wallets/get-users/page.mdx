@@ -1,5 +1,5 @@
 import { Callout } from "@doc";
-import { createMetadata, ArticleIconCard, Stack } from "@doc";
+import { createMetadata, ArticleIconCard, Stack, OpenApiEndpoint } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TypeScriptIcon } from "@/icons";
 
@@ -8,8 +8,8 @@ export const metadata = createMetadata({
 		title: "Get Users",
 		icon: "wallets",
 	},
-	title: "Get Users",
-	description: "Learn how to fetch in-app wallet users for your application.",
+	title: "Get Users | thirdweb Documentation",
+	description: "List and fetch users from your in-app or ecosystem wallet. thirdweb makes it easy to access wallet addresses, emails, phone numbers, and more—directly from your backend.",
 });
 
 # Fetch Users
@@ -24,103 +24,68 @@ From your backend, you can list all your users and fetch the details of any user
 
 <TabsContent value="single">
 
-### Endpoint
+## Get Single User
 
-`GET` request to the following endpoint:
-
-```http
-GET /v1/wallets/user?email=user@example.com
-Host: api.thirdweb.com
-x-secret-key: <your-secret-key>
-```
+Fetch details for a specific user by email, phone, wallet address, or user ID.
 
 ### Query Parameters
 
-You can then query by different user identifiers:
+You can query by any of these user identifiers:
 
-- `address`: The user's wallet address that thirdweb has generated for them
+- `address`: The user's wallet address that thirdweb generated
 - `email`: The user's email address
 - `phone`: The user's phone number
-- `externalWalletAddress`: The user's wallet address that used to login via SIWE
+- `externalWalletAddress`: The user's external wallet address (SIWE login)
 - `id`: The user's ID (for custom auth)
 
 ### Authentication
 
-You need to include the following headers:
-
+Required headers:
 - `x-secret-key`: Your secret key for authentication
 - `x-ecosystem-id` (optional): Your ecosystem ID
 - `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-### Example Requests
+### Example
 
-Here's an example curl command to fetch user details by email:
+<OpenApiEndpoint path="/v1/wallets/user" method="GET" />
 
-```bash
+For ecosystem wallets, include the ecosystem headers in your requests.
 
-curl -X GET 'https://api.thirdweb.com/v1/wallets/user?email=user@example.com' \
-  -H 'x-secret-key: YOUR_SECRET_KEY'
+</TabsContent>
 
-```
+<TabsContent value="all">
 
-Here's an example curl command to fetch user details by address:
+## Get All Users
 
-```bash
-curl -X GET 'https://api.thirdweb.com/v1/wallets/user?address=0x123456789abcdef' \
-  -H 'x-secret-key: YOUR_SECRET_KEY'
-```
+List all users in your in-app or ecosystem wallet with pagination support.
 
-Here's an example curl command to fetch the user details for an ecosystem owner:
+### Query Parameters
 
-```bash
-curl -X GET 'https://api.thirdweb.com/v1/wallets/user?address=0x123456789abcdef' \
-  -H 'x-secret-key: YOUR_SECRET_KEY' \
-  -H 'x-ecosystem-id: ecosystem.YOUR_ECOSYSTEM_ID' \
-  -H 'x-ecosystem-partner-id: YOUR_PARTNER_ID'
-```
+- `page` (optional): Page number for pagination
+- `limit` (optional): Maximum users per request (default: 50)
 
-In both examples, replace `YOUR_SECRET_KEY` with your actual ThirdWeb Client Secret.
+### Authentication
 
-Replace `YOUR_ECOSYSTEM_ID` and `YOUR_PARTNER_ID` with your actual ecosystem ID and partner ID respectively. The partner ID can be one you set up for yourself as the ecosystem owner.
+Required headers:
+- `x-secret-key`: Your secret key for authentication
+- `x-ecosystem-id` (optional): Your ecosystem ID
+- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-### Response Format
+<Callout variant="info" title="Ecosystem Users">
+	For ecosystem wallets, the secret key must be from the same account as the ecosystem owner.
+</Callout>
 
-The API returns a JSON array with the following structure for each user:
+### Example
 
-```json
-{
-	"result": {
-		"pagination": {
-			"hasMore": false,
-			"limit": 50,
-			"page": 1
-		},
-		"wallets": [
-			{
-				"address": "0x3aA70e68BBA8BC922a75d07388e368892c15c9Da",
-				"createdAt": "2025-07-21T22:58:12.834Z",
-				"profiles": [
-					{
-            "id": "107302390467834615186",
-            "name": "Richard Hendricks",
-            "type": "google",
-            "email": "richard@piedpiper.com",
-            "picture": "https://lh3.googleusercontent.com/a/ACg8ocKC1D6ezzzaZxxUk4qtK_HCwVwpNamVopazXwklGBwuuHeSf_c=s96-c",
-            "givenName": "Richard",
-            "emailVerified": true
-          }
-				]
-			}
-		]
-	}
-}
-```
+<OpenApiEndpoint path="/v1/wallets/user" method="GET" />
 
-For more information, [view the full reference](https://api.thirdweb.com/reference#tag/wallets/get/v1/wallets/user)
+</TabsContent>
 
-### Convenience Methods
+</Tabs>
 
-If you are using the thirdweb SDK, you can use the `getUser` method to retrieve user details.
+## SDK Integration
+
+If you're using the thirdweb SDK, you can use the `getUser` method for easier integration:
 
 <Stack>
 	<ArticleIconCard
@@ -130,79 +95,3 @@ If you are using the thirdweb SDK, you can use the `getUser` method to retrieve 
 		href="/references/typescript/v5/getUser"
 	/>
 </Stack>
-
-</TabsContent>
-
-<TabsContent value="all">
-
-### Endpoint
-
-`GET` request to the following endpoint:
-
-```http
-GET /v1/wallets/users
-Host: api.thirdweb.com
-x-secret-key: <your-secret-key>
-```
-
-### Query Parameters
-
-- `page` (optional): The page number to fetch (for pagination)
-- `limit` (optional): Maximum number of users to return per request (defaults to 50)
-
-### Authentication
-
-You need to include the following headers:
-
-- `x-secret-key`: Your secret key for authentication
-- `x-ecosystem-id` (optional): Your ecosystem ID
-- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
-
-<Callout variant="info" title="Getting ecosystem users">
-	For ecosystem wallets, the secret key have to be from the same account as the
-	ecosystem owner.
-</Callout>
-
-### Example Requests
-
-Here's an example curl command to fetch all users:
-
-```bash
-curl -X GET 'https://api.thirdweb.com/v1/wallets/users?page=2&limit=100' \
-  -H 'x-secret-key: YOUR_SECRET_KEY' \
-  -H 'Content-Type: application/json'
-```
-
-### Response Format
-
-A successful API call returns an array of user objects in the following format:
-
-```json
-{
-  "result": {
-    "pagination": {
-      "hasMore": false,
-      "limit": 50,
-      "page": 1
-    },
-    "wallets": [
-  {
-    "address": "0x3aA70e68BBA8BC922a75d07388e368892c15c9Da",
-    "createdAt": "2025-07-21T22:58:12.834Z",
-    "profiles": [
-      {
-        "id": "107302390467834615186",
-        "name": "Richard Hendricks",
-        "type": "google",
-        "email": "richard@piedpiper.com",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocKC1D6ezzzaZxxUk4qtK_HCwVwpNamVopazXwklGBwuuHeSf_c=s96-c",
-        "givenName": "Richard",
-        "emailVerified": true
-      }]
-    },
-  ]
-}
-```
-
-</TabsContent>
-</Tabs>

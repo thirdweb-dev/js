@@ -36,7 +36,7 @@ export default async function Page(props: {
 
   const title = pathMetadata.summary || "";
   return (
-    <div className="container pb-8">
+    <div className="container max-w-[1400px] pb-8">
       <Breadcrumbs />
       <div className="h-3" />
       {title && (

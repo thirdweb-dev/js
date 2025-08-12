@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { MarkdownRenderer } from "@/components/blocks/markdown-renderer";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {

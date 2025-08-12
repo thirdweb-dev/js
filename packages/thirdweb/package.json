@@ -39,7 +39,7 @@
     "qrcode": "1.5.3",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.28.1",
+    "viem": "2.33.2",
     "zod": "3.25.75"
   },
   "devDependencies": {
@@ -410,9 +410,12 @@
       ],
       "wallets/*": [
         "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "insight": [
+        "./dist/types/exports/insight.d.ts"
       ]
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.105.23"
+  "version": "5.105.31"
 }

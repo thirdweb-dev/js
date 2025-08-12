@@ -1,4 +1,4 @@
-import { getValidAccount } from "../settings/getAccount";
+import { getValidAccount } from "@/api/account/get-account";
 import { AccountDevicesPage } from "./AccountDevicesPage";
 
 export default async function Page() {

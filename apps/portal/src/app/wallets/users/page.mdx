@@ -1,4 +1,4 @@
-import { ArticleIconCard, AuthList, Callout, DocImage, Grid, Stack } from "@doc";
+import { ArticleIconCard, AuthList, Callout, DocImage, Grid, Stack, createMetadata } from "@doc";
 import { UserIcon } from 'lucide-react'
 import {
     ReactIcon,
@@ -12,6 +12,16 @@ import {
 } from "@/icons"
 import EcosystemSocialConfig from './social-config.png'
 import { AuthMethodsTabs } from "@/components/Document/AuthMethodsTabs"
+
+export const metadata = createMetadata({
+	title: "User Wallets | thirdweb Documentation",
+	description:
+		"Create secure, non-custodial embedded wallets with social login, email, SMS, passkeys, and more using thirdweb. Instantly onboard users with seamless authentication and automatically generate wallets behind the scenes—no seed phrases required.",
+	image: {
+		title: "User Wallets",
+		icon: "wallets",
+	},
+});
 
 # User Wallets
 

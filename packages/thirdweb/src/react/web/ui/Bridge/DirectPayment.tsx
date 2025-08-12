@@ -64,7 +64,11 @@ export function DirectPayment({
     );
   };
 
-  const buyNow = (
+  const buyNow = uiOptions.buttonLabel ? (
+    <Text color="primaryButtonText" size="md">
+      {uiOptions.buttonLabel}
+    </Text>
+  ) : (
     <Container flex="row" gap="3xs">
       <Text color="primaryButtonText" size="md">
         Buy Now ·

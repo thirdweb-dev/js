@@ -37,7 +37,6 @@ export function TryItOut({ useEngineAPI }: TryItOutProps) {
 
       <div>
         <TabButtons
-          tabClassName="!text-sm"
           tabs={[
             {
               isActive: activeTab === "curl",
@@ -166,7 +165,7 @@ curl -X POST "${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/transactions" \\
   -H "x-secret-key: <your-project-secret-key>" \\
   -d '{
     "chainId": "84532",
-    "from": "<your-server-wallet-address>",  
+    "from": "<your-server-wallet-address>",
     "transactions": [
       {
         "type": "contractCall",
@@ -191,7 +190,7 @@ const response = await fetch(
       "from": "<your-server-wallet-address>",
       "transactions": [
         {
-          "type": "contractCall", 
+          "type": "contractCall",
           "contractAddress": "0x...",
           "method": "function mintTo(address to, uint256 amount)",
           "params": ["0x...", "100"]

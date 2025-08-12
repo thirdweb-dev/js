@@ -95,7 +95,6 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
       {!hideTabs && (
         <TabButtons
           hideBottomLine={!!onlyTabs}
-          tabClassName="text-sm gap-2 !text-sm"
           tabContainerClassName="px-3 pt-1.5 gap-0.5"
           tabIconClassName="size-4"
           tabs={environments.map((env) => ({

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fetchDeployMetadata } from "@/components/contract-components/fetchDeployMetadata";
+import { fetchDeployMetadata } from "@/api/contract/fetchDeployMetadata";
 import { ContractIdImage } from "@/components/contract-components/shared/contract-id-image";
 import {
   Table,

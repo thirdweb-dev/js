@@ -1,9 +1,9 @@
 "use client";
 
-import { SmartWalletsBillingAlert } from "@app/team/[team_slug]/[project_slug]/(sidebar)/account-abstraction/Alerts";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { AAFooter } from "./AAFooterSection";
+import { SmartWalletsBillingAlert } from "./Alerts";
 
 export function AccountAbstractionLayout(props: {
   projectSlug: string;

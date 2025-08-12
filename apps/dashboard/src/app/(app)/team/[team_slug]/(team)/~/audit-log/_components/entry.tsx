@@ -3,7 +3,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { KeyIcon, SettingsIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import type { AuditLogEntry } from "@/api/audit-log";
+import type { AuditLogEntry } from "@/api/team/audit-log";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface AuditLogEntryProps {

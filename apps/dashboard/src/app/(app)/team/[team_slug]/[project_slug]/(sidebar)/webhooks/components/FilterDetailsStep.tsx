@@ -74,13 +74,16 @@ export function FilterDetailsStep({
   const knownFunctionSignatures = functionSignatures.map(
     (sig) => sig.signature,
   );
+
+  // Handle both single and multiple signatures for custom signature detection
+  const sigHashes = Array.isArray(sigHash) ? sigHash : sigHash ? [sigHash] : [];
   const isCustomSignature =
     (watchFilterType === "event" &&
-      sigHash &&
-      !knownEventSignatures.includes(sigHash)) ||
+      sigHashes.some((hash) => hash && !knownEventSignatures.includes(hash))) ||
     (watchFilterType === "transaction" &&
-      sigHash &&
-      !knownFunctionSignatures.includes(sigHash));
+      sigHashes.some(
+        (hash) => hash && !knownFunctionSignatures.includes(hash),
+      ));
 
   return (
     <>
@@ -140,7 +143,7 @@ export function FilterDetailsStep({
                 </div>
                 <FormControl>
                   <div className="space-y-2">
-                    <Input placeholder="0x1234..." {...field} />
+                    <Input placeholder="0x1234...,0xabcd..." {...field} />
 
                     {/* ABI fetch status */}
                     <div className="mt-2 flex items-center justify-between">
@@ -300,13 +303,13 @@ export function FilterDetailsStep({
               <div className="flex items-center justify-between text-xs">
                 <FormLabel>
                   {watchFilterType === "event"
-                    ? "Event Signature (optional)"
-                    : "Function Signature (optional)"}
+                    ? "Event Signatures (optional)"
+                    : "Function Signatures (optional)"}
                 </FormLabel>
                 <p className="text-muted-foreground">
                   {watchFilterType === "event"
-                    ? "Select an event to monitor"
-                    : "Select a function to monitor"}
+                    ? "Select events to monitor"
+                    : "Select functions to monitor"}
                 </p>
               </div>
               <FormControl>
@@ -315,11 +318,16 @@ export function FilterDetailsStep({
                 eventSignatures.length > 0 ? (
                   <SignatureSelector
                     className="block w-full max-w-90 overflow-hidden text-ellipsis"
+                    multiSelect={true}
                     onChange={(val) => {
                       field.onChange(val);
                       // If custom signature, clear ABI field
                       const known = eventSignatures.map((sig) => sig.signature);
-                      if (val && !known.includes(val)) {
+                      const values = Array.isArray(val) ? val : [val];
+                      const hasCustomSignature = values.some(
+                        (v) => v && !known.includes(v),
+                      );
+                      if (hasCustomSignature) {
                         form.setValue("abi", "");
                       }
                     }}
@@ -328,21 +336,26 @@ export function FilterDetailsStep({
                       label: truncateMiddle(sig.name, 30, 15),
                       value: sig.signature,
                     }))}
-                    placeholder="Select or enter an event signature"
+                    placeholder="Select or enter event signatures"
                     setAbi={(abi) => form.setValue("sigHashAbi", abi)}
-                    value={field.value || ""}
+                    value={field.value || []}
                   />
                 ) : watchFilterType === "transaction" &&
                   Object.keys(fetchedTxAbis).length > 0 &&
                   functionSignatures.length > 0 ? (
                   <SignatureSelector
+                    multiSelect={true}
                     onChange={(val) => {
                       field.onChange(val);
                       // If custom signature, clear ABI field
                       const known = functionSignatures.map(
                         (sig) => sig.signature,
                       );
-                      if (val && !known.includes(val)) {
+                      const values = Array.isArray(val) ? val : [val];
+                      const hasCustomSignature = values.some(
+                        (v) => v && !known.includes(v),
+                      );
+                      if (hasCustomSignature) {
                         form.setValue("abi", "");
                       }
                     }}
@@ -351,9 +364,9 @@ export function FilterDetailsStep({
                       label: truncateMiddle(sig.name, 30, 15),
                       value: sig.signature,
                     }))}
-                    placeholder="Select or enter a function signature"
+                    placeholder="Select or enter function signatures"
                     setAbi={(abi) => form.setValue("sigHashAbi", abi)}
-                    value={field.value || ""}
+                    value={field.value || []}
                   />
                 ) : (
                   <Input
@@ -367,7 +380,11 @@ export function FilterDetailsStep({
                         ? "Fetching event signatures..."
                         : "Fetching function signatures..."
                     }
-                    value={field.value}
+                    value={
+                      Array.isArray(field.value)
+                        ? field.value.join(", ")
+                        : field.value || ""
+                    }
                   />
                 )}
               </FormControl>

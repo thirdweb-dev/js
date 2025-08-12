@@ -1,7 +1,7 @@
 "use client";
 
 import type { ThirdwebContract } from "thirdweb";
-import { useWalletNFTs } from "@/hooks/useWalletNFTs";
+import { useOwnedNFTsInsight } from "@/hooks/useWalletNFTs";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { NFTCards } from "../../_components/NFTCards";
 
@@ -16,36 +16,34 @@ export const NftsOwned: React.FC<NftsOwnedProps> = ({
   isInsightSupported,
   projectMeta,
 }) => {
-  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
+  const ownedNFTInsightQuery = useOwnedNFTsInsight({
     chainId: contract.chain.id,
     isInsightSupported: isInsightSupported,
     walletAddress: contract.address,
+    client: contract.client,
+    chain: contract.chain,
   });
 
-  const nfts = walletNFTs?.result || [];
-  const error = walletNFTs?.error;
+  const nfts = ownedNFTInsightQuery.data || [];
+  const error = ownedNFTInsightQuery.error;
 
   return nfts.length !== 0 ? (
     <NFTCards
       allNfts
       client={contract.client}
-      isPending={isWalletNFTsLoading}
-      nfts={nfts.map((nft) => ({
+      isPending={ownedNFTInsightQuery.isPending}
+      nfts={nfts.map((x) => ({
         chainId: contract.chain.id,
-        contractAddress: nft.contractAddress,
-        id: BigInt(nft.id),
-        metadata: nft.metadata,
-        owner: nft.owner,
-        supply: BigInt(nft.supply),
-        tokenAddress: nft.tokenAddress,
-        tokenURI: nft.tokenURI,
-        type: nft.type,
+        contractAddress: x.tokenAddress,
+        id: x.id.toString(),
+        metadata: x.metadata,
+        type: x.type,
       }))}
       projectMeta={projectMeta}
     />
-  ) : isWalletNFTsLoading ? null : error ? (
+  ) : ownedNFTInsightQuery.isPending ? null : error ? (
     <p className="text-sm text-muted-foreground">
-      Failed to fetch NFTs for this account: {error}
+      Failed to fetch NFTs for this account: {error.message}
     </p>
   ) : (
     <p className="text-sm text-muted-foreground">

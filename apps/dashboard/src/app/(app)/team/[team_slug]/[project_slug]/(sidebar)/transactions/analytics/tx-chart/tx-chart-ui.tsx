@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import Link from "next/link";
 import { useMemo } from "react";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { Button } from "@/components/ui/button";

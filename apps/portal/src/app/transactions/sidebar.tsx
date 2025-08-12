@@ -13,7 +13,7 @@ export const sidebar: SideBar = {
       icon: <ZapIcon />,
     },
     {
-      href: "https://playground.thirdweb.com/",
+      href: "https://playground.thirdweb.com/transactions/airdrop-tokens",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },
@@ -87,16 +87,35 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
+          href: `/vault`,
+          name: "Vault",
+        },
+        {
+          href: `${transactionsSlug}/security`,
+          name: "Security",
+        },
+        {
+          href: `${transactionsSlug}/troubleshoot`,
+          name: "Troubleshoot",
+        },
+        {
+          href: `${transactionsSlug}/faqs`,
+          name: "FAQs",
+        },
+      ],
+    },
+    { separator: true },
+    {
+      name: "Advanced",
+      isCollapsible: false,
+      links: [
+        {
           href: `/engine/v3`,
           name: "Engine v3",
         },
         {
           href: `/engine/v2`,
           name: "Engine v2",
-        },
-        {
-          href: `/vault`,
-          name: "Vault",
         },
       ],
     },

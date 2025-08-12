@@ -92,7 +92,7 @@ export function useContractEvents<
     () =>
       events?.reduce((acc, curr) => {
         // we can use the event hash as a unique identifier?
-        return `${acc}${curr.hash}_`;
+        return `${acc}${curr.hash}${curr.topics.join("")}_`;
       }, "") || "__all__",
     [events],
   );

@@ -1,7 +1,7 @@
 "use client";
 import { apiServerProxy } from "@/actions/proxies";
-import type { Team } from "@/api/team";
-import type { TeamSubscription } from "@/api/team-subscription";
+import type { Team } from "@/api/team/get-team";
+import type { TeamSubscription } from "@/api/team/team-subscription";
 import { PlanInfoCardUI } from "./PlanInfoCard";
 
 export function PlanInfoCardClient(props: {

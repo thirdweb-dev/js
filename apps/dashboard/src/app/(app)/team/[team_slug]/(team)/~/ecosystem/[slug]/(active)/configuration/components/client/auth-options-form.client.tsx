@@ -12,7 +12,7 @@ import {
 } from "thirdweb/wallets/smart";
 import invariant from "tiny-invariant";
 import { z } from "zod";
-import type { AuthOption, Ecosystem } from "@/api/ecosystems";
+import type { AuthOption, Ecosystem } from "@/api/team/ecosystems";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,7 @@ const authOptions = [
   "google",
   "facebook",
   "x",
+  "tiktok",
   "discord",
   "farcaster",
   "telegram",

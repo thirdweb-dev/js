@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Ecosystem, Partner } from "@/api/ecosystems";
+import type { Ecosystem, Partner } from "@/api/team/ecosystems";
 import { fetchPartners } from "../configuration/hooks/fetchPartners";
 
 export function usePartners({

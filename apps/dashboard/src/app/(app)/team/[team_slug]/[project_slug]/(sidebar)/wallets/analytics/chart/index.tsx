@@ -1,10 +1,9 @@
-import { Suspense } from "react";
+import { ResponsiveSuspense } from "responsive-rsc";
 import { getInAppWalletUsage } from "@/api/analytics";
 import {
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
-import { RangeSelector } from "@/components/analytics/range-selector";
 import type { InAppWalletStats } from "@/types/analytics";
 import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
 
@@ -15,33 +14,27 @@ type InAppWalletAnalyticsProps = {
   isPending: boolean;
 };
 
-function InAppWalletAnalyticsInner({
-  interval,
-  range,
+function InAppWalletAnalyticsUI({
   stats,
   isPending,
 }: InAppWalletAnalyticsProps) {
   return (
-    <div>
-      <RangeSelector interval={interval} range={range} />
-      <div className="h-6" />
-      <div className="flex flex-col gap-4 lg:gap-6">
-        <InAppWalletUsersChartCardUI
-          description="The total number of active in-app wallet users on your project."
-          inAppWalletStats={stats || []}
-          isPending={isPending}
-          title="Unique Users"
-        />
-      </div>
-    </div>
+    <InAppWalletUsersChartCardUI
+      title="Unique Users"
+      description="The total number of active in-app wallet users on your project."
+      inAppWalletStats={stats || []}
+      isPending={isPending}
+    />
   );
 }
+
 type AsyncInAppWalletAnalyticsProps = Omit<
   InAppWalletAnalyticsProps,
   "stats" | "isPending"
 > & {
   teamId: string;
   projectId: string;
+  authToken: string;
 };
 
 async function AsyncInAppWalletAnalytics(
@@ -49,19 +42,22 @@ async function AsyncInAppWalletAnalytics(
 ) {
   const range = props.range ?? getLastNDaysRange("last-120");
 
-  const stats = await getInAppWalletUsage({
-    from: range.from,
-    period: props.interval,
-    projectId: props.projectId,
-    teamId: props.teamId,
-    to: range.to,
-  }).catch((error) => {
+  const stats = await getInAppWalletUsage(
+    {
+      from: range.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: range.to,
+    },
+    props.authToken,
+  ).catch((error) => {
     console.error(error);
     return [];
   });
 
   return (
-    <InAppWalletAnalyticsInner
+    <InAppWalletAnalyticsUI
       {...props}
       isPending={false}
       range={range}
@@ -72,12 +68,13 @@ async function AsyncInAppWalletAnalytics(
 
 export function InAppWalletAnalytics(props: AsyncInAppWalletAnalyticsProps) {
   return (
-    <Suspense
+    <ResponsiveSuspense
+      searchParamsUsed={["from", "to", "interval"]}
       fallback={
-        <InAppWalletAnalyticsInner {...props} isPending={true} stats={[]} />
+        <InAppWalletAnalyticsUI {...props} isPending={true} stats={[]} />
       }
     >
       <AsyncInAppWalletAnalytics {...props} />
-    </Suspense>
+    </ResponsiveSuspense>
   );
 }

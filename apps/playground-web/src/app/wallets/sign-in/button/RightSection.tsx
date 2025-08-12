@@ -151,7 +151,7 @@ export function RightSection(props: {
   );
 
   return (
-    <div className="flex shrink-0 flex-col gap-4 xl:sticky xl:top-0 xl:max-h-[100vh] xl:w-[764px]">
+    <div className="flex shrink-0 flex-col gap-4 xl:sticky xl:top-0 xl:max-h-[100vh] xl:w-[734px]">
       <TabButtons
         tabs={[
           {
@@ -185,7 +185,7 @@ export function RightSection(props: {
             // TODO: should show the expanded connected modal here instead
             connectButton
           ) : (
-            <div className="relative">
+            <div className="relative overflow-hidden">
               <ConnectEmbed
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
@@ -197,7 +197,7 @@ export function RightSection(props: {
                 }
                 auth={connectOptions.enableAuth ? playgroundAuth : undefined}
                 autoConnect={false}
-                className="shadow-xl"
+                className="shadow-xl !max-w-full"
                 client={THIRDWEB_CLIENT}
                 header={{
                   title: connectOptions.modalTitle,
@@ -283,11 +283,11 @@ function TabButtons(props: {
 }) {
   return (
     <div>
-      <div className="flex justify-start gap-1 rounded-lg border bg-card p-2 shadow-md md:inline-flex">
+      <div className="flex justify-start gap-1 rounded-lg border bg-card p-1 md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
             className={cn(
-              "gap-2 px-4 text-base",
+              "gap-2 px-4",
               tab.isActive
                 ? "bg-accent text-foreground"
                 : "bg-transparent text-muted-foreground",
@@ -295,6 +295,7 @@ function TabButtons(props: {
             key={tab.name}
             onClick={tab.onClick}
             variant="ghost"
+            size="sm"
           >
             {tab.name}
           </Button>

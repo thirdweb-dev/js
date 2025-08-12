@@ -1,5 +1,61 @@
 # @thirdweb-dev/nebula
 
+## 0.2.31
+
+### Patch Changes
+
+- Updated dependencies [[`45ba811`](https://github.com/thirdweb-dev/js/commit/45ba811950fe9e85060a4c93c76c13f7f00f8292), [`c672a84`](https://github.com/thirdweb-dev/js/commit/c672a84fc398730e673b40537e03ef09615106c7), [`d52855d`](https://github.com/thirdweb-dev/js/commit/d52855dbdabf497dc72a5dbed56c55d345bac0e9)]:
+  - thirdweb@5.105.31
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [[`e114b2c`](https://github.com/thirdweb-dev/js/commit/e114b2c4f98aa9470afffcd5f809953bb69c5c4f)]:
+  - thirdweb@5.105.30
+
+## 0.2.29
+
+### Patch Changes
+
+- Updated dependencies [[`c0948fb`](https://github.com/thirdweb-dev/js/commit/c0948fb9fe71b6403ac08f84e4c6f30bdbea8e3a)]:
+  - thirdweb@5.105.29
+
+## 0.2.28
+
+### Patch Changes
+
+- Updated dependencies [[`621c1de`](https://github.com/thirdweb-dev/js/commit/621c1de62e486b8698d9bd38fabde73fef9f7de5)]:
+  - thirdweb@5.105.28
+
+## 0.2.27
+
+### Patch Changes
+
+- Updated dependencies [[`fd4414b`](https://github.com/thirdweb-dev/js/commit/fd4414b451bf07d8a165f0dee9c71d2a1bea1812), [`9a3ebe1`](https://github.com/thirdweb-dev/js/commit/9a3ebe1cb1e937d40477019c71e163cc1837a99e), [`e5326c4`](https://github.com/thirdweb-dev/js/commit/e5326c43a9bf2aed665907760c48e43e2310cd74), [`e1ad7da`](https://github.com/thirdweb-dev/js/commit/e1ad7daf5401c4ddd3661eceed15e8c4f481d28e)]:
+  - thirdweb@5.105.27
+
+## 0.2.26
+
+### Patch Changes
+
+- Updated dependencies [[`b86d520`](https://github.com/thirdweb-dev/js/commit/b86d520f3c05c4c3741d9f3071f40d13cebe24dd), [`e4ba47b`](https://github.com/thirdweb-dev/js/commit/e4ba47bd1e4bc5aee4ca1e0bedd583dc9e33d30e), [`58787a2`](https://github.com/thirdweb-dev/js/commit/58787a28f362d168a72a6eb462930ad7de4b87f2)]:
+  - thirdweb@5.105.26
+
+## 0.2.25
+
+### Patch Changes
+
+- Updated dependencies [[`d35b6fc`](https://github.com/thirdweb-dev/js/commit/d35b6fc1fe320c55cddfe3080dc5b66a3d605514)]:
+  - thirdweb@5.105.25
+
+## 0.2.24
+
+### Patch Changes
+
+- Updated dependencies [[`c717eaa`](https://github.com/thirdweb-dev/js/commit/c717eaadae09c65b2f651145f1279ba876c90ace)]:
+  - thirdweb@5.105.24
+
 ## 0.2.23
 
 ### Patch Changes

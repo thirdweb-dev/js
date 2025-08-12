@@ -8,13 +8,6 @@ module.exports = {
   darkMode: ["class"],
   plugins: [require("tailwindcss-animate")],
   theme: {
-    borderRadius: {
-      full: "9999px",
-      lg: "var(--radius)",
-      md: "calc(var(--radius) - 2px)",
-      none: "0",
-      sm: "calc(var(--radius) - 4px)",
-    },
     container: {
       center: true,
       padding: "1rem",
@@ -23,10 +16,16 @@ module.exports = {
       },
     },
     extend: {
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "animate-in-slow": "animate-in 0.4s ease",
+        "text-shimmer": "text-shimmer 1.25s linear infinite",
       },
       colors: {
         accent: {
@@ -92,6 +91,10 @@ module.exports = {
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)", opacity: 1 },
           to: { height: 0, opacity: 0 },
+        },
+        "text-shimmer": {
+          "0%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "-100% 50%" },
         },
       },
       spacing: {

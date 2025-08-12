@@ -37,6 +37,9 @@ import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type TransactionWidgetProps = {
+  /**
+   * Customize the supported tokens that users can pay with.
+   */
   supportedTokens?: SupportedTokens;
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -189,6 +192,11 @@ export type TransactionWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -213,7 +221,7 @@ type UIOptionsResult =
  * @example
  * ### Default configuration
  *
- * By default, the `TransactionWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+ * By default, the `TransactionWidget` component allows users to fund their wallets with crypto or fiat on any of the supported chains.
  *
  * ```tsx
  * <TransactionWidget
@@ -225,6 +233,30 @@ type UIOptionsResult =
  *   })}
  *   amount="0.1"
  *  />
+ * ```
+ *
+ * ### Customize the supported tokens
+ *
+ * You can customize the supported tokens that users can pay with by passing a `supportedTokens` object to the `TransactionWidget` component.
+ *
+ * ```tsx
+ * <TransactionWidget
+ *   client={client}
+ *   transaction={prepareTransaction({
+ *     to: "0x...",
+ *     chain: ethereum,
+ *     client: client,
+ *   })}
+ *   supportedTokens={{
+ *     [8453]: [
+ *       {
+ *         address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ *         name: "USDC",
+ *         symbol: "USDC",
+ *       },
+ *     ],
+ *   }}
+ * />
  * ```
  *
  * ### Customize the UI
@@ -349,6 +381,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
       return {
         data: {
           currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
           metadata: {
             description: props.description,
             image: props.image,
@@ -409,6 +442,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        supportedTokens={props.supportedTokens}
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}

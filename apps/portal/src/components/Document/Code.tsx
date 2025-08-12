@@ -11,11 +11,10 @@ import {
   stringifyTokenStyle,
   type ThemedToken,
 } from "shiki";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
 // others
 import { cn } from "@/lib/utils";
-
 import { CopyButton } from "../others/CopyButton";
-import { ScrollShadow } from "../others/ScrollShadow/ScrollShadow";
 
 const jsOrTsLangs = new Set([
   "js",

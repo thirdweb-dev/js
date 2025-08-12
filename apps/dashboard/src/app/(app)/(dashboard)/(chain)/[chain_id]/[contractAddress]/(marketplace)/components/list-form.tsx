@@ -55,17 +55,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardOwnedNFTs } from "@/hooks/useDashboardOwnedNFTs";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
-import { useWalletNFTs } from "@/hooks/useWalletNFTs";
+import { useOwnedNFTsInsight } from "@/hooks/useWalletNFTs";
 import { cn } from "@/lib/utils";
-import { isAlchemySupported } from "@/lib/wallet/nfts/isAlchemySupported";
-import { isMoralisSupported } from "@/lib/wallet/nfts/isMoralisSupported";
-import type { WalletNFT } from "@/lib/wallet/nfts/types";
+import type { OwnedNFT } from "@/lib/wallet/nfts/types";
 import { shortenIfAddress } from "@/utils/usedapp-external";
 
 type ListForm =
   | (Omit<CreateListingParams, "quantity" | "currencyContractAddress"> & {
       currencyContractAddress: string;
-      selected?: WalletNFT;
+      selected?: OwnedNFT;
       listingType: "direct";
       listingDurationInSeconds: string;
       quantity: string;
@@ -73,7 +71,7 @@ type ListForm =
     })
   | (Omit<CreateAuctionParams, "quantity" | "currencyContractAddress"> & {
       currencyContractAddress: string;
-      selected?: WalletNFT;
+      selected?: OwnedNFT;
       listingType: "auction";
       listingDurationInSeconds: string;
       quantity: string;
@@ -114,18 +112,14 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const [isFormLoading, setIsFormLoading] = useState(false);
 
-  const isSupportedChain =
-    chainId &&
-    (isInsightSupported ||
-      isAlchemySupported(chainId) ||
-      isMoralisSupported(chainId));
-
   const account = useActiveAccount();
 
-  const { data: walletNFTs, isPending: isWalletNFTsLoading } = useWalletNFTs({
+  const ownedNFTsInsightQuery = useOwnedNFTsInsight({
     chainId,
     isInsightSupported,
     walletAddress: account?.address,
+    client: contract.client,
+    chain: contract.chain,
   });
 
   const sendAndConfirmTx = useSendAndConfirmTransaction();
@@ -173,58 +167,52 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       })
     : undefined;
 
-  const { data: ownedNFTs, isPending: isOwnedNFTsLoading } =
-    useDashboardOwnedNFTs({
-      contract: selectedContract,
-      // Only run this hook as the last resort if this chain is not supported by the API services we are using
-      disabled:
-        !selectedContract ||
-        isSupportedChain ||
-        isWalletNFTsLoading ||
-        (walletNFTs?.result || []).length > 0 ||
-        mode === "manual",
-      owner: account?.address,
-    });
+  const ownedNFTsRPCQuery = useDashboardOwnedNFTs({
+    contract: selectedContract,
+    // Only run this hook as the last resort if this chain is not supported by the API services we are using
+    disabled:
+      !selectedContract ||
+      isInsightSupported ||
+      ownedNFTsInsightQuery.isPending ||
+      (ownedNFTsInsightQuery.data && ownedNFTsInsightQuery.data.length > 0) ||
+      mode === "manual",
+    owner: account?.address,
+  });
 
-  const isSelected = (nft: WalletNFT) => {
+  const isSelected = (nft: OwnedNFT) => {
     return (
       form.watch("selected")?.id === nft.id &&
       form.watch("selected")?.contractAddress === nft.contractAddress
     );
   };
 
-  const ownedWalletNFTs: WalletNFT[] = useMemo(() => {
-    return ownedNFTs?.map((nft) => {
-      if (nft.type === "ERC721") {
-        return {
-          chainId: nft.chainId,
-          contractAddress: form.watch("selected.contractAddress"),
-          id: String(nft.id),
-          metadata: nft.metadata,
-          owner: nft.owner,
-          supply: "1",
-          tokenAddress: nft.tokenAddress,
-          tokenId: nft.id.toString(),
-          tokenURI: nft.tokenURI,
-          type: "ERC721",
-        };
-      }
-      return {
-        chainId: nft.chainId,
-        contractAddress: form.watch("selected.contractAddress"),
+  const ownedWalletNFTsRPC: OwnedNFT[] = useMemo(() => {
+    return ownedNFTsRPCQuery.data?.map((nft) => {
+      const nftObj: OwnedNFT = {
+        contractAddress: nft.tokenAddress,
         id: String(nft.id),
         metadata: nft.metadata,
-        owner: nft.owner,
-        supply: String(nft.supply),
-        tokenAddress: nft.tokenAddress,
-        tokenId: nft.id.toString(),
-        tokenURI: nft.tokenURI,
-        type: "ERC1155",
+        type: nft.type,
       };
-    }) as WalletNFT[];
-  }, [ownedNFTs, form]);
 
-  const nfts = ownedWalletNFTs || walletNFTs?.result;
+      return nftObj;
+    }) as OwnedNFT[];
+  }, [ownedNFTsRPCQuery.data]);
+
+  const ownedWalletNFTsInsight: OwnedNFT[] | undefined = useMemo(() => {
+    return ownedNFTsInsightQuery.data?.map((nft) => {
+      const nftObj: OwnedNFT = {
+        id: nft.id.toString(),
+        contractAddress: nft.tokenAddress,
+        metadata: nft.metadata,
+        type: nft.type,
+      };
+
+      return nftObj;
+    });
+  }, [ownedNFTsInsightQuery.data]);
+
+  const nfts = ownedWalletNFTsRPC || ownedWalletNFTsInsight;
 
   return (
     <Form {...form}>
@@ -472,7 +460,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               Select the NFT you want to list for sale
             </FormDescription>
 
-            {!isSupportedChain ? (
+            {!isInsightSupported ? (
               <div className="flex flex-col gap-4 mb-4">
                 <div className="flex flex-row items-center gap-3 rounded-md border border-border border-orange-100 bg-orange-50 p-[10px] dark:border-orange-300 dark:bg-orange-300">
                   <InfoIcon className="size-6 text-orange-400 dark:text-orange-900" />
@@ -504,9 +492,9 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               </div>
             ) : null}
 
-            {isWalletNFTsLoading ||
-            (isOwnedNFTsLoading &&
-              !isSupportedChain &&
+            {ownedNFTsInsightQuery.isPending ||
+            (ownedNFTsRPCQuery.isPending &&
+              !isInsightSupported &&
               form.watch("selected.contractAddress")) ? (
               <div className="flex flex-wrap gap-3">
                 {new Array(8).fill(0).map((_, index) => (
@@ -527,7 +515,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
                   return (
                     <ToolTipLabel
-                      key={nft.contractAddress + nft.id}
+                      key={`${nft.contractAddress}-${nft.id}`}
                       label={
                         <ul>
                           <li>

@@ -29,6 +29,7 @@ const TransactionPaymentWithTheme = (
 const meta = {
   args: {
     client: storyClient,
+    onExecuteTransaction: () => {},
     onContinue: (_amount, _token, _receiverAddress) => {},
     theme: "dark",
     uiOptions: TRANSACTION_UI_OPTIONS.ethTransfer,
@@ -164,6 +165,37 @@ export const ContractInteractionLight: Story = {
       description: {
         story:
           "Contract interaction transaction in light theme with enhanced UX and skeleton loading.",
+      },
+    },
+  },
+};
+
+export const CustomButtonLabel: Story = {
+  args: {
+    theme: "dark",
+    uiOptions: TRANSACTION_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+    docs: {
+      description: {
+        story:
+          "Example showcasing custom button label functionality. The button shows 'Execute Now' instead of the default 'Execute [functionName]' text.",
+      },
+    },
+  },
+};
+
+export const CustomButtonLabelLight: Story = {
+  args: {
+    theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.customButton,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story: "Light theme version with custom button label 'Execute Now'.",
       },
     },
   },

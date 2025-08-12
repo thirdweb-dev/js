@@ -43,7 +43,7 @@ export default function RootLayout({
           enableSystem={false}
         >
           <NextTopLoader
-            color="hsl(var(--link-foreground))"
+            color="hsl(var(--foreground))"
             height={2}
             shadow={false}
             showSpinner={false}

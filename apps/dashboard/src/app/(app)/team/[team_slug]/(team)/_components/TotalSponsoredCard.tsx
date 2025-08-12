@@ -1,35 +1,53 @@
-import { defineChain } from "thirdweb";
-import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
+"use client";
+import { useSetResponsiveSearchParams } from "responsive-rsc";
+import type { ChainMetadata } from "thirdweb/chains";
 import { cn } from "@/lib/utils";
 import type { UserOpStats } from "@/types/analytics";
 import { BarChart } from "../../../components/Analytics/BarChart";
 import { CombinedBarChartCard } from "../../../components/Analytics/CombinedBarChartCard";
 import { EmptyAccountAbstractionChartContent } from "../../[project_slug]/(sidebar)/account-abstraction/AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
 
-export async function TotalSponsoredChartCardUI({
-  data,
-  aggregatedData,
-  searchParams,
+const chartConfig = {
+  mainnet: {
+    color: "hsl(var(--chart-1))",
+    label: "Mainnet Chains",
+  },
+  testnet: {
+    color: "hsl(var(--chart-2))",
+    label: "Testnet Chains",
+  },
+  total: {
+    color: "hsl(var(--chart-3))",
+    label: "All Chains",
+  },
+};
+
+export function TotalSponsoredChartCardUI({
+  processedAggregatedData,
+  selectedChart,
   className,
   onlyMainnet,
   title,
+  chains,
+  data,
   description,
+  selectedChartQueryParam,
 }: {
   data: UserOpStats[];
-  aggregatedData: UserOpStats[];
-  searchParams?: { [key: string]: string | string[] | undefined };
+  selectedChart: string | undefined;
   className?: string;
   onlyMainnet?: boolean;
   title?: string;
+  selectedChartQueryParam: string;
   description?: string;
+  chains: ChainMetadata[];
+  processedAggregatedData: {
+    mainnet: number;
+    testnet: number;
+    total: number;
+  };
 }) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
+  const setResponsiveSearchParams = useSetResponsiveSearchParams();
 
   // Process data to combine by date and chain type
   const dateMap = new Map<string, { mainnet: number; testnet: number }>();
@@ -55,35 +73,6 @@ export async function TotalSponsoredChartCardUI({
     }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const processedAggregatedData = {
-    mainnet: aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    testnet: aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-  };
-
-  const chartConfig = {
-    mainnet: {
-      color: "hsl(var(--chart-1))",
-      label: "Mainnet Chains",
-    },
-    testnet: {
-      color: "hsl(var(--chart-2))",
-      label: "Testnet Chains",
-    },
-    total: {
-      color: "hsl(var(--chart-3))",
-      label: "All Chains",
-    },
-  };
-
   if (onlyMainnet) {
     const filteredData = timeSeriesData.filter((d) => d.mainnet > 0);
     return (
@@ -106,15 +95,23 @@ export async function TotalSponsoredChartCardUI({
   return (
     <CombinedBarChartCard
       activeChart={
-        (searchParams?.totalSponsored as keyof typeof chartConfig) ?? "mainnet"
+        selectedChart && selectedChart in chartConfig
+          ? (selectedChart as keyof typeof chartConfig)
+          : "mainnet"
       }
+      onSelect={(key) => {
+        setResponsiveSearchParams((v) => {
+          return {
+            ...v,
+            [selectedChartQueryParam]: key,
+          };
+        });
+      }}
       aggregateFn={(_data, key) => processedAggregatedData[key]}
       chartConfig={chartConfig}
       className={className}
       data={timeSeriesData}
-      existingQueryParams={searchParams}
       isCurrency
-      queryKey="totalSponsored"
       title={title || "Gas Sponsored"}
       // Get the trend from the last two COMPLETE periods
       trendFn={(data, key) =>

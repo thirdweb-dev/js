@@ -1,36 +1,26 @@
-import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { getClientTransactions } from "@/api/analytics";
-import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import type { AnalyticsQueryParams } from "@/types/analytics";
 import { TransactionsChartsUI } from "./TransactionCharts";
 
-export function TransactionsCharts(
-  props: AnalyticsQueryParams & {
-    searchParams: { [key: string]: string | string[] | undefined };
-    client: ThirdwebClient;
-  },
-) {
-  return (
-    // TODO: Add better LoadingChartState
-    <Suspense fallback={<LoadingChartState className="h-[458px] border" />}>
-      <TransactionsChartCardAsync {...props} />
-    </Suspense>
-  );
-}
-
-async function TransactionsChartCardAsync(
-  props: AnalyticsQueryParams & {
-    searchParams: { [key: string]: string | string[] | undefined };
-    client: ThirdwebClient;
-  },
-) {
+export async function TransactionsChartCardAsync(props: {
+  params: AnalyticsQueryParams;
+  client: ThirdwebClient;
+  selectedChartQueryParam: string;
+  selectedChart: string | undefined;
+  authToken: string;
+}) {
+  const { params, authToken, client, selectedChart, selectedChartQueryParam } =
+    props;
   const [data, aggregatedData] = await Promise.all([
-    getClientTransactions(props),
-    getClientTransactions({
-      ...props,
-      period: "all",
-    }),
+    getClientTransactions(params, authToken),
+    getClientTransactions(
+      {
+        ...params,
+        period: "all",
+      },
+      authToken,
+    ),
   ]);
 
   if (!aggregatedData.length) {
@@ -40,9 +30,10 @@ async function TransactionsChartCardAsync(
   return (
     <TransactionsChartsUI
       aggregatedData={aggregatedData}
-      client={props.client}
+      client={client}
       data={data}
-      searchParams={props.searchParams}
+      selectedChart={selectedChart}
+      selectedChartQueryParam={selectedChartQueryParam}
     />
   );
 }

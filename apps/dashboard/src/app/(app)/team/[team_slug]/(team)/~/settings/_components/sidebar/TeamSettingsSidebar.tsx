@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "thirdweb";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Badge } from "@/components/ui/badge";
 import type { Account } from "@/hooks/useApi";
 import { getTeamSettingsLinks } from "./getTeamSettingsLinks";

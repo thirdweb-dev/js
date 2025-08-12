@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
+import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
-import { fetchEcosystem } from "@/api/ecosystems";
-import { getTeamBySlug } from "@/api/team";
+import { fetchEcosystem } from "@/api/team/ecosystems";
+import { getTeamBySlug } from "@/api/team/get-team";
+import type { DurationId } from "@/components/analytics/date-range-selector";
+import { getFiltersFromSearchParams } from "@/lib/time";
 import { fetchPartners } from "../configuration/hooks/fetchPartners";
 import { EcosystemAnalyticsPage } from "./components/EcosystemAnalyticsPage";
 
@@ -47,21 +50,25 @@ export default async function Page(props: {
     teamId: team.id,
   });
 
+  const defaultRange: DurationId = "last-30";
+  const { range, interval } = getFiltersFromSearchParams({
+    defaultRange,
+    from: searchParams.from,
+    interval: searchParams.interval,
+    to: searchParams.to,
+  });
+
   return (
-    <EcosystemAnalyticsPage
-      ecosystemSlug={ecosystem.slug}
-      interval={searchParams.interval || "week"}
-      partners={partners}
-      range={
-        searchParams.from && searchParams.to
-          ? {
-              from: new Date(searchParams.from),
-              to: new Date(searchParams.to),
-              type: "custom",
-            }
-          : undefined
-      }
-      teamId={team.id}
-    />
+    <ResponsiveSearchParamsProvider value={searchParams}>
+      <EcosystemAnalyticsPage
+        authToken={authToken}
+        ecosystemSlug={ecosystem.slug}
+        interval={interval}
+        defaultRange={defaultRange}
+        partners={partners}
+        range={range}
+        teamId={team.id}
+      />
+    </ResponsiveSearchParamsProvider>
   );
 }

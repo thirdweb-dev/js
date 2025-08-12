@@ -1,4 +1,4 @@
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import type { EngineInstance } from "@/hooks/useEngine";
 import { EngineFooterCard } from "../_components";
 import { EngineInstancesTable } from "./engine-instances-table";

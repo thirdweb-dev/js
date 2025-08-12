@@ -44,7 +44,6 @@ export const EngineAccessTokens: React.FC<EngineAccessTokensProps> = ({
       {supportsKeyPairAuth && (
         <TabButtons
           containerClassName="mb-4 mt-3"
-          tabClassName="!text-sm"
           tabs={[
             {
               name: "Standard",

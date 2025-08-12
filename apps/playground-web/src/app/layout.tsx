@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
 import { metadataBase } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { AppSidebar } from "./AppSidebar";
+import { AppSidebarLayout } from "./AppSidebar";
 import { Providers } from "./providers";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
-import { MobileHeader } from "./MobileHeader";
-import { getSidebarLinks } from "./navLinks";
 
 const sansFont = Inter({
   subsets: ["latin"],
@@ -32,7 +31,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const sidebarLinks = getSidebarLinks();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -42,21 +40,24 @@ export default async function RootLayout({
           monoFont.variable,
         )}
       >
-        <NextTopLoader
-          color="hsl(var(--foreground))"
-          height={2}
-          shadow={false}
-          showSpinner={false}
-        />
-        <MobileHeader links={sidebarLinks} />
-        <div className="flex flex-col lg:h-dvh lg:flex-row">
-          <AppSidebar links={sidebarLinks} />
-          <div className="flex grow flex-col lg:overflow-auto">
-            <div className="relative grow">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
+          enableSystem={false}
+        >
+          <NextTopLoader
+            color="hsl(var(--foreground))"
+            height={2}
+            shadow={false}
+            showSpinner={false}
+          />
+          <div className="flex flex-col lg:h-dvh lg:flex-row">
+            <AppSidebarLayout>
               <Providers>{children}</Providers>
-            </div>
+            </AppSidebarLayout>
           </div>
-        </div>
+        </ThemeProvider>
       </body>
     </html>
   );

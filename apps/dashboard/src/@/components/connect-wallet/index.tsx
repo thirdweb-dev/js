@@ -1,6 +1,5 @@
 "use client";
 
-import { useFavoriteChainIds } from "@app/(dashboard)/(chain)/components/client/star-button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,6 +19,7 @@ import { LazyConfigureNetworkModal } from "@/components/misc/configure-networks/
 import { Button } from "@/components/ui/button";
 import { popularChains } from "@/constants/popularChains";
 import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useFavoriteChainIds } from "@/hooks/favorite-chains";
 import { useStore } from "@/lib/reactive";
 import {
   addRecentlyUsedChainId,

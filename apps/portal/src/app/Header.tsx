@@ -1,12 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import {
-  ChevronDownIcon,
-  MenuIcon,
-  MessageCircleIcon,
-  TableOfContentsIcon,
-} from "lucide-react";
+import { ChevronDownIcon, MenuIcon, TableOfContentsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChatButton } from "../components/AI/chat-button";
 import { GithubIcon } from "../components/Document/GithubButtonLink";
 import { CustomAccordion } from "../components/others/CustomAccordion";
 import { ThemeSwitcher } from "../components/others/theme/ThemeSwitcher";
@@ -50,6 +46,10 @@ const links = [
   {
     href: "/tokens",
     name: "Tokens",
+  },
+  {
+    href: "/insight",
+    name: "Insight",
   },
 ];
 
@@ -142,6 +142,10 @@ const apisLinks = [
 ];
 
 const aiLinks = [
+  {
+    href: "/ai/chat",
+    name: "Chat API",
+  },
   {
     href: "/ai/mcp",
     name: "MCP",
@@ -242,22 +246,13 @@ export function Header() {
           </div>
 
           <div className="hidden xl:block">
-            <Button asChild>
-              <Link href="/chat">
-                <MessageCircleIcon className="mr-2 size-4" />
-                Ask AI
-              </Link>
-            </Button>
+            <ChatButton />
           </div>
 
           <div className="flex items-center gap-1 xl:hidden">
             <ThemeSwitcher className="border-none bg-transparent" />
             <DocSearch variant="icon" />
-            <Button className="p-2" asChild variant="ghost">
-              <Link href="/chat">
-                <MessageCircleIcon className="size-6" />
-              </Link>
-            </Button>
+            <ChatButton />
             <Button
               className="p-2"
               onClick={() => setShowBurgerMenu(!showBurgerMenu)}

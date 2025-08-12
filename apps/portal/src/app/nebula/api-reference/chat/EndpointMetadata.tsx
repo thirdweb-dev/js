@@ -30,7 +30,9 @@ export function EndpointMetadata() {
         method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/chat",
+        referenceUrl: "https://api.thirdweb.com/reference#tag/ai/ai/chat",
         request: {
+          queryParameters: [],
           bodyParameters: [
             {
               description: "The message to be processed.",

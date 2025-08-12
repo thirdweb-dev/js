@@ -1,12 +1,15 @@
 import { notFound, redirect } from "next/navigation";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { getWebhookSummary } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getSupportedWebhookChains } from "@/api/insight/webhooks";
-import { getProject } from "@/api/projects";
-import { getAvailableTopics, getWebhookConfigs } from "@/api/webhook-configs";
+import { getProject } from "@/api/project/projects";
+import {
+  getAvailableTopics,
+  getWebhookConfigs,
+} from "@/api/project/webhook-configs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../../account/settings/getAccount";
 import { WebhooksOverview } from "./components/overview";
 
 export default async function WebhooksPage(props: {
@@ -77,14 +80,17 @@ export default async function WebhooksPage(props: {
   // Fetch metrics for all webhooks in parallel
   const webhookMetrics = await Promise.all(
     webhookConfigs.map(async (config) => {
-      const metricsResult = await getWebhookSummary({
-        from: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        period: "day",
-        projectId: project.id,
-        teamId: project.teamId, // 24 hours ago
-        to: new Date(),
-        webhookId: config.id,
-      });
+      const metricsResult = await getWebhookSummary(
+        {
+          from: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          period: "day",
+          projectId: project.id,
+          teamId: project.teamId, // 24 hours ago
+          to: new Date(),
+          webhookId: config.id,
+        },
+        authToken,
+      );
 
       return {
         metrics:

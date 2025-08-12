@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { SharedContractSplitPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/split/shared-split-page";
 import type { ProjectContractPageParams } from "../types";
 

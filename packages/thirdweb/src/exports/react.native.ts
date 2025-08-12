@@ -8,6 +8,9 @@ export type {
 } from "../react/core/design-system/index.js";
 // theme
 export { darkTheme, lightTheme } from "../react/core/design-system/index.js";
+// auth
+export type { SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
+export { useSiweAuth } from "../react/core/hooks/auth/useSiweAuth.js";
 export type {
   ConnectButton_connectButtonOptions,
   ConnectButton_connectModalOptions,

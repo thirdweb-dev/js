@@ -6,7 +6,6 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
-import { BatchLazyMint } from "@/components/batch-upload/batch-lazy-mint";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { BatchLazyMint } from "./batch-upload/batch-lazy-mint";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;

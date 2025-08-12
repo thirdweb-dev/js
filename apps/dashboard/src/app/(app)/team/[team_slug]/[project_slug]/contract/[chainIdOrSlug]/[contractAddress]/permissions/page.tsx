@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { SharedPermissionsPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/permissions/shared-permissions-page";
 import type { ProjectContractPageParams } from "../types";
 

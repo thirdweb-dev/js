@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { AdvancedSection } from "./components/AdvancedSection.client";
@@ -45,6 +45,8 @@ export default async function Page(props: {
           client={client}
           projectClientId={project.publishableKey}
           teamId={project.teamId}
+          projectSlug={params.project_slug}
+          teamSlug={params.team_slug}
         />
         <div className="h-12" />
         <QuickStartSection

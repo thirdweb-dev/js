@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { ChainIcon } from "@/components/blocks/ChainIcon";
+import { MultiSelect } from "@/components/blocks/multi-select";
 import { Badge } from "@/components/ui/badge";
-import { useAllChainsData } from "../../app/hooks/chains";
-import { SelectWithSearch } from "../ui/select-with-search";
-import { ChainIcon } from "./ChainIcon";
-import { MultiSelect } from "./multi-select";
+import { SelectWithSearch } from "@/components/ui/select-with-search";
+import { useAllChainsData } from "@/hooks/chains";
 
 function cleanChainName(chainName: string) {
   return chainName.replace("Mainnet", "");

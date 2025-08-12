@@ -9,12 +9,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { Team } from "@/api/team";
-import type { TeamSubscription } from "@/api/team-subscription";
+import type { Team } from "@/api/team/get-team";
+import type { TeamSubscription } from "@/api/team/team-subscription";
 import { BillingPortalButton } from "@/components/billing/billing";
-import { CancelPlanButton } from "@/components/billing/CancelPlanModal/CancelPlanModal";
-import { BillingPricing } from "@/components/billing/Pricing";
-import { RenewSubscriptionButton } from "@/components/billing/renew-subscription/renew-subscription-button";
+import { RenewSubscriptionButton } from "@/components/billing/renew-subscription-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -27,6 +25,8 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
+import { CancelPlanButton } from "./CancelPlanModal";
+import { BillingPricing } from "./Pricing";
 
 export function PlanInfoCardUI(props: {
   subscriptions: TeamSubscription[];

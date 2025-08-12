@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug, hasToCompleteTeamOnboarding } from "@/api/team";
+import {
+  getTeamBySlug,
+  hasToCompleteTeamOnboarding,
+} from "@/api/team/get-team";
 import { EnsureValidConnectedWalletLoginServer } from "@/components/misc/EnsureValidConnectedWalletLogin/EnsureValidConnectedWalletLoginServer";
 import { SaveLastVisitedTeamPage } from "../components/last-visited-page/SaveLastVisitedPage";
 import {

@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { ThirdwebMiniLogo } from "../../../app/(app)/components/ThirdwebMiniLogo";
 import { ChatBar } from "./ChatBar";

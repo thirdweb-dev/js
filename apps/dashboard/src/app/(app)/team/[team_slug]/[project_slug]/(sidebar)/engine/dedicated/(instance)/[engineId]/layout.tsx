@@ -1,3 +1,4 @@
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
@@ -9,7 +10,6 @@ import {
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import type { EngineInstance } from "@/hooks/useEngine";
 import { loginRedirect } from "@/utils/redirects";
-import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";
 import { EngineSidebarLayout } from "./_components/EnginePageLayout";

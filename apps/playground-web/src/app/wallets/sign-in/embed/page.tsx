@@ -1,30 +1,33 @@
-import type { Metadata } from "next";
+import { PanelTopIcon } from "lucide-react";
+import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { metadataBase } from "@/lib/constants";
-import { PageLayout } from "../../../../components/blocks/APIHeader";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seamlessly integrate account abstraction and SIWE auth.",
-  metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb ConnectEmbed",
-};
+const title = "Connect Embed";
+const description =
+  "Embeddable wallet component to manage logged in wallet states, view wallet balance, view assets, or buy and receive funds within an application.";
+const ogDescription =
+  "Wallet component to manage logged in wallet, view wallet balance, view assets, or buy and receive funds within an application";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Create a login experience tailor-made for your app. Add your wallets
-            of choice, enable web2 sign-in options and create a modal that fits
-            your brand.
-          </>
-        }
+        icon={PanelTopIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets?utm_source=playground"
-        title="ConnectEmbed"
       >
         <EmbedComponent />
       </PageLayout>
@@ -48,7 +51,11 @@ return (
 );
 };`}
       lang="tsx"
-      preview={<StyledConnectEmbed />}
+      preview={
+        <div className="overflow-hidden max-w-full px-3">
+          <StyledConnectEmbed />
+        </div>
+      }
     />
   );
 }

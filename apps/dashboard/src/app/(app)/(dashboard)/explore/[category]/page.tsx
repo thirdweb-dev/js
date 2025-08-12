@@ -1,5 +1,3 @@
-import { DeployUpsellCard } from "@app/(dashboard)/explore/components/upsells/deploy-your-own";
-import { getCategory } from "@app/(dashboard)/explore/data";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,7 +5,7 @@ import { Suspense } from "react";
 import {
   ContractCard,
   ContractCardSkeleton,
-} from "@/components/contracts/contract-card";
+} from "@/components/contracts/contract-card/contract-card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +14,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { DeployUpsellCard } from "../components/upsells/deploy-your-own";
+import { getCategory } from "../data";
 
 type ExploreCategoryPageProps = {
   params: Promise<{

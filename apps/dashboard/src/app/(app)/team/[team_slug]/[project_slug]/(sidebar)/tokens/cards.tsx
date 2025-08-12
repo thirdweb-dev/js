@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import {
-  reportAssetCreationStarted,
   reportAssetImportStarted,
   reportAssetImportSuccessful,
 } from "@/analytics/report";
@@ -43,11 +42,6 @@ export function Cards(props: {
         description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/token`}
         icon={CoinsIcon}
-        onClick={() => {
-          reportAssetCreationStarted({
-            assetType: "coin",
-          });
-        }}
         title="Create Coin"
       />
 
@@ -55,11 +49,6 @@ export function Cards(props: {
         description="Launch your own NFT collection"
         href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/nft`}
         icon={ImagesIcon}
-        onClick={() => {
-          reportAssetCreationStarted({
-            assetType: "nft",
-          });
-        }}
         title="Create NFT Collection"
       />
 

@@ -101,8 +101,8 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
     return (
       <EmptyState
         icon={LinkIcon}
-        title="No payment links configured yet"
-        description="Create a payment link to receive any token in seconds."
+        title="No payments configured yet"
+        description="Create a payment to receive any token in seconds."
         buttons={[
           <CreatePaymentLinkButton
             key="create-payment-link"
@@ -111,7 +111,7 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
           >
             <Button className="gap-1" variant="default" size="sm">
               <PlusIcon className="size-4" />
-              Create Payment Link
+              Create Payment
             </Button>
           </CreatePaymentLinkButton>,
         ]}
@@ -125,7 +125,7 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Payment Link</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead>Recipient</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Usages</TableHead>
@@ -191,8 +191,10 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
                       <CopyButton
                         tooltip={false}
                         label="Copy"
-                        variant="outline"
+                        variant="ghost"
                         text={paymentLink.link}
+                        iconClassName="size-3.5"
+                        className="-translate-x-2"
                       />
                     </TableCell>
                     <TableCell className="text-center">
@@ -202,7 +204,7 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
                         paymentLinkId={paymentLink.id}
                       >
                         <Button size="icon" variant="ghost">
-                          <TrashIcon className="size-5" strokeWidth={1} />
+                          <TrashIcon className="size-4" strokeWidth={1} />
                         </Button>
                       </DeletePaymentLinkButton>
                     </TableCell>
@@ -272,7 +274,7 @@ function DeletePaymentLinkButton(
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete the
-            payment link.
+            payment.
           </DialogDescription>
         </DialogHeader>
 
@@ -288,7 +290,7 @@ function DeletePaymentLinkButton(
                   });
                 },
                 onSuccess: () => {
-                  toast.success("Payment link deleted successfully.");
+                  toast.success("Payment deleted successfully.");
                   setOpen(false);
                   return queryClient.invalidateQueries({
                     queryKey: ["payment-links", props.clientId, props.teamId],

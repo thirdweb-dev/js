@@ -30,7 +30,6 @@ export function UploadNFTsFieldset(props: {
     <StepCard nextButton={undefined} prevButton={undefined} title="Upload NFTs">
       <TabButtons
         containerClassName="pt-2 px-4 md:px-6"
-        tabClassName="!text-sm"
         tabs={[
           {
             isActive: props.nftData.type === "single",

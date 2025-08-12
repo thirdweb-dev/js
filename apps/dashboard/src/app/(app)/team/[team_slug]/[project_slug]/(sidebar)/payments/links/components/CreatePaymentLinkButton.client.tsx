@@ -1,6 +1,5 @@
 "use client";
 
-import { resolveAddressAndEns } from "@app/(dashboard)/profile/[addressOrEns]/resolveAddressAndEns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LinkIcon } from "lucide-react";
@@ -10,6 +9,7 @@ import { toast } from "sonner";
 import { Bridge, toUnits } from "thirdweb";
 import { checksumAddress } from "thirdweb/utils";
 import z from "zod";
+import { reportPaymentLinkCreated } from "@/analytics/report";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
 import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
@@ -36,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { parseErrorToMessage } from "@/utils/errorParser";
+import { resolveAddressAndEns } from "@/utils/resolveAddressAndEns";
 
 const formSchema = z.object({
   chainId: z.number(),
@@ -91,7 +92,7 @@ export function CreatePaymentLinkButton(
         throw new Error("Invalid recipient address.");
       }
 
-      await createPaymentLink({
+      const result = await createPaymentLink({
         clientId: props.clientId,
         teamId: props.teamId,
         intent: {
@@ -102,10 +103,11 @@ export function CreatePaymentLinkButton(
         },
         title: values.title,
       });
-      return null;
+
+      return result;
     },
     onSuccess: () => {
-      toast.success("Payment link created successfully.");
+      toast.success("Payment created successfully.");
       return queryClient.invalidateQueries({
         queryKey: ["payment-links", props.clientId, props.teamId],
       });
@@ -153,7 +155,12 @@ export function CreatePaymentLinkButton(
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit((values) =>
               createMutation.mutateAsync(values, {
-                onSuccess: () => {
+                onSuccess: (result) => {
+                  reportPaymentLinkCreated({
+                    linkId: result.id,
+                    clientId: props.clientId,
+                  });
+
                   setOpen(false);
                   form.reset();
                   form.clearErrors();
@@ -162,7 +169,7 @@ export function CreatePaymentLinkButton(
             )}
           >
             <DialogHeader>
-              <DialogTitle>Create a Payment Link</DialogTitle>
+              <DialogTitle>Create a Payment</DialogTitle>
               <DialogDescription>
                 Get paid in any token on any chain.
               </DialogDescription>

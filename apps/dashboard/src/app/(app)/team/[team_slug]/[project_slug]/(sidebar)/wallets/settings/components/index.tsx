@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
@@ -11,9 +10,8 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
-import type { Project } from "@/api/projects";
-import type { SMSCountryTiers } from "@/api/sms";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { FileInput } from "@/components/blocks/FileInput";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -42,6 +40,7 @@ import {
 } from "@/schema/validations";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { toArrFromList } from "@/utils/string";
+import type { SMSCountryTiers } from "../api/sms";
 import CountrySelector from "./sms-country-select/country-selector";
 
 type InAppWalletSettingsPageProps = {

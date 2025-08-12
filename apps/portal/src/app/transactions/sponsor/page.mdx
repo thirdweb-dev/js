@@ -6,6 +6,7 @@ import {
 	createMetadata,
 	Steps,
 	Step,
+	OpenApiEndpoint,
 } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WalletsSmartIcon } from "@/icons";
@@ -56,22 +57,9 @@ Sponsor gas fees using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enab
 
   EIP-7702 is the default execution mode in the [thirdweb API](https://api.thirdweb.com/reference) for your user and server wallets.
 
-```http
-POST /v1/contracts/write
-Host: api.thirdweb.com
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
+Example sponsored contract write request:
 
-{
-  "from": "0x...", // your user or server wallet **EOA address** address
-  "chainId": "1", // your chain id
-  "calls": [{
-    "contractAddress": "0x...",
-    "method": "function transfer(address to, uint256 amount)",
-    "params": ["0x...", "1000000000000000000"],
-  }],
-}
-```
+<OpenApiEndpoint path="/v1/contracts/write" method="POST" />
 
   </TabsContent>
 
@@ -143,11 +131,10 @@ For chains that don't support EIP-7702, you can use EIP-4337 smart contract wall
 
   <TabsContent value="http">
 
-ERC4337 execution is not supported in the high level thirdweb API, but you can use the lower level [transactions API](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract) with specific execution options:
+ERC4337 execution is not supported in the high level thirdweb API, but you can use the lower level [Engine transactions API](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract) with specific execution options:
 
 ```http
-POST /v1/contracts/write
-Host: engine.thirdweb.com
+POST https://engine.thirdweb.com/v1/write/contract
 Content-Type: application/json
 x-secret-key: <your-project-secret-key>
 

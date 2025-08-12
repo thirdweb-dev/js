@@ -5,8 +5,7 @@ import { ChevronDownIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { sendMessageToTicket } from "@/api/support";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -21,6 +20,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
+import { sendMessageToTicket } from "../apis/support";
 import type { SupportMessage, SupportTicket } from "../types/tickets";
 import {
   getTicketStatusBadgeVariant,

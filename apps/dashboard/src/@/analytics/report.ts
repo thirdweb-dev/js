@@ -1,6 +1,7 @@
+"use client";
 import posthog from "posthog-js";
 
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import type { ProductSKU } from "../types/billing";
 
 // ----------------------------
@@ -271,22 +272,6 @@ export function reportAssetBuyFailed(properties: {
 
 /**
  * ### Why do we need to report this event?
- * - To track number of asset creation started from the assets page
- * - To track which asset types are being created the most
- *
- * ### Who is responsible for this event?
- * @MananTank
- */
-export function reportAssetCreationStarted(properties: {
-  assetType: "nft" | "coin";
-}) {
-  posthog.capture("asset creation started", {
-    assetType: properties.assetType,
-  });
-}
-
-/**
- * ### Why do we need to report this event?
  * - To track number of assets imported successfully from the assets page
  *
  * ### Who is responsible for this event?
@@ -427,4 +412,108 @@ export function reportUpsellClicked(properties: UpsellParams) {
  */
 export function reportPaymentCardClick(properties: { id: string }) {
   posthog.capture("payment card clicked", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To create a funnel "create payment link pageview" -> "payment link created" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @greg
+ */
+export function reportPaymentLinkCreated(properties: {
+  linkId: string;
+  clientId: string;
+}) {
+  posthog.capture("payment link created", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track funnel "payment link pageview" -> "payment link buy successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @greg
+ */
+export function reportPaymentLinkBuySuccessful() {
+  posthog.capture("payment link buy successful");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of failed payment link buys
+ * - To track what errors users encounter when trying to buy from a payment link
+ *
+ * ### Who is responsible for this event?
+ * @greg
+ */
+export function reportPaymentLinkBuyFailed(properties: {
+  errorMessage: string;
+}) {
+  posthog.capture("payment link buy failed", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To create a funnel for "asset pageview" -> "asset purchase successful" to understand the conversion rate
+ * - To understand which asset types are being viewed the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetPageview(properties: {
+  assetType: "nft" | "coin";
+  chainId: number;
+}) {
+  posthog.capture("asset pageview", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the usage of fund wallet modal
+ * - To create a funnel "fund wallet modal opened" -> "fund wallet buy successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletOpened() {
+  posthog.capture("fund wallet opened");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of successful fund wallet buys
+ * - To create a funnel "fund wallet modal opened" -> "fund wallet buy successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletSuccessful() {
+  posthog.capture("fund wallet successful");
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of failed fund wallet buys
+ * - To track the errors that users encounter when trying to buy from a fund wallet modal
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportFundWalletFailed(params: { errorMessage: string }) {
+  posthog.capture("fund wallet failed", params);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the conversion rate of the users choosing to create a token from new flow instead of the old flow
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenUpsellClicked(params: {
+  assetType: "nft" | "coin";
+  pageType: "explore" | "deploy-contract";
+}) {
+  posthog.capture("token upsell clicked", params);
 }

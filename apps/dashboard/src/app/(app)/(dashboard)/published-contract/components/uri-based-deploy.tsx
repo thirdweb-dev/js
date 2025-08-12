@@ -1,9 +1,9 @@
 import type { FetchDeployMetadataResult } from "thirdweb/contract";
 import { getUserThirdwebClient } from "@/api/auth-token";
-import { getProjects } from "@/api/projects";
-import { getTeams } from "@/api/team";
-import { CustomContractForm } from "@/components/contract-components/contract-deploy-form/custom-contract";
+import { getProjects } from "@/api/project/projects";
+import { getTeams } from "@/api/team/get-team";
 import { loginRedirect } from "@/utils/redirects";
+import { CustomContractForm } from "./custom-contract";
 
 type DeployFormForUriProps = {
   contractMetadata: FetchDeployMetadataResult | null;

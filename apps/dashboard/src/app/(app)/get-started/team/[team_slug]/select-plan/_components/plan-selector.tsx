@@ -5,8 +5,8 @@ import {
   reportOnboardingPlanSelected,
   reportOnboardingPlanSelectionSkipped,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
-import { PricingCard } from "@/components/blocks/pricing-card";
+import type { Team } from "@/api/team/get-team";
+import { PricingCard } from "@/components/billing/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";

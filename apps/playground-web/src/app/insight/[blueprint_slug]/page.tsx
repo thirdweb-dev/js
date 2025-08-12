@@ -54,7 +54,7 @@ export default async function Page(props: {
   return (
     <div>
       <Breadcrumbs />
-      <h1 className="mt-3 mb-6 font-semibold text-2xl tracking-tight lg:text-3xl">
+      <h1 className="mt-3 mb-6 font-semibold text-2xl tracking-tight">
         <div className="flex items-center gap-2">
           <span
             className={cn(

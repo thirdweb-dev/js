@@ -4,12 +4,10 @@ import {
   BellIcon,
   BookTextIcon,
   BoxIcon,
-  CoinsIcon,
   HomeIcon,
   LockIcon,
   RssIcon,
   SettingsIcon,
-  WalletIcon,
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +15,8 @@ import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
+import { TokenIcon } from "@/icons/TokenIcon";
+import { WalletProductIcon } from "@/icons/WalletProductIcon";
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
@@ -48,7 +48,7 @@ export function ProjectSidebarLayout(props: {
           links: [
             {
               href: `${layoutPath}/wallets`,
-              icon: WalletIcon,
+              icon: WalletProductIcon,
               label: "Wallets",
             },
             {
@@ -85,7 +85,7 @@ export function ProjectSidebarLayout(props: {
             },
             {
               href: `${layoutPath}/tokens`,
-              icon: CoinsIcon,
+              icon: TokenIcon,
               label: (
                 <span className="flex items-center gap-2">
                   Tokens <Badge>New</Badge>

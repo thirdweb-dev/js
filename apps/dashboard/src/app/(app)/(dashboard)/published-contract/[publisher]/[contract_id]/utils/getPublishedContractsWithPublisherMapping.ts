@@ -3,7 +3,7 @@ import { resolveAddress } from "thirdweb/extensions/ens";
 import {
   fetchLatestPublishedContractVersion,
   fetchPublishedContractVersions,
-} from "@/components/contract-components/fetch-contracts-with-versions";
+} from "@/api/contract/fetch-contracts-with-versions";
 
 function mapThirdwebPublisher(publisher: string) {
   if (publisher === "thirdweb.eth") {

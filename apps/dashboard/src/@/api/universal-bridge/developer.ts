@@ -200,7 +200,11 @@ export async function createPaymentLink(props: {
     throw new Error(text);
   }
 
-  return;
+  const response = (await res.json()) as {
+    data: PaymentLink;
+  };
+
+  return response.data;
 }
 
 export async function deletePaymentLink(props: {

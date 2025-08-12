@@ -8,7 +8,7 @@ import {
   rotateServiceAccount,
   type VaultClient,
 } from "@thirdweb-dev/vault-sdk";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { updateProjectClient } from "@/hooks/useApi";
 

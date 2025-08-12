@@ -1,163 +1,225 @@
-import type { SidebarLink } from "../components/ui/sidebar";
+"use client";
+
+import { ArrowLeftRightIcon } from "lucide-react";
+import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
+import { ContractIcon } from "../icons/ContractIcon";
+import { InsightIcon } from "../icons/InsightIcon";
+import { PayIcon } from "../icons/PayIcon";
+import { SmartAccountIcon } from "../icons/SmartAccountIcon";
+import { TokenIcon } from "../icons/TokenIcon";
+import { WalletProductIcon } from "../icons/WalletProductIcon";
 import { insightBlueprints } from "./insight/insightBlueprints";
 
-const staticSidebarLinks: SidebarLink[] = [
-  {
-    isCollapsible: false,
-    links: [
-      {
-        href: "/wallets/sign-in/button",
-        name: "ConnectButton",
-      },
-      {
-        href: "/wallets/sign-in/embed",
-        name: "ConnectEmbed",
-      },
-      {
-        href: "/wallets/sign-in/headless",
-        name: "Headless Connect",
-      },
-      {
-        href: "/wallets/in-app-wallet",
-        name: "In-App Wallets",
-      },
-      {
-        href: "/wallets/in-app-wallet/ecosystem",
-        name: "Ecosystem Wallets",
-      },
-      {
-        href: "/wallets/account-abstraction/eip-4337",
-        name: "EIP-4337",
-      },
-      {
-        href: "/wallets/account-abstraction/eip-7702",
-        name: "EIP-7702",
-      },
-      {
-        href: "/wallets/account-abstraction/eip-5792",
-        name: "EIP-5792",
-      },
-      {
-        href: "/wallets/account-abstraction/native-aa",
-        name: "Native AA (zkSync)",
-      },
-      {
-        href: "/wallets/auth",
-        name: "Auth",
-      },
-      {
-        href: "/wallets/social",
-        name: "Social",
-      },
-      {
-        href: "/wallets/blockchain-api",
-        name: "Blockchain API",
-      },
-      {
-        expanded: false,
-        links: [
-          {
-            href: "/wallets/headless/account-components",
-            name: "Account",
-          },
-          {
-            href: "/wallets/headless/nft-components",
-            name: "NFT",
-          },
-          {
-            href: "/wallets/headless/token-components",
-            name: "Token",
-          },
-          {
-            href: "/wallets/headless/chain-components",
-            name: "Chain",
-          },
-          {
-            href: "/wallets/headless/wallet-components",
-            name: "Wallet",
-          },
-        ],
-        name: "Headless Components",
-      },
-    ],
-    name: "Wallets",
+const wallets: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Wallets",
+    icon: WalletProductIcon,
   },
-];
+  links: [
+    {
+      href: "/wallets/sign-in/button",
+      label: "Connect Button",
+    },
+    {
+      href: "/wallets/sign-in/embed",
+      label: "Connect Embed",
+    },
+    {
+      href: "/wallets/sign-in/headless",
+      label: "Headless Connect",
+    },
+    {
+      href: "/wallets/in-app-wallet",
+      label: "In-App Wallets",
+    },
+    {
+      href: "/wallets/ecosystem-wallet",
+      label: "Ecosystem Wallets",
+    },
+    {
+      href: "/wallets/auth",
+      label: "Authentication (SIWE)",
+    },
+    {
+      href: "/wallets/social",
+      label: "Social Profiles",
+    },
 
-const universalBridgeSidebarLinks: SidebarLink = {
-  expanded: false,
-  isCollapsible: false,
+    {
+      subMenu: {
+        label: "Headless Components",
+      },
+      links: [
+        {
+          href: "/wallets/headless/account-components",
+          label: "Account Components",
+        },
+        {
+          href: "/wallets/headless/chain-components",
+          label: "Chain Components",
+        },
+        {
+          href: "/wallets/headless/wallet-components",
+          label: "Wallet Components",
+        },
+      ],
+    },
+  ],
+};
+
+const contracts: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Contracts",
+    icon: ContractIcon,
+  },
+  links: [
+    {
+      href: "/contracts/read",
+      label: "Read Contract",
+    },
+    {
+      href: "/contracts/write",
+      label: "Write Contract",
+    },
+    {
+      href: "/contracts/extensions",
+      label: "Pre-built Extensions",
+    },
+    {
+      href: "/contracts/events",
+      label: "Listen Contract Events",
+    },
+  ],
+};
+
+const tokens: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Tokens",
+    icon: TokenIcon,
+  },
+  links: [
+    {
+      href: "/tokens/token-components",
+      label: "Token Components",
+    },
+    {
+      href: "/tokens/nft-components",
+      label: "NFT Components",
+    },
+  ],
+};
+
+const accountAbstractions: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Account Abstraction",
+    icon: SmartAccountIcon,
+  },
+  links: [
+    {
+      href: "/account-abstraction/eip-4337",
+      label: "EIP-4337",
+    },
+    {
+      href: "/account-abstraction/eip-7702",
+      label: "EIP-7702",
+    },
+    {
+      href: "/account-abstraction/eip-5792",
+      label: "EIP-5792",
+    },
+    {
+      href: "/account-abstraction/native-aa",
+      label: "Native AA (zkSync)",
+    },
+  ],
+};
+
+const payments: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Payments",
+    icon: PayIcon,
+  },
   links: [
     {
       href: "/payments/ui-components",
-      name: "UI Component",
+      label: "UI Components",
     },
     {
       href: "/payments/fund-wallet",
-      name: "Buy Crypto",
+      label: "Buy Crypto",
     },
     {
       href: "/payments/commerce",
-      name: "Checkout",
+      label: "Checkout",
     },
     {
       href: "/payments/transactions",
-      name: "Transactions",
+      label: "Onchain Transaction",
     },
     {
       href: "/payments/backend",
-      name: "Backend API",
+      label: "Payments API",
     },
   ],
-  name: "Payments",
 };
 
-const engineSidebarLinks: SidebarLink = {
-  expanded: false,
-  isCollapsible: false,
+const transactions: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Transactions",
+    icon: ArrowLeftRightIcon,
+  },
   links: [
     {
       href: "/transactions/airdrop-tokens",
-      name: "Airdrop",
+      label: "Airdrop Tokens",
     },
     {
       href: "/transactions/mint-tokens",
-      name: "Mint NFTs",
+      label: "Mint NFTs",
     },
     {
       href: "/transactions/webhooks",
-      name: "Webhooks",
+      label: "Webhooks",
     },
   ],
-  name: "Transactions",
 };
 
-export function getSidebarLinks() {
-  const insightLinks: SidebarLink[] = insightBlueprints.map((blueprint) => {
-    return {
-      expanded: false,
-      links: blueprint.paths.map((pathInfo) => {
-        return {
-          crossedOut: pathInfo.deprecated,
-          href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
-          name: pathInfo.name,
-        };
-      }),
-      name: blueprint.name,
-    };
-  });
-
-  const sidebarLinks: SidebarLink[] = [
-    ...staticSidebarLinks,
-    universalBridgeSidebarLinks,
-    engineSidebarLinks,
-    {
-      expanded: false,
-      isCollapsible: false,
-      links: insightLinks,
-      name: "Insight",
+const insightLinks: ShadcnSidebarLink[] = insightBlueprints.map((blueprint) => {
+  return {
+    links: blueprint.paths.map((pathInfo) => {
+      return {
+        href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
+        label: pathInfo.name,
+        exactMatch: true,
+      };
+    }),
+    subMenu: {
+      label: blueprint.name,
     },
-  ];
+  };
+});
 
-  return sidebarLinks;
-}
+const insight: ShadcnSidebarLink = {
+  links: [
+    {
+      href: "/insight",
+      label: "Overview",
+      exactMatch: true,
+    },
+    ...insightLinks,
+  ],
+  subMenu: {
+    label: "Insight",
+    icon: InsightIcon,
+  },
+};
+
+export const sidebarLinks: ShadcnSidebarLink[] = [
+  wallets,
+  transactions,
+  contracts,
+  payments,
+  tokens,
+  insight,
+  accountAbstractions,
+];

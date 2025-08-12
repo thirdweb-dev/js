@@ -332,7 +332,6 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           <div className="flex flex-col h-full relative">
             <TabButtons
               tabContainerClassName="px-3 pt-2"
-              tabClassName="!text-sm"
               tabs={[
                 ...(viewFunctions.length > 0
                   ? [

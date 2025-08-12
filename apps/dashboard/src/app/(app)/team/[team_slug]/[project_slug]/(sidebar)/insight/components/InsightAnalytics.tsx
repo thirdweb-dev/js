@@ -51,39 +51,52 @@ export async function InsightAnalytics(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
+  authToken: string;
 }) {
   const { projectId, teamId, range, interval } = props;
 
-  const allTimeRequestsPromise = getInsightUsage({
-    from: range.from,
-    period: "all",
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
-  const chainsDataPromise = getInsightChainUsage({
-    from: range.from,
-    limit: 10,
-    period: "all",
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
-  const statusCodesDataPromise = getInsightStatusCodeUsage({
-    from: range.from,
-    period: interval,
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
-  const endpointsDataPromise = getInsightEndpointUsage({
-    from: range.from,
-    limit: 10,
-    period: "all",
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
+  const allTimeRequestsPromise = getInsightUsage(
+    {
+      from: range.from,
+      period: "all",
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  );
+  const chainsDataPromise = getInsightChainUsage(
+    {
+      from: range.from,
+      limit: 10,
+      period: "all",
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  );
+  const statusCodesDataPromise = getInsightStatusCodeUsage(
+    {
+      from: range.from,
+      period: interval,
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  );
+  const endpointsDataPromise = getInsightEndpointUsage(
+    {
+      from: range.from,
+      limit: 10,
+      period: "all",
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    props.authToken,
+  );
 
   const [allTimeRequestsData, statusCodesData, endpointsData, chainsData] =
     await Promise.all([

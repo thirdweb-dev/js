@@ -1,11 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeams } from "@/api/team";
+import { getTeams } from "@/api/team/get-team";
 import { AppFooter } from "@/components/footers/app-footer";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TeamHeader } from "../../components/TeamHeader/team-header";
-import { createTeamLink, TeamSelectorCard } from "./components/team-selector";
+import { createTeamLink, TeamSelectorCard } from "../_components/team-selector";
 
 export default async function Page(props: {
   params: Promise<{

@@ -2,7 +2,7 @@ import { ipAddress } from "@vercel/functions";
 import { startOfToday } from "date-fns";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress, ZERO_ADDRESS } from "thirdweb";
-import { getTeams } from "@/api/team";
+import { getTeams } from "@/api/team/get-team";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import {
   NEXT_PUBLIC_THIRDWEB_API_HOST,
@@ -15,7 +15,7 @@ import {
 } from "@/constants/server-envs";
 import type { Account } from "@/hooks/useApi";
 import { cacheGet, cacheSet } from "@/lib/redis";
-import { getFaucetClaimAmount } from "./claim-amount";
+import { getFaucetClaimAmount } from "@/utils/faucet";
 
 interface RequestTestnetFundsPayload {
   chainId: number;

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { FooterLinksSection } from "../components/footer/FooterLinksSection";
@@ -50,7 +50,7 @@ export default async function Layout(props: {
             },
             {
               exactMatch: true,
-              name: "Links",
+              name: "Create",
               path: `${payLayoutPath}/links`,
             },
             {

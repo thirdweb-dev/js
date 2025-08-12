@@ -19,6 +19,8 @@ import { TableRow } from "./PaymentsTableRow";
 export function RecentPaymentsSection(props: {
   client: ThirdwebClient;
   projectClientId: string;
+  teamSlug: string;
+  projectSlug: string;
   teamId: string;
 }) {
   const { data: payPurchaseData, isLoading } = useQuery<
@@ -95,8 +97,10 @@ export function RecentPaymentsSection(props: {
               className="flex items-center gap-2"
               asChild
             >
-              <Link href="/pay" target="_blank">
-                Create Payment Link
+              <Link
+                href={`/team/${props.teamSlug}/${props.projectSlug}/payments/links`}
+              >
+                Create Payment
                 <ArrowRightIcon className="size-4" />
               </Link>
             </Button>,

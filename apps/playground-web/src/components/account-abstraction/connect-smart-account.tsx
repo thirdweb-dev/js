@@ -11,25 +11,7 @@ import {
 import { shortenAddress } from "thirdweb/utils";
 import { inAppWallet, socialIcons } from "thirdweb/wallets/in-app";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { StyledConnectButton } from "../styled-connect-button";
 import { Button } from "../ui/button";
-
-export function ConnectSmartAccountPreview() {
-  return (
-    <div className="flex flex-col">
-      <StyledConnectButton
-        accountAbstraction={{
-          chain: baseSepolia,
-          sponsorGas: true,
-        }}
-        detailsModal={{
-          // We hide the in-app wallet so they can't switch to it
-          hiddenWallets: ["inApp"],
-        }}
-      />
-    </div>
-  );
-}
 
 export function ConnectSmartAccountCustomPreview() {
   const account = useActiveAccount();

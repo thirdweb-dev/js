@@ -6,9 +6,9 @@ import type {
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
 import { min } from "thirdweb/utils";
+import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { MediaCell } from "@/components/contracts/media-cell";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -168,9 +168,13 @@ export function MarketplaceTable(props: {
                   >
                     <TableCell>{row.id.toString()}</TableCell>
                     <TableCell>
-                      <MediaCell
-                        cell={{ value: row.asset.metadata }}
+                      <NFTMediaWithEmptyState
+                        className="pointer-events-none"
                         client={contract.client}
+                        height="120px"
+                        metadata={row.asset.metadata}
+                        requireInteraction
+                        width="120px"
                       />
                     </TableCell>
                     <TableCell>{row.asset.metadata.name ?? "N/A"}</TableCell>

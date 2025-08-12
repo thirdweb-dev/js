@@ -1,29 +1,33 @@
-import type { Metadata } from "next";
+import { ShoppingBagIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { StyledBuyWidgetPreview } from "@/components/universal-bridge/buy";
-import { metadataBase } from "@/lib/constants";
+import { createMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  description:
-    "The easiest way for users to fund their wallets. Onramp users in clicks and generate revenue for each user transaction. Integrate for free.",
-  metadataBase,
-  title: "Buy Crypto | thirdweb Payments",
-};
+const title = "Buy Crypto Component";
+const description =
+  "Embeddable component for users to purchase any cryptocurrency for top-ups and more with fiat or crypto-to-crypto swaps";
+const ogDescription =
+  "Configure a component to buy cryptocurrency with specified amounts, customization, and more. This interactive playground shows how to customize the component.";
+
+export const metadata = createMetadata({
+  description: ogDescription,
+  title,
+  image: {
+    icon: "payments",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Onramp users with credit card &amp; cross-chain crypto payments —
-            and generate revenue for each user transaction.
-          </>
-        }
+        icon={ShoppingBagIcon}
+        title={title}
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
-        title="The easiest way for users to fund their wallets"
       >
         <StyledPayWidget />
       </PageLayout>

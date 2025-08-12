@@ -18,8 +18,11 @@ import {
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import type { Topic, WebhookConfig } from "@/api/webhook-configs";
-import { deleteWebhookConfig, testDestinationUrl } from "@/api/webhook-configs";
+import type { Topic, WebhookConfig } from "@/api/project/webhook-configs";
+import {
+  deleteWebhookConfig,
+  testDestinationUrl,
+} from "@/api/project/webhook-configs";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";

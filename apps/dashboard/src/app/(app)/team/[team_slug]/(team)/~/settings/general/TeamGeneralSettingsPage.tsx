@@ -3,8 +3,8 @@
 import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { apiServerProxy } from "@/actions/proxies";
-import type { Team } from "@/api/team";
-import type { VerifiedDomainResponse } from "@/api/verified-domain";
+import type { Team } from "@/api/team/get-team";
+import type { VerifiedDomainResponse } from "@/api/team/verified-domain";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { TeamGeneralSettingsPageUI } from "./TeamGeneralSettingsPageUI";
 import { updateTeam } from "./updateTeam";

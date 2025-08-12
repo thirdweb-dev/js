@@ -1,12 +1,12 @@
-import { PayConfig } from "@app/team/[team_slug]/[project_slug]/(sidebar)/payments/settings/PayConfig";
-import { RouteDiscovery } from "@app/team/[team_slug]/[project_slug]/(sidebar)/payments/settings/RouteDiscovery";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { getFees } from "@/api/universal-bridge/developer";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
+import { PayConfig } from "./PayConfig";
+import { RouteDiscovery } from "./RouteDiscovery";
 
 export default async function Page(props: {
   params: Promise<{

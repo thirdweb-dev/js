@@ -1,0 +1,224 @@
+import { Step, Steps, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Stylus Airdrop Contracts | thirdweb Documentation",
+	description:
+		"Use Stylus Airdrop contracts on Arbitrum for efficient token distribution at scale. WASM-powered smart contracts enable fast, low-cost airdrops to thousands of wallets.",
+	image: {
+		title: "Stylus Airdrop Contract",
+		icon: "contracts",
+	},
+});
+
+# Stylus Airdrop Contract
+
+
+If you need to send tokens to thousands of wallets at once, you can leverage the Stylus Airdrop contracts. 
+
+Learn how to deploy Stylus Airdrop contracts through dashboard or CLI for inexpensive, WASM-powered distribution on [Arbitrum](https://thirdweb.com/arbitrum) chain. 
+
+### Benefits
+
+- Ink, not gas: Stylus executes WASM thousands of times faster than the EVM, so sending 10 000 NFTs costs a fraction of normal gas.
+- Rust Tooling: Cargo tests, Clippy lints, and the full crates ecosystem for your drop logic.
+- Interoperability: Rust contracts call Solidity (and vice-versa) with zero wrappers.
+- Battle-tested Logic: Template ports the same claim, snapshot &amp; signature pattern used by thirdweb’s Solidity pre-built contracts.
+
+## Deploy through dashboard
+
+Deploying a Stylus Airdrop contract is easy through the thirdweb dashboard and ideal when you don't want to modify any code on the contract.
+
+<Steps>
+<Step title="Select Stylus Contract">
+
+Navigate to the Stylus Contracts section on Explore and select any Airdrop contract for your project.
+</Step>
+
+<Step title="Deploy Contract">
+Select Arbitrum Sepolia or any other Stylus-supported network, then select Deploy.
+</Step>
+
+<Step title="Upload Recipients">
+You can either upload a CSV file with the recipient addresses and amounts and select `Run Airdrop`
+
+Or set a claim condition for recipients to claim their tokens on their own.
+</Step>
+
+</Steps>
+
+## Deploy through CLI
+
+If you want to modify the contract code or deploy a custom Airdrop contract, you can use the thirdweb CLI.
+
+<Steps>
+<Step title="Create a new Stylus Airdrop project">
+
+In your CLI, run the following command to create a new directory with an airdrop template contract.
+
+```bash
+npx thirdweb create-stylus --template airdrop-erc721
+```
+</Step>
+
+<Step title="Modify contract logic">
+In the `src/lib.rs` file you can modify the contract logic such as adding fees, gating logic, analytics events, and more.
+</Step>
+
+<Step title="Build & Test the Contract">
+
+To build your project, run the following command:
+
+```bash
+cargo stylus build
+```
+
+</Step>
+
+<Step title="Deploy or Publish Your Contract">
+You can publish and deploy your project to Arbitrum. Publishing stores your contract metadata in thirdweb’s on-chain registry so anyone (including you) can deploy that exact version later with a few clicks.
+
+To publish your contract, ensure you have your thirdweb secret key from your created project, then run the following command:
+
+```bash
+npx thirdweb publish-stylus -k YOUR_TW_SECRET_KEY
+```
+
+If you'd prefer to just deploy a single instance of the contract without publishing, run the following command to deploy:
+
+```bash
+npx thirdweb deploy-stylus -k YOUR_TW_SECRET_KEY
+```
+
+Once the transaction confirms, the CLI will redirect you to the contract management dashboard where you can mint, transfer, view events, or pull ready-made SDK snippets.
+</Step>
+
+</Steps>
+
+## Interacting with the Contract
+
+Using the thirdweb SDKs, you can interact with your Stylus Airdrop contract to mint tokens, transfer ownership, and more.
+
+The following includes three common patterns using thirdweb TypeScript SDK:
+
+### Owner-executed batch airdrop
+
+**When to use:** you already have every recipient’s address and want to send everything in a single transaction.
+
+```javascript
+import { createThirdwebClient, getContract, sendTransaction} from "thirdweb";
+import { arbitrumSepolia } from "thirdweb/chains";
+import { airdropERC721 } from "thirdweb/extensions/airdrop";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+
+const wallet = createWallet("io.metamask"); // or any wallet id
+const account = await wallet.connect({ client });
+
+const contract = getContract({
+  client,
+  chain: arbitrumSepolia,
+  address: "<DEPLOYED_ADDRESS>",
+});
+
+const contents = [
+  { recipient: "0xAbc…", tokenId: 1n },
+  { recipient: "0x123…", tokenId: 2n },
+];
+
+const tx = airdropERC721({
+  contract,
+  tokenAddress: contract.address,
+  contents,
+});
+
+await sendTransaction({ transaction: tx, account });
+```
+
+(Swap for airdropERC20 or airdropERC1155 helpers as needed.)
+
+### Claim-based airdrop (Merkle snapshot)
+
+**When to use:** you know the recipients but want them to claim the tokens at their convenience (gas paid by the claimer).
+
+1. Generate snapshot off-chain
+
+```javascript
+import { generateMerkleTreeInfoERC721 } from "thirdweb/extensions/airdrop";
+
+const snapshot = [
+  { address: "0xAbc…", tokenId: 7n },
+  { address: "0x123…", tokenId: 8n },
+];
+
+const { merkleRoot, contents } = await generateMerkleTreeInfoERC721({ snapshot });
+```
+
+merkleRoot is a single 32-byte value representing the whole list.
+
+2. Store root on-chain (_setMerkleRoot(root) in the template).
+
+```javascript
+const tx = setMerkleRoot({
+  contract,
+  root: merkleRoot,
+});
+await sendTransaction({ transaction: tx, account });   // executed by admin
+```
+
+3. Recipient claims:
+
+```javascript
+import { claimERC721, fetchProofsERC721 } from "thirdweb/extensions/airdrop";
+
+const proof = await fetchProofsERC721({
+  contract,
+  merkleRoot,
+  recipient: "0xAbc…",
+});
+
+const tx = claimERC721({
+  contract,
+  tokenAddress: contract.address,
+  proof,
+});
+
+await sendTransaction({ transaction: tx, account });
+```
+
+### Signature Based Airdrop (Dynamic Authentication)
+
+**When to use:** you don’t know the full list ahead of time (e.g., quest rewards). An authorised backend signs a payload per user; the user submits it on-chain.
+
+1. Generate signed payload server-side:
+
+```javascript
+import { generateAirdropSignatureERC721 } from "thirdweb/extensions/airdrop";
+
+const { signature, payload } = await generateAirdropSignatureERC721({
+  contract,
+  signer: account,          // ADMIN role or owner
+  to: "0xRecipient",
+  tokenId: 42n,
+});
+```
+
+2. Recipient executes:
+
+```javascript
+import { airdropERC721WithSignature } from "thirdweb/extensions/airdrop";
+
+const tx = airdropERC721WithSignature({
+  contract,
+  signature,
+  payload,
+});
+
+await sendTransaction({ transaction: tx, account: recipientAccount });
+```
+
+### Resources
+
+- [ERC-721 Airdrop Template](https://github.com/thirdweb-example/stylus-airdrop-erc721-template)
+- [TypeScript SDK Documentation > Airdrops](https://portal.thirdweb.com/references/typescript/v5/airdrop/airdropERC721)
+

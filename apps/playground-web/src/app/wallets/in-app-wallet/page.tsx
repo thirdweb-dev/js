@@ -1,33 +1,33 @@
-import type { Metadata } from "next";
+import { UserIcon } from "lucide-react";
 import { CodeExample } from "@/components/code/code-example";
 import { CustomLoginForm } from "@/components/in-app-wallet/custom-login-form";
+import { createMetadata } from "@/lib/metadata";
 import { PageLayout } from "../../../components/blocks/APIHeader";
 import { InAppConnectEmbed } from "../../../components/in-app-wallet/connect-button";
 import { Profiles } from "../../../components/in-app-wallet/profile-sections";
 import ThirdwebProvider from "../../../components/thirdweb-provider";
-import { metadataBase } from "../../../lib/constants";
 
-export const metadata: Metadata = {
-  description:
-    "Let users sign up with their email, phone number, social media accounts or directly with a wallet",
-  metadataBase,
-  title: "Any Auth | thirdweb in-app wallet",
-};
+const title = "In-App Wallets";
+const description =
+  "Add social login, passkey, phone, or email sign-in to your app. Use built-in auth or connect your own backend with custom endpoints.";
+
+export const metadata = createMetadata({
+  description,
+  title,
+  image: {
+    icon: "wallets",
+    title,
+  },
+});
 
 export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        description={
-          <>
-            Use any of the built-in auth methods or bring your own.
-            <br />
-            Supports custom auth endpoints to integrate with your existing user
-            base.
-          </>
-        }
+        description={description}
         docsLink="https://portal.thirdweb.com/wallets/users?utm_source=playground"
-        title="Onboard users to web3 with any auth method"
+        title={title}
+        icon={UserIcon}
       >
         <UIIntegration />
         <div className="h-14" />
