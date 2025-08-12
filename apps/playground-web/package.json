@@ -32,6 +32,7 @@
     "react-hook-form": "7.55.0",
     "react-markdown": "10.1.0",
     "react-pick-color": "^2.0.0",
+    "remark-gfm": "4.0.1",
     "server-only": "^0.0.1",
     "shiki": "1.27.0",
     "sonner": "2.0.6",
