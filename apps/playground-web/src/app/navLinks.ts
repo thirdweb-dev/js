@@ -18,7 +18,7 @@ const ai: ShadcnSidebarLink = {
   links: [
     {
       href: "/ai/chat",
-      label: "Nebula Chat",
+      label: "Chat API",
     },
   ],
 };

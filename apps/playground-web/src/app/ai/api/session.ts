@@ -7,7 +7,8 @@ import type {
   UpdatedSessionInfo,
 } from "./types";
 
-const NEBULA_URL = process.env.NEXT_PUBLIC_NEBULA_URL || "https://nebula-api.thirdweb-dev.com";
+const NEBULA_URL =
+  process.env.NEXT_PUBLIC_NEBULA_URL || "https://nebula-api.thirdweb-dev.com";
 
 export async function createSession(params: {
   authToken: string;

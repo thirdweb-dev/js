@@ -9,7 +9,7 @@ function createStore<T>(initialValue: T) {
     getValue: () => value,
     setValue: (newValue: T) => {
       value = newValue;
-      listeners.forEach(listener => listener(value));
+      listeners.forEach((listener) => listener(value));
     },
     subscribe: (listener: (value: T) => void) => {
       listeners.push(listener);
@@ -19,7 +19,7 @@ function createStore<T>(initialValue: T) {
           listeners.splice(index, 1);
         }
       };
-    }
+    },
   };
 }
 

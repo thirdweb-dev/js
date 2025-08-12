@@ -1,13 +1,22 @@
 "use client";
-import { ArrowRightIcon, MessageSquareXIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  MessageCircleIcon,
+  MessageSquareXIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ThirdwebClient } from "thirdweb";
+import { defineChain, prepareTransaction, type ThirdwebClient } from "thirdweb";
 import {
+  ConnectButton,
+  TransactionButton,
   useActiveAccount,
+  useActiveWallet,
   useActiveWalletConnectionStatus,
   useConnectedWallets,
   useSetActiveWallet,
+  WalletIcon,
+  WalletProvider,
 } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,15 +27,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
+import { Img } from "../../../components/ui/Img";
+import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { type NebulaContext, promptNebula } from "../api/chat";
-import { createSession, updateSession } from "../api/session";
 import type {
   NebulaSessionHistoryMessage,
   NebulaUserMessage,
   SessionInfo,
 } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
-import { newSessionsStore } from "../stores";
+import { resolveSchemeWithErrorHandler } from "./resolveSchemeWithErrorHandler";
 
 // Simplified types for the playground version
 export type WalletMeta = {
@@ -34,10 +45,28 @@ export type WalletMeta = {
   address: string;
 };
 
+type NebulaUserMessageContentItem =
+  | {
+      type: "image";
+      image_url: string | null;
+      b64: string | null;
+    }
+  | {
+      type: "text";
+      text: string;
+    }
+  | {
+      type: "transaction";
+      transaction_hash: string;
+      chain_id: number;
+    };
+
+export type NebulaUserMessageContent = NebulaUserMessageContentItem[];
+
 export type ChatMessage =
   | {
       type: "user";
-      content: NebulaUserMessage["content"];
+      content: NebulaUserMessageContent;
     }
   | {
       text: string;
@@ -48,10 +77,72 @@ export type ChatMessage =
       type: "presence";
     }
   | {
+      // assistant type message loaded from history doesn't have request_id
       request_id: string | undefined;
       text: string;
       type: "assistant";
+    }
+  | {
+      type: "action";
+      subtype: "sign_transaction";
+      request_id: string;
+      data: NebulaTxData;
+    }
+  | {
+      type: "action";
+      subtype: "sign_swap";
+      request_id: string;
+      data: NebulaSwapData;
+    }
+  | {
+      type: "image";
+      request_id: string;
+      data: {
+        width: number;
+        height: number;
+        url: string;
+      };
     };
+
+export type NebulaTxData = {
+  chainId: number;
+  data: `0x${string}`;
+  to: string;
+  value?: string;
+};
+
+export type NebulaSwapData = {
+  action: string;
+  transaction: {
+    chainId: number;
+    to: `0x${string}`;
+    data: `0x${string}`;
+    value?: string;
+  };
+  to: {
+    address: `0x${string}`;
+    amount: string;
+    chain_id: number;
+    decimals: number;
+    symbol: string;
+  };
+  from: {
+    address: `0x${string}`;
+    amount: string;
+    chain_id: number;
+    decimals: number;
+    symbol: string;
+  };
+  intent: {
+    amount: string;
+    destinationChainId: number;
+    destinationTokenAddress: `0x${string}`;
+    originChainId: number;
+    originTokenAddress: `0x${string}`;
+    receiver: `0x${string}`;
+    sender: `0x${string}`;
+  };
+};
 
 export function ChatPageContent(props: {
   session: SessionInfo | undefined;
@@ -88,7 +179,7 @@ export function ChatPageContent(props: {
         contextRes?.chain_ids ||
         props.initialParams?.chainIds.map((x) => x.toString()) ||
         [],
-      networks: "mainnet",
+      sessionId: props.session?.id || null,
       walletAddress: contextRes?.wallet_address || props.accountAddress || null,
     };
 
@@ -98,7 +189,7 @@ export function ChatPageContent(props: {
   const contextFilters = useMemo(() => {
     return {
       chainIds: _contextFilters?.chainIds || [],
-      networks: _contextFilters?.networks || null,
+      sessionId: _contextFilters?.sessionId || null,
       walletAddress: address || _contextFilters?.walletAddress || null,
     } satisfies NebulaContext;
   }, [_contextFilters, address]);
@@ -123,7 +214,7 @@ export function ChatPageContent(props: {
         if (lastUsedChainIds) {
           return {
             chainIds: lastUsedChainIds,
-            networks: _contextFilters?.networks || null,
+            sessionId: _contextFilters?.sessionId || null,
             walletAddress: _contextFilters?.walletAddress || null,
           };
         }
@@ -146,15 +237,6 @@ export function ChatPageContent(props: {
   const [isChatStreaming, setIsChatStreaming] = useState(false);
   const [enableAutoScroll, setEnableAutoScroll] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
-
-  const initSession = useCallback(async () => {
-    const session = await createSession({
-      authToken: props.authToken,
-      context: contextFilters,
-    });
-    setSessionId(session.id);
-    return session;
-  }, [contextFilters, props.authToken]);
 
   const handleSendMessage = useCallback(
     async (message: NebulaUserMessage) => {
@@ -195,32 +277,6 @@ export function ChatPageContent(props: {
       const abortController = new AbortController();
 
       try {
-        // Ensure we have a session ID
-        let currentSessionId = sessionId;
-        if (!currentSessionId) {
-          const session = await initSession();
-          currentSessionId = session.id;
-        }
-
-        const firstTextMessage =
-          message.role === "user"
-            ? message.content.find((x) => x.type === "text")?.text || ""
-            : "";
-
-        // add this session on sidebar
-        if (messages.length === 0 && firstTextMessage) {
-          const prevValue = newSessionsStore.getValue();
-          newSessionsStore.setValue([
-            {
-              created_at: new Date().toISOString(),
-              id: currentSessionId,
-              title: firstTextMessage,
-              updated_at: new Date().toISOString(),
-            },
-            ...prevValue,
-          ]);
-        }
-
         setChatAbortController(abortController);
 
         await handleNebulaPrompt({
@@ -228,7 +284,6 @@ export function ChatPageContent(props: {
           authToken: props.authToken,
           contextFilters: contextFilters,
           message: message,
-          sessionId: currentSessionId,
           setContextFilters,
           setMessages,
         });
@@ -246,14 +301,7 @@ export function ChatPageContent(props: {
         setEnableAutoScroll(false);
       }
     },
-    [
-      sessionId,
-      contextFilters,
-      props.authToken,
-      messages.length,
-      initSession,
-      setContextFilters,
-    ],
+    [contextFilters, props.authToken, setContextFilters],
   );
 
   const hasDoneAutoPrompt = useRef(false);
@@ -290,18 +338,6 @@ export function ChatPageContent(props: {
     address: x.getAccount()?.address || "",
     walletId: x.id,
   }));
-
-  const handleUpdateContextFilters = async (
-    values: NebulaContext | undefined,
-  ) => {
-    if (sessionId) {
-      await updateSession({
-        authToken: props.authToken,
-        contextFilters: values,
-        sessionId,
-      });
-    }
-  };
 
   const handleSetActiveWallet = (walletMeta: WalletMeta) => {
     const wallet = connectedWallets.find(
@@ -381,7 +417,6 @@ export function ChatPageContent(props: {
                   setActiveWallet={handleSetActiveWallet}
                   setContext={(v) => {
                     setContextFilters(v);
-                    handleUpdateContextFilters(v);
                   }}
                 />
               </div>
@@ -551,9 +586,7 @@ function SimpleChatBar(props: {
             <Button
               aria-label="Send"
               className="!h-auto w-auto p-2"
-              disabled={
-                message.trim() === "" || props.isConnectingWallet
-              }
+              disabled={message.trim() === "" || props.isConnectingWallet}
               onClick={() => {
                 if (message.trim() === "") return;
                 handleSubmit(message);
@@ -605,11 +638,12 @@ function SimpleChats(props: {
               return (
                 <div
                   className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
-                  key={index}
+                  key={`${index}-${message}`}
                 >
                   <RenderMessage
                     isMessagePending={isMessagePending}
                     message={message}
+                    sendMessage={props.sendMessage}
                   />
                 </div>
               );
@@ -625,8 +659,11 @@ function SimpleChats(props: {
 function RenderMessage(props: {
   message: ChatMessage;
   isMessagePending: boolean;
+  sendMessage: (message: NebulaUserMessage) => void;
 }) {
   const { message } = props;
+  const account = useActiveAccount();
+  const wallet = useActiveWallet();
 
   if (props.message.type === "user") {
     return (
@@ -634,7 +671,10 @@ function RenderMessage(props: {
         {props.message.content.map((msg, index) => {
           if (msg.type === "text") {
             return (
-              <div className="flex justify-end" key={index}>
+              <div
+                className="flex justify-end"
+                key={`${index}-${msg.text}-${msg.type}`}
+              >
                 <div className="max-w-[80%] overflow-auto rounded-xl border bg-card px-4 py-2">
                   <p className="leading-normal">{msg.text}</p>
                 </div>
@@ -651,7 +691,7 @@ function RenderMessage(props: {
     <div className="flex gap-3">
       <div className="-translate-y-[2px] relative shrink-0">
         <div className="flex size-9 items-center justify-center rounded-full border bg-card">
-          <MessageSquareXIcon className="size-5 text-muted-foreground" />
+          <MessageCircleIcon className="size-5 text-muted-foreground" />
         </div>
       </div>
 
@@ -659,13 +699,130 @@ function RenderMessage(props: {
         <div className="rounded-lg">
           {message.type === "assistant" && (
             <div className="prose prose-sm max-w-none">
-              <p>{message.text}</p>
+              <MarkdownRenderer
+                markdownText={message.text}
+                p={{ className: "mb-4 text-foreground leading-loose" }}
+                code={{ className: "rounded-lg" }}
+                inlineCode={{ className: "bg-muted/80" }}
+              />
+            </div>
+          )}
+
+          {message.type === "image" && (
+            <div className="flex justify-end" key={message.data.url}>
+              <Img
+                src={resolveSchemeWithErrorHandler({
+                  client: THIRDWEB_CLIENT,
+                  uri: message.data.url,
+                })}
+                width={message.data.width}
+                height={message.data.height}
+              />
+            </div>
+          )}
+
+          {message.type === "action" &&
+            message.subtype === "sign_transaction" && (
+              <div className="flex justify-end" key={message.request_id}>
+                {wallet && account ? (
+                  <div className="flex items-center gap-4">
+                    <WalletProvider id={wallet.id}>
+                      <WalletIcon className="size-6" />
+                    </WalletProvider>
+
+                    <TransactionButton
+                      transaction={() =>
+                        prepareTransaction({
+                          client: THIRDWEB_CLIENT,
+                          chain: defineChain(message.data.chainId),
+                          data: message.data.data,
+                          to: message.data.to,
+                          value: message.data.value
+                            ? BigInt(message.data.value)
+                            : undefined,
+                        })
+                      }
+                      onError={(error) => {
+                        alert(error.message);
+                        console.error(error);
+                      }}
+                      onTransactionSent={(tx) => {
+                        props.sendMessage({
+                          content: [
+                            {
+                              chain_id: message.data.chainId,
+                              transaction_hash: tx.transactionHash,
+                              type: "transaction",
+                            },
+                          ],
+                          role: "user",
+                        });
+                      }}
+                    >
+                      Execute Transaction
+                    </TransactionButton>
+                  </div>
+                ) : (
+                  <ConnectButton
+                    client={THIRDWEB_CLIENT}
+                    chain={defineChain(message.data.chainId)}
+                  />
+                )}
+              </div>
+            )}
+
+          {message.type === "action" && message.subtype === "sign_swap" && (
+            <div className="flex justify-end" key={message.request_id}>
+              {wallet && account ? (
+                <div className="flex items-center gap-4">
+                  <WalletProvider id={wallet.id}>
+                    <WalletIcon className="size-6" />
+                  </WalletProvider>
+
+                  <TransactionButton
+                    transaction={() =>
+                      prepareTransaction({
+                        client: THIRDWEB_CLIENT,
+                        chain: defineChain(message.data.transaction.chainId),
+                        data: message.data.transaction.data,
+                        to: message.data.transaction.to,
+                        value: message.data.transaction.value
+                          ? BigInt(message.data.transaction.value)
+                          : undefined,
+                      })
+                    }
+                    onError={(error) => {
+                      alert(error.message);
+                      console.error(error);
+                    }}
+                    onTransactionSent={(tx) => {
+                      props.sendMessage({
+                        content: [
+                          {
+                            chain_id: message.data.transaction.chainId,
+                            transaction_hash: tx.transactionHash,
+                            type: "transaction",
+                          },
+                        ],
+                        role: "user",
+                      });
+                    }}
+                  >
+                    Execute Swap
+                  </TransactionButton>
+                </div>
+              ) : (
+                <ConnectButton
+                  client={THIRDWEB_CLIENT}
+                  chain={defineChain(message.data.transaction.chainId)}
+                />
+              )}
             </div>
           )}
 
           {message.type === "presence" && (
-            <div className="text-muted-foreground text-sm">
-              {message.texts.join(" ")}
+            <div className="text-muted-foreground text-sm italic flex items-center gap-2">
+              {message.texts[message.texts.length - 1]}
             </div>
           )}
 
@@ -711,7 +868,6 @@ function getLastUsedChainIds(): string[] | null {
 async function handleNebulaPrompt(params: {
   abortController: AbortController;
   message: NebulaUserMessage;
-  sessionId: string;
   authToken: string;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
   contextFilters: NebulaContext | undefined;
@@ -720,7 +876,6 @@ async function handleNebulaPrompt(params: {
   const {
     abortController,
     message,
-    sessionId,
     authToken,
     setMessages,
     contextFilters,
@@ -741,6 +896,11 @@ async function handleNebulaPrompt(params: {
       switch (res.event) {
         case "init": {
           requestIdForMessage = res.data.request_id;
+          setContextFilters({
+            chainIds: contextFilters?.chainIds || [],
+            sessionId: res.data.session_id,
+            walletAddress: contextFilters?.walletAddress || null,
+          });
           return;
         }
 
@@ -798,8 +958,58 @@ async function handleNebulaPrompt(params: {
         case "context": {
           setContextFilters({
             chainIds: res.data.chain_ids.map((x) => x.toString()),
-            networks: res.data.networks,
+            sessionId: res.data.session_id,
             walletAddress: res.data.wallet_address,
+          });
+          return;
+        }
+
+        case "action": {
+          hasReceivedResponse = true;
+          switch (res.type) {
+            case "sign_transaction": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    data: res.data,
+                    request_id: res.request_id,
+                    subtype: res.type,
+                    type: "action",
+                  },
+                ];
+              });
+              return;
+            }
+            case "sign_swap": {
+              setMessages((prevMessages) => {
+                return [
+                  ...prevMessages,
+                  {
+                    data: res.data,
+                    request_id: res.request_id,
+                    subtype: res.type,
+                    type: "action",
+                  },
+                ];
+              });
+              return;
+            }
+          }
+          return;
+        }
+
+        case "image": {
+          hasReceivedResponse = true;
+          setMessages((prevMessages) => {
+            return [
+              ...prevMessages,
+              {
+                data: res.data,
+                request_id: res.request_id,
+                type: "image",
+              },
+            ];
           });
           return;
         }
@@ -820,7 +1030,6 @@ async function handleNebulaPrompt(params: {
       }
     },
     message,
-    sessionId,
   });
 
   if (!hasReceivedResponse) {

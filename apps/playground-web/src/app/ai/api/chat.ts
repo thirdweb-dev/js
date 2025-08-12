@@ -1,13 +1,12 @@
 import { stream } from "fetch-event-stream";
 import type { NebulaTxData, NebulaUserMessage } from "./types";
 
-// Mock URL for playground - you'll need to configure this
-const NEBULA_URL = process.env.NEXT_PUBLIC_NEBULA_URL || "https://nebula-api.thirdweb-dev.com";
+const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
 
 export type NebulaContext = {
   chainIds: string[] | null;
   walletAddress: string | null;
-  networks: "mainnet" | "testnet" | "all" | null;
+  sessionId: string | null;
 };
 
 export type NebulaSwapData = {
@@ -44,7 +43,6 @@ export type NebulaSwapData = {
 
 export async function promptNebula(params: {
   message: NebulaUserMessage;
-  sessionId: string;
   authToken: string;
   handleStream: (res: ChatStreamedResponse) => void;
   abortController: AbortController;
@@ -52,22 +50,24 @@ export async function promptNebula(params: {
 }) {
   const body: Record<string, string | boolean | object> = {
     messages: [params.message],
-    session_id: params.sessionId,
     stream: true,
   };
 
   if (params.context) {
     body.context = {
-      chain_ids: params.context.chainIds || [],
-      networks: params.context.networks,
+      chain_ids: params.context.chainIds?.map(Number) || [],
+      session_id: params.context.sessionId ?? undefined,
       wallet_address: params.context.walletAddress,
     };
   }
 
-  const events = await stream(`${NEBULA_URL}/chat`, {
+  const events = await stream(`${API_URL}/ai/chat`, {
     body: JSON.stringify(body),
     headers: {
-      Authorization: `Bearer ${params.authToken}`,
+      "x-client-id": process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!,
+      // FIXME REMOVE
+      "x-secret-key":
+        "7NFrTzBN9Y2Eca6Rl60uxT3Dwew4D9YaYHjoD_3Y2GDvkaejLFiodFDcuzGJqu0mc8PVCAi9M4Y3j6Ql_ZVRyQ",
       "Content-Type": "application/json",
     },
     method: "POST",
@@ -192,7 +192,7 @@ export async function promptNebula(params: {
         const contextData = JSON.parse(data.data) as {
           wallet_address: string;
           chain_ids: number[];
-          networks: NebulaContext["networks"];
+          session_id: string;
         };
 
         params.handleStream({
@@ -262,7 +262,7 @@ type ChatStreamedResponse =
       data: {
         wallet_address: string;
         chain_ids: number[];
-        networks: NebulaContext["networks"];
+        session_id: string;
       };
     }
   | {

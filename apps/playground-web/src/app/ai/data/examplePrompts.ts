@@ -4,11 +4,11 @@ type ExamplePrompt = {
   interceptedReply?: string;
 };
 
-const whatCanNebulaDoReply = `
-Nebula is a natural language model with improved blockchain reasoning, autonomous transaction capabilities, and real-time access to the blockchain.
-[Learn more about Nebula](https://portal.thirdweb.com/nebula)
+const whatCanThirdwebAiDoReply = `
+thirdweb AI is a natural language model with improved blockchain reasoning, autonomous transaction capabilities, and real-time access to the blockchain.
+[Learn more about thirdweb AI](https://portal.thirdweb.com/ai/chat)
 
-Here are some example actions you can perform with Nebula:
+Here are some example actions you can perform with thirdweb AI:
 
 ### Bridge & Swap
 Bridge and swap native currencies
@@ -62,7 +62,7 @@ Let's create your token! Just name it and I'll get started. I'll take care of th
 
 Add more info for more fun:
 - Symbol (e.g. 'HELLO')
-- Description (e.g. 'Hello world token deployed by Nebula')
+- Description (e.g. 'Hello world token deployed by thirdweb AI')
 - Total Supply (e.g. 1 million)
 - Mint total supply to your wallet (default is true)
 - Decimal places (default 18)
@@ -82,9 +82,9 @@ Great! How much ETH and to what address?
 
 export const examplePrompts: ExamplePrompt[] = [
   {
-    interceptedReply: whatCanNebulaDoReply,
-    message: "Tell me about Nebula's capabilities.",
-    title: "What can Nebula do?",
+    interceptedReply: whatCanThirdwebAiDoReply,
+    message: "Tell me about thirdweb AI's capabilities.",
+    title: "What can thirdweb AI do?",
   },
   {
     interceptedReply: deployTokenReply,
