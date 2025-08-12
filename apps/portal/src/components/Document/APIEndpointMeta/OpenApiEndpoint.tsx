@@ -309,6 +309,34 @@ function transformOpenApiToApiEndpointMeta(
     }
   }
 
+  // push default headers hardcoded for now
+  headers.push({
+    name: "x-secret-key",
+    type: "backend",
+    description:
+      "Project secret key - for backend usage only. Should not be used in frontend code.",
+    required: false,
+    example: undefined,
+  });
+  headers.push({
+    name: "x-client-id",
+    type: "frontend",
+    description:
+      "Project client ID - for frontend usage on authorized domains.",
+    required: false,
+    example: undefined,
+  });
+
+  if (method === "POST" && !path.includes("/v1/contracts/read")) {
+    headers.push({
+      name: "Authorization",
+      type: "frontend",
+      description: "Bearer token (JWT) for user wallet authentication",
+      required: false,
+      example: undefined,
+    });
+  }
+
   // Transform request body parameters
   const bodyParameters: APIParameter[] = [];
 

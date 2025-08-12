@@ -247,8 +247,20 @@ function createCurlCommand(params: { metadata: ApiEndpointMeta }) {
     url += `?${queryParams}`;
   }
 
-  const headers = params.metadata.request.headers
-    .filter((h) => h.example !== undefined)
+  const displayHeaders = params.metadata.request.headers.filter(
+    (h) => h.example !== undefined,
+  );
+
+  // always show secret key header in examples
+  displayHeaders.push({
+    name: "x-secret-key",
+    example: "<your-project-secret-key>",
+    description:
+      "Project secret key - for backend usage only. Should not be used in frontend code.",
+    required: false,
+  });
+
+  const headers = displayHeaders
     .map((h) => {
       return `-H "${h.name}:${
         typeof h.example === "object" && h !== null
@@ -290,7 +302,28 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
     url += `?${queryParams}`;
   }
 
-  for (const param of request.headers) {
+  const displayHeaders = request.headers.filter((h) => h.example !== undefined);
+
+  // always show secret key header in examples
+  if (params.metadata.path.includes("/v1/auth")) {
+    displayHeaders.push({
+      name: "x-client-id",
+      example: "<your-project-client-id>",
+      description:
+        "Project client ID - for frontend usage on authorized domains.",
+      required: false,
+    });
+  } else {
+    displayHeaders.push({
+      name: "x-secret-key",
+      example: "<your-project-secret-key>",
+      description:
+        "Project secret key - for backend usage only. Should not be used in frontend code.",
+      required: false,
+    });
+  }
+
+  for (const param of displayHeaders) {
     if (param.example !== undefined) {
       headersObj[param.name] = param.example;
     }
