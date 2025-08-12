@@ -4,7 +4,7 @@ import { fetchTypeScriptDoc } from "../fetchDocs/fetchTypeScriptDoc";
 const validReferenceLinks: Set<string> = new Set();
 
 /**
- * Get the map of all valid reference links for typescript pacakges
+ * Get the map of all valid reference links for typescript packages
  */
 export async function getAllTSReferencesLinks() {
   if (validReferenceLinks.size > 0) {

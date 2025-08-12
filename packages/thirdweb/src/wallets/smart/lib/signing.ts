@@ -181,7 +181,7 @@ export async function confirmContractDeployment(args: {
 }
 
 /**
- * Deployes a smart account via a dummy transaction. If the account is already deployed, this will do nothing.
+ * Deploys a smart account via a dummy transaction. If the account is already deployed, this will do nothing.
  *
  * @param args - Arguments for the deployment.
  * @param args.smartAccount - The smart account to deploy.
