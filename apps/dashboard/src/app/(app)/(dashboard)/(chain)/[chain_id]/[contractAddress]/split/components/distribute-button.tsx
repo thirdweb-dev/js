@@ -61,6 +61,7 @@ export const DistributeButton = ({
         isLoggedIn={isLoggedIn}
         isPending={mutation.isPending}
         onClick={distributeFunds}
+        size="sm"
         transactionCount={undefined}
         // if we fail to get the balances, we can't know how many transactions there are going to be
         txChainID={contract.chain.id}
@@ -87,7 +88,7 @@ export const DistributeButton = ({
       isLoggedIn={isLoggedIn}
       isPending={mutation.isPending}
       onClick={distributeFunds}
-      transactionCount={numTransactions}
+      transactionCount={numTransactions === 1 ? undefined : numTransactions}
       txChainID={contract.chain.id}
       variant="default"
       size="sm"
