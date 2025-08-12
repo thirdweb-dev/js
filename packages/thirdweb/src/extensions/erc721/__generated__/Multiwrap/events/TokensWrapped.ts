@@ -46,8 +46,8 @@ export type TokensWrappedEventFilters = Partial<{
  */
 export function tokensWrappedEvent(filters: TokensWrappedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensWrapped(address indexed wrapper, address indexed recipientOfWrappedToken, uint256 indexed tokenIdOfWrappedToken, (address assetContract, uint8 tokenType, uint256 tokenId, uint256 amount)[] wrappedContents)",
-    filters,
   });
 }

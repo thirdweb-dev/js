@@ -34,7 +34,7 @@ export type AdminUpdatedEventFilters = Partial<{
  */
 export function adminUpdatedEvent(filters: AdminUpdatedEventFilters = {}) {
   return prepareEvent({
-    signature: "event AdminUpdated(address indexed signer, bool isAdmin)",
     filters,
+    signature: "event AdminUpdated(address indexed signer, bool isAdmin)",
   });
 }

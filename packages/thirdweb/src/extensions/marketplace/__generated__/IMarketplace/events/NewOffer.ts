@@ -46,8 +46,8 @@ export type NewOfferEventFilters = Partial<{
  */
 export function newOfferEvent(filters: NewOfferEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event NewOffer(uint256 indexed listingId, address indexed offeror, uint8 indexed listingType, uint256 quantityWanted, uint256 totalOfferAmount, address currency)",
-    filters,
   });
 }

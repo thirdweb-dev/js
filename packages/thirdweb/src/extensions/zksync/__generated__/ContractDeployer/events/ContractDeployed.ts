@@ -48,8 +48,8 @@ export function contractDeployedEvent(
   filters: ContractDeployedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ContractDeployed(address indexed deployerAddress, bytes32 indexed bytecodeHash, address indexed contractAddress)",
-    filters,
   });
 }

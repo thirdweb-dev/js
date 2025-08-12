@@ -19,8 +19,8 @@ export type GetProfileIdByHandleHashParams = {
 export const FN_SELECTOR = "0x19e14070" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "handleHash",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

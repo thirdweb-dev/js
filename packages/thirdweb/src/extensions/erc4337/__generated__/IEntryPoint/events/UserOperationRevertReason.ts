@@ -42,8 +42,8 @@ export function userOperationRevertReasonEvent(
   filters: UserOperationRevertReasonEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event UserOperationRevertReason(bytes32 indexed userOpHash, address indexed sender, uint256 nonce, bytes revertReason)",
-    filters,
   });
 }

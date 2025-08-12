@@ -16,8 +16,8 @@ export type GetTokenIdParams = {
 export const FN_SELECTOR = "0x1e7663bc" as const;
 const FN_INPUTS = [
   {
-    type: "string",
     name: "localName",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [

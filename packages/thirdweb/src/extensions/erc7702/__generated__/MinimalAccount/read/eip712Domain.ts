@@ -8,32 +8,32 @@ export const FN_SELECTOR = "0x84b0196e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes1",
     name: "fields",
+    type: "bytes1",
   },
   {
-    type: "string",
     name: "name",
-  },
-  {
     type: "string",
+  },
+  {
     name: "version",
+    type: "string",
   },
   {
-    type: "uint256",
     name: "chainId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "verifyingContract",
+    type: "address",
   },
   {
-    type: "bytes32",
     name: "salt",
+    type: "bytes32",
   },
   {
-    type: "uint256[]",
     name: "extensions",
+    type: "uint256[]",
   },
 ] as const;
 

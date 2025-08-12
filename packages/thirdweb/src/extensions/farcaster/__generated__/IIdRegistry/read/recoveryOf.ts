@@ -16,14 +16,14 @@ export type RecoveryOfParams = {
 export const FN_SELECTOR = "0xfa1a1b25" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "fid",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "recovery",
+    type: "address",
   },
 ] as const;
 

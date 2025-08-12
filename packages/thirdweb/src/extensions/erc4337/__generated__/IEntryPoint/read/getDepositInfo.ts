@@ -16,36 +16,36 @@ export type GetDepositInfoParams = {
 export const FN_SELECTOR = "0x5287ce12" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
-    name: "info",
     components: [
       {
-        type: "uint112",
         name: "deposit",
-      },
-      {
-        type: "bool",
-        name: "staked",
-      },
-      {
         type: "uint112",
+      },
+      {
+        name: "staked",
+        type: "bool",
+      },
+      {
         name: "stake",
+        type: "uint112",
       },
       {
-        type: "uint32",
         name: "unstakeDelaySec",
+        type: "uint32",
       },
       {
-        type: "uint48",
         name: "withdrawTime",
+        type: "uint48",
       },
     ],
+    name: "info",
+    type: "tuple",
   },
 ] as const;
 

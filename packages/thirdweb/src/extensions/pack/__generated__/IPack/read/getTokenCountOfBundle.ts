@@ -16,8 +16,8 @@ export type GetTokenCountOfBundleParams = {
 export const FN_SELECTOR = "0xd0d2fe25" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_bundleId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

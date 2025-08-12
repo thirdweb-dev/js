@@ -15,8 +15,8 @@ export type EncodeBytesOnInstallParams = {
 export const FN_SELECTOR = "0x579a6021" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "startTokenId",
+    type: "uint256",
   },
 ] as const;
 

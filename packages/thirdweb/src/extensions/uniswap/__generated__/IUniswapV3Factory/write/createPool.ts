@@ -20,22 +20,22 @@ export type CreatePoolParams = WithOverrides<{
 export const FN_SELECTOR = "0xa1671295" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "tokenA",
-  },
-  {
     type: "address",
-    name: "tokenB",
   },
   {
-    type: "uint24",
+    name: "tokenB",
+    type: "address",
+  },
+  {
     name: "fee",
+    type: "uint24",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "pool",
+    type: "address",
   },
 ] as const;
 
@@ -142,8 +142,19 @@ export function createPool(
   });
 
   return prepareContractCall({
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -153,16 +164,5 @@ export function createPool(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
   });
 }

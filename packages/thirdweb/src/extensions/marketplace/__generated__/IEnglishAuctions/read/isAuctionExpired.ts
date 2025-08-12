@@ -19,8 +19,8 @@ export type IsAuctionExpiredParams = {
 export const FN_SELECTOR = "0x1389b117" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_auctionId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

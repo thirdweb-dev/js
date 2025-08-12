@@ -16,8 +16,8 @@ export type PayeeParams = {
 export const FN_SELECTOR = "0x8b83209b" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "index",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

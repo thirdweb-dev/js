@@ -46,8 +46,8 @@ export type RoleRevokedEventFilters = Partial<{
  */
 export function roleRevokedEvent(filters: RoleRevokedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender)",
-    filters,
   });
 }

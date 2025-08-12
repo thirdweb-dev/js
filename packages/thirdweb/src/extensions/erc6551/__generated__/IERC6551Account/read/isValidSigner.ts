@@ -17,18 +17,18 @@ export type IsValidSignerParams = {
 export const FN_SELECTOR = "0x523e3260" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
   {
-    type: "bytes",
     name: "context",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes4",
     name: "magicValue",
+    type: "bytes4",
   },
 ] as const;
 

@@ -48,8 +48,8 @@ export function roleAdminChangedEvent(
   filters: RoleAdminChangedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole)",
-    filters,
   });
 }

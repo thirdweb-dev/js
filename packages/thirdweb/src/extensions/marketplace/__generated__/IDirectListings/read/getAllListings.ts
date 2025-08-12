@@ -17,68 +17,68 @@ export type GetAllListingsParams = {
 export const FN_SELECTOR = "0xc5275fb0" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_startId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "_endId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "listings",
     components: [
       {
-        type: "uint256",
         name: "listingId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "quantity",
-      },
-      {
         type: "uint256",
+      },
+      {
         name: "pricePerToken",
+        type: "uint256",
       },
       {
-        type: "uint128",
         name: "startTimestamp",
-      },
-      {
         type: "uint128",
+      },
+      {
         name: "endTimestamp",
+        type: "uint128",
       },
       {
-        type: "address",
         name: "listingCreator",
+        type: "address",
       },
       {
-        type: "address",
         name: "assetContract",
-      },
-      {
         type: "address",
+      },
+      {
         name: "currency",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
-      },
-      {
         type: "uint8",
-        name: "status",
       },
       {
-        type: "bool",
+        name: "status",
+        type: "uint8",
+      },
+      {
         name: "reserved",
+        type: "bool",
       },
     ],
+    name: "listings",
+    type: "tuple[]",
   },
 ] as const;
 

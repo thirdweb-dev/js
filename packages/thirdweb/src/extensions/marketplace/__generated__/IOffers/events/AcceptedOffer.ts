@@ -46,8 +46,8 @@ export type AcceptedOfferEventFilters = Partial<{
  */
 export function acceptedOfferEvent(filters: AcceptedOfferEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AcceptedOffer(address indexed offeror, uint256 indexed offerId, address indexed assetContract, uint256 tokenId, address seller, uint256 quantityBought, uint256 totalPricePaid)",
-    filters,
   });
 }

@@ -40,8 +40,8 @@ export type TokensClaimedEventFilters = Partial<{
  */
 export function tokensClaimedEvent(filters: TokensClaimedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensClaimed(address indexed claimer, address indexed receiver, uint256 quantityClaimed)",
-    filters,
   });
 }

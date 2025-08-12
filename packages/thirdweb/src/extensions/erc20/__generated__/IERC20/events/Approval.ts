@@ -40,8 +40,8 @@ export type ApprovalEventFilters = Partial<{
  */
 export function approvalEvent(filters: ApprovalEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Approval(address indexed owner, address indexed spender, uint256 value)",
-    filters,
   });
 }

@@ -19,43 +19,43 @@ export type GetProfileParams = {
 export const FN_SELECTOR = "0xf08f4f64" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "profileId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "uint256",
         name: "pubCount",
+        type: "uint256",
       },
       {
-        type: "address",
         name: "followModule",
-      },
-      {
         type: "address",
+      },
+      {
         name: "followNFT",
+        type: "address",
       },
       {
-        type: "string",
         name: "__DEPRECATED__handle",
+        type: "string",
       },
       {
-        type: "string",
         name: "__DEPRECATED__imageURI",
+        type: "string",
       },
       {
-        type: "string",
         name: "__DEPRECATED__followNFTURI",
+        type: "string",
       },
       {
-        type: "string",
         name: "metadataURI",
+        type: "string",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

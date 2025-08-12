@@ -8,42 +8,42 @@ export const FN_SELECTOR = "0x30a63e11" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
-    name: "claimCondition",
     components: [
       {
-        type: "uint256",
         name: "availableSupply",
+        type: "uint256",
       },
       {
-        type: "bytes32",
         name: "allowlistMerkleRoot",
+        type: "bytes32",
       },
       {
-        type: "uint256",
         name: "pricePerUnit",
-      },
-      {
-        type: "address",
-        name: "currency",
-      },
-      {
         type: "uint256",
+      },
+      {
+        name: "currency",
+        type: "address",
+      },
+      {
         name: "maxMintPerWallet",
+        type: "uint256",
       },
       {
-        type: "uint48",
         name: "startTimestamp",
-      },
-      {
         type: "uint48",
-        name: "endTimestamp",
       },
       {
-        type: "string",
+        name: "endTimestamp",
+        type: "uint48",
+      },
+      {
         name: "auxData",
+        type: "string",
       },
     ],
+    name: "claimCondition",
+    type: "tuple",
   },
 ] as const;
 

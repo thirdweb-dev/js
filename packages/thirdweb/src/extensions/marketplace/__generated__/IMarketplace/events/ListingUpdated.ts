@@ -40,8 +40,8 @@ export type ListingUpdatedEventFilters = Partial<{
  */
 export function listingUpdatedEvent(filters: ListingUpdatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event ListingUpdated(uint256 indexed listingId, address indexed listingCreator)",
-    filters,
   });
 }

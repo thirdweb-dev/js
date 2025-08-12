@@ -16,8 +16,8 @@ export type EncryptedDataParams = {
 export const FN_SELECTOR = "0xa05112fc" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "index",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

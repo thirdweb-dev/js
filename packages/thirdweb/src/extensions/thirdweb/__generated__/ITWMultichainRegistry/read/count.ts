@@ -16,14 +16,14 @@ export type CountParams = {
 export const FN_SELECTOR = "0x05d85eda" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_deployer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "deploymentCount",
+    type: "uint256",
   },
 ] as const;
 

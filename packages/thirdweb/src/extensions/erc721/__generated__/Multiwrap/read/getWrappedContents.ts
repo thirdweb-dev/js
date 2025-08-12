@@ -16,32 +16,32 @@ export type GetWrappedContentsParams = {
 export const FN_SELECTOR = "0xd5576d26" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "contents",
     components: [
       {
-        type: "address",
         name: "assetContract",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "amount",
+        type: "uint256",
       },
     ],
+    name: "contents",
+    type: "tuple[]",
   },
 ] as const;
 

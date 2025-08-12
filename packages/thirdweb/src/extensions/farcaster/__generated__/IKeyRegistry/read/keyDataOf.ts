@@ -17,12 +17,12 @@ export type KeyDataOfParams = {
 export const FN_SELECTOR = "0xac34cc5a" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "fid",
+    type: "uint256",
   },
   {
-    type: "bytes",
     name: "key",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [

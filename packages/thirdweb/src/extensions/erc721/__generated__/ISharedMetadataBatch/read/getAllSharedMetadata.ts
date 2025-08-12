@@ -8,36 +8,36 @@ export const FN_SELECTOR = "0xfc3c2a73" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "metadata",
     components: [
       {
-        type: "bytes32",
         name: "id",
+        type: "bytes32",
       },
       {
-        type: "tuple",
-        name: "metadata",
         components: [
           {
-            type: "string",
             name: "name",
+            type: "string",
           },
           {
-            type: "string",
             name: "description",
+            type: "string",
           },
           {
-            type: "string",
             name: "imageURI",
+            type: "string",
           },
           {
-            type: "string",
             name: "animationURI",
+            type: "string",
           },
         ],
+        name: "metadata",
+        type: "tuple",
       },
     ],
+    name: "metadata",
+    type: "tuple[]",
   },
 ] as const;
 

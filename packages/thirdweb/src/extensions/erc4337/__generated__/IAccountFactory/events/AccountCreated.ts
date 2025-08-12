@@ -40,8 +40,8 @@ export type AccountCreatedEventFilters = Partial<{
  */
 export function accountCreatedEvent(filters: AccountCreatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AccountCreated(address indexed account, address indexed accountAdmin)",
-    filters,
   });
 }

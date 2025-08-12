@@ -19,22 +19,22 @@ export type GetWinningBidParams = {
 export const FN_SELECTOR = "0x6891939d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_auctionId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "bidder",
-  },
-  {
     type: "address",
-    name: "currency",
   },
   {
-    type: "uint256",
+    name: "currency",
+    type: "address",
+  },
+  {
     name: "bidAmount",
+    type: "uint256",
   },
 ] as const;
 

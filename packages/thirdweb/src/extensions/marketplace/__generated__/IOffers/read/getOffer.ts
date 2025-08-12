@@ -16,56 +16,56 @@ export type GetOfferParams = {
 export const FN_SELECTOR = "0x4579268a" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_offerId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
-    name: "offer",
     components: [
       {
-        type: "uint256",
         name: "offerId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "quantity",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "totalPrice",
-      },
-      {
         type: "uint256",
+      },
+      {
         name: "expirationTimestamp",
+        type: "uint256",
       },
       {
-        type: "address",
         name: "offeror",
+        type: "address",
       },
       {
-        type: "address",
         name: "assetContract",
-      },
-      {
         type: "address",
+      },
+      {
         name: "currency",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint8",
         name: "status",
+        type: "uint8",
       },
     ],
+    name: "offer",
+    type: "tuple",
   },
 ] as const;
 

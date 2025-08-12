@@ -16,14 +16,14 @@ export type PreviewDepositParams = {
 export const FN_SELECTOR = "0xef8b30f7" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "assets",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "shares",
+    type: "uint256",
   },
 ] as const;
 

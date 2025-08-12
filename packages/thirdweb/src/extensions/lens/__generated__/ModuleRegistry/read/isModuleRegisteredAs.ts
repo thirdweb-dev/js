@@ -23,12 +23,12 @@ export type IsModuleRegisteredAsParams = {
 export const FN_SELECTOR = "0xc2b62fdd" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "moduleAddress",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "moduleType",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

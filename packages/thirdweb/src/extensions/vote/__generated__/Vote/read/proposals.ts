@@ -16,30 +16,30 @@ export type ProposalsParams = {
 export const FN_SELECTOR = "0x013cf08b" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "key",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "proposalId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "proposer",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "startBlock",
-  },
-  {
     type: "uint256",
-    name: "endBlock",
   },
   {
-    type: "string",
+    name: "endBlock",
+    type: "uint256",
+  },
+  {
     name: "description",
+    type: "string",
   },
 ] as const;
 

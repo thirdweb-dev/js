@@ -16,14 +16,14 @@ export type GetEthBalanceParams = {
 export const FN_SELECTOR = "0x4d2301cc" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "addr",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "balance",
+    type: "uint256",
   },
 ] as const;
 

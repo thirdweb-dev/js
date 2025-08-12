@@ -36,8 +36,8 @@ export function tokenURIRevealedEvent(
   filters: TokenURIRevealedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokenURIRevealed(uint256 indexed index, string revealedURI)",
-    filters,
   });
 }

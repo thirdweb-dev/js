@@ -48,8 +48,8 @@ export function consecutiveTransferEvent(
   filters: ConsecutiveTransferEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ConsecutiveTransfer(uint256 indexed fromTokenId, uint256 toTokenId, address indexed from, address indexed to)",
-    filters,
   });
 }

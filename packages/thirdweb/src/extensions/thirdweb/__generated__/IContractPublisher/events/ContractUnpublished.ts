@@ -48,8 +48,8 @@ export function contractUnpublishedEvent(
   filters: ContractUnpublishedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ContractUnpublished(address indexed operator, address indexed publisher, string indexed contractId)",
-    filters,
   });
 }

@@ -16,14 +16,14 @@ export type ConvertToAssetsParams = {
 export const FN_SELECTOR = "0x07a2d13a" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "shares",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "assets",
+    type: "uint256",
   },
 ] as const;
 

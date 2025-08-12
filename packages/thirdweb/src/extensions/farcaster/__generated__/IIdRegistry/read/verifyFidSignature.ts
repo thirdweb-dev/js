@@ -22,26 +22,26 @@ export type VerifyFidSignatureParams = {
 export const FN_SELECTOR = "0x32faac70" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "custodyAddress",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "fid",
+    type: "uint256",
   },
   {
-    type: "bytes32",
     name: "digest",
+    type: "bytes32",
   },
   {
-    type: "bytes",
     name: "sig",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "bool",
     name: "isValid",
+    type: "bool",
   },
 ] as const;
 

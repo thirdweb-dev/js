@@ -40,8 +40,8 @@ export type ProxyDeployedEventFilters = Partial<{
  */
 export function proxyDeployedEvent(filters: ProxyDeployedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event ProxyDeployed(address indexed implementation, address proxy, address indexed deployer)",
-    filters,
   });
 }

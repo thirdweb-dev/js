@@ -16,14 +16,14 @@ export type GetAccountsOfSignerParams = {
 export const FN_SELECTOR = "0x0e6254fd" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address[]",
     name: "accounts",
+    type: "address[]",
   },
 ] as const;
 

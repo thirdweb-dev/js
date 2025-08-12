@@ -19,8 +19,8 @@ export type SupportsModuleParams = {
 export const FN_SELECTOR = "0xf2dc691d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "moduleTypeId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

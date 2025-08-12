@@ -40,8 +40,8 @@ export type DepositEventFilters = Partial<{
  */
 export function depositEvent(filters: DepositEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares)",
-    filters,
   });
 }

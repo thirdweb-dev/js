@@ -42,8 +42,8 @@ export function accountDeployedEvent(
   filters: AccountDeployedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event AccountDeployed(bytes32 indexed userOpHash, address indexed sender, address factory, address paymaster)",
-    filters,
   });
 }

@@ -48,8 +48,8 @@ export function tokensUnwrappedEvent(
   filters: TokensUnwrappedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensUnwrapped(address indexed unwrapper, address indexed recipientOfWrappedContents, uint256 indexed tokenIdOfWrappedToken)",
-    filters,
   });
 }

@@ -30,46 +30,46 @@ export type GetUserOpHashParams = {
 export const FN_SELECTOR = "0x22cdde4c" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "userOp",
     components: [
       {
-        type: "address",
         name: "sender",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "nonce",
-      },
-      {
-        type: "bytes",
-        name: "initCode",
-      },
-      {
-        type: "bytes",
-        name: "callData",
-      },
-      {
-        type: "bytes32",
-        name: "accountGasLimits",
-      },
-      {
         type: "uint256",
-        name: "preVerificationGas",
       },
       {
+        name: "initCode",
+        type: "bytes",
+      },
+      {
+        name: "callData",
+        type: "bytes",
+      },
+      {
+        name: "accountGasLimits",
         type: "bytes32",
+      },
+      {
+        name: "preVerificationGas",
+        type: "uint256",
+      },
+      {
         name: "gasFees",
+        type: "bytes32",
       },
       {
-        type: "bytes",
         name: "paymasterAndData",
+        type: "bytes",
       },
       {
-        type: "bytes",
         name: "signature",
+        type: "bytes",
       },
     ],
+    name: "userOp",
+    type: "tuple",
   },
 ] as const;
 const FN_OUTPUTS = [

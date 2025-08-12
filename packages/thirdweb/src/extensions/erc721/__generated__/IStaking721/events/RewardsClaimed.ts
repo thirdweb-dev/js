@@ -34,8 +34,8 @@ export type RewardsClaimedEventFilters = Partial<{
  */
 export function rewardsClaimedEvent(filters: RewardsClaimedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RewardsClaimed(address indexed staker, uint256 rewardAmount)",
-    filters,
   });
 }

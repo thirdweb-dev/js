@@ -16,8 +16,8 @@ export type GetRoleMemberCountParams = {
 export const FN_SELECTOR = "0xca15c873" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "role",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

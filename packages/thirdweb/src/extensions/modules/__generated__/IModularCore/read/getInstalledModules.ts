@@ -8,55 +8,55 @@ export const FN_SELECTOR = "0x3e429396" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
     components: [
       {
-        type: "address",
         name: "implementation",
+        type: "address",
       },
       {
-        type: "tuple",
-        name: "config",
         components: [
           {
-            type: "bool",
             name: "registerInstallationCallback",
+            type: "bool",
           },
           {
-            type: "bytes4[]",
             name: "requiredInterfaces",
-          },
-          {
             type: "bytes4[]",
+          },
+          {
             name: "supportedInterfaces",
+            type: "bytes4[]",
           },
           {
-            type: "tuple[]",
+            components: [
+              {
+                name: "selector",
+                type: "bytes4",
+              },
+            ],
             name: "callbackFunctions",
-            components: [
-              {
-                type: "bytes4",
-                name: "selector",
-              },
-            ],
+            type: "tuple[]",
           },
           {
-            type: "tuple[]",
-            name: "fallbackFunctions",
             components: [
               {
-                type: "bytes4",
                 name: "selector",
+                type: "bytes4",
               },
               {
-                type: "uint256",
                 name: "permissionBits",
+                type: "uint256",
               },
             ],
+            name: "fallbackFunctions",
+            type: "tuple[]",
           },
         ],
+        name: "config",
+        type: "tuple",
       },
     ],
+    type: "tuple[]",
   },
 ] as const;
 

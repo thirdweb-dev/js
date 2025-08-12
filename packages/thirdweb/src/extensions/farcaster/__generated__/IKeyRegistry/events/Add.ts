@@ -46,8 +46,8 @@ export type AddEventFilters = Partial<{
  */
 export function addEvent(filters: AddEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Add(uint256 indexed fid, uint32 indexed keyType, bytes indexed key, bytes keyBytes, uint8 metadataType, bytes metadata)",
-    filters,
   });
 }

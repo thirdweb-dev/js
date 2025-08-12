@@ -19,8 +19,8 @@ export type ProposalSnapshotParams = {
 export const FN_SELECTOR = "0x2d63f693" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "proposalId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

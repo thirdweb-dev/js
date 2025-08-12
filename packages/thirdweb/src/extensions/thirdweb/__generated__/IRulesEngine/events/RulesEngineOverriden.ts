@@ -36,7 +36,7 @@ export function rulesEngineOverridenEvent(
   filters: RulesEngineOverridenEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event RulesEngineOverriden(address indexed newRulesEngine)",
     filters,
+    signature: "event RulesEngineOverriden(address indexed newRulesEngine)",
   });
 }

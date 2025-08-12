@@ -19,22 +19,22 @@ export type ProposalVotesParams = {
 export const FN_SELECTOR = "0x544ffc9c" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "proposalId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "againstVotes",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "forVotes",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "abstainVotes",
+    type: "uint256",
   },
 ] as const;
 

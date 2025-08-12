@@ -42,8 +42,8 @@ export function cancelledListingEvent(
   filters: CancelledListingEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event CancelledListing(address indexed listingCreator, uint256 indexed listingId)",
-    filters,
   });
 }

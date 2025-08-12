@@ -36,7 +36,7 @@ export function ownershipHandoverRequestedEvent(
   filters: OwnershipHandoverRequestedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event OwnershipHandoverRequested(address indexed pendingOwner)",
     filters,
+    signature: "event OwnershipHandoverRequested(address indexed pendingOwner)",
   });
 }

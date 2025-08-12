@@ -32,46 +32,46 @@ export type CreateListingParams = WithOverrides<{
 export const FN_SELECTOR = "0x296f4e16" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "_params",
     components: [
       {
-        type: "address",
         name: "assetContract",
-      },
-      {
-        type: "uint256",
-        name: "tokenId",
-      },
-      {
-        type: "uint256",
-        name: "startTime",
-      },
-      {
-        type: "uint256",
-        name: "secondsUntilEndTime",
-      },
-      {
-        type: "uint256",
-        name: "quantityToList",
-      },
-      {
         type: "address",
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        name: "startTime",
+        type: "uint256",
+      },
+      {
+        name: "secondsUntilEndTime",
+        type: "uint256",
+      },
+      {
+        name: "quantityToList",
+        type: "uint256",
+      },
+      {
         name: "currencyToAccept",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "reservePricePerToken",
-      },
-      {
         type: "uint256",
-        name: "buyoutPricePerToken",
       },
       {
-        type: "uint8",
+        name: "buyoutPricePerToken",
+        type: "uint256",
+      },
+      {
         name: "listingType",
+        type: "uint8",
       },
     ],
+    name: "_params",
+    type: "tuple",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -169,23 +169,23 @@ export function createListing(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.params] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.params] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

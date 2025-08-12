@@ -17,35 +17,35 @@ export type GetTokenOfBundleParams = {
 export const FN_SELECTOR = "0x1da799c9" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_bundleId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "index",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "address",
         name: "assetContract",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "totalAmount",
+        type: "uint256",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

@@ -46,8 +46,8 @@ export type AddedEventFilters = Partial<{
  */
 export function addedEvent(filters: AddedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Added(address indexed deployer, address indexed deployment, uint256 indexed chainId, string metadataUri)",
-    filters,
   });
 }

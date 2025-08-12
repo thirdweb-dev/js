@@ -42,8 +42,8 @@ export function tokenRoyaltyUpdatedEvent(
   filters: TokenRoyaltyUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokenRoyaltyUpdated(uint256 indexed tokenId, address indexed recipient, uint16 bps)",
-    filters,
   });
 }

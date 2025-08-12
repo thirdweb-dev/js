@@ -34,8 +34,8 @@ export type TokensMintedEventFilters = Partial<{
  */
 export function tokensMintedEvent(filters: TokensMintedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensMinted(address indexed mintedTo, uint256 quantityMinted)",
-    filters,
   });
 }

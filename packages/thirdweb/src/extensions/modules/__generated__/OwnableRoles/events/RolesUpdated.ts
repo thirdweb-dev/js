@@ -40,8 +40,8 @@ export type RolesUpdatedEventFilters = Partial<{
  */
 export function rolesUpdatedEvent(filters: RolesUpdatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RolesUpdated(address indexed user, uint256 indexed roles)",
-    filters,
   });
 }

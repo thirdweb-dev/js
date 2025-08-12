@@ -20,18 +20,18 @@ export type GetMetadataUriParams = {
 export const FN_SELECTOR = "0xf4c2012d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_chainId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "_deployment",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "string",
     name: "metadataUri",
+    type: "string",
   },
 ] as const;
 

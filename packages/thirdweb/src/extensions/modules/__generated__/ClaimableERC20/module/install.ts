@@ -55,8 +55,8 @@ export function module(
       publisher: params?.publisher,
     });
     return {
-      module: moduleContract.address as Address,
       data: encodeInstall(params),
+      module: moduleContract.address as Address,
     };
   };
 }
@@ -92,8 +92,8 @@ export function install(options: {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
-    moduleName: contractId,
     moduleData: encodeInstall(options.params),
+    moduleName: contractId,
     publisher: options.params?.publisher,
   });
 }

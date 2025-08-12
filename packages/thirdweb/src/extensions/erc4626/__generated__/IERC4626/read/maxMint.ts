@@ -16,14 +16,14 @@ export type MaxMintParams = {
 export const FN_SELECTOR = "0xc63d75b6" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "receiver",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "maxShares",
+    type: "uint256",
   },
 ] as const;
 

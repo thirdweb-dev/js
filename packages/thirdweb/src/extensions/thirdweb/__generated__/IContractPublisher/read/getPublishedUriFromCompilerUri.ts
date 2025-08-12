@@ -19,14 +19,14 @@ export type GetPublishedUriFromCompilerUriParams = {
 export const FN_SELECTOR = "0x819e992f" as const;
 const FN_INPUTS = [
   {
-    type: "string",
     name: "compilerMetadataUri",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "string[]",
     name: "publishedMetadataUris",
+    type: "string[]",
   },
 ] as const;
 

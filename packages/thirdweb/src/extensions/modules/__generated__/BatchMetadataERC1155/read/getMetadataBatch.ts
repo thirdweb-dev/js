@@ -19,27 +19,27 @@ export type GetMetadataBatchParams = {
 export const FN_SELECTOR = "0xe034558b" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_batchIndex",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "uint256",
         name: "startTokenIdInclusive",
-      },
-      {
         type: "uint256",
-        name: "endTokenIdInclusive",
       },
       {
-        type: "string",
+        name: "endTokenIdInclusive",
+        type: "uint256",
+      },
+      {
         name: "baseURI",
+        type: "string",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

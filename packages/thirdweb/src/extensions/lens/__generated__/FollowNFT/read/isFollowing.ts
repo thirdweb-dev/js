@@ -19,8 +19,8 @@ export type IsFollowingParams = {
 export const FN_SELECTOR = "0x4d71688d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "followerProfileId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

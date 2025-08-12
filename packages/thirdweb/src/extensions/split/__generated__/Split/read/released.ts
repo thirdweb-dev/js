@@ -16,8 +16,8 @@ export type ReleasedParams = {
 export const FN_SELECTOR = "0x9852595c" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

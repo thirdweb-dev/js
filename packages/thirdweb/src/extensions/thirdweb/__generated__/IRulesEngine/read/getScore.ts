@@ -19,14 +19,14 @@ export type GetScoreParams = {
 export const FN_SELECTOR = "0xd47875d0" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_tokenOwner",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "score",
+    type: "uint256",
   },
 ] as const;
 

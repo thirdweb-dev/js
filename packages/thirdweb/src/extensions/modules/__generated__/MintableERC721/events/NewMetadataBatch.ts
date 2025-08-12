@@ -42,8 +42,8 @@ export function newMetadataBatchEvent(
   filters: NewMetadataBatchEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event NewMetadataBatch(uint256 indexed startTokenIdInclusive, uint256 indexed endTokenIdNonInclusive, string baseURI)",
-    filters,
   });
 }

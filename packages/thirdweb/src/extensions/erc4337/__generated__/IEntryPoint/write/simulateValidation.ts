@@ -34,54 +34,54 @@ export type SimulateValidationParams = WithOverrides<{
 export const FN_SELECTOR = "0xee219423" as const;
 const FN_INPUTS = [
   {
-    type: "tuple",
-    name: "userOp",
     components: [
       {
-        type: "address",
         name: "sender",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "nonce",
+        type: "uint256",
       },
       {
-        type: "bytes",
         name: "initCode",
+        type: "bytes",
       },
       {
-        type: "bytes",
         name: "callData",
+        type: "bytes",
       },
       {
-        type: "uint256",
         name: "callGasLimit",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "verificationGasLimit",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "preVerificationGas",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "maxFeePerGas",
-      },
-      {
         type: "uint256",
+      },
+      {
         name: "maxPriorityFeePerGas",
+        type: "uint256",
       },
       {
-        type: "bytes",
         name: "paymasterAndData",
+        type: "bytes",
       },
       {
-        type: "bytes",
         name: "signature",
+        type: "bytes",
       },
     ],
+    name: "userOp",
+    type: "tuple",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -181,23 +181,23 @@ export function simulateValidation(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.userOp] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.userOp] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

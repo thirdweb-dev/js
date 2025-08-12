@@ -16,8 +16,8 @@ export type GetSessionExpirationForSignerParams = {
 export const FN_SELECTOR = "0xf0a83adf" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

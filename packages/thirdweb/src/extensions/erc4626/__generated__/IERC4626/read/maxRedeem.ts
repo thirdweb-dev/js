@@ -16,14 +16,14 @@ export type MaxRedeemParams = {
 export const FN_SELECTOR = "0xd905777e" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "owner",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "maxShares",
+    type: "uint256",
   },
 ] as const;
 

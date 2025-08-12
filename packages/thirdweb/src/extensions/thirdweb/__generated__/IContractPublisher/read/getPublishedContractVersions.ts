@@ -23,40 +23,40 @@ export type GetPublishedContractVersionsParams = {
 export const FN_SELECTOR = "0x80251dac" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "publisher",
+    type: "address",
   },
   {
-    type: "string",
     name: "contractId",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "published",
     components: [
       {
-        type: "string",
         name: "contractId",
-      },
-      {
-        type: "uint256",
-        name: "publishTimestamp",
-      },
-      {
         type: "string",
+      },
+      {
+        name: "publishTimestamp",
+        type: "uint256",
+      },
+      {
         name: "publishMetadataUri",
+        type: "string",
       },
       {
-        type: "bytes32",
         name: "bytecodeHash",
+        type: "bytes32",
       },
       {
-        type: "address",
         name: "implementation",
+        type: "address",
       },
     ],
+    name: "published",
+    type: "tuple[]",
   },
 ] as const;
 

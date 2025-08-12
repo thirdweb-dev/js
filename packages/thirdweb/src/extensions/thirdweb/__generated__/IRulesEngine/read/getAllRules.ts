@@ -8,38 +8,38 @@ export const FN_SELECTOR = "0x1184aef2" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "rules",
     components: [
       {
-        type: "bytes32",
         name: "ruleId",
+        type: "bytes32",
       },
       {
-        type: "address",
         name: "token",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
-      },
-      {
-        type: "uint256",
-        name: "tokenId",
-      },
-      {
-        type: "uint256",
-        name: "balance",
-      },
-      {
-        type: "uint256",
-        name: "score",
-      },
-      {
         type: "uint8",
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        name: "balance",
+        type: "uint256",
+      },
+      {
+        name: "score",
+        type: "uint256",
+      },
+      {
         name: "ruleType",
+        type: "uint8",
       },
     ],
+    name: "rules",
+    type: "tuple[]",
   },
 ] as const;
 

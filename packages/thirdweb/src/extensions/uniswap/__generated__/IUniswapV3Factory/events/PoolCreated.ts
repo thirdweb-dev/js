@@ -46,8 +46,8 @@ export type PoolCreatedEventFilters = Partial<{
  */
 export function poolCreatedEvent(filters: PoolCreatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event PoolCreated(address indexed token0, address indexed token1, uint24 fee, int24 tickLower, int24 tickUpper, uint128 liquidity, address indexed sender)",
-    filters,
   });
 }

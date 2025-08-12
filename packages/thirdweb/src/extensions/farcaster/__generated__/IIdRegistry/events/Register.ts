@@ -40,8 +40,8 @@ export type RegisterEventFilters = Partial<{
  */
 export function registerEvent(filters: RegisterEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Register(address indexed to, uint256 indexed id, address recovery)",
-    filters,
   });
 }

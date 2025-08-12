@@ -48,8 +48,8 @@ export function delegateChangedEvent(
   filters: DelegateChangedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate)",
-    filters,
   });
 }

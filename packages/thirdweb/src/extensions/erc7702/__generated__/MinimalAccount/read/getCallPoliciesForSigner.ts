@@ -16,81 +16,81 @@ export type GetCallPoliciesForSignerParams = {
 export const FN_SELECTOR = "0x7103acbb" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
     components: [
       {
-        type: "address",
         name: "target",
+        type: "address",
       },
       {
-        type: "bytes4",
         name: "selector",
+        type: "bytes4",
       },
       {
-        type: "uint256",
         name: "maxValuePerUse",
+        type: "uint256",
       },
       {
-        type: "tuple",
-        name: "valueLimit",
         components: [
           {
-            type: "uint8",
             name: "limitType",
+            type: "uint8",
           },
           {
-            type: "uint256",
             name: "limit",
+            type: "uint256",
           },
           {
-            type: "uint256",
             name: "period",
+            type: "uint256",
           },
         ],
+        name: "valueLimit",
+        type: "tuple",
       },
       {
-        type: "tuple[]",
-        name: "constraints",
         components: [
           {
-            type: "uint8",
             name: "condition",
+            type: "uint8",
           },
           {
-            type: "uint64",
             name: "index",
+            type: "uint64",
           },
           {
-            type: "bytes32",
             name: "refValue",
+            type: "bytes32",
           },
           {
-            type: "tuple",
-            name: "limit",
             components: [
               {
-                type: "uint8",
                 name: "limitType",
+                type: "uint8",
               },
               {
-                type: "uint256",
                 name: "limit",
+                type: "uint256",
               },
               {
-                type: "uint256",
                 name: "period",
+                type: "uint256",
               },
             ],
+            name: "limit",
+            type: "tuple",
           },
         ],
+        name: "constraints",
+        type: "tuple[]",
       },
     ],
+    type: "tuple[]",
   },
 ] as const;
 

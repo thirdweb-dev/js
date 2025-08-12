@@ -16,8 +16,8 @@ export type DelegatesParams = {
 export const FN_SELECTOR = "0x587cde1e" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
