@@ -26,7 +26,7 @@ Yes, Payments is designed to be agnostic to wallet infrastructure. You can use i
 <Details summary="How can I split the payment between multiple destination wallet addresses?"> 
 You can use the thirdweb [Split contract](https://thirdweb.com/thirdweb.eth/Split) to handle this.
 
-- Deploy the Split contract with the set of beneficiary addresses. (These are immutable and fixed at deploy time.
+- Deploy the Split contract with the set of beneficiary addresses. (These are immutable and fixed at deploy time.)
 - Set the Split contract address as the sale recipient in your configuration.
 - Distribute the funds at any time by calling the distribute() function on the contract.
 
