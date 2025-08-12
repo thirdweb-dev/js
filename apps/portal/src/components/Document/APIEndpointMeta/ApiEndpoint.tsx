@@ -19,7 +19,7 @@ export type APIParameter = {
     | Array<string | boolean | number | object>;
 };
 
-export type RequestExampleType = {
+type RequestExampleType = {
   title: string;
   bodyParameters: APIParameter[];
 };

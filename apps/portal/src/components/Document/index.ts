@@ -3,7 +3,6 @@
 export { Badge } from "../ui/badge";
 // export { Table } from "./Table";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-export { ApiEndpoint } from "./APIEndpointMeta/ApiEndpoint";
 export { OpenApiEndpoint } from "./APIEndpointMeta/OpenApiEndpoint";
 export { AuthList } from "./AuthList";
 export { Breadcrumb } from "./Breadcrumb";
