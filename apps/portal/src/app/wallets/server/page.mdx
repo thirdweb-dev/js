@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
 import { TypeScriptIcon, EngineIcon } from "@/icons";
 import { createMetadata } from "@doc";
 
@@ -7,9 +7,8 @@ export const metadata = createMetadata({
         title: "Server Wallets",
         icon: "wallets",
     },
-    title: "Server Wallets",
-    description:
-        "Server wallets are wallets that are managed by your own application, like a treasury wallet or admin wallet. They are used to send transactions from the server.",
+    title: "Server Wallets | thirdweb Documentation",
+    description: "Create server wallets or developer wallets to let your application manage and sign transactions programmatically. Use them for admin actions, treasury management, or sending transactions directly from your backend.",
 });
 
 # Server Wallets
@@ -32,27 +31,40 @@ Server wallets are wallets that are managed by your own application, like a trea
 
 ### Use an existing Server Wallet
 
-Once created, you can use your server wallet by passing it as the `from` field of the `executionOptions` of the [transactions API](https://engine.thirdweb.com/reference).
+Once created, you can use your server wallet by passing it as the `from` field of the [thirdweb API](https://api.thirdweb.com/reference#tag/transactions/post/v1/transactions).
 
-### Create a new Server Wallet Programmatically
+### Create a new Server Wallet
 
-```http
-POST /v1/accounts
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
+You can create new server wallets via API by just passing an identifier. This can be any string, but we recommend using a descriptive name.
 
-{
-    "label": "My Server Wallet"
-}
-```
+<OpenApiEndpoint path="/v1/wallets/server" method="POST" />
 
 ### List all Server Wallets
 
-```http
-GET /v1/accounts
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
-```
+You can also list all server wallets for your project to get their addresses and identifiers.
+
+<OpenApiEndpoint path="/v1/wallets/server" method="GET" responseExampleOverride={{
+    result: {
+      pagination: {
+        hasMore: false,
+        limit: 20,
+        page: 1,
+      },
+      wallets: [
+        {
+          address: "string",
+          profiles: [
+            {
+              type: "server",
+              identifier: "string",
+            },
+          ],
+          createdAt: "string",
+          smartWalletAddress: "string",
+        },
+      ],
+    }
+}} />
 
   </TabsContent>
 

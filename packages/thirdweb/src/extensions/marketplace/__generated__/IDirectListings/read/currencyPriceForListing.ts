@@ -20,12 +20,12 @@ export type CurrencyPriceForListingParams = {
 export const FN_SELECTOR = "0xfb14079d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_listingId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "_currency",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -1,165 +1,179 @@
 "use client";
 
-import { FormControl, Input } from "@chakra-ui/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GemIcon } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { isAddress, type ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import { DecimalInput } from "@/components/ui/decimal-input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 
-interface TokenClaimButtonProps {
+const claimFormSchema = z.object({
+  to: z.string().refine(
+    (val) => {
+      if (isAddress(val)) return true;
+      return false;
+    },
+    { message: "Invalid address" },
+  ),
+  amount: z.string().refine(
+    (val) => {
+      // must be a positive number
+      const num = Number(val);
+      return !Number.isNaN(num) && num > 0;
+    },
+    { message: "Amount must be a positive number" },
+  ),
+});
+
+type ClaimFormValues = z.infer<typeof claimFormSchema>;
+
+export function TokenClaimButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
-
-const CLAIM_FORM_ID = "token-claim-form";
-
-export const TokenClaimButton: React.FC<TokenClaimButtonProps> = ({
-  contract,
-  isLoggedIn,
-  ...restButtonProps
-}) => {
-  const [open, setOpen] = useState(false);
+}) {
   const sendAndConfirmTransaction = useSendAndConfirmTransaction();
   const account = useActiveAccount();
-  const form = useForm({
-    defaultValues: { amount: "0", to: account?.address },
+
+  const form = useForm<ClaimFormValues>({
+    defaultValues: { amount: "0", to: account?.address || "" },
+    resolver: zodResolver(claimFormSchema),
   });
-  const { data: _decimals, isPending } = useReadContract(ERC20Ext.decimals, {
-    contract,
-  });
-  const claimTokensNotifications = useTxNotifications(
-    "Tokens claimed successfully",
-    "Failed to claim tokens",
-  );
+
+  async function onSubmit(d: ClaimFormValues) {
+    if (!account) {
+      return toast.error("Wallet is not connected");
+    }
+
+    const transaction = ERC20Ext.claimTo({
+      contract: props.contract,
+      from: account.address,
+      quantity: d.amount,
+      to: d.to,
+    });
+
+    const approveTx = await ERC20Ext.getApprovalForTransaction({
+      account,
+      transaction,
+    });
+
+    if (approveTx) {
+      const approveTxPromise = sendAndConfirmTransaction.mutateAsync(approveTx);
+      toast.promise(approveTxPromise, {
+        error: (error) => ({
+          loading: "Approve Spending for claiming tokens",
+          message: "Failed to approve tokens",
+          description: parseError(error),
+        }),
+        success: "Tokens approved successfully",
+      });
+
+      await approveTxPromise;
+    }
+
+    const claimTxPromise = sendAndConfirmTransaction.mutateAsync(transaction);
+
+    toast.promise(claimTxPromise, {
+      error: (error) => ({
+        loading: "Claiming tokens",
+        message: "Failed to claim tokens",
+        description: parseError(error),
+      }),
+      success: "Tokens claimed successfully",
+    });
+
+    await claimTxPromise;
+  }
+
   return (
-    <Sheet onOpenChange={setOpen} open={open}>
+    <Sheet>
       <SheetTrigger asChild>
-        <Button className="gap-2" variant="primary" {...restButtonProps}>
-          <GemIcon size={16} /> Claim
+        <Button className="gap-2">
+          <GemIcon className="size-4" /> Claim
         </Button>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
+      <SheetContent className="!w-full lg:!max-w-xl">
+        <SheetHeader className="mb-4">
           <SheetTitle className="text-left">Claim tokens</SheetTitle>
         </SheetHeader>
-        <form>
-          <div className="mt-10 flex flex-col gap-6">
-            <FormControl isInvalid={!!form.formState.errors.to} isRequired>
-              <FormLabel>To Address</FormLabel>
-              <Input
-                placeholder={ZERO_ADDRESS}
-                {...form.register("to", { required: true })}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="to"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>To Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="0x..."
+                        {...field}
+                        className="bg-card"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The wallet address of the recipient
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormHelperText>Enter the address to claim to.</FormHelperText>
-              <FormErrorMessage>
-                {form.formState.errors.to?.message}
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!form.formState.errors.amount} isRequired>
-              <FormLabel>Amount</FormLabel>
-              <Input
-                pattern={`^\\d+(\\.\\d{1,${_decimals || 18}})?$`}
-                type="text"
-                {...form.register("amount", { required: true })}
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <DecimalInput {...field} className="bg-card" />
+                    </FormControl>
+                    <FormDescription>
+                      The amount of tokens to claim
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormHelperText>How many would you like to claim?</FormHelperText>
-              <FormErrorMessage>
-                {form.formState.errors.amount?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </div>
-        </form>
-        <SheetFooter className="mt-10">
-          <TransactionButton
-            client={contract.client}
-            disabled={!form.formState.isDirty || isPending}
-            form={CLAIM_FORM_ID}
-            isLoggedIn={isLoggedIn}
-            isPending={form.formState.isSubmitting}
-            onClick={form.handleSubmit(async (d) => {
-              try {
-                if (!d.to) {
-                  return toast.error(
-                    "Need to specify an address to receive tokens",
-                  );
-                }
+            </div>
 
-                if (!account) {
-                  return toast.error("No account detected");
-                }
-                const transaction = ERC20Ext.claimTo({
-                  contract,
-                  from: account.address,
-                  quantity: d.amount,
-                  to: d.to,
-                });
-
-                const approveTx = await ERC20Ext.getApprovalForTransaction({
-                  account,
-                  transaction,
-                });
-
-                if (approveTx) {
-                  const promise = sendAndConfirmTransaction.mutateAsync(
-                    approveTx,
-                    {
-                      onError: (error) => {
-                        console.error(error);
-                      },
-                    },
-                  );
-                  toast.promise(promise, {
-                    error: "Failed to approve token",
-                    loading: "Approving ERC20 tokens for this claim",
-                    success: "Tokens approved successfully",
-                  });
-
-                  await promise;
-                }
-
-                await sendAndConfirmTransaction.mutateAsync(transaction, {
-                  onError: (error) => {
-                    console.error(error);
-                  },
-                  onSuccess: () => {
-                    form.reset({ amount: "0", to: account?.address });
-                    setOpen(false);
-                  },
-                });
-
-                claimTokensNotifications.onSuccess();
-              } catch (error) {
-                console.error(error);
-                claimTokensNotifications.onError(error);
-              }
-            })}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
-          >
-            Claim Tokens
-          </TransactionButton>
-        </SheetFooter>
+            <div className="mt-6 flex">
+              <TransactionButton
+                client={props.contract.client}
+                isLoggedIn={props.isLoggedIn}
+                isPending={form.formState.isSubmitting}
+                transactionCount={1}
+                txChainID={props.contract.chain.id}
+                type="submit"
+              >
+                Claim Tokens
+              </TransactionButton>
+            </div>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );
-};
+}

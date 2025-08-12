@@ -19,8 +19,8 @@ export type QuorumParams = {
 export const FN_SELECTOR = "0xf8ce560a" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "blockNumber",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

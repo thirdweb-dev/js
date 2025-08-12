@@ -1,6 +1,6 @@
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { TransactionAnalyticsFilter } from "./filter";
 import { TransactionsChartCard } from "./tx-chart/tx-chart";

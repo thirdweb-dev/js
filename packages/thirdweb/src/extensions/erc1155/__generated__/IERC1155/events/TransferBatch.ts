@@ -46,8 +46,8 @@ export type TransferBatchEventFilters = Partial<{
  */
 export function transferBatchEvent(filters: TransferBatchEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TransferBatch(address indexed _operator, address indexed _from, address indexed _to, uint256[] tokenIds, uint256[] _values)",
-    filters,
   });
 }

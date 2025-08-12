@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x38d52e0f" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "assetTokenAddress",
+    type: "address",
   },
 ] as const;
 

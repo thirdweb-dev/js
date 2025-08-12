@@ -8,30 +8,30 @@ export const FN_SELECTOR = "0xd42f2f35" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "signers",
     components: [
       {
-        type: "address",
         name: "signer",
+        type: "address",
       },
       {
-        type: "address[]",
         name: "approvedTargets",
+        type: "address[]",
       },
       {
-        type: "uint256",
         name: "nativeTokenLimitPerTransaction",
+        type: "uint256",
       },
       {
-        type: "uint128",
         name: "startTimestamp",
+        type: "uint128",
       },
       {
-        type: "uint128",
         name: "endTimestamp",
+        type: "uint128",
       },
     ],
+    name: "signers",
+    type: "tuple[]",
   },
 ] as const;
 

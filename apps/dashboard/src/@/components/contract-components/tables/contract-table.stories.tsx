@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { ProjectContract } from "@/api/getProjectContracts";
+import type { ProjectContract } from "@/api/project/getProjectContracts";
 import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { ContractTableUI } from "./contract-table";
 

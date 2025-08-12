@@ -42,8 +42,8 @@ export function currencyApprovedForListingEvent(
   filters: CurrencyApprovedForListingEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event CurrencyApprovedForListing(uint256 indexed listingId, address indexed currency, uint256 pricePerToken)",
-    filters,
   });
 }

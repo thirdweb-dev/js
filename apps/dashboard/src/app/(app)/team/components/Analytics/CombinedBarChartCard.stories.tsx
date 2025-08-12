@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { useState } from "react";
 import { CombinedBarChartCard } from "./CombinedBarChartCard";
 
 const meta = {
-  component: CombinedBarChartCard,
+  component: Variant,
   decorators: [
     (Story) => (
       <div className="container max-w-6xl py-10">
@@ -11,7 +12,7 @@ const meta = {
     ),
   ],
   title: "Analytics/CombinedBarChartCard",
-} satisfies Meta<typeof CombinedBarChartCard>;
+} satisfies Meta<typeof Variant>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -64,32 +65,20 @@ function generateTimeSeriesData(days: number) {
   return data;
 }
 
-export const UserActivity: Story = {
-  args: {
-    activeChart: "dailyUsers",
-    chartConfig,
-    data: generateTimeSeriesData(30),
-    queryKey: "dailyUsers",
-    title: "User Activity",
-  },
-};
+export const Default: Story = {};
 
-export const MonthlyUsers: Story = {
-  args: {
-    activeChart: "monthlyUsers",
-    chartConfig,
-    data: generateTimeSeriesData(30),
-    queryKey: "monthlyUsers",
-    title: "Monthly Users",
-  },
-};
+function Variant() {
+  const [activeChart, setActiveChart] = useState<
+    "dailyUsers" | "annualUsers" | "monthlyUsers"
+  >("dailyUsers");
 
-export const AnnualUsers: Story = {
-  args: {
-    activeChart: "annualUsers",
-    chartConfig,
-    data: generateTimeSeriesData(30),
-    queryKey: "annualUsers",
-    title: "Annual Users",
-  },
-};
+  return (
+    <CombinedBarChartCard
+      title="User Activity"
+      activeChart={activeChart}
+      chartConfig={chartConfig}
+      data={generateTimeSeriesData(30)}
+      onSelect={setActiveChart}
+    />
+  );
+}

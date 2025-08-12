@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightIcon, RocketIcon } from "lucide-react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { UpsellBannerCard } from "@/components/blocks/UpsellBannerCard";
 
 /**

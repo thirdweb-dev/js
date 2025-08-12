@@ -19,8 +19,8 @@ export type IsTrustedForwarderParams = {
 export const FN_SELECTOR = "0x572b6c05" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "forwarder",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

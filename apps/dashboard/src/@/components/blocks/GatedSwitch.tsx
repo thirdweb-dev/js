@@ -1,6 +1,6 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";

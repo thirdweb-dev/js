@@ -1,8 +1,15 @@
-import { MessageCircleIcon, WebhookIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  BotIcon,
+  MessageCircleIcon,
+  WebhookIcon,
+  ZapIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
-import { Button } from "@/components/ui/button";
+import { ChatButton } from "../components/AI/chat-button";
+import { Button } from "../components/ui/button";
 import {
   DotNetIcon,
   ExternalLinkIcon,
@@ -15,15 +22,15 @@ import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
-import { PlaygroundIcon } from "../icons/products/PlaygroundIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
+
 export default function Page() {
   return (
     <main className="container max-w-5xl grow pb-20" data-noindex>
       <Hero />
       <div className="space-y-8">
-        <PlaygroundSection />
+        <AISection />
         <LearningResourcesSection />
         <ReferenceSection />
       </div>
@@ -43,11 +50,16 @@ function Hero() {
           <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
             Development framework for building onchain apps, games, and agents.
           </p>
-          <div className="flex">
-            <Button className="flex items-center gap-2" asChild>
-              <Link href="/chat">
-                <MessageCircleIcon className="size-4" />
-                Ask AI
+          <div className="flex gap-3">
+            <ChatButton />
+            <Button
+              asChild
+              className="flex items-center gap-2 rounded-full bg-card"
+              variant="outline"
+            >
+              <Link href="https://playground.thirdweb.com">
+                Playground
+                <ArrowUpRightIcon className="size-4" />
               </Link>
             </Button>
           </div>
@@ -63,17 +75,30 @@ function Hero() {
   );
 }
 
-function PlaygroundSection() {
+function AISection() {
   return (
     <section>
-      <SectionTitle anchorId="playground" title="Live Demos" />
-      <ArticleCardIndex
-        description="Try out our interactive playground to get started"
-        external
-        href="https://playground.thirdweb.com"
-        icon={PlaygroundIcon}
-        title="Playground"
-      />
+      <SectionTitle anchorId="ai" title="AI" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ArticleCardIndex
+          description="Integrate the most advanced blockchain model into your applications"
+          href="/ai/chat"
+          icon={MessageCircleIcon}
+          title="Chat API"
+        />
+        <ArticleCardIndex
+          description="For agents and humans. Use the thirdweb API with natural language"
+          href="/ai/mcp"
+          icon={BotIcon}
+          title="MCP"
+        />
+        <ArticleCardIndex
+          description="Inject the thirdweb API reference in your prompts"
+          href="/ai/llm-txt"
+          icon={ZapIcon}
+          title="LLMs.txt"
+        />
+      </div>
     </section>
   );
 }
@@ -113,6 +138,11 @@ function ReferenceSection() {
         <SectionTitle anchorId="backend" title="Backend APIs" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <SDKCard
+            href="https://api.thirdweb.com/reference"
+            icon={ConnectIcon}
+            title="HTTP API"
+          />
+          <SDKCard
             href="https://engine.thirdweb.com/reference"
             icon={EngineIcon}
             title="Engine"
@@ -126,11 +156,6 @@ function ReferenceSection() {
             href="https://bridge.thirdweb.com/reference"
             icon={BridgeIcon}
             title="Payments"
-          />
-          <SDKCard
-            href="/connect/wallet/get-users"
-            icon={ConnectIcon} // TODO: actual openAPI docs
-            title="Wallets"
           />
           <SDKCard
             href="/bundler"
@@ -240,7 +265,7 @@ function SDKCard(props: {
         <props.icon className="size-4 shrink-0" />
       </div>
       <div className="flex flex-col">
-        <h3 className="font-medium text-base text-foreground mb-0.5">
+        <h3 className="font-semibold text-base text-foreground mb-0.5">
           <Link
             href={props.href}
             target={props.href.includes("http") ? "_blank" : undefined}

@@ -17,22 +17,22 @@ export type GetStakeInfoForTokenParams = {
 export const FN_SELECTOR = "0x168fb5c5" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "tokenId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "staker",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "_tokensStaked",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "_rewards",
+    type: "uint256",
   },
 ] as const;
 

@@ -16,18 +16,18 @@ export type ClaimConditionParams = {
 export const FN_SELECTOR = "0xe9703d25" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "currentStartId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "count",
+    type: "uint256",
   },
 ] as const;
 

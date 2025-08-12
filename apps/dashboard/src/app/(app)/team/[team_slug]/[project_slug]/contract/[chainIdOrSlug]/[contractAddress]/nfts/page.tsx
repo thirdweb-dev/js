@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { SharedNFTPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/nfts/shared-nfts-page";
 import type { ProjectContractPageParams } from "../types";
 

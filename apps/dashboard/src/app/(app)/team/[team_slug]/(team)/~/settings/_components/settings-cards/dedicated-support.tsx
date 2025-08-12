@@ -4,8 +4,8 @@ import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { createDedicatedSupportChannel } from "@/api/dedicated-support";
-import type { Team } from "@/api/team";
+import { createDedicatedSupportChannel } from "@/api/team/dedicated-support";
+import type { Team } from "@/api/team/get-team";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
 import {
   Select,

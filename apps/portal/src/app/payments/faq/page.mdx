@@ -2,14 +2,28 @@ import { createMetadata, Details } from "@doc";
 
 export const metadata = createMetadata({
   image: {
-    title: "thirdweb Payments - FAQs",
-    icon: "thirdweb",
+    title: "Payments FAQs",
+    icon: "payments",
   },
-  title: "thirdweb Payments - FAQs - thirdweb",
-  description: "thirdweb Payments - Frequently Asked Questions",
+  title: "Payments FAQs | thirdweb documentation",
+  description: "Explore FAQs around accepting crypto payments with thirdweb—covering payment links, checkout, webhooks, fiat onramps, and token compatibility.",
 });
 
-# FAQs
+# Payments FAQs
+
+### General
+
+<Details summary="What does Payments use to operate under the hood?"> 
+Payments is an asset router that combines thirdweb's own onchain infrastructure with existing bridging and swapping protocols to find the optimal route for any given transaction. 
+This can include intents, native bridges, third party bridges, cross-chain messaging protocols, thirdweb's custom bridges, and more. All routes are monitored and planned continuously for 
+health, price, and speed to guarantee the best path every time. 
+</Details>
+
+<Details summary="Am I able to use Payments with other wallet infrastructure providers?"> 
+Yes, Payments is designed to be agnostic to wallet infrastructure. You can use it with any wallet service. 
+</Details>
+
+### Fees
 
 <Details summary="What are the fees for Buy With Fiat?"> 
 thirdweb does not charge any fees for buy with fiat. Any fees on onramping are based on the onramp provider. 
@@ -23,11 +37,11 @@ For buying with crypto or swap fees, thirdweb charges a 0.3% protocol fee. Devel
 Network fees, also referred to as miner fees, are paid to the miner for processing crypto transactions and securing the respective network. These fees do not go to thirdweb.
 </Details>
 
-<Details summary="What does Payments use to operate under the hood?"> 
-Payments is an asset router that combines thirdweb's own onchain infrastructure with existing bridging and swapping protocols to find the optimal route for any given transaction. 
-This can include intents, native bridges, third party bridges, cross-chain messaging protocols, thirdweb's custom bridges, and more. All routes are monitored and planned continuously for 
-health, price, and speed to guarantee the best path every time. 
+<Details summary="Does thirdweb Payments offer fiat payouts?"> 
+Fiat payouts are not currently available.
 </Details>
+
+### Token & Region Support
 
 <Details summary="How can I support a token on Payments?"> 
 Payments is able to support most token that meet the following criteria:
@@ -38,25 +52,6 @@ Payments is able to support most token that meet the following criteria:
 To request support for a token, please visit the Payments tab in your project dashboard > Settings > "Don't see your token listed?" component and fill out the chain and token address information.
 
 Payments will automatically kick off the token route discovery process. Please check back the Payments modal after 20-40 minutes for the requested token. 
-</Details>
-
-<Details summary="Am I able to use Payments with other wallet infrastructure providers?"> 
-Yes, Payments is designed to be agnostic to wallet infrastructure. You can use it with any wallet service. 
-</Details>
-
-<Details summary="Does Payments support Apple Pay or Google Pay?"> 
-Apple Pay and Google Pay are supported through the onramp providers depending on region. Coinbase, Stripe, and Transak currently support Apple Pay. Transak supports Google Pay. [Learn more about the supported onramp providers.](/connect/pay/onramp-providers).
-</Details>
-
-<Details summary="What are the KYC requirements?">
-Onramp options all require minimal KYC. This is done to comply with local regulations and to ensure the safety of our users.
-Please note: onramping with Coinbase does not require KYC for a purchase below $500 with debit card. 
-</Details>
-
-<Details summary="What are your transaction limits for Buy With Fiat?"> 
-We currently require a $1 minimum purchase for both stablecoin and non-stablecoin purchases through Buy With Fiat.
-
-Our transaction maximum starts from $1500 per week for new users and can increase over time to $10,000 per week.
 </Details>
 
 <Details summary="What countries does Buy With Fiat support?"> 
@@ -87,6 +82,20 @@ Our transaction maximum starts from $1500 per week for new users and can increas
 All United States are supported, excluding Hawaii.
 </Details>
 
+<Details summary="What cryptocurrencies does Payments support?"> 
+Payments can support any currency on our [supported chains](https://thirdweb.com/chainlist?service=pay).
+</Details>
+
+<Details summary="Does Payments support Apple Pay or Google Pay?"> 
+Apple Pay and Google Pay are supported through the onramp providers depending on region. Coinbase, Stripe, and Transak currently support Apple Pay. Transak supports Google Pay.
+</Details>
+
+<Details summary="What are your transaction limits for Buy With Fiat?"> 
+We currently require a $1 minimum purchase for both stablecoin and non-stablecoin purchases through Buy With Fiat.
+
+Our transaction maximum starts from $1500 per week for new users and can increase over time to $10,000 per week.
+</Details>
+
 <Details summary="Does thirdweb offer direct onramping to tokens through Buy With Fiat?"> 
 We offer direct onramping **internationally** to the following tokens:
 
@@ -107,20 +116,20 @@ All other tokens will require an additional Buy With Crypto step.
 \* Not available in New York or the EU.
 </Details>
 
-<Details summary="How does KYC work with Buy With Fiat"> 
-Users will be required to complete KYC verification for their first purchase using 'Buy with Fiat.' After that, no further KYC will be needed for future purchases on the same platform.
-</Details>
-
-<Details summary="What cryptocurrencies does Payments support?"> 
-Payments can support any currency on our [supported chains](https://thirdweb.com/chainlist?service=pay).
-</Details>
-
 <Details summary="How are cryptocurrency prices set in thirdweb Payments?"> 
 Prices are set depending on the liquidity provider used to route your transaction.
 </Details>
 
-<Details summary="Does thirdweb Payments offer fiat payouts?"> 
-Fiat payouts are not currently available.
+### KYC & Compliance
+
+<Details summary="What are the KYC requirements?">
+Onramp options all require minimal KYC. This is done to comply with local regulations and to ensure the safety of our users.
+Please note: onramping with Coinbase does not require KYC for a purchase below $500 with debit card. 
 </Details>
+
+<Details summary="How does KYC work with Buy With Fiat"> 
+Users will be required to complete KYC verification for their first purchase using 'Buy with Fiat.' After that, no further KYC will be needed for future purchases on the same platform.
+</Details>
+
 
 

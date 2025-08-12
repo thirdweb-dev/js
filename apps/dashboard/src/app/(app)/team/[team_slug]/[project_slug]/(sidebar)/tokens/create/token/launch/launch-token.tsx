@@ -12,7 +12,8 @@ import {
   reportAssetCreationFailed,
   reportAssetCreationSuccessful,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
+import { FilePreview } from "@/components/blocks/file-preview";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import {
   type MultiStepState,
@@ -30,7 +31,6 @@ import {
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { parseError } from "@/utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
-import { FilePreview } from "../../_common/file-preview";
 import { StepCard } from "../../_common/step-card";
 import { StorageErrorPlanUpsell } from "../../_common/storage-error-upsell";
 import type { CreateAssetFormValues } from "../_common/form";

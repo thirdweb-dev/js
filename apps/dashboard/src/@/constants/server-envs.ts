@@ -58,16 +58,6 @@ if (isProd && INSIGHT_SERVICE_API_KEY) {
   );
 }
 
-export const MORALIS_API_KEY = process.env.MORALIS_API_KEY || "";
-
-if (MORALIS_API_KEY) {
-  experimental_taintUniqueValue(
-    "Do not pass MORALIS_API_KEY to the client",
-    process,
-    MORALIS_API_KEY,
-  );
-}
-
 export const ANALYTICS_SERVICE_URL = process.env.ANALYTICS_SERVICE_URL || "";
 
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";

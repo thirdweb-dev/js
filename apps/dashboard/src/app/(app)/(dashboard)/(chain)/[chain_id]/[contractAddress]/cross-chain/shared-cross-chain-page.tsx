@@ -18,7 +18,7 @@ import { moduleInstalledEvent } from "thirdweb/modules";
 import { eth_getCode, getRpcClient } from "thirdweb/rpc";
 import type { TransactionReceipt } from "thirdweb/transaction";
 import { type AbiFunction, decodeFunctionData } from "thirdweb/utils";
-import { fetchPublishedContractsFromDeploy } from "@/components/contract-components/fetchPublishedContractsFromDeploy";
+import { fetchPublishedContractsFromDeploy } from "@/api/contract/fetchPublishedContractsFromDeploy";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { redirectToContractLandingPage } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/utils";
 import { getContractPageParamsInfo } from "../_utils/getContractFromParams";

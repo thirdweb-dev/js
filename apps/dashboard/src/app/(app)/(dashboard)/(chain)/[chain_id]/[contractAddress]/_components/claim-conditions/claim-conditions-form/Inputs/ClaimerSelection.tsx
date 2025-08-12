@@ -1,8 +1,15 @@
-import { Box, Flex, Select } from "@chakra-ui/react";
 import { UploadIcon } from "lucide-react";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
-import { useClaimConditionsFormContext } from "..";
-import { CustomFormControl } from "../common";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useClaimConditionsFormContext } from "../index";
 
 /**
  * Allows the user to
@@ -19,12 +26,11 @@ export const ClaimerSelection = () => {
     isErc20,
     setOpenSnapshotIndex: setOpenIndex,
     isAdmin,
-    isColumn,
     claimConditionType,
   } = useClaimConditionsFormContext();
 
-  const handleClaimerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.currentTarget.value as "any" | "specific" | "overrides";
+  const handleClaimerChange = (value: string) => {
+    const val = value as "any" | "specific" | "overrides";
 
     if (val === "any") {
       form.setValue(`phases.${phaseIndex}.snapshot`, undefined);
@@ -80,79 +86,69 @@ export const ClaimerSelection = () => {
         : `Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`;
 
   return (
-    <CustomFormControl
-      disabled={formDisabled}
-      error={
+    <FormFieldSetup
+      errorMessage={
         form.getFieldState(`phases.${phaseIndex}.snapshot`, form.formState)
-          .error
+          ?.error?.message
       }
       helperText={helperText}
       label={label}
+      isRequired={false}
     >
-      <Flex direction={{ base: "column", md: "row" }} gap={4}>
+      <div className="flex flex-col md:flex-row gap-4">
         {claimConditionType === "overrides" ||
         claimConditionType === "specific" ? null : (
           <Select
-            isDisabled={formDisabled}
-            onChange={handleClaimerChange}
+            disabled={formDisabled}
+            onValueChange={handleClaimerChange}
             value={dropType}
-            w={{ base: "100%", md: "50%" }}
           >
-            <option value="any">Any wallet</option>
-            <option value="overrides">Any wallet (with overrides)</option>
-            <option value="specific">Only specific wallets</option>
+            <SelectTrigger className="w-full md:w-1/2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="any">Any wallet</SelectItem>
+              <SelectItem value="overrides">
+                Any wallet (with overrides)
+              </SelectItem>
+              <SelectItem value="specific">Only specific wallets</SelectItem>
+            </SelectContent>
           </Select>
         )}
 
         {/* Edit or See Snapshot */}
         {field.snapshot ? (
-          <Flex
-            direction={{
-              base: "column",
-              md: isColumn ? "column" : "row",
-            }}
-            gap={1.5}
-          >
+          <div className="flex items-center gap-3">
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
               className="gap-2 rounded-md"
               disabled={disabledSnapshotButton}
               onClick={() => setOpenIndex(phaseIndex)}
-              variant="primary"
+              size="sm"
             >
               {isAdmin ? "Edit" : "See"} Claimer Snapshot
               <UploadIcon className="size-4" />
             </Button>
 
-            <Flex
-              _light={{
-                color: field.snapshot?.length === 0 ? "red.500" : "green.500",
-              }}
-              align="center"
-              color={field.snapshot?.length === 0 ? "red.400" : "green.400"}
-              direction="row"
-              gap={2}
-              justify="center"
-              ml={2}
-              opacity={disabledSnapshotButton ? 0.5 : 1}
+            <div
+              className={cn(
+                "flex gap-2 items-center",
+                field.snapshot?.length === 0
+                  ? "text-muted-foreground"
+                  : "text-green-600 dark:text-green-500",
+                disabledSnapshotButton ? "opacity-50" : "",
+              )}
             >
-              <p>
-                ●{" "}
-                <strong>
-                  {field.snapshot?.length} address
-                  {field.snapshot?.length === 1 ? "" : "es"}
-                </strong>{" "}
-                in snapshot
-              </p>
-            </Flex>
-          </Flex>
-        ) : (
-          <Box
-            display={{ base: "none", md: "block" }}
-            w={{ base: "100%", md: "50%" }}
-          />
-        )}
-      </Flex>
-    </CustomFormControl>
+              <div className="size-2 bg-current rounded-full" />
+              <span className="text-sm">
+                {field.snapshot?.length}{" "}
+                {field.snapshot?.length === 1 ? "address" : "addresses"} in
+                snapshot
+              </span>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </FormFieldSetup>
   );
 };

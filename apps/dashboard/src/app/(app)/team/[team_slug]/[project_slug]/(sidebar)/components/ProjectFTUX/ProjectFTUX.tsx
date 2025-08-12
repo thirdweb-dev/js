@@ -5,7 +5,7 @@ import {
   ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
@@ -254,7 +254,7 @@ function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
     {
       description:
         "Bridge, swap, and purchase cryptocurrencies with any fiat options or tokens via cross-chain routing",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/universal-bridge`,
+      href: `/team/${props.teamSlug}/${props.projectSlug}/payments`,
       icon: PayIcon,
       title: "Payments",
     },

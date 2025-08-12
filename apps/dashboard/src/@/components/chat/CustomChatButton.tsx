@@ -4,7 +4,7 @@ import { MessageCircleIcon, XIcon } from "lucide-react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { cn } from "@/lib/utils";

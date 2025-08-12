@@ -36,7 +36,7 @@ export function primarySaleRecipientUpdatedEvent(
   filters: PrimarySaleRecipientUpdatedEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event PrimarySaleRecipientUpdated(address indexed recipient)",
     filters,
+    signature: "event PrimarySaleRecipientUpdated(address indexed recipient)",
   });
 }

@@ -16,41 +16,41 @@ export type GetTransferPoliciesForSignerParams = {
 export const FN_SELECTOR = "0xed6ed279" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
     components: [
       {
-        type: "address",
         name: "target",
+        type: "address",
       },
       {
-        type: "uint256",
         name: "maxValuePerUse",
+        type: "uint256",
       },
       {
-        type: "tuple",
-        name: "valueLimit",
         components: [
           {
-            type: "uint8",
             name: "limitType",
+            type: "uint8",
           },
           {
-            type: "uint256",
             name: "limit",
+            type: "uint256",
           },
           {
-            type: "uint256",
             name: "period",
+            type: "uint256",
           },
         ],
+        name: "valueLimit",
+        type: "tuple",
       },
     ],
+    type: "tuple[]",
   },
 ] as const;
 

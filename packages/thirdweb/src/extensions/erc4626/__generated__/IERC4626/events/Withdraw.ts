@@ -46,8 +46,8 @@ export type WithdrawEventFilters = Partial<{
  */
 export function withdrawEvent(filters: WithdrawEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Withdraw(address indexed caller, address indexed receiver, address indexed owner, uint256 assets, uint256 shares)",
-    filters,
   });
 }

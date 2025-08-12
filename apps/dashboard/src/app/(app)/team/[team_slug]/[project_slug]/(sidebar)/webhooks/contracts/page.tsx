@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { ContractsWebhooksPageContent } from "../contract-webhooks/contract-webhooks-page";
 

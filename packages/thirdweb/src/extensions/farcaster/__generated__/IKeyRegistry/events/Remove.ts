@@ -40,8 +40,8 @@ export type RemoveEventFilters = Partial<{
  */
 export function removeEvent(filters: RemoveEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Remove(uint256 indexed fid, bytes indexed key, bytes keyBytes)",
-    filters,
   });
 }

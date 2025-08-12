@@ -16,14 +16,14 @@ export type NoncesParams = {
 export const FN_SELECTOR = "0x7ecebe00" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "nonce",
+    type: "uint256",
   },
 ] as const;
 

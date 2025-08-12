@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { SharedContractSourcesPage } from "../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/sources/shared-sources-page";
 import type { ProjectContractPageParams } from "../types";
 

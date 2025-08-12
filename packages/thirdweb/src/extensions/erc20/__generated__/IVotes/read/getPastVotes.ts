@@ -20,12 +20,12 @@ export type GetPastVotesParams = {
 export const FN_SELECTOR = "0x3a46b1a8" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "blockNumber",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

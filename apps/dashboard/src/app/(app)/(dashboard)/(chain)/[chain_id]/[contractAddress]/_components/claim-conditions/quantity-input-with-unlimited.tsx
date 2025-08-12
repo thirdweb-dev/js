@@ -2,25 +2,23 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface QuantityInputWithUnlimitedProps {
+export function QuantityInputWithUnlimited(props: {
   value: string;
   onChange: (value: string) => void;
   hideMaxButton?: true;
   decimals?: number;
   isDisabled: boolean;
   isRequired: boolean;
-}
+}) {
+  const {
+    value = "0",
+    onChange,
+    hideMaxButton,
+    isDisabled,
+    isRequired,
+    decimals,
+  } = props;
 
-export const QuantityInputWithUnlimited: React.FC<
-  QuantityInputWithUnlimitedProps
-> = ({
-  value = "0",
-  onChange,
-  hideMaxButton,
-  isDisabled,
-  isRequired,
-  decimals,
-}) => {
   const [stringValue, setStringValue] = useState<string>(
     Number.isNaN(Number(value)) ? "0" : value.toString(),
   );
@@ -45,7 +43,7 @@ export const QuantityInputWithUnlimited: React.FC<
   };
 
   return (
-    <div className="flex flex-row items-center rounded-md border border-border">
+    <div className="flex flex-row items-center rounded-md border border-border pr-1 bg-background max-w-sm">
       <Input
         className="border-none"
         disabled={isDisabled}
@@ -64,7 +62,7 @@ export const QuantityInputWithUnlimited: React.FC<
       />
       {hideMaxButton ? null : (
         <Button
-          className="mr-1 text-primary"
+          className="text-muted-foreground bg-transparent hover:accent"
           disabled={isDisabled}
           onClick={() => {
             updateValue("unlimited");
@@ -77,4 +75,4 @@ export const QuantityInputWithUnlimited: React.FC<
       )}
     </div>
   );
-};
+}

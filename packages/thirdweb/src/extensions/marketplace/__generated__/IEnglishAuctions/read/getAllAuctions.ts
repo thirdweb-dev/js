@@ -17,76 +17,76 @@ export type GetAllAuctionsParams = {
 export const FN_SELECTOR = "0xc291537c" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_startId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "_endId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple[]",
-    name: "auctions",
     components: [
       {
-        type: "uint256",
         name: "auctionId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "tokenId",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "quantity",
+        type: "uint256",
       },
       {
-        type: "uint256",
         name: "minimumBidAmount",
-      },
-      {
         type: "uint256",
+      },
+      {
         name: "buyoutBidAmount",
+        type: "uint256",
       },
       {
-        type: "uint64",
         name: "timeBufferInSeconds",
+        type: "uint64",
       },
       {
-        type: "uint64",
         name: "bidBufferBps",
+        type: "uint64",
       },
       {
-        type: "uint64",
         name: "startTimestamp",
-      },
-      {
         type: "uint64",
+      },
+      {
         name: "endTimestamp",
+        type: "uint64",
       },
       {
-        type: "address",
         name: "auctionCreator",
+        type: "address",
       },
       {
-        type: "address",
         name: "assetContract",
-      },
-      {
         type: "address",
+      },
+      {
         name: "currency",
+        type: "address",
       },
       {
-        type: "uint8",
         name: "tokenType",
+        type: "uint8",
       },
       {
-        type: "uint8",
         name: "status",
+        type: "uint8",
       },
     ],
+    name: "auctions",
+    type: "tuple[]",
   },
 ] as const;
 

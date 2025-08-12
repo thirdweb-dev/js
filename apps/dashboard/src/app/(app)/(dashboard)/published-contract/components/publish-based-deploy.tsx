@@ -1,13 +1,16 @@
 import { isAddress } from "thirdweb";
 import { fetchDeployMetadata } from "thirdweb/contract";
 import { resolveAddress } from "thirdweb/extensions/ens";
+import { getAuthTokenWalletAddress } from "@/api/auth-token";
 import {
   fetchPublishedContractVersion,
   fetchPublishedContractVersions,
-} from "@/components/contract-components/fetch-contracts-with-versions";
+} from "@/api/contract/fetch-contracts-with-versions";
 import { ZERO_FEE_VERSIONS } from "@/constants/fee-config";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { PublishedContractBreadcrumbs } from "../[publisher]/[contract_id]/components/breadcrumbs.client";
 import { DeployContractHeader } from "./contract-header";
+import { TokenBanner } from "./token-banner";
 import { DeployFormForUri } from "./uri-based-deploy";
 
 type PublishBasedDeployProps = {
@@ -25,6 +28,8 @@ function mapThirdwebPublisher(publisher: string) {
 }
 
 export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
+  const accountAddress = await getAuthTokenWalletAddress();
+
   // resolve ENS if required
   const publisherAddress = isAddress(props.publisher)
     ? props.publisher
@@ -91,19 +96,51 @@ export async function DeployFormForPublishInfo(props: PublishBasedDeployProps) {
       ),
     ]);
 
+  const isTWPublisher =
+    contractMetadata?.publisher ===
+    "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
+
   return (
-    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-8 pb-20">
-      <DeployContractHeader
-        {...props}
-        activeVersion={publishedContract}
-        allVersions={publishedContractVersions}
-      />
-      <DeployFormForUri
-        contractMetadata={contractMetadata}
-        contractMetadataNoFee={contractMetadataNoFee}
-        modules={fetchedModules.filter((m) => m !== null)}
-        pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
-      />
+    <div>
+      <div className="border-border border-b border-dashed">
+        <PublishedContractBreadcrumbs className="container max-w-5xl" />
+      </div>
+
+      <div className="border-b">
+        <DeployContractHeader
+          {...props}
+          activeVersion={publishedContract}
+          allVersions={publishedContractVersions}
+          className="container max-w-5xl"
+          accountAddress={accountAddress || undefined}
+        />
+      </div>
+
+      {isTWPublisher &&
+        (contractMetadata.name === "DropERC20" ||
+          contractMetadata.name === "TokenERC20") && (
+          <TokenBanner type="erc20" />
+        )}
+      {isTWPublisher &&
+        (contractMetadata.name === "DropERC721" ||
+          contractMetadata.name === "TokenERC721") && (
+          <TokenBanner type="erc721" />
+        )}
+
+      {isTWPublisher &&
+        (contractMetadata.name === "DropERC1155" ||
+          contractMetadata.name === "TokenERC1155") && (
+          <TokenBanner type="erc1155" />
+        )}
+
+      <div className="container max-w-5xl py-8">
+        <DeployFormForUri
+          contractMetadata={contractMetadata}
+          contractMetadataNoFee={contractMetadataNoFee}
+          modules={fetchedModules.filter((m) => m !== null)}
+          pathname={`/${props.publisher}/${props.contract_id}${props.version ? `/${props.version}` : ""}/deploy`}
+        />
+      </div>
     </div>
   );
 }

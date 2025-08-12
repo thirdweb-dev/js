@@ -42,8 +42,8 @@ export function packRandomnessFulfilledEvent(
   filters: PackRandomnessFulfilledEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event PackRandomnessFulfilled(uint256 indexed packId, uint256 indexed requestId)",
-    filters,
   });
 }

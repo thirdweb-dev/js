@@ -22,24 +22,24 @@ export type OnERC1155ReceivedParams = WithOverrides<{
 export const FN_SELECTOR = "0xf23a6e61" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "operator",
-  },
-  {
     type: "address",
+  },
+  {
     name: "from",
+    type: "address",
   },
   {
-    type: "uint256",
     name: "id",
-  },
-  {
     type: "uint256",
-    name: "value",
   },
   {
-    type: "bytes",
+    name: "value",
+    type: "uint256",
+  },
+  {
     name: "data",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [
@@ -161,8 +161,19 @@ export function onERC1155Received(
   });
 
   return prepareContractCall({
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [
@@ -174,16 +185,5 @@ export function onERC1155Received(
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
   });
 }

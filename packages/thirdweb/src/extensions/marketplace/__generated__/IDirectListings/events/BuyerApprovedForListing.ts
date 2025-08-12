@@ -42,8 +42,8 @@ export function buyerApprovedForListingEvent(
   filters: BuyerApprovedForListingEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event BuyerApprovedForListing(uint256 indexed listingId, address indexed buyer, bool approved)",
-    filters,
   });
 }

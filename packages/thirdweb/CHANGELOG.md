@@ -1,5 +1,108 @@
 # thirdweb
 
+## 5.105.31
+
+### Patch Changes
+
+- [#7819](https://github.com/thirdweb-dev/js/pull/7819) [`45ba811`](https://github.com/thirdweb-dev/js/commit/45ba811950fe9e85060a4c93c76c13f7f00f8292) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Sort payment quotes in ascending order
+
+- [#7807](https://github.com/thirdweb-dev/js/pull/7807) [`c672a84`](https://github.com/thirdweb-dev/js/commit/c672a84fc398730e673b40537e03ef09615106c7) Thanks [@Yash094](https://github.com/Yash094)! - Add chinese locale support
+
+- [#7824](https://github.com/thirdweb-dev/js/pull/7824) [`d52855d`](https://github.com/thirdweb-dev/js/commit/d52855dbdabf497dc72a5dbed56c55d345bac0e9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix supportedTokens address comparison
+
+## 5.105.30
+
+### Patch Changes
+
+- [#7813](https://github.com/thirdweb-dev/js/pull/7813) [`e114b2c`](https://github.com/thirdweb-dev/js/commit/e114b2c4f98aa9470afffcd5f809953bb69c5c4f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Skips payment selection in the TransactionWidget if the user's balance is sufficient to complete the transaction.
+
+## 5.105.29
+
+### Patch Changes
+
+- [#7809](https://github.com/thirdweb-dev/js/pull/7809) [`c0948fb`](https://github.com/thirdweb-dev/js/commit/c0948fb9fe71b6403ac08f84e4c6f30bdbea8e3a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle environments where process is not defined
+
+## 5.105.28
+
+### Patch Changes
+
+- [#7805](https://github.com/thirdweb-dev/js/pull/7805) [`621c1de`](https://github.com/thirdweb-dev/js/commit/621c1de62e486b8698d9bd38fabde73fef9f7de5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add ability to override button label for all payment widgets
+
+## 5.105.27
+
+### Patch Changes
+
+- [#7803](https://github.com/thirdweb-dev/js/pull/7803) [`fd4414b`](https://github.com/thirdweb-dev/js/commit/fd4414b451bf07d8a165f0dee9c71d2a1bea1812) Thanks [@MananTank](https://github.com/MananTank)! - Update `getTotalClaimedSupply` and `getTotalUnclaimedSupply` erc721 extensions to consider `startTokenId` if the contract has `startTokenId` set.
+
+- [#7789](https://github.com/thirdweb-dev/js/pull/7789) [`9a3ebe1`](https://github.com/thirdweb-dev/js/commit/9a3ebe1cb1e937d40477019c71e163cc1837a99e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add transaction hash to max wait time error
+
+- [#7785](https://github.com/thirdweb-dev/js/pull/7785) [`e5326c4`](https://github.com/thirdweb-dev/js/commit/e5326c43a9bf2aed665907760c48e43e2310cd74) Thanks [@alecananian](https://github.com/alecananian)! - Added `useSiweAuth` to the React Native exports
+
+- [#7774](https://github.com/thirdweb-dev/js/pull/7774) [`e1ad7da`](https://github.com/thirdweb-dev/js/commit/e1ad7daf5401c4ddd3661eceed15e8c4f481d28e) Thanks [@MananTank](https://github.com/MananTank)! - Fix `thirdweb/insight` import typescript error
+
+## 5.105.26
+
+### Patch Changes
+
+- [#7775](https://github.com/thirdweb-dev/js/pull/7775) [`b86d520`](https://github.com/thirdweb-dev/js/commit/b86d520f3c05c4c3741d9f3071f40d13cebe24dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle mobile deeplinks for transactions via WalletConnect
+
+- [#7767](https://github.com/thirdweb-dev/js/pull/7767) [`e4ba47b`](https://github.com/thirdweb-dev/js/commit/e4ba47bd1e4bc5aee4ca1e0bedd583dc9e33d30e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix decodeFunction and decodeError functions
+
+- [#7766](https://github.com/thirdweb-dev/js/pull/7766) [`58787a2`](https://github.com/thirdweb-dev/js/commit/58787a28f362d168a72a6eb462930ad7de4b87f2) Thanks [@alecananian](https://github.com/alecananian)! - Fixed `useContractEvents` persisting previous data when filters change
+
+## 5.105.25
+
+### Patch Changes
+
+- [#7761](https://github.com/thirdweb-dev/js/pull/7761) [`d35b6fc`](https://github.com/thirdweb-dev/js/commit/d35b6fc1fe320c55cddfe3080dc5b66a3d605514) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix CheckoutWidget transaction invalidation and fix nft filtering in connect UI
+
+## 5.105.24
+
+### Patch Changes
+
+- [#7745](https://github.com/thirdweb-dev/js/pull/7745) [`c717eaa`](https://github.com/thirdweb-dev/js/commit/c717eaadae09c65b2f651145f1279ba876c90ace) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Faster payment widget quote discovery
+
+## 5.105.23
+
+### Patch Changes
+
+- [#7746](https://github.com/thirdweb-dev/js/pull/7746) [`4f38198`](https://github.com/thirdweb-dev/js/commit/4f38198ae110bf89479109e3e099ea94ddfd774e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve walletConnect connection and auto-connection flow
+
+## 5.105.22
+
+### Patch Changes
+
+- [#7732](https://github.com/thirdweb-dev/js/pull/7732) [`1cbbbc3`](https://github.com/thirdweb-dev/js/commit/1cbbbc3c12763c9fae3af8a7fe6490383e0cad0d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve EIP5792 support
+
+- [#7729](https://github.com/thirdweb-dev/js/pull/7729) [`58dbe90`](https://github.com/thirdweb-dev/js/commit/58dbe90b930a215684871ff45e2dd9abd1d1f1d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to onchain nonce in 7702 execution
+
+- [#7710](https://github.com/thirdweb-dev/js/pull/7710) [`e92d8f9`](https://github.com/thirdweb-dev/js/commit/e92d8f921a4b620e731e8916e4c145711c87f5fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add contract filtering to Insight.getOwnedNFTs and getOwnedTokens
+
+- Updated dependencies [[`e92d8f9`](https://github.com/thirdweb-dev/js/commit/e92d8f921a4b620e731e8916e4c145711c87f5fa)]:
+  - @thirdweb-dev/insight@1.1.1
+
+## 5.105.21
+
+### Patch Changes
+
+- [#7708](https://github.com/thirdweb-dev/js/pull/7708) [`3c8e444`](https://github.com/thirdweb-dev/js/commit/3c8e444fe6f4bf90c8d2eaaa1b4481b683f41ec6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ecosystem wallet connection with default chains
+
+- [#7711](https://github.com/thirdweb-dev/js/pull/7711) [`adec6be`](https://github.com/thirdweb-dev/js/commit/adec6be844f8e35d770e2d7f491117cea4a34548) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix showQrModal option not respected on desktop web
+
+## 5.105.20
+
+### Patch Changes
+
+- [#7693](https://github.com/thirdweb-dev/js/pull/7693) [`cf22c23`](https://github.com/thirdweb-dev/js/commit/cf22c23b45e86adbe50a2b7b40e7a283f5222941) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize 4337 signature performance
+
+## 5.105.19
+
+### Patch Changes
+
+- [#7683](https://github.com/thirdweb-dev/js/pull/7683) [`08955f1`](https://github.com/thirdweb-dev/js/commit/08955f1588c749104c12db51d974c7eebc258efd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose getAuthToken from inapp and ecosystem wallets
+
+- [#7681](https://github.com/thirdweb-dev/js/pull/7681) [`7562952`](https://github.com/thirdweb-dev/js/commit/756295241a7168d4c62bdc146ffb3352859e58cf) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Bridge.status: Adds optional transactionId parameter
+
 ## 5.105.18
 
 ### Patch Changes
@@ -6005,7 +6108,7 @@
 
 - [#2933](https://github.com/thirdweb-dev/js/pull/2933) [`8e0a3ce`](https://github.com/thirdweb-dev/js/commit/8e0a3cea1e354f45e7aa107851909e7d57604f0d) Thanks [@MananTank](https://github.com/MananTank)! - ### Integrate Pay Modal with TransactionButton
 
-  By default, the Pay Modal is integrated with the `TransactionButton` component. If the user performs a transaction and does not have enough funds to execute it and if [thirdweb pay](https://portal.thirdweb.com/connect/pay/buy-with-crypto) is available for that blockchain, the Pay Modal will be displayed to allow user to buy the required amount of tokens
+  By default, the Pay Modal is integrated with the `TransactionButton` component. If the user performs a transaction and does not have enough funds to execute it and if [thirdweb Payments](https://portal.thirdweb.com/payments) is available for that blockchain, the Pay Modal will be displayed to allow user to buy the required amount of tokens
 
   A new prop `payModal` is added to the `TransactionButton` component customize the Pay Modal UI or disable it entirely
 

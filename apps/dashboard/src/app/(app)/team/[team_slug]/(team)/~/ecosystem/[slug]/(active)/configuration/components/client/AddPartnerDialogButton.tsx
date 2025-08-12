@@ -2,7 +2,7 @@
 
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import type { Ecosystem } from "@/api/ecosystems";
+import type { Ecosystem } from "@/api/team/ecosystems";
 import { Button } from "@/components/ui/button";
 
 export function AddPartnerDialogButton(props: {

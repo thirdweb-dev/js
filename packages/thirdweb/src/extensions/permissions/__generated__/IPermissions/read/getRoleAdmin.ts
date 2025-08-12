@@ -16,8 +16,8 @@ export type GetRoleAdminParams = {
 export const FN_SELECTOR = "0x248a9ca3" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "role",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

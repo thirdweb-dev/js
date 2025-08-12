@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0xe9523c97" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "address[]",
     name: "admins",
+    type: "address[]",
   },
 ] as const;
 

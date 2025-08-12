@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { getFaucetClaimAmount } from "../../../../../../api/testnet-faucet/claim/claim-amount";
+import { getFaucetClaimAmount } from "@/utils/faucet";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { FaucetButton } from "../client/FaucetButton";
 import { GiftIcon } from "../icons/GiftIcon";

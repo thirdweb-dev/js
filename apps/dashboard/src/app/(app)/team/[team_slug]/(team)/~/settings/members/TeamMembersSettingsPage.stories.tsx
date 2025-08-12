@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import type { TeamAccountRole, TeamMember } from "@/api/team-members";
+import type { TeamAccountRole, TeamMember } from "@/api/team/team-members";
 import { teamStub } from "@/storybook/stubs";
 import { BadgeContainer, storybookThirdwebClient } from "@/storybook/utils";
 import { ManageMembersSection } from "./ManageMembersSection";

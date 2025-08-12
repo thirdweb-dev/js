@@ -1,7 +1,7 @@
 import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getTeams } from "@/api/team";
+import { getTeams } from "@/api/team/get-team";
 import { NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/public-envs";
 import {
   DISABLE_FAUCET_CHAIN_IDS,

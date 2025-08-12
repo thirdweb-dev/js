@@ -25,20 +25,20 @@ export type HashProposalParams = {
 export const FN_SELECTOR = "0xc59057e4" as const;
 const FN_INPUTS = [
   {
-    type: "address[]",
     name: "targets",
+    type: "address[]",
   },
   {
-    type: "uint256[]",
     name: "values",
+    type: "uint256[]",
   },
   {
-    type: "bytes[]",
     name: "calldatas",
+    type: "bytes[]",
   },
   {
-    type: "bytes32",
     name: "descriptionHash",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

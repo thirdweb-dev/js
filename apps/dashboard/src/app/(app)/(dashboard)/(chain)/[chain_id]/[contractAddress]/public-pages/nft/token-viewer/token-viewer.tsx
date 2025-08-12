@@ -269,7 +269,6 @@ function TokenInfoUI(props: {
                     className="h-auto py-0 text-sm"
                     client={props.contract.client}
                     iconClassName="hidden"
-                    preventOpenOnFocus
                   />
                 </div>
               ) : (
@@ -339,7 +338,6 @@ function TokenInfoUI(props: {
             {props.type === "erc1155" && (
               <div className="border-t border-dashed pt-2">
                 <TabButtons
-                  tabClassName="!text-sm"
                   tabs={[
                     {
                       isActive: tab === "traits",

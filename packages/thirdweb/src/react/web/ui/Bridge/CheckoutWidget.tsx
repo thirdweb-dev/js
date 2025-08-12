@@ -29,6 +29,9 @@ import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type CheckoutWidgetProps = {
+  /**
+   * Customize the supported tokens that users can pay with.
+   */
   supportedTokens?: SupportedTokens;
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -186,6 +189,11 @@ export type CheckoutWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -210,11 +218,43 @@ type UIOptionsResult =
  * @example
  * ### Default configuration
  *
- * By default, the `CheckoutWidget` component will allows users to fund their wallets with crypto or fiat on any of the supported chains..
+ * The `CheckoutWidget` component allows user to pay a given wallet for any product or service. You can register webhooks to get notified for every purchase done via the widget.
  *
  * ```tsx
  * <CheckoutWidget
  *   client={client}
+ *   chain={base}
+ *   amount="0.01" // in native tokens (ETH), pass tokenAddress to charge in a specific token (USDC, USDT, etc.)
+ *   seller="0x123...abc" // the wallet address that will receive the payment
+ *   name="Premium Course"
+ *   description="Complete guide to web3 development"
+ *   image="/course-thumbnail.jpg"
+ *   onSuccess={() => {
+ *     alert("Purchase successful!");
+ *   }}
+ *  />
+ * ```
+ *
+ * ### Customize the supported tokens
+ *
+ * You can customize the supported tokens that users can pay with by passing a `supportedTokens` object to the `CheckoutWidget` component.
+ *
+ * ```tsx
+ * <CheckoutWidget
+ *   client={client}
+ *   chain={arbitrum}
+ *   amount="0.01"
+ *   seller="0x123...abc"
+ *   // user will only be able to pay with these tokens
+ *   supportedTokens={{
+ *     [8453]: [
+ *       {
+ *         address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ *         name: "USDC",
+ *         symbol: "USDC",
+ *       },
+ *     ],
+ *   }}
  *  />
  * ```
  *
@@ -225,6 +265,9 @@ type UIOptionsResult =
  * ```tsx
  * <CheckoutWidget
  *   client={client}
+ *   chain={arbitrum}
+ *   amount="0.01"
+ *   seller="0x123...abc"
  *   theme={darkTheme({
  *     colors: {
  *       modalBg: "red",
@@ -253,6 +296,9 @@ type UIOptionsResult =
  * ```tsx
  * <CheckoutWidget
  *   client={client}
+ *   chain={arbitrum}
+ *   amount="0.01"
+ *   seller="0x123...abc"
  *   connectOptions={{
  *     connectModal: {
  *       size: 'compact',
@@ -310,6 +356,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
           },
           mode: "direct_payment",
           currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
           paymentInfo: {
             amount: props.amount,
             feePayer: props.feePayer === "seller" ? "receiver" : "sender",
@@ -369,6 +416,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         receiverAddress={props.seller}
         showThirdwebBranding={props.showThirdwebBranding}
         uiOptions={bridgeDataQuery.data.data}
+        supportedTokens={props.supportedTokens}
       />
     );
   }

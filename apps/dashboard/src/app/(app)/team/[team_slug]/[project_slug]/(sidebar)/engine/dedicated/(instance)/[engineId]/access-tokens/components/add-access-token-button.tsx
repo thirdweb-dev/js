@@ -1,111 +1,102 @@
-import {
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { Text } from "chakra/text";
-import { CirclePlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useEngineCreateAccessToken } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 
-interface AddAccessTokenButtonProps {
-  instanceUrl: string;
-  authToken: string;
-}
-
-export const AddAccessTokenButton: React.FC<AddAccessTokenButtonProps> = ({
+export function AddAccessTokenButton({
   instanceUrl,
   authToken,
-}) => {
-  const [accessToken, setAccessToken] = useState<string>("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: createAccessToken } = useEngineCreateAccessToken({
+}: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const [accessToken, setAccessToken] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const createAccessToken = useEngineCreateAccessToken({
     authToken,
     instanceUrl,
   });
-
-  const [hasStoredToken, setHasStoredToken] = useState<boolean>(false);
-
-  const { onSuccess, onError } = useTxNotifications(
-    "Access token created successfully.",
-    "Failed to create Access Token.",
-  );
+  const [hasStoredToken, setHasStoredToken] = useState(false);
 
   return (
     <>
       <Button
-        colorScheme="primary"
-        leftIcon={<CirclePlusIcon className="size-6" />}
+        className="gap-2"
         onClick={() => {
-          createAccessToken(undefined, {
+          createAccessToken.mutate(undefined, {
             onError: (error) => {
-              onError(error);
+              toast.error("Failed to create access token", {
+                description: parseError(error),
+              });
               console.error(error);
             },
             onSuccess: (response) => {
-              onSuccess();
+              toast.success("Access token created successfully");
               setAccessToken(response.accessToken);
-              onOpen();
+              setIsOpen(true);
             },
           });
         }}
-        size="sm"
-        variant="ghost"
-        w="fit-content"
       >
+        {createAccessToken.isPending ? (
+          <Spinner className="size-4" />
+        ) : (
+          <PlusIcon className="size-4" />
+        )}
         Create Access Token
       </Button>
 
-      <Modal
-        closeOnEsc={false}
-        closeOnOverlayClick={false}
-        isCentered
-        isOpen={isOpen}
-        onClose={onClose}
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          setIsOpen(open);
+          if (!open) setAccessToken("");
+        }}
       >
-        <ModalOverlay />
-        <ModalContent className="!bg-background rounded-lg border border-border">
-          <ModalHeader>Access token</ModalHeader>
-          <ModalBody as={Flex} flexDir="column" gap={4}>
-            <div className="flex flex-col gap-4">
-              <PlainTextCodeBlock code={accessToken} />
-              <Text color="red.500">
-                This access token will not be shown again.
-              </Text>
-              <CheckboxWithLabel>
-                <Checkbox
-                  checked={hasStoredToken}
-                  onCheckedChange={(val) => setHasStoredToken(!!val)}
-                />
-                <span>I have securely stored this access token.</span>
-              </CheckboxWithLabel>
-            </div>
-          </ModalBody>
+        <DialogContent className="p-0 gap-0 overflow-hidden">
+          <DialogHeader className="p-4 lg:p-6">
+            <DialogTitle>Access token</DialogTitle>
+            <DialogDescription>
+              This access token will not be shown again.
+            </DialogDescription>
+          </DialogHeader>
 
-          <ModalFooter as={Flex} gap={3}>
+          <div className="space-y-4 overflow-hidden px-4 lg:px-6">
+            <PlainTextCodeBlock code={accessToken} className="max-w-full" />
+            <CheckboxWithLabel>
+              <Checkbox
+                checked={hasStoredToken}
+                onCheckedChange={(val) => setHasStoredToken(!!val)}
+              />
+              <span>I have securely stored this access token.</span>
+            </CheckboxWithLabel>
+          </div>
+
+          <div className="p-4 lg:p-6 border-t bg-card mt-8 flex justify-end">
             <Button
-              colorScheme="primary"
-              isDisabled={!hasStoredToken}
+              disabled={!hasStoredToken}
               onClick={() => {
-                onClose();
+                setIsOpen(false);
                 setAccessToken("");
               }}
-              type="submit"
             >
               Done
             </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
-};
+}

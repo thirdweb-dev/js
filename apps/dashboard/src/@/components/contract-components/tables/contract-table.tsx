@@ -6,7 +6,7 @@ import Link from "next/link";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import type { ProjectContract } from "@/api/getProjectContracts";
+import type { ProjectContract } from "@/api/project/getProjectContracts";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { NetworkSelectDropdown } from "@/components/contract-components/tables/NetworkSelectDropdown";
 import { Badge } from "@/components/ui/badge";

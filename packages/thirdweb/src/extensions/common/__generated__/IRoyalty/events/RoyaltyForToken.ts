@@ -42,8 +42,8 @@ export function royaltyForTokenEvent(
   filters: RoyaltyForTokenEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RoyaltyForToken(uint256 indexed tokenId, address indexed royaltyRecipient, uint256 royaltyBps)",
-    filters,
   });
 }

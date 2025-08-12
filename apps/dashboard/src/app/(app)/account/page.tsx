@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeams } from "@/api/team";
-import { getMemberByAccountId } from "@/api/team-members";
+import { getTeams } from "@/api/team/get-team";
+import { getMemberByAccountId } from "@/api/team/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
-import { getValidAccount } from "./settings/getAccount";
 
 export default async function Page() {
   const [authToken, account, teams] = await Promise.all([

@@ -13,24 +13,23 @@ import {
 } from "@/components/ui/sheet";
 import { SharedMetadataForm } from "./shared-metadata-form";
 
-interface NFTSharedMetadataButtonProps {
+export function NFTSharedMetadataButton({
+  contract,
+  isLoggedIn,
+}: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
-
-export const NFTSharedMetadataButton: React.FC<
-  NFTSharedMetadataButtonProps
-> = ({ contract, isLoggedIn, ...restButtonProps }) => {
+}) {
   const [open, setOpen] = useState(false);
   return (
     <MinterOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button className="gap-2" variant="primary" {...restButtonProps}>
+          <Button className="gap-2" variant="primary">
             <PlusIcon className="size-5" /> Set NFT Metadata
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
+        <SheetContent className="!w-full lg:!max-w-2xl overflow-auto">
           <SheetHeader>
             <SheetTitle className="text-left">Set NFT Metadata</SheetTitle>
           </SheetHeader>
@@ -43,4 +42,4 @@ export const NFTSharedMetadataButton: React.FC<
       </Sheet>
     </MinterOnly>
   );
-};
+}

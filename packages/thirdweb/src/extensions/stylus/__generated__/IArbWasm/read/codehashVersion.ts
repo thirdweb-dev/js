@@ -16,14 +16,14 @@ export type CodehashVersionParams = {
 export const FN_SELECTOR = "0xd70c0ca7" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "codehash",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint16",
     name: "version",
+    type: "uint16",
   },
 ] as const;
 

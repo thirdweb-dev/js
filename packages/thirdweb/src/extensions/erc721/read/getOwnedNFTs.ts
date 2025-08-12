@@ -78,6 +78,7 @@ async function getOwnedNFTsFromInsight(
       chains: [options.contract.chain],
       client: options.contract.client,
       ownerAddress: options.owner,
+      contractAddresses: [options.contract.address],
       queryOptions: {
         limit,
         page,

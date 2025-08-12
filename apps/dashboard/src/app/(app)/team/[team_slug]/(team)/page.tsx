@@ -2,8 +2,8 @@ import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
 import { getWalletConnections } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProjects, type Project } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProjects, type Project } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
@@ -38,7 +38,10 @@ export default async function Page(props: {
   });
 
   const projects = await getProjects(params.team_slug);
-  const projectsWithTotalWallets = await getProjectsWithAnalytics(projects);
+  const projectsWithTotalWallets = await getProjectsWithAnalytics(
+    projects,
+    authToken,
+  );
 
   return (
     <div className="flex grow flex-col">
@@ -64,6 +67,7 @@ export default async function Page(props: {
           <FreePlanUpsellBannerUI highlightPlan="growth" teamSlug={team.slug} />
         ) : (
           <DismissibleAlert
+            preserveState={true}
             description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
             localStorageId={`${team.id}-engines-alert`}
             title="Looking for Engines?"
@@ -78,6 +82,7 @@ export default async function Page(props: {
 
 async function getProjectsWithAnalytics(
   projects: Project[],
+  authToken: string,
 ): Promise<Array<ProjectWithAnalytics>> {
   return Promise.all(
     projects.map(async (project) => {
@@ -85,13 +90,16 @@ async function getProjectsWithAnalytics(
         const today = new Date();
         const thirtyDaysAgo = subDays(today, 30);
 
-        const data = await getWalletConnections({
-          from: thirtyDaysAgo,
-          period: "all",
-          projectId: project.id,
-          teamId: project.teamId,
-          to: today,
-        });
+        const data = await getWalletConnections(
+          {
+            from: thirtyDaysAgo,
+            period: "all",
+            projectId: project.id,
+            teamId: project.teamId,
+            to: today,
+          },
+          authToken,
+        );
 
         let uniqueWalletsConnected = 0;
         for (const d of data) {

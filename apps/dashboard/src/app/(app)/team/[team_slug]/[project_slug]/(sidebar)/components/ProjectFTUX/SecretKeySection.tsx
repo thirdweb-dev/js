@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { rotateSecretKeyClient } from "@/hooks/useApi";
 import { RotateSecretKeyButton } from "../../settings/ProjectGeneralSettingsPage";
 

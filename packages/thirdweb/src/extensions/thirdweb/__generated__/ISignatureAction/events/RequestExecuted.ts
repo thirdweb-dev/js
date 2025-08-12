@@ -42,8 +42,8 @@ export function requestExecutedEvent(
   filters: RequestExecutedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RequestExecuted(address indexed user, address indexed signer, (uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid, bytes data) _req)",
-    filters,
   });
 }

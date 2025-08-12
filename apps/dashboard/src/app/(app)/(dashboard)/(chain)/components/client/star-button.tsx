@@ -1,27 +1,13 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { StarIcon } from "lucide-react";
-import { useActiveAccount } from "thirdweb/react";
 import { apiServerProxy } from "@/actions/proxies";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useFavoriteChainIds } from "@/hooks/favorite-chains";
 import { cn } from "@/lib/utils";
-
-async function favoriteChains() {
-  const res = await apiServerProxy<{ data: string[] }>({
-    method: "GET",
-    pathname: "/v1/chains/favorites",
-  });
-
-  if (!res.ok) {
-    throw new Error(res.error);
-  }
-
-  const result = res.data;
-  return result.data ?? [];
-}
 
 async function addChainToFavorites(chainId: number) {
   const res = await apiServerProxy({
@@ -50,15 +36,6 @@ async function removeChainFromFavorites(chainId: number) {
 
   const result = res.data;
   return result?.data?.favorite;
-}
-
-export function useFavoriteChainIds() {
-  const address = useActiveAccount()?.address;
-  return useQuery({
-    enabled: !!address,
-    queryFn: () => favoriteChains(),
-    queryKey: ["favoriteChains", address],
-  });
 }
 
 export function StarButton(props: {

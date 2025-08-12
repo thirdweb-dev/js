@@ -1,125 +1,212 @@
-import { afterEach, beforeAll, describe, expect, it, test, vi } from "vitest";
-import {
-  ANVIL_CHAIN,
-  FORKED_ETHEREUM_CHAIN,
-} from "../../../test/src/chains.js";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
 import type { Wallet } from "../interfaces/wallet.js";
-import { getCapabilities } from "./get-capabilities.js";
-
-const SUPPORTED_RESPONSE = {
-  1: {
-    paymasterService: {
-      supported: true,
-    },
-    sessionKeys: {
-      supported: true,
-    },
-  },
-};
-
-const RAW_UNSUPPORTED_ERROR = {
-  code: -32601,
-  message: "some nonsense the wallet sends us about not supporting",
-};
-
-const UNSUPPORTED_RESPONSE_STRING = "does not support wallet_getCapabilities";
+import {
+  type GetCapabilitiesOptions,
+  getCapabilities,
+} from "./get-capabilities.js";
 
 const mocks = vi.hoisted(() => ({
-  injectedRequest: vi.fn(),
+  getCapabilities: vi.fn(),
 }));
 
-vi.mock("../injected/index.js", () => {
-  return {
-    getInjectedProvider: vi.fn().mockReturnValue({
-      request: mocks.injectedRequest,
-    }),
-  };
-});
-
-describe.sequential("injected wallet", async () => {
+describe.sequential("getCapabilities general", () => {
   const wallet: Wallet = createWallet(METAMASK);
-  describe.sequential("supported", () => {
-    beforeAll(() => {
-      mocks.injectedRequest.mockResolvedValue(SUPPORTED_RESPONSE);
-    });
 
-    afterEach(() => {
-      mocks.injectedRequest.mockClear();
-    });
-
-    test("without account should return no capabilities", async () => {
-      wallet.getAccount = vi.fn().mockReturnValue(undefined);
-
-      const capabilities = await getCapabilities({
-        wallet,
-      });
-
-      expect(mocks.injectedRequest).not.toHaveBeenCalled();
-      expect(capabilities).toEqual({
-        message:
-          "Can't get capabilities, no account connected for wallet: io.metamask",
-      });
-    });
-
-    test("with account should return capabilities", async () => {
-      wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
-
-      const capabilities = await getCapabilities({
-        wallet,
-      });
-
-      expect(mocks.injectedRequest).toHaveBeenCalledWith({
-        method: "wallet_getCapabilities",
-        params: [TEST_ACCOUNT_A.address],
-      });
-      expect(capabilities).toEqual(SUPPORTED_RESPONSE);
-    });
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
-  describe("unsupported", () => {
-    beforeAll(() => {
-      mocks.injectedRequest.mockRejectedValue(RAW_UNSUPPORTED_ERROR);
-    });
-
-    afterEach(() => {
-      mocks.injectedRequest.mockClear();
-    });
-
-    it("should return clean unsupported response", async () => {
-      wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
-      wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-      const capabilities = await getCapabilities({
-        wallet,
-      });
-
-      expect(mocks.injectedRequest).toHaveBeenCalledWith({
-        method: "wallet_getCapabilities",
-        params: [TEST_ACCOUNT_A.address],
-      });
-      if ("message" in capabilities) {
-        expect(capabilities.message).toContain(UNSUPPORTED_RESPONSE_STRING);
-      } else {
-        throw new Error("capabilities does not contain message");
-      }
-    });
-  });
-});
-
-describe.sequential("in-app wallet", async () => {
-  let wallet: Wallet = createWallet("inApp");
-
-  test("should return no support", async () => {
-    wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-    wallet.getAccount = vi.fn().mockReturnValue(TEST_ACCOUNT_A);
+  test("without account should return message", async () => {
+    wallet.getAccount = vi.fn().mockReturnValue(undefined);
 
     const capabilities = await getCapabilities({
       wallet,
     });
 
     expect(capabilities).toEqual({
+      message:
+        "Can't get capabilities, no account connected for wallet: io.metamask",
+    });
+  });
+
+  test("without getCapabilities support should fail", async () => {
+    wallet.getAccount = vi.fn().mockReturnValue({
+      ...TEST_ACCOUNT_A,
+      // no getCapabilities method
+    });
+
+    const promise = getCapabilities({
+      wallet,
+    });
+
+    await expect(promise).rejects.toMatchInlineSnapshot(
+      "[Error: Failed to get capabilities, wallet io.metamask does not support EIP-5792]",
+    );
+  });
+
+  test("should delegate to account.getCapabilities", async () => {
+    const mockResponse = {
+      [ANVIL_CHAIN.id]: {
+        paymasterService: {
+          supported: true,
+        },
+        sessionKeys: {
+          supported: true,
+        },
+      },
+    };
+
+    const mockAccount = {
+      ...TEST_ACCOUNT_A,
+      getCapabilities: mocks.getCapabilities.mockResolvedValue(mockResponse),
+    };
+
+    wallet.getAccount = vi.fn().mockReturnValue(mockAccount);
+
+    const result = await getCapabilities({
+      wallet,
+    });
+
+    expect(result).toEqual(mockResponse);
+    expect(mocks.getCapabilities).toHaveBeenCalledWith({
+      chainId: undefined,
+    });
+  });
+
+  test("should delegate to account.getCapabilities with chainId", async () => {
+    const mockResponse = {
+      paymasterService: {
+        supported: true,
+      },
+      sessionKeys: {
+        supported: true,
+      },
+    };
+
+    const mockAccount = {
+      ...TEST_ACCOUNT_A,
+      getCapabilities: mocks.getCapabilities.mockResolvedValue(mockResponse),
+    };
+
+    wallet.getAccount = vi.fn().mockReturnValue(mockAccount);
+
+    const result = await getCapabilities({
+      wallet,
+      chainId: ANVIL_CHAIN.id,
+    });
+
+    expect(result).toEqual(mockResponse);
+    expect(mocks.getCapabilities).toHaveBeenCalledWith({
+      chainId: ANVIL_CHAIN.id,
+    });
+  });
+});
+
+describe.sequential("injected wallet account.getCapabilities", () => {
+  // These tests verify the behavior of the getCapabilities method on injected wallet accounts
+  // The actual implementation would be in packages/thirdweb/src/wallets/injected/index.ts
+
+  test("should handle successful getCapabilities", async () => {
+    const mockProvider = {
+      request: vi.fn().mockResolvedValue({
+        [ANVIL_CHAIN.id]: {
+          paymasterService: {
+            supported: true,
+          },
+          sessionKeys: {
+            supported: true,
+          },
+        },
+      }),
+    };
+
+    // Mock what an injected account with getCapabilities would look like
+    const injectedAccount = {
+      ...TEST_ACCOUNT_A,
+      getCapabilities: async (_options: any) => {
+        // This mimics the implementation in injected/index.ts
+        const response = await mockProvider.request({
+          method: "wallet_getCapabilities",
+          params: [injectedAccount.address],
+        });
+        return response;
+      },
+    };
+
+    const wallet: Wallet = createWallet(METAMASK);
+    wallet.getAccount = vi.fn().mockReturnValue(injectedAccount);
+
+    const result = await getCapabilities({
+      wallet,
+    });
+
+    expect(result).toEqual({
+      [ANVIL_CHAIN.id]: {
+        paymasterService: {
+          supported: true,
+        },
+        sessionKeys: {
+          supported: true,
+        },
+      },
+    });
+    expect(mockProvider.request).toHaveBeenCalledWith({
+      method: "wallet_getCapabilities",
+      params: [TEST_ACCOUNT_A.address],
+    });
+  });
+
+  test("should handle provider errors", async () => {
+    const mockProvider = {
+      request: vi.fn().mockRejectedValue({
+        code: -32601,
+        message: "some nonsense the wallet sends us about not supporting",
+      }),
+    };
+
+    const injectedAccount = {
+      ...TEST_ACCOUNT_A,
+      getCapabilities: async (_options: any) => {
+        try {
+          return await mockProvider.request({
+            method: "wallet_getCapabilities",
+            params: [injectedAccount.address],
+          });
+        } catch {
+          return {
+            message: `io.metamask does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.`,
+          };
+        }
+      },
+    };
+
+    const wallet: Wallet = createWallet(METAMASK);
+    wallet.getAccount = vi.fn().mockReturnValue(injectedAccount);
+
+    const result = await getCapabilities({
+      wallet,
+    });
+
+    expect(result).toEqual({
+      message:
+        "io.metamask does not support wallet_getCapabilities, reach out to them directly to request EIP-5792 support.",
+    });
+  });
+});
+
+describe.sequential("in-app wallet", () => {
+  const wallet: Wallet = createWallet("inApp");
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("should delegate to in-app wallet getCapabilities implementation", async () => {
+    const mockResponse = {
       [ANVIL_CHAIN.id]: {
         atomic: {
           status: "unsupported",
@@ -128,134 +215,28 @@ describe.sequential("in-app wallet", async () => {
           supported: false,
         },
       },
-    });
-  });
+    };
 
-  test("with no account should return no capabilities", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(undefined);
+    const inAppAccount = {
+      ...TEST_ACCOUNT_A,
+      getCapabilities: async (_options: GetCapabilitiesOptions) => {
+        // This would be the actual in-app wallet implementation
+        return mockResponse;
+      },
+    };
 
-    const capabilities = await getCapabilities({
+    wallet.getAccount = vi.fn().mockReturnValue(inAppAccount);
+
+    const result = await getCapabilities({
       wallet,
     });
 
-    expect(capabilities).toEqual({
-      message: "Can't get capabilities, no account connected for wallet: inApp",
-    });
+    expect(result).toEqual(mockResponse);
   });
 
-  describe.sequential("with smart account", async () => {
-    test("with sponsorGas should support paymasterService and atomicBatch", async () => {
-      wallet = createWallet("inApp", {
-        smartAccount: {
-          chain: ANVIL_CHAIN,
-          sponsorGas: true,
-        },
-      });
-
-      wallet.getAccount = vi.fn().mockReturnValue({
-        ...TEST_ACCOUNT_A,
-        sendBatchTransaction: vi.fn(),
-      });
-      wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-
-      const capabilities = await getCapabilities({
-        wallet,
-      });
-
-      expect(capabilities).toEqual({
-        [ANVIL_CHAIN.id]: {
-          atomic: {
-            status: "supported",
-          },
-          paymasterService: {
-            supported: true,
-          },
-        },
-      });
-    });
-
-    test("without sponsorGas should support atomicBatch", async () => {
-      wallet = createWallet("inApp", {
-        smartAccount: {
-          chain: ANVIL_CHAIN,
-          sponsorGas: false,
-        },
-      });
-      wallet.getAccount = vi.fn().mockReturnValue({
-        ...TEST_ACCOUNT_A,
-        sendBatchTransaction: vi.fn(),
-      });
-      wallet.getChain = vi.fn().mockReturnValue(ANVIL_CHAIN);
-
-      const capabilities = await getCapabilities({
-        wallet,
-      });
-
-      expect(capabilities).toEqual({
-        [ANVIL_CHAIN.id]: {
-          atomic: {
-            status: "supported",
-          },
-          paymasterService: {
-            supported: false,
-          },
-        },
-      });
-    });
-  });
-});
-
-describe.sequential("smart wallet", async () => {
-  let wallet: Wallet = createWallet("smart", {
-    chain: FORKED_ETHEREUM_CHAIN,
-    sponsorGas: true,
-  });
-  const smartAccount = {
-    ...TEST_ACCOUNT_A,
-    sendBatchTransaction: vi.fn(),
-  };
-
-  test("with no chain should return no capabilities", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(smartAccount);
-    wallet.getChain = vi.fn().mockReturnValue(undefined);
-
-    const capabilities = await getCapabilities({
-      wallet,
-    });
-
-    expect(capabilities).toEqual({
-      message:
-        "Can't get capabilities, no active chain found for wallet: smart",
-    });
-  });
-
-  test("with no account should return no capabilities", async () => {
-    wallet.getAccount = vi.fn().mockReturnValue(undefined);
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
-
-    const capabilities = await getCapabilities({
-      wallet,
-    });
-
-    expect(capabilities).toEqual({
-      message: "Can't get capabilities, no account connected for wallet: smart",
-    });
-  });
-
-  test("with sponsorGas should support paymasterService and atomicBatch", async () => {
-    wallet = createWallet("smart", {
-      chain: ANVIL_CHAIN,
-      sponsorGas: true,
-    });
-    wallet.getAccount = vi.fn().mockReturnValue(smartAccount);
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
-
-    const capabilities = await getCapabilities({
-      wallet,
-    });
-
-    expect(capabilities).toEqual({
-      [FORKED_ETHEREUM_CHAIN.id]: {
+  test("should handle smart account capabilities", async () => {
+    const mockResponse = {
+      [ANVIL_CHAIN.id]: {
         atomic: {
           status: "supported",
         },
@@ -263,32 +244,62 @@ describe.sequential("smart wallet", async () => {
           supported: true,
         },
       },
-    });
-  });
+    };
 
-  test("without sponsorGas should return atomicBatch", async () => {
-    wallet = createWallet("smart", {
-      chain: FORKED_ETHEREUM_CHAIN,
-      sponsorGas: false,
-    });
-    wallet.getChain = vi.fn().mockReturnValue(FORKED_ETHEREUM_CHAIN);
+    const smartAccount = {
+      ...TEST_ACCOUNT_A,
+      sendBatchTransaction: vi.fn(), // indicates it's a smart account
+      getCapabilities: async (_options: GetCapabilitiesOptions) => {
+        return mockResponse;
+      },
+    };
+
     wallet.getAccount = vi.fn().mockReturnValue(smartAccount);
 
-    const capabilities = await getCapabilities({
+    const result = await getCapabilities({
       wallet,
     });
 
-    expect(capabilities).toEqual({
-      [FORKED_ETHEREUM_CHAIN.id]: {
+    expect(result).toEqual(mockResponse);
+  });
+});
+
+describe.sequential("smart wallet", () => {
+  const wallet: Wallet = createWallet("smart", {
+    chain: ANVIL_CHAIN,
+    sponsorGas: true,
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("should delegate to smart wallet getCapabilities implementation", async () => {
+    const mockResponse = {
+      [ANVIL_CHAIN.id]: {
         atomic: {
           status: "supported",
         },
         paymasterService: {
-          supported: false,
+          supported: true,
         },
       },
+    };
+
+    const smartAccount = {
+      ...TEST_ACCOUNT_A,
+      sendBatchTransaction: vi.fn(),
+      getCapabilities: async (_options: GetCapabilitiesOptions) => {
+        return mockResponse;
+      },
+    };
+
+    wallet.getAccount = vi.fn().mockReturnValue(smartAccount);
+
+    const result = await getCapabilities({
+      wallet,
     });
+
+    expect(result).toEqual(mockResponse);
   });
 });
-
-// TODO: Coinbase SDK Tests

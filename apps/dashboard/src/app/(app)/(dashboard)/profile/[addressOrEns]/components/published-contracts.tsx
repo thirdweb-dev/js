@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { fetchPublishedContracts } from "@/components/contract-components/fetchPublishedContracts";
+import type { fetchPublishedContracts } from "@/api/contract/fetchPublishedContracts";
 import { ShowMoreButton } from "@/components/contract-components/tables/show-more-button";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PublishedContractTable } from "./PublishedContractTable";

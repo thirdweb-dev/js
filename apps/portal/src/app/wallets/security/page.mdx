@@ -5,15 +5,15 @@ import EcosystemScoped from "./assets/ecosystem-scoped.svg";
 
 export const metadata = createMetadata({
 	image: {
-		title: "In App wallet and Ecosystem Security",
+		title: "Wallet Security",
 		icon: "wallets",
 	},
-	title: "thirdweb Wallet Security",
+	title: "Wallet Security & Architecture | thirdweb Documentation",
 	description:
 		"Learn how thirdweb protects your user's private keys across applications using nitro Enclaves",
 });
 
-# thirdweb Wallet Security
+# Wallet Security & Architecture
 
 ## Wallet Creation
 
@@ -32,21 +32,16 @@ When a user signs into an application using their email or social logins for the
 - The wallet's private key never exists in an unencrypted form outside of the enclave.
 - All sensitive operations, such as transaction signing, occur within the enclave, ensuring the wallet's security.
 
-## Wallet Usage
-
 ### General Usage
 
 - When users interact with their wallet via the enclave, all communications are encrypted and only the legitimate user can access their wallet.
 - All traffic is encrypted with TLS and HSTS. Services are run in private VPCs on AWS and accessible only from a single entry point via our Cloudflare DNS.
-- Applications can [link multiple authentication methods](/connect/in-app-wallet/guides/link-multiple-profiles) to the same wallet. Any of these methods can be used to authenticate into the users wallet.
+- Applications can [link multiple authentication methods](/wallets/link-profiles) to the same wallet. Any of these methods can be used to authenticate into the users wallet.
 
 ### Ecosystem Usage
 
 Ecosystem wallets are controlled by the ecosystem owner. Ecosystem owners are able to specify usage policies for their partners and developers which restricts what they can do with the wallet. Unlike the shamir secret sharing model, the enclave wallet model ensures that the private key is never reconstructed on the client. This ensures no-one can extract the private key from the client, including other developers in the ecosystem. Moreover, it also means that partners and developers must submit the request to the enclave which would be able to verify the request and block requests that are out of scope or denied by the ecosystem owner.  
  
-## Scopes
-
-
 ### In App Wallets
 
 In-App Wallets are scoped to applications per Client ID. If users use the same email to sign in to a different application using In-App Wallets, the application will manage an entirely different wallet.

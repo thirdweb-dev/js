@@ -110,7 +110,6 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
                 </SheetHeader>
                 <AirdropUpload
                   client={contract.client}
-                  onClose={() => setOpen(false)}
                   setAirdrop={(value) =>
                     setValue("addresses", value, { shouldDirty: true })
                   }

@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { CreateSupportCase } from "../_components/CreateSupportCase";
 
 export default async function CreatePage(props: {

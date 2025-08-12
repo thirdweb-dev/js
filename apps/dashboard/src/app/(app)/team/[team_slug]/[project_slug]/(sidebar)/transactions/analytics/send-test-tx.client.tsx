@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import * as z from "zod";
 import { engineCloudProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
@@ -292,7 +292,7 @@ export function SendTestTransaction(props: {
 
   return (
     <div className="mt-3 w-full rounded-md border bg-background p-6">
-      <TryItOut />
+      <TryItOut useEngineAPI={false} />
       <div className="mt-6 flex flex-col gap-2 md:flex-row md:justify-end md:gap-2">
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
@@ -314,6 +314,7 @@ export function SendTestTransaction(props: {
                 `/team/${props.teamSlug}/${props.project.slug}/transactions`,
               );
             } else {
+              localStorage.setItem("engineFtuxCompleted", "true");
               router.refresh();
             }
           }}

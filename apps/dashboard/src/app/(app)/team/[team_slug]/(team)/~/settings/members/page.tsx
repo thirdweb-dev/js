@@ -1,10 +1,10 @@
 import { notFound, redirect } from "next/navigation";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
-import { getTeamInvites } from "@/api/team-invites";
-import { getMembers } from "@/api/team-members";
+import { getTeamBySlug } from "@/api/team/get-team";
+import { getTeamInvites } from "@/api/team/team-invites";
+import { getMembers } from "@/api/team/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getValidAccount } from "../../../../../../account/settings/getAccount";
 import { getRecommendedMembers } from "./getRecommendedMembers";
 import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
 

@@ -19,14 +19,14 @@ export type GetPublisherProfileUriParams = {
 export const FN_SELECTOR = "0x4f781675" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "publisher",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "string",
     name: "uri",
+    type: "string",
   },
 ] as const;
 

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { FooterLinksSection } from "../components/footer/FooterLinksSection";
 

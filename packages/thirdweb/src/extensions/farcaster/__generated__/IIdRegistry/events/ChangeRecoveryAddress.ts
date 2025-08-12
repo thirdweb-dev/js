@@ -42,8 +42,8 @@ export function changeRecoveryAddressEvent(
   filters: ChangeRecoveryAddressEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ChangeRecoveryAddress(uint256 indexed id, address indexed recovery)",
-    filters,
   });
 }

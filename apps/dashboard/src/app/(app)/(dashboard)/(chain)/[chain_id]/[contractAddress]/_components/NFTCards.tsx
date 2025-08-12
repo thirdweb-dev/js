@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { type NFT, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import type { OwnedNFT } from "@/lib/wallet/nfts/types";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../_utils/contract-page-path";
 
@@ -27,7 +28,7 @@ const dummyMetadata: (idx: number) => NFTWithContract = (idx) => ({
 });
 
 interface NFTCardsProps {
-  nfts: Array<NFTWithContract>;
+  nfts: Array<OwnedNFT & { chainId: number }>;
   isPending: boolean;
   allNfts?: boolean;
   projectMeta: ProjectMeta | undefined;

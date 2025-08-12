@@ -2,6 +2,7 @@ import { AsteriskIcon, InfoIcon } from "lucide-react";
 import type React from "react";
 import { Label } from "@/components/ui/label";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "../../lib/utils";
 
 export function FormFieldSetup(props: {
   htmlFor?: string;
@@ -10,13 +11,22 @@ export function FormFieldSetup(props: {
   children: React.ReactNode;
   tooltip?: React.ReactNode;
   isRequired: boolean;
+  labelClassName?: string;
+  labelContainerClassName?: string;
   helperText?: React.ReactNode;
   className?: string;
 }) {
   return (
     <div className={props.className}>
-      <div className="mb-2 inline-flex items-center gap-1">
-        <Label htmlFor={props.htmlFor}>{props.label}</Label>
+      <div
+        className={cn(
+          "mb-2 inline-flex items-center gap-1",
+          props.labelContainerClassName,
+        )}
+      >
+        <Label htmlFor={props.htmlFor} className={props.labelClassName}>
+          {props.label}
+        </Label>
 
         {props.isRequired && (
           <AsteriskIcon className="size-3.5 text-destructive-text" />

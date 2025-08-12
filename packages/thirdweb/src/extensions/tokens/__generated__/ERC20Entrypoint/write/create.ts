@@ -17,7 +17,7 @@ export type CreateParams = WithOverrides<{
     type: "tuple";
     name: "createParams";
     components: [
-      { type: "address"; name: "referrer" },
+      { type: "address"; name: "developer" },
       { type: "bytes32"; name: "salt" },
       { type: "bytes"; name: "data" },
       { type: "bytes"; name: "hookData" },
@@ -37,7 +37,7 @@ const FN_INPUTS = [
     components: [
       {
         type: "address",
-        name: "referrer",
+        name: "developer",
       },
       {
         type: "bytes32",

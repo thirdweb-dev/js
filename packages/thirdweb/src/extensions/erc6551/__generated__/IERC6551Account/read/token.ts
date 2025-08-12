@@ -8,16 +8,16 @@ export const FN_SELECTOR = "0xfc0c546a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "chainId",
-  },
-  {
-    type: "address",
-    name: "tokenContract",
-  },
-  {
     type: "uint256",
+  },
+  {
+    name: "tokenContract",
+    type: "address",
+  },
+  {
     name: "tokenId",
+    type: "uint256",
   },
 ] as const;
 

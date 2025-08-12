@@ -3,7 +3,7 @@
 import { CrownIcon, LockIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

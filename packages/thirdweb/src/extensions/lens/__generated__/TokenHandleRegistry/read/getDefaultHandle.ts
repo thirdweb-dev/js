@@ -19,8 +19,8 @@ export type GetDefaultHandleParams = {
 export const FN_SELECTOR = "0xe524488d" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "profileId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

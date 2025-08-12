@@ -1,12 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import {
-  ChevronDownIcon,
-  MenuIcon,
-  MessageCircleIcon,
-  TableOfContentsIcon,
-} from "lucide-react";
+import { ChevronDownIcon, MenuIcon, TableOfContentsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ChatButton } from "../components/AI/chat-button";
 import { GithubIcon } from "../components/Document/GithubButtonLink";
 import { CustomAccordion } from "../components/others/CustomAccordion";
 import { ThemeSwitcher } from "../components/others/theme/ThemeSwitcher";
@@ -51,6 +47,10 @@ const links = [
     href: "/tokens",
     name: "Tokens",
   },
+  {
+    href: "/insight",
+    name: "Insight",
+  },
 ];
 
 const toolLinks = [
@@ -82,7 +82,7 @@ export const connectLinks: Array<{
   icon: React.FC<{ className?: string }>;
 }> = [
   {
-    href: "/connect",
+    href: "/wallets",
     icon: TableOfContentsIcon,
     name: "Overview",
   },
@@ -120,6 +120,10 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
+    href: "https://api.thirdweb.com/reference",
+    name: "HTTP API",
+  },
+  {
     href: "https://insight.thirdweb.com/reference",
     name: "Insight",
   },
@@ -134,6 +138,21 @@ const apisLinks = [
   {
     href: "/bundler",
     name: "Bundler",
+  },
+];
+
+const aiLinks = [
+  {
+    href: "/ai/chat",
+    name: "Chat API",
+  },
+  {
+    href: "/ai/mcp",
+    name: "MCP",
+  },
+  {
+    href: "/ai/llm-txt",
+    name: "LLMs.txt",
   },
 ];
 
@@ -227,22 +246,13 @@ export function Header() {
           </div>
 
           <div className="hidden xl:block">
-            <Button asChild>
-              <Link href="/chat">
-                <MessageCircleIcon className="mr-2 size-4" />
-                Ask AI
-              </Link>
-            </Button>
+            <ChatButton />
           </div>
 
           <div className="flex items-center gap-1 xl:hidden">
             <ThemeSwitcher className="border-none bg-transparent" />
             <DocSearch variant="icon" />
-            <Button className="p-2" asChild variant="ghost">
-              <Link href="/chat">
-                <MessageCircleIcon className="size-6" />
-              </Link>
-            </Button>
+            <ChatButton />
             <Button
               className="p-2"
               onClick={() => setShowBurgerMenu(!showBurgerMenu)}
@@ -271,7 +281,7 @@ export function Header() {
                   }}
                 >
                   <NavLink href={link.href} name={link.name} />
-                  {pathname.includes(link.href) && (
+                  {pathname.startsWith(link.href) && (
                     <div className="bg-violet-700 h-[2px] inset-x-0 rounded-full absolute -bottom-1" />
                   )}
                 </li>
@@ -281,6 +291,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <div className="px-1">
+            <DropdownLinks
+              category="AI"
+              links={aiLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
+          </div>
           <div className="px-1">
             <DropdownLinks
               category="SDKs"
@@ -339,12 +356,24 @@ export function Header() {
             </div>
 
             <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-lg">AI</h3>
+              {aiLinks.map((link) => (
+                <NavLink
+                  href={link.href}
+                  key={link.name}
+                  name={link.name}
+                  onClick={() => setShowBurgerMenu(false)}
+                />
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-4">
               <h3 className="font-semibold text-lg">SDKs</h3>
               {sdkLinks.map((link) => (
                 <NavLink
                   href={link.href}
-                  icon={link.icon}
                   key={link.name}
+                  icon={link.icon}
                   name={link.name}
                   onClick={() => setShowBurgerMenu(false)}
                 />
@@ -497,7 +526,7 @@ function NavLink(props: {
     <Link
       className={clsx(
         "font-medium text-base transition-colors hover:text-foreground xl:text-sm",
-        pathname.includes(props.href)
+        pathname.startsWith(props.href)
           ? "text-foreground"
           : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",

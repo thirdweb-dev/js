@@ -9,8 +9,8 @@ import {
   reportOnboardingMembersUpsellButtonClicked,
   reportOnboardingMembersUpsellPlanSelected,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
-import { PricingCard } from "@/components/blocks/pricing-card";
+import type { Team } from "@/api/team/get-team";
+import { PricingCard } from "@/components/billing/pricing-card";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {

@@ -51,23 +51,30 @@ function InAppWalletsSummaryInner(props: {
 async function AsyncInAppWalletsSummary(props: {
   teamId: string;
   projectId: string;
+  authToken: string;
 }) {
-  const { teamId, projectId } = props;
-  const allTimeStatsPromise = getInAppWalletUsage({
-    from: new Date(2022, 0, 1),
-    period: "all",
-    projectId,
-    teamId,
-    to: new Date(),
-  });
+  const { teamId, projectId, authToken } = props;
+  const allTimeStatsPromise = getInAppWalletUsage(
+    {
+      from: new Date(2022, 0, 1),
+      period: "all",
+      projectId,
+      teamId,
+      to: new Date(),
+    },
+    authToken,
+  );
 
-  const monthlyStatsPromise = getInAppWalletUsage({
-    from: subDays(new Date(), 30),
-    period: "month",
-    projectId,
-    teamId,
-    to: new Date(),
-  });
+  const monthlyStatsPromise = getInAppWalletUsage(
+    {
+      from: subDays(new Date(), 30),
+      period: "month",
+      projectId,
+      teamId,
+      to: new Date(),
+    },
+    authToken,
+  );
 
   const [allTimeStats, monthlyStats] = await Promise.all([
     allTimeStatsPromise,
@@ -86,6 +93,7 @@ async function AsyncInAppWalletsSummary(props: {
 export function InAppWalletsSummary(props: {
   teamId: string;
   projectId: string;
+  authToken: string;
 }) {
   return (
     <Suspense
@@ -100,6 +108,7 @@ export function InAppWalletsSummary(props: {
       <AsyncInAppWalletsSummary
         projectId={props.projectId}
         teamId={props.teamId}
+        authToken={props.authToken}
       />
     </Suspense>
   );

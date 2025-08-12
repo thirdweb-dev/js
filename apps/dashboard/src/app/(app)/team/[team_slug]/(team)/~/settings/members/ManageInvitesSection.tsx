@@ -6,8 +6,8 @@ import { EllipsisIcon, MailIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import type { Team } from "@/api/team";
-import type { TeamInvite } from "@/api/team-invites";
+import type { Team } from "@/api/team/get-team";
+import type { TeamInvite } from "@/api/team/team-invites";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

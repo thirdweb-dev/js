@@ -16,18 +16,18 @@ export type GetStakeInfoParams = {
 export const FN_SELECTOR = "0xc3453153" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "staker",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256[]",
     name: "_tokensStaked",
+    type: "uint256[]",
   },
   {
-    type: "uint256",
     name: "_rewards",
+    type: "uint256",
   },
 ] as const;
 

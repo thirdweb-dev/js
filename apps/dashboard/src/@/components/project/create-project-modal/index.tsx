@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";

@@ -40,8 +40,8 @@ export type SignerRemovedEventFilters = Partial<{
  */
 export function signerRemovedEvent(filters: SignerRemovedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event SignerRemoved(address indexed account, address indexed signer)",
-    filters,
   });
 }

@@ -1,4 +1,4 @@
-import type { Ecosystem } from "@/api/ecosystems";
+import type { Ecosystem } from "@/api/team/ecosystems";
 import {
   IntegrationPermissionsToggle,
   IntegrationPermissionsToggleSkeleton,

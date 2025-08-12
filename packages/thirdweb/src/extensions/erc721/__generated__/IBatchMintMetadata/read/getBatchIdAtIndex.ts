@@ -16,8 +16,8 @@ export type GetBatchIdAtIndexParams = {
 export const FN_SELECTOR = "0x2419f51b" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_index",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

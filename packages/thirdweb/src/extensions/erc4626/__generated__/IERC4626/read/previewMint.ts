@@ -16,8 +16,8 @@ export type PreviewMintParams = {
 export const FN_SELECTOR = "0xb3d7f6b9" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "shares",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

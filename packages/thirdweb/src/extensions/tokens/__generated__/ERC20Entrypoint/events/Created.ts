@@ -41,7 +41,7 @@ export type CreatedEventFilters = Partial<{
 export function createdEvent(filters: CreatedEventFilters = {}) {
   return prepareEvent({
     signature:
-      "event Created(bytes32 contractId, address indexed creator, address indexed asset, address referrer, bytes hookData)",
+      "event Created(bytes32 contractId, address indexed creator, address indexed asset, address developer, bytes hookData)",
     filters,
   });
 }

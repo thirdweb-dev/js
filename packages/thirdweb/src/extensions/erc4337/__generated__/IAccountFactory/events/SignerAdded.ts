@@ -40,8 +40,8 @@ export type SignerAddedEventFilters = Partial<{
  */
 export function signerAddedEvent(filters: SignerAddedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event SignerAdded(address indexed account, address indexed signer)",
-    filters,
   });
 }

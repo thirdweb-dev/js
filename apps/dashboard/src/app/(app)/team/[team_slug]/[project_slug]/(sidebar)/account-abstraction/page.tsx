@@ -2,15 +2,15 @@ import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getUserOpUsage } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import {
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { AccountAbstractionAnalytics } from "./AccountAbstractionAnalytics";
 import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
+import { AccountAbstractionAnalytics } from "./aa-analytics";
 import { searchParamLoader } from "./search-params";
 
 interface PageParams {
@@ -61,13 +61,16 @@ export default async function Page(props: {
     type: rangeType,
   };
 
-  const userOpStats = await getUserOpUsage({
-    from: range.from,
-    period: interval,
-    projectId: project.id,
-    teamId: project.teamId,
-    to: range.to,
-  });
+  const userOpStats = await getUserOpUsage(
+    {
+      from: range.from,
+      period: interval,
+      projectId: project.id,
+      teamId: project.teamId,
+      to: range.to,
+    },
+    authToken,
+  );
 
   const client = getClientThirdwebClient({
     jwt: authToken,
@@ -79,6 +82,7 @@ export default async function Page(props: {
       <AccountAbstractionSummary
         projectId={project.id}
         teamId={project.teamId}
+        authToken={authToken}
       />
 
       <div className="h-10" />

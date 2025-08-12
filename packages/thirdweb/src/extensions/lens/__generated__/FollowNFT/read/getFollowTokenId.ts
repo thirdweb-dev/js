@@ -19,8 +19,8 @@ export type GetFollowTokenIdParams = {
 export const FN_SELECTOR = "0x11c763d6" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "followerProfileId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -1,5 +1,5 @@
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Input } from "@/components/ui/input";
-import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 
 /**
@@ -12,13 +12,15 @@ export const PhaseNameInput: React.FC = () => {
   const inputValue = field.metadata?.name;
 
   return (
-    <CustomFormControl
-      disabled={formDisabled}
+    <FormFieldSetup
+      isRequired={false}
+      errorMessage={undefined}
       helperText="This does not affect how your claim phase functions and is for organizational purposes only."
       label="Name"
     >
       <Input
         disabled={formDisabled}
+        className="max-w-xs"
         onChange={(e) => {
           form.setValue(`phases.${phaseIndex}.metadata.name`, e.target.value);
         }}
@@ -26,6 +28,6 @@ export const PhaseNameInput: React.FC = () => {
         type="text"
         value={inputValue}
       />
-    </CustomFormControl>
+    </FormFieldSetup>
   );
 };

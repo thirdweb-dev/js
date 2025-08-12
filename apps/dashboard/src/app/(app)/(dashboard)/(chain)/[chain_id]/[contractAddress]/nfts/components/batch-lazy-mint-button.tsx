@@ -6,7 +6,6 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
-import { BatchLazyMint } from "@/components/batch-upload/batch-lazy-mint";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { BatchLazyMint } from "./batch-upload/batch-lazy-mint";
 
 interface BatchLazyMintButtonProps {
   canCreateDelayedRevealBatch: boolean;
@@ -60,59 +60,61 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
             Batch Upload
           </Button>
         </SheetTrigger>
-        <SheetContent className="min-w-full overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle className="text-left">Upload NFTs</SheetTitle>
+        <SheetContent className="!w-full !max-w-full overflow-y-auto p-0">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Upload NFTs</SheetTitle>
           </SheetHeader>
-          <BatchLazyMint
-            canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
-            chainId={contract.chain.id}
-            client={contract.client}
-            isLoggedIn={isLoggedIn}
-            nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
-            onSubmit={async ({ revealType, data }) => {
-              try {
-                const tx = (() => {
-                  switch (true) {
-                    // lazy mint erc721
-                    case revealType === "instant" && isErc721: {
-                      return ERC721Ext.lazyMint({
-                        contract,
-                        nfts: data.metadatas,
-                      });
+          <div className="p-4 lg:p-6">
+            <BatchLazyMint
+              canCreateDelayedRevealBatch={canCreateDelayedRevealBatch}
+              chainId={contract.chain.id}
+              client={contract.client}
+              isLoggedIn={isLoggedIn}
+              nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
+              onSubmit={async ({ revealType, data }) => {
+                try {
+                  const tx = (() => {
+                    switch (true) {
+                      // lazy mint erc721
+                      case revealType === "instant" && isErc721: {
+                        return ERC721Ext.lazyMint({
+                          contract,
+                          nfts: data.metadatas,
+                        });
+                      }
+                      // lazy mint erc1155
+                      case revealType === "instant" && !isErc721: {
+                        return ERC1155Ext.lazyMint({
+                          contract,
+                          nfts: data.metadatas,
+                        });
+                      }
+                      // delayed reveal erc721
+                      case revealType === "delayed": {
+                        return ERC721Ext.createDelayedRevealBatch({
+                          contract,
+                          metadata: data.metadata,
+                          password: data.password,
+                          placeholderMetadata: data.placeholderMetadata,
+                        });
+                      }
+                      default: {
+                        throw new Error("Invalid reveal type");
+                      }
                     }
-                    // lazy mint erc1155
-                    case revealType === "instant" && !isErc721: {
-                      return ERC1155Ext.lazyMint({
-                        contract,
-                        nfts: data.metadatas,
-                      });
-                    }
-                    // delayed reveal erc721
-                    case revealType === "delayed": {
-                      return ERC721Ext.createDelayedRevealBatch({
-                        contract,
-                        metadata: data.metadata,
-                        password: data.password,
-                        placeholderMetadata: data.placeholderMetadata,
-                      });
-                    }
-                    default: {
-                      throw new Error("Invalid reveal type");
-                    }
-                  }
-                })();
+                  })();
 
-                await sendTxMutation.mutateAsync(tx);
+                  await sendTxMutation.mutateAsync(tx);
 
-                txNotifications.onSuccess();
-                setOpen(false);
-              } catch (error) {
-                console.error(error);
-                txNotifications.onError(error);
-              }
-            }}
-          />
+                  txNotifications.onSuccess();
+                  setOpen(false);
+                } catch (error) {
+                  console.error(error);
+                  txNotifications.onError(error);
+                }
+              }}
+            />
+          </div>
         </SheetContent>
       </Sheet>
     </MinterOnly>

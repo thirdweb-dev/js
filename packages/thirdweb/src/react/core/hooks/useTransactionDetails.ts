@@ -13,6 +13,7 @@ import type { SupportedFiatCurrency } from "../../../pay/convert/type.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../transaction/utils.js";
+import { stringify } from "../../../utils/json.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
@@ -63,7 +64,6 @@ export function useTransactionDetails({
   return useQuery({
     enabled: !!transaction.to && !!chainMetadata.data,
     queryFn: async (): Promise<TransactionDetails> => {
-      // Create contract instance for metadata fetching
       const contract = getContract({
         address: transaction.to as string,
         chain: transaction.chain,
@@ -83,7 +83,7 @@ export function useTransactionDetails({
           client,
           erc20Value?.tokenAddress || NATIVE_TOKEN_ADDRESS,
           transaction.chain.id,
-        ).catch(() => null),
+        ),
         hasSponsoredTransactions
           ? 0n
           : getTransactionGasCost(transaction).catch(() => null),
@@ -180,9 +180,7 @@ export function useTransactionDetails({
     },
     queryKey: [
       "transaction-details",
-      transaction.to,
-      transaction.chain.id,
-      transaction.erc20Value?.toString(),
+      stringify(transaction),
       hasSponsoredTransactions,
     ],
   });

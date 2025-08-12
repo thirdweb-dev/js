@@ -6,6 +6,7 @@ import {
 	createMetadata,
 	Steps,
 	Step,
+	OpenApiEndpoint,
 } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WalletsSmartIcon } from "@/icons";
@@ -24,8 +25,6 @@ export const metadata = createMetadata({
 
 Monitor and get notified about transactions in your application, both on your project dashboard and programmatically.
 
----
-
 <Tabs defaultValue="http">
 	<TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
@@ -40,15 +39,17 @@ Monitor and get notified about transactions in your application, both on your pr
 
   <TabsContent value="http">
 
-  You can track the status of transactions sent via the [transactions API](https://engine.thirdweb.com/reference) using its transaction id.
+  ### Get transaction status
 
-```http
-GET /v1/transactions?id=<transaction-id>
-Content-Type: application/json
-x-secret-key: <your-project-secret-key>
-```
+  Get the information about a transaction by its id.
 
-You can also search transactions by `from` or `status`.
+  <OpenApiEndpoint path="/v1/transactions/{transactionId}" method="GET" />
+  
+  ### List transactions
+
+  List all transactions for your project with filtering and pagination.
+
+<OpenApiEndpoint path="/v1/transactions" method="GET" />
 
   </TabsContent>
 

@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 import {
   fetchLatestPublishedContractVersion,
   fetchPublishedContractVersions,
-} from "@/components/contract-components/fetch-contracts-with-versions";
+} from "@/api/contract/fetch-contracts-with-versions";
 import type { ModuleMeta } from "./install-module-params";
 
 export async function getModuleInstalledParams(

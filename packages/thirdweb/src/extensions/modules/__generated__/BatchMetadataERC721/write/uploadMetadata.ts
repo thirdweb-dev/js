@@ -19,12 +19,12 @@ export type UploadMetadataParams = WithOverrides<{
 export const FN_SELECTOR = "0xbfa2f36e" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_amount",
+    type: "uint256",
   },
   {
-    type: "string",
     name: "_baseURI",
+    type: "string",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -125,23 +125,23 @@ export function uploadMetadata(
   });
 
   return prepareContractCall({
-    contract: options.contract,
-    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: async () => {
-      const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.amount, resolvedOptions.baseURI] as const;
-    },
-    value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
+    contract: options.contract,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
     gas: async () => (await asyncOptions()).overrides?.gas,
     gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
     maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
     maxPriorityFeePerGas: async () =>
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.amount, resolvedOptions.baseURI] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
   });
 }

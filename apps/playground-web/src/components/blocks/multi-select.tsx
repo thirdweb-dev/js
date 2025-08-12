@@ -145,7 +145,7 @@ export const MultiSelect = forwardRef<HTMLButtonElement, MultiSelectProps>(
 
     // scroll to top when options change
     const popoverElRef = useRef<HTMLDivElement>(null);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    // biome-ignore lint/correctness/useExhaustiveDependencies: ok
     useEffect(() => {
       const scrollContainer =
         popoverElRef.current?.querySelector("[data-scrollable]");

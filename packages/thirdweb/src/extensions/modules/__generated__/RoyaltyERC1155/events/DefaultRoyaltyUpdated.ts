@@ -36,8 +36,8 @@ export function defaultRoyaltyUpdatedEvent(
   filters: DefaultRoyaltyUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event DefaultRoyaltyUpdated(address indexed recipient, uint16 bps)",
-    filters,
   });
 }

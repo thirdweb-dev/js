@@ -36,8 +36,8 @@ export function platformFeeInfoUpdatedEvent(
   filters: PlatformFeeInfoUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event PlatformFeeInfoUpdated(address indexed platformFeeRecipient, uint256 platformFeeBps)",
-    filters,
   });
 }

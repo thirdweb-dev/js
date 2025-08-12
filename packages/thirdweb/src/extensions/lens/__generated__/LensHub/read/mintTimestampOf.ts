@@ -16,8 +16,8 @@ export type MintTimestampOfParams = {
 export const FN_SELECTOR = "0x50ddf35c" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

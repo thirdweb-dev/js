@@ -18,22 +18,22 @@ export type GetPoolParams = {
 export const FN_SELECTOR = "0x1698ee82" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "tokenA",
-  },
-  {
     type: "address",
-    name: "tokenB",
   },
   {
-    type: "uint24",
+    name: "tokenB",
+    type: "address",
+  },
+  {
     name: "fee",
+    type: "uint24",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "pool",
+    type: "address",
   },
 ] as const;
 

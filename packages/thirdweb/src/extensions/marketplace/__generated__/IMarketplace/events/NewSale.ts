@@ -46,8 +46,8 @@ export type NewSaleEventFilters = Partial<{
  */
 export function newSaleEvent(filters: NewSaleEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event NewSale(uint256 indexed listingId, address indexed assetContract, address indexed lister, address buyer, uint256 quantityBought, uint256 totalPricePaid)",
-    filters,
   });
 }

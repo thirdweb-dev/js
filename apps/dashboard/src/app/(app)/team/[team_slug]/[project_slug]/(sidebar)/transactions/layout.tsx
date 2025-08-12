@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TabPathLinks } from "@/components/ui/tabs";
-import { NEXT_PUBLIC_ENGINE_CLOUD_URL } from "@/constants/public-envs";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -31,7 +31,7 @@ function TransactionsLayout(props: {
       <div className="pt-4 lg:pt-6">
         {/* header */}
         <div className="container flex max-w-7xl flex-col gap-4">
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex flex-col">
               <h1 className="mb-1 flex items-center gap-2 font-semibold text-3xl tracking-tight">
                 Transactions{" "}
@@ -45,21 +45,28 @@ function TransactionsLayout(props: {
               <div className="flex items-center gap-2">
                 <Link
                   className="max-w-full truncate text-muted-foreground text-sm hover:text-foreground" // TODO: change this
-                  href={`${NEXT_PUBLIC_ENGINE_CLOUD_URL}/reference`}
+                  href={`${NEXT_PUBLIC_THIRDWEB_API_HOST}/reference`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  {NEXT_PUBLIC_ENGINE_CLOUD_URL}
+                  {NEXT_PUBLIC_THIRDWEB_API_HOST}
                 </Link>
               </div>
             </div>
-            <Link href={`${projectLayoutPath}/engine/dedicated`}>
-              <Button variant="outline">View Dedicated Engine</Button>
-            </Link>
+            <Button
+              variant="outline"
+              asChild
+              className="rounded-full bg-background"
+              size="sm"
+            >
+              <Link href={`${projectLayoutPath}/engine/dedicated`}>
+                View Dedicated Engine
+              </Link>
+            </Button>
           </div>
         </div>
 
-        <div className="h-4" />
+        <div className="h-5" />
 
         {/* Nav */}
         <TabPathLinks

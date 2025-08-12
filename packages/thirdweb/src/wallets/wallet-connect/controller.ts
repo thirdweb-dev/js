@@ -1,4 +1,7 @@
-import type { UniversalProvider } from "@walletconnect/universal-provider";
+import type {
+  RequestArguments,
+  UniversalProvider,
+} from "@walletconnect/universal-provider";
 import type { Address } from "abitype";
 import {
   getTypesForEIP712Domain,
@@ -39,6 +42,7 @@ import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
+import type { WalletInfo } from "../wallet-info.js";
 import type { WalletId } from "../wallet-types.js";
 import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
@@ -78,16 +82,16 @@ export async function connectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void,
+  sessionHandler?: (uri: string) => void | Promise<void>,
 ): Promise<ReturnType<typeof onConnect>> {
   const provider = await initProvider(options, walletId, sessionHandler);
   const wcOptions = options.walletConnect;
 
   let { onDisplayUri } = wcOptions || {};
+  const walletInfo = await getWalletInfo(walletId);
 
   // use default sessionHandler unless onDisplayUri is explicitly provided
   if (!onDisplayUri && sessionHandler) {
-    const walletInfo = await getWalletInfo(walletId);
     const deeplinkHandler = (uri: string) => {
       const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
       if (!appUrl) {
@@ -123,30 +127,28 @@ export async function connectWC(
     optionalChains: optionalChains,
   });
 
-  if (!provider.session) {
-    // For UniversalProvider, we need to connect with namespaces
-    await provider.connect({
-      ...(wcOptions?.pairingTopic
-        ? { pairingTopic: wcOptions?.pairingTopic }
-        : {}),
-      namespaces: {
-        [NAMESPACE]: {
-          chains: chainsToRequest,
-          events: ["chainChanged", "accountsChanged"],
-          methods: [
-            "eth_sendTransaction",
-            "eth_signTransaction",
-            "eth_sign",
-            "personal_sign",
-            "eth_signTypedData",
-            "wallet_switchEthereumChain",
-            "wallet_addEthereumChain",
-          ],
-          rpcMap,
-        },
+  // For UniversalProvider, we need to connect with namespaces
+  await provider.connect({
+    ...(wcOptions?.pairingTopic
+      ? { pairingTopic: wcOptions?.pairingTopic }
+      : {}),
+    namespaces: {
+      [NAMESPACE]: {
+        chains: chainsToRequest,
+        events: ["chainChanged", "accountsChanged"],
+        methods: [
+          "eth_sendTransaction",
+          "eth_signTransaction",
+          "eth_sign",
+          "personal_sign",
+          "eth_signTypedData",
+          "wallet_switchEthereumChain",
+          "wallet_addEthereumChain",
+        ],
+        rpcMap,
       },
-    });
-  }
+    },
+  });
 
   setRequestedChainsIds(
     chainsToRequest.map((x) => Number(x.split(":")[1])),
@@ -187,7 +189,16 @@ export async function connectWC(
     provider.events.removeListener("display_uri", wcOptions.onDisplayUri);
   }
 
-  return onConnect(address, chain, provider, emitter, storage, options.client);
+  return onConnect(
+    address,
+    chain,
+    provider,
+    emitter,
+    storage,
+    options.client,
+    walletInfo,
+    sessionHandler,
+  );
 }
 
 /**
@@ -199,11 +210,13 @@ export async function autoConnectWC(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
   storage: AsyncStorage,
-  sessionHandler?: (uri: string) => void,
+  sessionHandler?: (uri: string) => void | Promise<void>,
 ): Promise<ReturnType<typeof onConnect>> {
   const savedConnectParams: SavedConnectParams | null = storage
     ? await getSavedConnectParamsFromStorage(storage, walletId)
     : null;
+
+  const walletInfo = await getWalletInfo(walletId);
 
   const provider = await initProvider(
     savedConnectParams
@@ -223,9 +236,14 @@ export async function autoConnectWC(
     sessionHandler,
   );
 
+  if (!provider.session) {
+    await provider.disconnect();
+    throw new Error("No wallet connect session found on provider.");
+  }
+
   // For UniversalProvider, get accounts from enable() method
-  const addresses = await provider.enable();
-  const address = addresses[0];
+  const namespaceAccounts = provider.session?.namespaces?.[NAMESPACE]?.accounts;
+  const address = namespaceAccounts?.[0]?.split(":")[2];
 
   if (!address) {
     throw new Error("No accounts found on provider.");
@@ -240,7 +258,16 @@ export async function autoConnectWC(
       ? options.chain
       : getCachedChain(providerChainId);
 
-  return onConnect(address, chain, provider, emitter, storage, options.client);
+  return onConnect(
+    address,
+    chain,
+    provider,
+    emitter,
+    storage,
+    options.client,
+    walletInfo,
+    sessionHandler,
+  );
 }
 
 // Connection utils -----------------------------------------------------------------------------------------------
@@ -281,6 +308,10 @@ async function initProvider(
       ],
       name: wcOptions?.appMetadata?.name || getDefaultAppMetadata().name,
       url: wcOptions?.appMetadata?.url || getDefaultAppMetadata().url,
+      redirect: {
+        native: walletInfo.mobile.native || undefined,
+        universal: walletInfo.mobile.universal || undefined,
+      },
     },
     projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
   });
@@ -318,17 +349,22 @@ function createAccount({
   address,
   client,
   chain,
+  sessionRequestHandler,
+  walletInfo,
 }: {
   provider: WCProvider;
   address: string;
   client: ThirdwebClient;
   chain: Chain;
+  sessionRequestHandler?: (uri: string) => void | Promise<void>;
+  walletInfo: WalletInfo;
 }) {
   const account: Account = {
     address: getAddress(address),
     async sendTransaction(tx: SendTransactionOption) {
-      const transactionHash = (await provider.request(
-        {
+      const transactionHash = (await requestAndOpenWallet({
+        provider,
+        payload: {
           method: "eth_sendTransaction",
           params: [
             {
@@ -340,8 +376,10 @@ function createAccount({
             },
           ],
         },
-        `eip155:${tx.chainId}`,
-      )) as Hex;
+        chain: `eip155:${tx.chainId}`,
+        walletInfo,
+        sessionRequestHandler,
+      })) as Hex;
 
       trackTransaction({
         chainId: tx.chainId,
@@ -367,13 +405,16 @@ function createAccount({
         }
         return message.raw;
       })();
-      return provider.request(
-        {
+      return requestAndOpenWallet({
+        provider,
+        payload: {
           method: "personal_sign",
           params: [messageToSign, this.address],
         },
-        `eip155:${chain.id}`,
-      );
+        chain: `eip155:${chain.id}`,
+        walletInfo,
+        sessionRequestHandler,
+      });
     },
     async signTypedData(_data) {
       const data = parseTypedData(_data);
@@ -396,17 +437,45 @@ function createAccount({
         types,
       });
 
-      return await provider.request(
-        {
+      return await requestAndOpenWallet({
+        provider,
+        payload: {
           method: "eth_signTypedData_v4",
           params: [this.address, typedData],
         },
-        `eip155:${chain.id}`,
-      );
+        chain: `eip155:${chain.id}`,
+        walletInfo,
+        sessionRequestHandler,
+      });
     },
   };
 
   return account;
+}
+
+async function requestAndOpenWallet(args: {
+  provider: WCProvider;
+  payload: RequestArguments;
+  chain?: string;
+  walletInfo: WalletInfo;
+  sessionRequestHandler?: (uri: string) => void | Promise<void>;
+}) {
+  const { provider, payload, chain, walletInfo, sessionRequestHandler } = args;
+  const resultPromise: Promise<`0x${string}`> = provider.request(
+    payload,
+    chain,
+  );
+
+  const walletLinkToOpen =
+    provider.session?.peer?.metadata?.redirect?.native ||
+    walletInfo.mobile.native ||
+    walletInfo.mobile.universal;
+
+  if (sessionRequestHandler && walletLinkToOpen) {
+    await sessionRequestHandler(walletLinkToOpen);
+  }
+
+  return resultPromise;
 }
 
 function onConnect(
@@ -416,8 +485,17 @@ function onConnect(
   emitter: WalletEmitter<WCSupportedWalletIds>,
   storage: AsyncStorage,
   client: ThirdwebClient,
+  walletInfo: WalletInfo,
+  sessionRequestHandler?: (uri: string) => void | Promise<void>,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
-  const account = createAccount({ address, chain, client, provider });
+  const account = createAccount({
+    address,
+    chain,
+    client,
+    provider,
+    sessionRequestHandler,
+    walletInfo,
+  });
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -441,6 +519,8 @@ function onConnect(
         chain,
         client,
         provider,
+        sessionRequestHandler,
+        walletInfo,
       });
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);

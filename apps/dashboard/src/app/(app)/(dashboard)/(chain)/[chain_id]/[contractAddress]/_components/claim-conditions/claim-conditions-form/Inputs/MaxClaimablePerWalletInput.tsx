@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { QuantityInputWithUnlimited } from "../../quantity-input-with-unlimited";
-import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 
 /**
@@ -23,13 +23,13 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
   }
 
   return (
-    <CustomFormControl
-      disabled={formDisabled}
-      error={
+    <FormFieldSetup
+      isRequired={true}
+      errorMessage={
         form.getFieldState(
           `phases.${phaseIndex}.maxClaimablePerWallet`,
           form.formState,
-        ).error
+        ).error?.message
       }
       helperText={
         <>
@@ -39,14 +39,13 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
             : ". "}
           Limits are set per wallets and not per user, sophisticated actors
           could get around wallet restrictions.{" "}
-          <Link
-            className="text-blue-500"
+          <UnderlineLink
             href="https://portal.thirdweb.com/contracts/design/Drop#sybil-attacks"
             rel="noopener noreferrer"
             target="_blank"
           >
             Learn more
-          </Link>
+          </UnderlineLink>
           .
         </>
       }
@@ -66,6 +65,6 @@ export const MaxClaimablePerWalletInput: React.FC = () => {
         }
         value={field?.maxClaimablePerWallet?.toString() || "0"}
       />
-    </CustomFormControl>
+    </FormFieldSetup>
   );
 };

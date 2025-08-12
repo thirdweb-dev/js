@@ -1,163 +1,225 @@
-import type { SidebarLink } from "../components/ui/sidebar";
+"use client";
+
+import { ArrowLeftRightIcon } from "lucide-react";
+import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
+import { ContractIcon } from "../icons/ContractIcon";
+import { InsightIcon } from "../icons/InsightIcon";
+import { PayIcon } from "../icons/PayIcon";
+import { SmartAccountIcon } from "../icons/SmartAccountIcon";
+import { TokenIcon } from "../icons/TokenIcon";
+import { WalletProductIcon } from "../icons/WalletProductIcon";
 import { insightBlueprints } from "./insight/insightBlueprints";
 
-const staticSidebarLinks: SidebarLink[] = [
-  {
-    isCollapsible: false,
-    links: [
-      {
-        href: "/connect/sign-in/button",
-        name: "ConnectButton",
-      },
-      {
-        href: "/connect/sign-in/embed",
-        name: "ConnectEmbed",
-      },
-      {
-        href: "/connect/sign-in/headless",
-        name: "Headless Connect",
-      },
-      {
-        href: "/connect/in-app-wallet",
-        name: "In-App Wallets",
-      },
-      {
-        href: "/connect/in-app-wallet/ecosystem",
-        name: "Ecosystem Wallets",
-      },
-      {
-        href: "/connect/account-abstraction/sponsor",
-        name: "EIP-4337",
-      },
-      {
-        href: "/connect/account-abstraction/7702",
-        name: "EIP-7702",
-      },
-      {
-        href: "/connect/account-abstraction/5792",
-        name: "EIP-5792",
-      },
-      {
-        href: "/connect/account-abstraction/native-aa",
-        name: "Native AA (zkSync)",
-      },
-      {
-        href: "/connect/auth",
-        name: "Auth",
-      },
-      {
-        href: "/connect/social",
-        name: "Social",
-      },
-      {
-        href: "/connect/blockchain-api",
-        name: "Blockchain API",
-      },
-      {
-        expanded: false,
-        links: [
-          {
-            href: "/connect/ui",
-            name: "Account",
-          },
-          {
-            href: "/connect/ui/nft",
-            name: "NFT",
-          },
-          {
-            href: "/connect/ui/token",
-            name: "Token",
-          },
-          {
-            href: "/connect/ui/chain",
-            name: "Chain",
-          },
-          {
-            href: "/connect/ui/wallet",
-            name: "Wallet",
-          },
-        ],
-        name: "Headless Components",
-      },
-    ],
-    name: "Wallets",
+const wallets: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Wallets",
+    icon: WalletProductIcon,
   },
+  links: [
+    {
+      href: "/wallets/sign-in/button",
+      label: "Connect Button",
+    },
+    {
+      href: "/wallets/sign-in/embed",
+      label: "Connect Embed",
+    },
+    {
+      href: "/wallets/sign-in/headless",
+      label: "Headless Connect",
+    },
+    {
+      href: "/wallets/in-app-wallet",
+      label: "In-App Wallets",
+    },
+    {
+      href: "/wallets/ecosystem-wallet",
+      label: "Ecosystem Wallets",
+    },
+    {
+      href: "/wallets/auth",
+      label: "Authentication (SIWE)",
+    },
+    {
+      href: "/wallets/social",
+      label: "Social Profiles",
+    },
+
+    {
+      subMenu: {
+        label: "Headless Components",
+      },
+      links: [
+        {
+          href: "/wallets/headless/account-components",
+          label: "Account Components",
+        },
+        {
+          href: "/wallets/headless/chain-components",
+          label: "Chain Components",
+        },
+        {
+          href: "/wallets/headless/wallet-components",
+          label: "Wallet Components",
+        },
+      ],
+    },
+  ],
+};
+
+const contracts: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Contracts",
+    icon: ContractIcon,
+  },
+  links: [
+    {
+      href: "/contracts/read",
+      label: "Read Contract",
+    },
+    {
+      href: "/contracts/write",
+      label: "Write Contract",
+    },
+    {
+      href: "/contracts/extensions",
+      label: "Pre-built Extensions",
+    },
+    {
+      href: "/contracts/events",
+      label: "Listen Contract Events",
+    },
+  ],
+};
+
+const tokens: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Tokens",
+    icon: TokenIcon,
+  },
+  links: [
+    {
+      href: "/tokens/token-components",
+      label: "Token Components",
+    },
+    {
+      href: "/tokens/nft-components",
+      label: "NFT Components",
+    },
+  ],
+};
+
+const accountAbstractions: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Account Abstraction",
+    icon: SmartAccountIcon,
+  },
+  links: [
+    {
+      href: "/account-abstraction/eip-4337",
+      label: "EIP-4337",
+    },
+    {
+      href: "/account-abstraction/eip-7702",
+      label: "EIP-7702",
+    },
+    {
+      href: "/account-abstraction/eip-5792",
+      label: "EIP-5792",
+    },
+    {
+      href: "/account-abstraction/native-aa",
+      label: "Native AA (zkSync)",
+    },
+  ],
+};
+
+const payments: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Payments",
+    icon: PayIcon,
+  },
+  links: [
+    {
+      href: "/payments/ui-components",
+      label: "UI Components",
+    },
+    {
+      href: "/payments/fund-wallet",
+      label: "Buy Crypto",
+    },
+    {
+      href: "/payments/commerce",
+      label: "Checkout",
+    },
+    {
+      href: "/payments/transactions",
+      label: "Onchain Transaction",
+    },
+    {
+      href: "/payments/backend",
+      label: "Payments API",
+    },
+  ],
+};
+
+const transactions: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Transactions",
+    icon: ArrowLeftRightIcon,
+  },
+  links: [
+    {
+      href: "/transactions/airdrop-tokens",
+      label: "Airdrop Tokens",
+    },
+    {
+      href: "/transactions/mint-tokens",
+      label: "Mint NFTs",
+    },
+    {
+      href: "/transactions/webhooks",
+      label: "Webhooks",
+    },
+  ],
+};
+
+const insightLinks: ShadcnSidebarLink[] = insightBlueprints.map((blueprint) => {
+  return {
+    links: blueprint.paths.map((pathInfo) => {
+      return {
+        href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
+        label: pathInfo.name,
+        exactMatch: true,
+      };
+    }),
+    subMenu: {
+      label: blueprint.name,
+    },
+  };
+});
+
+const insight: ShadcnSidebarLink = {
+  links: [
+    {
+      href: "/insight",
+      label: "Overview",
+      exactMatch: true,
+    },
+    ...insightLinks,
+  ],
+  subMenu: {
+    label: "Insight",
+    icon: InsightIcon,
+  },
+};
+
+export const sidebarLinks: ShadcnSidebarLink[] = [
+  wallets,
+  transactions,
+  contracts,
+  payments,
+  tokens,
+  insight,
+  accountAbstractions,
 ];
-
-const universalBridgeSidebarLinks: SidebarLink = {
-  expanded: false,
-  isCollapsible: false,
-  links: [
-    {
-      href: "/connect/pay",
-      name: "UI Component",
-    },
-    {
-      href: "/connect/pay/fund-wallet",
-      name: "Buy Crypto",
-    },
-    {
-      href: "/connect/pay/commerce",
-      name: "Checkout",
-    },
-    {
-      href: "/connect/pay/transactions",
-      name: "Transactions",
-    },
-    {
-      href: "/connect/pay/backend",
-      name: "Backend API",
-    },
-  ],
-  name: "Payments",
-};
-
-const engineSidebarLinks: SidebarLink = {
-  expanded: false,
-  isCollapsible: false,
-  links: [
-    {
-      href: "/engine/airdrop",
-      name: "Airdrop",
-    },
-    {
-      href: "/engine/minting",
-      name: "Mint NFTs",
-    },
-    {
-      href: "/engine/webhooks",
-      name: "Webhooks",
-    },
-  ],
-  name: "Transactions",
-};
-
-export function getSidebarLinks() {
-  const insightLinks: SidebarLink[] = insightBlueprints.map((blueprint) => {
-    return {
-      expanded: false,
-      links: blueprint.paths.map((pathInfo) => {
-        return {
-          crossedOut: pathInfo.deprecated,
-          href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
-          name: pathInfo.name,
-        };
-      }),
-      name: blueprint.name,
-    };
-  });
-
-  const sidebarLinks: SidebarLink[] = [
-    ...staticSidebarLinks,
-    universalBridgeSidebarLinks,
-    engineSidebarLinks,
-    {
-      expanded: false,
-      isCollapsible: false,
-      links: insightLinks,
-      name: "Insight",
-    },
-  ];
-
-  return sidebarLinks;
-}

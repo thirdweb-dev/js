@@ -22,13 +22,12 @@ export function ContractTokensPageClient(props: {
     return <ErrorPage />;
   }
 
-  const { supportedERCs, functionSelectors } = metadataQuery.data;
+  const { functionSelectors } = metadataQuery.data;
 
   return (
     <ContractTokensPage
       contract={props.contract}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
-      isERC20={supportedERCs.isERC20}
       isLoggedIn={props.isLoggedIn}
       isMintToSupported={isMintToSupported(functionSelectors)}
     />

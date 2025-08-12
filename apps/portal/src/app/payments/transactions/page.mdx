@@ -1,0 +1,105 @@
+import {
+	Callout,
+	createMetadata,
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+  ArticleIconCard,
+} from "@doc";
+import { ReactIcon } from "@/icons";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Onchain Transactions",
+		icon: "payments",
+	},
+	title: "Onchain Transactions",
+	description: "Accept any token as payment for your onchain transactions.",
+});
+
+# Pay for Transactions
+
+Pay for onchain transactions using any token or fiat with the `TransactionWidget`.
+
+<Tabs defaultValue="react">
+  <TabsList>
+    <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
+      <ReactIcon className="w-4 h-4 mr-2" />
+      React
+    </TabsTrigger>
+  </TabsList>
+
+<TabsContent value="react">
+
+### Pay for a transaction with the `TransactionWidget`
+
+```tsx
+import { TransactionWidget } from "thirdweb/react";
+import { createThirdwebClient, prepareContractCall, getContract } from "thirdweb";
+import { arbitrum } from "thirdweb/chains";
+import { toUnits } from "thirdweb/utils";
+
+const client = createThirdwebClient({
+	clientId: "YOUR_CLIENT_ID",
+});
+
+const contract = getContract({
+  client,
+  address: "0x...", // the target contract address
+  chain: arbitrum,
+});
+
+function ProductPage() {
+	return (
+		<div>
+			<h1>Execute a transaction</h1>
+			<p>Execute a transaction onchain</p>
+
+			<TransactionWidget
+				client={client}
+				chain={arbitrum}
+				transaction={prepareContractCall({
+					contract,
+					method: "function paidMint(address to, uint256 amount)",
+					args: [to, amount],
+          // if the transaction requires a native token, you can specify the amount with `value`
+          value: toUnits("100", 18), // the amount of native token required to purchase in wei
+          // if the transaction requires an erc20 token, you can specify the token and amount with `erc20Value`
+          erc20Value: {
+            token: USDC_TOKEN_ADDRESS, // the erc20 token required to purchase
+            amount: toUnits("100", 6), // the amount of erc20 token required to purchase in wei
+          },
+				})}
+				onSuccess={() => {
+					alert("Transaction successful!");
+					// Redirect or update UI
+				}}
+			/>
+		</div>
+	);
+}
+```
+
+The TransactionWidget handles the complete payment flow, supporting both crypto and fiat payments across 50+ chains.
+
+</TabsContent>
+</Tabs>
+
+## View it in action:  
+
+<ArticleIconCard
+  title="Pay for Transactions Live Demo"
+  description="Pay for a transaction using the TransactionWidget"
+  icon={ReactIcon}
+  href="https://playground.thirdweb.com/connect/pay/transactions"
+/>
+
+## Going Further
+
+- [Custom Payment Data](/payments/custom-data) - Attach metadata to payments
+- [Webhooks](/payments/webhooks) - Get notified when payments complete
+
+## API Reference
+
+- [TransactionWidget](/references/typescript/v5/transactionwidget)

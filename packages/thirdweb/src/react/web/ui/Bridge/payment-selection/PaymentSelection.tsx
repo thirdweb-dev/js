@@ -13,6 +13,7 @@ import { usePaymentMethods } from "../../../../core/hooks/usePaymentMethods.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
 import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
+import type { SupportedTokens } from "../../../../core/utils/defaultTokens.js";
 import type { ConnectLocale } from "../../ConnectWallet/locale/types.js";
 import { WalletSwitcherConnectionScreen } from "../../ConnectWallet/screens/WalletSwitcherConnectionScreen.js";
 import { Container, ModalHeader } from "../../components/basic.js";
@@ -89,6 +90,8 @@ export interface PaymentSelectionProps {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  supportedTokens?: SupportedTokens;
 }
 
 type Step =
@@ -109,6 +112,7 @@ export function PaymentSelection({
   connectLocale,
   includeDestinationToken,
   paymentMethods = ["crypto", "card"],
+  supportedTokens,
   feePayer,
   currency,
 }: PaymentSelectionProps) {
@@ -149,6 +153,7 @@ export function PaymentSelection({
       receiverAddress?.toLowerCase() !==
         payerWallet?.getAccount()?.address?.toLowerCase(),
     payerWallet,
+    supportedTokens,
   });
 
   // Handle error from usePaymentMethods
@@ -287,6 +292,7 @@ export function PaymentSelection({
             onPaymentMethodSelected={handlePaymentMethodSelected}
             paymentMethods={suitableTokenPaymentMethods}
             paymentMethodsLoading={paymentMethodsLoading}
+            currency={currency}
           />
         )}
 

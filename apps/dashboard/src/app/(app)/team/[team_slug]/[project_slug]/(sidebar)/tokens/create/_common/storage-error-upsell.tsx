@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { apiServerProxy } from "@/actions/proxies";
 import { reportUpsellClicked, reportUpsellShown } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";

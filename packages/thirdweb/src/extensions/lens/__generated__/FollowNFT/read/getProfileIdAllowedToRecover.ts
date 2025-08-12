@@ -19,8 +19,8 @@ export type GetProfileIdAllowedToRecoverParams = {
 export const FN_SELECTOR = "0x2af1544f" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "followTokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -1,15 +1,15 @@
 import { Callout } from "@doc";
-import { createMetadata, ArticleIconCard, Stack } from "@doc";
+import { createMetadata, ArticleIconCard, Stack, OpenApiEndpoint } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TypeScriptIcon } from "@/icons";
 
 export const metadata = createMetadata({
-  image: {
-    title: "Get Users",
-    icon: "wallets",
-  },
-  title: "Get Users | thirdweb",
-  description: "Learn how to fetch in-app wallet users for your application.",
+	image: {
+		title: "Get Users",
+		icon: "wallets",
+	},
+	title: "Get Users | thirdweb Documentation",
+	description: "List and fetch users from your in-app or ecosystem wallet. thirdweb makes it easy to access wallet addresses, emails, phone numbers, and more—directly from your backend.",
 });
 
 # Fetch Users
@@ -24,178 +24,74 @@ From your backend, you can list all your users and fetch the details of any user
 
 <TabsContent value="single">
 
-### Endpoint
+## Get Single User
 
-`GET` request to the following endpoint:
-
-```
-https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details
-```
+Fetch details for a specific user by email, phone, wallet address, or user ID.
 
 ### Query Parameters
 
-You can specify the query parameter `queryBy` to query by different user identifiers:
+You can query by any of these user identifiers:
 
-- `queryBy`: The parameter to query by. Can be one of `walletAddress`, `email`, `phone`, `externalWalletAddress`, or `id`.
-
-You can then specify the value to query by, matching the queryBy parameter:
-
-- `walletAddress`: The user's wallet address that thirdweb has generated for them
+- `address`: The user's wallet address that thirdweb generated
 - `email`: The user's email address
 - `phone`: The user's phone number
-- `externalWalletAddress`: The user's wallet address that used to login via SIWE
+- `externalWalletAddress`: The user's external wallet address (SIWE login)
 - `id`: The user's ID (for custom auth)
 
 ### Authentication
 
-You need to include the following headers:
-
+Required headers:
 - `x-secret-key`: Your secret key for authentication
 - `x-ecosystem-id` (optional): Your ecosystem ID
 - `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-### Example Requests
+### Example
 
-Here's an example curl command to fetch user details by email:
+<OpenApiEndpoint path="/v1/wallets/user" method="GET" />
 
-```bash
-
-curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=email&email=user@example.com' \
-  -H 'x-secret-key: YOUR_SECRET_KEY'
-
-```
-
-Here's an example curl command to fetch user details by address:
-
-```bash
-curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
-  -H 'x-secret-key: YOUR_SECRET_KEY'
-```
-
-Here's an example curl command to fetch the user details for an ecosystem owner:
-
-```bash
-curl -X GET 'https://in-app-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details?queryBy=walletAddress&walletAddress=0x123456789abcdef' \
-  -H 'x-secret-key: YOUR_SECRET_KEY' \
-  -H 'x-ecosystem-id: ecosystem.YOUR_ECOSYSTEM_ID' \
-  -H 'x-ecosystem-partner-id: YOUR_PARTNER_ID'
-```
-
-In both examples, replace `YOUR_SECRET_KEY` with your actual ThirdWeb Client Secret.
-
-Replace `YOUR_ECOSYSTEM_ID` and `YOUR_PARTNER_ID` with your actual ecosystem ID and partner ID respectively. The partner ID can be one you set up for yourself as the ecosystem owner.
-
-### Response Format
-
-The API returns a JSON array with the following structure for each user:
-
-```json
-[
-  {
-    "userId": "string",
-    "walletAddress": "string",
-    "email": "string (optional)",
-    "phone": "string (optional)",
-    "createdAt": "string",
-    "linkedAccounts": [
-      {
-        "type": "string",
-        "details": {
-          "phone": "string",
-          // or
-          "email": "string",
-          // or
-          "address": "string",
-          // or
-          "id": "string",
-          // Additional key-value pairs may be present
-        }
-      }
-    ]
-  }
-]
-```
-
-Note: The `details` object in `linkedAccounts` will contain different fields based on the account type. See the [list of Strategies](#list-of-strategies) above for more information.
-
-Remember to handle the response appropriately in your chosen programming language, including error cases and parsing the JSON response.
-
-### Convenience Methods
-
-If you are using the thirdweb SDK, you can use the `getUser` method to retrieve user details.
-
-<Stack>
- <ArticleIconCard
-	title="getUser"
-	icon={TypeScriptIcon}
-	description="Get user details from your backend for thirdweb wallets in TypeScript"
-	href="/references/typescript/v5/getUser"
-/>
-</Stack>
+For ecosystem wallets, include the ecosystem headers in your requests.
 
 </TabsContent>
 
 <TabsContent value="all">
 
-### Endpoint
+## Get All Users
 
-`GET` request to the following endpoint:
-
-```
-https://in-app-wallet.thirdweb.com/api/v1/users
-```
+List all users in your in-app or ecosystem wallet with pagination support.
 
 ### Query Parameters
 
-- `offset` (optional): Number of users to skip (for pagination)
-- `limit` (optional): Maximum number of users to return per request (defaults to 100)
+- `page` (optional): Page number for pagination
+- `limit` (optional): Maximum users per request (default: 50)
 
 ### Authentication
 
-You need to include the following headers:
-
+Required headers:
 - `x-secret-key`: Your secret key for authentication
 - `x-ecosystem-id` (optional): Your ecosystem ID
 - `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
 
-<Callout variant='info' title='Getting ecosystem users'>
-For ecosystem wallets, the secret key have to be from the same account as the ecosystem owner.
+<Callout variant="info" title="Ecosystem Users">
+	For ecosystem wallets, the secret key must be from the same account as the ecosystem owner.
 </Callout>
 
-### Example Requests
+### Example
 
-Here's an example curl command to fetch all users:
-
-```bash
-curl -X GET 'https://in-app-wallet.thirdweb.com/api/v1/users?offset=200&limit=100' \
-  -H 'x-secret-key: YOUR_SECRET_KEY' \
-  -H 'Content-Type: application/json'
-```
-
-### Response Format
-
-A successful API call returns an array of user objects in the following format:
-
-```json
-[
-  {
-    "userId": "9841a5de-b4a6-44b3-ad14-c4b8745782ca",
-    "walletAddress": "0x933F5BC72634c55b3643A6Aa0cD5b65ca4915d39",
-    "createdAt": "2024-11-05T00:55:25.142Z",
-    "authProvider": "google",
-    "authDetails": {
-        "id": "107302390467834615186",
-        "name": "Richard Hendricks",
-        "type": "google",
-        "email": "richard@piedpiper.com",
-        "picture": "https://lh3.googleusercontent.com/a/ACg8ocKC1D6ezzzaZxxUk4qtK_HCwVwpNamVopazXwklGBwuuHeSf_c=s96-c",
-        "givenName": "Richard",
-        "emailVerified": true
-    },
-    "email": "richard@piedpiper.com",
-  }
-]
-```
+<OpenApiEndpoint path="/v1/wallets/user" method="GET" />
 
 </TabsContent>
+
 </Tabs>
+
+## SDK Integration
+
+If you're using the thirdweb SDK, you can use the `getUser` method for easier integration:
+
+<Stack>
+	<ArticleIconCard
+		title="getUser"
+		icon={TypeScriptIcon}
+		description="Get user details from your backend for thirdweb wallets in TypeScript"
+		href="/references/typescript/v5/getUser"
+	/>
+</Stack>

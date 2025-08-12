@@ -1,4 +1,4 @@
-import { ChakraProviderSetup } from "chakra/ChakraProviderSetup";
+import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken } from "@/api/auth-token";
 import {
   Breadcrumb,
@@ -10,7 +10,6 @@ import {
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import type { EngineInstance } from "@/hooks/useEngine";
 import { loginRedirect } from "@/utils/redirects";
-import { getValidAccount } from "../../../../../../../../account/settings/getAccount";
 import { getEngineInstance } from "../../_utils/getEngineInstance";
 import { EngineErrorPage } from "./_components/EngineErrorPage";
 import { EngineSidebarLayout } from "./_components/EnginePageLayout";
@@ -59,32 +58,30 @@ export default async function Layout(props: {
   }
 
   return (
-    <ChakraProviderSetup>
-      <div className="flex grow flex-col">
-        <EngineInstanceHeader
-          instance={instance}
-          rootPath={engineRootLayoutPath}
-          teamSlug={params.team_slug}
-        />
+    <div className="flex grow flex-col">
+      <EngineInstanceHeader
+        instance={instance}
+        rootPath={engineRootLayoutPath}
+        teamSlug={params.team_slug}
+      />
 
-        <EngineSidebarLayout
+      <EngineSidebarLayout
+        engineId={params.engineId}
+        projectSlug={params.project_slug}
+        teamSlug={params.team_slug}
+      >
+        <EnsureEnginePermission
+          accountId={account.id}
+          authToken={authToken}
           engineId={params.engineId}
+          instance={instance}
           projectSlug={params.project_slug}
           teamSlug={params.team_slug}
         >
-          <EnsureEnginePermission
-            accountId={account.id}
-            authToken={authToken}
-            engineId={params.engineId}
-            instance={instance}
-            projectSlug={params.project_slug}
-            teamSlug={params.team_slug}
-          >
-            <div>{props.children}</div>
-          </EnsureEnginePermission>
-        </EngineSidebarLayout>
-      </div>
-    </ChakraProviderSetup>
+          <div>{props.children}</div>
+        </EnsureEnginePermission>
+      </EngineSidebarLayout>
+    </div>
   );
 }
 

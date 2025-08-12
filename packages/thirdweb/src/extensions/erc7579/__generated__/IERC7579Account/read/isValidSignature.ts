@@ -17,12 +17,12 @@ export type IsValidSignatureParams = {
 export const FN_SELECTOR = "0x1626ba7e" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "hash",
+    type: "bytes32",
   },
   {
-    type: "bytes",
     name: "data",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [

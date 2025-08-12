@@ -16,81 +16,81 @@ export type GetSessionStateForSignerParams = {
 export const FN_SELECTOR = "0x74e25eb2" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
     components: [
       {
-        type: "tuple[]",
+        components: [
+          {
+            name: "remaining",
+            type: "uint256",
+          },
+          {
+            name: "target",
+            type: "address",
+          },
+          {
+            name: "selector",
+            type: "bytes4",
+          },
+          {
+            name: "index",
+            type: "uint256",
+          },
+        ],
         name: "transferValue",
-        components: [
-          {
-            type: "uint256",
-            name: "remaining",
-          },
-          {
-            type: "address",
-            name: "target",
-          },
-          {
-            type: "bytes4",
-            name: "selector",
-          },
-          {
-            type: "uint256",
-            name: "index",
-          },
-        ],
+        type: "tuple[]",
       },
       {
-        type: "tuple[]",
+        components: [
+          {
+            name: "remaining",
+            type: "uint256",
+          },
+          {
+            name: "target",
+            type: "address",
+          },
+          {
+            name: "selector",
+            type: "bytes4",
+          },
+          {
+            name: "index",
+            type: "uint256",
+          },
+        ],
         name: "callValue",
-        components: [
-          {
-            type: "uint256",
-            name: "remaining",
-          },
-          {
-            type: "address",
-            name: "target",
-          },
-          {
-            type: "bytes4",
-            name: "selector",
-          },
-          {
-            type: "uint256",
-            name: "index",
-          },
-        ],
+        type: "tuple[]",
       },
       {
-        type: "tuple[]",
-        name: "callParams",
         components: [
           {
-            type: "uint256",
             name: "remaining",
-          },
-          {
-            type: "address",
-            name: "target",
-          },
-          {
-            type: "bytes4",
-            name: "selector",
-          },
-          {
             type: "uint256",
+          },
+          {
+            name: "target",
+            type: "address",
+          },
+          {
+            name: "selector",
+            type: "bytes4",
+          },
+          {
             name: "index",
+            type: "uint256",
           },
         ],
+        name: "callParams",
+        type: "tuple[]",
       },
     ],
+    type: "tuple",
   },
 ] as const;
 

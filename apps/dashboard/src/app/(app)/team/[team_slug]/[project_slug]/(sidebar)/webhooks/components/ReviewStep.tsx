@@ -194,12 +194,27 @@ export default function ReviewStep({
 
           <li className="flex justify-between">
             <span className="text-muted-foreground text-sm">
-              Signature Hash:
+              Signature Hash
+              {Array.isArray(form.watch("sigHash")) &&
+              (form.watch("sigHash")?.length || 0) > 1
+                ? "es"
+                : ""}
+              :
             </span>
             <span className="font-medium text-sm">
               {(() => {
                 const sigHash = form.watch("sigHash");
-                return sigHash ? truncateMiddle(sigHash, 10, 6) : "None";
+                if (!sigHash) return "None";
+
+                if (Array.isArray(sigHash)) {
+                  if (sigHash.length === 0) return "None";
+                  if (sigHash.length === 1) {
+                    return truncateMiddle(sigHash[0] || "", 10, 6);
+                  }
+                  return `${sigHash.length} signature${sigHash.length > 1 ? "s" : ""} selected`;
+                } else {
+                  return truncateMiddle(sigHash, 10, 6);
+                }
               })()}
             </span>
           </li>

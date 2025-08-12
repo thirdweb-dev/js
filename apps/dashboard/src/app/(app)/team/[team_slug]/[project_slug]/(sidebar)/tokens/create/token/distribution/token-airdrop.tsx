@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { DownloadFileButton } from "@/components/blocks/download-file-button";
 import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
@@ -37,7 +38,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { cn } from "@/lib/utils";
-import { DownloadFileButton } from "../../_common/download-file-button";
 import type { TokenDistributionForm } from "../_common/form";
 
 type AirdropAddressInput = {

@@ -16,42 +16,42 @@ export type ClaimConditionParams = {
 export const FN_SELECTOR = "0xe9703d25" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "startTimestamp",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "maxClaimableSupply",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "supplyClaimed",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "quantityLimitPerWallet",
-  },
-  {
-    type: "bytes32",
-    name: "merkleRoot",
-  },
-  {
     type: "uint256",
+  },
+  {
+    name: "merkleRoot",
+    type: "bytes32",
+  },
+  {
     name: "pricePerToken",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "currency",
+    type: "address",
   },
   {
-    type: "string",
     name: "metadata",
+    type: "string",
   },
 ] as const;
 

@@ -23,12 +23,12 @@ export type IsNewWinningBidParams = {
 export const FN_SELECTOR = "0x2eb566bd" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_auctionId",
+    type: "uint256",
   },
   {
-    type: "uint256",
     name: "_bidAmount",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -2,7 +2,7 @@
 
 import type { ThirdwebClient } from "thirdweb";
 import { engineCloudProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
 import { TransactionsTableUI } from "./tx-table-ui";
 import type { TransactionStatus, TransactionsResponse } from "./types";

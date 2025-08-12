@@ -16,8 +16,8 @@ export type IsRegisteredParams = {
 export const FN_SELECTOR = "0xc3c5a547" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

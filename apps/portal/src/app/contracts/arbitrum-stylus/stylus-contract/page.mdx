@@ -1,0 +1,135 @@
+import { Steps, Step, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "Stylus Contracts | thirdweb Documentation",
+    description:
+        "Deploy Stylus contracts on Arbitrum for efficient token distribution at scale. WASM-powered smart contracts enable fast, low-cost airdrops to thousands of wallets.",
+    image: {
+        title: "Deploy Stylus Contracts",
+        icon: "contracts",
+    },
+});
+
+# Deploy Stylus Contracts on Arbitrum
+
+Arbitrum Stylus brings a second, WebAssembly (WASM) virtual machine to every Arbitrum chain, so you can write contracts in Rust (or C/C++) while staying 100 % interoperable with existing Solidity code. 
+
+Under the hood, Stylus executes WASM thousands of times faster than the EVM, so transactions are metered in a new, much-smaller unit called ink rather than gas — translating to dramatic fee savings for compute- or memory-heavy logic. Learn more about Stylus on the [Arbitrum documentation](https://docs.arbitrum.io/stylus/concepts/how-it-works).
+
+This tutorial will cover how to create a simple NFT template project with thirdweb CLI and deploy it to the Arbitrum network using Stylus. You can also follow this tutorial to deploy an ERC-20, ERC-1155, or Airdrop contract. 
+
+## Benefits
+
+- Rust Tooling: Cargo, Clippy, unit tests, Rust crates, and the broader Rust ecosystem are at your disposal.
+- Ink-priced execution: Complex math, on-chain SVG generation, even lightweight ML models are suddenly affordable.
+- Opt-in re-entrancy protection: The Rust SDK disables re-entrancy by default; you only enable it when you really need it.
+- Multi-VM composability: Rust contract can call Solidity contracts (and vice-versa) without wrappers.
+
+## Prerequisites
+
+- [Create a project on your thirdweb account](https://thirdweb.com/dashboard)
+- Install thirdweb CLI by running `npm install -g thirdweb`
+- Install Rust tool chain by running `curl https://sh.rustup.rs -sSf | sh` or visit rust-lang.org
+- Install solc by running `npm install -g solc` or visit soliditylang.org
+- Install Node version 18 or higher
+
+## Scaffold an ERC-721 Stylus project
+
+<Steps>
+<Step title="Initialize a new Stylus project">
+In your CLI, create a new directory and run the following command to create a new stylus project:
+
+```bash
+npx thirdweb create-stylus
+```
+
+Select the ERC-721 template when prompted. This will scaffold a new Stylus project with a basic ERC-721 contract.
+</Step>
+
+<Step title="Set Collection Name & Symbol">
+
+Open src/lib.rs and set the collection name and symbol. You may also tweak any other minting logic as well such as supply cap, roles, and fees. 
+
+</Step>
+<Step title="Build & test the project">
+
+Stylus compiles your Rust to WASM and generates an ABI JSON that thirdweb uses for the dashboard & SDK.
+
+Run the following command to build your project:
+
+```bash
+cargo stylus build
+``` 
+
+You can also run the following command to test your project:
+
+```bash
+cargo test
+```
+
+</Step>
+
+<Step title="Deploy or Publish Your Contract">
+
+You can publish and deploy your project to Arbitrum. Publishing stores your contract metadata in thirdweb’s on-chain registry so anyone (including you) can deploy that exact version later with a few clicks.
+
+To publish your contract, ensure you have your thirdweb secret key from your created project, then run the following command:
+
+```bash
+npx thirdweb publish-stylus -k YOUR_TW_SECRET_KEY
+```
+
+If you'd prefer to just deploy a single instance of the contract without publishing, run the following command to deploy:
+
+```bash
+npx thirdweb deploy-stylus -k YOUR_TW_SECRET_KEY
+```
+
+Once the transaction confirms, the CLI will redirect you to the contract management dashboard where you can mint, transfer, view events, or pull ready-made SDK snippets.
+
+</Step>
+
+<Step title="(Optional) Mint NFTs Programmatically">
+
+You can mint NFTs programmatically using the thirdweb SDKs. Use the following code snippet to mint NFTs:
+
+```javascript
+import { createThirdwebClient, getContract, sendTransaction } from "thirdweb";
+import { arbitrumSepolia } from "thirdweb/chains";
+import { mintTo } from "thirdweb/extensions/erc721";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+
+const wallet = createWallet("io.metamask"); // or any wallet id
+const account = await wallet.connect({ client });
+
+// 3 · Wrap the deployed contract
+const contract = getContract({
+  client,
+  chain: arbitrumSepolia,
+  address: "<DEPLOYED_ADDRESS>",
+});
+
+// 4 · Prepare the mint transaction
+const transaction = mintTo({
+  contract,
+  to: "0xRecipient",
+  nft: {
+    name: "Stylus NFT #1",
+    // image, description, attributes, … are optional
+  },
+});
+
+// 5 · Send the transaction
+const result = await sendTransaction({ transaction, account });
+console.log("Minted token:", result);
+```
+
+</Step>
+
+</Steps>
+
+## Next Steps
+
+- Learn more about Arbitrum Stylus through the official docs on architecture, gas/ink, and safety features. [View Arbitrum Documentation.](https://docs.arbitrum.io/stylus/concepts/how-it-works)

@@ -1,8 +1,8 @@
+import { getValidAccount } from "@/api/account/get-account";
+import { getLinkedWallets } from "@/api/account/linked-wallets";
 import { getAuthToken } from "@/api/auth-token";
-import { getLinkedWallets } from "@/api/linked-wallets";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
-import { getValidAccount } from "../settings/getAccount";
 import { LinkWallet } from "./LinkWalletUI";
 
 export default async function Page() {

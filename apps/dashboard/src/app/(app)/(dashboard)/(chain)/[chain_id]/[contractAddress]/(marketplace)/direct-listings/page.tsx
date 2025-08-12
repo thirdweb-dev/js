@@ -1,4 +1,4 @@
-import { getRawAccount } from "../../../../../../account/settings/getAccount";
+import { getRawAccount } from "@/api/account/get-account";
 import type { PublicContractPageParams } from "../../types";
 import { SharedDirectListingsPage } from "./shared-direct-listings-page";
 

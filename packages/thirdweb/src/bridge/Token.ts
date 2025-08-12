@@ -15,6 +15,7 @@ import type { Token } from "./types/Token.js";
  *
  * const tokens = await Bridge.tokens({
  *   client: thirdwebClient,
+ *   chainId: 1,
  * });
  * ```
  *
@@ -28,7 +29,13 @@ import type { Token } from "./types/Token.js";
  *     symbol: "ETH",
  *     name: "Ethereum",
  *     iconUri: "https://assets.relay.link/icons/1/light.png",
- *     priceUsd: 2000.50
+ *     priceUsd: 2000.50,
+ *     prices: {
+ *       USD: 2000.50,
+ *       EUR: 1800.00,
+ *       GBP: 1500.00,
+ *       JPY: 10000.00
+ *     }
  *   },
  *   {
  *     chainId: 1,
@@ -37,7 +44,13 @@ import type { Token } from "./types/Token.js";
  *     symbol: "USDC",
  *     name: "USD Coin",
  *     iconUri: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
- *     priceUsd: 1.00
+ *     priceUsd: 1.00,
+ *     prices: {
+ *       USD: 1.00,
+ *       EUR: 0.84,
+ *       GBP: 0.73,
+ *       JPY: 120.00
+ *     }
  *   }
  * ]
  * ```

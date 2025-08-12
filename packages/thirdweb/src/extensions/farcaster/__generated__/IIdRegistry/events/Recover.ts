@@ -46,8 +46,8 @@ export type RecoverEventFilters = Partial<{
  */
 export function recoverEvent(filters: RecoverEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Recover(address indexed from, address indexed to, uint256 indexed id)",
-    filters,
   });
 }

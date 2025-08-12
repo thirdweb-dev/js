@@ -1,5 +1,5 @@
-import { getValidAccount } from "@app/account/settings/getAccount";
 import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
+import { getValidAccount } from "@/api/account/get-account";
 import { TabPathLinks } from "@/components/ui/tabs";
 
 export default async function WebhooksLayout(props: {
@@ -49,7 +49,7 @@ export default async function WebhooksLayout(props: {
             },
             {
               name: "Payments",
-              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+              path: `/team/${params.team_slug}/${params.project_slug}/payments/webhooks`,
             },
           ]}
           scrollableClassName="container max-w-7xl"
@@ -63,7 +63,7 @@ export default async function WebhooksLayout(props: {
             },
             {
               name: "Payments",
-              path: `/team/${params.team_slug}/${params.project_slug}/webhooks/universal-bridge`,
+              path: `/team/${params.team_slug}/${params.project_slug}/payments/webhooks`,
             },
           ]}
           scrollableClassName="container max-w-7xl"

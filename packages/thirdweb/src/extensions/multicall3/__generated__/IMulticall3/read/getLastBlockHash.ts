@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x27e86d6e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "bytes32",
     name: "blockHash",
+    type: "bytes32",
   },
 ] as const;
 

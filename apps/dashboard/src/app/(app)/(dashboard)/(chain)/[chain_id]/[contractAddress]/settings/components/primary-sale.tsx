@@ -1,10 +1,5 @@
 "use client";
-import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
@@ -21,9 +16,18 @@ import { z } from "zod";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { TransactionButton } from "@/components/tx-button";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AddressOrEnsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
+import { parseError } from "@/utils/errorParser";
 import { SettingDetectedState } from "./detected-state";
 
 const CommonPrimarySaleSchema = z.object({
@@ -56,90 +60,90 @@ export const SettingsPrimarySale = ({
     values: transformedQueryData,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Primary sale address updated",
-    "Error updating primary sale address",
-    contract,
-  );
+  const onSubmit = (data: z.input<typeof CommonPrimarySaleSchema>) => {
+    const saleRecipient = data.primary_sale_recipient;
+    if (!saleRecipient) {
+      return toast.error("Please enter a valid primary sale recipient address");
+    }
+    const transaction = setPrimarySaleRecipient({
+      contract,
+      saleRecipient,
+    });
+
+    mutation.mutate(transaction, {
+      onError: (error) => {
+        toast.error("Error updating primary sale address", {
+          description: parseError(error),
+        });
+        console.error(error);
+      },
+      onSuccess: () => {
+        toast.success("Primary sale address updated");
+      },
+    });
+  };
 
   return (
-    <Card overflow="hidden" p={0} position="relative">
+    <div className="relative bg-card border rounded-lg">
       <SettingDetectedState detectedState={detectedState} type="primarySale" />
-      <Flex
-        as="form"
-        direction="column"
-        onSubmit={form.handleSubmit((d) => {
-          const saleRecipient = d.primary_sale_recipient;
-          if (!saleRecipient) {
-            return toast.error(
-              "Please enter a valid primary sale recipient address",
-            );
-          }
-          const transaction = setPrimarySaleRecipient({
-            contract,
-            saleRecipient,
-          });
-          // if we switch back to mutateAsync then *need* to catch errors
-          mutation.mutate(transaction, {
-            onError: (error) => {
-              console.error(error);
-              onError(error);
-            },
-            onSuccess: () => {
-              form.reset({ primary_sale_recipient: saleRecipient });
-              onSuccess();
-            },
-          });
-        })}
-      >
-        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
-          <Heading size="title.sm">Primary Sales</Heading>
-          <Text fontStyle="italic" size="body.md">
-            The wallet address that should receive the revenue from initial
-            sales of the assets.
-          </Text>
-          <Flex direction={{ base: "column", md: "row" }} gap={4}>
-            <FormControl
-              isDisabled={mutation.isPending || !address}
-              isInvalid={
-                !!form.getFieldState("primary_sale_recipient", form.formState)
-                  .error
-              }
-            >
-              <FormLabel>Recipient Address</FormLabel>
-              <SolidityInput
-                client={contract.client}
-                disabled={mutation.isPending || !address}
-                formContext={form}
-                solidityType="address"
-                {...form.register("primary_sale_recipient")}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="p-4 md:p-6">
+            {/* header */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold tracking-tight">
+                Primary Sales
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                The wallet address that should receive the revenue from initial
+                sales of the assets
+              </p>
+            </div>
+
+            {query.isPending ? (
+              <Skeleton className="h-[74px] w-full" />
+            ) : (
+              <FormField
+                control={form.control}
+                name="primary_sale_recipient"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Recipient Address</FormLabel>
+                    <FormControl>
+                      <SolidityInput
+                        client={contract.client}
+                        disabled={!address}
+                        formContext={form}
+                        solidityType="address"
+                        className="max-w-md"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormErrorMessage>
-                {
-                  form.getFieldState("primary_sale_recipient", form.formState)
-                    .error?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-          </Flex>
-        </Flex>
-        <AdminOnly contract={contract}>
-          <TransactionButton
-            className="!rounded-t-none rounded-xl"
-            client={contract.client}
-            disabled={query.isPending || !form.formState.isDirty}
-            isLoggedIn={isLoggedIn}
-            isPending={mutation.isPending}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
-          >
-            {mutation.isPending
-              ? "Updating Primary Sale Settings"
-              : "Update Primary Sale Settings"}
-          </TransactionButton>
-        </AdminOnly>
-      </Flex>
-    </Card>
+            )}
+          </div>
+          <AdminOnly contract={contract}>
+            <div className="px-4 lg:px-6 py-3 border-t border-dashed flex justify-end">
+              <TransactionButton
+                client={contract.client}
+                disabled={query.isPending}
+                isLoggedIn={isLoggedIn}
+                isPending={mutation.isPending}
+                transactionCount={undefined}
+                txChainID={contract.chain.id}
+                type="submit"
+                variant="default"
+                size="sm"
+              >
+                Save
+              </TransactionButton>
+            </div>
+          </AdminOnly>
+        </form>
+      </Form>
+    </div>
   );
 };

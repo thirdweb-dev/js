@@ -36,7 +36,7 @@ export function ownershipHandoverCanceledEvent(
   filters: OwnershipHandoverCanceledEventFilters = {},
 ) {
   return prepareEvent({
-    signature: "event OwnershipHandoverCanceled(address indexed pendingOwner)",
     filters,
+    signature: "event OwnershipHandoverCanceled(address indexed pendingOwner)",
   });
 }

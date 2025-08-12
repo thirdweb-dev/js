@@ -46,8 +46,8 @@ export type AuctionClosedEventFilters = Partial<{
  */
 export function auctionClosedEvent(filters: AuctionClosedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AuctionClosed(uint256 indexed auctionId, address indexed assetContract, address indexed closer, uint256 tokenId, address auctionCreator, address winningBidder)",
-    filters,
   });
 }

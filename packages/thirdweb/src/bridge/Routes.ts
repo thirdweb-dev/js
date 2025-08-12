@@ -203,7 +203,10 @@ export declare namespace routes {
     destinationTokenAddress?: ox__Address.Address;
     /** Transaction hash to filter routes by */
     transactionHash?: ox__Hex.Hex;
-    /** Sort routes by popularity */
+    /**
+     * Sort routes by popularity
+     * @deprecated
+     */
     sortBy?: "popularity";
     /** Maximum number of steps in the route */
     maxSteps?: number;

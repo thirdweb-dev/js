@@ -35,7 +35,7 @@ export type PositionLockedEventFilters = Partial<{
 export function positionLockedEvent(filters: PositionLockedEventFilters = {}) {
   return prepareEvent({
     signature:
-      "event PositionLocked(address owner, address indexed asset, address positionManager, uint256 positionId, address recipient, address referrer)",
+      "event PositionLocked(address owner, address indexed asset, address positionManager, uint256 positionId, address recipient, address developer)",
     filters,
   });
 }

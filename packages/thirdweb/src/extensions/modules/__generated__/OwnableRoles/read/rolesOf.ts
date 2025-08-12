@@ -16,14 +16,14 @@ export type RolesOfParams = {
 export const FN_SELECTOR = "0x2de94807" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "user",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "roles",
+    type: "uint256",
   },
 ] as const;
 

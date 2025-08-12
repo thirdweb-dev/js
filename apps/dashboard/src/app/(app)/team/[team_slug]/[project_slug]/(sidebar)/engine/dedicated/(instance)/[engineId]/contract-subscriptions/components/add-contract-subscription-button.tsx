@@ -1,112 +1,123 @@
 "use client";
 
-import {
-  Collapse,
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Radio,
-  RadioGroup,
-  Spinner,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
-import { CirclePlusIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { getContract, isAddress, type ThirdwebClient } from "thirdweb";
+import { z } from "zod";
+import { MultiSelect } from "@/components/blocks/multi-select";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import {
   type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
 } from "@/hooks/useEngine";
 import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 
-interface AddContractSubscriptionButtonProps {
-  instanceUrl: string;
-  authToken: string;
-  client: ThirdwebClient;
-}
+const addContractSubscriptionSchema = z.object({
+  chainId: z.number().min(1, "Chain is required"),
+  contractAddress: z
+    .string()
+    .min(1, "Contract address is required")
+    .refine((val) => isAddress(val), "Invalid contract address"),
+  webhookUrl: z
+    .string()
+    .min(1, "Webhook URL is required")
+    .url("Invalid URL format"),
+  processEventLogs: z.boolean(),
+  filterEvents: z.array(z.string()),
+  processTransactionReceipts: z.boolean(),
+  filterFunctions: z.array(z.string()),
+});
 
-export const AddContractSubscriptionButton: React.FC<
-  AddContractSubscriptionButtonProps
-> = ({ instanceUrl, authToken, client }) => {
-  const disclosure = useDisclosure();
+type AddContractSubscriptionForm = z.infer<
+  typeof addContractSubscriptionSchema
+>;
 
-  return (
-    <>
-      <Button
-        colorScheme="primary"
-        leftIcon={<CirclePlusIcon className="size-6" />}
-        onClick={disclosure.onOpen}
-        size="sm"
-        variant="ghost"
-        w="fit-content"
-      >
-        Add Contract Subscription
-      </Button>
-
-      {disclosure.isOpen && (
-        <AddModal
-          authToken={authToken}
-          client={client}
-          disclosure={disclosure}
-          instanceUrl={instanceUrl}
-        />
-      )}
-    </>
-  );
-};
-
-interface AddContractSubscriptionForm {
-  chainId: number;
-  contractAddress: string;
-  webhookUrl: string;
-  processEventLogs: boolean;
-  filterEvents: string[];
-  processTransactionReceipts: boolean;
-  filterFunctions: string[];
-}
-
-const AddModal = ({
+export function AddContractSubscriptionButton({
   instanceUrl,
-  disclosure,
   authToken,
   client,
 }: {
   instanceUrl: string;
-  disclosure: UseDisclosureReturn;
   authToken: string;
   client: ThirdwebClient;
-}) => {
-  const { mutate: addContractSubscription } = useEngineAddContractSubscription({
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          onClick={() => setIsOpen(true)}
+          className="w-fit gap-2"
+        >
+          <PlusIcon className="size-4" />
+          Add Contract Subscription
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <AddModalContent
+          authToken={authToken}
+          client={client}
+          instanceUrl={instanceUrl}
+          setIsOpen={setIsOpen}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function AddModalContent({
+  instanceUrl,
+  authToken,
+  client,
+  setIsOpen,
+}: {
+  instanceUrl: string;
+  authToken: string;
+  client: ThirdwebClient;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}) {
+  const addContractSubscription = useEngineAddContractSubscription({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Created Contract Subscription.",
-    "Failed to create Contract Subscription.",
-  );
   const [modalState, setModalState] = useState<"inputContract" | "inputData">(
     "inputContract",
   );
 
   const form = useForm<AddContractSubscriptionForm>({
+    resolver: zodResolver(addContractSubscriptionSchema),
     defaultValues: {
       chainId: 84532,
       filterEvents: [],
@@ -128,51 +139,62 @@ const AddModal = ({
       webhookUrl: data.webhookUrl.trim(),
     };
 
-    addContractSubscription(input, {
+    addContractSubscription.mutate(input, {
       onError: (error) => {
-        onError(error);
+        toast.error("Failed to create Contract Subscription.", {
+          description: parseError(error),
+        });
         console.error(error);
       },
       onSuccess: () => {
-        onSuccess();
-        disclosure.onClose();
+        toast.success("Created Contract Subscription.");
+        setIsOpen(false);
       },
     });
   };
 
   return (
-    <Modal
-      isCentered
-      isOpen={disclosure.isOpen}
-      onClose={disclosure.onClose}
-      size="lg"
-    >
-      <ModalOverlay />
-      <ModalContent
-        as="form"
-        className="!bg-background rounded-lg border border-border"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <ModalHeader>Add Contract Subscription</ModalHeader>
-        <ModalCloseButton />
+    <div>
+      <DialogHeader className="p-4 lg:p-6">
+        <DialogTitle>Add Contract Subscription</DialogTitle>
+        {modalState === "inputContract" && (
+          <DialogDescription>
+            Add a contract subscription to process real-time onchain data.
+          </DialogDescription>
+        )}
 
-        {modalState === "inputContract" ? (
-          <ModalBodyInputContract
-            client={client}
-            form={form}
-            setModalState={setModalState}
-          />
-        ) : modalState === "inputData" ? (
-          <ModalBodyInputData
-            client={client}
-            form={form}
-            setModalState={setModalState}
-          />
-        ) : null}
-      </ModalContent>
-    </Modal>
+        {modalState === "inputData" && (
+          <DialogDescription>
+            Select the data type to process.
+            <br />
+            Events logs are arbitrary data triggered by a smart contract call.
+            <br />
+            Transaction receipts contain details about the blockchain execution.
+          </DialogDescription>
+        )}
+      </DialogHeader>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {modalState === "inputContract" ? (
+            <ModalBodyInputContract
+              client={client}
+              form={form}
+              setModalState={setModalState}
+            />
+          ) : modalState === "inputData" ? (
+            <ModalBodyInputData
+              client={client}
+              form={form}
+              setModalState={setModalState}
+              isAdding={addContractSubscription.isPending}
+            />
+          ) : null}
+        </form>
+      </Form>
+    </div>
   );
-};
+}
 
 const ModalBodyInputContract = ({
   form,
@@ -184,89 +206,82 @@ const ModalBodyInputContract = ({
   client: ThirdwebClient;
 }) => {
   return (
-    <>
-      <ModalBody>
-        <div className="flex flex-col gap-4">
-          <Text>
-            Add a contract subscription to process real-time onchain data.
-          </Text>
+    <div>
+      <div className="space-y-4 px-4 lg:px-6 pb-8">
+        <FormField
+          control={form.control}
+          name="chainId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Chain</FormLabel>
+              <FormControl>
+                <SingleNetworkSelector
+                  disableChainId
+                  chainId={field.value}
+                  client={client}
+                  onChange={(val) => field.onChange(val)}
+                  className="bg-card"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormControl isRequired>
-            <FormLabel>Chain</FormLabel>
-            <SingleNetworkSelector
-              chainId={form.watch("chainId")}
-              client={client}
-              onChange={(val) => form.setValue("chainId", val)}
-            />
-          </FormControl>
+        <FormField
+          control={form.control}
+          name="contractAddress"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contract Address</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="0x..."
+                  {...field}
+                  className="bg-card"
+                  spellCheck={false}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormControl
-            isInvalid={
-              !!form.getFieldState("contractAddress", form.formState).error
-            }
-            isRequired
-          >
-            <FormLabel>Contract Address</FormLabel>
-            <Input
-              placeholder="0x..."
-              type="text"
-              {...form.register("contractAddress", {
-                required: true,
-                validate: (v) => {
-                  const isValid = isAddress(v);
-                  return !isValid ? "Invalid address" : true;
-                },
-              })}
-            />
-            <FormErrorMessage>
-              {
-                form.getFieldState("contractAddress", form.formState).error
-                  ?.message
-              }
-            </FormErrorMessage>
-          </FormControl>
+        <FormField
+          control={form.control}
+          name="webhookUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Webhook URL</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="https://"
+                  type="url"
+                  {...field}
+                  className="bg-card"
+                />
+              </FormControl>
+              <FormDescription>
+                Engine sends an HTTP request to your backend when new onchain
+                data for this contract is detected.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
-          <FormControl
-            isInvalid={!!form.getFieldState("webhookUrl", form.formState).error}
-            isRequired
-          >
-            <FormLabel>Webhook URL</FormLabel>
-            <Input
-              placeholder="https://"
-              type="url"
-              {...form.register("webhookUrl", {
-                required: true,
-                validate: (v) => {
-                  try {
-                    new URL(v);
-                    return true;
-                  } catch {
-                    return "Invalid URL";
-                  }
-                },
-              })}
-            />
-            <FormHelperText>
-              Engine sends an HTTP request to your backend when new onchain data
-              for this contract is detected.
-            </FormHelperText>
-            <FormErrorMessage>
-              {form.getFieldState("webhookUrl", form.formState).error?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </div>
-      </ModalBody>
-
-      <ModalFooter>
+      <div className="flex justify-end border-t bg-card p-4 lg:p-6">
         <Button
-          colorScheme="primary"
-          isDisabled={!form.formState.isValid}
           onClick={() => setModalState("inputData")}
+          disabled={!form.formState.isValid}
+          className="gap-2"
         >
           Next
+          <ArrowRightIcon className="size-4" />
         </Button>
-      </ModalFooter>
-    </>
+      </div>
+    </div>
   );
 };
 
@@ -274,17 +289,18 @@ const ModalBodyInputData = ({
   form,
   setModalState,
   client,
+  isAdding,
 }: {
   form: UseFormReturn<AddContractSubscriptionForm>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
   client: ThirdwebClient;
+  isAdding: boolean;
 }) => {
-  const processEventLogsDisclosure = useDisclosure({
-    defaultIsOpen: form.getValues("processEventLogs"),
-  });
-  const processTransactionReceiptsDisclosure = useDisclosure({
-    defaultIsOpen: form.getValues("processTransactionReceipts"),
-  });
+  const [processEventLogsOpen, setProcessEventLogsOpen] = useState(
+    form.getValues("processEventLogs"),
+  );
+  const [processTransactionReceiptsOpen, setProcessTransactionReceiptsOpen] =
+    useState(form.getValues("processTransactionReceipts"));
   const [shouldFilterEvents, setShouldFilterEvents] = useState(false);
   const [shouldFilterFunctions, setShouldFilterFunctions] = useState(false);
 
@@ -305,156 +321,158 @@ const ModalBodyInputData = ({
       filterFunctions.length === 0);
 
   return (
-    <>
-      <ModalBody>
-        <div className="flex flex-col gap-4">
-          <Text>
-            Select the data type to process.
-            <br />
-            Events logs are arbitrary data triggered by a smart contract call.
-            <br />
-            Transaction receipts contain details about the blockchain execution.
-          </Text>
+    <div>
+      <div className="space-y-3 px-4 lg:px-6 pb-8">
+        <div className="space-y-2">
+          <CheckboxWithLabel>
+            <Checkbox
+              checked={form.watch("processEventLogs")}
+              onCheckedChange={(val) => {
+                const checked = !!val;
+                form.setValue("processEventLogs", checked);
+                setProcessEventLogsOpen(checked);
+              }}
+            />
+            <span className="text-sm text-foreground">Event Logs</span>
+          </CheckboxWithLabel>
 
-          <FormControl>
-            <FormLabel>Processed Data</FormLabel>
+          {/* Shows all/specific events if processing event logs */}
+          {processEventLogsOpen && (
+            <div className="space-y-2 pl-6">
+              <RadioGroup
+                defaultValue="false"
+                onValueChange={(val: "false" | "true") => {
+                  if (val === "true") {
+                    setShouldFilterEvents(true);
+                  } else {
+                    setShouldFilterEvents(false);
+                    form.setValue("filterEvents", []);
+                  }
+                }}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="false" id="all-events" />
+                    <label
+                      className="text-sm text-foreground"
+                      htmlFor="all-events"
+                    >
+                      All events
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="true" id="specific-events" />
+                    <label
+                      className="text-sm text-foreground"
+                      htmlFor="specific-events"
+                    >
+                      Specific events
+                    </label>
+                  </div>
 
-            <div className="flex flex-col gap-2">
-              <CheckboxWithLabel>
-                <Checkbox
-                  checked={form.watch("processEventLogs")}
-                  onCheckedChange={(val) => {
-                    const checked = !!val;
-                    form.setValue("processEventLogs", checked);
-                    if (checked) {
-                      processEventLogsDisclosure.onOpen();
-                    } else {
-                      processEventLogsDisclosure.onClose();
-                    }
-                  }}
-                />
-                <span>Event Logs</span>
-              </CheckboxWithLabel>
-              {/* Shows all/specific events if processing event logs */}
-              <Collapse in={processEventLogsDisclosure.isOpen}>
-                <div className="flex flex-col gap-2 px-4">
-                  <RadioGroup
-                    defaultValue="false"
-                    onChange={(val: "false" | "true") => {
-                      if (val === "true") {
-                        setShouldFilterEvents(true);
-                      } else {
-                        setShouldFilterEvents(false);
-                        form.setValue("filterEvents", []);
+                  {/* List event names to select */}
+                  {shouldFilterEvents && (
+                    <FilterSelector
+                      abiItemType="event"
+                      client={client}
+                      filter={filterEvents}
+                      form={form}
+                      setFilter={(value) =>
+                        form.setValue("filterEvents", value)
                       }
-                    }}
-                  >
-                    <div className="flex flex-col gap-2">
-                      <Radio value="false">
-                        <Text>All events</Text>
-                      </Radio>
-                      <Radio value="true">
-                        <Text>
-                          Specific events{" "}
-                          {!!filterEvents.length &&
-                            `(${filterEvents.length} selected)`}
-                        </Text>
-                      </Radio>
-                      {/* List event names to select */}
-                      <Collapse in={shouldFilterEvents}>
-                        <FilterSelector
-                          abiItemType="event"
-                          client={client}
-                          filter={filterEvents}
-                          form={form}
-                          setFilter={(value) =>
-                            form.setValue("filterEvents", value)
-                          }
-                        />
-                      </Collapse>
-                    </div>
-                  </RadioGroup>
+                    />
+                  )}
                 </div>
-              </Collapse>
-
-              <CheckboxWithLabel>
-                <Checkbox
-                  checked={form.watch("processTransactionReceipts")}
-                  onCheckedChange={(val) => {
-                    const checked = !!val;
-                    form.setValue("processTransactionReceipts", checked);
-                    if (checked) {
-                      processTransactionReceiptsDisclosure.onOpen();
-                    } else {
-                      processTransactionReceiptsDisclosure.onClose();
-                    }
-                  }}
-                />
-                <span>Transaction Receipts</span>
-              </CheckboxWithLabel>
-              {/* Shows all/specific functions if processing transaction receipts */}
-              <Collapse in={processTransactionReceiptsDisclosure.isOpen}>
-                <div className="flex flex-col gap-2 px-4">
-                  <RadioGroup
-                    defaultValue="false"
-                    onChange={(val: "false" | "true") => {
-                      if (val === "true") {
-                        setShouldFilterFunctions(true);
-                      } else {
-                        setShouldFilterFunctions(false);
-                        form.setValue("filterFunctions", []);
-                      }
-                    }}
-                  >
-                    <div className="flex flex-col gap-2">
-                      <Radio value="false">
-                        <Text>All functions</Text>
-                      </Radio>
-                      <Radio value="true">
-                        <Text>
-                          Specific functions{" "}
-                          {!!filterFunctions.length &&
-                            `(${filterFunctions.length} selected)`}
-                        </Text>
-                      </Radio>
-                      {/* List function names to select */}
-                      <Collapse in={shouldFilterFunctions}>
-                        <FilterSelector
-                          abiItemType="function"
-                          client={client}
-                          filter={filterFunctions}
-                          form={form}
-                          setFilter={(value) =>
-                            form.setValue("filterFunctions", value)
-                          }
-                        />
-                      </Collapse>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </Collapse>
+              </RadioGroup>
             </div>
-          </FormControl>
+          )}
         </div>
-      </ModalBody>
 
-      <ModalFooter as={Flex} gap={3}>
+        <div className="space-y-2">
+          <CheckboxWithLabel>
+            <Checkbox
+              checked={form.watch("processTransactionReceipts")}
+              onCheckedChange={(val) => {
+                const checked = !!val;
+                form.setValue("processTransactionReceipts", checked);
+                setProcessTransactionReceiptsOpen(checked);
+              }}
+            />
+            <span className="text-sm text-foreground">
+              Transaction Receipts
+            </span>
+          </CheckboxWithLabel>
+
+          {/* Shows all/specific functions if processing transaction receipts */}
+          {processTransactionReceiptsOpen && (
+            <div className="space-y-2 pl-6">
+              <RadioGroup
+                defaultValue="false"
+                onValueChange={(val: "false" | "true") => {
+                  if (val === "true") {
+                    setShouldFilterFunctions(true);
+                  } else {
+                    setShouldFilterFunctions(false);
+                    form.setValue("filterFunctions", []);
+                  }
+                }}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="false" id="all-functions" />
+                    <label
+                      htmlFor="all-functions"
+                      className="text-sm text-foreground"
+                    >
+                      All functions
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="true" id="specific-functions" />
+                    <label
+                      htmlFor="specific-functions"
+                      className="text-sm text-foreground"
+                    >
+                      Specific functions
+                    </label>
+                  </div>
+
+                  {/* List function names to select */}
+                  {shouldFilterFunctions && (
+                    <FilterSelector
+                      abiItemType="function"
+                      client={client}
+                      filter={filterFunctions}
+                      form={form}
+                      setFilter={(value) =>
+                        form.setValue("filterFunctions", value)
+                      }
+                    />
+                  )}
+                </div>
+              </RadioGroup>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-3 border-t bg-card p-4 lg:p-6">
         <Button
+          variant="outline"
           onClick={() => setModalState("inputContract")}
-          type="button"
-          variant="ghost"
         >
           Back
         </Button>
         <Button
-          colorScheme="primary"
-          isDisabled={isInputDataFormInvalid}
           type="submit"
+          disabled={isInputDataFormInvalid}
+          className="gap-2"
         >
-          Add
+          {isAdding && <Spinner className="size-4" />}
+          Add Subscription
         </Button>
-      </ModalFooter>
-    </>
+      </div>
+    </div>
   );
 };
 
@@ -466,7 +484,6 @@ const FilterSelector = ({
   client,
 }: {
   abiItemType: "function" | "event";
-
   form: UseFormReturn<AddContractSubscriptionForm>;
   filter: string[];
   setFilter: (value: string[]) => void;
@@ -534,33 +551,25 @@ const FilterSelector = ({
     }
   }, [abiItemType, abiItems.events, abiItems.writeFunctions]);
 
+  if (abiQuery.isPending) {
+    return <Skeleton className="h-[52px] w-full" />;
+  }
+
+  if (filterNames.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground py-2">
+        Cannot resolve the contract definition. Can not select {abiItemType}s.
+      </p>
+    );
+  }
+
   return (
-    <Card>
-      {abiQuery.isPending ? (
-        <Spinner size="sm" />
-      ) : filterNames.length === 0 ? (
-        <Text>
-          Cannot resolve the contract definition. Filters are unavailable.
-        </Text>
-      ) : (
-        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto">
-          {filterNames.map((name) => (
-            <CheckboxWithLabel key={name}>
-              <Checkbox
-                checked={filter.includes(name)}
-                onCheckedChange={(val) => {
-                  if (val) {
-                    setFilter([...filter, name]);
-                  } else {
-                    setFilter(filter.filter((item) => item !== name));
-                  }
-                }}
-              />
-              <span>{name}</span>
-            </CheckboxWithLabel>
-          ))}
-        </div>
-      )}
-    </Card>
+    <MultiSelect
+      options={filterNames.map((name) => ({ label: name, value: name }))}
+      selectedValues={filter}
+      onSelectedValuesChange={setFilter}
+      placeholder={`Select ${abiItemType}s`}
+      className="w-full bg-card"
+    />
   );
 };

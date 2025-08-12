@@ -9,7 +9,7 @@ import {
   toFunctionSelector,
 } from "thirdweb/utils";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { loginRedirect } from "@/utils/redirects";

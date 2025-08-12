@@ -16,8 +16,8 @@ export type TokensOfOwnerParams = {
 export const FN_SELECTOR = "0x8462151c" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "owner",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

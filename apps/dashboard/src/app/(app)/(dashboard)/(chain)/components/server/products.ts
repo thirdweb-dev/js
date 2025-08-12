@@ -41,14 +41,14 @@ export const products = [
     description: "Enable gas sponsorship for seamless transactions",
     icon: SmartAccountIcon,
     id: "account-abstraction",
-    link: "https://portal.thirdweb.com/connect/account-abstraction/overview",
+    link: "https://portal.thirdweb.com/wallets/sponsor-gas",
     name: "Account Abstraction",
   },
   {
     description: "Enable payments in any token on any chain",
     icon: PayIcon,
     id: "pay",
-    link: "https://portal.thirdweb.com/connect/pay/overview",
+    link: "https://portal.thirdweb.com/payments",
     name: "Payments",
   },
   {

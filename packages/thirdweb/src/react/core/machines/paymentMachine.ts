@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import type { Quote } from "../../../bridge/index.js";
 import type { Token } from "../../../bridge/types/Token.js";
 import type { Address } from "../../../utils/address.js";
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
@@ -24,6 +25,7 @@ export type PaymentMethod =
       payerWallet: Wallet;
       originToken: Token;
       balance: bigint;
+      quote: Quote;
     }
   | {
       type: "fiat";
@@ -228,6 +230,8 @@ export function usePaymentMachine(
             if (event.type === "DESTINATION_CONFIRMED")
               return "methodSelection";
             if (event.type === "ERROR_OCCURRED") return "error";
+            if (event.type === "CONTINUE_TO_TRANSACTION")
+              return "post-buy-transaction";
             break;
 
           case "methodSelection":

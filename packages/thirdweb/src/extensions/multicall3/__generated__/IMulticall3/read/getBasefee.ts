@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x3e64a696" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "basefee",
+    type: "uint256",
   },
 ] as const;
 

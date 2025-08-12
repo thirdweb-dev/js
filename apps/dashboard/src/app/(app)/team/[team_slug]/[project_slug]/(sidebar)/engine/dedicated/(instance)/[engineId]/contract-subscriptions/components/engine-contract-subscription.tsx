@@ -1,39 +1,38 @@
 "use client";
 
-import { Flex, FormControl, Switch } from "@chakra-ui/react";
-import { FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { useId, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import { Switch } from "@/components/ui/switch";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useEngineContractSubscription } from "@/hooks/useEngine";
 import { AddContractSubscriptionButton } from "./add-contract-subscription-button";
 import { ContractSubscriptionTable } from "./contract-subscriptions-table";
 
-interface EngineContractSubscriptionsProps {
+export function EngineContractSubscriptions({
+  instanceUrl,
+  authToken,
+  client,
+}: {
   instanceUrl: string;
   authToken: string;
   client: ThirdwebClient;
-}
-
-export const EngineContractSubscriptions: React.FC<
-  EngineContractSubscriptionsProps
-> = ({ instanceUrl, authToken, client }) => {
-  const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
+}) {
+  const [autoUpdate, setAutoUpdate] = useState(true);
   const contractSubscriptionsQuery = useEngineContractSubscription({
     authToken,
     instanceUrl,
   });
-
   const autoUpdateId = useId();
 
   return (
-    <Flex flexDir="column" gap={4}>
-      <Flex flexDir="row" gap={2} justify="space-between">
-        <Flex flexDir="column" gap={2}>
-          <Heading size="title.md">Contract Subscriptions</Heading>
-          <Text>
+    <div>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row gap-4 justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-semibold mb-1 tracking-tight">
+            Contract Subscriptions
+          </h2>
+          <p className="text-muted-foreground text-sm">
             Subscribe to event logs and transaction receipts on any contract.{" "}
             <UnderlineLink
               color="primary.500"
@@ -44,21 +43,23 @@ export const EngineContractSubscriptions: React.FC<
               Learn more about contract subscriptions
             </UnderlineLink>
             .
-          </Text>
-        </Flex>
-        <div className="flex flex-row">
-          <FormControl alignItems="center" display="flex">
-            <FormLabel htmlFor={autoUpdateId} mb="0">
+          </p>
+        </div>
+
+        <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center gap-3">
+            <label htmlFor={autoUpdateId} className="text-sm">
               Auto-Update
-            </FormLabel>
+            </label>
             <Switch
               id={autoUpdateId}
-              isChecked={autoUpdate}
-              onChange={() => setAutoUpdate((val) => !val)}
+              checked={autoUpdate}
+              onCheckedChange={() => setAutoUpdate((val) => !val)}
             />
-          </FormControl>
+          </div>
         </div>
-      </Flex>
+      </div>
+
       <ContractSubscriptionTable
         authToken={authToken}
         autoUpdate={autoUpdate}
@@ -68,11 +69,15 @@ export const EngineContractSubscriptions: React.FC<
         isFetched={contractSubscriptionsQuery.isFetched}
         isPending={contractSubscriptionsQuery.isPending}
       />
-      <AddContractSubscriptionButton
-        authToken={authToken}
-        client={client}
-        instanceUrl={instanceUrl}
-      />
-    </Flex>
+
+      {/* add */}
+      <div className="flex justify-end mt-4">
+        <AddContractSubscriptionButton
+          authToken={authToken}
+          client={client}
+          instanceUrl={instanceUrl}
+        />
+      </div>
+    </div>
   );
-};
+}

@@ -36,8 +36,8 @@ export function publisherProfileUpdatedEvent(
   filters: PublisherProfileUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event PublisherProfileUpdated(address indexed publisher, string prevURI, string newURI)",
-    filters,
   });
 }

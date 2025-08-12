@@ -1,3 +1,14 @@
+import { OpenApiEndpoint, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Deploy contracts",
+		icon: "contracts",
+	},
+	title: "Deploy Contracts",
+	description: "Deploy contracts on any EVM chain.",
+});
+
 # Deploy Contracts
 
 You can deploy contracts via CLI or programatically.
@@ -16,8 +27,6 @@ You can also publish your contract to be deployable by anyone on any chain.
 npx thirdweb publish -k <project-secret-key>
 ```
 
-
-
 ## Deploying via SDK
 
 You can deploy contracts from ABI and bytecode.
@@ -26,15 +35,15 @@ You can deploy contracts from ABI and bytecode.
 import { deployContract } from "thirdweb/deploys";
 
 const address = await deployContract({
-  client,
-  chain,
-  bytecode: "0x...",
-  abi: contractAbi,
-  constructorParams: {
-    param1: "value1",
-    param2: 123,
-  },
-  salt, // optional: salt enables deterministic deploys
+	client,
+	chain,
+	bytecode: "0x...",
+	abi: contractAbi,
+	constructorParams: {
+		param1: "value1",
+		param2: 123,
+	},
+	salt, // optional: salt enables deterministic deploys
 });
 ```
 
@@ -44,14 +53,26 @@ Or alternatively, you can deploy a contract from a previously published contract
 import { deployPublishedContract } from "thirdweb/deploys";
 
 const address = await deployPublishedContract({
-  client,
-  chain,
-  account,
-  contractId: "MyPublishedContract",
-  contractParams: {
-    param1: "value1",
-    param2: 123,
-  },
-  publisher: "0x...", // optional, defaults to the thirdweb deployer
+	client,
+	chain,
+	account,
+	contractId: "MyPublishedContract",
+	contractParams: {
+		param1: "value1",
+		param2: 123,
+	},
+	publisher: "0x...", // optional, defaults to the thirdweb deployer
 });
 ```
+
+## Deploy via API
+
+You can also deploy contracts via API by passing the contract bytecode and ABI. This will automatically verify the contract on block explorers and add it to your project dashboard.
+
+<OpenApiEndpoint path="/v1/contracts" method="POST" />
+
+## List all deployed contracts
+
+You can list all deployed contracts for your project.
+
+<OpenApiEndpoint path="/v1/contracts" method="GET" />

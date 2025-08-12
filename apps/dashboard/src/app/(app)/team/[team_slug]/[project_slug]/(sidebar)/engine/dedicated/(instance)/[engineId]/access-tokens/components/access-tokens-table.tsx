@@ -1,33 +1,28 @@
-import {
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  type UseDisclosureReturn,
-  useDisclosure,
-} from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button } from "chakra/button";
-import { FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type AccessToken,
   useEngineRevokeAccessToken,
   useEngineUpdateAccessToken,
 } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { toDateTimeLocal } from "@/utils/date-utils";
+import { parseError } from "@/utils/errorParser";
 
 interface AccessTokensTableProps {
   instanceUrl: string;
@@ -40,36 +35,32 @@ interface AccessTokensTableProps {
 
 const columnHelper = createColumnHelper<AccessToken>();
 
-export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
+export function AccessTokensTable({
   instanceUrl,
   accessTokens,
   isPending,
   isFetched,
   authToken,
   client,
-}) => {
-  const editDisclosure = useDisclosure();
-  const removeDisclosure = useDisclosure();
+}: AccessTokensTableProps) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
   const [selectedAccessToken, setSelectedAccessToken] = useState<AccessToken>();
 
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("tokenMask", {
-        cell: (cell) => {
-          return (
-            <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
-          );
-        },
+        cell: (cell) => (
+          <p className="py-3 font-mono text-foreground">{cell.getValue()}</p>
+        ),
         header: "Access Token",
       }),
       columnHelper.accessor("label", {
-        cell: (cell) => {
-          return (
-            <Text isTruncated maxW={300}>
-              {cell.getValue()}
-            </Text>
-          );
-        },
+        cell: (cell) => (
+          <span className="truncate max-w-[300px] block">
+            {cell.getValue()}
+          </span>
+        ),
         header: "Label",
       }),
       columnHelper.accessor("walletAddress", {
@@ -82,11 +73,8 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
       columnHelper.accessor("createdAt", {
         cell: (cell) => {
           const value = cell.getValue();
-
-          if (!value) {
-            return;
-          }
-          return <Text>{toDateTimeLocal(value)}</Text>;
+          if (!value) return null;
+          return <span>{toDateTimeLocal(value)}</span>;
         },
         header: "Created At",
       }),
@@ -105,7 +93,7 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
             icon: <PencilIcon className="size-4" />,
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);
-              editDisclosure.onOpen();
+              setEditOpen(true);
             },
             text: "Edit",
           },
@@ -114,181 +102,201 @@ export const AccessTokensTable: React.FC<AccessTokensTableProps> = ({
             isDestructive: true,
             onClick: (accessToken) => {
               setSelectedAccessToken(accessToken);
-              removeDisclosure.onOpen();
+              setRemoveOpen(true);
             },
             text: "Delete",
           },
         ]}
         title="access tokens"
       />
-
-      {selectedAccessToken && editDisclosure.isOpen && (
+      {selectedAccessToken && (
         <EditModal
+          open={editOpen}
+          onOpenChange={setEditOpen}
           accessToken={selectedAccessToken}
           authToken={authToken}
-          disclosure={editDisclosure}
           instanceUrl={instanceUrl}
         />
       )}
-      {selectedAccessToken && removeDisclosure.isOpen && (
+      {selectedAccessToken && (
         <RemoveModal
+          open={removeOpen}
+          onOpenChange={setRemoveOpen}
           accessToken={selectedAccessToken}
           authToken={authToken}
-          disclosure={removeDisclosure}
           instanceUrl={instanceUrl}
         />
       )}
     </>
   );
-};
+}
 
-const EditModal = ({
+function EditModal({
+  open,
+  onOpenChange,
   accessToken,
-  disclosure,
   instanceUrl,
   authToken,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   accessToken: AccessToken;
-  disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
-}) => {
-  const { mutate: updateAccessToken } = useEngineUpdateAccessToken({
+}) {
+  const updateToken = useEngineUpdateAccessToken({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully updated access token",
-    "Failed to update access token",
-  );
-
   const [label, setLabel] = useState(accessToken.label ?? "");
-
   const onClick = () => {
-    updateAccessToken(
+    updateToken.mutate(
       {
         id: accessToken.id,
         label,
       },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to update access token", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Successfully updated access token");
+          onOpenChange(false);
         },
       },
     );
   };
-
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Update Access Token</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <FormControl>
-              <FormLabel>Access Token</FormLabel>
-              <Text>{accessToken.tokenMask}</Text>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Input
-                onChange={(e) => setLabel(e.target.value)}
-                placeholder="Enter a description for this access token"
-                type="text"
-                value={label}
-              />
-            </FormControl>
-          </div>
-        </ModalBody>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Update Access Token</DialogTitle>
+        </DialogHeader>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
+        <div className="px-4 lg:px-6 space-y-5">
+          <div className="space-y-1.5">
+            <h3 className="text-sm font-medium">Access Token </h3>
+            <div className="font-mono text-sm text-muted-foreground">
+              {accessToken.tokenMask}
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="edit-label">Label</Label>
+            <Input
+              id="edit-label"
+              onChange={(e) => setLabel(e.target.value)}
+              placeholder="Enter a description for this access token"
+              className="bg-card"
+              type="text"
+              value={label}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 border-t p-4 lg:p-6 mt-8 bg-card">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            type="button"
+          >
             Cancel
           </Button>
-          <Button colorScheme="blue" onClick={onClick} type="submit">
+          <Button onClick={onClick} type="submit" className="gap-2">
+            {updateToken.isPending && <Spinner className="size-4" />}
             Save
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
+}
 
-const RemoveModal = ({
+function RemoveModal({
+  open,
+  onOpenChange,
   accessToken,
-  disclosure,
   instanceUrl,
   authToken,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   accessToken: AccessToken;
-  disclosure: UseDisclosureReturn;
   instanceUrl: string;
   authToken: string;
-}) => {
-  const { mutate: deleteAccessToken } = useEngineRevokeAccessToken({
+}) {
+  const deleteToken = useEngineRevokeAccessToken({
     authToken,
     instanceUrl,
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deleted access token",
-    "Failed to delete access token",
-  );
-
   const onClick = () => {
-    deleteAccessToken(
+    deleteToken.mutate(
       {
         id: accessToken.id,
       },
       {
         onError: (error) => {
-          onError(error);
+          toast.error("Failed to delete access token", {
+            description: parseError(error),
+          });
           console.error(error);
         },
         onSuccess: () => {
-          onSuccess();
-          disclosure.onClose();
+          toast.success("Successfully deleted access token");
+          onOpenChange(false);
         },
       },
     );
   };
-
   return (
-    <Modal isCentered isOpen={disclosure.isOpen} onClose={disclosure.onClose}>
-      <ModalOverlay />
-      <ModalContent className="!bg-background rounded-lg border border-border">
-        <ModalHeader>Delete Access Token</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <div className="flex flex-col gap-4">
-            <Text>Are you sure you want to delete this access token?</Text>
-            <FormControl>
-              <FormLabel>Access Token</FormLabel>
-              <Text>{accessToken.tokenMask}</Text>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Text>{accessToken.label ?? <em>N/A</em>}</Text>
-            </FormControl>
-          </div>
-        </ModalBody>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Delete access token</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this access token?
+          </DialogDescription>
+        </DialogHeader>
 
-        <ModalFooter as={Flex} gap={3}>
-          <Button onClick={disclosure.onClose} type="button" variant="ghost">
+        <div className="px-4 lg:px-6 space-y-5">
+          <div className="space-y-1.5">
+            <h3 className="text-sm font-medium">Access Token </h3>
+            <div className="font-mono text-sm text-muted-foreground">
+              {accessToken.tokenMask}
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Label</Label>
+            <div className="text-sm text-muted-foreground">
+              {accessToken.label ?? <span> No Label </span>}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 border-t p-4 lg:p-6 mt-8 bg-card">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            type="button"
+          >
             Cancel
           </Button>
-          <Button colorScheme="red" onClick={onClick} type="submit">
+          <Button
+            variant="destructive"
+            onClick={onClick}
+            type="submit"
+            className="gap-2"
+          >
+            {deleteToken.isPending && <Spinner className="size-4" />}
             Delete
           </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
+}

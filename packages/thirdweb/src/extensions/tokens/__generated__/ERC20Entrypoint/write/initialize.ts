@@ -13,6 +13,7 @@ import { once } from "../../../../../utils/promise/once.js";
  */
 export type InitializeParams = WithOverrides<{
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
+  manager: AbiParameterToPrimitiveType<{ type: "address"; name: "manager" }>;
   poolRouter: AbiParameterToPrimitiveType<{
     type: "address";
     name: "poolRouter";
@@ -20,11 +21,15 @@ export type InitializeParams = WithOverrides<{
   airdrop: AbiParameterToPrimitiveType<{ type: "address"; name: "airdrop" }>;
 }>;
 
-export const FN_SELECTOR = "0xc0c53b8b" as const;
+export const FN_SELECTOR = "0xf8c8765e" as const;
 const FN_INPUTS = [
   {
     type: "address",
     name: "owner",
+  },
+  {
+    type: "address",
+    name: "manager",
   },
   {
     type: "address",
@@ -66,6 +71,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * import { encodeInitializeParams } from "thirdweb/extensions/tokens";
  * const result = encodeInitializeParams({
  *  owner: ...,
+ *  manager: ...,
  *  poolRouter: ...,
  *  airdrop: ...,
  * });
@@ -74,6 +80,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
 export function encodeInitializeParams(options: InitializeParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.owner,
+    options.manager,
     options.poolRouter,
     options.airdrop,
   ]);
@@ -89,6 +96,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * import { encodeInitialize } from "thirdweb/extensions/tokens";
  * const result = encodeInitialize({
  *  owner: ...,
+ *  manager: ...,
  *  poolRouter: ...,
  *  airdrop: ...,
  * });
@@ -116,6 +124,7 @@ export function encodeInitialize(options: InitializeParams) {
  * const transaction = initialize({
  *  contract,
  *  owner: ...,
+ *  manager: ...,
  *  poolRouter: ...,
  *  airdrop: ...,
  *  overrides: {
@@ -146,6 +155,7 @@ export function initialize(
       const resolvedOptions = await asyncOptions();
       return [
         resolvedOptions.owner,
+        resolvedOptions.manager,
         resolvedOptions.poolRouter,
         resolvedOptions.airdrop,
       ] as const;

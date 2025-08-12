@@ -46,8 +46,8 @@ export type DeletedEventFilters = Partial<{
  */
 export function deletedEvent(filters: DeletedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event Deleted(address indexed deployer, address indexed deployment, uint256 indexed chainId)",
-    filters,
   });
 }

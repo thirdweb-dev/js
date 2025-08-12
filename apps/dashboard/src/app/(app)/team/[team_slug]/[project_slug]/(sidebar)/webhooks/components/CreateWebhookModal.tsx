@@ -65,7 +65,7 @@ export function CreateContractWebhookButton({
       inputAbi: [],
       name: "",
       secret: "",
-      sigHash: "",
+      sigHash: [],
       sigHashAbi: "",
       toAddresses: "",
       webhookUrl: "",

@@ -79,7 +79,6 @@ export function DatePickerWithRange(props: {
             <div className={cn("px-4", !props.header && "py-4")}>
               <TabButtons
                 activeTabClassName="!bg-inverted !text-inverted-foreground"
-                tabClassName="!text-sm"
                 tabContainerClassName="gap-2"
                 tabs={[
                   {

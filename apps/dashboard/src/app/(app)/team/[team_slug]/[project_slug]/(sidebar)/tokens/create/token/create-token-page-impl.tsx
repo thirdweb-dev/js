@@ -20,7 +20,7 @@ import {
   reportAssetCreationFailed,
   reportContractDeployed,
 } from "@/analytics/report";
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { parseError } from "@/utils/errorParser";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";

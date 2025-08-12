@@ -1,17 +1,27 @@
 "use client";
 
-import { FormControl, Input } from "@chakra-ui/react";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GemIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { isAddress, type ThirdwebContract } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -19,9 +29,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { parseError } from "@/utils/errorParser";
 
-const CLAIM_FORM_ID = "nft-claim-form";
+const claimFormSchema = z.object({
+  amount: z.string().refine((val) => {
+    const num = Number(val);
+    return Number.isInteger(num) && num > 0;
+  }, "Amount must be a positive integer"),
+  to: z.string().refine((val) => {
+    if (isAddress(val)) {
+      return true;
+    }
+    return false;
+  }, "Invalid address"),
+});
+
+type ClaimFormData = z.infer<typeof claimFormSchema>;
 
 interface NFTClaimButtonProps {
   contract: ThirdwebContract;
@@ -32,22 +55,63 @@ interface NFTClaimButtonProps {
  * This button is used for claiming NFT Drop contract (erc721) only!
  * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
  */
-export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
-  contract,
-  isLoggedIn,
-}) => {
+export function NFTClaimButton({ contract, isLoggedIn }: NFTClaimButtonProps) {
   const address = useActiveAccount()?.address;
-  const { register, handleSubmit, formState, setValue } = useForm({
+  const form = useForm<ClaimFormData>({
+    resolver: zodResolver(claimFormSchema),
     defaultValues: { amount: "1", to: address },
   });
-  const { errors } = formState;
   const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
   const [open, setOpen] = useState(false);
-  const claimNFTNotifications = useTxNotifications(
-    "NFT claimed successfully",
-    "Failed to claim NFT",
-  );
+
+  async function onSubmit(data: ClaimFormData) {
+    try {
+      if (!account) {
+        return toast.error("No account detected");
+      }
+
+      const transaction = claimTo({
+        contract,
+        from: account.address,
+        quantity: BigInt(data.amount),
+        to: data.to.trim(),
+      });
+
+      const approveTx = await getApprovalForTransaction({
+        account,
+        transaction,
+      });
+
+      if (approveTx) {
+        const approveTxPromise = sendAndConfirmTx.mutateAsync(approveTx, {
+          onError: (error) => {
+            console.error(error);
+          },
+        });
+        toast.promise(approveTxPromise, {
+          error: (err) => ({
+            message: "Failed to approve token",
+            description: parseError(err),
+          }),
+          loading: "Approving ERC20 tokens for this claim",
+          success: "Tokens approved successfully",
+        });
+
+        await approveTxPromise;
+      }
+
+      await sendAndConfirmTx.mutateAsync(transaction);
+
+      toast.success("NFT claimed successfully");
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to claim NFT", {
+        description: parseError(error),
+      });
+    }
+  }
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
@@ -56,120 +120,79 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
           <GemIcon className="size-4" /> Claim
         </Button>
       </SheetTrigger>
-      <SheetContent className="overflow-y-auto sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+
+      <SheetContent className="!w-full !max-w-lg">
         <SheetHeader>
           <SheetTitle className="text-left">Claim NFTs</SheetTitle>
         </SheetHeader>
-        <form className="mt-8 flex w-full flex-col gap-3 md:flex-row">
-          <div className="flex w-full flex-col gap-6 md:flex-row">
-            <FormControl isInvalid={!!errors.to} isRequired>
-              <FormLabel>To Address</FormLabel>
-              <Input
-                placeholder={ZERO_ADDRESS}
-                {...register("to", {
-                  onChange: (e) => {
-                    setValue("to", e.target.value.trim(), {
-                      shouldValidate: true,
-                    });
-                  },
-                  validate: (value) => {
-                    if (!value) {
-                      return "Enter a recipient address";
-                    }
-                    if (!isAddress(value.trim())) {
-                      return "Invalid EVM address";
-                    }
-                  },
-                })}
-              />
-              <FormHelperText>Enter the address to claim to.</FormHelperText>
-              <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
-            </FormControl>
-            <FormControl isInvalid={!!errors.amount} isRequired>
-              <FormLabel>Amount</FormLabel>
-              <Input
-                type="text"
-                {...register("amount", {
-                  validate: (value) => {
-                    const valueNum = Number(value);
-                    if (!Number.isInteger(valueNum)) {
-                      return "Amount must be an integer";
-                    }
-                  },
-                })}
-              />
-              <FormHelperText>How many would you like to claim?</FormHelperText>
-              <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
-            </FormControl>
-          </div>
-        </form>
-        <div className="mt-4 flex justify-end">
-          <TransactionButton
-            client={contract.client}
-            form={CLAIM_FORM_ID}
-            isLoggedIn={isLoggedIn}
-            isPending={formState.isSubmitting}
-            onClick={handleSubmit(async (d) => {
-              try {
-                if (!account) {
-                  return toast.error("No account detected");
-                }
-                if (!d.to) {
-                  return toast.error(
-                    "Please enter the address that will receive the NFT",
-                  );
-                }
-
-                const transaction = claimTo({
-                  contract,
-                  from: account.address,
-                  quantity: BigInt(d.amount),
-                  to: d.to.trim(),
-                });
-
-                const approveTx = await getApprovalForTransaction({
-                  account,
-                  transaction,
-                });
-
-                if (approveTx) {
-                  const promise = sendAndConfirmTx.mutateAsync(approveTx, {
-                    onError: (error) => {
-                      console.error(error);
-                    },
-                  });
-                  toast.promise(promise, {
-                    error: "Failed to approve token",
-                    loading: "Approving ERC20 tokens for this claim",
-                    success: "Tokens approved successfully",
-                  });
-
-                  await promise;
-                }
-
-                await sendAndConfirmTx.mutateAsync(transaction, {
-                  onError: (error) => {
-                    console.error(error);
-                  },
-                  onSuccess: () => {
-                    setOpen(false);
-                  },
-                });
-
-                claimNFTNotifications.onSuccess();
-              } catch (error) {
-                console.error(error);
-                claimNFTNotifications.onError(error);
-              }
-            })}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-4 space-y-5"
           >
-            Claim NFT
-          </TransactionButton>
-        </div>
+            <FormField
+              control={form.control}
+              name="to"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>To Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="0x..."
+                      className="bg-card"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.trim());
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Enter the address to claim to.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      className="bg-card"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.trim());
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    How many would you like to claim?
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end">
+              <TransactionButton
+                client={contract.client}
+                isLoggedIn={isLoggedIn}
+                isPending={form.formState.isSubmitting}
+                onClick={() => {}}
+                transactionCount={1}
+                txChainID={contract.chain.id}
+                type="submit"
+              >
+                Claim NFT
+              </TransactionButton>
+            </div>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );
-};
+}

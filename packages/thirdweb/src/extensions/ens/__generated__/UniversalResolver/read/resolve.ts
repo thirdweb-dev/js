@@ -17,12 +17,12 @@ export type ResolveParams = {
 export const FN_SELECTOR = "0x9061b923" as const;
 const FN_INPUTS = [
   {
-    type: "bytes",
     name: "name",
+    type: "bytes",
   },
   {
-    type: "bytes",
     name: "data",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [

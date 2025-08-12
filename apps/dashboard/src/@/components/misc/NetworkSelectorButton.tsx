@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { popularChains } from "@/constants/popularChains";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useActiveChainAsDashboardChain } from "@/hooks/chains/v5-adapter";
+import { useFavoriteChainIds } from "@/hooks/favorite-chains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { useStore } from "@/lib/reactive";
 import { cn } from "@/lib/utils";
@@ -17,7 +18,6 @@ import {
   recentlyUsedChainIdsStore,
   type StoredChain,
 } from "@/stores/chainStores";
-import { useFavoriteChainIds } from "../../../app/(app)/(dashboard)/(chain)/components/client/star-button";
 import { mapV4ChainToV5Chain } from "../../utils/map-chains";
 import { getSDKTheme } from "../../utils/sdk-component-theme";
 import { CustomChainRenderer } from "./CustomChainRenderer";

@@ -27,8 +27,8 @@ import type { ThirdwebClient } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { z } from "zod";
 import { apiServerProxy } from "@/actions/proxies";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { DangerSettingCard } from "@/components/blocks/DangerSettingCard";
 import { FileInput } from "@/components/blocks/FileInput";
@@ -223,7 +223,7 @@ export function ProjectGeneralSettingsPageUI(props: {
     aaConfig: `${projectLayout}/account-abstraction/settings`,
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
     inAppConfig: `${projectLayout}/wallets/settings`,
-    payConfig: `${projectLayout}/universal-bridge/settings`,
+    payConfig: `${projectLayout}/payments/settings`,
   };
 
   const { project } = props;

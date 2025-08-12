@@ -17,31 +17,41 @@ export async function RPCAnalytics(props: {
   teamId: string;
   range: Range;
   interval: "day" | "week";
+  authToken: string;
 }) {
-  const { projectId, teamId, range, interval } = props;
+  const { projectId, teamId, range, interval, authToken } = props;
 
   // TODO: add requests by status code, but currently not performant enough
-  const allRequestsByUsageTypePromise = getRpcUsageByType({
-    from: range.from,
-    period: "all",
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
-  const requestsByUsageTypePromise = getRpcUsageByType({
-    from: range.from,
-    period: interval,
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  });
-  const evmMethodsPromise = getRpcMethodUsage({
-    from: range.from,
-    period: "all",
-    projectId: projectId,
-    teamId: teamId,
-    to: range.to,
-  }).catch((error) => {
+  const allRequestsByUsageTypePromise = getRpcUsageByType(
+    {
+      from: range.from,
+      period: "all",
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    authToken,
+  );
+  const requestsByUsageTypePromise = getRpcUsageByType(
+    {
+      from: range.from,
+      period: interval,
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    authToken,
+  );
+  const evmMethodsPromise = getRpcMethodUsage(
+    {
+      from: range.from,
+      period: "all",
+      projectId: projectId,
+      teamId: teamId,
+      to: range.to,
+    },
+    authToken,
+  ).catch((error) => {
     console.error(error);
     return [];
   });

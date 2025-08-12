@@ -2,6 +2,7 @@ import type { Address } from "abitype";
 import type * as ox__TypedData from "ox/TypedData";
 import type { Hex, SignableMessage } from "viem";
 import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import type {
   AuthorizationRequest,
   SignedAuthorization,
@@ -12,6 +13,15 @@ import type {
 } from "../../transaction/prepare-transaction.js";
 import type { SerializableTransaction } from "../../transaction/serialize-transaction.js";
 import type { SendTransactionResult } from "../../transaction/types.js";
+import type { GetCapabilitiesResult } from "../eip5792/get-capabilities.js";
+import type {
+  SendCallsOptions,
+  SendCallsResult,
+} from "../eip5792/send-calls.js";
+import type {
+  GetCallsStatusResponse,
+  WalletSendCallsId,
+} from "../eip5792/types.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
 import type {
   CreateWalletArgs,
@@ -300,4 +310,25 @@ export type Account = {
    * ```
    */
   watchAsset?: (asset: WatchAssetParams) => Promise<boolean>;
+
+  /**
+   * EIP-5792: Send the given array of calls via the wallet provider
+   */
+  sendCalls?: (
+    calls: Omit<SendCallsOptions, "wallet">,
+  ) => Promise<Omit<SendCallsResult, "wallet">>;
+  /**
+   * EIP-5792: Get the status of the given call bundle
+   */
+  getCallsStatus?: (options: {
+    id: WalletSendCallsId;
+    chain: Chain;
+    client: ThirdwebClient;
+  }) => Promise<GetCallsStatusResponse>;
+  /**
+   * EIP-5792: Get the capabilities of the wallet
+   */
+  getCapabilities?: (options: {
+    chainId?: number;
+  }) => Promise<GetCapabilitiesResult>;
 };

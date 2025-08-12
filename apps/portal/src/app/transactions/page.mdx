@@ -1,40 +1,39 @@
 import {
-	Callout,
-	OpenSourceCard,
-	createMetadata,
-	InstallTabs,
-	SDKCard,
-	Grid,
-	ArticleIconCard,
-	Tabs,
-	TabsList,
-	TabsTrigger,
-	TabsContent,
+  Callout,
+  OpenSourceCard,
+  createMetadata,
+  InstallTabs,
+  SDKCard,
+  Grid,
+  ArticleIconCard,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  OpenApiEndpoint,
 } from "@doc";
 import {
-	ReactIcon,
-	TypeScriptIcon,
-	UnityIcon,
-	DotNetIcon,
-	UnrealEngineIcon,
-	EngineIcon,
+  ReactIcon,
+  TypeScriptIcon,
+  UnityIcon,
+  DotNetIcon,
+  UnrealEngineIcon,
+  EngineIcon,
 } from "@/icons";
 import { ExternalLink } from "lucide-react";
 
 export const metadata = createMetadata({
-	image: {
-		title: "Transactions",
-		icon: "transactions",
-	},
-	title: "Transactions",
-	description: "Send, monitor, and manage transactions.",
+  image: {
+    title: "Transactions",
+    icon: "transactions",
+  },
+  title: "Transactions",
+  description: "Send, monitor, and manage transactions.",
 });
 
 # Get Started
 
 Send, monitor, and manage transactions. Send transactions from user or server wallets, sponsor gas, monitor transaction status, and more.
-
----
 
 <Tabs defaultValue="http">
   <TabsList>
@@ -69,29 +68,18 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
   </TabsList>
 
   <TabsContent value="http">
-    ### Send a Transaction
 
-    You can send transactions with your [server wallets](/connect/wallet/server) using the [transactions API](https://engine.thirdweb.com/reference).
+    ### Send raw transactions
 
-    ```http
-    POST /v1/contract/write
-    Content-Type: application/json
-    x-secret-key: <your-project-secret-key>
+    Send a raw transaction from a [user wallet](/wallets/users) from the frontend, or [server wallet](/wallets/server) from the backend using the [thirdweb API](https://api.thirdweb.com/reference#tag/transactions/post/v1/transactions).
 
-    {
-        "executionOptions": {
-          "from": "0x...", // your server wallet address
-          "chainId": "1" // your chain id
-        },
-        "params": [{
-          "contractAddress": "0x...",
-          "method": "function transfer(address to, uint256 amount)",
-          "params": ["0x...", "1000000000000000000"],
-        }],
-    }
-    ```
+    - For server wallets, you can execute transactions with just your project secret key.
+    - For user wallets in React applications that use the SDK, you can obtain the user wallet auth token (JWT) with the [`useAuthToken()`](/references/typescript/v5/useAuthToken) hook.
+    - For user wallets in TypeScript applications, you can get it by calling `wallet.getAuthToken()` on a connected [`inAppWallet()`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet()`](/references/typescript/v5/ecosystemWallet).
 
-  </TabsContent>
+      <OpenApiEndpoint path="/v1/transactions" method="POST" />
+
+    </TabsContent>
 
   <TabsContent value="typescript">
     ### Installation
@@ -146,7 +134,7 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
 
     ### Send a Transaction
 
-    Send a transaction from a [user wallet](/connect/wallet/sign-in-methods/configure) from the frontend, or [server wallet](/connect/wallet/server) from the backend.
+    Send a transaction from a [user wallet](/wallets/users) from the frontend, or [server wallet](/wallets/server) from the backend.
 
     <Tabs defaultValue="frontend">
       <TabsList>

@@ -42,8 +42,8 @@ export function royaltyEngineUpdatedEvent(
   filters: RoyaltyEngineUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event RoyaltyEngineUpdated(address indexed previousAddress, address indexed newAddress)",
-    filters,
   });
 }

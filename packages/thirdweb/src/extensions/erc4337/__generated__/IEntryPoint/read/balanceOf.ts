@@ -16,8 +16,8 @@ export type BalanceOfParams = {
 export const FN_SELECTOR = "0x70a08231" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "account",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

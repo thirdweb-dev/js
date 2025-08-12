@@ -1,6 +1,5 @@
 "use client";
 
-import { getFaucetClaimAmount } from "@app/api/testnet-faucet/claim/claim-amount";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaucetButton } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(app)/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
@@ -49,6 +48,7 @@ import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { cn } from "@/lib/utils";
 import type { ChainMetadataWithServices, ChainServices } from "@/types/chain";
+import { getFaucetClaimAmount } from "@/utils/faucet";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
 
 const GAS_FREE_CHAINS = [

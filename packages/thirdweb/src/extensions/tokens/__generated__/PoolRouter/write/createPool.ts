@@ -17,8 +17,8 @@ export type CreatePoolParams = WithOverrides<{
     name: "createPoolConfig";
     components: [
       { type: "address"; name: "recipient" },
-      { type: "address"; name: "referrer" },
-      { type: "uint16"; name: "referrerBps" },
+      { type: "address"; name: "developer" },
+      { type: "uint16"; name: "developerBps" },
       { type: "address"; name: "token" },
       { type: "address"; name: "tokenPair" },
       { type: "uint256"; name: "amount" },
@@ -40,11 +40,11 @@ const FN_INPUTS = [
       },
       {
         type: "address",
-        name: "referrer",
+        name: "developer",
       },
       {
         type: "uint16",
-        name: "referrerBps",
+        name: "developerBps",
       },
       {
         type: "address",

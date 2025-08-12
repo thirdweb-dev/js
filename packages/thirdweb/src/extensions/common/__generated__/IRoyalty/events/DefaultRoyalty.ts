@@ -34,8 +34,8 @@ export type DefaultRoyaltyEventFilters = Partial<{
  */
 export function defaultRoyaltyEvent(filters: DefaultRoyaltyEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event DefaultRoyalty(address indexed newRoyaltyRecipient, uint256 newRoyaltyBps)",
-    filters,
   });
 }

@@ -1,8 +1,5 @@
 "use client";
 
-import { FormControl, Textarea } from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { FormErrorMessage, FormLabel } from "chakra/form";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,6 +8,15 @@ import type { ThirdwebContract } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Sheet,
   SheetContent,
@@ -18,95 +24,107 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { parseError } from "@/utils/errorParser";
 
-interface VoteButtonProps {
-  contract: ThirdwebContract;
-  isLoggedIn: boolean;
-}
-
-const PROPOSAL_FORM_ID = "proposal-form-id";
-
-export const ProposalButton: React.FC<VoteButtonProps> = ({
+export function ProposalButton({
   contract,
   isLoggedIn,
-}) => {
+}: {
+  contract: ThirdwebContract;
+  isLoggedIn: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const sendTx = useSendAndConfirmTransaction();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ description: string }>();
+  const form = useForm<{ description: string }>({
+    defaultValues: {
+      description: "",
+    },
+  });
+
+  async function onSubmit(data: { description: string }) {
+    const tx = VoteExt.propose({
+      calldatas: ["0x"],
+      contract,
+      description: data.description,
+      targets: [contract.address],
+      values: [0n],
+    });
+
+    await sendTx.mutateAsync(tx, {
+      onError: (error) => {
+        toast.error("Failed to create proposal", {
+          description: parseError(error),
+        });
+        console.error(error);
+      },
+      onSuccess: () => {
+        toast.success("Proposal created successfully");
+        setOpen(false);
+      },
+    });
+  }
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
-        <Button
-          colorScheme="primary"
-          leftIcon={<PlusIcon className="size-5" />}
-        >
+        <Button className="gap-2" size="sm">
+          <PlusIcon className="size-3.5" />
           Create Proposal
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:w-[540px] sm:max-w-[90%] lg:w-[700px]">
+      <SheetContent className="!w-full lg:!max-w-lg">
         <SheetHeader>
           <SheetTitle>Create new proposal</SheetTitle>
         </SheetHeader>
-        <form
-          className="mt-10 flex flex-col gap-6"
-          id={PROPOSAL_FORM_ID}
-          onSubmit={handleSubmit((data) => {
-            const tx = VoteExt.propose({
-              calldatas: ["0x"],
-              contract,
-              description: data.description,
-              targets: [contract.address],
-              values: [0n],
-            });
-            toast.promise(
-              sendTx.mutateAsync(tx, {
-                onError: (error) => {
-                  console.error(error);
-                },
-                onSuccess: () => {
-                  setOpen(false);
-                },
-              }),
-              {
-                error: "Failed to create proposal",
-                loading: "Creating proposal...",
-                success: "Proposal created successfully",
-              },
-            );
-          })}
-        >
-          <FormControl isInvalid={!!errors.description} isRequired>
-            <FormLabel>Description</FormLabel>
-            <Textarea {...register("description")} />
-            <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
-          </FormControl>
-        </form>
-        <div className="mt-6 flex flex-row justify-end gap-3">
-          <Button
-            isDisabled={sendTx.isPending}
-            onClick={() => setOpen(false)}
-            variant="outline"
+        <Form {...form}>
+          <form
+            className="mt-4 flex flex-col gap-6"
+            onSubmit={form.handleSubmit(onSubmit)}
           >
-            Cancel
-          </Button>
-          <TransactionButton
-            client={contract.client}
-            form={PROPOSAL_FORM_ID}
-            isLoggedIn={isLoggedIn}
-            isPending={sendTx.isPending}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
-          >
-            Submit
-          </TransactionButton>
-        </div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="bg-card"
+                      placeholder="Enter proposal description..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              rules={{
+                required: "Description is required",
+              }}
+            />
+
+            <div className="mt-6 flex flex-row justify-end gap-3">
+              <Button
+                disabled={sendTx.isPending}
+                onClick={() => setOpen(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <TransactionButton
+                client={contract.client}
+                isLoggedIn={isLoggedIn}
+                isPending={sendTx.isPending}
+                transactionCount={1}
+                txChainID={contract.chain.id}
+                type="submit"
+              >
+                Submit
+              </TransactionButton>
+            </div>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );
-};
+}

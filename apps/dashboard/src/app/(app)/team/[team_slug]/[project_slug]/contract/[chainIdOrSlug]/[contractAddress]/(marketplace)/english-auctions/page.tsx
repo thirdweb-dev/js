@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { SharedEnglishAuctionsPage } from "../../../../../../../../(dashboard)/(chain)/[chain_id]/[contractAddress]/(marketplace)/english-auctions/shared-english-auctions-page";
 import type { ProjectContractPageParams } from "../../types";
 

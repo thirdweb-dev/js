@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { EcosystemCreatePage } from "./EcosystemCreatePage";
 
 export default async function Page(props: {

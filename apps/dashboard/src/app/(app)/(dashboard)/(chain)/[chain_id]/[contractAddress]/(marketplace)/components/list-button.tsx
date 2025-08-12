@@ -14,8 +14,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { TabButtons } from "@/components/ui/tabs";
-import { isAlchemySupported } from "@/lib/wallet/nfts/isAlchemySupported";
-import { isMoralisSupported } from "@/lib/wallet/nfts/isMoralisSupported";
 import { CreateListingsForm } from "./list-form";
 
 interface CreateListingButtonProps {
@@ -41,18 +39,18 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   const [listingMode, setListingMode] =
     useState<(typeof LISTING_MODES)[number]>("Select NFT");
 
-  const isSupportedChain =
-    contract.chain.id &&
-    (isInsightSupported ||
-      isAlchemySupported(contract.chain.id) ||
-      isMoralisSupported(contract.chain.id));
-
   return (
     <ListerOnly contract={contract}>
       <Sheet onOpenChange={setOpen} open={open}>
         <SheetTrigger asChild>
-          <Button variant="primary" {...restButtonProps} disabled={!address}>
-            {createText} <PlusIcon className="ml-2 size-5" />
+          <Button
+            {...restButtonProps}
+            disabled={!address}
+            className="gap-2"
+            size="sm"
+          >
+            <PlusIcon className="size-4" />
+            {createText}
           </Button>
         </SheetTrigger>
         <SheetContent className="w-full overflow-y-auto sm:min-w-[540px] lg:min-w-[700px]">
@@ -63,11 +61,9 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           If the chain is not supported by the indexer providers
           we don't show the tabs, we only show the Manual input form.
           Otherwise we show both */}
-          {isSupportedChain ? (
+          {isInsightSupported ? (
             <>
               <TabButtons
-                tabClassName="text-sm gap-2 !text-sm"
-                tabContainerClassName="gap-0.5"
                 tabs={LISTING_MODES.map((mode) => ({
                   isActive: mode === listingMode,
                   name: mode,

@@ -1,4 +1,3 @@
-import { Flex, GridItem, SimpleGrid, usePrevious } from "@chakra-ui/react";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import type {
@@ -11,169 +10,177 @@ import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Card } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@/components/ui/table";
 import { CancelTab } from "./cancel-tab";
 import { LISTING_STATUS } from "./types";
 
-interface NFTDrawerProps {
+export function ListingDrawer(props: {
   contract: ThirdwebContract;
   isOpen: boolean;
   onClose: () => void;
-  data: DirectListing | EnglishAuction | null;
+  data: DirectListing | EnglishAuction;
   isLoggedIn: boolean;
-}
-
-export const ListingDrawer: React.FC<NFTDrawerProps> = ({
-  contract,
-  isOpen,
-  onClose,
-  data,
-  isLoggedIn,
-}) => {
+}) {
+  const { contract, isOpen, onClose, data, isLoggedIn } = props;
   const address = useActiveAccount()?.address;
-  const prevData = usePrevious(data);
-
-  const renderData = data || prevData;
-  const isOwner =
-    address?.toLowerCase() === renderData?.creatorAddress.toLowerCase();
-
-  const tokenId = renderData?.asset.id.toString() || "";
-
-  if (!renderData) {
-    return null;
-  }
+  const isOwner = address?.toLowerCase() === data.creatorAddress.toLowerCase();
+  const tokenId = data.asset.id.toString();
 
   return (
     <Sheet onOpenChange={onClose} open={isOpen}>
-      <SheetContent className="flex w-full flex-col gap-6 py-6 md:min-w-[600px]">
-        <div className="flex flex-row gap-6">
+      <SheetContent className="!w-full !max-w-lg gap-0">
+        <div className="space-y-4">
           <NFTMediaWithEmptyState
             client={contract.client}
-            height="150px"
-            metadata={renderData.asset.metadata}
+            height="120px"
+            metadata={data.asset.metadata}
             requireInteraction
-            width="150px"
+            width="120px"
+            className="border rounded-xl"
           />
-          <Flex flexDir="column" gap={2} w="70%">
-            <p className="font-bold text-lg">
-              {renderData.asset.metadata.name}
+          <div className="space-y-1">
+            <p className="font-semibold text-2xl leading-tight">
+              {data.asset.metadata.name}
             </p>
-            <p className="line-clamp-6 truncate text-base leading-normal">
-              {renderData.asset.metadata.name}
-            </p>
-          </Flex>
+            {data.asset.metadata.description && (
+              <p className="line-clamp-6 truncate text-sm text-muted-foreground">
+                {data.asset.metadata.description}
+              </p>
+            )}
+          </div>
         </div>
 
-        <Flex flexDir="column" gap={4}>
-          <Card className="flex flex-col gap-3 p-4">
-            <SimpleGrid columns={12} placeItems="center left" rowGap={3}>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Asset contract address</p>
-              </GridItem>
-              <GridItem colSpan={9}>
+        <Table className="my-6 border-y border-dashed">
+          <TableBody>
+            {/* NFT contract address */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>NFT contract address</StyledTableHead>
+              <StyledTableCell>
                 <CopyAddressButton
-                  address={renderData.assetContractAddress}
+                  address={data.assetContractAddress}
                   copyIconPosition="right"
                 />
-              </GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Token ID</p>
-              </GridItem>
-              <GridItem colSpan={9}>
+              </StyledTableCell>
+            </TableRow>
+
+            {/* Token ID */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Token ID</StyledTableHead>
+              <StyledTableCell>
                 <CopyTextButton
                   copyIconPosition="right"
+                  className="gap-4"
                   textToCopy={tokenId}
                   textToShow={tokenId}
                   tooltip="Token ID"
                 />
-              </GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Seller</p>
-              </GridItem>
-              <GridItem colSpan={9}>
+              </StyledTableCell>
+            </TableRow>
+
+            {/* Seller */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Seller</StyledTableHead>
+              <StyledTableCell>
                 <WalletAddress
-                  address={renderData.creatorAddress}
+                  address={data.creatorAddress}
                   client={contract.client}
+                  className="py-1 h-auto"
                 />
-              </GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Listing ID</p>
-              </GridItem>
-              <GridItem colSpan={9}>
+              </StyledTableCell>
+            </TableRow>
+
+            {/* Listing ID */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Listing ID</StyledTableHead>
+              <StyledTableCell>
                 <CopyTextButton
+                  className="gap-4"
                   copyIconPosition="right"
-                  textToCopy={renderData.id.toString()}
-                  textToShow={renderData.id.toString()}
+                  textToCopy={data.id.toString()}
+                  textToShow={data.id.toString()}
                   tooltip="Listing ID"
                 />
-              </GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Type</p>
-              </GridItem>
-              <GridItem colSpan={9}>{renderData.asset.type}</GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Status</p>
-              </GridItem>
-              <GridItem colSpan={9}>
+              </StyledTableCell>
+            </TableRow>
+
+            {/* Type */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Type</StyledTableHead>
+              <StyledTableCell>{data.asset.type}</StyledTableCell>
+            </TableRow>
+
+            {/* Status */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Status</StyledTableHead>
+              <StyledTableCell>
                 <Badge className="uppercase">
-                  {LISTING_STATUS[renderData.status]}
+                  {LISTING_STATUS[data.status]}
                 </Badge>
-              </GridItem>
-              <GridItem colSpan={3}>
-                <p className="font-bold">Quantity</p>
-              </GridItem>
-              <GridItem colSpan={9}>
-                {(renderData.quantity || 0n).toString()}{" "}
+              </StyledTableCell>
+            </TableRow>
+
+            {/* Quantity */}
+            <TableRow className="border-dashed">
+              <StyledTableHead>Quantity</StyledTableHead>
+              <StyledTableCell>
+                {(data.quantity || 0n).toString()}{" "}
                 {/* For listings that are completed, the `quantity` would be `0`
-                    So we show this text to make it clear */}
-                {LISTING_STATUS[renderData.status] === "Completed"
+                        So we show this text to make it clear */}
+                {LISTING_STATUS[data.status] === "Completed"
                   ? "(Sold out)"
                   : ""}
-              </GridItem>
+              </StyledTableCell>
+            </TableRow>
 
-              {renderData.type === "direct-listing" && (
-                <>
-                  <GridItem colSpan={3}>
-                    <p className="font-bold">Price</p>
-                  </GridItem>
-                  <GridItem colSpan={9}>
-                    {renderData.currencyValuePerToken.displayValue}{" "}
-                    {renderData.currencyValuePerToken.symbol}
-                  </GridItem>
-                </>
-              )}
-            </SimpleGrid>
-          </Card>
-          {data?.asset.metadata.properties ? (
-            <Card className="flex flex-col gap-3 p-4">
-              <p className="font-bold">Attributes</p>
-              <CodeClient
-                code={
-                  JSON.stringify(data.asset.metadata.properties, null, 2) || ""
-                }
-                lang="json"
-              />
-            </Card>
-          ) : null}
-        </Flex>
+            {/* Price */}
+            {data.type === "direct-listing" && (
+              <TableRow className="border-dashed">
+                <StyledTableHead>Price</StyledTableHead>
+                <StyledTableCell>
+                  {data.currencyValuePerToken.displayValue}{" "}
+                  {data.currencyValuePerToken.symbol}
+                </StyledTableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        {data?.asset.metadata.properties ? (
+          <div className="space-y-1">
+            <p className="font-bold">Attributes</p>
+            <CodeClient
+              code={
+                JSON.stringify(data.asset.metadata.properties, null, 2) || ""
+              }
+              lang="json"
+            />
+          </div>
+        ) : null}
+
         {isOwner && (
           <CancelTab
             contract={contract}
-            id={renderData.id.toString()}
-            isAuction={renderData.type === "english-auction"}
+            id={data.id.toString()}
+            isAuction={data.type === "english-auction"}
             isLoggedIn={isLoggedIn}
           />
         )}
 
-        {!isOwner && renderData.status === "ACTIVE" && (
+        {!isOwner && data.status === "ACTIVE" && (
           <BuyDirectListingButton
             chain={contract.chain}
             className="w-full"
             client={contract.client}
-            contractAddress={renderData.assetContractAddress}
-            listingId={renderData.id}
+            contractAddress={data.assetContractAddress}
+            listingId={data.id}
             onError={(error) => {
               toast.error("Failed to buy listing", {
                 description: error.message,
@@ -184,10 +191,18 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             }}
             quantity={1n}
           >
-            Buy Listing
+            Buy NFT
           </BuyDirectListingButton>
         )}
       </SheetContent>
     </Sheet>
   );
-};
+}
+
+function StyledTableHead({ children }: { children: React.ReactNode }) {
+  return <TableHead className="px-0 py-3.5">{children}</TableHead>;
+}
+
+function StyledTableCell({ children }: { children: React.ReactNode }) {
+  return <TableCell className="px-0 py-3.5">{children}</TableCell>;
+}

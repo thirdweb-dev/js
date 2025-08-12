@@ -1,17 +1,13 @@
-import type { ExploreCategory } from "@app/(dashboard)/explore/data";
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
   ContractCard,
   ContractCardSkeleton,
-} from "@/components/contracts/contract-card";
+} from "@/components/contracts/contract-card/contract-card";
+import type { ExploreCategory } from "../../data";
 
-interface ContractRowProps {
-  category: ExploreCategory;
-}
-
-export function ContractRow({ category }: ContractRowProps) {
+export function ContractRow({ category }: { category: ExploreCategory }) {
   return (
     <section>
       {/* Title, Description + View all link */}

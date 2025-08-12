@@ -42,8 +42,8 @@ export function ownershipTransferredEvent(
   filters: OwnershipTransferredEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event OwnershipTransferred(address indexed oldOwner, address indexed newOwner)",
-    filters,
   });
 }

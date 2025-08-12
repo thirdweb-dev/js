@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, ZapIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
@@ -11,6 +11,11 @@ export const sidebar: SideBar = {
       href: walletSlug,
       name: "Get Started",
       icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com/",
+      icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     { separator: true },
     {
@@ -29,7 +34,11 @@ export const sidebar: SideBar = {
           name: "External Wallets",
         },
         {
-          href: `${walletSlug}/sponsor-gas`,
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "Ecosystem Wallets",
+        },
+        {
+          href: `/transactions/sponsor`,
           name: "Sponsor Gas",
         },
         {
@@ -63,6 +72,11 @@ export const sidebar: SideBar = {
     {
       isCollapsible: false,
       links: [
+        {
+          href: "https://api.thirdweb.com/reference#tag/wallets",
+          icon: <CodeIcon />,
+          name: "HTTP API",
+        },
         {
           href: "/references/typescript/v5",
           icon: <TypeScriptIcon />,
@@ -102,22 +116,12 @@ export const sidebar: SideBar = {
       name: "Resources",
       links: [
         {
-          href: "https://playground.thirdweb.com/",
-          icon: <ExternalLinkIcon />,
-          name: "Playground",
-        },
-        {
-          href: "https://thirdweb.com/templates",
-          icon: <ExternalLinkIcon />,
-          name: "Templates",
-        },
-        {
-          href: `${walletSlug}/ecosystem/set-up`,
-          name: "Ecosystem Wallets",
-        },
-        {
           href: `${walletSlug}/security`,
           name: "Security",
+        },
+        {
+          href: "/vault",
+          name: "Vault",
         },
         {
           href: `${walletSlug}/faq`,

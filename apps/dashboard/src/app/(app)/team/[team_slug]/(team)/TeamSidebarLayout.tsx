@@ -1,5 +1,6 @@
 "use client";
 import {
+  AtomIcon,
   BookTextIcon,
   BoxIcon,
   ChartNoAxesColumnIcon,
@@ -51,7 +52,7 @@ export function TeamSidebarLayout(props: {
             },
           ],
           subMenu: {
-            icon: WalletCardsIcon,
+            icon: AtomIcon,
             label: "Ecosystems",
           },
         },

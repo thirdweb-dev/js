@@ -34,7 +34,7 @@ export type ExecutedEventFilters = Partial<{
  */
 export function executedEvent(filters: ExecutedEventFilters = {}) {
   return prepareEvent({
-    signature: "event Executed(address indexed to, uint256 value, bytes data)",
     filters,
+    signature: "event Executed(address indexed to, uint256 value, bytes data)",
   });
 }

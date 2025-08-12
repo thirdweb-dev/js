@@ -20,23 +20,25 @@ export const EngineConfiguration: React.FC<EngineConfigurationProps> = ({
   authToken,
 }) => {
   return (
-    <div className="flex flex-col gap-12">
+    <div>
       <EngineWalletConfig
         authToken={authToken}
         instance={instance}
         projectSlug={projectSlug}
         teamSlug={teamSlug}
       />
-      <EngineCorsConfig authToken={authToken} instanceUrl={instance.url} />
-      <EngineIpAllowlistConfig
-        authToken={authToken}
-        instanceUrl={instance.url}
-      />
-      <EngineSystem
-        instance={instance}
-        projectSlug={projectSlug}
-        teamIdOrSlug={teamSlug}
-      />
+      <div className="space-y-8">
+        <EngineCorsConfig authToken={authToken} instanceUrl={instance.url} />
+        <EngineIpAllowlistConfig
+          authToken={authToken}
+          instanceUrl={instance.url}
+        />
+        <EngineSystem
+          instance={instance}
+          projectSlug={projectSlug}
+          teamIdOrSlug={teamSlug}
+        />
+      </div>
     </div>
   );
 };

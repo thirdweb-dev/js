@@ -6,7 +6,7 @@ import {
   useCapabilities,
   useWalletInfo,
 } from "thirdweb/react";
-import { createWallet } from "thirdweb/wallets";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import CodeClient from "../code/code.client";
 
@@ -29,6 +29,12 @@ export function Eip5792GetCapabilitiesPreview() {
                 label: "Login to view wallet capabilities",
               }}
               wallets={[
+                inAppWallet({
+                  executionMode: {
+                    mode: "EIP7702",
+                    sponsorGas: true,
+                  },
+                }),
                 createWallet("io.metamask"),
                 createWallet("com.coinbase.wallet"),
               ]}

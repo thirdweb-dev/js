@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { getTeamBySlug, service_getTeamBySlug } from "@/api/team";
-import { getValidAccount } from "../../../../account/settings/getAccount";
+import { getValidAccount } from "@/api/account/get-account";
+import { getTeamBySlug, service_getTeamBySlug } from "@/api/team/get-team";
 import { JoinTeamPage } from "./JoinTeamPage";
 
 export default async function Page(props: {

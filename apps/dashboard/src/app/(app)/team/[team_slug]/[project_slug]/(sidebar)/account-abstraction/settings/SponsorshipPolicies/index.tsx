@@ -1,31 +1,37 @@
 "use client";
 
-import {
-  Box,
-  Divider,
-  Flex,
-  FormControl,
-  IconButton,
-  Input,
-  Select,
-  Switch,
-  Textarea,
-} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectBundlerService } from "@thirdweb-dev/service-utils";
-import { Button } from "chakra/button";
-import { FormErrorMessage, FormLabel } from "chakra/form";
-import { Text } from "chakra/text";
-import { TrashIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { isAddress, type ThirdwebClient } from "thirdweb";
 import { z } from "zod";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { updateProjectClient } from "@/hooks/useApi";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
@@ -175,45 +181,25 @@ export function AccountAbstractionSettingsPage(
   );
 
   return (
-    <Flex flexDir="column" gap={8}>
-      <Flex
-        alignItems="left"
-        flexDir={{ base: "column", lg: "row" }}
-        gap={8}
-        justifyContent="space-between"
-      >
-        <Flex flexDir="column" gap={2}>
-          <Text>
-            Configure the rules for your sponsored transactions.{" "}
-            <UnderlineLink
-              className="text-primary-500"
-              href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              View documentation
-            </UnderlineLink>
-            .
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex
-        as="form"
-        flexDir="column"
-        gap={6}
-        onSubmit={form.handleSubmit((values) => {
-          const limits: ProjectBundlerService["limits"] | null =
-            values.globalLimit
-              ? {
-                  global: {
-                    maxSpend: values.globalLimit.maxSpend,
-                    maxSpendUnit: values.globalLimit.maxSpendUnit,
-                  },
-                }
-              : null;
+    <div className="">
+      <Form {...form}>
+        <form
+          className="bg-card border rounded-lg"
+          onSubmit={form.handleSubmit((values) => {
+            const limits: ProjectBundlerService["limits"] | null =
+              values.globalLimit
+                ? {
+                    global: {
+                      maxSpend: values.globalLimit.maxSpend,
+                      maxSpendUnit: values.globalLimit.maxSpendUnit,
+                    },
+                  }
+                : null;
 
-          const parsedValues: Omit<ProjectBundlerService, "name" | "actions"> =
-            {
+            const parsedValues: Omit<
+              ProjectBundlerService,
+              "name" | "actions"
+            > = {
               // don't set null - `updateProject` API adds chainId 0 to the list if its null and makes it `[0]`
               allowedChainIds: values.allowedChainIds || [],
               allowedContractAddresses: values.allowedContractAddresses
@@ -245,454 +231,493 @@ export function AccountAbstractionSettingsPage(
                   : null,
             };
 
-          const newServices = props.project.services.map((service) => {
-            if (service.name === "bundler") {
-              const bundlerService: ProjectBundlerService = {
-                ...service,
-                actions: [],
-                ...parsedValues,
-              };
+            const newServices = props.project.services.map((service) => {
+              if (service.name === "bundler") {
+                const bundlerService: ProjectBundlerService = {
+                  ...service,
+                  actions: [],
+                  ...parsedValues,
+                };
 
-              return bundlerService;
-            }
+                return bundlerService;
+              }
 
-            return service;
-          });
+              return service;
+            });
 
-          updateProject.mutate(
-            {
-              services: newServices,
-            },
-            {
-              onError,
-              onSuccess,
-            },
-          );
-        })}
-      >
-        <FormControl>
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel pointerEvents="none">Global spend limits</FormLabel>
-                <Text>
-                  Maximum gas cost (in USD) that you want to sponsor. <br />{" "}
-                  This applies for the duration of the billing period (monthly).
-                  Once this limit is reached, your users will have to fund their
-                  own gas costs.
-                </Text>
-              </div>
-
-              <Switch
-                colorScheme="primary"
-                isChecked={!!form.watch("globalLimit")}
-                onChange={() => {
-                  form.setValue(
-                    "globalLimit",
-                    !form.watch("globalLimit")
-                      ? {
-                          maxSpend: "0",
-                          maxSpendUnit: "usd",
-                        }
-                      : null,
-                  );
-                }}
-              />
-            </div>
-            {form.watch("globalLimit") && (
-              <div className="flex flex-col">
-                <FormControl
-                  isInvalid={
-                    !!form.getFieldState("globalLimit.maxSpend", form.formState)
-                      .error
-                  }
-                >
-                  <FormLabel>Spend limit</FormLabel>
-                  <div className="flex flex-row items-center gap-2">
-                    <Input
-                      placeholder="Enter an amount"
-                      w="xs"
-                      {...form.register("globalLimit.maxSpend")}
-                    />
-                    <Select
-                      w="xs"
-                      {...form.register("globalLimit.maxSpendUnit")}
-                    >
-                      <option value="usd">USD</option>
-                      {/* TODO native currency <option value={"native"}>
-                          Native Currency (ie. ETH)
-                        </option> */}
-                    </Select>
-                    <Text>per month</Text>
-                  </div>
-                  <FormErrorMessage>
-                    {
-                      form.getFieldState("globalLimit.maxSpend", form.formState)
-                        .error?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              </div>
-            )}
-          </Flex>
-        </FormControl>
-        <Divider />
-        <FormControl
-          isInvalid={
-            !!form.getFieldState("allowedChainIds", form.formState).error
-          }
+            updateProject.mutate(
+              {
+                services: newServices,
+              },
+              {
+                onError,
+                onSuccess,
+              },
+            );
+          })}
         >
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel pointerEvents="none">
-                  Restrict to specific chains
-                </FormLabel>
-                <Text>
-                  Only sponsor transactions on the specified chains. <br /> By
-                  default, transactions can be sponsored on any of the{" "}
-                  <UnderlineLink
-                    className="text-primary-500"
-                    href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    supported chains.
-                  </UnderlineLink>
-                </Text>
-              </div>
-
-              <Switch
-                colorScheme="primary"
-                isChecked={form.watch("allowedChainIds") !== null}
-                onChange={() => {
-                  form.setValue(
-                    "allowedChainIds",
-                    !form.watch("allowedChainIds") ? [] : null,
-                  );
-                }}
-              />
-            </div>
-            {form.watch("allowedChainIds") && (
-              <Flex flexDir="column">
-                <MultiNetworkSelector
-                  client={props.client}
-                  onChange={(chainIds) =>
-                    form.setValue("allowedChainIds", chainIds)
-                  }
-                  selectedChainIds={form.watch("allowedChainIds") || []}
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("allowedChainIds", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </Flex>
-            )}
-          </Flex>
-        </FormControl>
-        <Divider />
-        <FormControl
-          isInvalid={
-            !!form.getFieldState("allowedContractAddresses", form.formState)
-              .error
-          }
-        >
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel pointerEvents="none">
-                  Restrict to specific contract addresses
-                </FormLabel>
-                <Text>
-                  Only sponsor transactions for the specified contracts.
-                </Text>
-              </div>
-
-              <Switch
-                colorScheme="primary"
-                isChecked={form.watch("allowedContractAddresses") !== null}
-                onChange={() => {
-                  form.setValue(
-                    "allowedContractAddresses",
-                    form.watch("allowedContractAddresses") === null ? "" : null,
-                  );
-                }}
-              />
-            </div>
-            {form.watch("allowedContractAddresses") !== null && (
-              <Flex flexDir="column">
-                <Textarea
-                  placeholder="Comma separated list of contract addresses. ex: 0x1234..., 0x5678..."
-                  {...form.register("allowedContractAddresses")}
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState(
-                      "allowedContractAddresses",
-                      form.formState,
-                    ).error?.message
-                  }
-                </FormErrorMessage>
-              </Flex>
-            )}
-          </Flex>
-        </FormControl>
-
-        <Divider />
-        <FormControl>
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel pointerEvents="none">
-                  Allowlisted/Blocklisted accounts
-                </FormLabel>
-                <Text>
-                  Select either allowlisted or blocklisted accounts. Disabling
-                  this option will allow all accounts.
-                </Text>
-              </div>
-
-              <Switch
-                colorScheme="primary"
-                isChecked={form.watch("allowedOrBlockedWallets") !== null}
-                onChange={() => {
-                  form.setValue(
-                    "allowedOrBlockedWallets",
-                    form.watch("allowedOrBlockedWallets") === null ? "" : null,
-                  );
-                }}
-              />
-            </div>
-            {form.watch("allowedOrBlockedWallets") !== null && (
-              <Select
-                placeholder="Select allowed or blocked wallets"
-                {...form.register("allowedOrBlockedWallets")}
+          <div className="p-4 lg:p-6 border-b border-dashed">
+            <h2 className="text-xl font-semibold tracking-tight mb-0.5">
+              Sponsorship policies
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Configure the rules for your sponsored transactions.{" "}
+              <UnderlineLink
+                className="text-primary-500"
+                href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                <option value="allowed">Allowlisted wallets</option>
-                <option value="blocked">Blocklisted wallets</option>
-              </Select>
-            )}
+                View documentation
+              </UnderlineLink>
+            </p>
+          </div>
 
-            {form.watch("allowedOrBlockedWallets") === "allowed" && (
-              <Flex flexDir="column" gap={2}>
-                <Text>
-                  Only transactions from these accounts will be sponsored. The
-                  same address will be considered across all networks by
-                  default.
-                </Text>
-                <Textarea
-                  placeholder="Comma separated list of wallet addresses. ex: 0x1234..., 0x5678..."
-                  {...form.register("allowedWallets")}
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("allowedWallets", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </Flex>
-            )}
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="globalLimit"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6 border-b border-dashed border-border">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-medium">
+                        Global spend limits
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Maximum gas cost (in USD) that you want to sponsor.{" "}
+                        <br /> This applies for the duration of the billing
+                        period (monthly). Once this limit is reached, your users
+                        will have to fund their own gas costs.
+                      </p>
+                    </div>
 
-            {form.watch("allowedOrBlockedWallets") === "blocked" && (
-              <Flex flexDir="column" gap={2}>
-                <Text>
-                  Transactions from these accounts will not be sponsored. The
-                  same address will be considered across all networks by
-                  default.
-                </Text>
-                <Textarea
-                  placeholder="Comma separated list of wallet addresses. ex: 0x1234..., 0x5678..."
-                  {...form.register("blockedWallets")}
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("blockedWallets", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </Flex>
-            )}
-          </Flex>
-        </FormControl>
-
-        <Divider />
-        <FormControl>
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel
-                  htmlFor="server-verifier-switch"
-                  pointerEvents="none"
-                >
-                  Server verifier
-                </FormLabel>
-                <Text>
-                  Specify your own endpoint that will verify each transaction
-                  and decide whether it should be sponsored or not. <br /> This
-                  gives you fine grained control and lets you build your own
-                  rules.{" "}
-                  <UnderlineLink
-                    className="text-primary-500"
-                    href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    View server verifier documentation
-                  </UnderlineLink>
-                  .
-                </Text>
-              </div>
-
-              <GatedSwitch
-                currentPlan={props.validTeamPlan}
-                requiredPlan="starter"
-                switchProps={{
-                  checked: form.watch("serverVerifier").enabled,
-                  id: "server-verifier-switch",
-                  onCheckedChange: (checked) => {
-                    form.setValue(
-                      "serverVerifier",
-                      !checked
-                        ? { enabled: false, headers: null, url: null }
-                        : { enabled: true, headers: [], url: "" },
-                    );
-                  },
-                }}
-                teamSlug={props.teamSlug}
-              />
-            </div>
-            {form.watch("serverVerifier").enabled && (
-              <div className="flex flex-row items-start">
-                <FormControl
-                  isInvalid={
-                    !!form.getFieldState("serverVerifier.url", form.formState)
-                      .error
-                  }
-                >
-                  <FormLabel>URL</FormLabel>
-                  <Input
-                    placeholder="https://example.com/your-verifier"
-                    type="text"
-                    {...form.register("serverVerifier.url")}
-                  />
-                  <FormErrorMessage>
-                    {
-                      form.getFieldState("serverVerifier.url", form.formState)
-                        .error?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl>
-                  <FormLabel size="label.sm">Custom Headers</FormLabel>
-                  <div className="flex flex-col items-end gap-3">
-                    {customHeaderFields.fields.map((_, customHeaderIdx) => {
-                      return (
-                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                        <Flex gap={2} key={customHeaderIdx} w="full">
-                          <Input
-                            placeholder="Key"
-                            type="text"
-                            {...form.register(
-                              `serverVerifier.headers.${customHeaderIdx}.key`,
-                            )}
-                          />
-                          <Input
-                            placeholder="Value"
-                            type="text"
-                            {...form.register(
-                              `serverVerifier.headers.${customHeaderIdx}.value`,
-                            )}
-                          />
-                          <IconButton
-                            aria-label="Remove header"
-                            icon={<TrashIcon />}
-                            onClick={() => {
-                              customHeaderFields.remove(customHeaderIdx);
-                            }}
-                          />
-                        </Flex>
-                      );
-                    })}
-                    <Button
-                      onClick={() => {
-                        customHeaderFields.append({
-                          key: "",
-                          value: "",
-                        });
+                    <Switch
+                      checked={!!field.value}
+                      onCheckedChange={(checked) => {
+                        field.onChange(
+                          checked
+                            ? {
+                                maxSpend: "0",
+                                maxSpendUnit: "usd",
+                              }
+                            : null,
+                        );
                       }}
-                      w={
-                        customHeaderFields.fields.length === 0
-                          ? "full"
-                          : "fit-content"
-                      }
-                    >
-                      Add header
-                    </Button>
+                    />
                   </div>
-                </FormControl>
-              </div>
-            )}
-          </Flex>
-        </FormControl>
 
-        <Divider />
-        <FormControl
-          isInvalid={
-            !!form.getFieldState("bypassWallets", form.formState).error
-          }
-        >
-          <Flex flexDir="column" gap={4}>
-            <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
-              <div>
-                <FormLabel pointerEvents="none">Admin accounts</FormLabel>
-                <Text>
-                  These accounts won&apos;t be subject to any sponsorship rules.
-                  All transactions will be sponsored.
-                </Text>
-              </div>
+                  {field.value && (
+                    <FormField
+                      control={form.control}
+                      name="globalLimit.maxSpend"
+                      render={({ field: spendField }) => (
+                        <FormItem>
+                          <FormLabel>Spend limit</FormLabel>
+                          <div className="flex flex-row items-center gap-3">
+                            <Input
+                              placeholder="Enter an amount"
+                              className="w-36"
+                              {...spendField}
+                            />
 
-              <Switch
-                colorScheme="primary"
-                isChecked={form.watch("bypassWallets") !== null}
-                onChange={() => {
-                  form.setValue(
-                    "bypassWallets",
-                    form.watch("bypassWallets") === null ? "" : null,
-                  );
-                }}
-              />
-            </div>
-            {form.watch("bypassWallets") !== null && (
-              <Flex flexDir="column">
-                <Textarea
-                  placeholder="Comma separated list of admin accounts. ex: 0x1234..., 0x5678..."
-                  {...form.register("bypassWallets")}
-                />
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("bypassWallets", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </Flex>
-            )}
-          </Flex>
-        </FormControl>
+                            <FormField
+                              control={form.control}
+                              name="globalLimit.maxSpendUnit"
+                              render={({ field: unitField }) => (
+                                <Select
+                                  onValueChange={unitField.onChange}
+                                  value={unitField.value}
+                                >
+                                  <SelectTrigger className="w-32">
+                                    <SelectValue placeholder="Select unit" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="usd">USD</SelectItem>
+                                    {/* TODO native currency <SelectItem value="native">
+                                        Native Currency (ie. ETH)
+                                      </SelectItem> */}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                            <p className="text-sm text-muted-foreground">
+                              per month
+                            </p>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
 
-        <Divider />
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="allowedChainIds"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6 border-b border-dashed border-border">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-medium">
+                        Restrict to specific chains
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Only sponsor transactions on the specified chains.{" "}
+                        <br /> By default, transactions can be sponsored on any
+                        of the{" "}
+                        <UnderlineLink
+                          className="text-primary-500"
+                          href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          supported chains.
+                        </UnderlineLink>
+                      </p>
+                    </div>
 
-        <Box alignSelf="flex-end">
-          <Button
-            colorScheme="primary"
-            isLoading={updateProject.isPending}
-            type="submit"
-          >
-            Save changes
-          </Button>
-        </Box>
-      </Flex>
-    </Flex>
+                    <Switch
+                      checked={field.value !== null}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked ? [] : null);
+                      }}
+                    />
+                  </div>
+                  {field.value && (
+                    <div className="flex flex-col gap-4">
+                      <MultiNetworkSelector
+                        className="max-w-xl bg-background"
+                        client={props.client}
+                        onChange={(chainIds) => field.onChange(chainIds)}
+                        selectedChainIds={field.value || []}
+                      />
+                      <FormMessage />
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
+
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="allowedContractAddresses"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6 border-b border-dashed border-border">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-medium">
+                        Restrict to specific contract addresses
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Only sponsor transactions for the specified contracts.
+                      </p>
+                    </div>
+
+                    <Switch
+                      checked={field.value !== null}
+                      onCheckedChange={(v) => {
+                        field.onChange(v ? "" : null);
+                      }}
+                    />
+                  </div>
+                  {field.value !== null && (
+                    <div className="flex flex-col gap-4">
+                      <Textarea
+                        placeholder="Comma separated list of contract addresses. ex: 0x1234..., 0x5678..."
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                      <FormMessage />
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
+
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="allowedOrBlockedWallets"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6 border-b border-dashed border-border">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-medium">
+                        Allowlisted/Blocklisted accounts
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Select either allowlisted or blocklisted accounts.
+                        Disabling this option will allow all accounts.
+                      </p>
+                    </div>
+
+                    <Switch
+                      checked={field.value !== null}
+                      onCheckedChange={(v) => {
+                        field.onChange(v ? "" : null);
+                      }}
+                    />
+                  </div>
+                  {field.value !== null && (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select allowed or blocked wallets" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="allowed">
+                          Allowlisted wallets
+                        </SelectItem>
+                        <SelectItem value="blocked">
+                          Blocklisted wallets
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {field.value === "allowed" && (
+                    <FormField
+                      control={form.control}
+                      name="allowedWallets"
+                      render={({ field: walletsField }) => (
+                        <div className="flex flex-col gap-2">
+                          <p className="text-sm text-muted-foreground">
+                            Only transactions from these accounts will be
+                            sponsored. The same address will be considered
+                            across all networks by default.
+                          </p>
+                          <Textarea
+                            spellCheck={false}
+                            placeholder="Comma separated list of wallet addresses. ex: 0x1234..., 0x5678..."
+                            {...walletsField}
+                            value={walletsField.value ?? ""}
+                          />
+                          <FormMessage />
+                        </div>
+                      )}
+                    />
+                  )}
+
+                  {field.value === "blocked" && (
+                    <FormField
+                      control={form.control}
+                      name="blockedWallets"
+                      render={({ field: walletsField }) => (
+                        <div className="flex flex-col gap-2">
+                          <p className="text-sm text-muted-foreground">
+                            Transactions from these accounts will not be
+                            sponsored. The same address will be considered
+                            across all networks by default.
+                          </p>
+                          <Textarea
+                            spellCheck={false}
+                            placeholder="Comma separated list of wallet addresses. ex: 0x1234..., 0x5678..."
+                            {...walletsField}
+                            value={walletsField.value ?? ""}
+                          />
+                          <FormMessage />
+                        </div>
+                      )}
+                    />
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
+
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="serverVerifier"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6 border-b border-dashed border-border">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel
+                        htmlFor="server-verifier-switch"
+                        className="text-base font-medium"
+                      >
+                        Server verifier
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        Specify your own endpoint that will verify each
+                        transaction and decide whether it should be sponsored or
+                        not. <br /> This gives you fine grained control and lets
+                        you build your own rules.{" "}
+                        <UnderlineLink
+                          className="text-primary-500"
+                          href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          View server verifier documentation
+                        </UnderlineLink>
+                        .
+                      </p>
+                    </div>
+
+                    <GatedSwitch
+                      currentPlan={props.validTeamPlan}
+                      requiredPlan="starter"
+                      switchProps={{
+                        checked: field.value.enabled,
+                        id: "server-verifier-switch",
+                        onCheckedChange: (v) => {
+                          field.onChange(
+                            !v
+                              ? { enabled: false, headers: null, url: null }
+                              : { enabled: true, headers: [], url: "" },
+                          );
+                        },
+                      }}
+                      teamSlug={props.teamSlug}
+                    />
+                  </div>
+                  {field.value.enabled && (
+                    <div className="flex flex-col gap-4">
+                      <FormField
+                        control={form.control}
+                        name="serverVerifier.url"
+                        render={({ field: urlField }) => (
+                          <FormItem>
+                            <FormLabel>URL</FormLabel>
+                            <Input
+                              placeholder="https://example.com/your-verifier"
+                              type="text"
+                              {...urlField}
+                              value={urlField.value ?? ""}
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="serverVerifier.headers"
+                        render={() => (
+                          <FormItem>
+                            <FormLabel className="text-sm">
+                              Custom Headers
+                            </FormLabel>
+                            <div className="space-y-3">
+                              {customHeaderFields.fields.map((_, headerIdx) => (
+                                <div
+                                  // biome-ignore lint/suspicious/noArrayIndexKey: fine
+                                  key={headerIdx}
+                                  className="flex items-center gap-3 w-full"
+                                >
+                                  <Input
+                                    placeholder="Key"
+                                    className="max-w-xs"
+                                    type="text"
+                                    {...form.register(
+                                      `serverVerifier.headers.${headerIdx}.key`,
+                                    )}
+                                  />
+                                  <Input
+                                    placeholder="Value"
+                                    className="max-w-sm"
+                                    type="text"
+                                    {...form.register(
+                                      `serverVerifier.headers.${headerIdx}.value`,
+                                    )}
+                                  />
+                                  <Button
+                                    variant="outline"
+                                    type="button"
+                                    onClick={() =>
+                                      customHeaderFields.remove(headerIdx)
+                                    }
+                                    className="size-10 rounded-full p-0 shrink-0"
+                                  >
+                                    <TrashIcon className="size-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  customHeaderFields.append({
+                                    key: "",
+                                    value: "",
+                                  });
+                                }}
+                                className="w-fit bg-background rounded-full gap-2"
+                              >
+                                <PlusIcon className="size-3.5" />
+                                Add header
+                              </Button>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
+
+          <DynamicHeight>
+            <FormField
+              control={form.control}
+              name="bypassWallets"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-4 p-4 lg:p-6">
+                  <div className="flex flex-row items-center justify-between gap-6 lg:gap-12">
+                    <div className="space-y-1">
+                      <FormLabel className="text-base font-medium">
+                        Admin accounts
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        These accounts won&apos;t be subject to any sponsorship
+                        rules. All transactions will be sponsored.
+                      </p>
+                    </div>
+
+                    <Switch
+                      checked={field.value !== null}
+                      onCheckedChange={(v) => {
+                        field.onChange(v ? "" : null);
+                      }}
+                    />
+                  </div>
+                  {field.value !== null && (
+                    <div className="flex flex-col gap-4">
+                      <Textarea
+                        placeholder="Comma separated list of admin accounts. ex: 0x1234..., 0x5678..."
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                      <FormMessage />
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+          </DynamicHeight>
+
+          <div className="flex justify-end border-t px-4 lg:px-6 py-4">
+            <Button
+              size="sm"
+              disabled={updateProject.isPending}
+              type="submit"
+              className="gap-2"
+            >
+              {updateProject.isPending && <Spinner className="size-4" />}
+              Save
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

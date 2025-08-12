@@ -1,5 +1,6 @@
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { nextTokenIdToClaim } from "../__generated__/IDrop/read/nextTokenIdToClaim.js";
+import { startTokenId } from "../__generated__/IERC721A/read/startTokenId.js";
 
 /**
  * Retrieves the total claimed supply of ERC721 tokens.
@@ -20,5 +21,10 @@ import { nextTokenIdToClaim } from "../__generated__/IDrop/read/nextTokenIdToCla
 export async function getTotalClaimedSupply(
   options: BaseTransactionOptions,
 ): Promise<bigint> {
-  return nextTokenIdToClaim(options);
+  const [startTokenId_, nextTokenIdToClaim_] = await Promise.all([
+    startTokenId(options).catch(() => 0n),
+    nextTokenIdToClaim(options),
+  ]);
+
+  return nextTokenIdToClaim_ - startTokenId_;
 }

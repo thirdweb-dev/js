@@ -1,4 +1,4 @@
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 
 export function getValidTeamPlan(team: Team): Team["billingPlan"] {
   if (

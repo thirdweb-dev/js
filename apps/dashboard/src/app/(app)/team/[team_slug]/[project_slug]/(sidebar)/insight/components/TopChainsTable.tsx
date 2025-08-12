@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardHeading } from "../../universal-bridge/components/common";
+import { CardHeading } from "../../payments/components/common";
 
 export function TopInsightChainsTable(props: {
   data: InsightChainStats[];

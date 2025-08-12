@@ -1,4 +1,4 @@
-import { ZapIcon } from "lucide-react";
+import { ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
@@ -11,6 +11,11 @@ export const sidebar: SideBar = {
       href: transactionsSlug,
       name: "Get Started",
       icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com/transactions/airdrop-tokens",
+      icon: <ExternalLinkIcon />,
+      name: "Playground",
     },
     { separator: true },
     {
@@ -82,16 +87,35 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
+          href: `/vault`,
+          name: "Vault",
+        },
+        {
+          href: `${transactionsSlug}/security`,
+          name: "Security",
+        },
+        {
+          href: `${transactionsSlug}/troubleshoot`,
+          name: "Troubleshoot",
+        },
+        {
+          href: `${transactionsSlug}/faqs`,
+          name: "FAQs",
+        },
+      ],
+    },
+    { separator: true },
+    {
+      name: "Advanced",
+      isCollapsible: false,
+      links: [
+        {
           href: `/engine/v3`,
           name: "Engine v3",
         },
         {
           href: `/engine/v2`,
           name: "Engine v2",
-        },
-        {
-          href: `/vault`,
-          name: "Vault",
         },
       ],
     },

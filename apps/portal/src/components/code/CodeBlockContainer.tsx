@@ -1,10 +1,10 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow"; // Adjusted path for portal
 import { useClipboard } from "@/hooks/useClipboard"; // Adjusted path for portal
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button"; // Adjusted path for portal
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow"; // Adjusted path for portal
 
 export function CodeBlockContainer(props: {
   codeToCopy: string;

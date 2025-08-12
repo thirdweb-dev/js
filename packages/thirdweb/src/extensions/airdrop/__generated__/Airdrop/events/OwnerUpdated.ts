@@ -40,8 +40,8 @@ export type OwnerUpdatedEventFilters = Partial<{
  */
 export function ownerUpdatedEvent(filters: OwnerUpdatedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event OwnerUpdated(address indexed prevOwner, address indexed newOwner)",
-    filters,
   });
 }

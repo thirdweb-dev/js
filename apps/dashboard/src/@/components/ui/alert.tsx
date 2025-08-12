@@ -4,7 +4,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
-  "bg-card relative w-full rounded-lg border border-border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
+  "bg-card relative w-full rounded-xl border border-border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
   {
     defaultVariants: {
       variant: "default",
@@ -38,7 +38,7 @@ const AlertTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   <h5
-    className={cn("font-medium leading-tight tracking-tight", className)}
+    className={cn("font-medium leading-tight", className)}
     ref={ref}
     {...props}
   />
@@ -51,7 +51,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     className={cn(
-      "mt-1.5 text-muted-foreground text-sm [&_p]:leading-relaxed",
+      "mt-1 text-muted-foreground text-sm [&_p]:leading-relaxed",
       className,
     )}
     ref={ref}

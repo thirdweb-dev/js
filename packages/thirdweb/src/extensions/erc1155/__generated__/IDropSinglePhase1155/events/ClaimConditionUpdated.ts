@@ -36,8 +36,8 @@ export function claimConditionUpdatedEvent(
   filters: ClaimConditionUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event ClaimConditionUpdated(uint256 indexed tokenId, (uint256 startTimestamp, uint256 maxClaimableSupply, uint256 supplyClaimed, uint256 quantityLimitPerWallet, bytes32 merkleRoot, uint256 pricePerToken, address currency, string metadata) condition, bool resetEligibility)",
-    filters,
   });
 }

@@ -23,7 +23,6 @@ export function WalletAddress(props: {
   className?: string;
   iconClassName?: string;
   client: ThirdwebClient;
-  preventOpenOnFocus?: boolean;
   fallbackIcon?: React.ReactNode;
 }) {
   // default back to zero address if no address provided
@@ -76,10 +75,7 @@ export function WalletAddress(props: {
 
   return (
     <HoverCard>
-      <HoverCardTrigger
-        asChild
-        tabIndex={props.preventOpenOnFocus ? -1 : undefined}
-      >
+      <HoverCardTrigger asChild tabIndex={-1}>
         <Button
           className={cn(
             "flex flex-row items-center gap-2 px-0",
@@ -206,11 +202,11 @@ function WalletAvatar(props: {
 
   return (
     <div
-      className={cn("size-6 overflow-hidden rounded-full", props.iconClassName)}
+      className={cn("size-5 overflow-hidden rounded-full", props.iconClassName)}
     >
       {resolvedAvatarSrc ? (
         <Img
-          className={cn("size-6 object-cover", props.iconClassName)}
+          className={cn("size-5 object-cover", props.iconClassName)}
           src={resolvedAvatarSrc}
         />
       ) : props.fallbackIcon ? (

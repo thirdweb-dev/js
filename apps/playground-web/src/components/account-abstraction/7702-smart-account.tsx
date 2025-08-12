@@ -101,6 +101,7 @@ export function Eip7702SmartAccountPreview() {
                   setTxHash(null);
                 }}
                 onError={(error) => {
+                  console.error("minting error", error);
                   alert(`Error: ${error.message}`);
                 }}
                 onTransactionSent={async (tx) => {

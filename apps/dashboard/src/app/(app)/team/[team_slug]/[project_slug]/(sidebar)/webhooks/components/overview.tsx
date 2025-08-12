@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import type { ThirdwebClient } from "thirdweb";
-import type { Topic, WebhookConfig } from "@/api/webhook-configs";
+import type { Topic, WebhookConfig } from "@/api/project/webhook-configs";
 import type { WebhookSummaryStats } from "@/types/analytics";
 import { WebhookConfigsTable } from "./webhook-configs-table";
 

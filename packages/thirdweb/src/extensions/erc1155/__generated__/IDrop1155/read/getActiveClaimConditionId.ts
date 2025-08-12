@@ -16,8 +16,8 @@ export type GetActiveClaimConditionIdParams = {
 export const FN_SELECTOR = "0x5ab063e8" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

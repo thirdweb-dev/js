@@ -36,8 +36,8 @@ export function updatedRewardsPerUnitTimeEvent(
   filters: UpdatedRewardsPerUnitTimeEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event UpdatedRewardsPerUnitTime(uint256 indexed _tokenId, uint256 oldRewardsPerUnitTime, uint256 newRewardsPerUnitTime)",
-    filters,
   });
 }

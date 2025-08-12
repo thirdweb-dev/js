@@ -52,11 +52,18 @@ export async function SharedContractTokensPage(props: {
     info.serverContract,
   );
 
+  if (!supportedERCs.isERC20) {
+    redirectToContractLandingPage({
+      chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
+      projectMeta: props.projectMeta,
+    });
+  }
+
   return (
     <ContractTokensPage
       contract={info.clientContract}
       isClaimToSupported={isClaimToSupported(functionSelectors)}
-      isERC20={supportedERCs.isERC20}
       isLoggedIn={props.isLoggedIn}
       isMintToSupported={isMintToSupported(functionSelectors)}
     />

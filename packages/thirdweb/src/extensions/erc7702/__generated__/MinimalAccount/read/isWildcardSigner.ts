@@ -16,8 +16,8 @@ export type IsWildcardSignerParams = {
 export const FN_SELECTOR = "0x16c258a7" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

@@ -39,11 +39,11 @@ export default async function Page() {
       <Breadcrumb
         crumbs={[
           {
-            href: "/connect/external-wallets",
+            href: "/wallets/external-wallets",
             name: "External Wallets",
           },
           {
-            href: `/connect/external-wallets/${walletId}`,
+            href: `/wallets/external-wallets/${walletId}`,
             name: walletMetadata.name,
           },
         ]}

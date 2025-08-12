@@ -29,7 +29,6 @@ export function WaitingForIntegrationCard(props: {
         {/* Code */}
         <div>
           <TabButtons
-            tabClassName="!text-sm"
             tabs={props.codeTabs.map((tab) => ({
               isActive: tab.label === selectedTab,
               name: tab.label,

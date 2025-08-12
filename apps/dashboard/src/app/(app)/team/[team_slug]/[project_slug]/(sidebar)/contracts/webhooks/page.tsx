@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject } from "@/api/projects";
-import { getTeamBySlug } from "@/api/team";
+import { getProject } from "@/api/project/projects";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { loginRedirect } from "@/utils/redirects";
 

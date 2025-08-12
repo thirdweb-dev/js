@@ -20,14 +20,14 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isMultiphase,
 }) => {
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className="space-y-5">
       <section>
-        <h2 className="mb-1 font-semibold text-xl tracking-tight">
+        <h2 className="mb-0.5 font-semibold text-2xl tracking-tight">
           Set Claim Conditions
         </h2>
         <p className="text-muted-foreground text-sm">
           Control when the {isERC20 ? "tokens" : "NFTs"} get dropped, how much
-          they cost, and more.
+          they cost, and more
         </p>
       </section>
 

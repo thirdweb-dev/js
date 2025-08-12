@@ -12,10 +12,27 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
+    {
+      href: "https://playground.thirdweb.com/",
+      icon: <ExternalLinkIcon />,
+      name: "Playground",
+    },
     { separator: true },
     {
       isCollapsible: false,
       links: [
+        {
+          href: `${paymentsSlug}/fund`,
+          name: "Fund Wallets",
+        },
+        {
+          href: `${paymentsSlug}/products`,
+          name: "Sell a Product",
+        },
+        {
+          href: `${paymentsSlug}/transactions`,
+          name: "Pay for Transactions",
+        },
         {
           href: `${paymentsSlug}/send`,
           name: "Send a Payment",
@@ -23,10 +40,6 @@ export const sidebar: SideBar = {
         {
           href: `${paymentsSlug}/sell`,
           name: "Sell Tokens",
-        },
-        {
-          href: `${paymentsSlug}/products`,
-          name: "Sell a Product",
         },
         {
           href: `${paymentsSlug}/tokens`,
@@ -85,14 +98,12 @@ export const sidebar: SideBar = {
       name: "Resources",
       links: [
         {
-          href: "https://playground.thirdweb.com/",
-          icon: <ExternalLinkIcon />,
-          name: "Playground",
+          href: `${paymentsSlug}/fees`,
+          name: "Understanding Fees",
         },
         {
-          href: "https://thirdweb.com/templates",
-          icon: <ExternalLinkIcon />,
-          name: "Templates",
+          href: `${paymentsSlug}/onramp-providers`,
+          name: "Onramp Providers",
         },
         {
           href: `${paymentsSlug}/faq`,

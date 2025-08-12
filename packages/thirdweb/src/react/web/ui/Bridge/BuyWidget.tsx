@@ -33,6 +33,9 @@ import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type BuyWidgetProps = {
+  /**
+   * Customize the supported tokens that users can pay with.
+   */
   supportedTokens?: SupportedTokens;
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -180,6 +183,11 @@ export type BuyWidgetProps = {
    * @default "USD"
    */
   currency?: SupportedFiatCurrency;
+
+  /**
+   * Custom label for the main action button.
+   */
+  buttonLabel?: string;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -212,7 +220,7 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount="0.1"
+ *   amount="0.1" // in native tokens (ie. ETH)
  * />
  * ```
  *
@@ -224,10 +232,33 @@ type UIOptionsResult =
  * <BuyWidget
  *   client={client}
  *   chain={ethereum}
- *   amount="100"
+ *   amount="100" // 100 USDC on mainnet
  *   tokenAddress="0xA0b86a33E6417E4df2057B2d3C6d9F7cc11b0a70"
  * />
  * ```
+ *
+ * ### Customize the supported tokens
+ *
+ * You can customize the supported tokens that users can pay with by passing a `supportedTokens` object to the `BuyWidget` component.
+ *
+ * ```tsx
+ * <BuyWidget
+ *   client={client}
+ *   chain={ethereum}
+ *   amount="0.1"
+ *   // user will only be able to pay with these tokens
+ *   supportedTokens={{
+ *     [8453]: [
+ *       {
+ *         address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ *         name: "USDC",
+ *         symbol: "USDC",
+ *       },
+ *     ],
+ *   }}
+ * />
+ * ```
+ *
  *
  * ### Customize the UI
  *
@@ -335,6 +366,7 @@ export function BuyWidget(props: BuyWidgetProps) {
             },
             mode: "fund_wallet",
             currency: props.currency || "USD",
+            buttonLabel: props.buttonLabel,
           },
           type: "success",
         };
@@ -364,6 +396,8 @@ export function BuyWidget(props: BuyWidgetProps) {
             title: props.title,
           },
           mode: "fund_wallet",
+          currency: props.currency || "USD",
+          buttonLabel: props.buttonLabel,
         },
         type: "success",
       };
@@ -398,6 +432,7 @@ export function BuyWidget(props: BuyWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        supportedTokens={props.supportedTokens}
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}

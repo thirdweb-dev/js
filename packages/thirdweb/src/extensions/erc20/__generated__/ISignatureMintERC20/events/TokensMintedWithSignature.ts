@@ -42,8 +42,8 @@ export function tokensMintedWithSignatureEvent(
   filters: TokensMintedWithSignatureEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensMintedWithSignature(address indexed signer, address indexed mintedTo, (address to, address primarySaleRecipient, uint256 quantity, uint256 price, address currency, uint128 validityStartTimestamp, uint128 validityEndTimestamp, bytes32 uid) mintRequest)",
-    filters,
   });
 }

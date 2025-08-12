@@ -36,8 +36,8 @@ export function sharedMetadataUpdatedEvent(
   filters: SharedMetadataUpdatedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event SharedMetadataUpdated(bytes32 indexed id, string name, string description, string imageURI, string animationURI)",
-    filters,
   });
 }

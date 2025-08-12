@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getTeamBySlug } from "@/api/team";
+import { getTeamBySlug } from "@/api/team/get-team";
 import { TabPathLinks } from "@/components/ui/tabs";
 import { loginRedirect } from "@/utils/redirects";
 

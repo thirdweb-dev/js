@@ -16,8 +16,8 @@ export type ExistsParams = {
 export const FN_SELECTOR = "0x4f558e79" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "tokenId",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

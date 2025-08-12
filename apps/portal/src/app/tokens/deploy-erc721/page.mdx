@@ -1,0 +1,57 @@
+import { Step, Steps, DocImage, createMetadata, Callout } from "@doc";
+import TokenDeployment from "../assets/token_deployment.png";
+import CreateNFT from "./assets/create_nft.png";
+import UploadNFTs from "./assets/upload_NFTs.png";
+import SaleRecipients from "./assets/sale_recipients.png";
+
+export const metadata = createMetadata({
+    image: {
+        title: "Deploy an ERC-721 token",
+        icon: "contracts",
+    },
+    title: "Deploy an ERC-721 token | thirdweb Documentation",
+    description:
+        "Learn how to deploy an ERC-721 token using thirdweb's dashboard or programmatically through the SDK.",
+});
+
+# Deploy an ERC-721 token
+
+Learn how to deploy an ERC-721 token using thirdweb's dashboard or programmatically through the SDK. This guide will walk you through the steps to create, configure, and deploy your own ERC-721 token.
+
+## Deploying through the dashboard
+
+<Steps>
+  <Step title="Create a project">
+    Navigate to the [thirdweb dashboard](https://thirdweb.com/) and create a new project or use an existing one.
+  </Step>
+  <Step title="Select NFT Collection">
+    Navigate to the Tokens section and select Create NFT Collection
+    <DocImage src={TokenDeployment} alt="Token deployment screen on thirdweb dashboard" />
+  </Step>
+  <Step title="Configure Collection">
+    Determine your NFT Collection's name, symbol, and chain. You may also optionally set up an image or logo, social links, and a description for your collection.
+
+    In this step, also determine the admin wallet address that will manage the collection. This address will have the ability to mint new NFTs, manage metadata, and perform other administrative tasks.
+    <DocImage src={CreateNFT} alt="Create NFT screen on thirdweb dashboard" />
+  </Step>
+  <Step title="Upload NFTs">
+    Upload your NFTs to the collection. You can upload images, videos, or other media files that represent your NFTs. 
+    You can also set metadata for each NFT, including name, description, and attributes.
+    <DocImage src={UploadNFTs} alt="Upload NFTs screen on thirdweb dashboard" />
+
+    <Callout variant="info" title="Metadata Management">
+      You can switch to "Create Multiple" to upload multiple NFTs at once. This is useful for bulk minting or creating a series of NFTs when you have a corresponding CSV or JSON file with metadata.
+    </Callout>
+  </Step>
+    <Step title="Determine Primary and Secondary Sale Recipients">
+    Input the wallet address that will receive the primary sale proceeds from the NFT collection. You can also set up secondary sale royalties, which will be paid to the specified address whenever the NFT is resold on marketplaces that support royalties.
+    <DocImage src={SaleRecipients} alt="Sale recipients screen on thirdweb dashboard" />
+  </Step>
+  <Step title="Deploy Collection">
+    Confirm your configuration and select the "Launch" button to deploy your ERC-721 token collection to the blockchain.
+  </Step>
+</Steps>
+
+## Deploying programmatically
+
+Coming soon

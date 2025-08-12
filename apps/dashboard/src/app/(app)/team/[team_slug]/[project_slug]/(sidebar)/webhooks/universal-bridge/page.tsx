@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { getProject } from "@/api/projects";
+import { getProject } from "@/api/project/projects";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { PayWebhooksPage } from "../../universal-bridge/webhooks/components/webhooks.client";
+import { PayWebhooksPage } from "../../payments/webhooks/components/webhooks.client";
 
 export default async function Page(props: {
   params: Promise<{

@@ -1,58 +1,38 @@
 "use client";
 
-import { Flex, IconButton, Select, Skeleton } from "@chakra-ui/react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { Legacy_CopyButton } from "chakra/button";
-import { Text } from "chakra/text";
-import {
-  ChevronFirstIcon,
-  ChevronLastIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
-import { TWTable } from "@/components/blocks/TWTable";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
-import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectMeta } from "../../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import { buildContractPagePath } from "../../_utils/contract-page-path";
 
-const columnHelper = createColumnHelper<{ account: string }>();
-
-const columns = [
-  columnHelper.accessor("account", {
-    cell: (info) => (
-      <Flex align="center" gap={2}>
-        <Text fontFamily="mono">{info.getValue()}</Text>
-        <Legacy_CopyButton
-          aria-label="Copy account address"
-          colorScheme="primary"
-          value={info.getValue()}
-        />
-      </Flex>
-    ),
-    header: "Account",
-  }),
-];
+const pageSize = 10;
 
 type AccountsTableProps = {
   contract: ThirdwebContract;
   projectMeta: ProjectMeta | undefined;
 };
 
-export const AccountsTable: React.FC<AccountsTableProps> = ({
-  contract,
-  projectMeta,
-}) => {
-  const router = useDashboardRouter();
+export function AccountsTable({ contract, projectMeta }: AccountsTableProps) {
   const chainSlug = useChainSlug(contract.chain.id);
 
   const [currentPage, setCurrentPage] = useState(0);
-  // default page size of 25
-  const [pageSize, setPageSize] = useState(25);
 
   const totalAccountsQuery = useReadContract(totalAccounts, { contract });
 
@@ -72,7 +52,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
       );
     }
     return currentPage * pageSize + pageSize;
-  }, [currentPage, pageSize, totalAccountsQuery.data]);
+  }, [currentPage, totalAccountsQuery.data]);
 
   const accountsQuery = useReadContract(getAccounts, {
     contract,
@@ -82,105 +62,91 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({
   });
 
   const totalPages = Math.ceil(totalAccountsNum / pageSize);
-
-  const canNextPage = currentPage < totalPages - 1;
-  const canPreviousPage = currentPage > 0;
+  const showPagination = totalPages > 1;
 
   const data = accountsQuery.data || [];
 
   return (
-    <Flex direction="column" gap={4}>
+    <div className="border rounded-lg overflow-hidden">
       {/* TODO add a skeleton when loading*/}
-      <TWTable
-        columns={columns}
-        data={data.map((account) => ({ account }))}
-        isFetched={accountsQuery.isFetched}
-        isPending={accountsQuery.isPending}
-        onRowClick={(row) => {
-          const accountContractPagePath = buildContractPagePath({
-            chainIdOrSlug: chainSlug.toString(),
-            contractAddress: row.account,
-            projectMeta,
-          });
+      <TableContainer className="border-0 rounded-none">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Account</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {accountsQuery.isPending &&
+              new Array(pageSize).fill(0).map((_, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                <SkeletonRow key={index} />
+              ))}
 
-          router.push(accountContractPagePath);
-        }}
-        title="account"
-      />
-      {/* pagination */}
-      <div className="flex w-full items-center justify-center">
-        <Flex align="center" direction="row" gap={2}>
-          <IconButton
-            aria-label="first page"
-            icon={<ChevronFirstIcon className="size-4" />}
-            isDisabled={totalAccountsQuery.isPending}
-            onClick={() => setCurrentPage(0)}
-          />
-          <IconButton
-            aria-label="previous page"
-            icon={<ChevronLeftIcon className="size-4" />}
-            isDisabled={totalAccountsQuery.isPending || !canPreviousPage}
-            onClick={() => {
-              setCurrentPage((curr) => {
-                if (curr > 0) {
-                  return curr - 1;
-                }
-                return curr;
-              });
-            }}
-          />
-          <Text whiteSpace="nowrap">
-            Page <strong>{currentPage + 1}</strong> of{" "}
-            <Skeleton
-              as="span"
-              display="inline"
-              isLoaded={totalAccountsQuery.isSuccess}
-            >
-              <strong>{totalPages}</strong>
-            </Skeleton>
-          </Text>
-          <IconButton
-            aria-label="next page"
-            icon={<ChevronRightIcon className="size-4" />}
-            isDisabled={totalAccountsQuery.isPending || !canNextPage}
-            onClick={() =>
-              setCurrentPage((curr) => {
-                if (curr < totalPages - 1) {
-                  return curr + 1;
-                }
-                return curr;
-              })
-            }
-          />
-          <IconButton
-            aria-label="last page"
-            icon={<ChevronLastIcon className="size-4" />}
-            isDisabled={totalAccountsQuery.isPending || !canNextPage}
-            onClick={() => setCurrentPage(totalPages - 1)}
-          />
+            {!accountsQuery.isPending &&
+              data.map((account) => {
+                const accountContractPagePath = buildContractPagePath({
+                  chainIdOrSlug: chainSlug.toString(),
+                  contractAddress: account,
+                  projectMeta,
+                });
 
-          <Select
-            isDisabled={totalAccountsQuery.isPending}
-            onChange={(e) => {
-              const newPageSize = Number.parseInt(e.target.value as string, 10);
-              // compute the new page number based on the new page size
-              const newPage = Math.floor(
-                (currentPage * pageSize) / newPageSize,
-              );
-              setCurrentPage(newPage);
-              setPageSize(newPageSize);
-            }}
-            value={pageSize}
-          >
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="250">250</option>
-            <option value="500">500</option>
-          </Select>
-        </Flex>
-      </div>
-    </Flex>
+                return (
+                  <TableRow linkBox key={account} className="hover:bg-muted/50">
+                    <TableCell className="py-6">
+                      <Link
+                        href={accountContractPagePath}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="before:absolute before:inset-0"
+                        aria-label="View account"
+                      />
+
+                      <div className="flex items-center justify-between gap-2">
+                        <CopyTextButton
+                          textToShow={account}
+                          textToCopy={account}
+                          variant="ghost"
+                          tooltip="Copy account address"
+                          copyIconPosition="right"
+                          className="z-10 relative"
+                        />
+
+                        <ArrowUpRightIcon className="size-4 text-muted-foreground" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+
+        {!accountsQuery.isPending && data.length === 0 && (
+          <div className="px-4 text-center py-20 flex items-center justify-center text-muted-foreground">
+            No accounts
+          </div>
+        )}
+      </TableContainer>
+
+      {showPagination && (
+        <div className="py-4 border-t bg-card">
+          <PaginationButtons
+            activePage={currentPage + 1}
+            totalPages={totalPages}
+            onPageClick={(page) => setCurrentPage(page - 1)}
+          />
+        </div>
+      )}
+    </div>
   );
-};
-//
+}
+
+function SkeletonRow() {
+  return (
+    <TableRow>
+      <TableCell className="py-6">
+        <Skeleton className="h-6 w-[364px]" />
+      </TableCell>
+    </TableRow>
+  );
+}

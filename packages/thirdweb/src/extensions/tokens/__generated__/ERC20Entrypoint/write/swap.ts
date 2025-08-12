@@ -21,7 +21,7 @@ export type SwapParams = WithOverrides<{
       { type: "uint256"; name: "amountIn" },
       { type: "uint256"; name: "minAmountOut" },
       { type: "address"; name: "recipient" },
-      { type: "address"; name: "referrer" },
+      { type: "address"; name: "developer" },
       { type: "uint256"; name: "deadline" },
       { type: "bytes"; name: "data" },
     ];
@@ -56,7 +56,7 @@ const FN_INPUTS = [
       },
       {
         type: "address",
-        name: "referrer",
+        name: "developer",
       },
       {
         type: "uint256",

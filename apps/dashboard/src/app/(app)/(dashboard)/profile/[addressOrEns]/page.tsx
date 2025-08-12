@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { replaceDeployerAddress } from "@/lib/publisher-utils";
+import { resolveAddressAndEns } from "@/utils/resolveAddressAndEns";
 import { shortenIfAddress } from "@/utils/usedapp-external";
 import { ProfileUI } from "./ProfileUI";
-import { resolveAddressAndEns } from "./resolveAddressAndEns";
 
 type PageProps = {
   params: Promise<{

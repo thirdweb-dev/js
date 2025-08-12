@@ -1,116 +1,155 @@
-import {
-  Flex,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { Button } from "chakra/button";
-import { FormLabel } from "chakra/form";
-import { CirclePlusIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { isAddress } from "thirdweb";
-import { type EngineAdmin, useEngineGrantPermissions } from "@/hooks/useEngine";
-import { useTxNotifications } from "@/hooks/useTxNotifications";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useEngineGrantPermissions } from "@/hooks/useEngine";
+import { parseError } from "@/utils/errorParser";
 
-interface AddAdminButtonProps {
-  instanceUrl: string;
-  authToken: string;
-}
+const addAdminSchema = z.object({
+  walletAddress: z
+    .string()
+    .refine((address) => isAddress(address), "Invalid address"),
+  label: z.string().optional(),
+});
 
-export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
+type AddAdminFormData = z.infer<typeof addAdminSchema>;
+
+export function AddAdminButton({
   instanceUrl,
   authToken,
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate: grantPermissions } = useEngineGrantPermissions({
+}: {
+  instanceUrl: string;
+  authToken: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const grantPermissionsMutation = useEngineGrantPermissions({
     authToken,
     instanceUrl,
   });
 
-  const form = useForm<EngineAdmin>({
-    defaultValues: {
-      permissions: "ADMIN",
-    },
+  const form = useForm<AddAdminFormData>({
+    resolver: zodResolver(addAdminSchema),
+    defaultValues: {},
   });
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully added admin.",
-    "Failed to add admin.",
-  );
+  const onSubmit = (data: AddAdminFormData) => {
+    grantPermissionsMutation.mutate(
+      {
+        ...data,
+        permissions: "ADMIN",
+      },
+      {
+        onError: (error) => {
+          toast.error("Failed to add admin.", {
+            description: parseError(error),
+          });
+          console.error(error);
+        },
+        onSuccess: () => {
+          toast.success("Admin added successfully.");
+          setOpen(false);
+          form.reset();
+        },
+      },
+    );
+  };
 
   return (
-    <>
-      <Button
-        colorScheme="primary"
-        leftIcon={<CirclePlusIcon className="size-6" />}
-        onClick={onOpen}
-        size="sm"
-        variant="ghost"
-        w="fit-content"
-      >
-        Add Admin
-      </Button>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent
-          as="form"
-          className="!bg-background rounded-lg border border-border"
-          onSubmit={form.handleSubmit((data) => {
-            if (!isAddress(data.walletAddress)) {
-              onError(new Error("Invalid wallet address"));
-            }
-            grantPermissions(data, {
-              onError: (error) => {
-                onError(error);
-                console.error(error);
-              },
-              onSuccess: () => {
-                onSuccess();
-                onClose();
-              },
-            });
-          })}
-        >
-          <ModalHeader>Add Admin</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <div className="flex flex-col gap-4">
-              <FormControl isRequired>
-                <FormLabel>Wallet Address</FormLabel>
-                <Input
-                  placeholder="The wallet address for this admin"
-                  type="text"
-                  {...form.register("walletAddress", { required: true })}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Label</FormLabel>
-                <Input
-                  placeholder="Enter a description for this admin"
-                  type="text"
-                  {...form.register("label")}
-                />
-              </FormControl>
-            </div>
-          </ModalBody>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button className="w-fit gap-2">
+          <PlusIcon className="size-4" />
+          Add Admin
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="p-0 overflow-hidden gap-0">
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Add Admin</DialogTitle>
+          <DialogDescription>
+            Add a new admin to your engine instance.
+          </DialogDescription>
+        </DialogHeader>
 
-          <ModalFooter as={Flex} gap={3}>
-            <Button onClick={onClose} type="button" variant="ghost">
-              Cancel
-            </Button>
-            <Button colorScheme="primary" type="submit">
-              Add
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4 px-4 lg:px-6 pb-8">
+              {/* wallet address */}
+              <FormField
+                control={form.control}
+                name="walletAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Wallet Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="bg-card"
+                        placeholder="0x..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* label */}
+              <FormField
+                control={form.control}
+                name="label"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Label</FormLabel>
+                    <FormControl>
+                      <Input
+                        className="bg-card"
+                        placeholder="label for this admin"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex justify-end gap-3 p-4 lg:p-6 bg-card border-t">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" className="gap-2">
+                {grantPermissionsMutation.isPending && (
+                  <Spinner className="size-4" />
+                )}
+                Add Admin
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
-};
+}

@@ -7,9 +7,9 @@ import { upload } from "../storage/upload.js";
 import { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
 import { toUnits } from "../utils/units.js";
 import {
+  DEFAULT_DEVELOPER_REWARD_BPS,
   DEFAULT_MAX_SUPPLY_ERC20,
   DEFAULT_POOL_INITIAL_TICK,
-  DEFAULT_REFERRER_REWARD_BPS,
 } from "./constants.js";
 import type { PoolConfig, TokenParams } from "./types.js";
 
@@ -83,7 +83,7 @@ export function encodePoolConfig(poolConfig: PoolConfig): Hex {
       type: "int24",
     },
     {
-      name: "referrerRewardBps",
+      name: "developerRewardBps",
       type: "uint16",
     },
   ] as const;
@@ -92,7 +92,7 @@ export function encodePoolConfig(poolConfig: PoolConfig): Hex {
     toUnits(poolConfig.amount.toString(), 18),
     poolConfig.currency || NATIVE_TOKEN_ADDRESS,
     poolConfig.initialTick || DEFAULT_POOL_INITIAL_TICK,
-    poolConfig.referrerRewardBps || DEFAULT_REFERRER_REWARD_BPS,
+    poolConfig.developerRewardBps || DEFAULT_DEVELOPER_REWARD_BPS,
   ]);
 }
 

@@ -46,8 +46,8 @@ export type RoleGrantedEventFilters = Partial<{
  */
 export function roleGrantedEvent(filters: RoleGrantedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender)",
-    filters,
   });
 }

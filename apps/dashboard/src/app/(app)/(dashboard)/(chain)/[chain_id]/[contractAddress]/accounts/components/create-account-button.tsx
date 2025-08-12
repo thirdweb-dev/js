@@ -1,7 +1,12 @@
 "use client";
 
+import { PlusIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb";
-import * as ERC4337Ext from "thirdweb/extensions/erc4337";
+import {
+  createAccount,
+  getAccountsOfSigner,
+  isAccountDeployed,
+} from "thirdweb/extensions/erc4337";
 import {
   useActiveAccount,
   useReadContract,
@@ -11,39 +16,30 @@ import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 
-interface CreateAccountButtonProps {
+export function CreateAccountButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
-
-export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
-  contract,
-  isLoggedIn,
-  ...restButtonProps
-}) => {
+}) {
   const sendTxMutation = useSendAndConfirmTransaction();
 
   const address = useActiveAccount()?.address;
 
-  const isAccountDeployedQuery = useReadContract(ERC4337Ext.isAccountDeployed, {
+  const isAccountDeployedQuery = useReadContract(isAccountDeployed, {
     adminSigner: address || "",
-    contract,
+    contract: props.contract,
     data: "0x",
     queryOptions: {
       enabled: !!address,
     },
   });
 
-  const accountsForAddressQuery = useReadContract(
-    ERC4337Ext.getAccountsOfSigner,
-    {
-      contract,
-      queryOptions: {
-        enabled: !!address,
-      },
-      signer: address || "",
+  const accountsForAddressQuery = useReadContract(getAccountsOfSigner, {
+    contract: props.contract,
+    queryOptions: {
+      enabled: !!address,
     },
-  );
+    signer: address || "",
+  });
 
   if (!address) {
     return null;
@@ -52,8 +48,9 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
   if (isAccountDeployedQuery.data && accountsForAddressQuery.data?.length) {
     return (
       <ToolTipLabel label="You can only initialize one account per EOA.">
-        <Button disabled variant="primary">
-          Account Created
+        <Button disabled variant="default" size="sm" className="gap-2">
+          <PlusIcon className="size-3.5" />
+          Create Account
         </Button>
       </ToolTipLabel>
     );
@@ -61,23 +58,25 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
 
   return (
     <TransactionButton
-      client={contract.client}
+      client={props.contract.client}
       disabled={isAccountDeployedQuery.data}
-      isLoggedIn={isLoggedIn}
+      isLoggedIn={props.isLoggedIn}
+      variant="default"
+      size="sm"
       isPending={sendTxMutation.isPending}
       onClick={() => {
-        const tx = ERC4337Ext.createAccount({
+        const tx = createAccount({
           admin: address,
-          contract,
+          contract: props.contract,
           data: "0x",
         });
         sendTxMutation.mutate(tx);
       }}
-      transactionCount={1}
-      txChainID={contract.chain.id}
-      {...restButtonProps}
+      transactionCount={undefined}
+      txChainID={props.contract.chain.id}
     >
+      <PlusIcon className="size-3.5" />
       Create Account
     </TransactionButton>
   );
-};
+}

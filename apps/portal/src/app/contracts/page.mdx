@@ -10,6 +10,7 @@ import {
 	TabsList,
 	TabsTrigger,
 	TabsContent,
+	OpenApiEndpoint,
 } from "@doc";
 import {
 	ReactIcon,
@@ -33,8 +34,6 @@ export const metadata = createMetadata({
 # Get Started
 
 Read, write, and deploy smart contracts on any EVM compatible blockchain.
-
----
 
 <Tabs defaultValue="http">
   <TabsList>
@@ -69,57 +68,18 @@ Read, write, and deploy smart contracts on any EVM compatible blockchain.
   </TabsList>
 
   <TabsContent value="http">
-    ### Read a Contract
 
-    You can read contract data efficiently using the [contract read API](https://engine.thirdweb.com/reference).
+    ### Read from Contracts
 
-    ```http
-    GET /v1/contract/read
-    Content-Type: application/json
-    x-secret-key: <your-project-secret-key>
+    You can efficiently read data from multiple functions or contracts in a single request.
 
-    {
-        "readOptions": {
-          "chainId": "1" // your chain id
-		  "from": "0x...", // optional, if you want to read from a specific address
-        },
-        "params": [{
-          "contractAddress": "0x...",
-          "method": "function allowance(address owner, address spender)",
-          "params": ["0x...", "0x..."],
-        }],
-    }
-    ```
+    <OpenApiEndpoint path="/v1/contracts/read" method="POST" />
 
-	You can batch multiple contract reads in a single request, and the response will be an array of results or errors.
+    ### Write to Contracts
 
-	### Write to a Contract
+    You can write multiple functions to multiple contracts on the same chain in a single request atomically, which will result in a single transaction for optimal gas efficiency.
 
-	You can write to a contract using the [contract write API](https://engine.thirdweb.com/reference).
-
-	```http
-	POST /v1/contract/write
-	Content-Type: application/json
-	x-secret-key: <your-project-secret-key>
-
-	{
-		"executionOptions": {
-			"from": "0x...", // your server wallet address
-			"chainId": "1" // your chain id
-		},
-		"params": [{
-			"contractAddress": "0x...",
-			"method": "function transfer(address to, uint256 amount)",
-			"params": ["0x...", "1000000000000000000"],
-		}]
-	}
-	```
-
-	You can batch multiple contract writes in a single request, and the transactions will be batched atomically onchain.
-
-	### Deploy a Contract
-
-	You can deploy a contract using the [contract deploy API](https://engine.thirdweb.com/reference).
+	<OpenApiEndpoint path="/v1/contracts/write" method="POST" />
 
   </TabsContent>
 

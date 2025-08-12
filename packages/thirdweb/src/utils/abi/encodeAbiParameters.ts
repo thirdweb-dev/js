@@ -23,7 +23,7 @@ import {
  * @throws {Error} - If the number of parameters and values do not match.
  * @example
  * ```ts
- * import { encodeAbiParameters } from "viem";
+ * import { encodeAbiParameters } from "thirdweb/utils";
  *
  * const params = [
  *  { name: "param1", type: "uint256" },

@@ -36,8 +36,8 @@ export function tokensLazyMintedEvent(
   filters: TokensLazyMintedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event TokensLazyMinted(uint256 indexed startTokenId, uint256 endTokenId, string baseURI, bytes encryptedBaseURI)",
-    filters,
   });
 }

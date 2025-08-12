@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import { BoxIcon } from "lucide-react";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { teamsAndProjectsStub } from "@/storybook/stubs";
 import {

@@ -4,8 +4,8 @@
 import { ChevronsUpDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import type { Project } from "@/api/projects";
-import type { Team } from "@/api/team";
+import type { Project } from "@/api/project/projects";
+import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {

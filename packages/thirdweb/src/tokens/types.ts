@@ -18,7 +18,7 @@ export type PoolConfig = {
   amount: bigint;
   currency?: string;
   initialTick?: number;
-  referrerRewardBps?: number;
+  developerRewardBps?: number;
 };
 
 export type DistributeContent = {
@@ -31,6 +31,7 @@ type DistributeConfig = {
 };
 
 type LaunchConfig =
+  | { kind: "none"; config: undefined }
   | { kind: "pool"; config: PoolConfig }
   | { kind: "distribute"; config: DistributeConfig };
 
@@ -38,7 +39,7 @@ export type CreateTokenOptions = ClientAndChainAndAccount & {
   salt?: Hex;
   params: TokenParams;
   launchConfig?: LaunchConfig;
-  referrerAddress?: string;
+  developerAddress?: string;
 };
 
 export type CreateTokenByImplementationConfigOptions =

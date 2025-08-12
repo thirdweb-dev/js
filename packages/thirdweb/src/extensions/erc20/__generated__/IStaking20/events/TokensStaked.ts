@@ -34,7 +34,7 @@ export type TokensStakedEventFilters = Partial<{
  */
 export function tokensStakedEvent(filters: TokensStakedEventFilters = {}) {
   return prepareEvent({
-    signature: "event TokensStaked(address indexed staker, uint256 amount)",
     filters,
+    signature: "event TokensStaked(address indexed staker, uint256 amount)",
   });
 }

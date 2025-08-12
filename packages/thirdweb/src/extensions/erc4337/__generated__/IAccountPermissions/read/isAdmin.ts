@@ -16,8 +16,8 @@ export type IsAdminParams = {
 export const FN_SELECTOR = "0x24d7806c" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

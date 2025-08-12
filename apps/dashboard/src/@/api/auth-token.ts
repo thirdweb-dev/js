@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
-import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-import { LAST_USED_TEAM_ID } from "@/constants/cookies";
+import {
+  COOKIE_ACTIVE_ACCOUNT,
+  COOKIE_PREFIX_TOKEN,
+  LAST_USED_TEAM_ID,
+} from "@/constants/cookie";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 
 export async function getAuthToken() {

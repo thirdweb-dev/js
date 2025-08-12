@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { fetchEcosystemList } from "@/api/ecosystems";
+import { fetchEcosystemList } from "@/api/team/ecosystems";
 import { loginRedirect } from "@/utils/redirects";
 
 export default async function Page(props: {

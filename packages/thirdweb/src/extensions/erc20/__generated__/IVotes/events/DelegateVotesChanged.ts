@@ -36,8 +36,8 @@ export function delegateVotesChangedEvent(
   filters: DelegateVotesChangedEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance)",
-    filters,
   });
 }

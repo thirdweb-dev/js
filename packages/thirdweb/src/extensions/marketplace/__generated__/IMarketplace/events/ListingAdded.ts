@@ -46,8 +46,8 @@ export type ListingAddedEventFilters = Partial<{
  */
 export function listingAddedEvent(filters: ListingAddedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event ListingAdded(uint256 indexed listingId, address indexed assetContract, address indexed lister, (uint256 listingId, address tokenOwner, address assetContract, uint256 tokenId, uint256 startTime, uint256 endTime, uint256 quantity, address currency, uint256 reservePricePerToken, uint256 buyoutPricePerToken, uint8 tokenType, uint8 listingType) listing)",
-    filters,
   });
 }

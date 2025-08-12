@@ -22,7 +22,7 @@ interface SelectWithSearchProps
   }[];
   value: string | undefined;
   onValueChange: (value: string) => void;
-  placeholder: string;
+  placeholder: string | React.ReactNode;
   searchPlaceholder?: string;
   className?: string;
   overrideSearchFn?: (

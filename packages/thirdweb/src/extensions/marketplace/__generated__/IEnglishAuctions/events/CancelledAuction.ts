@@ -42,8 +42,8 @@ export function cancelledAuctionEvent(
   filters: CancelledAuctionEventFilters = {},
 ) {
   return prepareEvent({
+    filters,
     signature:
       "event CancelledAuction(address indexed auctionCreator, uint256 indexed auctionId)",
-    filters,
   });
 }

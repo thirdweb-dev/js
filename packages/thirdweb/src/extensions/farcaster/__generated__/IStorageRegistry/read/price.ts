@@ -16,8 +16,8 @@ export type PriceParams = {
 export const FN_SELECTOR = "0x26a49e37" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "units",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

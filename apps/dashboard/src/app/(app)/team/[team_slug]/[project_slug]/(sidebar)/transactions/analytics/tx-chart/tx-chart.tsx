@@ -1,5 +1,5 @@
 import { ResponsiveSuspense } from "responsive-rsc";
-import type { Project } from "@/api/projects";
+import type { Project } from "@/api/project/projects";
 import { getTransactionsChart } from "../../lib/analytics";
 import { getTxAnalyticsFiltersFromSearchParams } from "../../lib/utils";
 import type { Wallet } from "../../server-wallets/wallet-table/types";

@@ -36,9 +36,10 @@
     "ora": "8.2.0",
     "ox": "0.7.0",
     "prompts": "2.4.2",
+    "qrcode": "1.5.3",
     "toml": "3.0.0",
     "uqr": "0.1.2",
-    "viem": "2.28.1",
+    "viem": "2.33.2",
     "zod": "3.25.75"
   },
   "devDependencies": {
@@ -61,6 +62,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/cross-spawn": "^6.0.6",
     "@types/prompts": "2.4.9",
+    "@types/qrcode": "1.5.5",
     "@types/react": "19.1.8",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.7.0",
@@ -97,133 +99,133 @@
   },
   "exports": {
     ".": {
-      "default": "./dist/cjs/exports/thirdweb.js",
+      "types": "./dist/types/exports/thirdweb.d.ts",
       "import": "./dist/esm/exports/thirdweb.js",
-      "types": "./dist/types/exports/thirdweb.d.ts"
+      "default": "./dist/cjs/exports/thirdweb.js"
     },
     "./adapters/*": {
-      "default": "./dist/cjs/exports/adapters/*.js",
+      "types": "./dist/types/exports/adapters/*.d.ts",
       "import": "./dist/esm/exports/adapters/*.js",
-      "types": "./dist/types/exports/adapters/*.d.ts"
+      "default": "./dist/cjs/exports/adapters/*.js"
     },
     "./ai": {
-      "default": "./dist/cjs/exports/ai.js",
+      "types": "./dist/types/exports/ai.d.ts",
       "import": "./dist/esm/exports/ai.js",
-      "types": "./dist/types/exports/ai.d.ts"
-    },
-    "./tokens": {
-      "default": "./dist/cjs/exports/tokens.js",
-      "import": "./dist/esm/exports/tokens.js",
-      "types": "./dist/types/exports/tokens.d.ts"
+      "default": "./dist/cjs/exports/ai.js"
     },
     "./auth": {
-      "default": "./dist/cjs/exports/auth.js",
+      "types": "./dist/types/exports/auth.d.ts",
       "import": "./dist/esm/exports/auth.js",
-      "types": "./dist/types/exports/auth.d.ts"
+      "default": "./dist/cjs/exports/auth.js"
     },
     "./bridge": {
-      "default": "./dist/cjs/exports/bridge.js",
+      "types": "./dist/types/exports/bridge.d.ts",
       "import": "./dist/esm/exports/bridge.js",
-      "types": "./dist/types/exports/bridge.d.ts"
+      "default": "./dist/cjs/exports/bridge.js"
     },
     "./chains": {
-      "default": "./dist/cjs/exports/chains.js",
+      "types": "./dist/types/exports/chains.d.ts",
       "import": "./dist/esm/exports/chains.js",
-      "types": "./dist/types/exports/chains.d.ts"
+      "default": "./dist/cjs/exports/chains.js"
     },
     "./contract": {
-      "default": "./dist/cjs/exports/contract.js",
+      "types": "./dist/types/exports/contract.d.ts",
       "import": "./dist/esm/exports/contract.js",
-      "types": "./dist/types/exports/contract.d.ts"
+      "default": "./dist/cjs/exports/contract.js"
     },
     "./deploys": {
-      "default": "./dist/cjs/exports/deploys.js",
+      "types": "./dist/types/exports/deploys.d.ts",
       "import": "./dist/esm/exports/deploys.js",
-      "types": "./dist/types/exports/deploys.d.ts"
+      "default": "./dist/cjs/exports/deploys.js"
     },
     "./engine": {
-      "default": "./dist/cjs/exports/engine.js",
+      "types": "./dist/types/exports/engine.d.ts",
       "import": "./dist/esm/exports/engine.js",
-      "types": "./dist/types/exports/engine.d.ts"
+      "default": "./dist/cjs/exports/engine.js"
     },
     "./event": {
-      "default": "./dist/cjs/exports/event.js",
+      "types": "./dist/types/exports/event.d.ts",
       "import": "./dist/esm/exports/event.js",
-      "types": "./dist/types/exports/event.d.ts"
+      "default": "./dist/cjs/exports/event.js"
     },
     "./extensions/*": {
-      "default": "./dist/cjs/exports/extensions/*.js",
+      "types": "./dist/types/exports/extensions/*.d.ts",
       "import": "./dist/esm/exports/extensions/*.js",
-      "types": "./dist/types/exports/extensions/*.d.ts"
+      "default": "./dist/cjs/exports/extensions/*.js"
     },
     "./insight": {
-      "default": "./dist/cjs/exports/insight.js",
+      "types": "./dist/types/exports/insight.d.ts",
       "import": "./dist/esm/exports/insight.js",
-      "types": "./dist/types/exports/insight.d.ts"
+      "default": "./dist/cjs/exports/insight.js"
     },
     "./modules": {
-      "default": "./dist/cjs/exports/modules.js",
+      "types": "./dist/types/exports/modules.d.ts",
       "import": "./dist/esm/exports/modules.js",
-      "types": "./dist/types/exports/modules.d.ts"
+      "default": "./dist/cjs/exports/modules.js"
     },
     "./package.json": "./package.json",
     "./pay": {
-      "default": "./dist/cjs/exports/pay.js",
+      "types": "./dist/types/exports/pay.d.ts",
       "import": "./dist/esm/exports/pay.js",
-      "types": "./dist/types/exports/pay.d.ts"
+      "default": "./dist/cjs/exports/pay.js"
     },
     "./react": {
-      "default": "./dist/cjs/exports/react.js",
-      "import": "./dist/esm/exports/react.js",
+      "types": "./dist/types/exports/react.d.ts",
       "react-native": "./dist/esm/exports/react.native.js",
-      "types": "./dist/types/exports/react.d.ts"
+      "import": "./dist/esm/exports/react.js",
+      "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
-      "default": "./dist/cjs/exports/react.native.js",
+      "types": "./dist/types/exports/react.native.d.ts",
       "import": "./dist/esm/exports/react.native.js",
-      "types": "./dist/types/exports/react.native.d.ts"
+      "default": "./dist/cjs/exports/react.native.js"
     },
     "./rpc": {
-      "default": "./dist/cjs/exports/rpc.js",
+      "types": "./dist/types/exports/rpc.d.ts",
       "import": "./dist/esm/exports/rpc.js",
-      "types": "./dist/types/exports/rpc.d.ts"
+      "default": "./dist/cjs/exports/rpc.js"
     },
     "./social": {
-      "default": "./dist/cjs/exports/social.js",
+      "types": "./dist/types/exports/social.d.ts",
       "import": "./dist/esm/exports/social.js",
-      "types": "./dist/types/exports/social.d.ts"
+      "default": "./dist/cjs/exports/social.js"
     },
     "./storage": {
-      "default": "./dist/cjs/exports/storage.js",
+      "types": "./dist/types/exports/storage.d.ts",
       "import": "./dist/esm/exports/storage.js",
-      "types": "./dist/types/exports/storage.d.ts"
+      "default": "./dist/cjs/exports/storage.js"
+    },
+    "./tokens": {
+      "types": "./dist/types/exports/tokens.d.ts",
+      "default": "./dist/cjs/exports/tokens.js",
+      "import": "./dist/esm/exports/tokens.js"
     },
     "./transaction": {
-      "default": "./dist/cjs/exports/transaction.js",
+      "types": "./dist/types/exports/transaction.d.ts",
       "import": "./dist/esm/exports/transaction.js",
-      "types": "./dist/types/exports/transaction.d.ts"
+      "default": "./dist/cjs/exports/transaction.js"
     },
     "./utils": {
-      "default": "./dist/cjs/exports/utils.js",
+      "types": "./dist/types/exports/utils.d.ts",
       "import": "./dist/esm/exports/utils.js",
-      "types": "./dist/types/exports/utils.d.ts"
+      "default": "./dist/cjs/exports/utils.js"
     },
     "./wallets": {
-      "default": "./dist/cjs/exports/wallets.js",
-      "import": "./dist/esm/exports/wallets.js",
+      "types": "./dist/types/exports/wallets.d.ts",
       "react-native": "./dist/esm/exports/wallets.native.js",
-      "types": "./dist/types/exports/wallets.d.ts"
+      "import": "./dist/esm/exports/wallets.js",
+      "default": "./dist/cjs/exports/wallets.js"
     },
     "./wallets/*": {
-      "default": "./dist/cjs/exports/wallets/*.js",
+      "types": "./dist/types/exports/wallets/*.d.ts",
       "import": "./dist/esm/exports/wallets/*.js",
-      "types": "./dist/types/exports/wallets/*.d.ts"
+      "default": "./dist/cjs/exports/wallets/*.js"
     },
     "./wallets/in-app": {
-      "default": "./dist/cjs/exports/wallets/in-app.js",
-      "import": "./dist/esm/exports/wallets/in-app.js",
+      "types": "./dist/types/exports/wallets/in-app.d.ts",
       "react-native": "./dist/esm/exports/wallets/in-app.native.js",
-      "types": "./dist/types/exports/wallets/in-app.d.ts"
+      "import": "./dist/esm/exports/wallets/in-app.js",
+      "default": "./dist/cjs/exports/wallets/in-app.js"
     }
   },
   "files": [
@@ -352,9 +354,6 @@
       "ai": [
         "./dist/types/exports/ai.d.ts"
       ],
-      "tokens": [
-        "./dist/types/exports/tokens.d.ts"
-      ],
       "auth": [
         "./dist/types/exports/auth.d.ts"
       ],
@@ -397,6 +396,9 @@
       "storage": [
         "./dist/types/exports/storage.d.ts"
       ],
+      "tokens": [
+        "./dist/types/exports/tokens.d.ts"
+      ],
       "transaction": [
         "./dist/types/exports/transaction.d.ts"
       ],
@@ -408,9 +410,12 @@
       ],
       "wallets/*": [
         "./dist/types/exports/wallets/*.d.ts"
+      ],
+      "insight": [
+        "./dist/types/exports/insight.d.ts"
       ]
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.105.18"
+  "version": "5.105.31"
 }

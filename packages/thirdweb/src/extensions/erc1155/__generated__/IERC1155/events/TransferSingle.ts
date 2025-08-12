@@ -46,8 +46,8 @@ export type TransferSingleEventFilters = Partial<{
  */
 export function transferSingleEvent(filters: TransferSingleEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event TransferSingle(address indexed _operator, address indexed _from, address indexed _to, uint256 tokenId, uint256 _value)",
-    filters,
   });
 }

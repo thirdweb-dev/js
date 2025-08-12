@@ -16,36 +16,36 @@ export type GetPermissionsForSignerParams = {
 export const FN_SELECTOR = "0xf15d424e" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "signer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    type: "tuple",
-    name: "permissions",
     components: [
       {
-        type: "address",
         name: "signer",
+        type: "address",
       },
       {
-        type: "address[]",
         name: "approvedTargets",
+        type: "address[]",
       },
       {
-        type: "uint256",
         name: "nativeTokenLimitPerTransaction",
+        type: "uint256",
       },
       {
-        type: "uint128",
         name: "startTimestamp",
+        type: "uint128",
       },
       {
-        type: "uint128",
         name: "endTimestamp",
+        type: "uint128",
       },
     ],
+    name: "permissions",
+    type: "tuple",
   },
 ] as const;
 

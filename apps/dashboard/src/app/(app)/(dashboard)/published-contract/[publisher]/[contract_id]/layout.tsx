@@ -1,5 +1,4 @@
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { PublishedContractBreadcrumbs } from "./components/breadcrumbs.client";
 import { getLatestPublishedContractsWithPublisherMapping } from "./utils/getPublishedContractsWithPublisherMapping";
 
 type Params = { publisher: string; contract_id: string };
@@ -8,12 +7,7 @@ export default function PublishedContractLayout(props: {
   children: React.ReactNode;
   params: Promise<Params>;
 }) {
-  return (
-    <div className="flex flex-col">
-      <PublishedContractBreadcrumbs />
-      <div className="container flex flex-col gap-8 py-8">{props.children}</div>
-    </div>
-  );
+  return props.children;
 }
 
 export async function generateMetadata(props: { params: Promise<Params> }) {

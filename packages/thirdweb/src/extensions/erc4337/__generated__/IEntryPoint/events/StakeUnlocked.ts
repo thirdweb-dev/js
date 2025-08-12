@@ -34,8 +34,8 @@ export type StakeUnlockedEventFilters = Partial<{
  */
 export function stakeUnlockedEvent(filters: StakeUnlockedEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event StakeUnlocked(address indexed account, uint256 withdrawTime)",
-    filters,
   });
 }

@@ -16,8 +16,8 @@ export type AddrParams = {
 export const FN_SELECTOR = "0x3b3b57de" as const;
 const FN_INPUTS = [
   {
-    type: "bytes32",
     name: "name",
+    type: "bytes32",
   },
 ] as const;
 const FN_OUTPUTS = [

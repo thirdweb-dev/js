@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0xcea943ee" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "address",
     name: "primarySaleRecipient",
+    type: "address",
   },
 ] as const;
 

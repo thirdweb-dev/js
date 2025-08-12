@@ -20,12 +20,12 @@ export type IsBuyerApprovedForListingParams = {
 export const FN_SELECTOR = "0x9cfbe2a6" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_listingId",
+    type: "uint256",
   },
   {
-    type: "address",
     name: "_buyer",
+    type: "address",
   },
 ] as const;
 const FN_OUTPUTS = [

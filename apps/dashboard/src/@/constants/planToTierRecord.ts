@@ -1,4 +1,4 @@
-import type { Team } from "@/api/team";
+import type { Team } from "@/api/team/get-team";
 
 // Note: Growth legacy is considered higher tier in this hierarchy
 export const planToTierRecordForGating: Record<Team["billingPlan"], number> = {

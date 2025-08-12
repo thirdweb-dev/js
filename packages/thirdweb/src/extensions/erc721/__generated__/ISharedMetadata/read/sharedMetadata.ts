@@ -8,20 +8,20 @@ export const FN_SELECTOR = "0xb280f703" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "string",
     name: "name",
+    type: "string",
   },
   {
-    type: "string",
     name: "description",
+    type: "string",
   },
   {
-    type: "string",
     name: "imageURI",
+    type: "string",
   },
   {
-    type: "string",
     name: "animationURI",
+    type: "string",
   },
 ] as const;
 

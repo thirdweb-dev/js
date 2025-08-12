@@ -16,8 +16,8 @@ export type OnTokenURIParams = {
 export const FN_SELECTOR = "0xcfc0cb96" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "_id",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

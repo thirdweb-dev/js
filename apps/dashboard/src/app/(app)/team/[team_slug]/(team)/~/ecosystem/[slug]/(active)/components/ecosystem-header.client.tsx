@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
-import type { Ecosystem } from "@/api/ecosystems";
+import type { Ecosystem } from "@/api/team/ecosystems";
 import { Img } from "@/components/blocks/Img";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";

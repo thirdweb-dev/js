@@ -101,7 +101,7 @@ describe("waitForReceipt", () => {
     }
 
     await expect(result).rejects.toThrow(
-      `Transaction not found after ${10} blocks`,
+      `Transaction receipt for ${MOCK_TX_HASH} not found after 10 blocks`,
     );
     expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(10);
   });

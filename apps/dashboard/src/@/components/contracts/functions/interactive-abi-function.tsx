@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  ButtonGroup,
-  Divider,
-  Flex,
-  FormControl,
-  Input,
-} from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { type AbiFunction, type AbiParameter, formatAbiItem } from "abitype";
-import { Button } from "chakra/button";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormHelperText, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
-import { ExternalLinkIcon, InfoIcon, PlayIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  InfoIcon,
+  PlayIcon,
+  RefreshCcwIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
@@ -29,16 +22,18 @@ import {
 } from "thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { parseAbiParams, stringify, toFunctionSelector } from "thirdweb/utils";
+import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { camelToTitle } from "@/components/solidity-inputs/helpers";
 import { TransactionButton } from "@/components/tx-button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
-import { InlineCode } from "@/components/ui/inline-code";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { replaceIpfsUrl } from "@/lib/sdk";
 
 function formatResponseData(data: unknown): {
   type: "json" | "text";
@@ -122,11 +117,11 @@ function formatContractCall(
   return parsedParams;
 }
 
-interface InteractiveAbiFunctionProps {
+type InteractiveAbiFunctionProps = {
   abiFunction: AbiFunction;
   contract: ThirdwebContract;
   isLoggedIn: boolean;
-}
+};
 
 function useAsyncRead(contract: ThirdwebContract, abiFunction: AbiFunction) {
   const formattedAbi = formatAbiItem({
@@ -366,97 +361,71 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
 
   return (
     <FormProvider {...form}>
-      <Card
-        as={Flex}
-        bg="transparent"
-        border="none"
-        borderRadius="none"
-        boxShadow="none"
-        flexDirection="column"
-        flexGrow={1}
-        gap={4}
-        gridColumn={{ base: "span 12", md: "span 9" }}
-        p={0}
-        w="100%"
-      >
-        <Flex
-          as="form"
-          direction="column"
-          gap={2}
-          id={formId}
-          position="relative"
-          w="100%"
-        >
-          {fields.length > 0 && (
-            <>
-              <Divider mb="8px" />
-              {fields.map((item, index) => {
-                return (
-                  <FormControl
-                    isInvalid={
-                      !!form.getFieldState(
-                        `params.${index}.value`,
-                        form.formState,
-                      ).error
-                    }
-                    key={item.id}
-                    mb="8px"
-                  >
-                    <Flex justify="space-between">
-                      <FormLabel>{camelToTitle(item.key)}</FormLabel>
-                      <Text fontSize="12px">{item.key}</Text>
-                    </Flex>
-                    <SolidityInput
-                      // @ts-expect-error - old types, need to update
-                      solidityComponents={item.components}
-                      solidityName={item.key}
-                      solidityType={item.type}
-                      {...form.register(`params.${index}.value`)}
-                      functionName={abiFunction.name}
-                    />
-                    <FormErrorMessage>
-                      {
-                        form.getFieldState(
-                          `params.${index}.value`,
-                          form.formState,
-                        ).error?.message
-                      }
-                    </FormErrorMessage>
-                  </FormControl>
-                );
-              })}
-            </>
-          )}
+      <div className="space-y-6">
+        <form className="space-y-5 relative w-full" id={formId}>
+          {fields.length > 0 &&
+            fields.map((item, index) => {
+              const fieldError = form.getFieldState(
+                `params.${index}.value`,
+                form.formState,
+              ).error;
+
+              return (
+                <FormFieldSetup
+                  key={item.id}
+                  htmlFor={`params.${index}.value`}
+                  labelClassName="w-full"
+                  labelContainerClassName="flex w-full"
+                  label={
+                    <div className="flex justify-between items-center w-full gap-3">
+                      <span>{camelToTitle(item.key)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {item.key}
+                      </span>
+                    </div>
+                  }
+                  errorMessage={fieldError?.message}
+                  isRequired={false}
+                  className="mb-2"
+                >
+                  <SolidityInput
+                    // @ts-expect-error - old types, need to update
+                    solidityComponents={item.components}
+                    solidityName={item.key}
+                    solidityType={item.type}
+                    {...form.register(`params.${index}.value`)}
+                    functionName={abiFunction.name}
+                  />
+                </FormFieldSetup>
+              );
+            })}
 
           {abiFunction.stateMutability === "payable" && (
-            <>
-              <Divider mb="8px" />
-              <FormControl gap={0.5}>
-                <FormLabel>Native Token Value</FormLabel>
-                <Input {...form.register("value")} />
-                <FormHelperText>
-                  The native currency value (in Ether) to send with this
-                  transaction (ex: 0.01 to send 0.01 native currency).
-                </FormHelperText>
-              </FormControl>
-            </>
+            <FormFieldSetup
+              htmlFor="value"
+              label="Native Token Value"
+              errorMessage={undefined}
+              isRequired={false}
+              helperText="The native currency value (in Ether) to send with this transaction (ex: 0.01 to send 0.01 native currency)."
+            >
+              <Input {...form.register("value")} className="bg-background" />
+            </FormFieldSetup>
           )}
 
           {error ? (
-            <>
-              <Divider />
-              <Heading size="label.sm">Error</Heading>
-              <InlineCode
-                className="relative w-full whitespace-pre-wrap rounded-md border border-border p-4 text-red-500"
-                //  biome-ignore lint/suspicious/noExplicitAny: FIXME
-                code={formatError(error as any)}
+            <div>
+              <h3 className="text-sm font-medium mb-2">Error</h3>
+              <PlainTextCodeBlock
+                className="text-red-500 bg-background"
+                code={formatError(error)}
               />
-            </>
+            </div>
+          ) : readLoading ? (
+            <Skeleton className="h-20 w-full rounded-lg" />
           ) : formattedResponseData ? (
             <>
-              <Divider />
               <div className="flex flex-row items-center gap-2">
-                <Heading size="label.sm">Output</Heading>
+                <h3 className="text-sm font-medium">Output</h3>
                 {/* Show the Solidity type of the function's output */}
                 {abiFunction.outputs.length > 0 && (
                   <Badge variant="default">
@@ -466,30 +435,32 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               </div>
 
               {formattedResponseData.type === "text" ? (
-                <PlainTextCodeBlock code={formattedResponseData.data} />
+                <PlainTextCodeBlock
+                  code={formattedResponseData.data}
+                  className="bg-background"
+                />
               ) : (
                 <CodeClient
                   code={formattedResponseData.data}
                   lang={formattedResponseData.type}
+                  className="bg-background"
                 />
               )}
 
               {/* If the result is an IPFS URI, show a handy link so that users can open it in a new tab */}
               {formattedResponseData.type === "text" &&
                 formattedResponseData.data.startsWith("ipfs://") && (
-                  <Text size="label.sm">
-                    <UnderlineLink
-                      href={replaceIpfsUrl(
-                        formattedResponseData.data,
-                        contract.client,
-                      )}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Open in gateway
-                    </UnderlineLink>
-                  </Text>
+                  <Link
+                    href={`https://ipfs.io/ipfs/${formattedResponseData.data.split("ipfs://")[1]}`}
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-2 mt-1"
+                    target="_blank"
+                  >
+                    Open In IPFS Gateway
+                    <ExternalLinkIcon className="size-3.5" />
+                  </Link>
                 )}
+
               {/* Same with the logic above but this time it's applied to traditional urls */}
               {((formattedResponseData.type === "text" &&
                 formattedResponseData.data.startsWith("https://")) ||
@@ -506,37 +477,46 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               )}
             </>
           ) : null}
-        </Flex>
+        </form>
 
-        <Divider mt="auto" />
-        <ButtonGroup ml="auto">
+        <div className="flex gap-3 justify-end">
           {isView ? (
             <Button
-              colorScheme="primary"
               form={formId}
-              isDisabled={!abiFunction}
-              isLoading={readLoading}
+              disabled={!abiFunction}
               onClick={handleContractRead}
-              rightIcon={<PlayIcon className="size-4" />}
+              className="gap-2 bg-background rounded-full"
+              variant="outline"
             >
-              Run
+              {/* run / rerun */}
+              {readLoading ? (
+                <Spinner className="size-4" />
+              ) : readData ? (
+                <RefreshCcwIcon className="size-4 text-muted-foreground" />
+              ) : (
+                <PlayIcon className="size-4 text-muted-foreground" />
+              )}
+              {readData ? "Run again" : readLoading ? "Running" : "Run"}
             </Button>
           ) : (
             <>
-              <Button
-                isDisabled={
-                  !abiFunction || txSimulation.isPending || mutationLoading
-                }
-                isLoading={txSimulation.isPending}
-                onClick={handleContractSimulation}
-              >
-                <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
-                  <span className="mr-3">
-                    <InfoIcon className="size-5" />
-                  </span>
-                </ToolTipLabel>
-                Simulate
-              </Button>
+              <ToolTipLabel label="Simulate the transaction to see its potential outcome without actually sending it to the network. This action doesn't cost gas.">
+                <Button
+                  className="gap-2 bg-background"
+                  variant="outline"
+                  disabled={
+                    !abiFunction || txSimulation.isPending || mutationLoading
+                  }
+                  onClick={handleContractSimulation}
+                >
+                  {txSimulation.isPending ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    <InfoIcon className="size-4 text-muted-foreground" />
+                  )}
+                  Simulate
+                </Button>
+              </ToolTipLabel>
               <TransactionButton
                 client={contract.client}
                 disabled={
@@ -553,8 +533,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
               </TransactionButton>
             </>
           )}
-        </ButtonGroup>
-      </Card>
+        </div>
+      </div>
     </FormProvider>
   );
 };

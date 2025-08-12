@@ -14,6 +14,7 @@ import {
 } from "thirdweb";
 import { MediaRenderer } from "thirdweb/react";
 import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
+import { FilePreview } from "@/components/blocks/file-preview";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +33,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import { FilePreview } from "../../../_common/file-preview";
 import { nftWithPriceSchema } from "../schema";
 import { BatchUploadInstructions } from "./batch-upload-instructions";
 import {

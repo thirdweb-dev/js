@@ -57,11 +57,11 @@ export default async function Page(props: PageProps) {
       <Breadcrumb
         crumbs={[
           {
-            href: "/connect/external-wallets",
+            href: "/wallets/external-wallets",
             name: "External Wallets",
           },
           {
-            href: `/connect/external-wallets/${params.walletId}`,
+            href: `/wallets/external-wallets/${params.walletId}`,
             name: walletMetadata.name,
           },
         ]}

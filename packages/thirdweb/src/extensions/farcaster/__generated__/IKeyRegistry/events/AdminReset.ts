@@ -40,8 +40,8 @@ export type AdminResetEventFilters = Partial<{
  */
 export function adminResetEvent(filters: AdminResetEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event AdminReset(uint256 indexed fid, bytes indexed key, bytes keyBytes)",
-    filters,
   });
 }

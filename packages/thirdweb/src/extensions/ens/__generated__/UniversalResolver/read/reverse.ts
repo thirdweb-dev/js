@@ -19,8 +19,8 @@ export type ReverseParams = {
 export const FN_SELECTOR = "0xec11c823" as const;
 const FN_INPUTS = [
   {
-    type: "bytes",
     name: "reverseName",
+    type: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [

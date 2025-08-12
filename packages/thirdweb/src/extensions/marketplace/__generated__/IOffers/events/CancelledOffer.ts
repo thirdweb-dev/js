@@ -40,8 +40,8 @@ export type CancelledOfferEventFilters = Partial<{
  */
 export function cancelledOfferEvent(filters: CancelledOfferEventFilters = {}) {
   return prepareEvent({
+    filters,
     signature:
       "event CancelledOffer(address indexed offeror, uint256 indexed offerId)",
-    filters,
   });
 }

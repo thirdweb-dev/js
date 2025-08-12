@@ -8,8 +8,8 @@ export const FN_SELECTOR = "0x42cbb15c" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    type: "uint256",
     name: "blockNumber",
+    type: "uint256",
   },
 ] as const;
 

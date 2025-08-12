@@ -1,10 +1,5 @@
 "use client";
-import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "chakra/card";
-import { FormErrorMessage, FormLabel } from "chakra/form";
-import { Heading } from "chakra/heading";
-import { Text } from "chakra/text";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -21,6 +16,15 @@ import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { TransactionButton } from "@/components/tx-button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { AddressOrEnsSchema, BasisPointsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
@@ -51,7 +55,7 @@ const CommonRoyaltySchema = z.object({
   seller_fee_basis_points: BasisPointsSchema,
 });
 
-export const SettingsRoyalties = ({
+export function SettingsRoyalties({
   contract,
   detectedState,
   isLoggedIn,
@@ -59,7 +63,7 @@ export const SettingsRoyalties = ({
   contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
   isLoggedIn: boolean;
-}) => {
+}) {
   const query = useReadContract(getDefaultRoyaltyInfo, {
     contract,
   });
@@ -82,101 +86,105 @@ export const SettingsRoyalties = ({
   );
 
   return (
-    <Card overflow="hidden" p={0} position="relative">
+    <div className="relative overflow-hidden bg-card border rounded-lg">
       <SettingDetectedState detectedState={detectedState} type="royalties" />
-      <Flex
-        as="form"
-        direction="column"
-        onSubmit={form.handleSubmit((d) => {
-          const transaction = setDefaultRoyaltyInfo({
-            contract,
-            royaltyBps: BigInt(d.seller_fee_basis_points),
-            royaltyRecipient: d.fee_recipient,
-          });
-          mutation.mutate(transaction, {
-            onError: (error) => {
-              console.error(error);
-              onError(error);
-            },
-            onSuccess: () => {
-              form.reset(d);
-              onSuccess();
-            },
-          });
-        })}
-      >
-        <Flex as="section" direction="column" gap={4} p={{ base: 6, md: 10 }}>
-          <Heading size="title.sm">Royalties</Heading>
-          <Text fontStyle="italic" size="body.md">
-            The wallet address that should receive the revenue from royalties
-            earned from secondary sales of the assets.
-          </Text>
-          <Flex direction={{ base: "column", md: "row" }} gap={4}>
-            <FormControl
-              isDisabled={!address}
-              isInvalid={
-                !!form.getFieldState("fee_recipient", form.formState).error
-              }
-            >
-              <FormLabel>Recipient Address</FormLabel>
-              <SolidityInput
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit((d) => {
+            const transaction = setDefaultRoyaltyInfo({
+              contract,
+              royaltyBps: BigInt(d.seller_fee_basis_points),
+              royaltyRecipient: d.fee_recipient,
+            });
+            mutation.mutate(transaction, {
+              onError: (error) => {
+                console.error(error);
+                onError(error);
+              },
+              onSuccess: () => {
+                form.reset(d);
+                onSuccess();
+              },
+            });
+          })}
+        >
+          <div className="p-4 md:p-6">
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold tracking-tight">
+                Royalties
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                The wallet address that should receive the revenue from
+                royalties earned from secondary sales of the assets.
+              </p>
+            </div>
+
+            {query.isPending ? (
+              <Skeleton className="h-[74px] w-full" />
+            ) : (
+              <div className="flex flex-col md:flex-row gap-4">
+                <FormField
+                  control={form.control}
+                  name="fee_recipient"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 max-w-md">
+                      <FormLabel>Recipient Address</FormLabel>
+                      <FormControl>
+                        <SolidityInput
+                          client={contract.client}
+                          formContext={form}
+                          solidityType="address"
+                          {...field}
+                          disabled={!address}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="seller_fee_basis_points"
+                  render={() => (
+                    <FormItem className="md:max-w-[200px]">
+                      <FormLabel>Percentage</FormLabel>
+                      <FormControl>
+                        <BasisPointsInput
+                          onChange={(value) =>
+                            form.setValue("seller_fee_basis_points", value, {
+                              shouldValidate: true,
+                            })
+                          }
+                          value={form.watch("seller_fee_basis_points")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            )}
+          </div>
+
+          <AdminOnly contract={contract}>
+            <div className="p-4 lg:px-6 py-3 border-t border-dashed flex justify-end">
+              <TransactionButton
                 client={contract.client}
-                formContext={form}
-                solidityType="address"
-                {...form.register("fee_recipient")}
-                disabled={!address}
-              />
-              <FormErrorMessage>
-                {
-                  form.getFieldState("fee_recipient", form.formState).error
-                    ?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-            <FormControl
-              isDisabled={!address}
-              isInvalid={
-                !!form.getFieldState("seller_fee_basis_points", form.formState)
-                  .error
-              }
-              maxW={{ base: "100%", md: "200px" }}
-            >
-              <FormLabel>Percentage</FormLabel>
-              <BasisPointsInput
-                onChange={(value) =>
-                  form.setValue("seller_fee_basis_points", value, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                  })
-                }
-                value={form.watch("seller_fee_basis_points")}
-              />
-              <FormErrorMessage>
-                {
-                  form.getFieldState("seller_fee_basis_points", form.formState)
-                    .error?.message
-                }
-              </FormErrorMessage>
-            </FormControl>
-          </Flex>
-        </Flex>
-        <AdminOnly contract={contract}>
-          <TransactionButton
-            className="!rounded-t-none rounded-xl"
-            client={contract.client}
-            disabled={query.isPending || !form.formState.isDirty}
-            isLoggedIn={isLoggedIn}
-            isPending={mutation.isPending}
-            transactionCount={1}
-            txChainID={contract.chain.id}
-            type="submit"
-          >
-            {mutation.isPending
-              ? "Updating Royalty Settings"
-              : "Update Royalty Settings"}
-          </TransactionButton>
-        </AdminOnly>
-      </Flex>
-    </Card>
+                size="sm"
+                variant="default"
+                disabled={query.isPending || !form.formState.isDirty}
+                isLoggedIn={isLoggedIn}
+                isPending={mutation.isPending}
+                transactionCount={undefined}
+                txChainID={contract.chain.id}
+                type="submit"
+              >
+                Save
+              </TransactionButton>
+            </div>
+          </AdminOnly>
+        </form>
+      </Form>
+    </div>
   );
-};
+}

@@ -18,16 +18,16 @@ export type KeyAtParams = {
 export const FN_SELECTOR = "0x0ea9442c" as const;
 const FN_INPUTS = [
   {
-    type: "uint256",
     name: "fid",
-  },
-  {
-    type: "uint8",
-    name: "state",
-  },
-  {
     type: "uint256",
+  },
+  {
+    name: "state",
+    type: "uint8",
+  },
+  {
     name: "index",
+    type: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [

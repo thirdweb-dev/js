@@ -1,7 +1,7 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import type { TeamAccountRole } from "@/api/team-members";
+import type { TeamAccountRole } from "@/api/team/team-members";
 import { Input } from "@/components/ui/input";
 import {
   Select,

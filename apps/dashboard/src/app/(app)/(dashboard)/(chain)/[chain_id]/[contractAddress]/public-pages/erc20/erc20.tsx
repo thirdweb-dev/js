@@ -4,6 +4,7 @@ import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
 import { GridPattern } from "@/components/ui/background-patterns";
 import { resolveFunctionSelectors } from "@/lib/selectors";
+import { AssetPageView } from "../_components/asset-page-view";
 import { getContractCreator } from "../_components/getContractCreator";
 import { PageHeader } from "../_components/PageHeader";
 import { getTokenPriceData } from "./_apis/token-price-data";
@@ -85,6 +86,7 @@ export async function ERC20PublicPage(props: {
 
   return (
     <div className="flex grow flex-col">
+      <AssetPageView assetType="coin" chainId={props.chainMetadata.chainId} />
       <PageHeader containerClassName="max-w-5xl" />
 
       <div className="border-b">
