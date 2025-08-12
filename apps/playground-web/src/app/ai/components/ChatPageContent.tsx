@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import { Img } from "../../../components/ui/Img";
+import { Spinner } from "../../../components/ui/Spinner/Spinner";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import type {
@@ -349,16 +350,17 @@ export function ChatPageContent(props: {
   };
 
   return (
-    <div className="flex grow flex-col overflow-hidden">
+    <div className="flex h-screen flex-col overflow-hidden">
       <WalletDisconnectedDialog
         onOpenChange={setShowConnectModal}
         open={showConnectModal}
       />
 
-      <div className="flex grow overflow-hidden">
-        <div className="relative flex grow flex-col overflow-hidden rounded-lg pb-4">
-          {showEmptyState ? (
-            <div className="fade-in-0 container flex max-w-[800px] grow animate-in flex-col justify-center">
+      {showEmptyState ? (
+        <div className="flex h-full flex-col">
+          {/* Empty state content - scrollable area */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="fade-in-0 container flex max-w-[800px] min-h-full animate-in flex-col justify-center">
               <EmptyStateChatPageContent
                 connectedWallets={connectedWalletsMeta}
                 context={contextFilters}
@@ -368,28 +370,60 @@ export function ChatPageContent(props: {
                 setContext={setContextFilters}
               />
             </div>
-          ) : (
-            <div className="fade-in-0 relative z-[0] flex max-h-full flex-1 animate-in flex-col overflow-hidden">
-              {sessionWithNoMessages && (
-                <div className="container flex max-h-full max-w-[800px] flex-1 flex-col justify-center py-8">
-                  <div className="flex flex-col items-center justify-center p-4">
-                    <div className="mb-5 rounded-full border bg-card p-3">
-                      <MessageSquareXIcon className="size-6 text-muted-foreground" />
-                    </div>
-                    <p className="mb-1 text-center text-foreground">
-                      No messages found
-                    </p>
-                    <p className="text-balance text-center text-muted-foreground text-sm">
-                      This session was aborted before receiving any messages
-                    </p>
-                  </div>
-                </div>
-              )}
+          </div>
 
-              {messages.length > 0 && (
+          {/* Chat input - anchored at bottom (same as chat state) */}
+          <div className="flex-shrink-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container max-w-[800px] py-4">
+              <SimpleChatBar
+                abortChatStream={() => {
+                  chatAbortController?.abort();
+                  setChatAbortController(undefined);
+                  setIsChatStreaming(false);
+                }}
+                client={props.client}
+                connectedWallets={connectedWalletsMeta}
+                context={contextFilters}
+                isChatStreaming={isChatStreaming}
+                isConnectingWallet={connectionStatus === "connecting"}
+                placeholder="Ask thirdweb AI"
+                sendMessage={handleSendMessage}
+                setActiveWallet={handleSetActiveWallet}
+                setContext={(v) => {
+                  setContextFilters(v);
+                }}
+              />
+
+              {/* Footer disclaimer */}
+              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
+                thirdweb AI can make mistakes. Please use with discretion
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-full flex-col">
+          {/* Chat messages area - scrollable */}
+          <div className="flex-1 overflow-y-auto">
+            {sessionWithNoMessages ? (
+              <div className="container flex h-full max-w-[800px] flex-col justify-center py-8">
+                <div className="flex flex-col items-center justify-center p-4">
+                  <div className="mb-5 rounded-full border bg-card p-3">
+                    <MessageSquareXIcon className="size-6 text-muted-foreground" />
+                  </div>
+                  <p className="mb-1 text-center text-foreground">
+                    No messages found
+                  </p>
+                  <p className="text-balance text-center text-muted-foreground text-sm">
+                    This session was aborted before receiving any messages
+                  </p>
+                </div>
+              </div>
+            ) : (
+              messages.length > 0 && (
                 <SimpleChats
                   authToken={props.authToken}
-                  className="min-w-0 pt-6 pb-32"
+                  className="min-w-0"
                   client={props.client}
                   enableAutoScroll={enableAutoScroll}
                   isChatStreaming={isChatStreaming}
@@ -398,36 +432,40 @@ export function ChatPageContent(props: {
                   sessionId={sessionId}
                   setEnableAutoScroll={setEnableAutoScroll}
                 />
-              )}
+              )
+            )}
+          </div>
 
-              <div className="container max-w-[800px]">
-                <SimpleChatBar
-                  abortChatStream={() => {
-                    chatAbortController?.abort();
-                    setChatAbortController(undefined);
-                    setIsChatStreaming(false);
-                  }}
-                  client={props.client}
-                  connectedWallets={connectedWalletsMeta}
-                  context={contextFilters}
-                  isChatStreaming={isChatStreaming}
-                  isConnectingWallet={connectionStatus === "connecting"}
-                  placeholder="Ask Nebula"
-                  sendMessage={handleSendMessage}
-                  setActiveWallet={handleSetActiveWallet}
-                  setContext={(v) => {
-                    setContextFilters(v);
-                  }}
-                />
-              </div>
+          {/* Chat input - anchored at bottom */}
+          <div className="flex-shrink-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container max-w-[800px] py-4">
+              <SimpleChatBar
+                abortChatStream={() => {
+                  chatAbortController?.abort();
+                  setChatAbortController(undefined);
+                  setIsChatStreaming(false);
+                }}
+                client={props.client}
+                connectedWallets={connectedWalletsMeta}
+                context={contextFilters}
+                isChatStreaming={isChatStreaming}
+                isConnectingWallet={connectionStatus === "connecting"}
+                placeholder="Ask thirdweb AI"
+                sendMessage={handleSendMessage}
+                setActiveWallet={handleSetActiveWallet}
+                setContext={(v) => {
+                  setContextFilters(v);
+                }}
+              />
+
+              {/* Footer disclaimer */}
+              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
+                thirdweb AI can make mistakes. Please use with discretion
+              </p>
             </div>
-          )}
-
-          <p className="mt-4 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-            Nebula may make mistakes. Please use with discretion
-          </p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -478,28 +516,15 @@ function EmptyStateChatPageContent(props: {
       <div className="relative py-10">
         <div className="flex justify-center">
           <div className="rounded-full border p-4 bg-card">
-            <MessageSquareXIcon className="size-8 text-muted-foreground" />
+            <MessageCircleIcon className="size-8 text-muted-foreground" />
           </div>
         </div>
         <div className="h-5" />
         <h1 className="px-4 text-center font-semibold text-3xl tracking-tight md:text-4xl">
-          How can I help you <br /> onchain today?
+          thirdweb AI demo
         </h1>
-        <div className="h-5" />
+        <div className="h-8" />
         <div className="mx-auto max-w-[600px]">
-          <SimpleChatBar
-            abortChatStream={() => {}}
-            client={{} as ThirdwebClient}
-            connectedWallets={props.connectedWallets}
-            context={props.context}
-            isChatStreaming={false}
-            isConnectingWallet={props.isConnectingWallet}
-            placeholder="Ask Nebula"
-            sendMessage={props.sendMessage}
-            setActiveWallet={props.setActiveWallet}
-            setContext={props.setContext}
-          />
-          <div className="h-5" />
           <div className="flex flex-wrap justify-center gap-2.5">
             {examplePrompts.map((prompt) => {
               return (
@@ -552,7 +577,7 @@ function SimpleChatBar(props: {
     <div className="overflow-hidden rounded-2xl border border-border bg-card transition-colors p-2">
       <div className="max-h-[200px] overflow-y-auto">
         <textarea
-          className="min-h-[60px] w-full resize-none border-none bg-transparent pt-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
+          className="min-h-[60px] w-full resize-none border-none bg-transparent p-2 leading-relaxed focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
           disabled={props.isChatStreaming}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
@@ -627,30 +652,26 @@ function SimpleChats(props: {
   }, [messages, enableAutoScroll]);
 
   return (
-    <div className="relative flex max-h-full flex-1 flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
-        <div className="container max-w-[800px]">
-          <div className={`flex flex-col gap-5 py-4 ${props.className}`}>
-            {props.messages.map((message, index) => {
-              const isMessagePending =
-                props.isChatStreaming && index === props.messages.length - 1;
+    <div className="container max-w-[800px]">
+      <div className={`flex flex-col gap-5 py-6 pb-8 ${props.className}`}>
+        {props.messages.map((message, index) => {
+          const isMessagePending =
+            props.isChatStreaming && index === props.messages.length - 1;
 
-              return (
-                <div
-                  className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
-                  key={`${index}-${message}`}
-                >
-                  <RenderMessage
-                    isMessagePending={isMessagePending}
-                    message={message}
-                    sendMessage={props.sendMessage}
-                  />
-                </div>
-              );
-            })}
-            <div ref={scrollAnchorRef} />
-          </div>
-        </div>
+          return (
+            <div
+              className="fade-in-0 min-w-0 animate-in pt-1 text-sm duration-300 lg:text-base"
+              key={`${index}-${message}`}
+            >
+              <RenderMessage
+                isMessagePending={isMessagePending}
+                message={message}
+                sendMessage={props.sendMessage}
+              />
+            </div>
+          );
+        })}
+        <div ref={scrollAnchorRef} />
       </div>
     </div>
   );
@@ -691,7 +712,11 @@ function RenderMessage(props: {
     <div className="flex gap-3">
       <div className="-translate-y-[2px] relative shrink-0">
         <div className="flex size-9 items-center justify-center rounded-full border bg-card">
-          <MessageCircleIcon className="size-5 text-muted-foreground" />
+          {props.isMessagePending ? (
+            <Spinner />
+          ) : (
+            <MessageCircleIcon className="size-5 text-muted-foreground" />
+          )}
         </div>
       </div>
 
@@ -808,7 +833,9 @@ function RenderMessage(props: {
                       });
                     }}
                   >
-                    Execute Swap
+                    {message.data.action === "approval"
+                      ? "Approve"
+                      : "Execute Swap"}
                   </TransactionButton>
                 </div>
               ) : (

@@ -1,4 +1,4 @@
-import { BookIcon, ZapIcon } from "lucide-react";
+import { BookIcon, PlayIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 export const sidebar: SideBar = {
@@ -11,6 +11,11 @@ export const sidebar: SideBar = {
           name: "Get Started",
           href: "/ai/chat",
           icon: <ZapIcon />,
+        },
+        {
+            name: "Playground",
+            href: "https://playground.thirdweb.com/ai/chat",
+            icon: <PlayIcon />,
         },
         {
           name: "Response Handling",
