@@ -62,7 +62,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   return (
     <div>
       <div>
-        <Heading anchorId="request" className="text-lg lg:text-lg" level={2}>
+        <Heading anchorId="request" className="text-lg lg:text-lg" level={3}>
           Request
         </Heading>
         <div className="rounded-lg border">
@@ -116,7 +116,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
       </div>
 
       <div>
-        <Heading anchorId="response" className="text-lg lg:text-lg" level={2}>
+        <Heading anchorId="response" className="text-lg lg:text-lg" level={3}>
           Response
         </Heading>
         <div className="overflow-hidden rounded-lg border">

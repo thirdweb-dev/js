@@ -370,7 +370,7 @@ function transformOpenApiToApiEndpointMeta(
 
   // Use override if provided, otherwise generate from OpenAPI spec
   if (responseExampleOverride) {
-    Object.assign(responseExamples, responseExampleOverride);
+    responseExamples["200"] = JSON.stringify(responseExampleOverride, null, 2);
   } else {
     for (const [statusCode, response] of Object.entries(operation.responses)) {
       const content = response.content;

@@ -71,19 +71,15 @@ Read, write, and deploy smart contracts on any EVM compatible blockchain.
 
     ### Read from Contracts
 
+    You can efficiently read data from multiple functions or contracts in a single request.
+
     <OpenApiEndpoint path="/v1/contracts/read" method="POST" />
 
     ### Write to Contracts
 
+    You can write multiple functions to multiple contracts on the same chain in a single request atomically, which will result in a single transaction for optimal gas efficiency.
+
 	<OpenApiEndpoint path="/v1/contracts/write" method="POST" />
-
-    ### Deploy Contracts
-
-    <OpenApiEndpoint path="/v1/contracts" method="POST" />
-
-    ### List Contracts
-
-    <OpenApiEndpoint path="/v1/contracts" method="GET" />
 
   </TabsContent>
 
