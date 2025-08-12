@@ -35,11 +35,11 @@ const FN_OUTPUTS = [
       },
       {
         type: "address",
-        name: "referrer",
+        name: "developer",
       },
       {
         type: "uint16",
-        name: "referrerBps",
+        name: "developerBps",
       },
       {
         type: "address",

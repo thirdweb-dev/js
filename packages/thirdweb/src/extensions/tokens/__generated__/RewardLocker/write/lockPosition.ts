@@ -21,10 +21,13 @@ export type LockPositionParams = WithOverrides<{
     type: "address";
     name: "recipient";
   }>;
-  referrer: AbiParameterToPrimitiveType<{ type: "address"; name: "referrer" }>;
-  referrerBps: AbiParameterToPrimitiveType<{
+  developer: AbiParameterToPrimitiveType<{
+    type: "address";
+    name: "developer";
+  }>;
+  developerBps: AbiParameterToPrimitiveType<{
     type: "uint16";
-    name: "referrerBps";
+    name: "developerBps";
   }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
@@ -45,11 +48,11 @@ const FN_INPUTS = [
   },
   {
     type: "address",
-    name: "referrer",
+    name: "developer",
   },
   {
     type: "uint16",
-    name: "referrerBps",
+    name: "developerBps",
   },
   {
     type: "bytes",
@@ -89,8 +92,8 @@ export function isLockPositionSupported(availableSelectors: string[]) {
  *  asset: ...,
  *  positionId: ...,
  *  recipient: ...,
- *  referrer: ...,
- *  referrerBps: ...,
+ *  developer: ...,
+ *  developerBps: ...,
  *  data: ...,
  * });
  * ```
@@ -100,8 +103,8 @@ export function encodeLockPositionParams(options: LockPositionParams) {
     options.asset,
     options.positionId,
     options.recipient,
-    options.referrer,
-    options.referrerBps,
+    options.developer,
+    options.developerBps,
     options.data,
   ]);
 }
@@ -118,8 +121,8 @@ export function encodeLockPositionParams(options: LockPositionParams) {
  *  asset: ...,
  *  positionId: ...,
  *  recipient: ...,
- *  referrer: ...,
- *  referrerBps: ...,
+ *  developer: ...,
+ *  developerBps: ...,
  *  data: ...,
  * });
  * ```
@@ -148,8 +151,8 @@ export function encodeLockPosition(options: LockPositionParams) {
  *  asset: ...,
  *  positionId: ...,
  *  recipient: ...,
- *  referrer: ...,
- *  referrerBps: ...,
+ *  developer: ...,
+ *  developerBps: ...,
  *  data: ...,
  *  overrides: {
  *    ...
@@ -181,8 +184,8 @@ export function lockPosition(
         resolvedOptions.asset,
         resolvedOptions.positionId,
         resolvedOptions.recipient,
-        resolvedOptions.referrer,
-        resolvedOptions.referrerBps,
+        resolvedOptions.developer,
+        resolvedOptions.developerBps,
         resolvedOptions.data,
       ] as const;
     },

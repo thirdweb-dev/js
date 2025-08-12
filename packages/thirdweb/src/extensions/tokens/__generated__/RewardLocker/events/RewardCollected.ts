@@ -37,7 +37,7 @@ export function rewardCollectedEvent(
 ) {
   return prepareEvent({
     signature:
-      "event RewardCollected(address owner, address indexed asset, address positionManager, uint256 positionId, address recipient, address referrer, address token0, uint256 recipientAmount0, uint256 referrerAmount0, uint256 feeAmount0, address token1, uint256 recipientAmount1, uint256 referrerAmount1, uint256 feeAmount1)",
+      "event RewardCollected(address owner, address indexed asset, address positionManager, uint256 positionId, address recipient, address developer, address token0, uint256 recipientAmount0, uint256 developerAmount0, uint256 feeAmount0, address token1, uint256 recipientAmount1, uint256 developerAmount1, uint256 feeAmount1)",
     filters,
   });
 }

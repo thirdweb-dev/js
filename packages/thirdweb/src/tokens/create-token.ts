@@ -4,7 +4,7 @@ import { parseEventLogs } from "../event/actions/parse-logs.js";
 import { createdEvent } from "../extensions/tokens/__generated__/ERC20Entrypoint/events/Created.js";
 import { create } from "../extensions/tokens/__generated__/ERC20Entrypoint/write/create.js";
 import { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
-import { DEFAULT_REFERRER_ADDRESS } from "./constants.js";
+import { DEFAULT_DEVELOPER_ADDRESS } from "./constants.js";
 import { getDeployedEntrypointERC20 } from "./get-entrypoint-erc20.js";
 import {
   encodeInitParams,
@@ -37,7 +37,7 @@ export async function createToken(options: CreateTokenOptions) {
     createParams: {
       data: encodedInitData,
       hookData,
-      referrer: options.referrerAddress || DEFAULT_REFERRER_ADDRESS,
+      developer: options.developerAddress || DEFAULT_DEVELOPER_ADDRESS,
       salt,
     },
     creator,
