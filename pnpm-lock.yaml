@@ -624,6 +624,9 @@ importers:
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
+      fetch-event-stream:
+        specifier: 0.1.5
+        version: 0.1.5
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.1.0)
@@ -648,21 +651,33 @@ importers:
       react:
         specifier: 19.1.0
         version: 19.1.0
+      react-children-utilities:
+        specifier: ^2.10.0
+        version: 2.10.0(react@19.1.0)
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       react-hook-form:
         specifier: 7.55.0
         version: 7.55.0(react@19.1.0)
+      react-markdown:
+        specifier: 10.1.0
+        version: 10.1.0(@types/react@19.1.8)(react@19.1.0)
       react-pick-color:
         specifier: ^2.0.0
         version: 2.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      remark-gfm:
+        specifier: 4.0.1
+        version: 4.0.1
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
       shiki:
         specifier: 1.27.0
         version: 1.27.0
+      sonner:
+        specifier: 2.0.6
+        version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
@@ -16640,7 +16655,7 @@ snapshots:
 
   '@babel/helper-annotate-as-pure@7.27.3':
     dependencies:
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.2
 
   '@babel/helper-compilation-targets@7.27.2':
     dependencies:
@@ -16686,7 +16701,7 @@ snapshots:
   '@babel/helper-member-expression-to-functions@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.2
     transitivePeerDependencies:
       - supports-color
 
@@ -16708,7 +16723,7 @@ snapshots:
 
   '@babel/helper-optimise-call-expression@7.27.1':
     dependencies:
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.2
 
   '@babel/helper-plugin-utils@7.27.1': {}
 
@@ -16733,7 +16748,7 @@ snapshots:
   '@babel/helper-skip-transparent-expression-wrappers@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.2
     transitivePeerDependencies:
       - supports-color
 
