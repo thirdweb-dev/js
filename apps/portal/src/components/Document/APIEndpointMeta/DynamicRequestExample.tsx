@@ -17,6 +17,7 @@ interface DynamicRequestExampleProps {
     bodyParameters?: APIParameter[];
   }>;
   endpointUrl: string;
+  referenceUrl: string;
   method: string;
   pathParameters: APIParameter[];
   headers: APIParameter[];
@@ -77,6 +78,7 @@ function ParameterSection(props: {
   return (
     <div className="border-b last:border-b-0">
       <Details
+        key={props.title}
         summary={
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium">{props.title}</span>
@@ -154,6 +156,7 @@ export function DynamicRequestExample(props: DynamicRequestExampleProps) {
             exampleType: example.exampleType,
           }))}
           endpointUrl={props.endpointUrl}
+          referenceUrl={props.referenceUrl}
           method={props.method}
           hasSeparateDropdowns={props.hasMultipleExamples}
           selectedExample={

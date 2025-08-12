@@ -28,7 +28,7 @@ export function Details(props: {
       defaultOpen={props.startExpanded}
       trigger={
         <div className="flex gap-3">
-          <p
+          <span
             className={cn(
               "break-all font-bold text-foreground text-sm tracking-tight",
               "flex w-full gap-3 text-left font-semibold text-foreground group-hover:underline",
@@ -36,7 +36,7 @@ export function Details(props: {
             )}
           >
             {props.summary}
-          </p>
+          </span>
           {props.tags && props.tags.length > 0 && (
             <div className="ml-auto flex items-center gap-2">
               {props.tags?.map((flag) => {

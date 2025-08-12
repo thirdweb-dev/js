@@ -68,7 +68,10 @@ You will be asked to enter the following values
 
 <TabsContent value="http">
 
-<OpenApiEndpoint path="/v1/auth/initiate" method="POST" />
+<OpenApiEndpoint path="/v1/auth/complete" method="POST" requestBodyOverride={{
+	type: "jwt",
+	payload: "<your-jwt>",
+}}/>
 
 </TabsContent>
 

@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ExternalLinkIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
 import { Details } from "../Details";
@@ -27,6 +28,7 @@ export type RequestExampleType = {
 export type ApiEndpointMeta = {
   title: string;
   description: React.ReactNode;
+  referenceUrl: string;
   path: string;
   origin: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
@@ -109,7 +111,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   return (
     <div>
       <div>
-        <Heading anchorId="request" className="text-lg lg:text-lg" level={3}>
+        <Heading anchorId={`request#${props.metadata.method.toLowerCase()}${props.metadata.path}`} className="text-lg lg:text-lg" level={3}>
           Request
         </Heading>
 
@@ -118,6 +120,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
           <DynamicRequestExample
             requestExamples={requestExamples}
             endpointUrl={props.metadata.path}
+            referenceUrl={props.metadata.referenceUrl}
             method={props.metadata.method}
             pathParameters={request.pathParameters}
             headers={request.headers}
@@ -139,6 +142,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
                 label: example.label,
               }))}
               endpointUrl={props.metadata.path}
+              referenceUrl={props.metadata.referenceUrl}
               method={props.metadata.method}
             />
 
@@ -177,7 +181,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
       </div>
 
       <div>
-        <Heading anchorId="response" className="text-lg lg:text-lg" level={3}>
+        <Heading anchorId={`response#${props.metadata.method.toLowerCase()}${props.metadata.path}`} className="text-lg lg:text-lg" level={3}>
           Response
         </Heading>
         <div className="overflow-hidden rounded-lg border">

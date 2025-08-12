@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ExternalLinkIcon } from "lucide-react";
 
 export function RequestExample(props: {
   codeExamples: Array<{
@@ -19,6 +20,7 @@ export function RequestExample(props: {
   }>;
   method: string;
   endpointUrl: string;
+  referenceUrl: string;
   onExampleChange?: (label: string) => void;
   onFormatChange?: (format: "fetch" | "curl") => void;
   onExampleTypeChange?: (exampleType: string) => void;
@@ -77,7 +79,10 @@ export function RequestExample(props: {
             {props.method}
           </Badge>
           <span className="truncate font-mono text-sm">
-            {props.endpointUrl}
+            <a href={props.referenceUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+              {props.endpointUrl}
+              <ExternalLinkIcon className="size-3" />
+            </a>
           </span>
         </div>
         {props.hasSeparateDropdowns ? (

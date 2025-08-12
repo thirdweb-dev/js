@@ -20,7 +20,6 @@ From your backend, you can list all your users and fetch the details of any user
 	<TabsList>
 		<TabsTrigger value="single">Single User</TabsTrigger>
 		<TabsTrigger value="all">All Users</TabsTrigger>
-		<TabsTrigger value="create">Create User</TabsTrigger>
 	</TabsList>
 
 <TabsContent value="single">
@@ -79,31 +78,6 @@ Required headers:
 ### Example
 
 <OpenApiEndpoint path="/v1/wallets/user" method="GET" />
-
-</TabsContent>
-
-<TabsContent value="create">
-
-## Create User Wallet (Pregeneration)
-
-Pregenerate a user wallet before authentication. This creates a wallet in advance that can be claimed later when the user authenticates.
-
-### Use Cases
-
-- Create wallets based on known email addresses or user IDs
-- Pre-fund wallets with tokens or NFTs before users claim them
-- Enable smoother onboarding experiences
-
-### Authentication
-
-Required headers:
-- `x-secret-key`: Your secret key for authentication
-- `x-ecosystem-id` (optional): Your ecosystem ID
-- `x-ecosystem-partner-id` (optional): Your ecosystem partner ID
-
-### Example
-
-<OpenApiEndpoint path="/v1/wallets/user" method="POST" />
 
 </TabsContent>
 

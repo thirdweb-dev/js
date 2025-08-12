@@ -427,12 +427,15 @@ function transformOpenApiToApiEndpointMeta(
     }
   }
 
+  const tag = operation.tags?.[0] || "";
+
   return {
     title: operation.summary || `${method.toUpperCase()} ${path}`,
     description: operation.description || operation.summary || "",
     path,
     origin: baseUrl,
     method: method.toUpperCase() as "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+    referenceUrl: generateReferenceUrl(tag, path, method),
     request: {
       pathParameters,
       headers,
@@ -479,7 +482,7 @@ async function OpenApiEndpointInner({
       requestBodyOverride,
       responseExampleOverride,
     );
-    return <ApiEndpoint metadata={metadata} key={specUrl + path} />;
+    return <ApiEndpoint metadata={metadata} key={specUrl + path + method} />;
   } catch (error) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4">
@@ -490,4 +493,10 @@ async function OpenApiEndpointInner({
       </div>
     );
   }
+}
+
+const BASE_API_URL = "https://api.thirdweb.com";
+
+function generateReferenceUrl(tag: string, path: string, method: string): string {
+  return `${BASE_API_URL}/reference#tag/${tag.toLowerCase()}/${method.toLowerCase()}${path}`;
 }
