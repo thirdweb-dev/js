@@ -1,3 +1,4 @@
+import type { OpenAPIV3_1 } from "openapi-types";
 import { cache, Suspense } from "react";
 import {
   type APIParameter,
@@ -6,81 +7,7 @@ import {
 } from "./ApiEndpoint";
 
 // OpenAPI 3.0 types (simplified for our needs)
-interface OpenApiSpec {
-  openapi: string;
-  info: {
-    title: string;
-    version: string;
-  };
-  servers?: Array<{
-    url: string;
-    description?: string;
-  }>;
-  paths: {
-    [path: string]: {
-      [method: string]: {
-        summary?: string;
-        description?: string;
-        parameters?: Array<{
-          name: string;
-          in: "query" | "header" | "path" | "cookie";
-          required?: boolean;
-          description?: string;
-          schema?: {
-            type?: string;
-            example?: any;
-            default?: any;
-          };
-          example?: any;
-        }>;
-        requestBody?: {
-          required?: boolean;
-          content: {
-            [mediaType: string]: {
-              schema?: {
-                type?: string;
-                properties?: {
-                  [key: string]: {
-                    type?: string;
-                    description?: string;
-                    example?: any;
-                    required?: boolean;
-                  };
-                };
-                required?: string[];
-                example?: any;
-                examples?: any[];
-              };
-            };
-          };
-        };
-        responses: {
-          [statusCode: string]: {
-            description: string;
-            content?: {
-              [mediaType: string]: {
-                schema?: {
-                  type?: string;
-                  properties?: {
-                    [key: string]: {
-                      type?: string;
-                      description?: string;
-                      example?: any;
-                      required?: boolean;
-                    };
-                  };
-                  required?: string[];
-                  example?: any;
-                  examples?: any[];
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-}
+type OpenApiSpec = OpenAPIV3_1.Document;
 
 interface OpenApiEndpointProps {
   specUrl?: string;
@@ -266,12 +193,14 @@ function transformOpenApiToApiEndpointMeta(
   requestBodyOverride?: Record<string, any>,
   responseExampleOverride?: Record<string, string>,
 ): ApiEndpointMeta {
-  const pathItem = spec.paths[path];
+  const pathItem = spec.paths?.[path];
   if (!pathItem) {
     throw new Error(`Path ${path} not found in OpenAPI spec`);
   }
 
-  const operation = pathItem[method.toLowerCase()];
+  const operation = pathItem[
+    method.toLowerCase() as keyof typeof pathItem
+  ] as OpenAPIV3_1.OperationObject;
   if (!operation) {
     throw new Error(`Method ${method} not found for path ${path}`);
   }
@@ -285,14 +214,14 @@ function transformOpenApiToApiEndpointMeta(
   const queryParameters: APIParameter[] = [];
 
   if (operation.parameters) {
-    for (const param of operation.parameters) {
+    for (const param of operation.parameters as OpenAPIV3_1.ParameterObject[]) {
+      const schema = param.schema as OpenAPIV3_1.SchemaObject;
       const apiParam: APIParameter = {
         name: param.name,
         description: param.description || "",
-        type: param.schema?.type || "string",
+        type: schema?.type || "string",
         required: param.required || false,
-        example:
-          param.example || param.schema?.example || param.schema?.default,
+        example: param.example || schema?.example || schema?.default,
       } as APIParameter;
 
       switch (param.in) {
@@ -341,7 +270,11 @@ function transformOpenApiToApiEndpointMeta(
     example: undefined,
   });
 
-  if (method === "POST" && !path.includes("/v1/contracts/read")) {
+  if (
+    method === "POST" &&
+    !path.includes("/v1/contracts/read") &&
+    !path.includes("/v1/auth")
+  ) {
     headers.push({
       name: "Authorization",
       type: "frontend",
@@ -353,6 +286,10 @@ function transformOpenApiToApiEndpointMeta(
 
   // Transform request body parameters
   const bodyParameters: APIParameter[] = [];
+  const requestExamples: Array<{
+    title: string;
+    bodyParameters: APIParameter[];
+  }> = [];
 
   // Use override if provided
   if (requestBodyOverride) {
@@ -367,42 +304,93 @@ function transformOpenApiToApiEndpointMeta(
       bodyParameters.push(apiParam);
     }
   } else if (operation.requestBody) {
-    const content = operation.requestBody.content;
+    const content = (operation.requestBody as OpenAPIV3_1.RequestBodyObject)
+      .content;
     const jsonContent = content["application/json"];
+    const schema = jsonContent?.schema as OpenAPIV3_1.SchemaObject;
 
-    const example =
-      jsonContent?.schema?.example || jsonContent?.schema?.examples?.[0];
-    const required = jsonContent?.schema?.required || [];
+    // Check if this is a oneOf schema (multiple possible request bodies)
+    if (schema?.oneOf && Array.isArray(schema.oneOf)) {
+      // Parse each oneOf schema into separate request examples
+      for (const [index, oneOfSchema] of schema.oneOf.entries()) {
+        const schema = oneOfSchema as any;
+        const title = schema.title || `Option ${index + 1}`;
+        const required = schema.required || [];
+        const schemaBodyParameters: APIParameter[] = [];
 
-    if (example) {
-      // If there's a global example use that
-      if (typeof example === "object" && example !== null) {
-        for (const [key, value] of Object.entries(example)) {
+        // Use schema examples if available
+        const schemaExamples = schema.examples || [];
+        const schemaExample = schemaExamples[index];
+
+        if (schemaExample && typeof schemaExample === "object") {
+          // Use the provided example
+          for (const [key, value] of Object.entries(schemaExample)) {
+            const property = schema.properties?.[key];
+            const apiParam: APIParameter = {
+              name: key,
+              description: property?.description || "",
+              type: property?.type,
+              required: required.includes(key),
+              example: value as any,
+            };
+            schemaBodyParameters.push(apiParam);
+          }
+        } else if (schema.properties) {
+          // Generate from schema properties
+          for (const [propName, propSchema] of Object.entries(
+            schema.properties,
+          )) {
+            const prop = propSchema as any;
+            const apiParam: APIParameter = {
+              name: propName,
+              description: prop.description || "",
+              type: prop.type,
+              required: required.includes(propName),
+              example: generateExampleFromSchema(prop) as any,
+            };
+            schemaBodyParameters.push(apiParam);
+          }
+        }
+
+        requestExamples.push({
+          title,
+          bodyParameters: schemaBodyParameters,
+        });
+      }
+    } else {
+      // Single schema (not oneOf)
+      const example = schema?.example || schema?.examples?.[0];
+      const required = schema?.required || [];
+
+      if (example) {
+        // If there's a global example use that
+        if (typeof example === "object" && example !== null) {
+          for (const [key, value] of Object.entries(example)) {
+            const apiParam: APIParameter = {
+              name: key,
+              description: schema?.properties?.[key]?.description || "",
+              required: required.includes(key),
+              example: value,
+            } as APIParameter;
+
+            bodyParameters.push(apiParam);
+          }
+        }
+      } else if (schema?.properties) {
+        for (const [propName, propSchema] of Object.entries(
+          schema.properties,
+        )) {
+          const prop = propSchema as any;
           const apiParam: APIParameter = {
-            name: key,
-            description:
-              jsonContent?.schema?.properties?.[key]?.description || "",
-            required: required.includes(key),
-            example: value,
+            name: propName,
+            description: prop.description || "",
+            type: prop.type,
+            required: required.includes(propName),
+            example: prop.example,
           } as APIParameter;
 
           bodyParameters.push(apiParam);
         }
-      }
-    } else if (jsonContent?.schema?.properties) {
-      for (const [propName, propSchema] of Object.entries(
-        jsonContent.schema.properties,
-      )) {
-        const prop = propSchema as any;
-        const apiParam: APIParameter = {
-          name: propName,
-          description: prop.description || "",
-          type: prop.type,
-          required: required.includes(propName),
-          example: prop.example,
-        } as APIParameter;
-
-        bodyParameters.push(apiParam);
       }
     }
   }
@@ -414,8 +402,10 @@ function transformOpenApiToApiEndpointMeta(
   if (responseExampleOverride) {
     responseExamples["200"] = JSON.stringify(responseExampleOverride, null, 2);
   } else {
-    for (const [statusCode, response] of Object.entries(operation.responses)) {
-      const content = response.content;
+    for (const [statusCode, response] of Object.entries(
+      (operation as OpenAPIV3_1.OperationObject).responses || {},
+    )) {
+      const content = (response as OpenAPIV3_1.ResponseObject).content;
       let example = "";
 
       if (content) {
@@ -448,6 +438,8 @@ function transformOpenApiToApiEndpointMeta(
       headers,
       queryParameters,
       bodyParameters,
+      // Include request examples if we have oneOf schemas
+      requestExamples: requestExamples.length > 0 ? requestExamples : undefined,
     },
     responseExamples,
   };

@@ -3,6 +3,7 @@ import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
 import { Details } from "../Details";
 import { Heading } from "../Heading";
+import { DynamicRequestExample } from "./DynamicRequestExample";
 import { RequestExample } from "./RequestExample";
 
 export type APIParameter = {
@@ -18,6 +19,11 @@ export type APIParameter = {
     | Array<string | boolean | number | object>;
 };
 
+export type RequestExampleType = {
+  title: string;
+  bodyParameters: APIParameter[];
+};
+
 export type ApiEndpointMeta = {
   title: string;
   description: React.ReactNode;
@@ -29,6 +35,8 @@ export type ApiEndpointMeta = {
     headers: APIParameter[];
     queryParameters: APIParameter[];
     bodyParameters: APIParameter[];
+    // Support for multiple request examples (oneOf schemas)
+    requestExamples?: RequestExampleType[];
   };
   responseExamples: Record<string, string>;
 };
@@ -36,26 +44,65 @@ export type ApiEndpointMeta = {
 export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
   const { responseExamples, request } = props.metadata;
 
+  // If we have multiple request examples (oneOf schemas), create code examples for each
   const requestExamples: Array<{
     lang: "javascript" | "bash";
     code: string;
     label: string;
-  }> = [
-    {
-      code: createFetchCommand({
-        metadata: props.metadata,
-      }),
-      label: "Fetch",
-      lang: "javascript",
-    },
-    {
-      code: createCurlCommand({
-        metadata: props.metadata,
-      }),
-      label: "Curl",
-      lang: "bash",
-    },
-  ];
+    format: "fetch" | "curl";
+    exampleType?: string;
+    bodyParameters?: APIParameter[];
+  }> = [];
+
+  if (request.requestExamples && request.requestExamples.length > 0) {
+    // Create examples for each oneOf schema
+    for (const requestExample of request.requestExamples) {
+      const metadataWithExample = {
+        ...props.metadata,
+        request: {
+          ...request,
+          bodyParameters: requestExample.bodyParameters,
+        },
+      };
+
+      requestExamples.push(
+        {
+          code: createFetchCommand({ metadata: metadataWithExample }),
+          label: `Fetch - ${requestExample.title}`,
+          lang: "javascript",
+          format: "fetch",
+          exampleType: requestExample.title,
+          bodyParameters: requestExample.bodyParameters,
+        },
+        {
+          code: createCurlCommand({ metadata: metadataWithExample }),
+          label: `Curl - ${requestExample.title}`,
+          lang: "bash",
+          format: "curl",
+          exampleType: requestExample.title,
+          bodyParameters: requestExample.bodyParameters,
+        },
+      );
+    }
+  } else {
+    // Default single example
+    requestExamples.push(
+      {
+        code: createFetchCommand({ metadata: props.metadata }),
+        label: "Fetch",
+        lang: "javascript",
+        format: "fetch",
+        bodyParameters: request.bodyParameters,
+      },
+      {
+        code: createCurlCommand({ metadata: props.metadata }),
+        label: "Curl",
+        lang: "bash",
+        format: "curl",
+        bodyParameters: request.bodyParameters,
+      },
+    );
+  }
 
   const responseKeys = Object.keys(responseExamples);
 
@@ -65,11 +112,22 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
         <Heading anchorId="request" className="text-lg lg:text-lg" level={3}>
           Request
         </Heading>
-        <div className="rounded-lg border">
-          <RequestExample
-            // render <CodeBlock /> on server and pass it to client
-            codeExamples={requestExamples.map((example) => {
-              return {
+
+        {/* Use DynamicRequestExample for multiple examples, regular for single */}
+        {request.requestExamples && request.requestExamples.length > 0 ? (
+          <DynamicRequestExample
+            requestExamples={requestExamples}
+            endpointUrl={props.metadata.path}
+            method={props.metadata.method}
+            pathParameters={request.pathParameters}
+            headers={request.headers}
+            queryParameters={request.queryParameters}
+            hasMultipleExamples={true}
+          />
+        ) : (
+          <div className="rounded-lg border">
+            <RequestExample
+              codeExamples={requestExamples.map((example) => ({
                 code: (
                   <CodeBlock
                     className="rounded-none border-none"
@@ -79,40 +137,43 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
                   />
                 ),
                 label: example.label,
-              };
-            })}
-            endpointUrl={props.metadata.path}
-            method={props.metadata.method}
-          />
+              }))}
+              endpointUrl={props.metadata.path}
+              method={props.metadata.method}
+            />
 
-          {/* Parameters section inside the card */}
-          <div className="border-t">
-            {request.headers.length > 0 && (
-              <ParameterSection parameters={request.headers} title="Headers" />
-            )}
+            {/* Parameters section inside the card */}
+            <div className="border-t">
+              {request.headers.length > 0 && (
+                <ParameterSection
+                  parameters={request.headers}
+                  title="Headers"
+                />
+              )}
 
-            {request.pathParameters.length > 0 && (
-              <ParameterSection
-                parameters={request.pathParameters}
-                title="Path Parameters"
-              />
-            )}
+              {request.pathParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.pathParameters}
+                  title="Path Parameters"
+                />
+              )}
 
-            {request.queryParameters.length > 0 && (
-              <ParameterSection
-                parameters={request.queryParameters}
-                title="Query Parameters"
-              />
-            )}
+              {request.queryParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.queryParameters}
+                  title="Query Parameters"
+                />
+              )}
 
-            {request.bodyParameters.length > 0 && (
-              <ParameterSection
-                parameters={request.bodyParameters}
-                title="Request Body"
-              />
-            )}
+              {request.bodyParameters.length > 0 && (
+                <ParameterSection
+                  parameters={request.bodyParameters}
+                  title="Request Body"
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div>
