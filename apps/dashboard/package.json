@@ -107,7 +107,7 @@
     "postcss": "8.5.6",
     "storybook": "9.0.15",
     "tailwindcss": "3.4.17",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "name": "thirdweb-dashboard",
   "private": true,

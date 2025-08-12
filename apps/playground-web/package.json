@@ -50,7 +50,7 @@
     "postcss": "8.5.6",
     "tailwindcss": "3.4.17",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "name": "playground-web",
   "private": true,

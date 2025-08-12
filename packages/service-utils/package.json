@@ -14,7 +14,7 @@
     "@cloudflare/workers-types": "4.20250704.0",
     "@types/node": "22.14.1",
     "@vitest/coverage-v8": "3.2.4",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "vitest": "3.2.4"
   },
   "exports": {
