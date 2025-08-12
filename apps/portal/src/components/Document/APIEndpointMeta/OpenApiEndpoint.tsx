@@ -326,6 +326,20 @@ function transformOpenApiToApiEndpointMeta(
     required: false,
     example: undefined,
   });
+  headers.push({
+    name: "x-ecosystem-id",
+    type: "optional",
+    description: "Ecosystem ID - for ecosystem wallets.",
+    required: false,
+    example: undefined,
+  });
+  headers.push({
+    name: "x-ecosystem-partner-id",
+    type: "optional",
+    description: "Ecosystem partner ID - for ecosystem wallets.",
+    required: false,
+    example: undefined,
+  });
 
   if (method === "POST" && !path.includes("/v1/contracts/read")) {
     headers.push({

@@ -72,10 +72,13 @@ Create wallets for your users with flexible authentication options. Choose from 
 
 ## API Authentication
 
-Create and authenticate user wallets using different methods:
+Authenticating a user is done in two steps:
+
+1. Initiate authentication
+2. Complete authentication
 
 ### Initiate Authentication
-Start authentication with email, phone, passkey, or social providers:
+Start authentication with email, phone, passkey, or social providers
 
 <OpenApiEndpoint path="/v1/auth/initiate" method="POST" />
 
@@ -94,7 +97,7 @@ Retrieve authenticated user's wallet details:
   <TabsContent value="typescript">
     ### Installation
 
-    Install the thirdweb SDK in your TypeScript project:
+    Install the thirdweb SDK in your TypeScript project
 
     <InstallTabs
       npm="npm i thirdweb"
