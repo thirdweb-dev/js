@@ -3,34 +3,20 @@ import { cn } from "../../../lib/utils";
 import { CodeBlock } from "../Code";
 import { Details } from "../Details";
 import { Heading } from "../Heading";
-import { Paragraph } from "../Paragraph";
 import { RequestExample } from "./RequestExample";
 
-export type APIParameter =
-  | {
-      name: string;
-      required: false;
-      description: React.ReactNode;
-      type?: string;
-      example?:
-        | string
-        | boolean
-        | number
-        | object
-        | Array<string | boolean | number | object>;
-    }
-  | {
-      name: string;
-      required: true;
-      example:
-        | string
-        | boolean
-        | number
-        | object
-        | Array<string | boolean | number | object>;
-      description: React.ReactNode;
-      type?: string;
-    };
+export type APIParameter = {
+  name: string;
+  required: boolean;
+  description: React.ReactNode;
+  type?: string;
+  example?:
+    | string
+    | boolean
+    | number
+    | object
+    | Array<string | boolean | number | object>;
+};
 
 export type ApiEndpointMeta = {
   title: string;
@@ -98,33 +84,34 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
             endpointUrl={props.metadata.path}
             method={props.metadata.method}
           />
-        </div>
 
-        <div className="mt-4">
-          {request.headers.length > 0 && (
-            <ParameterSection parameters={request.headers} title="Headers" />
-          )}
+          {/* Parameters section inside the card */}
+          <div className="border-t">
+            {request.headers.length > 0 && (
+              <ParameterSection parameters={request.headers} title="Headers" />
+            )}
 
-          {request.pathParameters.length > 0 && (
-            <ParameterSection
-              parameters={request.pathParameters}
-              title="Path Parameters"
-            />
-          )}
+            {request.pathParameters.length > 0 && (
+              <ParameterSection
+                parameters={request.pathParameters}
+                title="Path Parameters"
+              />
+            )}
 
-          {request.queryParameters.length > 0 && (
-            <ParameterSection
-              parameters={request.queryParameters}
-              title="Query Parameters"
-            />
-          )}
+            {request.queryParameters.length > 0 && (
+              <ParameterSection
+                parameters={request.queryParameters}
+                title="Query Parameters"
+              />
+            )}
 
-          {request.bodyParameters.length > 0 && (
-            <ParameterSection
-              parameters={request.bodyParameters}
-              title="Request Body"
-            />
-          )}
+            {request.bodyParameters.length > 0 && (
+              <ParameterSection
+                parameters={request.bodyParameters}
+                title="Request Body"
+              />
+            )}
+          </div>
         </div>
       </div>
 
@@ -174,84 +161,75 @@ function ParameterSection(props: {
   parameters: APIParameter[];
 }) {
   return (
-    <div className="mb-5">
-      <h6 className="my-2 break-words text-foreground text-sm font-semibold">
-        {props.title}
-      </h6>
-      <div className="flex flex-col">
-        {props.parameters
-          .sort((a, b) => {
-            if (a.required === b.required) {
-              return 0;
-            }
-            return a.required ? -1 : 1;
-          })
-          .map((param) => (
-            <ParameterItem key={param.name} param={param} />
-          ))}
-      </div>
+    <div className="border-b last:border-b-0">
+      <Details
+        summary={
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium">{props.title}</span>
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+              {props.parameters.length}
+            </span>
+          </div>
+        }
+        accordionItemClassName="border-0 my-0"
+        accordionTriggerClassName="p-4 hover:bg-muted/50 transition-colors"
+      >
+        <div className="px-4 pb-4">
+          {props.parameters
+            .sort((a, b) => {
+              if (a.required === b.required) {
+                return 0;
+              }
+              return a.required ? -1 : 1;
+            })
+            .map((param) => (
+              <InlineParameterItem key={param.name} param={param} />
+            ))}
+        </div>
+      </Details>
     </div>
   );
 }
 
-function ParameterItem({ param }: { param: APIParameter }) {
+function InlineParameterItem({ param }: { param: APIParameter }) {
   return (
-    <Details
-      accordionItemClassName="my-1"
-      accordionTriggerClassName="font-mono"
-      summary={
-        <div className="flex items-center gap-2">
-          <span>{param.name}</span>
-          {param.type && (
-            <span className="text-xs text-muted-foreground px-1.5 py-0.5 bg-muted rounded">
-              {param.type}
-            </span>
-          )}
-        </div>
-      }
-      tags={param.required ? ["Required"] : []}
-    >
-      <div className={"flex flex-col gap-3"}>
-        {param.description && (
-          <div>
-            <h5 className="text-sm font-medium mb-1">Description</h5>
-            <Paragraph className="text-sm">{param.description}</Paragraph>
-          </div>
-        )}
-
+    <div className="flex flex-col gap-2 p-3 bg-muted/30 rounded-lg">
+      <div className="flex items-center gap-2 flex-wrap">
+        <code className="text-foreground text-sm font-mono bg-background px-2 py-1 rounded border">
+          {param.name}
+        </code>
         {param.type && (
-          <div>
-            <h5 className="text-sm font-medium mb-1">Type</h5>
-            <div className="rounded-lg border">
-              <CodeBlock
-                className="border-none"
-                code={param.type}
-                containerClassName="mb-0"
-                lang="typescript"
-              />
-            </div>
-          </div>
+          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded">
+            {param.type}
+          </span>
         )}
-
-        {param.example !== undefined && (
-          <div>
-            <h5 className="text-sm font-medium mb-1">Example</h5>
-            <div className="rounded-lg border">
-              <CodeBlock
-                className="border-none"
-                code={
-                  typeof param.example === "object"
-                    ? JSON.stringify(param.example, null, 2)
-                    : String(param.example)
-                }
-                containerClassName="mb-0"
-                lang={typeof param.example === "object" ? "json" : "text"}
-              />
-            </div>
-          </div>
+        {param.required && (
+          <span className="text-xs text-warning-text px-2 py-1 rounded border border-warning-text">
+            Required
+          </span>
         )}
       </div>
-    </Details>
+
+      {param.description && (
+        <div className="text-sm text-muted-foreground">{param.description}</div>
+      )}
+
+      {param.example !== undefined && (
+        <div className="text-sm flex flex-col gap-2">
+          <span className="text-muted-foreground">Example: </span>
+          <CodeBlock
+            code={
+              typeof param.example === "object"
+                ? JSON.stringify(param.example)
+                : String(param.example)
+            }
+            containerClassName="m-0"
+            lang="json"
+            scrollContainerClassName="max-h-[200px]"
+          />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -335,7 +313,7 @@ function createFetchCommand(params: { metadata: ApiEndpointMeta }) {
   }
 
   if (Object.keys(bodyObj).length > 0) {
-    fetchOptions.body = JSON.stringify(bodyObj);
+    fetchOptions.body = bodyObj;
   }
 
   return `fetch('${url}', ${JSON.stringify(fetchOptions, null, 2)})`;

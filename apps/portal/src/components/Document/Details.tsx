@@ -58,7 +58,7 @@ export function Details(props: {
         props.accordionTriggerClassName,
       )}
     >
-      <div className="pt-4 pl-4 [&>:first-child]:mt-0">{props.children}</div>
+      <div className="pl-4 [&>:first-child]:mt-0">{props.children}</div>
     </CustomAccordion>
   );
 }
