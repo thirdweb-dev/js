@@ -22,7 +22,10 @@ export function EndpointMetadata() {
         method: "DELETE",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/{session_id}",
+        referenceUrl:
+          "https://api.thirdweb.com/reference#tag/ai/ai/delete-session",
         request: {
+          queryParameters: [],
           bodyParameters: [],
           headers: [nebulaSecretKeyHeaderParameter],
           pathParameters: [nebulaSessionIdPathParameter],

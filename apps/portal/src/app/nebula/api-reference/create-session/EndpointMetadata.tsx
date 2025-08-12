@@ -15,7 +15,10 @@ export function EndpointMetadata() {
         method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session",
+        referenceUrl:
+          "https://api.thirdweb.com/reference#tag/ai/ai/create-session",
         request: {
+          queryParameters: [],
           bodyParameters: [
             {
               description: "Set a custom title for the session.",

@@ -3,6 +3,7 @@
 export { Badge } from "../ui/badge";
 // export { Table } from "./Table";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+export { OpenApiEndpoint } from "./APIEndpointMeta/OpenApiEndpoint";
 export { AuthList } from "./AuthList";
 export { Breadcrumb } from "./Breadcrumb";
 export { Callout } from "./Callout";
@@ -18,7 +19,6 @@ export { GithubButtonLink } from "./GithubButtonLink";
 // export { EditPage } from "./EditPage";
 export { Grid } from "./Grid";
 export { Heading } from "./Heading";
-// export { ApiEndpoint } from "./APIEndpointMeta/ApiEndpoint";
 export { InlineCode } from "./InlineCode";
 export { InstallTabs } from "./InstallTabs";
 export { UnorderedList } from "./List";

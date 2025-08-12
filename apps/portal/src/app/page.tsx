@@ -1,4 +1,10 @@
-import { ArrowUpRightIcon, BotIcon, WebhookIcon, ZapIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  BotIcon,
+  MessageCircleIcon,
+  WebhookIcon,
+  ZapIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
@@ -16,7 +22,6 @@ import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
-import { PlaygroundIcon } from "../icons/products/PlaygroundIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
 
@@ -25,7 +30,7 @@ export default function Page() {
     <main className="container max-w-5xl grow pb-20" data-noindex>
       <Hero />
       <div className="space-y-8">
-        <PlaygroundSection />
+        <AISection />
         <LearningResourcesSection />
         <ReferenceSection />
       </div>
@@ -70,20 +75,19 @@ function Hero() {
   );
 }
 
-function PlaygroundSection() {
+function AISection() {
   return (
     <section>
-      <SectionTitle anchorId="playground" title="Quick Starts" />
+      <SectionTitle anchorId="ai" title="AI" />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <ArticleCardIndex
-          description="Try out our interactive playground to get started"
-          external
-          href="https://playground.thirdweb.com"
-          icon={PlaygroundIcon}
-          title="Playground"
+          description="Integrate the most advanced blockchain model into your applications"
+          href="/ai/chat"
+          icon={MessageCircleIcon}
+          title="Chat API"
         />
         <ArticleCardIndex
-          description="For agents and humans: use the thirdweb API with natural language"
+          description="For agents and humans. Use the thirdweb API with natural language"
           href="/ai/mcp"
           icon={BotIcon}
           title="MCP"
