@@ -1,0 +1,53 @@
+import { EndpointMetadata } from "./EndpointMetadata";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@doc";
+
+# Chat API
+
+The thirdweb AI chat API is a standard OpenAI-compatible chat completion API that allows you to interact with the thirdweb AI model, specialized for blockchain interactions.
+
+The thirdweb proprietary model is optimized for blockchain interactions and can:
+
+- Query real-time data from the blockchain
+- Analyze transactions
+- Fetch token balances, prices and metadata
+- Prepare any contract call or transaction for signing
+- Prepare swaps from any token pair
+- Deploy contracts
+- Generate images
+- Search the web for information
+- And more!
+
+You can use the API with the API directly, or with any OpenAI-compatible client library.
+
+<Tabs defaultValue="api">
+  <TabsList>
+    <TabsTrigger value="api">HTTP API</TabsTrigger>
+    <TabsTrigger value="openai">OpenAI Client</TabsTrigger>
+  </TabsList>
+  <TabsContent value="api">
+    <EndpointMetadata />
+  </TabsContent>
+  <TabsContent value="openai">
+
+### Using the OpenAI Client
+
+You can use the standard OpenAI client library to interact with the thirdweb AI model.
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+	base_url="https://api.thirdweb.com/ai",
+	api_key="<your-project-secret-key>",
+)
+chat_completion = client.chat.completions.create(
+	model="t0",
+	messages=[{"role": "user", "content": "Transfer 10 USDC to vitalik.eth"}],
+	stream=False,
+    extra_body={ "context": { "from": "0x...", "chain_ids": [8453] }}
+)
+
+print(chat_completion)
+```
+  </TabsContent>
+</Tabs>
