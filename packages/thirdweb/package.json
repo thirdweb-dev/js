@@ -56,7 +56,7 @@
     "@storybook/addon-docs": "9.0.15",
     "@storybook/addon-links": "9.0.15",
     "@storybook/addon-onboarding": "9.0.15",
-    "@storybook/react-vite": "9.0.15",
+    "@storybook/react-vite": "9.1.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
