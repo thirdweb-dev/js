@@ -76,9 +76,6 @@ export function TeamHighlightsCard({
           : "activeUsers"
       }
       aggregateFn={(_data, key) => {
-        if (key === "activeUsers") {
-          return Math.max(...timeSeriesData.map((d) => d[key]));
-        }
         return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
       }}
       chartConfig={chartConfig}
