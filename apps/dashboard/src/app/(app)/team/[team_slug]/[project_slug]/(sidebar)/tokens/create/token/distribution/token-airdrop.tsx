@@ -262,8 +262,13 @@ const AirdropUpload: React.FC<AirdropUploadProps> = ({
 
   if (csvUpload.normalizeQuery.isPending) {
     return (
-      <div className="flex h-[300px] w-full grow items-center justify-center rounded-lg border border-border">
+      <div className="flex min-h-[400px] w-full flex-col grow items-center justify-center">
         <Spinner className="size-10" />
+        <p className="text-base text-foreground mt-5">Resolving ENS</p>
+        <p className="text-sm text-muted-foreground mt-2">
+          {csvUpload.normalizeProgress.current} /{" "}
+          {csvUpload.normalizeProgress.total}
+        </p>
       </div>
     );
   }

@@ -293,7 +293,7 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
 };
 
 const DisconnectWallet = (props: ConnectedModalProps) => {
-  const { wallet, account, theme, onClose } = props;
+  const { wallet, account, theme, onClose, onDisconnect } = props;
   const { disconnect } = useDisconnect();
   const siweAuth = useSiweAuth(wallet, account, props.auth);
   return (
@@ -304,6 +304,10 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
         if (siweAuth.isLoggedIn) {
           siweAuth.doLogout();
         }
+        onDisconnect?.({
+          wallet,
+          account,
+        });
       }}
       style={styles.walletMenuRow}
     >

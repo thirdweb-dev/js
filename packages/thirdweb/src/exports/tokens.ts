@@ -3,8 +3,8 @@ export { claimRewards } from "../extensions/tokens/__generated__/ERC20Entrypoint
 export { position } from "../extensions/tokens/__generated__/RewardLocker/read/position.js";
 export { positionManager } from "../extensions/tokens/__generated__/RewardLocker/read/positionManager.js";
 export {
-  DEFAULT_REFERRER_ADDRESS,
-  DEFAULT_REFERRER_REWARD_BPS,
+  DEFAULT_DEVELOPER_ADDRESS,
+  DEFAULT_DEVELOPER_REWARD_BPS,
 } from "../tokens/constants.js";
 export { createToken } from "../tokens/create-token.js";
 export { distributeToken } from "../tokens/distribute-token.js";

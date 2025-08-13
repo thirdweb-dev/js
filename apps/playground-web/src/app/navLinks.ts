@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftRightIcon } from "lucide-react";
+import { ArrowLeftRightIcon, BotIcon } from "lucide-react";
 import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
 import { ContractIcon } from "../icons/ContractIcon";
 import { InsightIcon } from "../icons/InsightIcon";
@@ -9,6 +9,19 @@ import { SmartAccountIcon } from "../icons/SmartAccountIcon";
 import { TokenIcon } from "../icons/TokenIcon";
 import { WalletProductIcon } from "../icons/WalletProductIcon";
 import { insightBlueprints } from "./insight/insightBlueprints";
+
+const ai: ShadcnSidebarLink = {
+  subMenu: {
+    label: "AI",
+    icon: BotIcon,
+  },
+  links: [
+    {
+      href: "/ai/chat",
+      label: "Chat API",
+    },
+  ],
+};
 
 const wallets: ShadcnSidebarLink = {
   subMenu: {
@@ -215,6 +228,7 @@ const insight: ShadcnSidebarLink = {
 };
 
 export const sidebarLinks: ShadcnSidebarLink[] = [
+  ai,
   wallets,
   transactions,
   contracts,

@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import pLimit from "p-limit";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Papa from "papaparse";
 import { useCallback, useState } from "react";
 import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
@@ -95,6 +94,7 @@ export function useCsvUpload<
   // Always gonna need the wallet address
   T extends { address: string },
 >(props: Props<T>) {
+  const queryClient = useQueryClient();
   const [rawData, setRawData] = useState<
     T[] | Array<T & { [key in string]: unknown }>
   >(props.defaultRawData || []);
@@ -132,16 +132,29 @@ export function useCsvUpload<
     [props.csvParser],
   );
 
+  const [normalizeProgress, setNormalizeProgress] = useState({
+    total: 0,
+    current: 0,
+  });
+
   const normalizeQuery = useQuery({
     queryFn: async () => {
-      const limit = pLimit(50);
-      const results = await Promise.all(
-        rawData.map((item) => {
-          return limit(() =>
+      const batchSize = 50;
+      const results = [];
+      for (let i = 0; i < rawData.length; i += batchSize) {
+        const batch = rawData.slice(i, i + batchSize);
+        setNormalizeProgress({
+          total: rawData.length,
+          current: i,
+        });
+        const batchResults = await Promise.all(
+          batch.map((item) =>
             checkIsAddress({ item: item, thirdwebClient: props.client }),
-          );
-        }),
-      );
+          ),
+        );
+        results.push(...batchResults);
+      }
+
       return {
         invalidFound: !!results.find((item) => !item?.isValid),
         result: processAirdropData(results),
@@ -153,12 +166,18 @@ export function useCsvUpload<
 
   const removeInvalid = useCallback(() => {
     const filteredData = normalizeQuery.data?.result.filter(
-      ({ isValid }) => isValid,
+      (d) => d.isValid && d.resolvedAddress !== ZERO_ADDRESS,
     );
-    // double type assertion is save here because we don't really use this variable (only check for its length)
-    // Also filteredData's type is the superset of T[]
-    setRawData(filteredData as unknown as T[]);
-  }, [normalizeQuery.data?.result]);
+
+    if (filteredData && normalizeQuery.data) {
+      // Directly update the query result instead of setting new state to avoid triggering refetch
+      queryClient.setQueryData(["snapshot-check-isAddress", rawData], {
+        ...normalizeQuery.data,
+        result: filteredData,
+        invalidFound: false, // Since we removed all invalid items
+      });
+    }
+  }, [normalizeQuery.data, queryClient, rawData]);
 
   const processData = useCallback(
     (data: T[]) => {
@@ -181,5 +200,6 @@ export function useCsvUpload<
     removeInvalid,
     reset,
     setFiles,
+    normalizeProgress,
   };
 }

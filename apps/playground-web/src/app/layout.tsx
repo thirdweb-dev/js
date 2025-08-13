@@ -7,6 +7,7 @@ import { Providers } from "./providers";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "sonner";
 
 const sansFont = Inter({
   subsets: ["latin"],
@@ -57,6 +58,7 @@ export default async function RootLayout({
               <Providers>{children}</Providers>
             </AppSidebarLayout>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

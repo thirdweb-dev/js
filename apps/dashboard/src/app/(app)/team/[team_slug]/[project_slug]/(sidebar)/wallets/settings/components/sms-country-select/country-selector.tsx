@@ -1,6 +1,8 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: EXPECTED */
 
-import { CheckIcon, MinusIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import type { SMSCountryTiers } from "../../api/sms";
@@ -29,17 +31,6 @@ export default function CountrySelector({
   const isTierSelected = (tier: string) => {
     const tierCountries = countryTiers[tier as keyof typeof countryTiers];
     return tierCountries.every((country) => isCountrySelected(country));
-  };
-
-  // Check if some countries in a tier are selected
-  const isTierIndeterminate = (tier: string) => {
-    const tierCountries = countryTiers[tier as keyof typeof countryTiers];
-    const selectedInTier = tierCountries.filter((country) =>
-      isCountrySelected(country),
-    );
-    return (
-      selectedInTier.length > 0 && selectedInTier.length < tierCountries.length
-    );
   };
 
   // Toggle a tier selection
@@ -81,101 +72,144 @@ export default function CountrySelector({
     onChange(newSelected);
   };
 
-  // Get selected countries count for a tier
-  const getSelectedCountInTier = (tier: string) => {
-    const tierCountries = countryTiers[tier as keyof typeof countryTiers];
-    return tierCountries.filter((country) => isCountrySelected(country)).length;
-  };
+  return (
+    <div className="space-y-5">
+      {Object.entries(countryTiers).map(([tier, tierCountries], index) => {
+        const selectedTierCountries = tierCountries.filter((country) =>
+          isCountrySelected(country),
+        );
+
+        return (
+          <TierCard
+            key={tier}
+            tierIndex={index}
+            tier={tier}
+            onToggleTier={() => toggleTier(tier)}
+            tierCountries={tierCountries}
+            selectedTierCountries={selectedTierCountries}
+            onToggleCountry={toggleCountry}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function TierCard(props: {
+  tier: string;
+  tierIndex: number;
+  onToggleTier: () => void;
+  tierCountries: string[];
+  selectedTierCountries: string[];
+  onToggleCountry: (country: string) => void;
+}) {
+  const {
+    tier,
+    tierIndex,
+    onToggleTier,
+    tierCountries: countries,
+    selectedTierCountries: selectedCountries,
+    onToggleCountry,
+  } = props;
+
+  const [isExpanded, setIsExpanded] = useState(true);
+  const isPartiallySelected =
+    selectedCountries.length > 0 && selectedCountries.length < countries.length;
+  const isTierFullySelected = selectedCountries.length === countries.length;
 
   return (
-    <div className="space-y-3">
-      {Object.entries(countryTiers).map(([tier, countries], index) => (
-        <div className="overflow-hidden rounded-md border" key={tier}>
-          <div className="flex items-center bg-muted/30 p-2">
-            <div className="relative mr-2 flex items-center">
-              <Checkbox
-                checked={isTierSelected(tier)}
-                className="h-4 w-4"
-                id={`tier-${index + 1}`}
-                onCheckedChange={() => toggleTier(tier)}
-              />
-              {isTierIndeterminate(tier) && (
-                <MinusIcon className="-translate-x-1/2 -translate-y-1/2 pointer-events-none absolute top-1/2 left-1/2 h-2.5 w-2.5 transform text-primary" />
-              )}
-            </div>
-            <label
-              className="flex-1 cursor-pointer font-medium text-sm"
-              htmlFor={`tier-${index + 1}`}
-            >
-              Tier {index + 1}
-              {isTierIndeterminate(tier) && (
-                <span className="ml-1 font-normal text-muted-foreground text-xs">
-                  ({getSelectedCountInTier(tier)}/{countries.length})
-                </span>
-              )}
-            </label>
-            <span
-              className={cn(
-                "font-medium text-xs",
-                tier === "tier1"
-                  ? "text-green-600 dark:text-green-500"
-                  : "text-muted-foreground",
-              )}
-            >
-              {tierPricing[tier as keyof typeof tierPricing]}
-            </span>
-          </div>
+    <div className="overflow-hidden rounded-xl border bg-background">
+      {/* header */}
+      <div className="flex items-center px-4 py-3 gap-3 justify-between">
+        {/* left */}
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={
+              isPartiallySelected ? "indeterminate" : isTierFullySelected
+            }
+            id={`tier-${tier}`}
+            onCheckedChange={onToggleTier}
+          />
+          <label
+            className="flex-1 cursor-pointer font-medium text-sm"
+            htmlFor={`tier-${tier}`}
+          >
+            Tier {tierIndex + 1}
+          </label>
 
-          <div
+          {isPartiallySelected && (
+            <span className="text-muted-foreground text-sm">
+              ({selectedCountries.length}/{countries.length})
+            </span>
+          )}
+        </div>
+
+        {/* right */}
+        <div className="flex items-center gap-3">
+          <span
             className={cn(
-              "grid grid-cols-2 gap-1.5 p-2",
-              countries.length === 2
-                ? "md:grid-cols-2"
-                : countries.length === 3
-                  ? "md:grid-cols-3"
-                  : "md:grid-cols-4",
+              "text-sm",
+              tier === "tier1"
+                ? "text-green-600 dark:text-green-500"
+                : "text-muted-foreground",
             )}
           >
-            {countries.map((country) => (
-              <div
+            {tierPricing[tier as keyof typeof tierPricing]}
+          </span>
+
+          <Button
+            variant="ghost"
+            className="p-0 size-7"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <ChevronDownIcon
+              className={cn(
+                "size-4 transition-transform",
+                isExpanded && "rotate-180",
+              )}
+            />
+          </Button>
+        </div>
+      </div>
+
+      {/* body */}
+      {isExpanded && (
+        <div
+          className={cn(
+            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 translate-y-[1px] translate-x-[1px] -ml-[1px] border-t",
+          )}
+        >
+          {countries.map((country) => {
+            const isSelected = selectedCountries.includes(country);
+            return (
+              <Button
+                variant="outline"
                 className={cn(
-                  "relative flex cursor-pointer items-center justify-between rounded-md border p-1.5 transition-colors ",
-                  isCountrySelected(country)
-                    ? "border-primary bg-primary/10"
-                    : "border-transparent hover:bg-muted/50",
+                  "justify-between gap-3 text-start h-auto rounded-none border-l-0 border-t-0 border-border py-2.5 bg-background",
                 )}
                 key={country}
-                onClick={() => toggleCountry(country)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    toggleCountry(country);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
+                onClick={() => onToggleCountry(country)}
                 title={countryNames[country] || country}
               >
-                <span className="flex items-center space-x-2">
-                  <span aria-hidden="true" className="text-lg">
-                    {getCountryFlag(country)}
-                  </span>
-                  <span className="font-medium text-xs">
-                    {countryNames[country] || country}
-                    {countryPrefixes[country]
-                      ? ` (${countryPrefixes[country]})`
-                      : ""}
-                  </span>
-                </span>
-                <div className="flex h-3 w-3 items-center justify-center">
-                  {isCountrySelected(country) && (
-                    <CheckIcon className="h-3 w-3 text-primary" />
-                  )}
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">{getCountryFlag(country)}</div>
+                  <div className="space-y-0.5">
+                    <div className="font-medium text-sm">
+                      {countryNames[country] || country}
+                    </div>
+                    <div className="text-muted-foreground text-xs tabular-nums">
+                      {countryPrefixes[country]
+                        ? `${countryPrefixes[country]}`
+                        : ""}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+                {isSelected && <CheckIcon className="size-5 text-foreground" />}
+              </Button>
+            );
+          })}
         </div>
-      ))}
+      )}
     </div>
   );
 }

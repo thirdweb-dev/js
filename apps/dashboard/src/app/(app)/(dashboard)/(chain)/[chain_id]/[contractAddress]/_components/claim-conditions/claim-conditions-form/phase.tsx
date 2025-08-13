@@ -35,11 +35,14 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
     isActive,
     isMultiPhase,
     phaseIndex,
+    phaseSnapshots,
   } = useClaimConditionsFormContext();
 
   const toggleEditing = () => {
     form.setValue(`phases.${phaseIndex}.isEditing`, !field.isEditing);
   };
+
+  const snapshot = phaseSnapshots[phaseIndex];
 
   return (
     <DynamicHeight transition="height 0.3s ease">
@@ -118,9 +121,7 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
               <PhaseStartTimeInput />
 
               <CreatorInput
-                creatorAddress={
-                  (field.snapshot?.[0] as { address: string })?.address
-                }
+                creatorAddress={(snapshot?.[0] as { address: string })?.address}
               />
 
               <MaxClaimableSupplyInput />

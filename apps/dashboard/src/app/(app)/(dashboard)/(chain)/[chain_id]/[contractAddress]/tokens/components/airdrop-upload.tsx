@@ -21,12 +21,29 @@ export function AirdropUpload(props: {
     client: props.client,
     csvParser,
   });
+
+  if (csvUpload.normalizeQuery.isPending) {
+    return (
+      <div className="flex min-h-[400px] w-full flex-col grow items-center justify-center">
+        <Spinner className="size-10" />
+        <p className="text-base text-foreground mt-5">Resolving ENS</p>
+        <p className="text-sm text-muted-foreground mt-2">
+          {csvUpload.normalizeProgress.current} /{" "}
+          {csvUpload.normalizeProgress.total}
+        </p>
+      </div>
+    );
+  }
+
   const normalizeData = csvUpload.normalizeQuery.data;
 
   if (!normalizeData) {
     return (
-      <div className="flex min-h-[400px] w-full grow items-center justify-center rounded-lg border border-border">
-        <Spinner className="size-10" />
+      <div className="flex min-h-[400px] w-full flex-col grow items-center justify-center text-center">
+        <p className="text-base text-foreground">Failed to resolve ENS</p>
+        <p className="text-sm text-muted-foreground mt-2">
+          {String(csvUpload.normalizeQuery.error)}
+        </p>
       </div>
     );
   }
