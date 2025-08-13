@@ -1,4 +1,4 @@
-import { type ThirdwebContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { getRewards } from "thirdweb/tokens";
 
 export async function getValidReward(params: {
