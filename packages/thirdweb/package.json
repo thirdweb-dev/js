@@ -197,8 +197,8 @@
     },
     "./tokens": {
       "types": "./dist/types/exports/tokens.d.ts",
-      "default": "./dist/cjs/exports/tokens.js",
-      "import": "./dist/esm/exports/tokens.js"
+      "import": "./dist/esm/exports/tokens.js",
+      "default": "./dist/cjs/exports/tokens.js"
     },
     "./transaction": {
       "types": "./dist/types/exports/transaction.d.ts",
