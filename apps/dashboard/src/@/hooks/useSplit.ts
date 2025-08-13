@@ -7,15 +7,19 @@ import {
 import { toast } from "sonner";
 import {
   type Chain,
+  NATIVE_TOKEN_ADDRESS,
   sendAndConfirmTransaction,
   type ThirdwebClient,
   type ThirdwebContract,
 } from "thirdweb";
+import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 import { distribute, distributeByToken } from "thirdweb/extensions/split";
 import { getOwnedTokens } from "thirdweb/insight";
 import { useActiveAccount } from "thirdweb/react";
+import { getWalletBalance } from "thirdweb/wallets";
 import invariant from "tiny-invariant";
 import { parseError } from "../utils/errorParser";
+import { tryCatch } from "../utils/try-catch";
 
 function getTokenBalancesQuery(params: {
   ownerAddress: string;
@@ -24,7 +28,7 @@ function getTokenBalancesQuery(params: {
 }) {
   return queryOptions({
     queryFn: async () => {
-      return getOwnedTokens({
+      const ownedTokenBalancePromise = getOwnedTokens({
         client: params.client,
         chains: [params.chain],
         ownerAddress: params.ownerAddress,
@@ -32,6 +36,31 @@ function getTokenBalancesQuery(params: {
           include_native: "true",
         },
       });
+
+      const result = await tryCatch(ownedTokenBalancePromise);
+
+      // fallback to fetch native token balance with rpc
+      if (result.error) {
+        const walletBalance = await getWalletBalance({
+          address: params.ownerAddress,
+          client: params.client,
+          chain: params.chain,
+        });
+
+        const nativeTokenBalance: GetBalanceResult = {
+          name: walletBalance.name,
+          value: walletBalance.value,
+          decimals: walletBalance.decimals,
+          displayValue: walletBalance.displayValue,
+          symbol: walletBalance.symbol,
+          chainId: params.chain.id,
+          tokenAddress: NATIVE_TOKEN_ADDRESS,
+        };
+
+        return [nativeTokenBalance];
+      }
+
+      return result.data;
     },
     queryKey: ["getOwnedTokens", params.chain.id, params.ownerAddress],
     retry: false,

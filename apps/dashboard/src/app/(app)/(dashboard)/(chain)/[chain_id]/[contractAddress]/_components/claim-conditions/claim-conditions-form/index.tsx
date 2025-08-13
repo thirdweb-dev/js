@@ -6,7 +6,15 @@ import {
   CircleHelpIcon,
   PlusIcon,
 } from "lucide-react";
-import { createContext, Fragment, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  Fragment,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   type UseFieldArrayReturn,
   type UseFormReturn,
@@ -120,21 +128,19 @@ export const ClaimConditionTypeData: Record<
 });
 
 const getClaimConditionTypeFromPhase = (
-  phase: ClaimConditionInput,
+  phase: Omit<ClaimConditionInput, "snapshot">,
+  snapshot: SnapshotEntry[] | undefined,
 ): ClaimConditionType => {
-  if (!phase.snapshot) {
+  if (!snapshot) {
     return "public";
   }
 
-  if (phase.snapshot) {
+  if (snapshot) {
     if (
       phase.maxClaimablePerWallet?.toString() === "0" &&
       phase.price === "0" &&
-      typeof phase.snapshot !== "string" &&
-      phase.snapshot.length === 1 &&
-      phase.snapshot.some(
-        (a) => (a as SnapshotEntry).maxClaimable === "unlimited",
-      )
+      snapshot.length === 1 &&
+      snapshot.some((a) => a.maxClaimable === "unlimited")
     ) {
       return "creator";
     }
@@ -165,6 +171,11 @@ interface ClaimsConditionFormContextData {
   isColumn?: boolean;
   isErc20: boolean;
   claimConditionType: ClaimConditionType;
+  phaseSnapshots: Record<number, SnapshotEntry[] | undefined>;
+  setPhaseSnapshot: (
+    phaseIndex: number,
+    snapshot: SnapshotEntry[] | undefined,
+  ) => void;
 }
 
 // legacy, but we SHOULD remove this and instead pass down props!
@@ -207,6 +218,10 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
   const isAdmin = useIsAdmin(contract);
   const [openSnapshotIndex, setOpenSnapshotIndex] = useState(-1);
+  const [phaseSnapshots, setPhaseSnapshots] = useState<
+    Record<number, SnapshotEntry[] | undefined>
+  >({});
+
   const sendTx = useSendAndConfirmTransaction();
 
   const tokenDecimals = useReadContract(decimals, {
@@ -233,35 +248,56 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           }),
   });
 
+  const isSnapshotInitialized = useRef(false);
+  // save snapshots in a separate state instead of form state because it makes rendering very slow for large snapshots (10k, 100k rows etc)
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (isSnapshotInitialized.current || !claimConditionsQuery.data) {
+      return;
+    }
+
+    const newPhaseSnapshots: Record<number, SnapshotEntry[] | undefined> = {};
+
+    claimConditionsQuery.data.forEach((phase, idx) => {
+      const snapshot = phase.snapshot?.map(
+        ({ address, maxClaimable, price, currencyAddress }) => ({
+          address,
+          currencyAddress: currencyAddress || undefined,
+          maxClaimable: maxClaimable || "0",
+          price: price || undefined,
+        }),
+      );
+      newPhaseSnapshots[idx] = snapshot;
+    });
+
+    setPhaseSnapshots(newPhaseSnapshots);
+    isSnapshotInitialized.current = true;
+  }, [claimConditionsQuery.data]);
+
   const transformedQueryData = useMemo(() => {
     return (claimConditionsQuery.data || [])
-      .map((phase, idx) => ({
-        ...phase,
-        currencyAddress: phase.currencyAddress?.toLowerCase() || "0",
-        currencyMetadata: {
-          ...phase.currencyMetadata,
-          value: phase.currencyMetadata.value?.toString() || "0",
-        },
-        fromSdk: true,
-        isEditing: false,
-        maxClaimablePerWallet: phase.maxClaimablePerWallet?.toString() || "0",
-        maxClaimableSupply: phase.maxClaimableSupply?.toString() || "0",
-        merkleRootHash: (phase.merkleRootHash || "") as string,
-        metadata: {
-          ...phase.metadata,
-          name: phase?.metadata?.name || `Phase ${idx + 1}`,
-        },
-        price: phase.currencyMetadata.displayValue,
-        snapshot: phase.snapshot?.map(
-          ({ address, maxClaimable, price, currencyAddress }) => ({
-            address,
-            currencyAddress: currencyAddress || undefined,
-            maxClaimable: maxClaimable || "0",
-            price: price || undefined,
-          }),
-        ),
-        startTime: new Date(phase.startTime),
-      }))
+      .map((phase, idx) => {
+        return {
+          ...phase,
+          currencyAddress: phase.currencyAddress?.toLowerCase() || "0",
+          currencyMetadata: {
+            ...phase.currencyMetadata,
+            value: phase.currencyMetadata.value?.toString() || "0",
+          },
+          fromSdk: true,
+          isEditing: false,
+          maxClaimablePerWallet: phase.maxClaimablePerWallet?.toString() || "0",
+          maxClaimableSupply: phase.maxClaimableSupply?.toString() || "0",
+          merkleRootHash: (phase.merkleRootHash || "") as string,
+          metadata: {
+            ...phase.metadata,
+            name: phase?.metadata?.name || `Phase ${idx + 1}`,
+          },
+          price: phase.currencyMetadata.displayValue,
+          snapshot: undefined, // Do not save snapshot in form data - its slow
+          startTime: new Date(phase.startTime),
+        };
+      })
       .filter(
         (phase) => isMultiPhase || Number(phase.maxClaimableSupply) !== 0,
       );
@@ -289,8 +325,19 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     name: "phases",
   });
 
+  const setPhaseSnapshot = (
+    phaseIndex: number,
+    snapshot: SnapshotEntry[] | undefined,
+  ) => {
+    setPhaseSnapshots((prev) => ({
+      ...prev,
+      [phaseIndex]: snapshot,
+    }));
+  };
+
   const addPhase = (type: ClaimConditionType) => {
     const name = `${ClaimConditionTypeData[type].name} phase`;
+    const newPhaseIndex = formFields.fields.length;
 
     switch (type) {
       case "public":
@@ -305,8 +352,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           ...DEFAULT_PHASE,
           maxClaimablePerWallet: "0",
           metadata: { name },
-          snapshot: [],
+          snapshot: undefined,
         });
+        setPhaseSnapshot(newPhaseIndex, []);
         break;
 
       case "overrides":
@@ -314,8 +362,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           ...DEFAULT_PHASE,
           maxClaimablePerWallet: "1",
           metadata: { name },
-          snapshot: [],
+          snapshot: undefined,
         });
+        setPhaseSnapshot(newPhaseIndex, []);
         break;
 
       case "creator":
@@ -325,16 +374,17 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
           maxClaimableSupply: "unlimited",
           metadata: { name },
           price: "0",
-          snapshot: walletAddress
-            ? [
-                {
-                  address: walletAddress,
-                  maxClaimable: "unlimited",
-                  price: "0",
-                },
-              ]
-            : [],
+          snapshot: undefined,
         });
+        if (walletAddress) {
+          setPhaseSnapshot(newPhaseIndex, [
+            {
+              address: walletAddress,
+              maxClaimable: "unlimited",
+              price: "0",
+            },
+          ]);
+        }
         break;
 
       default:
@@ -360,6 +410,12 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
       );
     }
     try {
+      // Merge snapshots back into phases for submission
+      const phasesWithSnapshots = d.phases.map((phase, index) => ({
+        ...phase,
+        snapshot: phaseSnapshots[index] || undefined,
+      }));
+
       const tx = setClaimPhasesTx(
         {
           contract,
@@ -370,19 +426,11 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               ? { type: "erc721" }
               : { tokenId: BigInt(tokenId || 0), type: "erc1155" }),
         },
-        d.phases,
+        phasesWithSnapshots,
       );
       await sendTx.mutateAsync(tx);
 
       saveClaimPhaseNotification.onSuccess();
-
-      const newPhases = d.phases.map((phase) => ({
-        ...phase,
-        fromSdk: true,
-        isEditing: false,
-      }));
-
-      form.setValue("phases", newPhases);
     } catch (error) {
       console.error(error);
 
@@ -446,17 +494,21 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         {!isAdmin && <p>Connect with admin wallet to edit claim conditions.</p>}
 
         {controlledFields.map((field, index) => {
-          const dropType: DropType = field.snapshot
+          const snapshot = phaseSnapshots[index];
+          const dropType: DropType = snapshot
             ? field.maxClaimablePerWallet?.toString() === "0"
               ? "specific"
               : "overrides"
             : "any";
 
-          const claimConditionType = getClaimConditionTypeFromPhase(field);
+          const claimConditionType = getClaimConditionTypeFromPhase(
+            field,
+            snapshot,
+          );
 
           const isActive = activePhaseId === field.id;
 
-          const snapshotValue = field.snapshot?.map((v) =>
+          const snapshotValue = snapshot?.map((v) =>
             typeof v === "string"
               ? {
                   address: v,
@@ -482,9 +534,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 onClose={() => {
                   setOpenSnapshotIndex(-1);
                 }}
-                setSnapshot={(snapshot) =>
-                  form.setValue(`phases.${index}.snapshot`, snapshot)
-                }
+                setSnapshot={(snapshot) => setPhaseSnapshot(index, snapshot)}
                 value={snapshotValue}
               />
 
@@ -503,6 +553,8 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   phaseIndex: index,
                   setOpenSnapshotIndex,
                   tokenDecimals: tokenDecimals.data,
+                  phaseSnapshots,
+                  setPhaseSnapshot,
                 }}
               >
                 <ClaimConditionsPhase
@@ -510,6 +562,8 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   isPending={sendTx.isPending}
                   onRemove={() => {
                     formFields.remove(index);
+                    // Clean up snapshot when phase is removed
+                    setPhaseSnapshot(index, undefined);
                   }}
                 />
               </ClaimsConditionFormContext.Provider>

@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.105.33
+
+### Patch Changes
+
+- [#7850](https://github.com/thirdweb-dev/js/pull/7850) [`4be655d`](https://github.com/thirdweb-dev/js/commit/4be655dd084dd474d021a7a539a0c67e648bb42d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix onDisconnect not being invoked in react native
+
+## 5.105.32
+
+### Patch Changes
+
+- [#7844](https://github.com/thirdweb-dev/js/pull/7844) [`0d7e5e5`](https://github.com/thirdweb-dev/js/commit/0d7e5e563d142d178005469e31ea3423e6daacf1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix SDK resolution in environements where process is undefined
+
+- [#7825](https://github.com/thirdweb-dev/js/pull/7825) [`a77e98a`](https://github.com/thirdweb-dev/js/commit/a77e98a48a2f10d8b465e2ef1ba0f28a6df43f3f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Deprecates `sortBy` parameter in Bridge.routes
+
+- [#7817](https://github.com/thirdweb-dev/js/pull/7817) [`66c7df9`](https://github.com/thirdweb-dev/js/commit/66c7df98e42dc7b5168b817e3f9a179349479d62) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Adds TikTok as a new authentication method for In-App and Ecosystem Wallets.
+
+- [#7827](https://github.com/thirdweb-dev/js/pull/7827) [`90f36bc`](https://github.com/thirdweb-dev/js/commit/90f36bc414a8f29b9794d3d6a15e2b3e145eca7c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Hide quote value in payment widgets
+
 ## 5.105.31
 
 ### Patch Changes

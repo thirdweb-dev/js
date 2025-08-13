@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
 import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
-import Link from "next/link";
 import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
@@ -240,11 +239,7 @@ export const InAppWalletSettingsUI: React.FC<
 
   return (
     <Form {...form}>
-      <form
-        autoComplete="off"
-        className="flex flex-col gap-6"
-        onSubmit={handleSubmit}
-      >
+      <form autoComplete="off" className="space-y-6" onSubmit={handleSubmit}>
         {/* Branding */}
         <BrandingFieldset
           client={props.client}
@@ -252,12 +247,28 @@ export const InAppWalletSettingsUI: React.FC<
           requiredPlan={brandingRequiredPlan}
           teamPlan={props.teamPlan}
           teamSlug={props.teamSlug}
+          isUpdating={props.isUpdating}
         />
 
-        <NativeAppsFieldset form={form} />
+        <NativeAppsFieldset form={form} isUpdating={props.isUpdating} />
 
         {/* Authentication */}
-        <Fieldset legend="Authentication">
+        <Fieldset
+          legend="Authentication"
+          footer={
+            <div className="flex justify-end p-4 md:px-6 border-t border-dashed">
+              <Button
+                className="gap-2"
+                type="submit"
+                size="sm"
+                variant="outline"
+              >
+                {props.isUpdating && <Spinner className="size-4" />}
+                Save
+              </Button>
+            </div>
+          }
+        >
           <JSONWebTokenFields
             form={form}
             requiredPlan={authRequiredPlan}
@@ -265,7 +276,7 @@ export const InAppWalletSettingsUI: React.FC<
             teamSlug={props.teamSlug}
           />
 
-          <div className="h-5" />
+          <div className="my-5 border-t border-dashed" />
 
           <AuthEndpointFields
             form={form}
@@ -274,7 +285,7 @@ export const InAppWalletSettingsUI: React.FC<
             teamSlug={props.teamSlug}
           />
 
-          <div className="h-5" />
+          <div className="my-5 border-t border-dashed" />
 
           <SMSCountryFields
             form={form}
@@ -284,13 +295,6 @@ export const InAppWalletSettingsUI: React.FC<
             teamSlug={props.teamSlug}
           />
         </Fieldset>
-
-        <div className="flex justify-end">
-          <Button className="gap-2" type="submit" variant="primary">
-            {props.isUpdating && <Spinner className="size-4" />}
-            Save changes
-          </Button>
-        </div>
       </form>
     </Form>
   );
@@ -302,14 +306,22 @@ function BrandingFieldset(props: {
   teamSlug: string;
   requiredPlan: Team["billingPlan"];
   client: ThirdwebClient;
+  isUpdating: boolean;
 }) {
   return (
-    <Fieldset legend="Branding">
-      <SwitchContainer
-        description="Pass a custom logo and app name to be used in the emails sent to users."
-        switchId="branding-switch"
-        title="Custom email logo and name"
-      >
+    <FieldsetWithDescription
+      legend="Branding"
+      description="Set an app name and logo to be used in the emails sent to users"
+      footer={
+        <div className="flex justify-end p-4 md:px-6 border-t border-dashed">
+          <Button className="gap-2" type="submit" size="sm" variant="outline">
+            {props.isUpdating && <Spinner className="size-4" />}
+            Save
+          </Button>
+        </div>
+      }
+    >
+      <div className="absolute top-8 right-6">
         <GatedSwitch
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
@@ -330,64 +342,69 @@ function BrandingFieldset(props: {
           teamSlug={props.teamSlug}
           trackingLabel="customEmailLogoAndName"
         />
-      </SwitchContainer>
+      </div>
 
       <GatedCollapsibleContainer
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        className="border-t border-dashed pt-5"
         currentPlan={props.teamPlan}
         isExpanded={!!props.form.watch("branding")}
         requiredPlan={props.requiredPlan}
       >
-        {/* Application Image */}
-        <FormField
-          control={props.form.control}
-          name="branding.applicationImageUrl"
-          render={() => (
-            <FormItem className="space-y-1">
-              <FormLabel>Application Image URL</FormLabel>
-              <FormDescription className="!mb-4">
-                Logo that will display in the emails sent to users.{" "}
-                <br className="max-sm:hidden" /> The image must be squared with
-                recommended size of 72x72 px.
-              </FormDescription>
-              <FormControl>
-                <AppImageFormControl
-                  client={props.client}
-                  setUri={(uri) => {
-                    props.form.setValue("branding.applicationImageUrl", uri, {
-                      shouldDirty: true,
-                      shouldTouch: true,
-                    });
-                  }}
-                  uri={props.form.watch("branding.applicationImageUrl")}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <FormField
+            control={props.form.control}
+            name="branding.applicationImageUrl"
+            render={() => (
+              <FormItem className="lg:border-r lg:border-dashed lg:pr-6">
+                <div className="space-y-1">
+                  <FormLabel>Application Image URL</FormLabel>
+                  <FormDescription className="!mb-4">
+                    Logo that will display in the emails sent to users.{" "}
+                    <br className="max-sm:hidden" /> The image must be squared
+                    with recommended size of 72x72 px.
+                  </FormDescription>
 
-        {/* Application Name */}
-        <FormField
-          control={props.form.control}
-          name="branding.applicationName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Application Name</FormLabel>
-              <FormDescription className="!mb-2">
-                Name that will be displayed in the emails sent to users.{" "}
-                <br className="max-sm:hidden" /> Defaults to your API Key's
-                name.
-              </FormDescription>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <FormMessage />
+                </div>
+
+                <FormControl>
+                  <AppImageFormControl
+                    client={props.client}
+                    setUri={(uri) => {
+                      props.form.setValue("branding.applicationImageUrl", uri, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                      });
+                    }}
+                    uri={props.form.watch("branding.applicationImageUrl")}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          {/* Application Name */}
+          <FormField
+            control={props.form.control}
+            name="branding.applicationName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Application Name</FormLabel>
+                <FormDescription>
+                  Name that will be displayed in the emails sent to users.{" "}
+                  <br className="max-sm:hidden" /> Defaults to your API Key's
+                  name.
+                </FormDescription>
+                <FormControl>
+                  <Input {...field} className="max-w-md" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </GatedCollapsibleContainer>
-    </Fieldset>
+    </FieldsetWithDescription>
   );
 }
 
@@ -418,7 +435,7 @@ function AppImageFormControl(props: {
       <div className="relative">
         <FileInput
           accept={{ "image/*": [] }}
-          className="w-24 rounded-full bg-background lg:w-28"
+          className="w-24 rounded-full bg-background"
           client={props.client}
           disableHelperText
           setValue={async (v) => {
@@ -514,14 +531,13 @@ function JSONWebTokenFields(props: {
         description={
           <>
             Optionally allow users to authenticate with a custom JWT.{" "}
-            <Link
-              className="text-link-foreground hover:text-foreground"
+            <UnderlineLink
               href="https://portal.thirdweb.com/wallets/custom-auth"
               rel="noopener noreferrer"
               target="_blank"
             >
               Learn more
-            </Link>
+            </UnderlineLink>
           </>
         }
         switchId="authentication-switch"
@@ -606,14 +622,13 @@ function AuthEndpointFields(props: {
           <>
             Optionally allow users to authenticate with any arbitrary payload
             that you provide.{" "}
-            <Link
-              className="text-link-foreground hover:text-foreground"
+            <UnderlineLink
               href="https://portal.thirdweb.com/wallets/custom-auth"
               rel="noopener noreferrer"
               target="_blank"
             >
               Learn more
-            </Link>
+            </UnderlineLink>
           </>
         }
         switchId="auth-endpoint-switch"
@@ -743,10 +758,21 @@ function AuthEndpointFieldsContent(props: {
 
 function NativeAppsFieldset(props: {
   form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  isUpdating: boolean;
 }) {
   const { form } = props;
   return (
-    <Fieldset legend="Native Apps">
+    <Fieldset
+      legend="Native Apps"
+      footer={
+        <div className="flex justify-end p-4 md:px-6 border-t border-dashed">
+          <Button className="gap-2" type="submit" size="sm" variant="outline">
+            {props.isUpdating && <Spinner className="size-4" />}
+            Save
+          </Button>
+        </div>
+      }
+    >
       <FormField
         control={form.control}
         name="redirectUrls"
@@ -789,21 +815,60 @@ function GatedCollapsibleContainer(props: {
     return null;
   }
 
-  return <div className={cn("mt-6", props.className)}>{props.children}</div>;
+  return (
+    <div
+      className={cn("mt-5 fade-in-0 duration-300 animate-in", props.className)}
+    >
+      {props.children}
+    </div>
+  );
 }
 
-function Fieldset(props: { legend: string; children: React.ReactNode }) {
+function Fieldset(props: {
+  legend: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <DynamicHeight>
-      <fieldset className="rounded-lg border border-border bg-card p-4 md:p-6">
-        {/* put inside div to remove default styles on legend  */}
-        <div className="mb-4 font-semibold text-xl tracking-tight">
-          <legend> {props.legend}</legend>
-        </div>
+    <div className="rounded-lg border bg-card relative">
+      <DynamicHeight>
+        <fieldset className="p-4 md:px-6 md:py-5">
+          {/* put inside div to remove default styles on legend  */}
+          <div className="border-b pb-4 mb-5 border-dashed font-semibold text-xl tracking-tight">
+            <legend> {props.legend}</legend>
+          </div>
 
-        {props.children}
-      </fieldset>
-    </DynamicHeight>
+          {props.children}
+        </fieldset>
+      </DynamicHeight>
+      {props.footer}
+    </div>
+  );
+}
+
+function FieldsetWithDescription(props: {
+  legend: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  description: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border bg-card relative">
+      <DynamicHeight>
+        <fieldset className="p-4 md:p-6">
+          {/* put inside div to remove default styles on legend  */}
+          <div className="pr-20">
+            <legend className="font-semibold text-xl tracking-tight">
+              {props.legend}
+            </legend>
+            <p className="text-muted-foreground text-sm">{props.description}</p>
+          </div>
+
+          {props.children}
+        </fieldset>
+      </DynamicHeight>
+      {props.footer}
+    </div>
   );
 }
 
