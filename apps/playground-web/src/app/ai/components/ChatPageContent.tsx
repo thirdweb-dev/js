@@ -1,5 +1,9 @@
 "use client";
-import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ExternalLinkIcon,
+  MessageCircleIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defineChain, prepareTransaction, type ThirdwebClient } from "thirdweb";
@@ -346,8 +350,14 @@ export function ChatPageContent(props: {
               />
 
               {/* Footer disclaimer */}
-              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-                thirdweb AI can make mistakes. Please use with discretion
+              <p className="flex items-center justify-center gap-1 mt-3 text-center text-muted-foreground hover:text-foreground text-xs opacity-75 lg:text-sm">
+                <Link
+                  href="https://portal.thirdweb.com/ai/chat"
+                  target="_blank"
+                >
+                  Learn how to integrate thirdweb AI into your apps
+                </Link>
+                <ExternalLinkIcon className="size-3" />
               </p>
             </div>
           </div>
@@ -392,8 +402,14 @@ export function ChatPageContent(props: {
               />
 
               {/* Footer disclaimer */}
-              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-                thirdweb AI can make mistakes. Please use with discretion
+              <p className="flex items-center justify-center gap-1 mt-3 text-center text-muted-foreground hover:text-foreground text-xs opacity-75 lg:text-sm">
+                <Link
+                  href="https://portal.thirdweb.com/ai/chat"
+                  target="_blank"
+                >
+                  Learn how to integrate thirdweb AI into your apps
+                </Link>
+                <ExternalLinkIcon className="size-3" />
               </p>
             </div>
           </div>
