@@ -23,7 +23,7 @@ import {
 } from "./constants.js";
 
 export async function getDeployedEntrypointERC20(options: ClientAndChain) {
-  const cacheKey = `${options.chain.id}-${ENTRYPOINT_DEPLOY_URL}`;
+  const cacheKey = `${options.chain.id}-${ENTRYPOINT_DEPLOY_URL}-${JSON.stringify(options.client)}`;
 
   return withCache(
     async () => {
@@ -94,7 +94,7 @@ export async function getDeployedEntrypointERC20(options: ClientAndChain) {
 }
 
 async function getDeployedContractFactory(options: ClientAndChain) {
-  const cacheKey = `${options.chain.id}-${CONTRACT_FACTORY_DEPLOY_URL}`;
+  const cacheKey = `${options.chain.id}-${CONTRACT_FACTORY_DEPLOY_URL}-${JSON.stringify(options.client)}`;
   return withCache(
     async () => {
       const contractMetadata = await fetchDeployMetadata({
