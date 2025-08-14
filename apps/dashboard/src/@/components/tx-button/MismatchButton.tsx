@@ -18,7 +18,7 @@ import {
 } from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
 import {
-  CheckoutWidget,
+  BuyWidget,
   useActiveAccount,
   useActiveWallet,
   useActiveWalletChain,
@@ -267,14 +267,12 @@ export const MismatchButton = forwardRef<
             />
           )}
 
-          {dialog === "pay" && account && (
-            <CheckoutWidget
+          {dialog === "pay" && (
+            <BuyWidget
               className="!w-full"
               client={props.client}
               chain={txChain}
               amount="0.01"
-              name="Buy Funds"
-              seller={account.address as `0x${string}`}
               theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
             />
           )}
