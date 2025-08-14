@@ -30,7 +30,13 @@ export default async function Page(props: {
 
   const assetContractClient = info.clientContract;
 
-  const entrypointContractClient = await getDeployedEntrypointERC20({
+  const { address } = await getDeployedEntrypointERC20({
+    chain: assetContractClient.chain,
+    client: assetContractClient.client,
+  });
+
+  const entrypointContractClient = getContract({
+    address,
     chain: assetContractClient.chain,
     client: assetContractClient.client,
   });
