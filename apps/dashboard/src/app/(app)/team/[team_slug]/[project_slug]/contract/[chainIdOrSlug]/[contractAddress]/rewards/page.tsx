@@ -66,7 +66,7 @@ export default async function Page(props: {
     },
   });
 
-  console.log("DEBUG", {
+  console.error("DEBUG", {
     assetContractClient,
     entrypointContractClient,
     reward,
