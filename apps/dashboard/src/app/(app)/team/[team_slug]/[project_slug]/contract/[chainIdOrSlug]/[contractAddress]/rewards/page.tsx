@@ -28,22 +28,24 @@ export default async function Page(props: {
     notFound();
   }
 
-  const assetContractClient = info.clientContract;
+  const chain = info.clientContract.chain;
+  const assetContractServer = info.serverContract;
+  const serverClient = assetContractServer.client;
 
-  const { address } = await getDeployedEntrypointERC20({
-    chain: assetContractClient.chain,
-    client: assetContractClient.client,
-  });
+  const { address: entrypointContractAddress } =
+    await getDeployedEntrypointERC20({
+      chain,
+      client: serverClient,
+    });
 
-  const entrypointContractClient = getContract({
-    address,
-    chain: assetContractClient.chain,
-    client: assetContractClient.client,
-  });
-
+  // Note: must use server contract/client here
   const reward = await getValidReward({
-    assetContract: assetContractClient,
-    entrypointContract: entrypointContractClient,
+    assetContract: assetContractServer,
+    entrypointContract: getContract({
+      address: entrypointContractAddress,
+      chain,
+      client: serverClient,
+    }),
   });
 
   if (!reward) {
@@ -52,32 +54,27 @@ export default async function Page(props: {
     );
   }
 
-  const v3PositionManagerContract = getContract({
-    address: reward.positionManager,
-    chain: assetContractClient.chain,
-    client: assetContractClient.client,
-  });
-
+  // Note: must use server contract/client here
   const unclaimedFees = await getUnclaimedFees({
-    positionManager: v3PositionManagerContract,
+    positionManager: getContract({
+      address: reward.positionManager,
+      chain,
+      client: serverClient,
+    }),
     reward: {
       tokenId: reward.positionId,
       recipient: reward.recipient,
     },
   });
 
-  console.error("DEBUG", {
-    assetContractClient,
-    entrypointContractClient,
-    reward,
-    unclaimedFees,
-    chainSlug: info.chainMetadata.slug,
-  });
-
   return (
     <ClaimRewardsPage
-      assetContractClient={assetContractClient}
-      entrypointContractClient={entrypointContractClient}
+      assetContractClient={info.clientContract}
+      entrypointContractClient={getContract({
+        address: entrypointContractAddress,
+        chain: chain,
+        client: info.clientContract.client,
+      })}
       reward={reward}
       unclaimedFees={unclaimedFees}
       chainSlug={info.chainMetadata.slug}
