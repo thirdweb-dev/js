@@ -66,6 +66,14 @@ export default async function Page(props: {
     },
   });
 
+  console.log("DEBUG", {
+    assetContractClient,
+    entrypointContractClient,
+    reward,
+    unclaimedFees,
+    chainSlug: info.chainMetadata.slug,
+  });
+
   return (
     <ClaimRewardsPage
       assetContractClient={assetContractClient}
