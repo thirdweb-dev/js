@@ -131,12 +131,16 @@ export function LaunchTokenStatus(props: {
           label: "Set claim conditions",
           status: { type: "idle" },
         },
-        {
+      ];
+
+      // if user is selling 100% of the tokens, owner share is 0% - so skip minting
+      if (Number(formValues.dropERC20Mode.saleAllocationPercentage) !== 100) {
+        initialSteps.push({
           id: stepIds["drop-erc20:mint-tokens"],
           label: "Mint tokens",
           status: { type: "idle" },
-        },
-      ];
+        });
+      }
 
       if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
         initialSteps.push({
@@ -364,7 +368,7 @@ export function LaunchTokenStatus(props: {
           className="gap-0 overflow-hidden p-0 md:max-w-[480px]"
           dialogCloseClassName="hidden"
         >
-          <div className="flex flex-col gap-6 p-6">
+          <div className="flex flex-col gap-6 p-6 overflow-hidden">
             <DialogHeader className="space-y-0.5">
               <DialogTitle className="font-semibold text-xl tracking-tight">
                 Status
