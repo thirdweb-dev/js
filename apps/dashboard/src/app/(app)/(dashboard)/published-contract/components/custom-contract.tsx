@@ -47,7 +47,6 @@ import {
   DEFAULT_FEE_BPS,
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
-  THIRDWEB_PUBLISHER_ADDRESS,
 } from "@/constants/addresses";
 import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { ZERO_FEE_CHAINS } from "@/constants/fee-config";
@@ -218,9 +217,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const defaultFeeRecipientFunction = metadata.abi.find(
     (a) => a.type === "function" && a.name === "DEFAULT_FEE_RECIPIENT",
   );
-  const hasInbuiltDefaultFeeConfig =
-    defaultFeeRecipientFunction &&
-    metadata.publisher === THIRDWEB_PUBLISHER_ADDRESS;
+  const hasInbuiltDefaultFeeConfig = defaultFeeRecipientFunction;
 
   const isFeeExempt =
     walletChain?.id && ZERO_FEE_CHAINS.includes(walletChain.id);
