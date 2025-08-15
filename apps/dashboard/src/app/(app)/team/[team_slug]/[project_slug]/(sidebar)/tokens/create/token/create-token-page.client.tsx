@@ -165,7 +165,11 @@ export function CreateTokenAssetPageUI(props: {
           client={props.client}
           form={tokenInfoForm}
           onChainUpdated={() => {
-            // no op
+            // reset the token address to the native token address on chain change
+            tokenDistributionForm.setValue(
+              "dropERC20Mode.saleTokenAddress",
+              nativeTokenAddress,
+            );
           }}
           onNext={() => {
             reportAssetCreationStepConfigured({
