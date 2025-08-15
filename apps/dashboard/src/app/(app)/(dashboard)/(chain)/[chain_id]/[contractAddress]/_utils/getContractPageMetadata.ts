@@ -25,6 +25,7 @@ export type ContractPageMetadata = {
   isAccount: boolean;
   isAccountPermissionsSupported: boolean;
   functionSelectors: string[];
+  showClaimRewards: boolean;
 };
 
 export async function getContractPageMetadata(contract: ThirdwebContract) {

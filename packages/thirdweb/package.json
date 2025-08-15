@@ -195,6 +195,11 @@
       "import": "./dist/esm/exports/storage.js",
       "default": "./dist/cjs/exports/storage.js"
     },
+    "./tokens": {
+      "types": "./dist/types/exports/tokens.d.ts",
+      "import": "./dist/esm/exports/tokens.js",
+      "default": "./dist/cjs/exports/tokens.js"
+    },
     "./transaction": {
       "types": "./dist/types/exports/transaction.d.ts",
       "import": "./dist/esm/exports/transaction.js",
@@ -390,6 +395,9 @@
       ],
       "storage": [
         "./dist/types/exports/storage.d.ts"
+      ],
+      "tokens": [
+        "./dist/types/exports/tokens.d.ts"
       ],
       "transaction": [
         "./dist/types/exports/transaction.d.ts"
