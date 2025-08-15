@@ -460,6 +460,12 @@ async function redirects() {
       permanent: false,
       source: "/universal-bridge",
     },
+    // redirect /nebula to /ai
+    {
+      destination: "/ai",
+      permanent: false,
+      source: "/nebula",
+    },
     ...legacyDashboardToTeamRedirects,
     ...projectPageRedirects,
     ...teamPageRedirects,
