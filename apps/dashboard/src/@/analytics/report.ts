@@ -224,7 +224,11 @@ export function reportChainConfigurationAdded(properties: {
 // ASSETS
 // ----------------------------
 
-type AssetContractType = "DropERC20" | "DropERC1155" | "DropERC721";
+type AssetContractType =
+  | "DropERC20"
+  | "DropERC1155"
+  | "DropERC721"
+  | "ERC20Asset";
 
 /**
  * ### Why do we need to report this event?
@@ -334,6 +338,15 @@ export function reportAssetCreationSuccessful(properties: {
   });
 }
 
+type CoinCreationStep =
+  | "erc20-asset:deploy-contract"
+  | "erc20-asset:airdrop-tokens"
+  | "erc20-asset:approve-airdrop-tokens"
+  | "drop-erc20:deploy-contract"
+  | "drop-erc20:set-claim-conditions"
+  | "drop-erc20:mint-tokens"
+  | "drop-erc20:airdrop-tokens";
+
 /**
  * ### Why do we need to report this event?
  * - To track number of failed asset creations
@@ -355,12 +368,7 @@ export function reportAssetCreationFailed(
       }
     | {
         assetType: "coin";
-        step:
-          | "deploy-contract"
-          | "set-claim-conditions"
-          | "mint-tokens"
-          | "airdrop-tokens"
-          | "approve-airdrop-tokens";
+        step: CoinCreationStep;
       }
   ),
 ) {

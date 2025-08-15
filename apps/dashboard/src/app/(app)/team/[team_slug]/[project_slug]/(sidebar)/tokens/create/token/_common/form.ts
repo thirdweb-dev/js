@@ -22,20 +22,21 @@ const priceAmountSchema = z.string().refine(
     return !Number.isNaN(number) && number >= 0;
   },
   {
-    message: "Must be number larger than or equal to 0",
+    message: "Amount must be number larger than or equal to 0",
   },
 );
 
 export const tokenDistributionFormSchema = z.object({
+  // airdrop
   airdropAddresses: z.array(
     z.object({
       address: addressSchema,
       quantity: z.string(),
     }),
   ),
-  // UI states
   airdropEnabled: z.boolean(),
-  pool: z.object({
+  // sales ---
+  erc20Asset_poolMode: z.object({
     startingPricePerToken: priceAmountSchema.refine((value) => {
       const numValue = Number(value);
       if (numValue === 0) {
@@ -47,21 +48,37 @@ export const tokenDistributionFormSchema = z.object({
 
       return isValidTickValue(tick);
     }, "Invalid price"),
+    saleAllocationPercentage: z.string().refine(
+      (value) => {
+        const number = Number(value);
+        if (Number.isNaN(number)) {
+          return false;
+        }
+        return number >= 0 && number <= 100;
+      },
+      {
+        message: "Must be a number between 0 and 100",
+      },
+    ),
   }),
-  saleAllocationPercentage: z.string().refine(
-    (value) => {
-      const number = Number(value);
-      if (Number.isNaN(number)) {
-        return false;
-      }
-      return number >= 0 && number <= 100;
-    },
-    {
-      message: "Must be a number between 0 and 100",
-    },
-  ),
-
-  saleMode: z.enum(["pool", "disabled"]),
+  dropERC20Mode: z.object({
+    pricePerToken: priceAmountSchema,
+    saleTokenAddress: addressSchema,
+    saleAllocationPercentage: z.string().refine(
+      (value) => {
+        const number = Number(value);
+        if (Number.isNaN(number)) {
+          return false;
+        }
+        return number >= 0 && number <= 100;
+      },
+      {
+        message: "Must be a number between 0 and 100",
+      },
+    ),
+  }),
+  saleEnabled: z.boolean(),
+  saleMode: z.enum(["erc20-asset:pool", "drop-erc20:token-drop"]),
   supply: z.string().min(1, "Supply is required"),
 });
 

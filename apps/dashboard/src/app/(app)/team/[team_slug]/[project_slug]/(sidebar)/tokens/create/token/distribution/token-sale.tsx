@@ -1,17 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { DollarSignIcon, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { defineChain } from "thirdweb";
-import { isPoolRouterEnabled } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Badge } from "@/components/ui/badge";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   Select,
   SelectContent,
@@ -27,53 +22,11 @@ export function TokenSaleSection(props: {
   form: TokenDistributionForm;
   chainId: string;
   client: ThirdwebClient;
+  isRouterEnabled: boolean;
 }) {
-  const saleMode = props.form.watch("saleMode");
   const { idToChain } = useAllChainsData();
   const chainMeta = idToChain.get(Number(props.chainId));
-  const [hasUserUpdatedSaleMode, setHasUserUpdatedSaleMode] = useState(false);
-
-  const isRouterEnabledQuery = useQuery({
-    queryFn: async () => {
-      try {
-        return await isPoolRouterEnabled({
-          // eslint-disable-next-line no-restricted-syntax
-          chain: defineChain(Number(props.chainId)),
-          client: props.client,
-        });
-      } catch {
-        return false;
-      }
-    },
-    queryKey: ["isRouterEnabled", props.chainId],
-  });
-
-  const isRouterEnabledValue = isRouterEnabledQuery.data === true;
-
-  const isSaleEnabled = saleMode !== "disabled";
-
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (isRouterEnabledValue === false && isSaleEnabled) {
-      props.form.setValue("saleMode", "disabled", {
-        shouldValidate: true,
-      });
-    }
-  }, [isRouterEnabledValue, isSaleEnabled, props.form]);
-
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    if (
-      isRouterEnabledValue === true &&
-      !hasUserUpdatedSaleMode &&
-      !isSaleEnabled
-    ) {
-      props.form.setValue("saleMode", "pool", {
-        shouldValidate: true,
-      });
-    }
-  }, [isRouterEnabledValue, props.form, hasUserUpdatedSaleMode, isSaleEnabled]);
-
+  const isSaleEnabled = props.form.watch("saleEnabled");
   const protocolFee = 20;
   const leftOverFee = 100 - protocolFee;
   const convenienceFee = (12.5 * leftOverFee) / 100;
@@ -92,42 +45,39 @@ export function TokenSaleSection(props: {
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
-              {isRouterEnabledQuery.isPending ? (
-                <Spinner className="size-5" />
-              ) : (
-                <Switch
-                  checked={isSaleEnabled}
-                  disabled={!isRouterEnabledValue}
-                  onCheckedChange={(checked) => {
-                    if (!isRouterEnabledValue) {
-                      return;
-                    }
+            <Switch
+              checked={isSaleEnabled}
+              disabled={!props.isRouterEnabled}
+              onCheckedChange={(checked) => {
+                if (!props.isRouterEnabled) {
+                  return;
+                }
 
-                    setHasUserUpdatedSaleMode(true);
+                props.form.setValue("saleEnabled", checked);
 
-                    props.form.setValue(
-                      "saleMode",
-                      checked ? "pool" : "disabled",
-                    );
-
-                    if (checked && !props.form.getValues("airdropEnabled")) {
-                      props.form.setValue("saleAllocationPercentage", "100", {
-                        shouldValidate: true,
-                      });
-                    } else {
-                      props.form.setValue("saleAllocationPercentage", "0", {
-                        shouldValidate: true,
-                      });
-                    }
-                  }}
-                />
-              )}
-            </div>
+                if (checked && !props.form.getValues("airdropEnabled")) {
+                  props.form.setValue(
+                    "erc20Asset_poolMode.saleAllocationPercentage",
+                    "100",
+                    {
+                      shouldValidate: true,
+                    },
+                  );
+                } else {
+                  props.form.setValue(
+                    "erc20Asset_poolMode.saleAllocationPercentage",
+                    "0",
+                    {
+                      shouldValidate: true,
+                    },
+                  );
+                }
+              }}
+            />
           </div>
 
-          {isRouterEnabledQuery.data === false && (
-            <div className="mt-4 flex items-center gap-1.5">
+          {props.isRouterEnabled === false && (
+            <div className="mt-4 flex items-center gap-1.5 fade-in-0 duration-300 animate-in">
               <div className="rounded-full border bg-background p-1">
                 <XIcon className="size-3 text-muted-foreground" />
               </div>
@@ -138,8 +88,8 @@ export function TokenSaleSection(props: {
           )}
         </div>
 
-        {saleMode === "pool" && isRouterEnabledQuery.data === true && (
-          <div className="pt-4">
+        {isSaleEnabled && props.isRouterEnabled === true && (
+          <div className="pt-4 fade-in-0 duration-300 animate-in">
             <PoolConfig
               chainId={props.chainId}
               client={props.client}
@@ -202,7 +152,11 @@ function PoolConfig(props: {
 
   const totalSupply = Number(props.form.watch("supply"));
   const sellSupply = Math.floor(
-    (totalSupply * Number(props.form.watch("saleAllocationPercentage"))) / 100,
+    (totalSupply *
+      Number(
+        props.form.watch("erc20Asset_poolMode.saleAllocationPercentage"),
+      )) /
+      100,
   );
 
   return (
@@ -239,7 +193,8 @@ function PoolConfig(props: {
         {/* supply % */}
         <FormFieldSetup
           errorMessage={
-            props.form.formState.errors.saleAllocationPercentage?.message
+            props.form.formState.errors.erc20Asset_poolMode
+              ?.saleAllocationPercentage?.message
           }
           helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
           isRequired
@@ -249,11 +204,17 @@ function PoolConfig(props: {
             <DecimalInput
               maxValue={100}
               onChange={(value) => {
-                props.form.setValue("saleAllocationPercentage", value, {
-                  shouldValidate: true,
-                });
+                props.form.setValue(
+                  "erc20Asset_poolMode.saleAllocationPercentage",
+                  value,
+                  {
+                    shouldValidate: true,
+                  },
+                );
               }}
-              value={props.form.watch("saleAllocationPercentage")}
+              value={props.form.watch(
+                "erc20Asset_poolMode.saleAllocationPercentage",
+              )}
             />
             <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
               %
@@ -264,7 +225,8 @@ function PoolConfig(props: {
         {/* starting price */}
         <FormFieldSetup
           errorMessage={
-            props.form.formState.errors.pool?.startingPricePerToken?.message
+            props.form.formState.errors.erc20Asset_poolMode
+              ?.startingPricePerToken?.message
           }
           isRequired
           label="Starting price per token"
@@ -273,11 +235,17 @@ function PoolConfig(props: {
             <DecimalInput
               className="pr-10"
               onChange={(value) => {
-                props.form.setValue("pool.startingPricePerToken", value, {
-                  shouldValidate: true,
-                });
+                props.form.setValue(
+                  "erc20Asset_poolMode.startingPricePerToken",
+                  value,
+                  {
+                    shouldValidate: true,
+                  },
+                );
               }}
-              value={props.form.watch("pool.startingPricePerToken")}
+              value={props.form.watch(
+                "erc20Asset_poolMode.startingPricePerToken",
+              )}
             />
             <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
               {chainMeta?.nativeCurrency.symbol || "ETH"}

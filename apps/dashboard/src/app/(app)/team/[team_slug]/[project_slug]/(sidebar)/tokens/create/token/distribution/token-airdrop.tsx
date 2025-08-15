@@ -88,7 +88,7 @@ export function TokenAirdropSection(props: {
         </div>
 
         {isEnabled && (
-          <div className="flex justify-start mt-4">
+          <div className="flex justify-start mt-4 fade-in-0 duration-300 animate-in">
             {airdropAddresses.length > 0 ? (
               <div className="flex w-full flex-col gap-4 rounded-lg border bg-background p-4 md:flex-row lg:items-center lg:justify-between">
                 {/* left */}

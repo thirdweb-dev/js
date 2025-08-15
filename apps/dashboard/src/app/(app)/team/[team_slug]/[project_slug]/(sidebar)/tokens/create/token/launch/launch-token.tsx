@@ -38,11 +38,15 @@ import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
 
 const stepIds = {
-  "airdrop-tokens": "airdrop-tokens",
-  "approve-airdrop-tokens": "approve-airdrop-tokens",
-  "deploy-contract": "deploy-contract",
-  "mint-tokens": "mint-tokens",
-  "set-claim-conditions": "set-claim-conditions",
+  // asset ---
+  "erc20-asset:airdrop-tokens": "erc20-asset:airdrop-tokens",
+  "erc20-asset:approve-airdrop-tokens": "erc20-asset:approve-airdrop-tokens",
+  "erc20-asset:deploy-contract": "erc20-asset:deploy-contract",
+  // fallback ---
+  "drop-erc20:deploy-contract": "drop-erc20:deploy-contract",
+  "drop-erc20:set-claim-conditions": "drop-erc20:set-claim-conditions",
+  "drop-erc20:mint-tokens": "drop-erc20:mint-tokens",
+  "drop-erc20:airdrop-tokens": "drop-erc20:airdrop-tokens",
 } as const;
 
 type StepId = keyof typeof stepIds;
@@ -89,31 +93,63 @@ export function LaunchTokenStatus(props: {
   }
 
   async function handleSubmitClick() {
-    const initialSteps: MultiStepState<StepId>[] = [
-      {
-        id: stepIds["deploy-contract"],
-        label: "Deploy contract",
-        status: { type: "idle" },
-      },
-    ];
+    if (formValues.saleMode === "erc20-asset:pool") {
+      const initialSteps: MultiStepState<StepId>[] = [
+        {
+          id: stepIds["erc20-asset:deploy-contract"],
+          label: "Deploy contract",
+          status: { type: "idle" },
+        },
+      ];
 
-    if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
-      initialSteps.push({
-        id: stepIds["approve-airdrop-tokens"],
-        label: "Approve spending tokens for airdrop",
-        status: { type: "idle" },
-      });
+      if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
+        initialSteps.push({
+          id: stepIds["erc20-asset:approve-airdrop-tokens"],
+          label: "Approve spending tokens for airdrop",
+          status: { type: "idle" },
+        });
 
-      initialSteps.push({
-        id: stepIds["airdrop-tokens"],
-        label: "Airdrop tokens",
-        status: { type: "idle" },
-      });
+        initialSteps.push({
+          id: stepIds["erc20-asset:airdrop-tokens"],
+          label: "Airdrop tokens",
+          status: { type: "idle" },
+        });
+      }
+
+      setSteps(initialSteps);
+      setIsModalOpen(true);
+      executeSteps(initialSteps, 0, isGasless);
+    } else {
+      const initialSteps: MultiStepState<StepId>[] = [
+        {
+          id: stepIds["drop-erc20:deploy-contract"],
+          label: "Deploy contract",
+          status: { type: "idle" },
+        },
+        {
+          id: stepIds["drop-erc20:set-claim-conditions"],
+          label: "Set claim conditions",
+          status: { type: "idle" },
+        },
+        {
+          id: stepIds["drop-erc20:mint-tokens"],
+          label: "Mint tokens",
+          status: { type: "idle" },
+        },
+      ];
+
+      if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
+        initialSteps.push({
+          id: stepIds["drop-erc20:airdrop-tokens"],
+          label: "Airdrop tokens",
+          status: { type: "idle" },
+        });
+      }
+
+      setSteps(initialSteps);
+      setIsModalOpen(true);
+      executeSteps(initialSteps, 0, isGasless);
     }
-
-    setSteps(initialSteps);
-    setIsModalOpen(true);
-    executeSteps(initialSteps, 0, isGasless);
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
@@ -125,13 +161,28 @@ export function LaunchTokenStatus(props: {
       values: formValues,
     };
 
-    if (stepId === "deploy-contract") {
-      const result = await createTokenFunctions.deployContract(params);
+    // erc20-asset
+    if (stepId === "erc20-asset:deploy-contract") {
+      const result =
+        await createTokenFunctions.ERC20Asset.deployContract(params);
       setContractAddress(result.contractAddress);
-    } else if (stepId === "airdrop-tokens") {
-      await createTokenFunctions.airdropTokens(params);
-    } else if (stepId === "approve-airdrop-tokens") {
-      await createTokenFunctions.approveAirdropTokens(params);
+    } else if (stepId === "erc20-asset:airdrop-tokens") {
+      await createTokenFunctions.ERC20Asset.airdropTokens(params);
+    } else if (stepId === "erc20-asset:approve-airdrop-tokens") {
+      await createTokenFunctions.ERC20Asset.approveAirdropTokens(params);
+    }
+
+    // drop-erc20
+    else if (stepId === "drop-erc20:deploy-contract") {
+      const result =
+        await createTokenFunctions.DropERC20.deployContract(params);
+      setContractAddress(result.contractAddress);
+    } else if (stepId === "drop-erc20:set-claim-conditions") {
+      await createTokenFunctions.DropERC20.setClaimConditions(params);
+    } else if (stepId === "drop-erc20:mint-tokens") {
+      await createTokenFunctions.DropERC20.mintTokens(params);
+    } else if (stepId === "drop-erc20:airdrop-tokens") {
+      await createTokenFunctions.DropERC20.airdropTokens(params);
     }
   }
 
@@ -161,7 +212,10 @@ export function LaunchTokenStatus(props: {
 
         reportAssetCreationFailed({
           assetType: "coin",
-          contractType: "DropERC20",
+          contractType:
+            formValues.saleMode === "drop-erc20:token-drop"
+              ? "DropERC20"
+              : "ERC20Asset",
           error: errorMessage,
           step: currentStep.id,
         });
@@ -177,7 +231,10 @@ export function LaunchTokenStatus(props: {
 
     reportAssetCreationSuccessful({
       assetType: "coin",
-      contractType: "DropERC20",
+      contractType:
+        formValues.saleMode === "drop-erc20:token-drop"
+          ? "DropERC20"
+          : "ERC20Asset",
     });
 
     if (contractAddress) {

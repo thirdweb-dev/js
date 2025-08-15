@@ -26,15 +26,32 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const mockCreateTokenFunctions: CreateTokenFunctions = {
-  airdropTokens: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  ERC20Asset: {
+    airdropTokens: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
+    approveAirdropTokens: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
+    deployContract: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return { contractAddress: "0x123" };
+    },
   },
-  approveAirdropTokens: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  },
-  deployContract: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return { contractAddress: "0x123" };
+  DropERC20: {
+    airdropTokens: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
+    deployContract: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return { contractAddress: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" };
+    },
+    setClaimConditions: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
+    mintTokens: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    },
   },
 };
 
@@ -56,9 +73,12 @@ export const ErrorOnDeploy: Story = {
     client: storybookThirdwebClient,
     createTokenFunctions: {
       ...mockCreateTokenFunctions,
-      deployContract: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        throw new Error("Failed to deploy contract");
+      ERC20Asset: {
+        ...mockCreateTokenFunctions.ERC20Asset,
+        deployContract: async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          throw new Error("Failed to deploy contract");
+        },
       },
     },
     onLaunchSuccess: () => {},
@@ -74,11 +94,14 @@ export const StorageErrorOnDeploy: Story = {
     client: storybookThirdwebClient,
     createTokenFunctions: {
       ...mockCreateTokenFunctions,
-      deployContract: async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        throw new Error(
-          "You have reached your storage limit. Please add a valid payment method to continue using the service.",
-        );
+      ERC20Asset: {
+        ...mockCreateTokenFunctions.ERC20Asset,
+        deployContract: async () => {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          throw new Error(
+            "You have reached your storage limit. Please add a valid payment method to continue using the service.",
+          );
+        },
       },
     },
     onLaunchSuccess: () => {},

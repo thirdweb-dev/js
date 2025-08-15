@@ -14,6 +14,7 @@ import type {
   TokenDistributionForm,
   TokenDistributionFormValues,
 } from "../_common/form";
+import { DropERC20_TokenSaleSection } from "./drop-erc20-token-sale";
 import { TokenAirdropSection } from "./token-airdrop";
 import { TokenSaleSection } from "./token-sale";
 
@@ -26,14 +27,15 @@ export function TokenDistributionFieldset(props: {
   accountAddress: string;
   onNext: () => void;
   onPrevious: () => void;
-  form: TokenDistributionForm;
   chainId: string;
+  form: TokenDistributionForm;
   client: ThirdwebClient;
   tokenSymbol: string | undefined;
+  isRouterEnabled: boolean;
 }) {
   const { form } = props;
-  const distributionError = getDistributionError(form);
 
+  const distributionError = getDistributionError(form);
   const supplyId = useId();
 
   return (
@@ -67,11 +69,20 @@ export function TokenDistributionFieldset(props: {
               </FormFieldSetup>
             </div>
 
-            <TokenSaleSection
-              chainId={props.chainId}
-              client={props.client}
-              form={form}
-            />
+            {form.watch("saleMode") === "drop-erc20:token-drop" ? (
+              <DropERC20_TokenSaleSection
+                chainId={props.chainId}
+                client={props.client}
+                form={form}
+              />
+            ) : (
+              <TokenSaleSection
+                chainId={props.chainId}
+                isRouterEnabled={props.isRouterEnabled}
+                client={props.client}
+                form={form}
+              />
+            )}
 
             <TokenAirdropSection client={props.client} form={form} />
 
@@ -104,10 +115,12 @@ function getDistributionError(form: TokenDistributionForm) {
   }
 
   const saleSupplyPercentage = SafeNumber(
-    form.watch("saleAllocationPercentage"),
+    form.watch("saleMode") === "erc20-asset:pool"
+      ? form.watch("erc20Asset_poolMode.saleAllocationPercentage")
+      : form.watch("dropERC20Mode.saleAllocationPercentage"),
   );
 
-  const saleSupply = (saleSupplyPercentage / 100) * supply;
+  const saleSupply = Math.round((saleSupplyPercentage / 100) * supply);
   const ownerSupply = Math.max(supply - totalAirdrop - saleSupply, 0);
   const totalSumOfSupply = totalAirdrop + saleSupply + ownerSupply;
 
@@ -134,7 +147,10 @@ export function TokenDistributionBarChart(props: {
     );
   const airdropPercentage = (totalAirdropSupply / totalSupply) * 100;
   const salePercentage = Number(
-    props.distributionFormValues.saleAllocationPercentage,
+    props.distributionFormValues.saleMode === "erc20-asset:pool"
+      ? props.distributionFormValues.erc20Asset_poolMode
+          .saleAllocationPercentage
+      : props.distributionFormValues.dropERC20Mode.saleAllocationPercentage,
   );
 
   const ownerPercentage = Math.max(100 - airdropPercentage - salePercentage, 0);

@@ -93,7 +93,7 @@ export async function getDeployedEntrypointERC20(options: ClientAndChain) {
   );
 }
 
-async function getDeployedContractFactory(options: ClientAndChain) {
+export async function getDeployedContractFactory(options: ClientAndChain) {
   const cacheKey = `${options.chain.id}-${CONTRACT_FACTORY_DEPLOY_URL}-${JSON.stringify(options.client)}`;
   return withCache(
     async () => {

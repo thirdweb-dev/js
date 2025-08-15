@@ -13,8 +13,7 @@ import { TokenIcon, TokenProvider, useSendTransaction } from "thirdweb/react";
 import { claimRewards } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TransactionButton } from "@/components/tx-button";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { parseError } from "@/utils/errorParser";
 import { tryCatch } from "@/utils/try-catch";
@@ -127,14 +126,14 @@ export function ClaimRewardsPageUI(props: {
   return (
     <div>
       <div className="bg-card rounded-lg border">
-        <div className="p-4 lg:px-8 lg:py-8 border-b border-dashed">
+        <div className="p-4 lg:p-6 border-b border-dashed">
           <div className="flex mb-3">
             <div className="rounded-full border bg-background p-2">
               <DollarSignIcon className="size-5 text-muted-foreground" />
             </div>
           </div>
 
-          <h2 className="font-semibold text-3xl tracking-tight mb-0.5">
+          <h2 className="font-semibold text-2xl tracking-tight mb-0.5">
             Rewards
           </h2>
           <p className="text-muted-foreground text-sm">
@@ -144,14 +143,14 @@ export function ClaimRewardsPageUI(props: {
           </p>
         </div>
 
-        <div className="p-4 lg:px-8 py-8 border-b border-dashed">
-          <div className="mb-3">
-            <h3 className="font-medium text-lg">Unclaimed Rewards</h3>
+        <div className="p-4 lg:px-6 py-8 border-b border-dashed">
+          <div className="mb-4">
+            <h3 className="font-medium text-base mb-1">Unclaimed Rewards</h3>
             <p className="text-muted-foreground text-sm">
               The rewards that are earned but haven't been distributed yet
             </p>
           </div>
-          <div className="flex flex-col gap-3 lg:flex-row">
+          <div className="flex flex-col gap-4 lg:flex-row">
             <TokenReward
               token={props.unclaimedFees.token0}
               client={props.client}
@@ -167,9 +166,9 @@ export function ClaimRewardsPageUI(props: {
           </div>
         </div>
 
-        <div className="p-4 lg:px-8 py-8">
-          <h3 className="font-medium text-lg">Reward Distribution</h3>
-          <p className="text-muted-foreground text-sm mb-3">
+        <div className="p-4 lg:px-6 py-8">
+          <h3 className="font-medium text-base mb-1">Reward Distribution</h3>
+          <p className="text-muted-foreground text-sm mb-4">
             The unclaimed rewards will be distributed as:
           </p>
 
@@ -196,7 +195,7 @@ export function ClaimRewardsPageUI(props: {
             ]}
           />
 
-          <div className="h-5" />
+          <div className="h-6" />
 
           <div className="flex gap-5">
             <div>
@@ -205,7 +204,7 @@ export function ClaimRewardsPageUI(props: {
                 address={props.recipient}
                 client={props.client}
                 iconClassName="size-3"
-                className="h-auto py-1 text-sm"
+                className="h-auto py-1 text-xs"
                 fallbackIcon={
                   <div
                     className="size-3 rounded-full"
@@ -223,7 +222,7 @@ export function ClaimRewardsPageUI(props: {
                 address={props.developer}
                 client={props.client}
                 iconClassName="size-3"
-                className="h-auto py-1 text-sm"
+                className="h-auto py-1 text-xs"
                 fallbackIcon={
                   <div
                     className="size-3 rounded-full"
@@ -237,7 +236,7 @@ export function ClaimRewardsPageUI(props: {
           </div>
         </div>
 
-        <div className="p-4 py-6 lg:px-8 border-t border-dashed flex-col lg:flex-row flex lg:justify-between lg:items-center gap-4">
+        <div className="p-4 lg:p-6 border-t border-dashed flex-col lg:flex-row flex lg:justify-between lg:items-center gap-4">
           {hasUnclaimedRewards && (
             <p className="text-muted-foreground text-sm">
               Click on "Distribute Rewards" to distribute unclaimed rewards
@@ -249,18 +248,21 @@ export function ClaimRewardsPageUI(props: {
               There are no unclaimed rewards available for distribution
             </p>
           )}
-          <Button
+          <TransactionButton
             onClick={props.handleClaim}
-            className="gap-2 rounded-lg"
+            className="bg-background rounded-full"
+            transactionCount={undefined}
+            isPending={props.isClaimPending}
+            txChainID={props.chain.id}
+            isLoggedIn={true}
+            client={props.client}
             disabled={!hasUnclaimedRewards}
+            size="sm"
+            variant="outline"
           >
+            <SplitIcon className="size-3.5 text-muted-foreground" />
             Distribute Rewards
-            {props.isClaimPending ? (
-              <Spinner className="size-4" />
-            ) : (
-              <SplitIcon className="size-4" />
-            )}
-          </Button>
+          </TransactionButton>
         </div>
       </div>
     </div>
@@ -278,13 +280,13 @@ function TokenReward(props: {
   chainSlug: string;
 }) {
   const fallbackIcon = (
-    <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground font-bold">
+    <div className="size-9 rounded-full from-muted to-card bg-gradient-to-br flex items-center justify-center text-muted-foreground font-bold uppercase">
       {props.token.symbol[0]}
     </div>
   );
 
   return (
-    <div className="border p-3 rounded-lg flex items-center gap-3 min-w-[300px] bg-background relative hover:border-active-border">
+    <div className="border p-3 rounded-xl flex items-center gap-3 min-w-[300px] bg-background relative hover:border-active-border">
       <div className="rounded-full border shrink-0">
         <TokenProvider
           address={props.token.address}
@@ -292,7 +294,7 @@ function TokenReward(props: {
           chain={props.chain}
         >
           <TokenIcon
-            className="size-10 rounded-full"
+            className="size-9 rounded-full"
             loadingComponent={fallbackIcon}
             fallbackComponent={fallbackIcon}
           />
