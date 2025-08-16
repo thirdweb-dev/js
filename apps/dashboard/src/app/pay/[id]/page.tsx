@@ -1,13 +1,19 @@
+import { ShieldCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { defineChain, getContract } from "thirdweb";
-import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
+import { Bridge, defineChain, toTokens } from "thirdweb";
+import { getChainMetadata } from "thirdweb/chains";
 import { resolveScheme } from "thirdweb/storage";
-import { checksumAddress } from "thirdweb/utils";
+import { shortenAddress } from "thirdweb/utils";
 import { getPaymentLink } from "@/api/universal-bridge/links";
+import { Badge } from "@/components/ui/badge";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import { API_SERVER_SECRET } from "@/constants/server-envs";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import {
+  API_SERVER_SECRET,
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+} from "@/constants/server-envs";
+import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
+import { resolveEns } from "@/lib/ens";
 import { PayPageWidget } from "../components/client/PayPageWidget.client";
 import { payAppThirdwebClient } from "../constants";
 
@@ -37,52 +43,149 @@ export default async function PayPage({
     paymentId: id,
   });
 
-  const tokenContract = getContract({
-    address: paymentLink.destinationToken.address, // for this RPC call, use the dashboard client
-    // eslint-disable-next-line no-restricted-syntax
-    chain: defineChain(Number(paymentLink.destinationToken.chainId)),
-    client: getClientThirdwebClient(undefined),
-  });
-  const currencyMetadataPromise = getCurrencyMetadata({
-    contract: tokenContract,
-  });
-
   const projectMetadataPromise = getProjectMetadata(paymentLink.clientId);
 
-  const [{ symbol, decimals, name: tokenName }, projectMetadata] =
-    await Promise.all([currencyMetadataPromise, projectMetadataPromise]);
-
-  const token = {
-    address: checksumAddress(paymentLink.destinationToken.address),
+  const tokensPromise = Bridge.tokens({
+    client: getConfiguredThirdwebClient({
+      secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+      teamId: undefined,
+    }),
     chainId: Number(paymentLink.destinationToken.chainId),
-    decimals,
-    name: tokenName,
-    symbol,
-  };
+    tokenAddress: paymentLink.destinationToken.address,
+  });
+
+  const chainPromise = getChainMetadata(
+    defineChain(Number(paymentLink.destinationToken.chainId)),
+  );
+
+  const recipientPromise = resolveEns(
+    paymentLink.receiver,
+    getConfiguredThirdwebClient({
+      secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+      teamId: undefined,
+    }),
+  );
+
+  const [tokens, projectMetadata, chain, recipientEnsOrAddress] =
+    await Promise.all([
+      tokensPromise,
+      projectMetadataPromise,
+      chainPromise,
+      recipientPromise,
+    ]);
+
+  const token = tokens[0];
+  if (!token) {
+    throw new Error("Token not found");
+  }
 
   return (
     <div className="flex z-10 flex-col lg:flex-row h-full w-full">
       <header className="min-w-full lg:min-w-[500px] border-b lg:border-r lg:h-full bg-card flex flex-col gap-4 items-start p-4 lg:p-8">
-        <div className="flex flex-row items-center justify-center gap-4">
-          {projectMetadata.image && (
-            <Image
-              src={resolveScheme({
-                uri: projectMetadata.image,
-                client: payAppThirdwebClient,
-              })}
-              alt={projectMetadata.name}
-              width={25}
-              height={25}
-              className="rounded-full overflow-hidden"
-            />
+        <div>
+          <div className="flex flex-row items-center justify-start gap-4">
+            {projectMetadata.image && (
+              <Image
+                src={resolveScheme({
+                  uri: projectMetadata.image,
+                  client: payAppThirdwebClient,
+                })}
+                alt={projectMetadata.name}
+                width={25}
+                height={25}
+                className="rounded-full overflow-hidden"
+              />
+            )}
+            <h2 className="text-xl font-bold">{projectMetadata.name}</h2>
+          </div>
+          {projectMetadata.description && (
+            <p className="mt-2 text-sm text-muted-foreground hidden lg:block">
+              {projectMetadata.description}
+            </p>
           )}
-          <h2 className="text-xl font-bold">{projectMetadata.name}</h2>
         </div>
-        {projectMetadata.description && (
-          <p className="text-sm text-muted-foreground">
-            {projectMetadata.description}
-          </p>
-        )}
+
+        <div className="hidden lg:block my-4 w-full">
+          {paymentLink.amount && (
+            <div className="flex flex-col gap-1 w-full my-4">
+              <span className="text-muted-foreground text-xs">Details</span>
+              <div className="font-medium flex-row flex justify-between items-center w-full">
+                <div className="flex flex-row items-center gap-2">
+                  {token.iconUri && (
+                    <img
+                      src={resolveScheme({
+                        uri: token.iconUri,
+                        client: getConfiguredThirdwebClient({
+                          secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+                          teamId: undefined,
+                        }),
+                      })}
+                      alt={token.name}
+                      width={25}
+                      height={25}
+                      className="size-5 rounded-full overflow-hidden"
+                    />
+                  )}
+                  {toTokens(BigInt(paymentLink.amount), token.decimals)}{" "}
+                  {token.symbol}
+                </div>
+                {token.prices["USD"] && (
+                  <span>
+                    $
+                    {(
+                      Number(token.prices["USD"]) *
+                      Number(
+                        toTokens(BigInt(paymentLink.amount), token.decimals),
+                      )
+                    ).toFixed(2)}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+          {chain && (
+            <div className="flex flex-col gap-1 w-full my-4">
+              <span className="text-muted-foreground text-xs">Network</span>
+              <div className="font-medium flex-row flex justify-between items-center w-full">
+                <div className="flex flex-row items-center gap-2">
+                  {chain.icon?.url && (
+                    <img
+                      src={resolveScheme({
+                        uri: chain.icon.url,
+                        client: getConfiguredThirdwebClient({
+                          secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+                          teamId: undefined,
+                        }),
+                      })}
+                      alt={chain.name}
+                      width={chain.icon.width}
+                      height={chain.icon.height}
+                      className="size-5 rounded-full overflow-hidden"
+                    />
+                  )}
+                  {chain.name}
+                </div>
+              </div>
+            </div>
+          )}
+          {recipientEnsOrAddress.ensName ||
+            (recipientEnsOrAddress.address && (
+              <div className="flex flex-col gap-1 w-full my-4">
+                <span className="text-muted-foreground text-xs">Seller</span>
+                <div className="font-medium flex-row flex justify-between items-center w-full">
+                  {recipientEnsOrAddress.ensName ??
+                    shortenAddress(recipientEnsOrAddress.address)}
+                </div>
+              </div>
+            ))}
+        </div>
+
+        <div className="mt-auto hidden lg:block">
+          <Badge className="flex items-center gap-1.5 bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800">
+            <ShieldCheckIcon className="size-3" />
+            Secured by thirdweb
+          </Badge>
+        </div>
       </header>
       <main className="flex justify-center p-12 w-full items-center">
         <PayPageWidget
