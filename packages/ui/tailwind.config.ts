@@ -1,10 +1,15 @@
+import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
+import tailwindcssAnimate from "tailwindcss-animate";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{ts,tsx}"],
+const config: Config = {
+  content: [
+    "./src/**/*.{ts,tsx}",
+    // Note: when importing this config in website project,
+    // add a relative path to the ui package here
+  ],
   darkMode: ["class"],
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
   prefix: "",
   theme: {
     container: {
@@ -122,3 +127,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

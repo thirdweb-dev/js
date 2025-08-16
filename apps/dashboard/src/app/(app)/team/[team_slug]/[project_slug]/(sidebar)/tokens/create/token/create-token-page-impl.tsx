@@ -11,7 +11,6 @@ import {
   toWei,
 } from "thirdweb";
 import { deployERC20Contract } from "thirdweb/deploys";
-import type { ClaimConditionsInput } from "thirdweb/dist/types/utils/extensions/drops/types";
 import {
   approve,
   claimTo,
@@ -25,6 +24,7 @@ import {
   distributeToken,
   getDeployedEntrypointERC20,
 } from "thirdweb/tokens";
+import type { ClaimConditionsInput } from "thirdweb/utils";
 import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import { reportContractDeployed } from "@/analytics/report";

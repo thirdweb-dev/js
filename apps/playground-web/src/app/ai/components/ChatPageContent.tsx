@@ -32,10 +32,7 @@ import { Img } from "../../../components/ui/Img";
 import { Spinner } from "../../../components/ui/Spinner/Spinner";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { type NebulaContext, promptNebula } from "../api/chat";
-import type {
-  NebulaSessionHistoryMessage,
-  NebulaUserMessage,
-} from "../api/types";
+import type { NebulaUserMessage } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { resolveSchemeWithErrorHandler } from "./resolveSchemeWithErrorHandler";
 
@@ -585,7 +582,7 @@ function SimpleChats(props: {
   enableAutoScroll: boolean;
   sendMessage: (message: NebulaUserMessage) => void;
 }) {
-  const { messages, setEnableAutoScroll, enableAutoScroll } = props;
+  const { messages, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
 
   // auto scroll to bottom when messages change
@@ -1037,38 +1034,4 @@ function handleNebulaPromptError(params: {
 
     return newMessages;
   });
-}
-
-function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
-  const messages: ChatMessage[] = [];
-
-  for (const message of history) {
-    switch (message.role) {
-      case "user": {
-        messages.push({
-          content:
-            typeof message.content === "string"
-              ? [
-                  {
-                    text: message.content,
-                    type: "text",
-                  },
-                ]
-              : message.content,
-          type: message.role,
-        });
-        break;
-      }
-
-      case "assistant": {
-        messages.push({
-          request_id: undefined,
-          text: message.content,
-          type: message.role,
-        });
-      }
-    }
-  }
-
-  return messages;
 }

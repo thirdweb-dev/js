@@ -63,7 +63,7 @@ export async function promptNebula(params: {
   const events = await stream(`${API_URL}/ai/chat`, {
     body: JSON.stringify(body),
     headers: {
-      "x-client-id": process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!,
+      "x-client-id": process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "",
       "Content-Type": "application/json",
     },
     method: "POST",

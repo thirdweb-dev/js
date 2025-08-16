@@ -5,13 +5,12 @@ import {
   toUnits,
 } from "thirdweb";
 import { getContract } from "thirdweb/contract";
-import type { OverrideEntry } from "thirdweb/dist/types/utils/extensions/drops/types";
-import type { Prettify } from "thirdweb/dist/types/utils/type-utils";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { download } from "thirdweb/storage";
+import type { OverrideEntry } from "thirdweb/utils";
 import { maxUint256 } from "thirdweb/utils";
 import type { z } from "zod";
 import type {
@@ -26,20 +25,15 @@ type SnapshotEntry = {
   currencyAddress?: string | undefined;
 };
 
-type CombinedClaimCondition = Prettify<
-  Omit<
-    LegacyClaimCondition,
-    "price" | "waitInSeconds" | "availableSupply" | "currencyMetadata"
-  > & {
-    price: bigint;
-    currencyMetadata: Omit<
-      LegacyClaimCondition["currencyMetadata"],
-      "value"
-    > & {
-      value: bigint;
-    };
-  }
->;
+type CombinedClaimCondition = Omit<
+  LegacyClaimCondition,
+  "price" | "waitInSeconds" | "availableSupply" | "currencyMetadata"
+> & {
+  price: bigint;
+  currencyMetadata: Omit<LegacyClaimCondition["currencyMetadata"], "value"> & {
+    value: bigint;
+  };
+};
 
 type Options =
   | {

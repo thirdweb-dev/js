@@ -1,3 +1,4 @@
+import "@workspace/ui/global.css";
 import "./globals.css";
 import { Fira_Code, Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";

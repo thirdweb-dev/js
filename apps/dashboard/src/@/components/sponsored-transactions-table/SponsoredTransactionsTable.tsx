@@ -1,7 +1,7 @@
 "use client";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import type { ThirdwebClient } from "thirdweb/dist/types/client/client";
+import type { ThirdwebClient } from "thirdweb";
 import { analyticsServerProxy } from "@/actions/proxies";
 import {
   type SponsoredTransaction,

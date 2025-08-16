@@ -47,6 +47,7 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ["@workspace/ui"],
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -81,10 +82,6 @@ const nextConfig = {
         source: "/_ph/decide",
       },
     ];
-  },
-  webpack: (config) => {
-    config.externals.push("pino-pretty", "lokijs", "encoding");
-    return config;
   },
 };
 

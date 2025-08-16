@@ -10,8 +10,11 @@
   "ignoreDependencies": [
     "@thirdweb-dev/service-utils",
     "@thirdweb-dev/vault-sdk",
+    "thirdweb",
     "@types/color",
-    "fast-xml-parser"
+    "fast-xml-parser",
+    "@workspace/ui",
+    "tailwindcss-animate"
   ],
   "next": true,
   "project": ["src/**"]

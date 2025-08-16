@@ -31,6 +31,7 @@
     --success-text: 142.09 70.56% 35.29%;
     --warning-text: 38 92% 40%;
     --destructive-text: 360 72% 60%;
+    --nebula-pink-foreground: 321 90% 51%;
 
     /* Borders */
     --border: 0 0% 85%;
@@ -80,6 +81,7 @@
     --destructive-text: 360 72% 55%;
     --success-text: 142 75% 50%;
     --inverted-foreground: 0 0% 0%;
+    --nebula-pink-foreground: 321 90% 51%;
 
     /* Borders */
     --border: 0 0% 15%;
@@ -108,32 +110,37 @@
   }
 }
 
-.shiki,
-.shiki span {
-  background-color: transparent !important;
+/* shadcn charts */
+@layer base {
+  :root {
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    /* below is ai generated based on the initial */
+    --chart-6: 200 65% 50%;
+    --chart-7: 120 70% 45%;
+    --chart-8: 45 75% 55%;
+    --chart-9: 260 60% 60%;
+    --chart-10: 0 70% 50%;
+    --chart-11: 180 60% 50%;
+    --chart-12: 100 65% 55%;
+    --chart-13: 360 70% 55%;
+    --chart-14: 240 65% 50%;
+    --chart-15: 80 60% 50%;
+  }
 }
 
-.dark .shiki,
-.dark .shiki span {
-  color: var(--shiki-dark) !important;
-  /* Optional, if you also want font styles */
-  font-style: var(--shiki-dark-font-style) !important;
-  font-weight: var(--shiki-dark-font-weight) !important;
-  text-decoration: var(--shiki-dark-text-decoration) !important;
-}
-
-/* Fix colors on auto-filled inputs  */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  /* Revert text color */
-  -webkit-text-fill-color: hsl(var(--foreground)) !important;
-  color: hsl(var(--foreground)) !important;
-  caret-color: hsl(var(--foreground)) !important;
-
-  /* Revert background color */
-  transition: background-color 5000s ease-in-out 0s;
+@keyframes skeleton {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @layer utilities {
@@ -150,7 +157,51 @@ input:-webkit-autofill:active {
   }
 }
 
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+/* Fix colors on auto-filled inputs  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* Revert text color */
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  color: hsl(var(--foreground)) !important;
+  caret-color: hsl(var(--foreground)) !important;
+
+  /* Revert background color */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.shiki,
+.shiki span {
+  background-color: transparent !important;
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  /* Optional, if you also want font styles */
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--muted)) transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
