@@ -7,7 +7,7 @@ import { PayPageWidget } from "./components/client/PayPageWidget.client";
 import type { PayParams } from "./components/types";
 import { payAppThirdwebClient } from "./constants";
 
-const title = "thirdweb Pay";
+const title = "thirdweb Payments";
 const description = "Fast, secure, and simple payments.";
 
 export const metadata: Metadata = {

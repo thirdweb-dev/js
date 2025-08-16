@@ -30,17 +30,8 @@ export default async function PayLayout({
             disableTransitionOnChange
             enableSystem={false}
           >
-            <div className="relative mx-auto flex h-full w-full flex-col items-center justify-center overflow-x-hidden overflow-y-scroll py-10">
-              <main className="container z-10 flex justify-center">
-                {children}
-              </main>
-
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                className="-bottom-12 -right-12 pointer-events-none absolute lg:right-0 lg:bottom-0"
-                src="/assets/login/background.svg"
-              />
+            <div className="relative mx-auto flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-scroll">
+              {children}
             </div>
           </ThemeProvider>
         </PayProviders>
