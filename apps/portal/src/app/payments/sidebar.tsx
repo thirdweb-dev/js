@@ -42,6 +42,10 @@ export const sidebar: SideBar = {
           name: "Sell Tokens",
         },
         {
+          href: `${paymentsSlug}/swap`,
+          name: "Swap Tokens",
+        },
+        {
           href: `${paymentsSlug}/tokens`,
           name: "Get Token Prices",
         },
