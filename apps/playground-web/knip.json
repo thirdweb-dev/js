@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignore": ["src/components/ui/**", "src/app/insight/utils.ts"],
-  "ignoreDependencies": ["server-only"],
+  "ignoreDependencies": ["server-only", "@workspace/ui", "tailwindcss-animate"],
   "next": true,
   "project": ["src/**"]
 }

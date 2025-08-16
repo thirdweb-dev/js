@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
@@ -126,6 +126,7 @@ function FullWidthSidebarLayoutInner(props: FullWidthSidebarLayoutProps) {
               links={footerSidebarLinks}
               fullPath={props.fullPath}
             />
+            <SidebarSeparator />
             <ThemeToggle />
           </SidebarFooter>
         )}
@@ -289,7 +290,7 @@ function RenderSidebarSubmenu(props: {
       <DynamicHeight transition="height 200ms ease">
         <SidebarMenuItem>
           <Collapsible
-            className="group/collapsible [&[data-state=open]>button>svg[data-chevron]]:rotate-180"
+            className="group/collapsible [&[data-state=open]>button>svg[data-chevron]]:rotate-90"
             defaultOpen={open}
             open={open}
             onOpenChange={setOpen}
@@ -307,9 +308,9 @@ function RenderSidebarSubmenu(props: {
                 <span>{props.subMenu.label}</span>
 
                 {sidebar.open && (
-                  <ChevronDownIcon
+                  <ChevronRightIcon
                     data-chevron
-                    className="transition-transform ml-auto"
+                    className="transition-transform ml-auto text-foreground"
                   />
                 )}
               </SidebarMenuButton>

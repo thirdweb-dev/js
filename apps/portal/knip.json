@@ -2,31 +2,25 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
     "next.config.{js,ts,cjs,mjs}",
-    "{instrumentation,middleware}.{js,ts}",
-    "app/global-error.{js,jsx,ts,tsx}",
-    "app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
     "app/**/route.{js,jsx,ts,tsx}",
-    "app/{manifest,sitemap,robots}.{js,ts}",
     "app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
-    "app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
-    "pages/**/*.{js,jsx,ts,tsx}",
-    "src/{instrumentation,middleware}.{js,ts}",
-    "src/app/global-error.{js,jsx,ts,tsx}",
     "src/app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
-    "src/app/**/route.{js,jsx,ts,tsx}",
-    "src/app/{manifest,sitemap,robots}.{js,ts}",
-    "src/app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
-    "src/app/**/{opengraph,twitter}-image.{js,jsx,ts,tsx}",
-    "src/pages/**/*.{js,jsx,ts,tsx}",
     "scripts/*.ts"
   ],
-  "ignore": ["src/components/ui/**", "src/icons/**", "src/components/others/Banner.tsx"],
+  "ignore": [
+    "src/components/ui/**",
+    "src/icons/**",
+    "src/components/others/Banner.tsx"
+  ],
   "ignoreBinaries": ["only-allow"],
   "ignoreDependencies": [
     "@thirdweb-dev/chains",
     "@thirdweb-dev/wallets",
     "thirdweb",
-    "@types/flexsearch"
+    "@workspace/ui",
+    "@types/flexsearch",
+    "@radix-ui/react-slot",
+    "tailwindcss-animate"
   ],
   "next": true,
   "project": ["src/**"]

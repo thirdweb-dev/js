@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-import "../../global.css";
+import "@workspace/ui/global.css";
 import { BridgeProviders } from "./components/client/Providers.client";
 
 const fontSans = Inter({

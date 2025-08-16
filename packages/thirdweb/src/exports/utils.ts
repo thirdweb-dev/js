@@ -170,6 +170,12 @@ export {
   type GetClaimParamsOptions,
   getClaimParams,
 } from "../utils/extensions/drops/get-claim-params.js";
+// types
+export type {
+  ClaimConditionInput,
+  ClaimConditionsInput,
+  OverrideEntry,
+} from "../utils/extensions/drops/types.js";
 export { formatNumber } from "../utils/formatNumber.js";
 // Ethereum Signed Message hashing
 export { hashMessage } from "../utils/hashing/hashMessage.js";

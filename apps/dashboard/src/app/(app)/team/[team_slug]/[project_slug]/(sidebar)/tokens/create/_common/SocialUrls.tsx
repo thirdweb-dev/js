@@ -34,7 +34,7 @@ export function SocialUrlsFieldset<T extends WithSocialUrls>(props: {
       <h2 className="mb-2 font-medium text-sm">Social URLs</h2>
 
       {fields.length > 0 && (
-        <div className="mb-4 space-y-3">
+        <div className="mb-4 space-y-4">
           {fields.map((field, index) => (
             <div
               className="flex gap-3 max-sm:mb-6 max-sm:border-b max-sm:border-dashed max-sm:pb-6"

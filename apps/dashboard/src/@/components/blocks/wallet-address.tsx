@@ -1,5 +1,5 @@
 "use client";
-import { CheckIcon, CopyIcon, XIcon } from "lucide-react";
+import { CheckIcon, CircleSlashIcon, CopyIcon, XIcon } from "lucide-react";
 import { useMemo } from "react";
 import { isAddress, type ThirdwebClient, ZERO_ADDRESS } from "thirdweb";
 import { Blobbie, type SocialProfile, useSocialProfiles } from "thirdweb/react";
@@ -23,6 +23,7 @@ export function WalletAddress(props: {
   className?: string;
   iconClassName?: string;
   client: ThirdwebClient;
+  fallbackIcon?: React.ReactNode;
 }) {
   // default back to zero address if no address provided
   const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
@@ -59,9 +60,16 @@ export function WalletAddress(props: {
   // special case for zero address
   if (address === ZERO_ADDRESS) {
     return (
-      <span className={cn("cursor-pointer font-mono", props.className)}>
-        {shortenedAddress}
-      </span>
+      <div className="flex items-center gap-2 py-2">
+        <CircleSlashIcon
+          className={cn("size-6 text-muted-foreground/70", props.iconClassName)}
+        />
+        <span
+          className={cn("cursor-pointer font-mono text-sm", props.className)}
+        >
+          {shortenedAddress}
+        </span>
+      </div>
     );
   }
 
@@ -82,6 +90,7 @@ export function WalletAddress(props: {
               iconClassName={props.iconClassName}
               profiles={profiles.data || []}
               thirdwebClient={props.client}
+              fallbackIcon={props.fallbackIcon}
             />
           )}
           <span className="cursor-pointer font-mono">
@@ -173,6 +182,7 @@ function WalletAvatar(props: {
   profiles: SocialProfile[];
   thirdwebClient: ThirdwebClient;
   iconClassName?: string;
+  fallbackIcon?: React.ReactNode;
 }) {
   const avatar = useMemo(() => {
     return props.profiles.find(
@@ -199,6 +209,8 @@ function WalletAvatar(props: {
           className={cn("size-5 object-cover", props.iconClassName)}
           src={resolvedAvatarSrc}
         />
+      ) : props.fallbackIcon ? (
+        props.fallbackIcon
       ) : (
         <Blobbie
           address={props.address}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { ethereum } from "../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Address } from "../../../utils/address.js";
@@ -328,14 +329,11 @@ export function PayEmbed(props: PayEmbedProps) {
       ? props.payOptions.metadata
       : null;
 
-  if (
-    props.payOptions?.mode === "fund_wallet" &&
-    props.payOptions?.prefillBuy
-  ) {
+  if (!props.payOptions?.mode || props.payOptions?.mode === "fund_wallet") {
     return (
       <BuyWidget
-        amount={props.payOptions.prefillBuy.amount || "0.01"}
-        chain={props.payOptions.prefillBuy.chain}
+        amount={props.payOptions?.prefillBuy?.amount || "0.01"}
+        chain={props.payOptions?.prefillBuy?.chain || ethereum}
         client={props.client}
         onSuccess={() => props.payOptions?.onPurchaseSuccess?.()}
         paymentMethods={
@@ -349,7 +347,7 @@ export function PayEmbed(props: PayEmbedProps) {
         theme={theme}
         title={metadata?.name || "Buy"}
         tokenAddress={
-          props.payOptions.prefillBuy.token?.address as Address | undefined
+          props.payOptions?.prefillBuy?.token?.address as Address | undefined
         }
       />
     );

@@ -9,11 +9,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
     "noEmit": true,
     "noUncheckedIndexedAccess": true,
-
     "plugins": [
       {
         "name": "next"
@@ -22,7 +22,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020"
+    "target": "ES2022"
   },
   "exclude": ["node_modules", ".next", "lib/__generated__"],
   "include": [

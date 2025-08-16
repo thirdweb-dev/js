@@ -1,8 +1,3 @@
-type SessionContextFilter = {
-  chain_ids: string[] | null;
-  wallet_address: string | null;
-};
-
 type NebulaUserMessageContentItem =
   | {
       type: "image";
@@ -25,17 +20,6 @@ export type NebulaUserMessage = {
   role: "user";
   content: NebulaUserMessageContent;
 };
-
-export type NebulaSessionHistoryMessage =
-  | {
-      role: "assistant" | "action" | "image";
-      content: string;
-      timestamp: number;
-    }
-  | {
-      role: "user";
-      content: NebulaUserMessageContent | string;
-    };
 
 export type NebulaTxData = {
   chainId: number;

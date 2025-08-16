@@ -21,8 +21,8 @@ module.exports = [
   "/storage",
   // -- end scale category
 
-  // -- nebula
-  "/nebula",
+  // -- ai
+  "/ai",
   // -- contracts
   "/contracts",
   "/contracts/modular-contracts",

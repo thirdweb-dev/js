@@ -115,6 +115,7 @@ const SENTRY_OPTIONS: SentryBuildOptions = {
 const FRAMER_ADDITIONAL_LANGUAGES = ["es"];
 
 const baseNextConfig: NextConfig = {
+  transpilePackages: ["@workspace/ui"],
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -196,7 +197,6 @@ const baseNextConfig: NextConfig = {
       ]),
     ];
   },
-  serverExternalPackages: ["pino-pretty"],
 };
 
 function getConfig(): NextConfig {

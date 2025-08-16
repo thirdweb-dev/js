@@ -38,10 +38,15 @@ import type { CreateTokenFunctions } from "../create-token-page.client";
 import { TokenDistributionBarChart } from "../distribution/token-distribution";
 
 const stepIds = {
-  "airdrop-tokens": "airdrop-tokens",
-  "deploy-contract": "deploy-contract",
-  "mint-tokens": "mint-tokens",
-  "set-claim-conditions": "set-claim-conditions",
+  // asset ---
+  "erc20-asset:airdrop-tokens": "erc20-asset:airdrop-tokens",
+  "erc20-asset:approve-airdrop-tokens": "erc20-asset:approve-airdrop-tokens",
+  "erc20-asset:deploy-contract": "erc20-asset:deploy-contract",
+  // fallback ---
+  "drop-erc20:deploy-contract": "drop-erc20:deploy-contract",
+  "drop-erc20:set-claim-conditions": "drop-erc20:set-claim-conditions",
+  "drop-erc20:mint-tokens": "drop-erc20:mint-tokens",
+  "drop-erc20:airdrop-tokens": "drop-erc20:airdrop-tokens",
 } as const;
 
 type StepId = keyof typeof stepIds;
@@ -51,7 +56,10 @@ export function LaunchTokenStatus(props: {
   values: CreateAssetFormValues;
   onPrevious: () => void;
   client: ThirdwebClient;
-  onLaunchSuccess: () => void;
+  onLaunchSuccess: (params: {
+    chainId: number;
+    contractAddress: string;
+  }) => void;
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
@@ -60,7 +68,7 @@ export function LaunchTokenStatus(props: {
   const { createTokenFunctions } = props;
   const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [contractLink, setContractLink] = useState<string | null>(null);
+  const [contractAddress, setContractAddress] = useState<string | null>(null);
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
@@ -85,35 +93,67 @@ export function LaunchTokenStatus(props: {
   }
 
   async function handleSubmitClick() {
-    const initialSteps: MultiStepState<StepId>[] = [
-      {
-        id: stepIds["deploy-contract"],
-        label: "Deploy contract",
-        status: { type: "idle" },
-      },
-      {
-        id: stepIds["set-claim-conditions"],
-        label: "Set claim conditions",
-        status: { type: "idle" },
-      },
-      {
-        id: stepIds["mint-tokens"],
-        label: "Mint tokens",
-        status: { type: "idle" },
-      },
-    ];
+    if (formValues.saleMode === "erc20-asset:pool") {
+      const initialSteps: MultiStepState<StepId>[] = [
+        {
+          id: stepIds["erc20-asset:deploy-contract"],
+          label: "Deploy contract",
+          status: { type: "idle" },
+        },
+      ];
 
-    if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
-      initialSteps.push({
-        id: stepIds["airdrop-tokens"],
-        label: "Airdrop tokens",
-        status: { type: "idle" },
-      });
+      if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
+        initialSteps.push({
+          id: stepIds["erc20-asset:approve-airdrop-tokens"],
+          label: "Approve spending tokens for airdrop",
+          status: { type: "idle" },
+        });
+
+        initialSteps.push({
+          id: stepIds["erc20-asset:airdrop-tokens"],
+          label: "Airdrop tokens",
+          status: { type: "idle" },
+        });
+      }
+
+      setSteps(initialSteps);
+      setIsModalOpen(true);
+      executeSteps(initialSteps, 0, isGasless);
+    } else {
+      const initialSteps: MultiStepState<StepId>[] = [
+        {
+          id: stepIds["drop-erc20:deploy-contract"],
+          label: "Deploy contract",
+          status: { type: "idle" },
+        },
+        {
+          id: stepIds["drop-erc20:set-claim-conditions"],
+          label: "Set claim conditions",
+          status: { type: "idle" },
+        },
+      ];
+
+      // if user is selling 100% of the tokens, owner share is 0% - so skip minting
+      if (Number(formValues.dropERC20Mode.saleAllocationPercentage) !== 100) {
+        initialSteps.push({
+          id: stepIds["drop-erc20:mint-tokens"],
+          label: "Mint tokens",
+          status: { type: "idle" },
+        });
+      }
+
+      if (formValues.airdropEnabled && formValues.airdropAddresses.length > 0) {
+        initialSteps.push({
+          id: stepIds["drop-erc20:airdrop-tokens"],
+          label: "Airdrop tokens",
+          status: { type: "idle" },
+        });
+      }
+
+      setSteps(initialSteps);
+      setIsModalOpen(true);
+      executeSteps(initialSteps, 0, isGasless);
     }
-
-    setSteps(initialSteps);
-    setIsModalOpen(true);
-    executeSteps(initialSteps, 0, isGasless);
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
@@ -125,17 +165,28 @@ export function LaunchTokenStatus(props: {
       values: formValues,
     };
 
-    if (stepId === "deploy-contract") {
-      const result = await createTokenFunctions.deployContract(params);
-      setContractLink(
-        `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${result.contractAddress}`,
-      );
-    } else if (stepId === "set-claim-conditions") {
-      await createTokenFunctions.setClaimConditions(params);
-    } else if (stepId === "mint-tokens") {
-      await createTokenFunctions.mintTokens(params);
-    } else if (stepId === "airdrop-tokens") {
-      await createTokenFunctions.airdropTokens(params);
+    // erc20-asset
+    if (stepId === "erc20-asset:deploy-contract") {
+      const result =
+        await createTokenFunctions.ERC20Asset.deployContract(params);
+      setContractAddress(result.contractAddress);
+    } else if (stepId === "erc20-asset:airdrop-tokens") {
+      await createTokenFunctions.ERC20Asset.airdropTokens(params);
+    } else if (stepId === "erc20-asset:approve-airdrop-tokens") {
+      await createTokenFunctions.ERC20Asset.approveAirdropTokens(params);
+    }
+
+    // drop-erc20
+    else if (stepId === "drop-erc20:deploy-contract") {
+      const result =
+        await createTokenFunctions.DropERC20.deployContract(params);
+      setContractAddress(result.contractAddress);
+    } else if (stepId === "drop-erc20:set-claim-conditions") {
+      await createTokenFunctions.DropERC20.setClaimConditions(params);
+    } else if (stepId === "drop-erc20:mint-tokens") {
+      await createTokenFunctions.DropERC20.mintTokens(params);
+    } else if (stepId === "drop-erc20:airdrop-tokens") {
+      await createTokenFunctions.DropERC20.airdropTokens(params);
     }
   }
 
@@ -165,7 +216,10 @@ export function LaunchTokenStatus(props: {
 
         reportAssetCreationFailed({
           assetType: "coin",
-          contractType: "DropERC20",
+          contractType:
+            formValues.saleMode === "drop-erc20:token-drop"
+              ? "DropERC20"
+              : "ERC20Asset",
           error: errorMessage,
           step: currentStep.id,
         });
@@ -181,10 +235,18 @@ export function LaunchTokenStatus(props: {
 
     reportAssetCreationSuccessful({
       assetType: "coin",
-      contractType: "DropERC20",
+      contractType:
+        formValues.saleMode === "drop-erc20:token-drop"
+          ? "DropERC20"
+          : "ERC20Asset",
     });
 
-    props.onLaunchSuccess();
+    if (contractAddress) {
+      props.onLaunchSuccess({
+        chainId: Number(formValues.chain),
+        contractAddress,
+      });
+    }
   }
 
   async function handleRetry(step: MultiStepState<StepId>, gasless: boolean) {
@@ -195,6 +257,10 @@ export function LaunchTokenStatus(props: {
 
     await executeSteps(steps, startIndex, gasless);
   }
+
+  const contractLink = contractAddress
+    ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${contractAddress}`
+    : null;
 
   return (
     <StepCard
@@ -302,7 +368,7 @@ export function LaunchTokenStatus(props: {
           className="gap-0 overflow-hidden p-0 md:max-w-[480px]"
           dialogCloseClassName="hidden"
         >
-          <div className="flex flex-col gap-6 p-6">
+          <div className="flex flex-col gap-6 p-6 overflow-hidden">
             <DialogHeader className="space-y-0.5">
               <DialogTitle className="font-semibold text-xl tracking-tight">
                 Status

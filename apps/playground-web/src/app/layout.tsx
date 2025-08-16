@@ -4,7 +4,7 @@ import { metadataBase } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { AppSidebarLayout } from "./AppSidebar";
 import { Providers } from "./providers";
-import "./globals.css";
+import "@workspace/ui/global.css";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";

@@ -8,6 +8,7 @@ import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { SocialUrlsFieldset } from "../../_common/SocialUrls";
 import { StepCard } from "../../_common/step-card";
@@ -47,7 +48,7 @@ export function TokenInfoFieldset(props: {
                 client={props.client}
                 setValue={(file) =>
                   form.setValue("image", file, {
-                    shouldTouch: true,
+                    shouldValidate: true,
                   })
                 }
                 value={form.watch("image")}
@@ -59,7 +60,7 @@ export function TokenInfoFieldset(props: {
               {/* name + symbol */}
               <div className="flex flex-col gap-6 lg:flex-row lg:gap-4">
                 <FormFieldSetup
-                  className="grow"
+                  className="lg:max-w-[300px] grow"
                   errorMessage={form.formState.errors.name?.message}
                   htmlFor={nameId}
                   isRequired
@@ -73,7 +74,7 @@ export function TokenInfoFieldset(props: {
                 </FormFieldSetup>
 
                 <FormFieldSetup
-                  className="lg:max-w-[200px]"
+                  className="lg:max-w-[150px]"
                   errorMessage={form.formState.errors.symbol?.message}
                   htmlFor={symbolId}
                   isRequired
@@ -94,14 +95,28 @@ export function TokenInfoFieldset(props: {
                 isRequired
                 label="Chain"
               >
-                <ClientOnly ssr={null}>
+                <ClientOnly ssr={<Skeleton className="h-10" />}>
                   <SingleNetworkSelector
+                    priorityChains={[
+                      8453, // base
+                      84532, // base sepolia
+                      1, // ethereum
+                      56, // bnb smart chain mainnet (bsc)
+                      42161, // arbitrum one mainnet
+                      43114, // avalanche mainnet
+                      146, // sonic
+                      137, // polygon
+                      80094, // berachain mainnet
+                      10, // optimism
+                    ]}
                     chainId={Number(form.watch("chain"))}
                     className="bg-background"
                     client={props.client}
                     disableChainId
                     onChange={(chain) => {
-                      form.setValue("chain", chain.toString());
+                      form.setValue("chain", chain.toString(), {
+                        shouldValidate: true,
+                      });
                       props.onChainUpdated();
                     }}
                   />

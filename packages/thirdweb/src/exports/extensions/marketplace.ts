@@ -208,3 +208,6 @@ export {
   type MakeOfferParams,
   makeOffer,
 } from "../../extensions/marketplace/offers/write/makeOffer.js";
+
+// Types
+export type { ListingStatus } from "../../extensions/marketplace/types.js";

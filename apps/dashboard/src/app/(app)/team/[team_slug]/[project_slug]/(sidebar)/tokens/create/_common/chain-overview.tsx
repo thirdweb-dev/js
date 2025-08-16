@@ -1,4 +1,4 @@
-import type { ThirdwebClient } from "thirdweb/dist/types/client/client";
+import type { ThirdwebClient } from "thirdweb";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 

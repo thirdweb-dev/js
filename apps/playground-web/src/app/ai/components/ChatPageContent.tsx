@@ -1,5 +1,9 @@
 "use client";
-import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ExternalLinkIcon,
+  MessageCircleIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { defineChain, prepareTransaction, type ThirdwebClient } from "thirdweb";
@@ -28,10 +32,7 @@ import { Img } from "../../../components/ui/Img";
 import { Spinner } from "../../../components/ui/Spinner/Spinner";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { type NebulaContext, promptNebula } from "../api/chat";
-import type {
-  NebulaSessionHistoryMessage,
-  NebulaUserMessage,
-} from "../api/types";
+import type { NebulaUserMessage } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { resolveSchemeWithErrorHandler } from "./resolveSchemeWithErrorHandler";
 
@@ -346,8 +347,14 @@ export function ChatPageContent(props: {
               />
 
               {/* Footer disclaimer */}
-              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-                thirdweb AI can make mistakes. Please use with discretion
+              <p className="flex items-center justify-center gap-1 mt-3 text-center text-muted-foreground hover:text-foreground text-xs opacity-75 lg:text-sm">
+                <Link
+                  href="https://portal.thirdweb.com/ai/chat"
+                  target="_blank"
+                >
+                  Learn how to integrate thirdweb AI into your apps
+                </Link>
+                <ExternalLinkIcon className="size-3" />
               </p>
             </div>
           </div>
@@ -392,8 +399,14 @@ export function ChatPageContent(props: {
               />
 
               {/* Footer disclaimer */}
-              <p className="mt-3 text-center text-muted-foreground text-xs opacity-75 lg:text-sm">
-                thirdweb AI can make mistakes. Please use with discretion
+              <p className="flex items-center justify-center gap-1 mt-3 text-center text-muted-foreground hover:text-foreground text-xs opacity-75 lg:text-sm">
+                <Link
+                  href="https://portal.thirdweb.com/ai/chat"
+                  target="_blank"
+                >
+                  Learn how to integrate thirdweb AI into your apps
+                </Link>
+                <ExternalLinkIcon className="size-3" />
               </p>
             </div>
           </div>
@@ -569,7 +582,7 @@ function SimpleChats(props: {
   enableAutoScroll: boolean;
   sendMessage: (message: NebulaUserMessage) => void;
 }) {
-  const { messages, setEnableAutoScroll, enableAutoScroll } = props;
+  const { messages, enableAutoScroll } = props;
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
 
   // auto scroll to bottom when messages change
@@ -1021,38 +1034,4 @@ function handleNebulaPromptError(params: {
 
     return newMessages;
   });
-}
-
-function parseHistoryToMessages(history: NebulaSessionHistoryMessage[]) {
-  const messages: ChatMessage[] = [];
-
-  for (const message of history) {
-    switch (message.role) {
-      case "user": {
-        messages.push({
-          content:
-            typeof message.content === "string"
-              ? [
-                  {
-                    text: message.content,
-                    type: "text",
-                  },
-                ]
-              : message.content,
-          type: message.role,
-        });
-        break;
-      }
-
-      case "assistant": {
-        messages.push({
-          request_id: undefined,
-          text: message.content,
-          type: message.role,
-        });
-      }
-    }
-  }
-
-  return messages;
 }

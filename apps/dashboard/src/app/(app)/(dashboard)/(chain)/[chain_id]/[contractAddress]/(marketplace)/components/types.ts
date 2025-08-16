@@ -1,5 +1,4 @@
-// FIXME: export listing status type
-import type { ListingStatus } from "thirdweb/dist/types/extensions/marketplace/types";
+import type { ListingStatus } from "thirdweb/extensions/marketplace";
 
 export const LISTING_STATUS: Record<ListingStatus, string> = {
   ACTIVE: "Active",
