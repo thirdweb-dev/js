@@ -1,6 +1,6 @@
 "use client";
 
-import { CodeIcon, WebhookIcon } from "lucide-react";
+import { ArrowRightLeftIcon, CodeIcon, WebhookIcon } from "lucide-react";
 import { FeatureCard } from "./FeatureCard.client";
 
 export function AdvancedSection({
@@ -43,6 +43,19 @@ export function AdvancedSection({
           link={{
             href: `/team/${teamSlug}/${projectSlug}/payments/webhooks`,
             label: "Setup Webhooks",
+          }}
+        />
+        <FeatureCard
+          title="Swap Tokens"
+          icon={ArrowRightLeftIcon}
+          setupTime={5}
+          color="green"
+          id="swap_tokens"
+          features={["Swap any token", "Cross-chain swaps"]}
+          description="Swap tokens cross-chain with dedicated swapping endpoints."
+          link={{
+            href: `/team/${teamSlug}/${projectSlug}/payments/swap`,
+            label: "Setup Swaps",
           }}
         />
       </div>
