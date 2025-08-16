@@ -895,6 +895,7 @@ export function DetailsModal(props: {
         client={client}
         closeModal={closeModal}
         locale={locale}
+        manageWallet={props.detailsModal?.manageWallet}
         onBack={() => {
           setScreen("main");
         }}
@@ -1671,6 +1672,18 @@ export type UseWalletDetailsModalOptions = {
    * @param screen The name of the screen that was being shown when user closed the modal
    */
   onClose?: (screen: string) => void;
+
+  /**
+   * Configure options for managing the connected wallet.
+   */
+  manageWallet?: {
+    /**
+     * Allow linking other profiles to the connected wallet.
+     *
+     * By default it is `true`.
+     */
+    allowLinkingProfiles?: boolean;
+  };
 };
 
 /**
@@ -1738,6 +1751,7 @@ export function useWalletDetailsModal() {
               hideReceiveFunds: props.hideReceiveFunds,
               hideSendFunds: props.hideSendFunds,
               hideSwitchWallet: props.hideSwitchWallet,
+              manageWallet: props.manageWallet,
               networkSelector: props.networkSelector,
               onClose: props.onClose,
               payOptions: props.payOptions,
