@@ -13,6 +13,7 @@ export {
   getDeployedEntrypointERC20,
 } from "../tokens/get-entrypoint-erc20.js";
 export { isPoolRouterEnabled } from "../tokens/is-router-enabled.js";
+export { predictAddress } from "../tokens/predict-address.js";
 export {
   generateSalt,
   SaltFlag,
