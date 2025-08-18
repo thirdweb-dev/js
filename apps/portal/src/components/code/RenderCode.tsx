@@ -30,7 +30,7 @@ export function RenderCode(props: {
         />
       </ScrollShadow>
       <CopyButton
-        className="absolute top-4 right-4 z-[10] border bg-background p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="absolute top-4 right-4 z-10 border bg-background p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         iconClassName="size-3"
         text={props.code}
       />

@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Bridge, defineChain, toTokens } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
-import { resolveScheme } from "thirdweb/storage";
 import { shortenAddress } from "thirdweb/utils";
 import { getPaymentLink } from "@/api/universal-bridge/links";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,7 @@ import {
 } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { resolveEns } from "@/lib/ens";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { PayPageWidget } from "../components/client/PayPageWidget.client";
 import { payAppThirdwebClient } from "../constants";
 
@@ -55,6 +55,7 @@ export default async function PayPage({
   });
 
   const chainPromise = getChainMetadata(
+    // eslint-disable-next-line no-restricted-syntax
     defineChain(Number(paymentLink.destinationToken.chainId)),
   );
 
@@ -86,10 +87,12 @@ export default async function PayPage({
           <div className="flex flex-row items-center justify-start gap-4">
             {projectMetadata.image && (
               <Image
-                src={resolveScheme({
-                  uri: projectMetadata.image,
-                  client: payAppThirdwebClient,
-                })}
+                src={
+                  resolveSchemeWithErrorHandler({
+                    uri: projectMetadata.image,
+                    client: payAppThirdwebClient,
+                  }) || ""
+                }
                 alt={projectMetadata.name}
                 width={25}
                 height={25}
@@ -113,7 +116,7 @@ export default async function PayPage({
                 <div className="flex flex-row items-center gap-2">
                   {token.iconUri && (
                     <img
-                      src={resolveScheme({
+                      src={resolveSchemeWithErrorHandler({
                         uri: token.iconUri,
                         client: getConfiguredThirdwebClient({
                           secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
@@ -129,11 +132,11 @@ export default async function PayPage({
                   {toTokens(BigInt(paymentLink.amount), token.decimals)}{" "}
                   {token.symbol}
                 </div>
-                {token.prices["USD"] && (
+                {token.prices.USD && (
                   <span>
                     $
                     {(
-                      Number(token.prices["USD"]) *
+                      Number(token.prices.USD) *
                       Number(
                         toTokens(BigInt(paymentLink.amount), token.decimals),
                       )
@@ -150,7 +153,7 @@ export default async function PayPage({
                 <div className="flex flex-row items-center gap-2">
                   {chain.icon?.url && (
                     <img
-                      src={resolveScheme({
+                      src={resolveSchemeWithErrorHandler({
                         uri: chain.icon.url,
                         client: getConfiguredThirdwebClient({
                           secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
