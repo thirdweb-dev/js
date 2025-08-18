@@ -23,13 +23,9 @@ import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
 import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
-import {
-  reportAssetCreationFailed,
-  reportContractDeployed,
-} from "@/analytics/report";
+import { reportContractDeployed } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
 import { useAddContractToProject } from "@/hooks/project-contracts";
-import { parseError } from "@/utils/errorParser";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
 
@@ -96,81 +92,67 @@ export function CreateNFTPage(props: {
     // eslint-disable-next-line no-restricted-syntax
     const chain = defineChain(Number(collectionInfo.chain));
 
-    try {
-      let contractAddress: string;
+    let contractAddress: string;
 
-      if (ercType === "erc721") {
-        contractAddress = await deployERC721Contract({
-          account,
-          chain: chain,
-          client: props.client,
-          params: {
-            description: collectionInfo.description,
-            image: collectionInfo.image,
-            name: collectionInfo.name,
-            royaltyBps: BigInt(sales.royaltyBps),
-            royaltyRecipient: sales.royaltyRecipient,
-            saleRecipient: sales.primarySaleRecipient,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            symbol: collectionInfo.symbol,
-          },
-          type: "DropERC721",
-        });
-      } else {
-        contractAddress = await deployERC1155Contract({
-          account,
-          chain: chain,
-          client: props.client,
-          params: {
-            description: collectionInfo.description,
-            image: collectionInfo.image,
-            name: collectionInfo.name,
-            royaltyBps: BigInt(sales.royaltyBps),
-            royaltyRecipient: sales.royaltyRecipient,
-            saleRecipient: sales.primarySaleRecipient,
-            social_urls: transformSocialUrls(collectionInfo.socialUrls),
-            symbol: collectionInfo.symbol,
-          },
-          type: "DropERC1155",
-        });
-      }
-
-      reportContractDeployed({
-        address: contractAddress,
-        chainId: Number(collectionInfo.chain),
-        contractName: contractType,
-        deploymentType: "asset",
-        publisher: "deployer.thirdweb.eth",
+    if (ercType === "erc721") {
+      contractAddress = await deployERC721Contract({
+        account,
+        chain: chain,
+        client: props.client,
+        params: {
+          description: collectionInfo.description,
+          image: collectionInfo.image,
+          name: collectionInfo.name,
+          royaltyBps: BigInt(sales.royaltyBps),
+          royaltyRecipient: sales.royaltyRecipient,
+          saleRecipient: sales.primarySaleRecipient,
+          social_urls: transformSocialUrls(collectionInfo.socialUrls),
+          symbol: collectionInfo.symbol,
+        },
+        type: "DropERC721",
       });
-
-      contractAddressRef.current = contractAddress;
-
-      // add contract to project in background
-      addContractToProject.mutateAsync({
-        chainId: collectionInfo.chain,
-        contractAddress: contractAddress,
-        contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
-        deploymentType: "asset",
-        projectId: props.projectId,
-        teamId: props.teamId,
+    } else {
+      contractAddress = await deployERC1155Contract({
+        account,
+        chain: chain,
+        client: props.client,
+        params: {
+          description: collectionInfo.description,
+          image: collectionInfo.image,
+          name: collectionInfo.name,
+          royaltyBps: BigInt(sales.royaltyBps),
+          royaltyRecipient: sales.royaltyRecipient,
+          saleRecipient: sales.primarySaleRecipient,
+          social_urls: transformSocialUrls(collectionInfo.socialUrls),
+          symbol: collectionInfo.symbol,
+        },
+        type: "DropERC1155",
       });
-
-      return {
-        contractAddress,
-      };
-    } catch (error) {
-      const errorMessage = parseError(error);
-      console.error(errorMessage);
-
-      reportAssetCreationFailed({
-        assetType: "nft",
-        contractType,
-        error: errorMessage,
-        step: "deploy-contract",
-      });
-
-      throw error;
     }
+
+    reportContractDeployed({
+      address: contractAddress,
+      chainId: Number(collectionInfo.chain),
+      contractName: contractType,
+      deploymentType: "asset",
+      publisher: "deployer.thirdweb.eth",
+    });
+
+    contractAddressRef.current = contractAddress;
+
+    // add contract to project in background
+    addContractToProject.mutateAsync({
+      chainId: collectionInfo.chain,
+      contractAddress: contractAddress,
+      contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+      deploymentType: "asset",
+      projectId: props.projectId,
+      teamId: props.teamId,
+    });
+
+    return {
+      contractAddress,
+    };
   }
 
   async function handleLazyMintNFTs(params: {
@@ -179,8 +161,6 @@ export function CreateNFTPage(props: {
     gasless: boolean;
   }) {
     const { values, ercType } = params;
-    const contractType =
-      ercType === "erc721" ? ("DropERC721" as const) : ("DropERC1155" as const);
 
     const contract = getDeployedContract({
       chain: values.collectionInfo.chain,
@@ -197,24 +177,10 @@ export function CreateNFTPage(props: {
       nfts: values.nfts,
     });
 
-    try {
-      await sendAndConfirmTransaction({
-        account,
-        transaction,
-      });
-    } catch (error) {
-      const errorMessage = parseError(error);
-      console.error(error);
-
-      reportAssetCreationFailed({
-        assetType: "nft",
-        contractType,
-        error: errorMessage,
-        step: "mint-nfts",
-      });
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      account,
+      transaction,
+    });
   }
 
   async function handleSetClaimConditionsERC721(params: {
@@ -251,24 +217,10 @@ export function CreateNFTPage(props: {
       ],
     });
 
-    try {
-      await sendAndConfirmTransaction({
-        account,
-        transaction,
-      });
-    } catch (error) {
-      const errorMessage = parseError(error);
-      console.error(errorMessage);
-
-      reportAssetCreationFailed({
-        assetType: "nft",
-        contractType: "DropERC721",
-        error: errorMessage,
-        step: "set-claim-conditions",
-      });
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      account,
+      transaction,
+    });
   }
 
   async function handleSetClaimConditionsERC1155(params: {
@@ -336,24 +288,10 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    try {
-      await sendAndConfirmTransaction({
-        account,
-        transaction: tx,
-      });
-    } catch (error) {
-      const errorMessage = parseError(error);
-      console.error(errorMessage);
-
-      reportAssetCreationFailed({
-        assetType: "nft",
-        contractType: "DropERC1155",
-        error: errorMessage,
-        step: "set-claim-conditions",
-      });
-
-      throw error;
-    }
+    await sendAndConfirmTransaction({
+      account,
+      transaction: tx,
+    });
   }
 
   async function handleSetAdmins(params: {
@@ -395,24 +333,10 @@ export function CreateNFTPage(props: {
       data: encodedTxs,
     });
 
-    try {
-      await sendAndConfirmTransaction({
-        account,
-        transaction: tx,
-      });
-    } catch (e) {
-      const errorMessage = parseError(e);
-      console.error(errorMessage);
-
-      reportAssetCreationFailed({
-        assetType: "nft",
-        contractType: params.contractType,
-        error: errorMessage,
-        step: "set-admins",
-      });
-
-      throw e;
-    }
+    await sendAndConfirmTransaction({
+      account,
+      transaction: tx,
+    });
   }
 
   return (
