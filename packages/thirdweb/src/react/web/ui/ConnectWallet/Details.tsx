@@ -179,6 +179,7 @@ export const ConnectedWalletDetails: React.FC<{
         supportedNFTs={props.supportedNFTs}
         supportedTokens={props.supportedTokens}
         theme={props.theme}
+        showBalanceInFiat={props.detailsButton?.showBalanceInFiat}
       />,
     );
   }
@@ -898,6 +899,7 @@ export function DetailsModal(props: {
         onBack={() => {
           setScreen("main");
         }}
+        manageWallet={props.detailsModal?.manageWallet}
         setScreen={setScreen}
       />
     );
@@ -975,6 +977,7 @@ export function DetailsModal(props: {
         client={client}
         hiddenWallets={props.detailsModal?.hiddenWallets}
         locale={locale.id}
+        connectOptions={props.connectOptions}
         onCancel={() => setScreen("main")}
         onSuccess={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
@@ -1594,6 +1597,26 @@ export type UseWalletDetailsModalOptions = {
 
   /**
    * Render custom UI at the bottom of the Details Modal
+   * @param props - props passed to the footer component which includes a function to close the modal
+   * @example
+   * ```tsx
+   * function Example() {
+   *   const detailsModal = useWalletDetailsModal();
+   *
+   *   return (
+   *     <button onClick={() => detailsModal.open({
+   *       client,
+   *       footer: CustomFooter,
+   *     })}>
+   *         wallet details
+   *     </button>
+   *   )
+   * }
+   *
+   * function CustomFooter(props: { close: () => void }) {
+   *   return <div> ... </div>
+   * }
+   * ```
    */
   footer?: (props: { close: () => void }) => JSX.Element;
 
@@ -1654,6 +1677,11 @@ export type UseWalletDetailsModalOptions = {
   hideBuyFunds?: boolean;
 
   /**
+   * All wallet IDs included in this array will be hidden from wallet selection when connected.
+   */
+  hiddenWallets?: WalletId[];
+
+  /**
    * When you click on "View Assets", by default the "Tokens" tab is shown first.
    * If you want to show the "NFTs" tab first, change the order of the asset tabs to: ["nft", "token"]
    * Note: If an empty array is passed, the [View Funds] button will be hidden
@@ -1665,6 +1693,18 @@ export type UseWalletDetailsModalOptions = {
    * Note: Not all tokens are resolvable to a fiat value. In that case, nothing will be shown.
    */
   showBalanceInFiat?: SupportedFiatCurrency;
+
+  /**
+   * Configure options for managing the connected wallet.
+   */
+  manageWallet?: {
+    /**
+     * Allow linking other profiles to the connected wallet.
+     *
+     * By default it is `true`.
+     */
+    allowLinkingProfiles?: boolean;
+  };
 
   /**
    * The callback function for when the modal is closed
@@ -1729,6 +1769,9 @@ export function useWalletDetailsModal() {
             closeModal={closeModal}
             connectOptions={props.connectOptions}
             detailsModal={{
+              showBalanceInFiat: props.showBalanceInFiat,
+              hiddenWallets: props.hiddenWallets,
+              manageWallet: props.manageWallet,
               assetTabs: props.assetTabs,
               connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
               connectedAccountName: props.connectedAccountName,

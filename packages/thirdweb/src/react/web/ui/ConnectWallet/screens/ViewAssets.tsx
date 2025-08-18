@@ -22,7 +22,7 @@ export type AssetTabs = "token" | "nft";
 
 const TokenTab = {
   label: (
-    <span className="flex gap-2">
+    <span style={{ display: "flex", gap: "8px", alignItems: "center" }}>
       <CoinsIcon size={iconSize.sm} /> Tokens
     </span>
   ),
@@ -31,7 +31,7 @@ const TokenTab = {
 
 const NftTab = {
   label: (
-    <span className="flex gap-2">
+    <span style={{ display: "flex", gap: "8px", alignItems: "center" }}>
       <ImageIcon size={iconSize.sm} /> NFTs
     </span>
   ),

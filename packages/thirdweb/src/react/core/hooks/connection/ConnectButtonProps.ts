@@ -198,6 +198,9 @@ export type TransactionOptions = {
   transaction: PreparedTransaction;
 };
 
+// Note: When adding props to ConnectButton_connectButtonOptions,
+// make sure to also add it in UseWalletDetailsModalOptions for useWalletDetailsModal hook
+
 /**
  * Options for configuring the `ConnectButton`'s Connect Button
  * @connectWallet
