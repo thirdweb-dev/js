@@ -99,7 +99,7 @@ export default async function PayPage({
             <h2 className="text-xl font-bold">{projectMetadata.name}</h2>
           </div>
           {projectMetadata.description && (
-            <p className="mt-2 text-sm text-muted-foreground hidden lg:block">
+            <p className="mt-2 text-sm text-muted-foreground">
               {projectMetadata.description}
             </p>
           )}
