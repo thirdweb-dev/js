@@ -1,6 +1,5 @@
 import { ShieldCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Bridge, defineChain, toTokens } from "thirdweb";
 import { getChainMetadata } from "thirdweb/chains";
 import { shortenAddress } from "thirdweb/utils";
@@ -86,7 +85,7 @@ export default async function PayPage({
         <div>
           <div className="flex flex-row items-center justify-start gap-4">
             {projectMetadata.image && (
-              <Image
+              <img
                 src={
                   resolveSchemeWithErrorHandler({
                     uri: projectMetadata.image,
