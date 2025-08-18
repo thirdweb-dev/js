@@ -22,7 +22,7 @@ export type PoolConfig = {
 };
 
 export type DistributeContent = {
-  amount: bigint;
+  amount: string;
   recipient: string;
 };
 

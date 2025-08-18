@@ -179,7 +179,7 @@ export function CreateTokenAssetPage(props: {
       chain: contract.chain,
       client: props.client,
       contents: values.airdropAddresses.map((recipient) => ({
-        amount: BigInt(recipient.quantity),
+        amount: recipient.quantity,
         recipient: recipient.address,
       })),
       tokenAddress: contract.address,
@@ -200,8 +200,8 @@ export function CreateTokenAssetPage(props: {
     const contract = getDeployedContract({ chain: values.chain });
 
     const totalAmountToAirdrop = values.airdropAddresses.reduce(
-      (acc, recipient) => acc + BigInt(recipient.quantity),
-      0n,
+      (acc, recipient) => acc + Number(recipient.quantity),
+      0,
     );
 
     const entrypoint = await getDeployedEntrypointERC20({
