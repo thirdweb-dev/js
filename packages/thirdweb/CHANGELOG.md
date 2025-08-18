@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.35
+
+### Patch Changes
+
+- [#7870](https://github.com/thirdweb-dev/js/pull/7870) [`f78b0a2`](https://github.com/thirdweb-dev/js/commit/f78b0a28dabf07dee801b923d33066c0bd103c3c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds predictAddress token extension function
+
 ## 5.105.34
 
 ### Patch Changes
