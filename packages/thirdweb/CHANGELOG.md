@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.105.34
+
+### Patch Changes
+
+- [#7858](https://github.com/thirdweb-dev/js/pull/7858) [`7f11657`](https://github.com/thirdweb-dev/js/commit/7f116577aba529e21a48163b295b091f9d6008f7) Thanks [@MananTank](https://github.com/MananTank)! - Fix PayEmbed UI when mode prop is not specified - Default to mode: "fund_wallet" with amount: "0.01" and chain: ethereum
+
+- [#7865](https://github.com/thirdweb-dev/js/pull/7865) [`467ba50`](https://github.com/thirdweb-dev/js/commit/467ba5090729dd951970b15ef320caf9d058cc0b) Thanks [@MananTank](https://github.com/MananTank)! - Add missing props for details modal on `useWalletDetailsModal` hook
+
+- [#7321](https://github.com/thirdweb-dev/js/pull/7321) [`d227bc3`](https://github.com/thirdweb-dev/js/commit/d227bc389bef4b2f84544a73732a61782e3dca16) Thanks [@kumaryash90](https://github.com/kumaryash90)! - ERC20 assets
+
 ## 5.105.33
 
 ### Patch Changes
