@@ -1,4 +1,3 @@
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { AlertTriangleIcon } from "lucide-react";
 import type { WebhookConfig } from "@/api/project/webhook-configs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
