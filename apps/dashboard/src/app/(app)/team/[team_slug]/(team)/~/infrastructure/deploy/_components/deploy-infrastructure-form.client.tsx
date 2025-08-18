@@ -1,11 +1,20 @@
 "use client";
 
 import { useQueryState } from "nuqs";
-import { useMemo, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { getChainInfraCheckoutURL } from "@/actions/billing";
+import { reportChainInfraRpcOmissionAgreed } from "@/analytics/report";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { RPCIcon } from "@/icons/RPCIcon";
@@ -44,7 +53,7 @@ const SERVICE_CONFIG = {
     icon: "RPCIcon",
     label: "RPC",
     monthlyPrice: 1500,
-    required: true,
+    required: false,
     sku: "chain:infra:rpc" as const,
   },
 } satisfies Record<
@@ -80,19 +89,26 @@ export function DeployInfrastructureForm(props: {
     searchParams.addons.withOptions({ history: "replace", startTransition }),
   );
 
+  const [rpcParam, setRpcParam] = useQueryState(
+    "rpc",
+    searchParams.rpc.withOptions({ history: "replace", startTransition }),
+  );
+
   const addons = useMemo(() => {
     return addonsStr ? addonsStr.split(",").filter(Boolean) : [];
   }, [addonsStr]);
 
   const includeInsight = addons.includes("insight");
   const includeAA = addons.includes("aa");
+  const includeRPC = rpcParam === "on";
 
   const selectedOrder = useMemo(() => {
-    const arr: (keyof typeof SERVICE_CONFIG)[] = ["rpc"];
+    const arr: (keyof typeof SERVICE_CONFIG)[] = [];
+    if (includeRPC) arr.push("rpc");
     if (includeInsight) arr.push("insight");
     if (includeAA) arr.push("accountAbstraction");
     return arr;
-  }, [includeInsight, includeAA]);
+  }, [includeInsight, includeAA, includeRPC]);
 
   // NEW: count selected services and prepare bundle discount hint
   const selectedCount = selectedOrder.length;
@@ -112,9 +128,9 @@ export function DeployInfrastructureForm(props: {
     return {
       accountAbstraction: includeAA,
       insight: includeInsight,
-      rpc: true,
+      rpc: includeRPC,
     } as const;
-  }, [includeInsight, includeAA]);
+  }, [includeInsight, includeAA, includeRPC]);
 
   const pricePerService = useMemo(() => {
     const isAnnual = frequency === "annual";
@@ -172,10 +188,13 @@ export function DeployInfrastructureForm(props: {
 
   const chainId = props.chain.chainId;
 
-  const checkout = () => {
+  const [showRpcWarning, setShowRpcWarning] = useState(false);
+
+  const proceedToCheckout = () => {
     startTransition(async () => {
       try {
-        const skus: ChainInfraSKU[] = [SERVICE_CONFIG.rpc.sku];
+        const skus: ChainInfraSKU[] = [];
+        if (includeRPC) skus.push(SERVICE_CONFIG.rpc.sku);
         if (includeInsight) skus.push(SERVICE_CONFIG.insight.sku);
         if (includeAA) skus.push(SERVICE_CONFIG.accountAbstraction.sku);
 
@@ -186,11 +205,9 @@ export function DeployInfrastructureForm(props: {
           teamSlug: props.teamSlug,
         });
 
-        // If the action returns, it means redirect did not happen and we have an error
         if (res.status === "error") {
           toast.error(res.error);
         } else if (res.status === "success") {
-          // replace the current page with the checkout page (which will then redirect back to us)
           window.location.href = res.data;
         }
       } catch (err) {
@@ -202,6 +219,15 @@ export function DeployInfrastructureForm(props: {
     });
   };
 
+  const checkout = () => {
+    const hasAddons = includeInsight || includeAA;
+    if (!includeRPC && hasAddons) {
+      setShowRpcWarning(true);
+      return;
+    }
+    proceedToCheckout();
+  };
+
   const periodLabel = frequency === "annual" ? "/yr" : "/mo";
   const isAnnual = frequency === "annual";
 
@@ -211,21 +237,22 @@ export function DeployInfrastructureForm(props: {
       <div className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold">Select Services</h3>
 
-        {/* Required service */}
+        {/* RPC (now optional) */}
         <div className="flex flex-col gap-2 mb-6">
           <ServiceCard
             description={SERVICE_CONFIG.rpc.description}
-            disabled
             icon={SERVICE_CONFIG.rpc.icon}
             label={SERVICE_CONFIG.rpc.label}
-            onToggle={() => {}}
+            onToggle={() => {
+              const newVal = !includeRPC;
+              setRpcParam(newVal ? "on" : "off");
+            }}
             originalPrice={
               isAnnual ? SERVICE_CONFIG.rpc.monthlyPrice * 12 : undefined
             }
             periodLabel={periodLabel}
             price={pricePerService.rpc}
-            required
-            selected
+            selected={includeRPC}
           />
         </div>
 
@@ -350,7 +377,11 @@ export function DeployInfrastructureForm(props: {
 
           <Button
             className="w-full"
-            disabled={isTransitionPending || !props.isOwner}
+            disabled={
+              isTransitionPending ||
+              !props.isOwner ||
+              selectedOrder.length === 0
+            }
             onClick={checkout}
           >
             Proceed to Checkout
@@ -362,6 +393,54 @@ export function DeployInfrastructureForm(props: {
           )}
         </div>
       </div>
+      {/* RPC Omission Warning Modal */}
+      <Dialog open={showRpcWarning} onOpenChange={setShowRpcWarning}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Proceed without RPC (not recommended)</DialogTitle>
+            <DialogDescription className="space-y-3">
+              <p>
+                RPC powers core functionality used by <strong>Insight</strong>{" "}
+                and <strong>Account Abstraction</strong>.
+              </p>
+              <div className="space-y-1">
+                <p>Without RPC, you may experience:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Delayed or missing data in Insight</li>
+                  <li>
+                    Transaction failures or degraded reliability for Account
+                    Abstraction
+                  </li>
+                  <li>Limited or unsupported features across both services</li>
+                </ul>
+              </div>
+              <p>
+                thirdweb <strong>cannot guarantee</strong> that Insight or
+                Account Abstraction will work as expected without RPC. To ensure
+                reliability, keep RPC enabled.
+              </p>
+              <p>If you still want to continue, confirm below.</p>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              onClick={() => {
+                reportChainInfraRpcOmissionAgreed({
+                  chainId,
+                  frequency: frequency === "annual" ? "annual" : "monthly",
+                  includeInsight,
+                  includeAccountAbstraction: includeAA,
+                });
+                setShowRpcWarning(false);
+                proceedToCheckout();
+              }}
+              variant="destructive"
+            >
+              I understand — proceed without RPC
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

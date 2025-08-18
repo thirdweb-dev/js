@@ -526,3 +526,24 @@ export function reportTokenUpsellClicked(params: {
 }) {
   posthog.capture("token upsell clicked", params);
 }
+
+// ----------------------------
+// CHAIN INFRASTRUCTURE CHECKOUT
+// ----------------------------
+/**
+ * ### Why do we need to report this event?
+ * - To record explicit user acknowledgement when proceeding to checkout without RPC
+ * - To measure how often customers choose to omit RPC while purchasing Insight and/or Account Abstraction
+ * - To correlate potential support issues arising from missing RPC
+ *
+ * ### Who is responsible for this event?
+ * @jnsdls
+ */
+export function reportChainInfraRpcOmissionAgreed(properties: {
+  chainId: number;
+  frequency: "monthly" | "annual";
+  includeInsight: boolean;
+  includeAccountAbstraction: boolean;
+}) {
+  posthog.capture("chain infra checkout rpc omission agreed", properties);
+}
