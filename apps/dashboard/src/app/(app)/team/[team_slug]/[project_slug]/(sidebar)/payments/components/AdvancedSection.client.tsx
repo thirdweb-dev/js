@@ -54,8 +54,9 @@ export function AdvancedSection({
           features={["Swap any token", "Cross-chain swaps"]}
           description="Swap tokens cross-chain with dedicated swapping endpoints."
           link={{
-            href: `/team/${teamSlug}/${projectSlug}/payments/swap`,
+            href: `https://portal.thirdweb.com/payments/swap`,
             label: "Setup Swaps",
+            target: "_blank",
           }}
         />
       </div>
