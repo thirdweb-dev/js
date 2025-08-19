@@ -2,7 +2,7 @@
 
 import { EmptyStateContent } from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { useSetResponsiveSearchParams } from "responsive-rsc";
-import type { UniversalBridgeStats, WalletUserStats } from "@/types/analytics";
+import type { InAppWalletStats, UniversalBridgeStats } from "@/types/analytics";
 import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
 
 type AggregatedMetrics = {
@@ -14,7 +14,7 @@ type AggregatedMetrics = {
 
 export function ProjectHighlightsCard(props: {
   selectedChart: string | undefined;
-  userStats: WalletUserStats[];
+  userStats: InAppWalletStats[];
   volumeStats: UniversalBridgeStats[];
   teamSlug: string;
   projectSlug: string;
@@ -34,18 +34,6 @@ export function ProjectHighlightsCard(props: {
 
   const chartConfig = {
     activeUsers: { color: "hsl(var(--chart-1))", label: "Active Users" },
-    feesCollected: {
-      color: "hsl(var(--chart-4))",
-      emptyContent: (
-        <EmptyStateContent
-          description="Your app hasn't collected any fees yet."
-          link={`/team/${teamSlug}/${projectSlug}/payments/settings`}
-          metric="Fees"
-        />
-      ),
-      isCurrency: true,
-      label: "Fee Revenue",
-    },
     newUsers: { color: "hsl(var(--chart-3))", label: "New Users" },
     totalVolume: {
       color: "hsl(var(--chart-2))",
@@ -58,6 +46,18 @@ export function ProjectHighlightsCard(props: {
       ),
       isCurrency: true,
       label: "Total Volume",
+    },
+    feesCollected: {
+      color: "hsl(var(--chart-4))",
+      emptyContent: (
+        <EmptyStateContent
+          description="Your app hasn't collected any fees yet."
+          link={`/team/${teamSlug}/${projectSlug}/payments/settings`}
+          metric="Fees"
+        />
+      ),
+      isCurrency: true,
+      label: "Fee Revenue",
     },
   } as const;
 
@@ -101,33 +101,46 @@ type TimeSeriesMetrics = AggregatedMetrics & {
  * Processes time series data to combine wallet and user statistics
  */
 function processTimeSeriesData(
-  userStats: WalletUserStats[],
+  userStats: InAppWalletStats[],
   volumeStats: UniversalBridgeStats[],
 ): TimeSeriesMetrics[] {
   const metrics: TimeSeriesMetrics[] = [];
+  const dates = [...new Set(userStats.map((a) => a.date))];
 
-  for (const stat of userStats) {
+  for (const date of dates) {
+    const activeUsers = userStats
+      .filter(
+        (u) => new Date(u.date).toISOString() === new Date(date).toISOString(),
+      )
+      .reduce((acc, curr) => acc + curr.uniqueWalletsConnected, 0);
+
+    const newUsers = userStats
+      .filter(
+        (u) => new Date(u.date).toISOString() === new Date(date).toISOString(),
+      )
+      .reduce((acc, curr) => acc + curr.newUsers, 0);
+
     const volume = volumeStats
       .filter(
         (v) =>
-          new Date(v.date).toISOString() ===
-            new Date(stat.date).toISOString() && v.status === "completed",
+          new Date(v.date).toISOString() === new Date(date).toISOString() &&
+          v.status === "completed",
       )
       .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
 
     const fees = volumeStats
       .filter(
         (v) =>
-          new Date(v.date).toISOString() ===
-            new Date(stat.date).toISOString() && v.status === "completed",
+          new Date(v.date).toISOString() === new Date(date).toISOString() &&
+          v.status === "completed",
       )
       .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
 
     metrics.push({
-      activeUsers: stat.totalUsers ?? 0,
-      date: stat.date,
+      activeUsers: activeUsers,
+      date: date,
       feesCollected: fees,
-      newUsers: stat.newUsers ?? 0,
+      newUsers: newUsers,
       totalVolume: volume,
     });
   }

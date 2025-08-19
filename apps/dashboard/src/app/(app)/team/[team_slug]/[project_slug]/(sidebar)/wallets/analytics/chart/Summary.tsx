@@ -1,48 +1,35 @@
-import { subDays } from "date-fns";
 import { ActivityIcon, UserIcon } from "lucide-react";
 import { Suspense } from "react";
 import { getInAppWalletUsage } from "@/api/analytics";
+import type { Range } from "@/components/analytics/date-range-selector";
 import { StatCard } from "@/components/analytics/stat";
 import type { InAppWalletStats } from "@/types/analytics";
 
 function InAppWalletsSummaryInner(props: {
-  allTimeStats: InAppWalletStats[] | undefined;
-  monthlyStats: InAppWalletStats[] | undefined;
+  stats: InAppWalletStats[] | undefined;
   isPending: boolean;
 }) {
-  const allTimeStats = props.allTimeStats?.reduce(
-    (acc, curr) => {
-      acc.uniqueWalletsConnected += curr.uniqueWalletsConnected;
-      return acc;
-    },
-    {
-      uniqueWalletsConnected: 0,
-    },
-  );
+  const activeUsers = props.stats?.reduce((acc, curr) => {
+    return acc + curr.uniqueWalletsConnected;
+  }, 0);
 
-  const monthlyStats = props.monthlyStats?.reduce(
-    (acc, curr) => {
-      acc.uniqueWalletsConnected += curr.uniqueWalletsConnected;
-      return acc;
-    },
-    {
-      uniqueWalletsConnected: 0,
-    },
-  );
+  const newUsers = props.stats?.reduce((acc, curr) => {
+    return acc + curr.newUsers;
+  }, 0);
 
   return (
     <div className="grid grid-cols-2 gap-4">
       <StatCard
         icon={ActivityIcon}
         isPending={props.isPending}
-        label="Total Users"
-        value={allTimeStats?.uniqueWalletsConnected || 0}
+        label="Active Users"
+        value={activeUsers || 0}
       />
       <StatCard
         icon={UserIcon}
         isPending={props.isPending}
-        label="Monthly Active Users"
-        value={monthlyStats?.uniqueWalletsConnected || 0}
+        label="New Users"
+        value={newUsers || 0}
       />
     </div>
   );
@@ -52,40 +39,26 @@ async function AsyncInAppWalletsSummary(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  range: Range;
 }) {
-  const { teamId, projectId, authToken } = props;
-  const allTimeStatsPromise = getInAppWalletUsage(
+  const { teamId, projectId, authToken, range } = props;
+  const aggregatedStatsPromise = getInAppWalletUsage(
     {
-      from: new Date(2022, 0, 1),
+      from: range.from,
       period: "all",
       projectId,
       teamId,
-      to: new Date(),
+      to: range.to,
     },
     authToken,
   );
 
-  const monthlyStatsPromise = getInAppWalletUsage(
-    {
-      from: subDays(new Date(), 30),
-      period: "month",
-      projectId,
-      teamId,
-      to: new Date(),
-    },
-    authToken,
-  );
-
-  const [allTimeStats, monthlyStats] = await Promise.all([
-    allTimeStatsPromise,
-    monthlyStatsPromise,
-  ]).catch(() => [null, null]);
+  const aggregatedStats = await aggregatedStatsPromise.catch(() => null);
 
   return (
     <InAppWalletsSummaryInner
-      allTimeStats={allTimeStats || undefined}
+      stats={aggregatedStats || undefined}
       isPending={false}
-      monthlyStats={monthlyStats || undefined}
     />
   );
 }
@@ -94,21 +67,17 @@ export function InAppWalletsSummary(props: {
   teamId: string;
   projectId: string;
   authToken: string;
+  range: Range;
 }) {
   return (
     <Suspense
-      fallback={
-        <InAppWalletsSummaryInner
-          allTimeStats={undefined}
-          isPending={true}
-          monthlyStats={undefined}
-        />
-      }
+      fallback={<InAppWalletsSummaryInner stats={undefined} isPending={true} />}
     >
       <AsyncInAppWalletsSummary
         projectId={props.projectId}
         teamId={props.teamId}
         authToken={props.authToken}
+        range={props.range}
       />
     </Suspense>
   );
