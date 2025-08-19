@@ -1,6 +1,9 @@
 import type { Hex } from "viem";
 import type { FileOrBufferOrString } from "../storage/upload/types.js";
-import type { ClientAndChainAndAccount } from "../utils/types.js";
+import type {
+  ClientAndChainAndAccount,
+  ClientAndChain,
+} from "../utils/types.js";
 
 export type TokenParams = {
   name: string;
@@ -11,7 +14,7 @@ export type TokenParams = {
   symbol?: string;
   contractURI?: string;
   maxSupply: bigint;
-  owner?: string;
+  owner: string;
 };
 
 export type PoolConfig = {
@@ -35,7 +38,7 @@ type LaunchConfig =
   | { kind: "pool"; config: PoolConfig }
   | { kind: "distribute"; config: DistributeConfig };
 
-export type CreateTokenOptions = ClientAndChainAndAccount & {
+export type CreateTokenOptions = ClientAndChain & {
   salt?: Hex;
   params: TokenParams;
   launchConfig?: LaunchConfig;
@@ -44,6 +47,6 @@ export type CreateTokenOptions = ClientAndChainAndAccount & {
 
 export type CreateTokenByImplementationConfigOptions =
   ClientAndChainAndAccount &
-    CreateTokenOptions & {
-      implementationAddress: string;
-    };
+  CreateTokenOptions & {
+    implementationAddress: string;
+  };
