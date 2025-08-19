@@ -40,6 +40,8 @@ export function TeamSidebarLayout(props: {
           icon: ChartNoAxesColumnIcon,
           label: "Analytics",
         },
+        // ecosystem below here
+        // TODO: make this one link to an overview page that has a list of all the ecosystems currently deployed
         {
           links: [
             ...props.ecosystems.map((ecosystem) => ({
@@ -66,29 +68,28 @@ export function TeamSidebarLayout(props: {
           icon: DatabaseIcon,
           label: "Usage",
         },
-        ...(props.chainSubscriptions.length > 0
-          ? [
-              {
-                separator: true,
-              } as const,
-              {
-                links: [
-                  ...props.chainSubscriptions.map((chainSubscription) => ({
-                    href: `${layoutPath}/~/infrastructure/${chainSubscription.slug}`,
-                    label: chainSubscription.chainName,
-                  })),
-                  {
-                    href: `${layoutPath}/~/infrastructure/deploy`,
-                    label: "Deploy Infrastructure",
-                  },
-                ],
-                subMenu: {
-                  icon: WalletCardsIcon,
-                  label: "Chain Infrastucture",
-                },
-              },
-            ]
-          : []),
+
+        {
+          separator: true,
+        } as const,
+        // infrastructure below here
+        // TODO: make this one link to an overview page that has a list of all the chains currently deployed
+        {
+          links: [
+            ...props.chainSubscriptions.map((chainSubscription) => ({
+              href: `${layoutPath}/~/infrastructure/${chainSubscription.slug}`,
+              label: chainSubscription.chainName,
+            })),
+            {
+              href: `${layoutPath}/~/infrastructure/deploy`,
+              label: "Deploy Infrastructure",
+            },
+          ],
+          subMenu: {
+            icon: WalletCardsIcon,
+            label: "Chain Infrastucture",
+          },
+        },
       ]}
       footerSidebarLinks={[
         {
