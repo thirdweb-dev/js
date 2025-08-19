@@ -54,6 +54,7 @@ function ecosystemWalletStatsStub(
         date: formattedDate,
         ecosystemPartnerId: "123",
         uniqueWalletsConnected: Math.floor(Math.random() * 1000) + 1,
+        newUsers: Math.floor(Math.random() * 100) + 1,
       });
     }
   }

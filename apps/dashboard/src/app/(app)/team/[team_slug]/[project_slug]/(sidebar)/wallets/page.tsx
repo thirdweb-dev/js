@@ -45,13 +45,14 @@ export default async function Page(props: {
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <div>
+        <ResponsiveTimeFilters defaultRange={defaultRange} />
+        <div className="h-6" />
         <InAppWalletsSummary
+          range={range}
           projectId={project.id}
           teamId={project.teamId}
           authToken={authToken}
         />
-        <div className="h-10" />
-        <ResponsiveTimeFilters defaultRange={defaultRange} />
         <div className="h-6" />
         <InAppWalletAnalytics
           interval={interval}
