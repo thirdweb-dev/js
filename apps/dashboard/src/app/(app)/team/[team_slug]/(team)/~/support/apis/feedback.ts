@@ -25,7 +25,8 @@ export async function submitSupportFeedback(
     });
 
     if (!supabase) {
-      const error = "Supabase client not initialized. Please check your environment variables.";
+      const error =
+        "Supabase client not initialized. Please check your environment variables.";
       console.error("❌ Supabase client error:", error);
       throw new Error(error);
     }
@@ -55,10 +56,12 @@ export async function submitSupportFeedback(
       feedbackLength: data.feedback?.length || 0,
     });
 
-    const { data: insertData, error } = await supabase.from("support_feedback").insert({
-      rating: data.rating,
-      feedback: data.feedback,
-    });
+    const { data: insertData, error } = await supabase
+      .from("support_feedback")
+      .insert({
+        rating: data.rating,
+        feedback: data.feedback,
+      });
 
     console.log("🔍 Debug - Insert result:", {
       insertData,
