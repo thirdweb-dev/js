@@ -1,8 +1,8 @@
 import type { Hex } from "viem";
 import type { FileOrBufferOrString } from "../storage/upload/types.js";
 import type {
-  ClientAndChainAndAccount,
   ClientAndChain,
+  ClientAndChainAndAccount,
 } from "../utils/types.js";
 
 export type TokenParams = {
@@ -47,6 +47,6 @@ export type CreateTokenOptions = ClientAndChain & {
 
 export type CreateTokenByImplementationConfigOptions =
   ClientAndChainAndAccount &
-  CreateTokenOptions & {
-    implementationAddress: string;
-  };
+    CreateTokenOptions & {
+      implementationAddress: string;
+    };
