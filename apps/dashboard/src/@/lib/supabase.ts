@@ -9,11 +9,12 @@ export const supabase =
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
-// Log the status for debugging
-if (process.env.NODE_ENV === "development") {
-  console.log("🔧 Supabase client status:", {
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-    clientCreated: !!supabase,
-  });
-}
+// Log the status for debugging (both dev and production)
+console.log("🔧 Supabase client status:", {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  clientCreated: !!supabase,
+  env: process.env.NODE_ENV,
+  urlLength: supabaseUrl?.length || 0,
+  keyLength: supabaseAnonKey?.length || 0,
+});
