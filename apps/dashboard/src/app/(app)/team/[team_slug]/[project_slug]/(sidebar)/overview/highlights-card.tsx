@@ -105,25 +105,26 @@ function processTimeSeriesData(
   volumeStats: UniversalBridgeStats[],
 ): TimeSeriesMetrics[] {
   const metrics: TimeSeriesMetrics[] = [];
-  const dates = [...new Set(userStats.map((a) => a.date))];
+  const dates = [
+    ...new Set([
+      ...userStats.map((a) => new Date(a.date).toISOString().slice(0, 10)),
+      ...volumeStats.map((a) => new Date(a.date).toISOString().slice(0, 10)),
+    ]),
+  ];
 
   for (const date of dates) {
     const activeUsers = userStats
-      .filter(
-        (u) => new Date(u.date).toISOString() === new Date(date).toISOString(),
-      )
+      .filter((u) => new Date(u.date).toISOString().slice(0, 10) === date)
       .reduce((acc, curr) => acc + curr.uniqueWalletsConnected, 0);
 
     const newUsers = userStats
-      .filter(
-        (u) => new Date(u.date).toISOString() === new Date(date).toISOString(),
-      )
+      .filter((u) => new Date(u.date).toISOString().slice(0, 10) === date)
       .reduce((acc, curr) => acc + curr.newUsers, 0);
 
     const volume = volumeStats
       .filter(
         (v) =>
-          new Date(v.date).toISOString() === new Date(date).toISOString() &&
+          new Date(v.date).toISOString().slice(0, 10) === date &&
           v.status === "completed",
       )
       .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
@@ -131,7 +132,7 @@ function processTimeSeriesData(
     const fees = volumeStats
       .filter(
         (v) =>
-          new Date(v.date).toISOString() === new Date(date).toISOString() &&
+          new Date(v.date).toISOString().slice(0, 10) === date &&
           v.status === "completed",
       )
       .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
