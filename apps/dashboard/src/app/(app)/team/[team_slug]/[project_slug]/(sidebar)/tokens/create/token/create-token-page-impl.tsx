@@ -445,6 +445,8 @@ export function CreateTokenAssetPage(props: {
           chainId: params.chainId,
           client: props.client,
           tokenAddress: params.contractAddress,
+          // TODO: UPDATE THIS WHEN WE ALLOW CUSTOM CURRENCY PAIRING
+          pairedTokenAddress: NATIVE_TOKEN_ADDRESS,
         });
         revalidatePathAction(
           `/team/${props.teamSlug}/project/${props.projectId}/tokens`,
