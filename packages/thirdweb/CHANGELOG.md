@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.36
+
+### Patch Changes
+
+- [#7887](https://github.com/thirdweb-dev/js/pull/7887) [`e01af9d`](https://github.com/thirdweb-dev/js/commit/e01af9db7128a66b8bc7297911f713eb828da3cc) Thanks [@leo-shi-dacheng](https://github.com/leo-shi-dacheng)! - fix: #7886
+
 ## 5.105.35
 
 ### Patch Changes
