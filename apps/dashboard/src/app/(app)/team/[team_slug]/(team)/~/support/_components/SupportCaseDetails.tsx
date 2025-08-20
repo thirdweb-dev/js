@@ -57,6 +57,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
       const result = await submitSupportFeedback({
         rating,
         feedback,
+        ticketId: ticket.id,
       });
 
       if ("error" in result) {

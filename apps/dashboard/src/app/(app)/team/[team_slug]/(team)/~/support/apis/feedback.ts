@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 interface FeedbackData {
   rating: number;
   feedback: string;
+  ticketId: string;
 }
 
 export async function submitSupportFeedback(
@@ -54,6 +55,7 @@ export async function submitSupportFeedback(
     console.log("🔍 Attempting to insert feedback data:", {
       rating: data.rating,
       feedbackLength: data.feedback?.length || 0,
+      ticketId: data.ticketId,
     });
 
     const { data: insertData, error } = await supabase
@@ -61,6 +63,7 @@ export async function submitSupportFeedback(
       .insert({
         rating: data.rating,
         feedback: data.feedback,
+        ticket_id: data.ticketId,
       });
 
     console.log("🔍 Debug - Insert result:", {
