@@ -13,7 +13,6 @@ import type {
   UniversalBridgeWalletStats,
   UserOpStats,
   WalletStats,
-  WalletUserStats,
   WebhookLatencyStats,
   WebhookRequestStats,
   WebhookSummaryStats,
@@ -147,7 +146,13 @@ const cached_getWalletConnections = unstable_cache(
     }
 
     const json = await res.json();
-    return json.data as WalletStats[];
+    return (json.data as WalletStats[]).filter(
+      (w) =>
+        w.walletType !== "smart" &&
+        w.walletType !== "smartWallet" &&
+        w.walletType !== "inApp" &&
+        w.walletType !== "inAppWallet",
+    );
   },
   ["getWalletConnections"],
   {
@@ -396,44 +401,6 @@ export function getRpcUsageByType(
   authToken: string,
 ) {
   return cached_getRpcUsageByType(normalizedParams(params), authToken);
-}
-
-const cached_getWalletUsers = unstable_cache(
-  async (
-    params: AnalyticsQueryParams,
-    authToken: string,
-  ): Promise<WalletUserStats[]> => {
-    const searchParams = buildSearchParams(params);
-    const res = await fetchAnalytics({
-      authToken,
-      url: `v2/sdk/wallet-connects/users?${searchParams.toString()}`,
-      init: {
-        method: "GET",
-      },
-    });
-
-    if (res?.status !== 200) {
-      const reason = await res?.text();
-      console.error(
-        `Failed to fetch wallet user stats: ${res?.status} - ${res.statusText} - ${reason}`,
-      );
-      return [];
-    }
-
-    const json = await res.json();
-    return json.data as WalletUserStats[];
-  },
-  ["getWalletUsers"],
-  {
-    revalidate: 60 * 60, // 1 hour
-  },
-);
-
-export function getWalletUsers(
-  params: AnalyticsQueryParams,
-  authToken: string,
-) {
-  return cached_getWalletUsers(normalizedParams(params), authToken);
 }
 
 type ActiveStatus = {

@@ -58,6 +58,7 @@ interface WebhookSingleResponse {
 }
 
 interface TestWebhookPayload {
+  webhook_id?: string;
   webhook_url: string;
   type?: "event" | "transaction";
 }

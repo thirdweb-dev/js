@@ -40,7 +40,7 @@ type AsyncInAppWalletAnalyticsProps = Omit<
 async function AsyncInAppWalletAnalytics(
   props: AsyncInAppWalletAnalyticsProps,
 ) {
-  const range = props.range ?? getLastNDaysRange("last-120");
+  const range = props.range ?? getLastNDaysRange("last-30");
 
   const stats = await getInAppWalletUsage(
     {

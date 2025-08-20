@@ -1,6 +1,6 @@
 import { subDays } from "date-fns";
 import { redirect } from "next/navigation";
-import { getWalletConnections } from "@/api/analytics";
+import { getInAppWalletUsage } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getProjects, type Project } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
@@ -90,7 +90,8 @@ async function getProjectsWithAnalytics(
         const today = new Date();
         const thirtyDaysAgo = subDays(today, 30);
 
-        const data = await getWalletConnections(
+        // TODO (stats): also add the external wallet usage?
+        const data = await getInAppWalletUsage(
           {
             from: thirtyDaysAgo,
             period: "all",

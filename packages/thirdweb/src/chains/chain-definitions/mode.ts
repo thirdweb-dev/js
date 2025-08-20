@@ -10,7 +10,7 @@ export const mode = /* @__PURE__ */ defineChain({
       url: "https://explorer.mode.network/",
     },
   ],
-  id: 919,
+  id: 34443,
   name: "Mode",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
 });

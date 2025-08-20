@@ -16,7 +16,6 @@ import {
   getUniversalBridgeUsage,
   getUserOpUsage,
   getWalletConnections,
-  getWalletUsers,
   isProjectActive,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
@@ -364,7 +363,7 @@ async function AsyncAppHighlightsCard(props: {
 }) {
   const [walletUserStatsTimeSeries, universalBridgeUsage] =
     await Promise.allSettled([
-      getWalletUsers(
+      getInAppWalletUsage(
         {
           from: props.range.from,
           period: props.interval,
@@ -389,7 +388,7 @@ async function AsyncAppHighlightsCard(props: {
   if (
     walletUserStatsTimeSeries.status === "fulfilled" &&
     universalBridgeUsage.status === "fulfilled"
-  )
+  ) {
     return (
       <div>
         <ProjectHighlightsCard
@@ -410,6 +409,7 @@ async function AsyncAppHighlightsCard(props: {
         />
       </div>
     );
+  }
 
   return (
     <EmptyStateCard
@@ -439,27 +439,25 @@ async function AsyncWalletDistributionCard(props: {
     <WalletDistributionCard data={walletConnections} />
   ) : (
     <EmptyStateCard
-      link="https://portal.thirdweb.com/wallets"
-      metric="Wallets"
+      link="https://portal.thirdweb.com/wallets/external-wallets"
+      metric="External Wallets"
     />
   );
 }
 
 async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
   const formattedData = await Promise.all(
-    data
-      .filter((w) => w.walletType !== "smart" && w.walletType !== "smartWallet")
-      .map(async (w) => {
-        const wallet = await getWalletInfo(w.walletType as WalletId).catch(
-          () => ({ name: w.walletType }),
-        );
-        return {
-          totalConnections: w.totalConnections,
-          uniqueWalletsConnected: w.uniqueWalletsConnected,
-          walletName: wallet.name,
-          walletType: w.walletType,
-        };
-      }),
+    data.map(async (w) => {
+      const wallet = await getWalletInfo(w.walletType as WalletId).catch(
+        () => ({ name: w.walletType }),
+      );
+      return {
+        totalConnections: w.totalConnections,
+        uniqueWalletsConnected: w.uniqueWalletsConnected,
+        walletName: wallet.name,
+        walletType: w.walletType,
+      };
+    }),
   );
 
   return (
@@ -470,7 +468,7 @@ async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
           value: uniqueWalletsConnected,
         };
       })}
-      title="Wallets Connected"
+      title="External Wallets Connected"
     />
   );
 }

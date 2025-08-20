@@ -41,7 +41,7 @@ export function useTestWebhook(clientId: string) {
       });
 
       const result = await testWebhook(
-        { type, webhook_url: webhookUrl },
+        { type, webhook_url: webhookUrl, webhook_id: id },
         clientId,
       );
 

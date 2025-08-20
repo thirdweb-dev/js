@@ -120,6 +120,7 @@ function createInAppWalletStatsStub(days: number): InAppWalletStats[] {
       authenticationMethod: pickRandomAuthMethod(),
       date: new Date(2024, 11, d).toLocaleString(),
       uniqueWalletsConnected: uniqueWallets,
+      newUsers: Math.floor(Math.random() * 100) + 1,
     });
 
     if (Math.random() > 0.7) {
