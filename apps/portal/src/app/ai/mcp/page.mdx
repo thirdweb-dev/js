@@ -1,4 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { ArrowDownIcon } from "lucide-react";
+import Link from "next/link";
 
 # MCP server
 
@@ -29,13 +32,24 @@ You can also use the MCP server on your own LLM client, like cursor, claude code
 
 <TabsContent value="cursor">
 
-Add the following to your `.cursor/mcp.json` file:
+<Button
+  asChild
+  className="flex items-center gap-3 bg-card mb-4 justify-start w-fit shadow-md hover:shadow-lg transition-shadow border-2"
+  variant="outline"
+>
+  <Link href="cursor://anysphere.cursor-deeplink/mcp/install?name=thirdweb-api&config=eyJ1cmwiOiJodHRwczovL2FwaS50aGlyZHdlYi5jb20vbWNwP3NlY3JldEtleT1ZT1VSX1NFQ1JFVF9LRVlfSEVSRSJ9" className="flex items-center gap-3">
+    <ArrowDownIcon className="size-4 flex-shrink-0" />
+    <span>Install into Cursor</span>
+  </Link>
+</Button>
+
+Add the following to your `.cursor/mcp.json` file (replace `YOUR_SECRET_KEY_HERE` with your thirdweb secret key):
 
 ```json
 {
   "mcpServers": {
     "thirdweb-api": {
-      "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>",
+      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
     }
   }
 }
@@ -51,7 +65,7 @@ Add the following to your `~/.codeium/windsurf/mcp_config.json` file:
 {
   "mcpServers": {
     "thirdweb-api": {
-      "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>",
+      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE",
     }
   }
 }
@@ -61,13 +75,24 @@ Add the following to your `~/.codeium/windsurf/mcp_config.json` file:
 
 <TabsContent value="vscode">
 
-Add the following to your VS Code `.vscode/mcp.json` file:
+<Button
+  asChild
+  className="flex items-center gap-3 bg-card mb-4 justify-start w-fit shadow-md hover:shadow-lg transition-shadow border-2"
+  variant="outline"
+>
+  <Link href="https://vscode.dev/redirect/mcp/install?name=thirdweb&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fapi.thirdweb.com%2Fmcp%22%7D" className="flex items-center gap-3">
+    <ArrowDownIcon className="size-4 flex-shrink-0" />
+    <span>Install into VS Code</span>
+  </Link>
+</Button>
+
+Add the following to your VS Code `.vscode/mcp.json` file (replace `YOUR_SECRET_KEY_HERE` with your thirdweb secret key):
 
 ```json
 {
   "mcp.servers": {
     "thirdweb-api": {
-      "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>",
+      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE",
     }
   }
 }
@@ -77,10 +102,10 @@ Add the following to your VS Code `.vscode/mcp.json` file:
 
 <TabsContent value="claudecode">
 
-Run the following command to add the MCP server to your Claude Code configuration:
+Run the following command to add the MCP server to your Claude Code configuration (replace `YOUR_SECRET_KEY_HERE` with your thirdweb secret key):
 
 ```bash
-claude mcp add --transport http "thirdweb-api" "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>"
+claude mcp add --transport http "thirdweb-api" "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
 ```
 
 </TabsContent>
@@ -139,4 +164,3 @@ List my contracts
 ```
 approve 100 USDC from treasury wallet to executor wallet
 ```
-
