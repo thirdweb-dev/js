@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { ChevronDownIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { Team } from "@/api/team/get-team";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,7 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
+import { submitSupportFeedback } from "../apis/feedback";
 import { sendMessageToTicket } from "../apis/support";
 import type { SupportMessage, SupportTicket } from "../types/tickets";
 import {
@@ -36,6 +37,42 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [localMessages, setLocalMessages] = useState(ticket.messages || []);
+
+  // rating/feedback
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+
+  const handleStarClick = (starIndex: number) => {
+    setRating(starIndex + 1);
+  };
+
+  const handleSendFeedback = useCallback(async () => {
+    if (rating === 0) {
+      toast.error("Please select a rating");
+      return;
+    }
+
+    try {
+      const result = await submitSupportFeedback({
+        rating,
+        feedback,
+        ticketId: ticket.id,
+      });
+
+      if ("error" in result) {
+        throw new Error(result.error);
+      }
+
+      toast.success("Thank you for your feedback!");
+      setFeedbackSubmitted(true);
+      setRating(0);
+      setFeedback("");
+    } catch (error) {
+      console.error("Failed to submit feedback:", error);
+      toast.error("Failed to submit feedback. Please try again.");
+    }
+  }, [rating, feedback, ticket.id]);
 
   const handleSendReply = async () => {
     if (!team.unthreadCustomerId) {
@@ -149,13 +186,73 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
           )}
         </div>
 
+        {/* Feedback Section - Only show for closed tickets */}
         {ticket.status === "closed" && (
-          <div className="border-t p-6">
-            <p className="text-muted-foreground text-sm">
-              This ticket is closed. If you need further assistance, please
-              create a new ticket.
-            </p>
-          </div>
+          <>
+            {!feedbackSubmitted && (
+              <>
+                <div className="border-t p-6">
+                  <p className="text-muted-foreground text-sm">
+                    This ticket is closed. Give us a quick rating to let us know
+                    how we did!
+                  </p>
+                </div>
+
+                <div className="flex gap-2 mb-6 px-6">
+                  {[1, 2, 3, 4, 5].map((starValue) => (
+                    <button
+                      key={`star-${starValue}`}
+                      type="button"
+                      onClick={() => handleStarClick(starValue - 1)}
+                      className="transition-colors"
+                      aria-label={`Rate ${starValue} out of 5 stars`}
+                    >
+                      <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill={starValue <= rating ? "#ff00aa" : "none"}
+                        stroke={starValue <= rating ? "#ff00aa" : "#666"}
+                        strokeWidth={starValue <= rating ? "2" : "1"}
+                        className="hover:fill-pink-500 hover:stroke-pink-500 rounded-sm"
+                        rx="2"
+                        aria-hidden="true"
+                      >
+                        <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative p-6">
+                  <div className="relative">
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Optional: Tell us how we can improve."
+                      className="text-muted-foreground text-sm w-full bg-black text-white rounded-lg p-4 pr-28 min-h-[100px] resize-none border border-[#262626] focus:border-[#262626] focus:outline-none placeholder-[#A1A1A1]"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSendFeedback}
+                      className="absolute mb-2 bottom-3 right-3 bg-white text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors"
+                    >
+                      Send Feedback
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {feedbackSubmitted && (
+              <div className="border-t p-6">
+                <p className="text-muted-foreground text-sm">
+                  This ticket is closed. If you need further assistance, please
+                  create a new ticket.
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
 
