@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { ChevronDownIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { Team } from "@/api/team/get-team";
 import { Badge } from "@/components/ui/badge";
@@ -47,7 +47,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
     setRating(starIndex + 1);
   };
 
-  const handleSendFeedback = async () => {
+  const handleSendFeedback = useCallback(async () => {
     if (rating === 0) {
       toast.error("Please select a rating");
       return;
@@ -72,7 +72,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
       console.error("Failed to submit feedback:", error);
       toast.error("Failed to submit feedback. Please try again.");
     }
-  };
+  }, [rating, feedback, ticket.id]);
 
   const handleSendReply = async () => {
     if (!team.unthreadCustomerId) {
