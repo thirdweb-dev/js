@@ -12,9 +12,9 @@ import {
 import type { CreateTokenOptions } from "./types.js";
 
 export async function predictAddress(options: CreateTokenOptions) {
-  const { client, params, launchConfig } = options;
+  const { client, params, launchConfig, account } = options;
 
-  const creator = params.owner;
+  const creator = params.owner || account.address;
   const encodedInitData = await encodeInitParams({
     client,
     creator,
