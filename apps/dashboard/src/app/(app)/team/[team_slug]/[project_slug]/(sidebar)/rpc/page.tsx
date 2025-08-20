@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
+import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
@@ -44,19 +45,41 @@ export default async function Page(props: {
   });
 
   return (
-    <ResponsiveSearchParamsProvider value={searchParams}>
-      <div>
-        <RPCAnalytics
-          client={client}
-          interval={interval}
-          projectClientId={project.publishableKey}
-          projectId={project.id}
-          range={range}
-          authToken={authToken}
-          teamId={project.teamId}
-        />
-        <div className="h-10" />
-      </div>
-    </ResponsiveSearchParamsProvider>
+    <ProjectPage
+      header={{
+        client,
+        title: "RPC",
+        description:
+          "Remote Procedure Call (RPC) provides reliable access to querying data and interacting with the blockchain through global edge RPCs.",
+        actions: {
+          primary: {
+            label: "Documentation",
+            href: "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
+            external: true,
+          },
+        },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
+          },
+        ],
+      }}
+    >
+      <ResponsiveSearchParamsProvider value={searchParams}>
+        <div>
+          <RPCAnalytics
+            client={client}
+            interval={interval}
+            projectClientId={project.publishableKey}
+            projectId={project.id}
+            range={range}
+            authToken={authToken}
+            teamId={project.teamId}
+          />
+          <div className="h-10" />
+        </div>
+      </ResponsiveSearchParamsProvider>
+    </ProjectPage>
   );
 }

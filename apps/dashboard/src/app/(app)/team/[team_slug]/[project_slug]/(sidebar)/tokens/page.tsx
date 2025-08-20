@@ -1,3 +1,5 @@
+import { Button } from "@workspace/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -6,11 +8,19 @@ import { getSortedDeployedContracts } from "@/api/project/getSortedDeployedContr
 import { getProject } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
 import { ClientOnly } from "@/components/blocks/client-only";
+import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { ContractTable } from "@/components/contract-components/tables/contract-table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
-import { Cards } from "./cards";
+import { Cards, ImportTokenButton } from "./cards";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -41,51 +51,75 @@ export default async function Page(props: {
   });
 
   return (
-    <div className="flex grow flex-col">
-      <AssetsHeader />
-      <div className="container max-w-7xl pt-8 pb-20">
-        <Cards
+    <ProjectPage
+      header={{
+        client,
+        title: "Tokens",
+        description: "Create and manage tokens for your project",
+        actions: {
+          primary: {
+            component: (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="gap-1.5 rounded-full">
+                    <PlusIcon className="size-4" />
+                    Create Token
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Create Token</DialogTitle>
+                  </DialogHeader>
+                  <Cards
+                    client={client}
+                    projectId={project.id}
+                    projectSlug={params.project_slug}
+                    teamId={team.id}
+                    teamSlug={params.team_slug}
+                  />
+                </DialogContent>
+              </Dialog>
+            ),
+          },
+          secondary: {
+            component: (
+              <ImportTokenButton
+                client={client}
+                projectId={project.id}
+                projectSlug={params.project_slug}
+                teamId={team.id}
+                teamSlug={params.team_slug}
+              />
+            ),
+          },
+        },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/tokens",
+          },
+          {
+            type: "playground",
+            href: "https://playground.thirdweb.com/tokens/token-components",
+          },
+          {
+            type: "api",
+            href: "https://api.thirdweb.com/reference#tag/tokens",
+          },
+        ],
+      }}
+    >
+      <Suspense fallback={<GenericLoadingPage />}>
+        <AssetsPageAsync
+          authToken={authToken}
           client={client}
           projectId={project.id}
           projectSlug={params.project_slug}
           teamId={team.id}
           teamSlug={params.team_slug}
         />
-
-        <div className="mt-10 mb-3">
-          <h2 className="font-semibold text-2xl tracking-tight">Your Tokens</h2>
-          <p className="text-muted-foreground">
-            List of all tokens created or imported into this project
-          </p>
-        </div>
-
-        <Suspense fallback={<GenericLoadingPage />}>
-          <AssetsPageAsync
-            authToken={authToken}
-            client={client}
-            projectId={project.id}
-            projectSlug={params.project_slug}
-            teamId={team.id}
-            teamSlug={params.team_slug}
-          />
-        </Suspense>
-      </div>
-    </div>
-  );
-}
-
-function AssetsHeader() {
-  return (
-    <div className="border-b">
-      <div className="container max-w-7xl py-10">
-        <h1 className="font-semibold text-2xl tracking-tight lg:text-3xl">
-          Tokens
-        </h1>
-        <p className="text-muted-foreground">
-          Create and manage tokens for your project
-        </p>
-      </div>
-    </div>
+      </Suspense>
+    </ProjectPage>
   );
 }
 

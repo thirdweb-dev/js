@@ -91,7 +91,7 @@ export function FullWidthSidebarLayout(props: {
         <main className="flex min-w-0 grow flex-col max-sm:w-full">
           {children}
         </main>
-        <AppFooter containerClassName="max-w-7xl" />
+        <AppFooter />
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export function ResponsiveTimeFilters(props: { defaultRange: DurationId }) {
   });
 
   return (
-    <div className="flex justify-end gap-3 flex-col lg:flex-row">
+    <div className="flex gap-3 flex-row">
       <DateRangeSelector
         className="rounded-full"
         range={range}

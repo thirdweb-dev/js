@@ -182,6 +182,22 @@ export function AccountAbstractionSettingsPage(
 
   return (
     <div className="">
+      <div className="pb-4 lg:pb-6">
+        <h2 className="text-xl font-semibold tracking-tight mb-0.5">
+          Sponsorship policies
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Configure the rules for your sponsored transactions.{" "}
+          <UnderlineLink
+            className="text-primary-500"
+            href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            View documentation
+          </UnderlineLink>
+        </p>
+      </div>
       <Form {...form}>
         <form
           className="bg-card border rounded-lg"
@@ -256,23 +272,6 @@ export function AccountAbstractionSettingsPage(
             );
           })}
         >
-          <div className="p-4 lg:p-6 border-b border-dashed">
-            <h2 className="text-xl font-semibold tracking-tight mb-0.5">
-              Sponsorship policies
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Configure the rules for your sponsored transactions.{" "}
-              <UnderlineLink
-                className="text-primary-500"
-                href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                View documentation
-              </UnderlineLink>
-            </p>
-          </div>
-
           <DynamicHeight>
             <FormField
               control={form.control}

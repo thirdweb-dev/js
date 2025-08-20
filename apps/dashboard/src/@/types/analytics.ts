@@ -60,13 +60,6 @@ export interface UniversalBridgeWalletStats {
   developerFeeUsdCents: number;
 }
 
-export interface WebhookRequestStats {
-  date: string;
-  webhookId: string;
-  httpStatusCode: number;
-  totalRequests: number;
-}
-
 export interface WebhookLatencyStats {
   date: string;
   webhookId: string;

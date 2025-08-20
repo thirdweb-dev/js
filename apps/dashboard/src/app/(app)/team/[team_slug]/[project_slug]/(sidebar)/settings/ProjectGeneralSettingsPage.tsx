@@ -10,9 +10,9 @@ import {
 import { format } from "date-fns";
 import {
   CircleAlertIcon,
-  ExternalLinkIcon,
   RefreshCcwIcon,
   TriangleAlertIcon,
+  WrenchIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -220,10 +220,10 @@ export function ProjectGeneralSettingsPageUI(props: {
   const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
 
   const paths = {
-    aaConfig: `${projectLayout}/account-abstraction/settings`,
+    aaConfig: `${projectLayout}/settings/account-abstraction`,
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
-    inAppConfig: `${projectLayout}/wallets/settings`,
-    payConfig: `${projectLayout}/payments/settings`,
+    inAppConfig: `${projectLayout}/settings/wallets`,
+    payConfig: `${projectLayout}/settings/payments`,
   };
 
   const { project } = props;
@@ -784,8 +784,7 @@ function EnabledServicesSetting(props: {
                         variant="outline"
                       >
                         <Link href={configurationLink}>
-                          Configure
-                          <ExternalLinkIcon className="size-3 text-muted-foreground" />
+                          <WrenchIcon className="size-3" /> Configure
                         </Link>
                       </Button>
                     </div>

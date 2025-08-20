@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
-import { isFeatureFlagEnabled } from "@/analytics/posthog-server";
 import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
-import { getProject, getProjects, type Project } from "@/api/project/projects";
+import { getProject, getProjects } from "@/api/project/projects";
 import { getTeamBySlug, getTeams } from "@/api/team/get-team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
 import { AnnouncementBanner } from "@/components/misc/AnnouncementBanner";
@@ -13,7 +12,7 @@ import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-l
 import { StaffModeNotice } from "../../(team)/_components/StaffModeNotice";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
-import { getEngineInstances } from "./engine/dedicated/_utils/getEngineInstances";
+import { getEngineInstances } from "./engine/_utils/getEngineInstances";
 
 export default async function ProjectLayout(props: {
   children: React.ReactNode;
@@ -57,18 +56,12 @@ export default async function ProjectLayout(props: {
     teamId: team.id,
   });
 
-  const [engineLinkType, isCentralizedWebhooksFeatureFlagEnabled] =
-    await Promise.all([
-      getEngineLinkType({
-        authToken,
-        project,
-      }),
-      isFeatureFlagEnabled({
-        flagKey: "centralized-webhooks",
-        accountId: account.id,
-        email: account.email,
-      }),
-    ]);
+  const engineInstances = await getEngineInstances({
+    authToken: authToken,
+    teamIdOrSlug: project.teamId,
+  });
+
+  const hasEngineInstances = !!engineInstances.data?.length;
 
   const isStaffMode = !teams.some((t) => t.slug === team.slug);
 
@@ -88,11 +81,8 @@ export default async function ProjectLayout(props: {
           />
         </div>
         <ProjectSidebarLayout
-          engineLinkType={engineLinkType}
           layoutPath={layoutPath}
-          isCentralizedWebhooksFeatureFlagEnabled={
-            isCentralizedWebhooksFeatureFlagEnabled
-          }
+          hasEngineInstances={hasEngineInstances}
         >
           {props.children}
         </ProjectSidebarLayout>
@@ -109,31 +99,4 @@ export default async function ProjectLayout(props: {
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </SidebarProvider>
   );
-}
-
-async function getEngineLinkType(params: {
-  authToken: string;
-  project: Project;
-}) {
-  const projectEngineCloudService = params.project.services.find(
-    (service) => service.name === "engineCloud",
-  );
-
-  const engineCloudToken = projectEngineCloudService?.managementAccessToken;
-
-  // if we have a management access token, link to engine cloud page
-  let engineLinkType: "cloud" | "dedicated" = "cloud";
-
-  // if we don't have a engine cloud management access token, check if there are any legacy engine instances
-  if (!engineCloudToken) {
-    const engineInstances = await getEngineInstances({
-      authToken: params.authToken,
-      teamIdOrSlug: params.project.teamId,
-    });
-    // if we have any legacy engine instances, link to the legacy engine page
-    if (engineInstances.data && engineInstances.data.length > 0) {
-      engineLinkType = "dedicated";
-    }
-  }
-  return engineLinkType;
 }
