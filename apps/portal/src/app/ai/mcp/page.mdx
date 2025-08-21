@@ -65,7 +65,7 @@ Add the following to your `~/.codeium/windsurf/mcp_config.json` file:
 {
   "mcpServers": {
     "thirdweb-api": {
-      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE",
+      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
     }
   }
 }
@@ -80,7 +80,7 @@ Add the following to your `~/.codeium/windsurf/mcp_config.json` file:
   className="flex items-center gap-3 bg-card mb-4 justify-start w-fit shadow-md hover:shadow-lg transition-shadow border-2"
   variant="outline"
 >
-  <Link href="https://vscode.dev/redirect/mcp/install?name=thirdweb-api&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fapi.thirdweb.com%2Fmcp%22%7D" className="flex items-center gap-3">
+  <Link href="https://vscode.dev/redirect/mcp/install?name=thirdweb-api&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fapi.thirdweb.com%2Fmcp%22%2C%22secret%22%3A%22YOUR_SECRET%22%7D" className="flex items-center gap-3" target="_blank" rel="noopener noreferrer">
     <ArrowDownIcon className="size-4 flex-shrink-0" />
     <span>Install into VS Code</span>
   </Link>
@@ -92,7 +92,7 @@ Add the following to your VS Code `.vscode/mcp.json` file (replace `YOUR_SECRET_
 {
   "mcp.servers": {
     "thirdweb-api": {
-      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE
+      "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
     }
   }
 }
