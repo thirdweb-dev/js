@@ -18,7 +18,7 @@ export function AdvancedSection({
           Advanced features to drive revenue in your app.
         </p>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <FeatureCard
           title="Customized Experience"
           description="Build your own branded experiences with the HTTP API or TypeScript SDK."
@@ -41,7 +41,7 @@ export function AdvancedSection({
           id="webhooks"
           features={["Instant events", "Transaction verification"]}
           link={{
-            href: `/team/${teamSlug}/${projectSlug}/payments/webhooks`,
+            href: `/team/${teamSlug}/${projectSlug}/webhooks/payments`,
             label: "Setup Webhooks",
           }}
         />

@@ -8,7 +8,7 @@ type FooterSectionProps = {
   }[];
 };
 
-type FooterCardProps = {
+export type FooterCardProps = {
   left: FooterSectionProps;
   center: FooterSectionProps;
   right: FooterSectionProps;

@@ -1,14 +1,20 @@
 "use client";
 
-import { BadgeDollarSignIcon, CodeIcon, LinkIcon } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import {
+  BadgeDollarSignIcon,
+  CodeIcon,
+  LinkIcon,
+  PlusIcon,
+} from "lucide-react";
+import { CreatePaymentLinkButton } from "../links/components/CreatePaymentLinkButton.client";
 import { FeatureCard } from "./FeatureCard.client";
 
-export function QuickStartSection({
-  teamSlug,
-  projectSlug,
-}: {
+export function QuickStartSection(props: {
   teamSlug: string;
   projectSlug: string;
+  clientId: string;
+  teamId: string;
 }) {
   return (
     <section>
@@ -35,10 +41,21 @@ export function QuickStartSection({
             "Get paid in any token",
             "Send instantly",
           ]}
-          link={{
-            href: `/team/${teamSlug}/${projectSlug}/payments/links`,
-            label: "Create Link",
-          }}
+          action={
+            <CreatePaymentLinkButton
+              clientId={props.clientId}
+              teamId={props.teamId}
+            >
+              <Button
+                className="w-full gap-2 group text-foreground"
+                size="sm"
+                variant="outline"
+              >
+                <PlusIcon className="size-4" />
+                Create Payment Link
+              </Button>
+            </CreatePaymentLinkButton>
+          }
         />
         <FeatureCard
           title="Earn Fees"
@@ -53,7 +70,7 @@ export function QuickStartSection({
             "Directly to your wallet",
           ]}
           link={{
-            href: `/team/${teamSlug}/${projectSlug}/payments/settings`,
+            href: `/team/${props.teamSlug}/${props.projectSlug}/settings/payments`,
             label: "Configure Fees",
           }}
         />

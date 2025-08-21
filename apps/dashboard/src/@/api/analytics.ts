@@ -14,7 +14,6 @@ import type {
   UserOpStats,
   WalletStats,
   WebhookLatencyStats,
-  WebhookRequestStats,
   WebhookSummaryStats,
 } from "@/types/analytics";
 import { getChains } from "./chain";
@@ -660,7 +659,7 @@ export function getEngineCloudMethodUsage(
   return cached_getEngineCloudMethodUsage(normalizedParams(params), authToken);
 }
 
-const cached_getWebhookSummary = unstable_cache(
+const _cached_getWebhookSummary = unstable_cache(
   async (
     params: AnalyticsQueryParams & { webhookId: string },
     authToken: string,
@@ -688,51 +687,7 @@ const cached_getWebhookSummary = unstable_cache(
   },
 );
 
-export function getWebhookSummary(
-  params: AnalyticsQueryParams & { webhookId: string },
-  authToken: string,
-) {
-  return cached_getWebhookSummary(normalizedParams(params), authToken);
-}
-
-const cached_getWebhookRequests = unstable_cache(
-  async (
-    params: AnalyticsQueryParams & { webhookId?: string },
-    authToken: string,
-  ): Promise<{ data: WebhookRequestStats[] } | { error: string }> => {
-    const searchParams = buildSearchParams(params);
-    if (params.webhookId) {
-      searchParams.append("webhookId", params.webhookId);
-    }
-
-    const res = await fetchAnalytics({
-      authToken,
-      url: `v2/webhook/requests?${searchParams.toString()}`,
-      init: {
-        method: "GET",
-      },
-    });
-    if (!res.ok) {
-      const reason = await res.text();
-      return { error: reason };
-    }
-
-    return (await res.json()) as { data: WebhookRequestStats[] };
-  },
-  ["getWebhookRequests"],
-  {
-    revalidate: 60 * 60, // 1 hour
-  },
-);
-
-export function getWebhookRequests(
-  params: AnalyticsQueryParams & { webhookId?: string },
-  authToken: string,
-) {
-  return cached_getWebhookRequests(normalizedParams(params), authToken);
-}
-
-const cached_getWebhookLatency = unstable_cache(
+const _cached_getWebhookLatency = unstable_cache(
   async (
     params: AnalyticsQueryParams & { webhookId?: string },
     authToken: string,
@@ -761,13 +716,6 @@ const cached_getWebhookLatency = unstable_cache(
     revalidate: 60 * 60, // 1 hour
   },
 );
-
-export function getWebhookLatency(
-  params: AnalyticsQueryParams & { webhookId?: string },
-  authToken: string,
-) {
-  return cached_getWebhookLatency(normalizedParams(params), authToken);
-}
 
 const cached_getInsightChainUsage = unstable_cache(
   async (

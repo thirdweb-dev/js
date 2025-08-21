@@ -16,7 +16,7 @@ import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { formatTokenAmount } from "./format";
 import { TableRow } from "./PaymentsTableRow";
 
-const pageSize = 50;
+const pageSize = 20;
 
 export function PaymentHistory(props: {
   client: ThirdwebClient;

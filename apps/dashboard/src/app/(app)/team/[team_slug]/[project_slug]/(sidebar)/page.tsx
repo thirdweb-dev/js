@@ -26,6 +26,7 @@ import type {
 } from "@/components/analytics/date-range-selector";
 import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
+import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import type {
@@ -104,25 +105,19 @@ export default async function ProjectOverviewPage(props: PageProps) {
 
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
-      <div className="flex grow flex-col">
-        <div className="w-full border-b py-10">
-          <div className="container max-w-7xl">
-            <Header
-              defaultRange={defaultRange}
-              showRangeSelector={isActive}
-              title={project.name}
-            />
-          </div>
-        </div>
-
-        <div className="h-6" />
-
-        {!isActive ? (
-          <div className="container max-w-7xl">
-            <ProjectFTUX project={project} teamSlug={params.team_slug} />
-          </div>
-        ) : (
-          <div className="container flex max-w-7xl grow flex-col">
+      <ProjectPage
+        header={{
+          client,
+          title: project.name,
+          description: "Your project's overview and analytics",
+          imageUrl: project.image,
+          // explicitly NO actions on the overview page
+          actions: null,
+        }}
+      >
+        {isActive ? (
+          <div className="flex flex-col gap-4 md:gap-6">
+            <ResponsiveTimeFilters defaultRange={defaultRange} />
             <ProjectAnalytics
               authToken={authToken}
               client={client}
@@ -133,10 +128,10 @@ export default async function ProjectOverviewPage(props: PageProps) {
               searchParams={searchParams}
             />
           </div>
+        ) : (
+          <ProjectFTUX project={project} teamSlug={params.team_slug} />
         )}
-
-        <div className="h-20" />
-      </div>
+      </ProjectPage>
     </ResponsiveSearchParamsProvider>
   );
 }

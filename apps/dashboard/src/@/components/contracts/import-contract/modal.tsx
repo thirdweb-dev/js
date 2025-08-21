@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowDownToLineIcon, ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, ImportIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -234,7 +234,7 @@ function ImportForm(props: {
               {addContractToProject.isPending ? (
                 <Spinner className="size-4" />
               ) : (
-                <ArrowDownToLineIcon className="size-4" />
+                <ImportIcon className="size-4" />
               )}
 
               {addContractToProject.isPending ? "Importing" : "Import"}

@@ -6,10 +6,7 @@ import {
 } from "@/api/analytics";
 import type { Range } from "@/components/analytics/date-range-selector";
 import { Card } from "@/components/ui/card";
-import { CodeServer } from "@/components/ui/code/code.server";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BuyWidgetFTUX } from "./BuyWidgetFTUX";
-import { apiCode, embedCode, sdkCode } from "./code-examples";
 import { PayAnalyticsFilter } from "./PayAnalyticsFilter";
 import { PayCustomersTable } from "./PayCustomersTable";
 import { PaymentHistory } from "./PaymentHistory.client";
@@ -74,36 +71,7 @@ export async function PayAnalytics(props: {
   const hasWallet = walletData.some((d) => d.count > 0);
 
   if (!hasVolume && !hasWallet) {
-    return (
-      <BuyWidgetFTUX
-        clientId={props.projectClientId}
-        codeExamples={
-          {
-            api: (
-              <CodeServer
-                className="bg-background"
-                code={apiCode(props.projectClientId)}
-                lang="bash"
-              />
-            ),
-            embed: (
-              <CodeServer
-                className="bg-background"
-                code={embedCode(props.projectClientId)}
-                lang="tsx"
-              />
-            ),
-            sdk: (
-              <CodeServer
-                className="bg-background"
-                code={sdkCode(props.projectClientId)}
-                lang="ts"
-              />
-            ),
-          } as const
-        }
-      />
-    );
+    return null;
   }
 
   return (

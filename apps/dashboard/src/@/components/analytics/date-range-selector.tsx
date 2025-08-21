@@ -86,7 +86,9 @@ export function getLastNDaysRange(id: DurationId) {
     throw new Error(`Invalid duration id: ${id}`);
   }
 
-  const todayDate = new Date(Date.now());
+  const todayDate = new Date();
+  todayDate.setDate(todayDate.getDate() + 1); // Move to next day
+  todayDate.setHours(0, 0, 0, 0); // Set to start of next day (00:00)
 
   const value: Range = {
     from: subDays(todayDate, durationInfo.days),

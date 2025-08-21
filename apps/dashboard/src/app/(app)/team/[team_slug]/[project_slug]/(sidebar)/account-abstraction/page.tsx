@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import type { SearchParams } from "nuqs/server";
 import { getUserOpUsage } from "@/api/analytics";
@@ -8,8 +9,11 @@ import {
   getLastNDaysRange,
   type Range,
 } from "@/components/analytics/date-range-selector";
+import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getAbsoluteUrl } from "@/utils/vercel";
 import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
+import { SmartWalletsBillingAlert } from "./Alerts";
 import { AccountAbstractionAnalytics } from "./aa-analytics";
 import { searchParamLoader } from "./search-params";
 
@@ -77,22 +81,94 @@ export default async function Page(props: {
     teamId: project.teamId,
   });
 
-  return (
-    <div className="flex grow flex-col">
-      <AccountAbstractionSummary
-        projectId={project.id}
-        teamId={project.teamId}
-        authToken={authToken}
-      />
+  const isBundlerServiceEnabled = !!project.services.find(
+    (s) => s.name === "bundler",
+  );
 
-      <div className="h-10" />
-      <AccountAbstractionAnalytics
-        client={client}
-        projectId={project.id}
-        teamId={project.teamId}
-        teamSlug={params.team_slug}
-        userOpStats={userOpStats}
-      />
-    </div>
+  const hasSmartWalletsWithoutBilling =
+    isBundlerServiceEnabled &&
+    team.billingStatus !== "validPayment" &&
+    team.billingStatus !== "pastDue";
+
+  return (
+    <ProjectPage
+      header={{
+        client,
+        title: "Account Abstraction",
+        description:
+          "Integrate EIP-7702 and EIP-4337 compliant smart accounts for gasless sponsorships and more.",
+
+        actions: {
+          primary: {
+            label: "Documentation",
+            href: "https://portal.thirdweb.com/transactions/sponsor",
+            external: true,
+          },
+          secondary: {
+            label: "Playground",
+            href: "https://playground.thirdweb.com/account-abstraction/eip-7702",
+            external: true,
+          },
+        },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/transactions/sponsor",
+          },
+          {
+            type: "playground",
+            href: "https://playground.thirdweb.com/account-abstraction/eip-7702",
+          },
+          {
+            type: "settings",
+            href: `/team/${params.team_slug}/${params.project_slug}/settings/account-abstraction`,
+          },
+        ],
+      }}
+    >
+      {hasSmartWalletsWithoutBilling && (
+        <>
+          <SmartWalletsBillingAlert teamSlug={params.team_slug} />
+          <div className="h-10" />
+        </>
+      )}
+      <div className="flex grow flex-col gap-10">
+        <AccountAbstractionSummary
+          projectId={project.id}
+          teamId={project.teamId}
+          authToken={authToken}
+        />
+
+        <AccountAbstractionAnalytics
+          client={client}
+          projectId={project.id}
+          teamId={project.teamId}
+          teamSlug={params.team_slug}
+          userOpStats={userOpStats}
+        />
+      </div>
+    </ProjectPage>
   );
 }
+
+const seo = {
+  desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
+  title: "The Complete Account Abstraction Toolkit | thirdweb",
+};
+
+export const metadata: Metadata = {
+  description: seo.desc,
+  openGraph: {
+    description: seo.desc,
+    images: [
+      {
+        alt: seo.title,
+        height: 630,
+        url: `${getAbsoluteUrl()}/assets/og-image/dashboard-wallets-smart-wallet.png`,
+        width: 1200,
+      },
+    ],
+    title: seo.title,
+  },
+  title: seo.title,
+};

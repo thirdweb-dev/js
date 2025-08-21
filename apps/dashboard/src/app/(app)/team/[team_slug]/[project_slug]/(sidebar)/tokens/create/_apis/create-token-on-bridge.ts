@@ -4,6 +4,7 @@ import { isProd } from "@/constants/env-utils";
 export async function createTokenOnUniversalBridge(params: {
   chainId: number;
   tokenAddress: string;
+  pairedTokenAddress?: string;
   client: ThirdwebClient;
 }) {
   const domain = isProd ? "thirdweb.com" : "thirdweb-dev.com";
@@ -11,6 +12,7 @@ export async function createTokenOnUniversalBridge(params: {
     body: JSON.stringify({
       chainId: params.chainId.toString(),
       tokenAddress: params.tokenAddress,
+      pairedTokenAddress: params.pairedTokenAddress,
     }),
     headers: {
       "Content-Type": "application/json",

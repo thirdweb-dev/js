@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.105.37
+
+### Patch Changes
+
+- [#7872](https://github.com/thirdweb-dev/js/pull/7872) [`1083316`](https://github.com/thirdweb-dev/js/commit/1083316ef681c3f6ca4138acd00b1e945c5156d5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update createToken to return a prepared transaction
+
+## 5.105.36
+
+### Patch Changes
+
+- [#7887](https://github.com/thirdweb-dev/js/pull/7887) [`e01af9d`](https://github.com/thirdweb-dev/js/commit/e01af9db7128a66b8bc7297911f713eb828da3cc) Thanks [@leo-shi-dacheng](https://github.com/leo-shi-dacheng)! - fix: #7886
+
 ## 5.105.35
 
 ### Patch Changes
