@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import { defineChain, type ThirdwebClient } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import {
   TokenProvider,
   TokenSymbol,
@@ -35,6 +35,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { parseError } from "@/utils/errorParser";
 import { ChainOverview } from "../../_common/chain-overview";
 import { StepCard } from "../../_common/step-card";
@@ -308,6 +309,8 @@ export function LaunchNFT(props: {
     (nft) => nft.price_amount === props.values.nfts[0]?.price_amount,
   );
 
+  const chain = useV5DashboardChain(Number(formValues.collectionInfo.chain));
+
   const uniqueAttributes = useMemo(() => {
     const attributeNames = new Set<string>();
     for (const nft of props.values.nfts) {
@@ -500,8 +503,7 @@ export function LaunchNFT(props: {
                 {formValues.nfts[0].price_amount}{" "}
                 <TokenProvider
                   address={formValues.nfts[0].price_currency}
-                  // eslint-disable-next-line no-restricted-syntax
-                  chain={defineChain(Number(formValues.collectionInfo.chain))}
+                  chain={chain}
                   client={props.client}
                 >
                   <TokenSymbol

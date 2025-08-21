@@ -1,7 +1,6 @@
 "use client";
 import { useRef } from "react";
 import {
-  defineChain,
   encode,
   getContract,
   sendAndConfirmTransaction,
@@ -25,6 +24,7 @@ import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import { reportContractDeployed } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
+import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
@@ -41,6 +41,7 @@ export function CreateNFTPage(props: {
   const activeAccount = useActiveAccount();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
+  const getChain = useGetV5DashboardChain();
 
   function getAccount(params: { gasless: boolean }) {
     if (!activeAccount) {
@@ -59,9 +60,7 @@ export function CreateNFTPage(props: {
   }
 
   function getDeployedContract(params: { chain: string }) {
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineChain(Number(params.chain));
-
+    const chain = getChain(Number(params.chain));
     const contractAddress = contractAddressRef.current;
 
     if (!contractAddress) {
@@ -89,8 +88,7 @@ export function CreateNFTPage(props: {
       gasless: params.gasless,
     });
 
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineChain(Number(collectionInfo.chain));
+    const chain = getChain(Number(collectionInfo.chain));
 
     let contractAddress: string;
 

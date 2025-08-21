@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  defineChain,
   getAddress,
   NATIVE_TOKEN_ADDRESS,
   type ThirdwebClient,
@@ -18,6 +17,7 @@ import {
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { StepCard } from "../_common/step-card";
 import {
   type CreateAssetFormValues,
@@ -94,13 +94,15 @@ export function CreateTokenAssetPageUI(props: {
     reValidateMode: "onChange",
   });
 
+  const chain = useV5DashboardChain(Number(tokenInfoForm.watch("chain")));
+
   const isERC20AssetSupportedQuery = useQuery({
-    queryKey: ["is-erc20-asset-supported", tokenInfoForm.watch("chain")],
+    queryKey: ["is-erc20-asset-supported", chain],
     queryFn: async () => {
       try {
         const res = await getDeployedContractFactory({
           // eslint-disable-next-line no-restricted-syntax
-          chain: defineChain(Number(tokenInfoForm.watch("chain"))),
+          chain: chain,
           client: props.client,
         });
         return !!res;
@@ -114,15 +116,14 @@ export function CreateTokenAssetPageUI(props: {
     queryFn: async () => {
       try {
         return await isPoolRouterEnabled({
-          // eslint-disable-next-line no-restricted-syntax
-          chain: defineChain(Number(tokenInfoForm.watch("chain"))),
+          chain: chain,
           client: props.client,
         });
       } catch {
         return false;
       }
     },
-    queryKey: ["is-asset-router-enabled", tokenInfoForm.watch("chain")],
+    queryKey: ["is-asset-router-enabled", chain],
   });
 
   const defaultSaleMode = isERC20AssetSupportedQuery.data

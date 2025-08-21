@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import type { Chain, ChainMetadata } from "thirdweb/chains";
 import { useActiveWalletChain } from "thirdweb/react";
 import { useAllChainsData } from "@/hooks/chains/allChains";
@@ -25,6 +25,17 @@ export function useV5DashboardChain(
     // eslint-disable-next-line no-restricted-syntax
     return defineDashboardChain(chainId, idToChain.get(chainId));
   }, [chainId, idToChain]);
+}
+
+export function useGetV5DashboardChain() {
+  const { idToChain } = useAllChainsData();
+  return useCallback(
+    (chainId: number) => {
+      // eslint-disable-next-line no-restricted-syntax
+      return defineDashboardChain(chainId, idToChain.get(chainId));
+    },
+    [idToChain],
+  );
 }
 
 /**

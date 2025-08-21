@@ -1,7 +1,6 @@
 "use client";
 import { useRef } from "react";
 import {
-  defineChain,
   getAddress,
   getContract,
   NATIVE_TOKEN_ADDRESS,
@@ -33,6 +32,7 @@ import {
   DEFAULT_FEE_BPS_NEW,
   DEFAULT_FEE_RECIPIENT,
 } from "@/constants/addresses";
+import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
@@ -52,6 +52,7 @@ export function CreateTokenAssetPage(props: {
   const activeAccount = useActiveAccount();
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
+  const getChain = useGetV5DashboardChain();
 
   function getAccount(gasless: boolean) {
     if (!activeAccount) {
@@ -75,8 +76,7 @@ export function CreateTokenAssetPage(props: {
       throw new Error("Contract address not set");
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    const chain = defineChain(Number(params.chain));
+    const chain = getChain(Number(params.chain));
 
     return getContract({
       address: contractAddress,
@@ -111,10 +111,11 @@ export function CreateTokenAssetPage(props: {
       Number(params.values.supply) * (salePercent / 100),
     );
 
+    const chain = getChain(Number(params.values.chain));
+
     const contractAddress = await createToken({
       account,
-      // eslint-disable-next-line no-restricted-syntax
-      chain: defineChain(Number(params.values.chain)),
+      chain: chain,
       client: props.client,
       launchConfig:
         params.values.saleEnabled && saleAmount !== 0
@@ -245,10 +246,11 @@ export function CreateTokenAssetPage(props: {
       {} as Record<string, string>,
     );
 
+    const chain = getChain(Number(params.values.chain));
+
     const contractAddress = await deployERC20Contract({
       account,
-      // eslint-disable-next-line no-restricted-syntax
-      chain: defineChain(Number(values.chain)),
+      chain: chain,
       client: props.client,
       params: {
         description: values.description,
