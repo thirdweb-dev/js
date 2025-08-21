@@ -83,9 +83,7 @@ export function ImportEngineButton(props: {
   const importMutation = useMutation({
     mutationFn: async (importParams: ImportEngineParams) => {
       await importEngine({ ...importParams, teamIdOrSlug: props.teamSlug });
-      router.push(
-        `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`,
-      );
+      router.push(`/team/${props.teamSlug}/${props.projectSlug}/engine`);
     },
   });
 
