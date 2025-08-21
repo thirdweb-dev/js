@@ -10,7 +10,6 @@ import { loginRedirect } from "@/utils/redirects";
 import { AdvancedSection } from "./components/AdvancedSection.client";
 import { PayAnalytics } from "./components/PayAnalytics";
 import { QuickStartSection } from "./components/QuickstartSection.client";
-import { RecentPaymentsSection } from "./components/RecentPaymentsSection.client";
 import { getUniversalBridgeFiltersFromSearchParams } from "./components/time";
 import { CreatePaymentLinkButton } from "./links/components/CreatePaymentLinkButton.client";
 import { PaymentLinksTable } from "./links/components/PaymentLinksTable.client";
@@ -166,13 +165,6 @@ export default async function Page(props: {
             range={range}
             teamId={project.teamId}
             authToken={authToken}
-          />
-          <RecentPaymentsSection
-            jwt={authToken}
-            projectClientId={project.publishableKey}
-            teamId={project.teamId}
-            projectSlug={params.project_slug}
-            teamSlug={params.team_slug}
           />
 
           <PaymentLinksTable
