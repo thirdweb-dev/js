@@ -25,7 +25,7 @@ export default async function Page(props: {
 
   if (searchParams.importUrl) {
     redirect(
-      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated/import?importUrl=${searchParams.importUrl}`,
+      `/team/${params.team_slug}/${params.project_slug}/engine?importUrl=${searchParams.importUrl}`,
     );
   }
 
@@ -35,9 +35,7 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`,
-    );
+    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/engine`);
   }
 
   if (!team) {

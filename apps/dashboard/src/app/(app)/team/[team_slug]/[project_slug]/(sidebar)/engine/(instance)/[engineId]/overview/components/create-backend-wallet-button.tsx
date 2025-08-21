@@ -184,7 +184,7 @@ export const CreateBackendWalletButton: React.FC<
                         Provide your credentials on the{" "}
                         <Link
                           className="text-link-foreground hover:text-foreground"
-                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
+                          href={`/team/${teamSlug}/${projectSlug}/engine/${instance.id}/configuration`}
                         >
                           Configuration
                         </Link>{" "}
@@ -241,7 +241,7 @@ export const CreateBackendWalletButton: React.FC<
                               wallet. You can find this in the{" "}
                               <Link
                                 className="text-link-foreground hover:text-foreground"
-                                href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/wallet-credentials`}
+                                href={`/team/${teamSlug}/${projectSlug}/engine/${instance.id}/wallet-credentials`}
                               >
                                 Wallet Credentials
                               </Link>{" "}

@@ -98,7 +98,7 @@ function BackendWalletsSection(props: {
           <p className="text-muted-foreground text-sm leading-relaxed">
             Set up other wallet types from the{" "}
             <UnderlineLink
-              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
+              href={`/team/${teamSlug}/${projectSlug}/engine/${instance.id}/configuration`}
             >
               Configuration
             </UnderlineLink>{" "}

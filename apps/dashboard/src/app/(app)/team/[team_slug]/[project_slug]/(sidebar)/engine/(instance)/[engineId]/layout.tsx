@@ -30,7 +30,7 @@ export default async function Layout(props: {
 
   if (!authToken) {
     loginRedirect(
-      `/team/${params.team_slug}/${params.project_slug}/engine/dedicated/${params.engineId}`,
+      `/team/${params.team_slug}/${params.project_slug}/engine/${params.engineId}`,
     );
   }
 
@@ -41,7 +41,7 @@ export default async function Layout(props: {
     teamIdOrSlug: params.team_slug,
   });
 
-  const engineRootLayoutPath = `/team/${params.team_slug}/${params.project_slug}/engine/dedicated`;
+  const engineRootLayoutPath = `/team/${params.team_slug}/${params.project_slug}/engine`;
 
   if (!instance) {
     return (

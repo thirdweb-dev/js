@@ -11,7 +11,7 @@ export async function engineInstancePageHandler(params: {
   projectSlug: string;
   engineId: string;
 }) {
-  const pagePath = `/team/${params.teamSlug}/${params.projectSlug}/engine/dedicated/${params.engineId}/access-tokens`;
+  const pagePath = `/team/${params.teamSlug}/${params.projectSlug}/engine/${params.engineId}/access-tokens`;
 
   const [authToken, account, team] = await Promise.all([
     getAuthToken(),

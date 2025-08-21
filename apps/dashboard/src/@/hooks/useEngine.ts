@@ -1662,7 +1662,7 @@ export function useEngineSystemMetrics(
     queryFn: async () => {
       const res = await apiServerProxy({
         method: "GET",
-        pathname: `/v1/teams/${teamIdOrSlug}/${projectSlug}/engine/dedicated/${engineId}/metrics`,
+        pathname: `/v1/teams/${teamIdOrSlug}/${projectSlug}/engine/${engineId}/metrics`,
       });
 
       if (!res.ok) {

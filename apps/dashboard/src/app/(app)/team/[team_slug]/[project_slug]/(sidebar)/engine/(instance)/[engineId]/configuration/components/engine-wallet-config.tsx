@@ -73,7 +73,7 @@ export function EngineWalletConfig({
         <p className="text-muted-foreground text-sm">
           Create backend wallets on the{" "}
           <UnderlineLink
-            href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}`}
+            href={`/team/${teamSlug}/${projectSlug}/engine/${instance.id}`}
           >
             Overview
           </UnderlineLink>{" "}
