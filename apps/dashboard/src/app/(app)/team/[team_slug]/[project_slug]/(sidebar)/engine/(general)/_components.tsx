@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
-  const engineLinkPrefix = `/team/${props.team_slug}/${props.project_slug}/engine/dedicated`;
+  const engineLinkPrefix = `/team/${props.team_slug}/${props.project_slug}/engine`;
 
   return (
     <div className="">

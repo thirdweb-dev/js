@@ -54,7 +54,7 @@ export function EngineSidebarLayout(props: {
   projectSlug: string;
   children: React.ReactNode;
 }) {
-  const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`;
+  const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
 
   const links: SidebarLink[] = sidebarLinkMeta.map((linkMeta) => {
     return {

@@ -17,7 +17,7 @@ export function EnsureEnginePermission(props: {
   instance: EngineInstance;
 }) {
   const { instance } = props;
-  const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine/dedicated`;
+  const rootPath = `/team/${props.teamSlug}/${props.projectSlug}/engine`;
 
   const permissionQuery = useQuery({
     queryFn: () => {

@@ -8,7 +8,7 @@ export const EngineInstancesList = (props: {
   projectSlug: string;
   instances: EngineInstance[];
 }) => {
-  const engineLinkPrefix = `/team/${props.team.slug}/${props.projectSlug}/engine/dedicated`;
+  const engineLinkPrefix = `/team/${props.team.slug}/${props.projectSlug}/engine`;
 
   return (
     <div className="flex grow flex-col gap-12">
