@@ -194,7 +194,7 @@ export const ImportBackendWalletButton: React.FC<
                         Provide your credentials on the{" "}
                         <Link
                           className="text-link-foreground hover:text-foreground"
-                          href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/${instance.id}/configuration`}
+                          href={`/team/${teamSlug}/${projectSlug}/engine/${instance.id}/configuration`}
                         >
                           Configuration
                         </Link>{" "}

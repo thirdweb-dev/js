@@ -51,7 +51,7 @@ export function EngineSystemMetrics({
           <AlertDescription className="text-muted-foreground text-sm">
             Upgrade to a{" "}
             <UnderlineLink
-              href={`/team/${teamSlug}/${projectSlug}/engine/dedicated/create`}
+              href={`/team/${teamSlug}/${projectSlug}/engine/create`}
               rel="noopener noreferrer"
               target="_blank"
             >

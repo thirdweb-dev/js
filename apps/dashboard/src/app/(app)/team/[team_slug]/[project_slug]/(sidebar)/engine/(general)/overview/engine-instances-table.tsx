@@ -954,7 +954,7 @@ function EmptyEngineState(props: { team: Team; projectSlug: string }) {
                 variant="default"
               >
                 <Link
-                  href={`/team/${props.team.slug}/${props.projectSlug}/engine/dedicated/import`}
+                  href={`/team/${props.team.slug}/${props.projectSlug}/engine`}
                 >
                   Import self-hosted Engine
                   <ArrowRightIcon size={16} />
