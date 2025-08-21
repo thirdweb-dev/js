@@ -80,12 +80,15 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
     return (
       <div className="flex flex-col items-center gap-8 rounded-lg border border-border p-8 text-center">
         <h2 className="font-semibold text-xl">No webhooks configured yet.</h2>
-        <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
-          <Button className="gap-1" variant="primary">
+        <CreatePaymentWebhookButton
+          clientId={props.clientId}
+          teamId={props.teamId}
+        >
+          <Button className="gap-1.5 rounded-full">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
           </Button>
-        </CreateWebhookButton>
+        </CreatePaymentWebhookButton>
       </div>
     );
   }
@@ -132,12 +135,15 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
       </TableContainer>
 
       <div className="mt-4 flex justify-end">
-        <CreateWebhookButton clientId={props.clientId} teamId={props.teamId}>
-          <Button className="gap-1" size="sm" variant="default">
+        <CreatePaymentWebhookButton
+          clientId={props.clientId}
+          teamId={props.teamId}
+        >
+          <Button className="gap-1.5 rounded-full">
             <PlusIcon className="size-4" />
             <span>Create Webhook</span>
           </Button>
-        </CreateWebhookButton>
+        </CreatePaymentWebhookButton>
       </div>
     </div>
   );
@@ -150,7 +156,9 @@ const formSchema = z.object({
   version: z.string(),
 });
 
-function CreateWebhookButton(props: PropsWithChildren<PayWebhooksPageProps>) {
+export function CreatePaymentWebhookButton(
+  props: PropsWithChildren<PayWebhooksPageProps>,
+) {
   const [open, setOpen] = useState(false);
   const [secretStored, setSecretStored] = useState(false);
   const secret = useMemo(() => {

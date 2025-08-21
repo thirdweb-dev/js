@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-export function FeatureCard(props: {
+type FeatureCardProps = {
   title: string;
   description: string;
   badge?: { label: string; variant?: "outline" | "success" | "default" };
@@ -16,8 +16,18 @@ export function FeatureCard(props: {
   color?: "green" | "violet";
   setupTime?: number;
   features?: string[];
-  link: { href: string; label: string; target?: string };
-}) {
+} & (
+  | {
+      action?: never;
+      link: { href: string; label: string; target?: string };
+    }
+  | {
+      action: React.ReactNode;
+      link?: never;
+    }
+);
+
+export function FeatureCard(props: FeatureCardProps) {
   return (
     <Card className="p-6 flex flex-col items-start gap-6 text-muted-foreground w-full">
       <div className="flex-1 flex flex-col items-start gap-6 w-full">
@@ -65,18 +75,28 @@ export function FeatureCard(props: {
           </div>
         )}
       </div>
-      <Button
-        onClick={() => reportPaymentCardClick({ id: props.id })}
-        size="sm"
-        variant="outline"
-        className="w-full gap-2 group text-foreground"
-        asChild
-      >
-        <Link href={props.link.href} target={props.link.target}>
-          {props.link.label}
-          <ArrowRightIcon className="size-4 group-hover:translate-x-1 transition-all" />
-        </Link>
-      </Button>
+      {props.link ? (
+        <Button
+          onClick={() => reportPaymentCardClick({ id: props.id })}
+          size="sm"
+          variant="outline"
+          className="w-full gap-2 group text-foreground"
+          asChild
+        >
+          <Link
+            href={props.link.href}
+            target={props.link.target}
+            rel={
+              props.link.target === "_blank" ? "noopener noreferrer" : undefined
+            }
+          >
+            {props.link.label}
+            <ArrowRightIcon className="size-4 group-hover:translate-x-1 transition-all" />
+          </Link>
+        </Button>
+      ) : (
+        props.action
+      )}
     </Card>
   );
 }

@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
-
+import { ProjectPage } from "@/components/blocks/project-page/project-page";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { KeyManagement } from "./components/key-management";
 
 export default async function VaultPage(props: {
@@ -24,13 +25,38 @@ export default async function VaultPage(props: {
   const maskedAdminKey = projectEngineCloudService?.maskedAdminKey;
   const isManagedVault = !!projectEngineCloudService?.encryptedAdminKey;
 
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
+
   return (
-    <div className="flex flex-col gap-8">
+    <ProjectPage
+      header={{
+        client,
+        title: "Vault",
+        description:
+          "Secure, non-custodial key management system for your server wallets.",
+        actions: {
+          primary: {
+            label: "Documentation",
+            href: "https://portal.thirdweb.com/vault",
+            external: true,
+          },
+        },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/vault",
+          },
+        ],
+      }}
+    >
       <KeyManagement
         maskedAdminKey={maskedAdminKey ?? undefined}
         isManagedVault={isManagedVault}
         project={project}
       />
-    </div>
+    </ProjectPage>
   );
 }

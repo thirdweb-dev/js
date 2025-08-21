@@ -41,6 +41,20 @@ import { formatTokenAmount } from "../../components/format";
 import { CreatePaymentLinkButton } from "./CreatePaymentLinkButton.client";
 
 export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
+  return (
+    <section>
+      <div className="mb-4">
+        <h2 className="font-semibold text-xl tracking-tight">Payment Links</h2>
+        <p className="text-muted-foreground text-sm">
+          Payment links you have created in this project.
+        </p>
+      </div>
+      <PaymentLinksTableInner clientId={props.clientId} teamId={props.teamId} />
+    </section>
+  );
+}
+
+function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
   const paymentLinksQuery = useQuery({
     queryFn: async () => {
       return getPaymentLinks({

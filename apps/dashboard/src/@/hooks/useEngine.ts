@@ -11,8 +11,8 @@ import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { apiServerProxy } from "@/actions/proxies";
 import type { EngineBackendWalletType } from "@/constants/engine";
-import type { ResultItem } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/dedicated/(instance)/[engineId]/metrics/components/StatusCodes";
-import type { EngineStatus } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/dedicated/(instance)/[engineId]/overview/components/transactions-table";
+import type { ResultItem } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/(instance)/[engineId]/metrics/components/StatusCodes";
+import type { EngineStatus } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/engine/(instance)/[engineId]/overview/components/transactions-table";
 import { engineKeys } from "../query-keys/cache-keys";
 
 // Engine instances

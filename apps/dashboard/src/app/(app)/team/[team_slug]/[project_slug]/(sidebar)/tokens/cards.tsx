@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import { CoinsIcon, ImagesIcon, ImportIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -11,17 +12,28 @@ import {
 import { ImportModal } from "@/components/contracts/import-contract/modal";
 import { cn } from "@/lib/utils";
 
-export function Cards(props: {
-  teamSlug: string;
-  projectSlug: string;
+export function ImportTokenButton(props: {
   client: ThirdwebClient;
-  teamId: string;
   projectId: string;
+  projectSlug: string;
+  teamId: string;
+  teamSlug: string;
 }) {
   const [importModalOpen, setImportModalOpen] = useState(false);
-
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <>
+      <Button
+        variant="outline"
+        className="gap-1.5 rounded-full"
+        onClick={() => {
+          reportAssetImportStarted();
+          setImportModalOpen(true);
+        }}
+      >
+        <ImportIcon className="size-4" />
+        Import Token
+      </Button>
+
       <ImportModal
         client={props.client}
         isOpen={importModalOpen}
@@ -37,7 +49,19 @@ export function Cards(props: {
         teamSlug={props.teamSlug}
         type="asset"
       />
+    </>
+  );
+}
 
+export function Cards(props: {
+  teamSlug: string;
+  projectSlug: string;
+  client: ThirdwebClient;
+  teamId: string;
+  projectId: string;
+}) {
+  return (
+    <div className="flex flex-row gap-4">
       <CardLink
         description="Launch your own ERC-20 coin"
         href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/token`}
@@ -50,17 +74,6 @@ export function Cards(props: {
         href={`/team/${props.teamSlug}/${props.projectSlug}/tokens/create/nft`}
         icon={ImagesIcon}
         title="Create NFT Collection"
-      />
-
-      <CardLink
-        description="Import coins or NFTs you own to the project"
-        href={undefined}
-        icon={ArrowDownToLineIcon}
-        onClick={() => {
-          reportAssetImportStarted();
-          setImportModalOpen(true);
-        }}
-        title="Import Existing Token"
       />
     </div>
   );

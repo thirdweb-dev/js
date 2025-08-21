@@ -1,14 +1,20 @@
+import { Button } from "@workspace/ui/components/button";
+import { PlusIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { getSupportedWebhookChains } from "@/api/insight/webhooks";
 import { getProject } from "@/api/project/projects";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
-import { ContractsWebhooksPageContent } from "../contract-webhooks/contract-webhooks-page";
+import {
+  CreatePaymentWebhookButton,
+  PayWebhooksPage,
+} from "../../payments/webhooks/components/webhooks.client";
 
-export default async function ContractsPage(props: {
-  params: Promise<{ team_slug: string; project_slug: string }>;
+export default async function Page(props: {
+  params: Promise<{
+    team_slug: string;
+    project_slug: string;
+  }>;
 }) {
   const [authToken, params] = await Promise.all([getAuthToken(), props.params]);
 
@@ -23,39 +29,36 @@ export default async function ContractsPage(props: {
     teamId: project.teamId,
   });
 
-  let supportedChainIds: number[] = [];
-  const supportedChainsRes = await getSupportedWebhookChains();
-  if ("chains" in supportedChainsRes) {
-    supportedChainIds = supportedChainsRes.chains;
-  }
-
   return (
     <ProjectPage
       header={{
         client,
         title: "Webhooks",
-        description:
-          "Get notified about blockchain events, transactions and more.",
+        description: "Get notified for Bridge, Swap and Onramp events.",
         actions: {
           primary: {
             component: (
-              <CreateContractWebhookButton
-                projectClientId={project.publishableKey}
-                supportedChainIds={supportedChainIds}
-                client={client}
-              />
+              <CreatePaymentWebhookButton
+                clientId={project.publishableKey}
+                teamId={project.teamId}
+              >
+                <Button className="gap-1.5 rounded-full">
+                  <PlusIcon className="size-4" />
+                  <span>Create Webhook</span>
+                </Button>
+              </CreatePaymentWebhookButton>
             ),
           },
           secondary: {
             label: "Documentation",
-            href: "https://portal.thirdweb.com/insight/webhooks",
+            href: "https://portal.thirdweb.com/payments/webhooks",
             external: true,
           },
         },
         links: [
           {
             type: "docs",
-            href: "https://portal.thirdweb.com/insight/webhooks",
+            href: "https://portal.thirdweb.com/payments/webhooks",
           },
         ],
       }}
@@ -70,10 +73,9 @@ export default async function ContractsPage(props: {
         },
       ]}
     >
-      <ContractsWebhooksPageContent
-        authToken={authToken}
-        project={project}
-        supportedChainIds={supportedChainIds}
+      <PayWebhooksPage
+        clientId={project.publishableKey}
+        teamId={project.teamId}
       />
     </ProjectPage>
   );

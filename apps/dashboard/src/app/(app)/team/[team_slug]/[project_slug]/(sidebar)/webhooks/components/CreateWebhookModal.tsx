@@ -230,7 +230,7 @@ export function CreateContractWebhookButton({
   return (
     <Dialog open={isOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-1.5" onClick={handleOpenModal} size="sm">
+        <Button className="gap-1.5 rounded-full" onClick={handleOpenModal}>
           <PlusIcon className="size-4" />
           Create Webhook
         </Button>

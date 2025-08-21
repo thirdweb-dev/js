@@ -216,14 +216,16 @@ function useUnderline<El extends HTMLElement>() {
   return { activeTabRef, containerRef, lineRef };
 }
 
+export type TabPathLink = {
+  name: React.ReactNode;
+  path: string;
+  exactMatch?: boolean;
+  isDisabled?: boolean;
+  isActive?: (pathname: string) => boolean;
+};
+
 export function TabPathLinks(props: {
-  links: {
-    name: React.ReactNode;
-    path: string;
-    exactMatch?: boolean;
-    isDisabled?: boolean;
-    isActive?: (pathname: string) => boolean;
-  }[];
+  links: TabPathLink[];
   className?: string;
   tabContainerClassName?: string;
   shadowColor?: string;

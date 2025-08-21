@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRightIcon, CreditCardIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import {
   getPayments,
   type PaymentsResponse,
@@ -12,16 +11,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { EmptyState } from "./EmptyState";
 import { TableRow } from "./PaymentsTableRow";
 
 export function RecentPaymentsSection(props: {
-  client: ThirdwebClient;
   projectClientId: string;
   teamSlug: string;
   projectSlug: string;
   teamId: string;
+  jwt: string;
 }) {
   const { data: payPurchaseData, isLoading } = useQuery<
     PaymentsResponse,
@@ -43,6 +43,10 @@ export function RecentPaymentsSection(props: {
     () => !payPurchaseData?.data.length,
     [payPurchaseData],
   );
+  const client = getClientThirdwebClient({
+    jwt: props.jwt,
+    teamId: props.teamId,
+  });
   return (
     <section>
       <div className="mb-4">
@@ -71,7 +75,7 @@ export function RecentPaymentsSection(props: {
                 ? payPurchaseData.data.map((purchase) => {
                     return (
                       <TableRow
-                        client={props.client}
+                        client={client}
                         key={purchase.id}
                         purchase={purchase}
                       />

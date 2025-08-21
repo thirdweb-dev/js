@@ -1,8 +1,4 @@
-import {
-  getSupportedWebhookChains,
-  getWebhooks,
-  type WebhookResponse,
-} from "@/api/insight/webhooks";
+import { getWebhooks, type WebhookResponse } from "@/api/insight/webhooks";
 import type { Project } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
@@ -11,10 +7,10 @@ import { ContractsWebhooksTable } from "../components/WebhooksTable";
 export async function ContractsWebhooksPageContent(props: {
   project: Project;
   authToken: string;
+  supportedChainIds: number[];
 }) {
   let webhooks: WebhookResponse[] = [];
   let errorMessage = "";
-  let supportedChainIds: number[] = [];
 
   const projectClientId = props.project.publishableKey;
 
@@ -24,13 +20,6 @@ export async function ContractsWebhooksPageContent(props: {
       errorMessage = webhooksRes.error;
     } else if (webhooksRes.data) {
       webhooks = webhooksRes.data;
-    }
-
-    const supportedChainsRes = await getSupportedWebhookChains();
-    if ("chains" in supportedChainsRes) {
-      supportedChainIds = supportedChainsRes.chains;
-    } else {
-      errorMessage = supportedChainsRes.error;
     }
   } catch (error) {
     errorMessage = "Failed to load webhooks. Please try again later.";
@@ -57,7 +46,7 @@ export async function ContractsWebhooksPageContent(props: {
         <ContractsWebhooksTable
           client={client}
           projectClientId={projectClientId}
-          supportedChainIds={supportedChainIds}
+          supportedChainIds={props.supportedChainIds}
           webhooks={webhooks}
         />
       ) : (
@@ -71,7 +60,7 @@ export async function ContractsWebhooksPageContent(props: {
           <CreateContractWebhookButton
             client={client}
             projectClientId={projectClientId}
-            supportedChainIds={supportedChainIds}
+            supportedChainIds={props.supportedChainIds}
           />
         </div>
       )}

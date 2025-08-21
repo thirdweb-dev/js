@@ -1,13 +1,14 @@
 "use client";
 import {
   ArrowLeftRightIcon,
-  BellIcon,
   BookTextIcon,
   BoxIcon,
+  DatabaseIcon,
   HomeIcon,
   LockIcon,
   RssIcon,
   SettingsIcon,
+  WebhookIcon,
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 import { Badge } from "@/components/ui/badge";
@@ -20,23 +21,15 @@ import { WalletProductIcon } from "@/icons/WalletProductIcon";
 
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
-  engineLinkType: "cloud" | "dedicated";
   children: React.ReactNode;
-  isCentralizedWebhooksFeatureFlagEnabled: boolean;
+  hasEngineInstances: boolean;
 }) {
-  const {
-    layoutPath,
-    engineLinkType,
-    children,
-    isCentralizedWebhooksFeatureFlagEnabled,
-  } = props;
-
   return (
     <FullWidthSidebarLayout
       contentSidebarLinks={[
         {
           exactMatch: true,
-          href: layoutPath,
+          href: props.layoutPath,
           icon: HomeIcon,
           label: "Overview",
         },
@@ -47,26 +40,17 @@ export function ProjectSidebarLayout(props: {
           group: "Build",
           links: [
             {
-              href: `${layoutPath}/wallets`,
+              href: `${props.layoutPath}/wallets`,
               icon: WalletProductIcon,
               label: "Wallets",
             },
             {
-              href:
-                engineLinkType === "cloud"
-                  ? `${layoutPath}/transactions`
-                  : `${layoutPath}/engine/dedicated`,
+              href: `${props.layoutPath}/transactions`,
               icon: ArrowLeftRightIcon,
-              isActive: (pathname) => {
-                return (
-                  pathname.startsWith(`${layoutPath}/transactions`) ||
-                  pathname.startsWith(`${layoutPath}/engine/dedicated`)
-                );
-              },
               label: "Transactions",
             },
             {
-              href: `${layoutPath}/contracts`,
+              href: `${props.layoutPath}/contracts`,
               icon: ContractIcon,
               label: "Contracts",
             },
@@ -79,12 +63,12 @@ export function ProjectSidebarLayout(props: {
           group: "Monetize",
           links: [
             {
-              href: `${layoutPath}/payments`,
+              href: `${props.layoutPath}/payments`,
               icon: PayIcon,
               label: "Payments",
             },
             {
-              href: `${layoutPath}/tokens`,
+              href: `${props.layoutPath}/tokens`,
               icon: TokenIcon,
               label: (
                 <span className="flex items-center gap-2">
@@ -101,45 +85,50 @@ export function ProjectSidebarLayout(props: {
           group: "Scale",
           links: [
             {
-              href: `${layoutPath}/insight`,
+              href: `${props.layoutPath}/insight`,
               icon: InsightIcon,
               label: "Insight",
             },
             {
-              href: `${layoutPath}/account-abstraction`,
+              href: `${props.layoutPath}/account-abstraction`,
               icon: SmartAccountIcon,
               label: "Account Abstraction",
             },
             {
-              href: `${layoutPath}/rpc`,
+              href: `${props.layoutPath}/rpc`,
               icon: RssIcon,
               label: "RPC",
             },
             {
-              href: `${layoutPath}/vault`,
+              href: `${props.layoutPath}/vault`,
               icon: LockIcon,
               label: "Vault",
             },
+            ...(props.hasEngineInstances
+              ? [
+                  {
+                    href: `${props.layoutPath}/engine`,
+                    icon: DatabaseIcon,
+                    label: (
+                      <span className="flex items-center gap-2">Engine</span>
+                    ),
+                  },
+                ]
+              : []),
           ],
         },
       ]}
       footerSidebarLinks={[
         {
-          href: isCentralizedWebhooksFeatureFlagEnabled
-            ? `${layoutPath}/webhooks`
-            : `${layoutPath}/webhooks/contracts`,
-          icon: BellIcon,
+          href: `${props.layoutPath}/webhooks/contracts`,
+          icon: WebhookIcon,
           isActive: (pathname) => {
-            return pathname.startsWith(`${layoutPath}/webhooks`);
+            return pathname.startsWith(`${props.layoutPath}/webhooks`);
           },
-          label: (
-            <span className="flex items-center gap-2">
-              Webhooks <Badge>New</Badge>
-            </span>
-          ),
+          label: "Webhooks",
         },
         {
-          href: `${layoutPath}/settings`,
+          href: `${props.layoutPath}/settings`,
           icon: SettingsIcon,
           label: "Project Settings",
         },
@@ -158,7 +147,7 @@ export function ProjectSidebarLayout(props: {
         },
       ]}
     >
-      {children}
+      {props.children}
     </FullWidthSidebarLayout>
   );
 }
