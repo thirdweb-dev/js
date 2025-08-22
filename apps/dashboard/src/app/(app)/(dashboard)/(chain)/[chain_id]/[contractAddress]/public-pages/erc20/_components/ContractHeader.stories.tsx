@@ -99,6 +99,26 @@ export const WithImageAndMultipleSocialUrls: Story = {
       website: mockSocialUrls.website,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
+  },
+};
+
+export const NotDashboardUser: Story = {
+  args: {
+    chainMetadata: ethereumChainMetadata,
+    clientContract: mockContract,
+    contractCreator: null,
+    image: mockTokenImage,
+    name: "Sample Token",
+    socialUrls: {
+      discord: mockSocialUrls.discord,
+      github: mockSocialUrls.github,
+      telegram: mockSocialUrls.telegram,
+      twitter: mockSocialUrls.twitter,
+      website: mockSocialUrls.website,
+    },
+    symbol: "SMPL",
+    isDashboardUser: false,
   },
 };
 
@@ -117,6 +137,7 @@ export const WithContractCreator: Story = {
       website: mockSocialUrls.website,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };
 
@@ -131,6 +152,7 @@ export const WithBrokenImageAndSingleSocialUrl: Story = {
       website: mockSocialUrls.website,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };
 
@@ -143,6 +165,7 @@ export const WithoutImageAndNoSocialUrls: Story = {
     name: "Sample Token",
     socialUrls: {},
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };
 
@@ -163,6 +186,7 @@ export const LongNameAndLotsOfSocialUrls: Story = {
       youtube: mockSocialUrls.youtube,
     },
     symbol: "LONG",
+    isDashboardUser: true,
   },
 };
 
@@ -187,6 +211,7 @@ export const AllSocialUrls: Story = {
       youtube: mockSocialUrls.youtube,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };
 
@@ -205,6 +230,7 @@ export const InvalidSocialUrls: Story = {
       youtube: mockSocialUrls.youtube,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };
 
@@ -220,5 +246,6 @@ export const SomeSocialUrls: Story = {
       website: mockSocialUrls.website,
     },
     symbol: "SMPL",
+    isDashboardUser: true,
   },
 };

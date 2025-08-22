@@ -14,6 +14,7 @@ export function NFTPublicPageLayout(props: {
   };
   children: React.ReactNode;
   contractCreator: string | null;
+  isDashboardUser: boolean;
 }) {
   return (
     <div className="flex grow flex-col">
@@ -38,6 +39,7 @@ export function NFTPublicPageLayout(props: {
                 : {}
             }
             symbol={props.contractMetadata.symbol}
+            isDashboardUser={props.isDashboardUser}
           />
         </div>
       </div>

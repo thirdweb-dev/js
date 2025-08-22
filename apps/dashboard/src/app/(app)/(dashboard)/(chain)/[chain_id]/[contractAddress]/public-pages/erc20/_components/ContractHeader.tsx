@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { useActiveAccount } from "thirdweb/react";
 import { Img } from "@/components/blocks/Img";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
@@ -51,6 +50,7 @@ export function ContractHeaderUI(props: {
   imageClassName?: string;
   contractCreator: string | null;
   className?: string;
+  isDashboardUser: boolean;
 }) {
   const socialUrls = useMemo(() => {
     const socialUrlsValue: { name: string; href: string }[] = [];
@@ -66,7 +66,6 @@ export function ContractHeaderUI(props: {
 
     return socialUrlsValue;
   }, [props.socialUrls]);
-  const activeAccount = useActiveAccount();
 
   const cleanedChainName = props.chainMetadata?.name
     ?.replace("Mainnet", "")
@@ -172,8 +171,7 @@ export function ContractHeaderUI(props: {
             variant="outline"
           />
 
-          {props.contractCreator?.toLowerCase() ===
-            activeAccount?.address?.toLowerCase() && (
+          {props.isDashboardUser && (
             <ToolTipLabel
               contentClassName="max-w-[300px]"
               label={

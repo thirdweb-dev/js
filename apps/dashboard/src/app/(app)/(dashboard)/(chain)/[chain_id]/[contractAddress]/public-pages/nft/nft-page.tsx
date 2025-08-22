@@ -1,9 +1,11 @@
+import { cookies } from "next/headers";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isTokenByIndexSupported } from "thirdweb/extensions/erc721";
 import { ResponsiveLayout } from "@/components/blocks/Responsive";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HAS_USED_DASHBOARD } from "@/constants/cookie";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { cn } from "@/lib/utils";
 import { getContractCreator } from "../_components/getContractCreator";
@@ -100,12 +102,16 @@ export async function NFTPublicPage(props: {
     <Skeleton className="h-[620px] border" />
   ) : null;
 
+  const cookieStore = await cookies();
+  const isDashboardUser = cookieStore.has(HAS_USED_DASHBOARD);
+
   return (
     <NFTPublicPageLayout
       chainMetadata={props.chainMetadata}
       clientContract={props.clientContract}
       contractCreator={contractCreator}
       contractMetadata={contractMetadata}
+      isDashboardUser={isDashboardUser}
     >
       <ResponsiveLayout
         desktop={

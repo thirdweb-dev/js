@@ -1,8 +1,10 @@
+import { cookies } from "next/headers";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
 import { GridPattern } from "@/components/ui/background-patterns";
+import { HAS_USED_DASHBOARD } from "@/constants/cookie";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { AssetPageView } from "../_components/asset-page-view";
 import { getContractCreator } from "../_components/getContractCreator";
@@ -65,6 +67,9 @@ export async function ERC20PublicPage(props: {
       : undefined,
   ]);
 
+  const cookieStore = await cookies();
+  const isDashboardUser = cookieStore.has(HAS_USED_DASHBOARD);
+
   const buyEmbed = (
     <BuyEmbed
       chainMetadata={props.chainMetadata}
@@ -96,6 +101,7 @@ export async function ERC20PublicPage(props: {
             clientContract={props.clientContract}
             contractCreator={contractCreator}
             image={contractMetadata.image}
+            isDashboardUser={isDashboardUser}
             name={contractMetadata.name}
             socialUrls={
               typeof contractMetadata.social_urls === "object" &&
