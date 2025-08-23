@@ -67,7 +67,7 @@ export default async function Page(props: {
               >
                 <Button className="gap-1.5 rounded-full">
                   <PlusIcon className="size-4" />
-                  Create Payment Link
+                  Create Payment
                 </Button>
               </CreatePaymentLinkButton>
             ),
