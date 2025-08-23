@@ -72,13 +72,14 @@ Create wallets for your users with flexible authentication options. Choose from 
 
 ## API Authentication
 
-Authenticating a user is done in two steps:
+For email, phone, passkey, or SIWE authentication, a two-step process is used:
+- Initiate authentication to get a challenge
+- Complete authentication with the challenge response
 
-1. Initiate authentication
-2. Complete authentication
+For guest or custom (jwt/auth-payload) authentication, you can skip the first step and directly use the `/v1/auth/complete` endpoint with the required parameters.
 
 ### Initiate Authentication
-Start authentication with email, phone, passkey, or social providers
+Start authentication with email, phone, passkey, or SIWE
 
 <OpenApiEndpoint path="/v1/auth/initiate" method="POST" />
 
@@ -86,6 +87,15 @@ Start authentication with email, phone, passkey, or social providers
 Verify and complete the authentication process:
 
 <OpenApiEndpoint path="/v1/auth/complete" method="POST" />
+
+## Social Authentication
+
+### Single Step Flow
+OAuth is done in a single step using a dedicated endpoint.
+
+Visit the API reference for more details on the available social providers and code snippets.
+
+<OpenApiEndpoint path="/v1/auth/social" method="GET" />
 
 ### Get Wallet Information
 Retrieve authenticated user's wallet details:
