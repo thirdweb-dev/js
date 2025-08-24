@@ -12,6 +12,7 @@ import {
   useWalletInfo,
 } from "../../../../../../core/utils/wallet.js";
 import { useProfiles } from "../../../../../hooks/wallets/useProfiles.js";
+import { getProfileEmail } from "../../../../../../../wallets/in-app/core/authentication/types.js";
 import { Container } from "../../../../components/basic.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Text } from "../../../../components/text.js";
@@ -36,7 +37,12 @@ export function WalletRow(props: {
     (wallet.id === "inApp" ||
       isEcosystemWallet(wallet) ||
       isSmartWallet(wallet))
-      ? profile.data?.find((p) => !!p.details.email)?.details.email
+      ? (() => {
+          const profileWithEmail = profile.data?.find((p) => {
+            return getProfileEmail(p) !== undefined;
+          });
+          return profileWithEmail ? getProfileEmail(profileWithEmail) : undefined;
+        })()
       : undefined;
   const walletInfo = useWalletInfo(wallet?.id);
   const ensNameQuery = useEnsName({

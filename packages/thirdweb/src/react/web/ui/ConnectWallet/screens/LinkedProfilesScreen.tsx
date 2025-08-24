@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useUnlinkProfile } from "../../../../../react/web/hooks/wallets/useUnlinkProfile.js";
 import { shortenAddress } from "../../../../../utils/address.js";
 import type { Profile } from "../../../../../wallets/in-app/core/authentication/types.js";
+import { getProfileEmail, getProfilePhone, getProfileAddress } from "../../../../../wallets/in-app/core/authentication/types.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";
 import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
@@ -24,18 +25,21 @@ import { MenuButton } from "../MenuButton.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
 function getProfileDisplayName(profile: Profile) {
+  const email = getProfileEmail(profile);
+  const phone = getProfilePhone(profile);
+  const address = getProfileAddress(profile);
+  
   switch (true) {
-    case profile.type === "email" && profile.details.email !== undefined:
-      return profile.details.email;
-    case profile.type === "google" && profile.details.email !== undefined:
-      return profile.details.email;
-    case profile.type === "phone" && profile.details.phone !== undefined:
-      return profile.details.phone;
-    case profile.details.address !== undefined:
-      return shortenAddress(profile.details.address, 6);
-    case (profile.type as string) === "cognito" &&
-      profile.details.email !== undefined:
-      return profile.details.email;
+    case profile.type === "email" && email !== undefined:
+      return email;
+    case profile.type === "google" && email !== undefined:
+      return email;
+    case profile.type === "phone" && phone !== undefined:
+      return phone;
+    case address !== undefined:
+      return shortenAddress(address, 6);
+    case (profile.type as string) === "cognito" && email !== undefined:
+      return email;
     case (profile.type as string).toLowerCase() === "custom_auth_endpoint":
       return "Custom Profile";
     default:
@@ -128,8 +132,9 @@ function LinkedProfile({
   enableUnlinking: boolean;
   client: ThirdwebClient;
 }) {
+  const profileAddress = getProfileAddress(profile);
   const { data: socialProfiles } = useSocialProfiles({
-    address: profile.details.address,
+    address: profileAddress,
     client,
   });
   const { mutate: unlinkProfileMutation, isPending } = useUnlinkProfile();
@@ -154,7 +159,7 @@ function LinkedProfile({
           }}
           width={iconSize.lg}
         />
-      ) : profile.details.address !== undefined ? (
+      ) : profileAddress !== undefined ? (
         <Container
           style={{
             borderRadius: "100%",
@@ -163,7 +168,7 @@ function LinkedProfile({
             width: "32px",
           }}
         >
-          <Blobbie address={profile.details.address} size={32} />
+          <Blobbie address={profileAddress} size={32} />
         </Container>
       ) : profile.type === "passkey" ? (
         <FingerPrintIcon size={iconSize.lg} />
@@ -202,9 +207,9 @@ function LinkedProfile({
           }}
         >
           {socialProfiles?.find((p) => p.avatar)?.name &&
-            profile.details.address && (
+            profileAddress && (
               <Text color="secondaryText" size="sm">
-                {shortenAddress(profile.details.address, 4)}
+                {shortenAddress(profileAddress, 4)}
               </Text>
             )}
           {enableUnlinking && (
