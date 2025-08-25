@@ -1,17 +1,31 @@
-"use server";
-
+import { z } from "zod";
 import { getVercelEnv } from "@/utils/vercel";
 
-interface FeedbackData {
-  rating: number;
-  feedback: string;
+type SupportFeedbackInput = {
   ticketId: string;
+  rating: number;
+  feedback?: string;
   teamId?: string;
-}
+};
+
+const SupportFeedbackSchema = z.object({
+  ticketId: z.string().min(1, "Missing ticketId"),
+  rating: z.number().int().min(1).max(5),
+  feedback: z.string().trim().max(1000).optional().default(""),
+  teamId: z.string().optional(),
+});
 
 export async function submitSupportFeedback(
-  data: FeedbackData,
+  data: SupportFeedbackInput,
 ): Promise<{ success: true } | { error: string }> {
+  "use server";
+
+  const parsed = SupportFeedbackSchema.safeParse(data);
+  if (!parsed.success) {
+    return { error: parsed.error.issues.map((i) => i.message).join(", ") };
+  }
+  const input = parsed.data;
+
   try {
     const apiKey = process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID;
     if (!apiKey) {
@@ -31,9 +45,9 @@ export async function submitSupportFeedback(
         "x-service-api-key": apiKey,
       },
       body: JSON.stringify({
-        rating: data.rating,
-        feedback: data.feedback,
-        ticket_id: data.ticketId,
+        rating: input.rating,
+        feedback: input.feedback,
+        ticket_id: input.ticketId,
       }),
     });
 
@@ -46,8 +60,8 @@ export async function submitSupportFeedback(
         console.debug(
           "CSAT endpoint not available; treating as success in preview/dev",
           {
-            rating: data.rating,
-            ticket_id: data.ticketId,
+            rating: input.rating,
+            ticket_id: input.ticketId,
             vercel_env: vercelEnv,
           },
         );
