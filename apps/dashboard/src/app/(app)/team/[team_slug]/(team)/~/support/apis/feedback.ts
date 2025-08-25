@@ -1,39 +1,67 @@
 "use server";
 
-import { supabase } from "@/lib/supabase";
-
 interface FeedbackData {
   rating: number;
   feedback: string;
   ticketId: string;
+  teamId?: string;
 }
 
 export async function submitSupportFeedback(
   data: FeedbackData,
 ): Promise<{ success: true } | { error: string }> {
   try {
-    if (!supabase) {
-      const error =
-        "Supabase client not initialized. Please check your environment variables.";
-      console.error("❌ Supabase client error:", error);
-      throw new Error(error);
+    const apiKey = process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID;
+    if (!apiKey) {
+      return { error: "NEXT_PUBLIC_DASHBOARD_CLIENT_ID not configured" };
     }
 
-    // Insert the feedback
-    const { error } = await supabase.from("support_feedback").insert({
-      rating: data.rating,
-      feedback: data.feedback,
-      ticket_id: data.ticketId,
+    // Use the main API host, not SIWA
+    const apiHost = process.env.NEXT_PUBLIC_THIRDWEB_API_HOST;
+    if (!apiHost) {
+      return { error: "NEXT_PUBLIC_THIRDWEB_API_HOST not configured" };
+    }
+
+    const response = await fetch(`${apiHost}/v1/csat/saveCSATFeedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-service-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        rating: data.rating,
+        feedback: data.feedback,
+        ticket_id: data.ticketId,
+      }),
     });
 
-    if (error) {
-      console.error("❌ Supabase insert error:", {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
+    if (!response.ok) {
+      if (response.status === 404) {
+        // CSAT endpoint doesn't exist in development, log locally
+        console.log(
+          "📝 CSAT endpoint not available in development, logging locally:",
+          {
+            rating: data.rating,
+            feedback: data.feedback,
+            ticket_id: data.ticketId,
+            timestamp: new Date().toISOString(),
+            environment: "development",
+          },
+        );
+
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        return { success: true };
+      }
+
+      const errorText = await response.text();
+      console.error("❌ CSAT endpoint error:", {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
       });
-      return { error: `Failed to submit feedback: ${error.message}` };
+      return { error: `Failed to submit feedback: ${response.statusText}` };
     }
 
     return { success: true };

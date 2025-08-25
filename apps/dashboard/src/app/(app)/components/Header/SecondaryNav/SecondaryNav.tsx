@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import type React from "react";
 import type { ThirdwebClient } from "thirdweb";

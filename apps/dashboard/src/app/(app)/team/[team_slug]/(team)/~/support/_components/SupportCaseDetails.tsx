@@ -33,6 +33,10 @@ interface SupportCaseDetailsProps {
   team: Team;
 }
 
+// Helper function to generate localStorage key for feedback submission
+const getFeedbackSubmittedKey = (ticketId: string) =>
+  `feedback_submitted_${ticketId}`;
+
 export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
@@ -41,7 +45,16 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   // rating/feedback
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+
+  // Check if feedback has already been submitted for this ticket
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(() => {
+    if (typeof window !== "undefined") {
+      return (
+        localStorage.getItem(getFeedbackSubmittedKey(ticket.id)) === "true"
+      );
+    }
+    return false;
+  });
 
   const handleStarClick = (starIndex: number) => {
     setRating(starIndex + 1);
@@ -58,21 +71,25 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
         rating,
         feedback,
         ticketId: ticket.id,
+        teamId: team.id,
       });
 
       if ("error" in result) {
         throw new Error(result.error);
       }
 
-      toast.success("Thank you for your feedback!");
+      // Mark feedback as submitted in localStorage
+      localStorage.setItem(getFeedbackSubmittedKey(ticket.id), "true");
       setFeedbackSubmitted(true);
+
+      toast.success("Thank you for your feedback!");
       setRating(0);
       setFeedback("");
     } catch (error) {
       console.error("Failed to submit feedback:", error);
       toast.error("Failed to submit feedback. Please try again.");
     }
-  }, [rating, feedback, ticket.id]);
+  }, [rating, feedback, ticket.id, team.id]);
 
   const handleSendReply = async () => {
     if (!team.unthreadCustomerId) {
