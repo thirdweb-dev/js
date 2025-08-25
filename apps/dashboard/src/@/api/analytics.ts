@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 import { normalizeTime } from "@/lib/time";
 import type {
+  AIUsageStats,
   AnalyticsQueryParams,
   EcosystemWalletStats,
   EngineCloudStats,
@@ -202,6 +203,44 @@ export function getInAppWalletUsage(
   authToken: string,
 ) {
   return cached_getInAppWalletUsage(normalizedParams(params), authToken);
+}
+
+const cached_getAiUsage = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<AIUsageStats[]> => {
+    const searchParams = buildSearchParams(params);
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/nebula/usage?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch AI usage, ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as AIUsageStats[];
+  },
+  ["getAiUsage"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getAiUsage(
+  params: AnalyticsQueryParams,
+  authToken: string,
+) {
+  return cached_getAiUsage(normalizedParams(params), authToken);
 }
 
 const cached_getUserOpUsage = unstable_cache(

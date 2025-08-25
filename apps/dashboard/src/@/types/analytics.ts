@@ -78,6 +78,14 @@ export interface WebhookSummaryStats {
   errorBreakdown: Record<string, number>;
 }
 
+export interface AIUsageStats {
+  date: string;
+  totalPromptTokens: number;
+  totalCompletionTokens: number;
+  totalSessions: number;
+  totalRequests: number;
+}
+
 export interface AnalyticsQueryParams {
   teamId: string;
   projectId?: string;
