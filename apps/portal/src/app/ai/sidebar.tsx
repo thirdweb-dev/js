@@ -4,7 +4,7 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 export const sidebar: SideBar = {
   links: [
     {
-      name: "Chat API",
+      name: "Blockchain LLM",
       isCollapsible: false,
       links: [
         {
@@ -16,6 +16,10 @@ export const sidebar: SideBar = {
           name: "Playground",
           href: "https://playground.thirdweb.com/ai/chat",
           icon: <ExternalLinkIcon />,
+        },
+        {
+          name: "Transaction Execution",
+          href: "/ai/chat/execution",
         },
         {
           name: "Streaming Responses",

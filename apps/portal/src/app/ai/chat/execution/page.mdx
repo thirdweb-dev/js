@@ -1,0 +1,59 @@
+import {OpenApiEndpoint} from "@doc";
+
+# Transaction Execution
+
+thirdweb AI can either auto execute transactions or prepare them for signing.
+
+- **Auto Execute**: The API will auto execute the transaction. Requires wallet authentication.
+- **Prepare for Signing**: The API will only prepare the transaction for signing. The user will need to sign the transaction manually.
+
+## Auto Execute
+
+Requirements:
+
+- The context object must be set with:
+  - `from` set to the wallet address to execute the transaction from
+  - `auto_execute_transaction` set to `true`
+  - (Optional) `chain_ids` set to the chain IDs to execute the transaction on
+- The API must be called with either:
+  - your `x-secret-key` header for server wallet authentication
+  - OR a `Authorization` header with a valid wallet JWT for user wallet authentication
+
+Model behavior:
+
+If all the requirements are met, the transaction will be executed automatically and the model will return a message with the transaction ID.
+
+It will also include an `actions` array with a `monitor_transaction` action. This action can be used to monitor the transaction status and get the transaction receipt via the thirdweb API.
+
+<OpenApiEndpoint path="/ai/chat" method="POST" requestBodyOverride={{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Transfer 10 USDC to vitalik.eth"
+    }
+  ],
+  "context": {
+    "from": "0x...",
+    "auto_execute_transaction": true,
+    "chain_ids": [8453]
+  }
+}} responseExampleOverride={{
+  "message": "I've sent 10 USDC to Vitalik's wallet with transaction ID 11cd95e3-c0ee-4468-97c1-fd05dc919cdb. It should be confirmed in a few seconds.",
+  "session_id": "123",
+  "request_id": "456",
+  "actions": [{
+    "session_id": "8d1bfac4-e6c0-473b-bbb6-649f459d37e6",
+    "request_id": "79066871-b86f-4814-8027-5f34d99df389",
+    "source": "model",
+    "type": "monitor_transaction",
+    "data": {
+        "transaction_id": "11cd95e3-c0ee-4468-97c1-fd05dc919cdb"
+    }
+}]
+}} />
+
+## Prepare for Signing
+
+When the `auto_execute` parameter is set to `false` or omitted, the API will prepare the transaction for signing and return the transaction data in the `actions` array as a 'sign_transaction' action type.
+
+<OpenApiEndpoint path="/ai/chat" method="POST" />

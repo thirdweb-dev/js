@@ -102,7 +102,7 @@ type ChatMessage =
     };
 
 type NebulaTxData = {
-  chainId: number;
+  chain_id: number;
   data: `0x${string}`;
   to: string;
   value?: string;
@@ -703,7 +703,7 @@ function RenderMessage(props: {
                       transaction={() =>
                         prepareTransaction({
                           client: THIRDWEB_CLIENT,
-                          chain: defineChain(message.data.chainId),
+                          chain: defineChain(message.data.chain_id),
                           data: message.data.data,
                           to: message.data.to,
                           value: message.data.value
@@ -719,7 +719,7 @@ function RenderMessage(props: {
                         props.sendMessage({
                           content: [
                             {
-                              chain_id: message.data.chainId,
+                              chain_id: message.data.chain_id,
                               transaction_hash: tx.transactionHash,
                               type: "transaction",
                             },
@@ -734,7 +734,7 @@ function RenderMessage(props: {
                 ) : (
                   <ConnectButton
                     client={THIRDWEB_CLIENT}
-                    chain={defineChain(message.data.chainId)}
+                    chain={defineChain(message.data.chain_id)}
                   />
                 )}
               </div>
