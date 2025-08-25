@@ -92,8 +92,13 @@ export default async function TransactionsAnalyticsPage(props: {
       header={{
         client,
         title: "Transactions",
-        description:
-          "Send, monitor, and manage transactions. Send transactions from user or server wallets, sponsor gas, monitor transaction status, and more.",
+        description: (
+          <>
+            Send, monitor, and manage transactions.{" "}
+            <br className="max-sm:hidden" /> Send transactions from user or
+            server wallets, sponsor gas, monitor transaction status, and more
+          </>
+        ),
         actions: {
           primary: {
             label: "Documentation",

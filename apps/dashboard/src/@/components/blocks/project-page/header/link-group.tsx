@@ -38,12 +38,12 @@ const linkTypeToOrder: Record<LinkType, number> = {
   settings: 5,
 };
 
-const linkTypeToIcon: Record<LinkType, React.ReactNode> = {
-  api: <NetworkIcon className="size-4" />,
-  docs: <BookTextIcon className="size-4" />,
-  playground: <BoxIcon className="size-4" />,
-  webhooks: <WebhookIcon className="size-4" />,
-  settings: <SettingsIcon className="size-4" />,
+const linkTypeToIcon: Record<LinkType, React.FC<{ className?: string }>> = {
+  api: NetworkIcon,
+  docs: BookTextIcon,
+  playground: BoxIcon,
+  webhooks: WebhookIcon,
+  settings: SettingsIcon,
 };
 
 function orderLinks(links: ActionLink[]) {
@@ -70,13 +70,14 @@ export function LinkGroup(props: { links: ActionLink[] }) {
       <div className="flex flex-row items-center gap-2">
         {orderedLinks.map((link) => {
           const isExternal = link.href.startsWith("http");
+          const Icon = linkTypeToIcon[link.type];
           return (
             <ToolTipLabel key={link.type} label={linkTypeToLabel[link.type]}>
               <Button
                 asChild
                 size="icon"
-                variant="outline"
-                className="rounded-full"
+                variant="secondary"
+                className="rounded-full border"
               >
                 <Link
                   href={link.href}
@@ -84,7 +85,7 @@ export function LinkGroup(props: { links: ActionLink[] }) {
                   rel={isExternal ? "noopener noreferrer" : undefined}
                   className="flex flex-row items-center gap-2"
                 >
-                  {linkTypeToIcon[link.type]}
+                  <Icon className="size-4 text-foreground" />
                 </Link>
               </Button>
             </ToolTipLabel>
@@ -98,25 +99,30 @@ export function LinkGroup(props: { links: ActionLink[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="outline" className="rounded-full">
-          <EllipsisVerticalIcon className="size-4" />
+        <Button size="icon" variant="secondary" className="rounded-full border">
+          <EllipsisVerticalIcon className="size-4 text-foreground" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="gap-1 flex flex-col md:w-48">
+      <DropdownMenuContent
+        align="center"
+        className="gap-1 flex flex-col md:w-48 rounded-lg"
+        sideOffset={10}
+      >
         {orderedLinks.map((link) => {
           const isExternal = link.href.startsWith("http");
+          const Icon = linkTypeToIcon[link.type];
           return (
             <DropdownMenuItem
               key={link.type}
               asChild
-              className="flex flex-row items-center gap-2 cursor-pointer py-2 text-muted-foreground hover:text-foreground"
+              className="flex flex-row items-center gap-2 cursor-pointer py-2"
             >
               <Link
                 href={link.href}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
               >
-                {linkTypeToIcon[link.type]}
+                <Icon className="size-4 text-muted-foreground" />
                 {linkTypeToLabel[link.type]}
               </Link>
             </DropdownMenuItem>

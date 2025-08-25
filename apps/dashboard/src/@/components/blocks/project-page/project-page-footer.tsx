@@ -7,7 +7,7 @@ export type ProjectPageFooterProps = FooterCardProps;
 
 export function ProjectPageFooter(props: ProjectPageFooterProps) {
   return (
-    <footer className="container">
+    <footer className="container max-w-7xl">
       <FooterLinksSection {...props} />
     </footer>
   );

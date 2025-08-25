@@ -31,11 +31,12 @@ export function ImportContractButton(props: {
       />
 
       <Button
-        className="gap-1.5 rounded-full"
+        className="gap-2 rounded-full border"
+        size="sm"
         onClick={() => {
           setImportModalOpen(true);
         }}
-        variant="outline"
+        variant="secondary"
       >
         <ImportIcon className="size-4" />
         Import contract

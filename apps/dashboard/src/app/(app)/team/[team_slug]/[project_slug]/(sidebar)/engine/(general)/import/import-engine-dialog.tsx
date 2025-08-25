@@ -107,7 +107,11 @@ export function ImportEngineButton(props: {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="gap-1.5 rounded-full" variant="outline">
+            <Button
+              className="gap-2 rounded-full border"
+              size="sm"
+              variant="secondary"
+            >
               <ImportIcon className="size-4" />
               Import Engine
             </Button>

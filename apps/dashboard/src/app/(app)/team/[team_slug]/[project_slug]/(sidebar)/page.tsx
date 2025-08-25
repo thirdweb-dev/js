@@ -304,14 +304,12 @@ export async function AsyncTotalSponsoredCard(props: {
   return userOpUsageTimeSeries.status === "fulfilled" &&
     userOpUsage.status === "fulfilled" &&
     userOpUsage.value.length > 0 ? (
-    <div className="">
-      <TotalSponsoredCard
-        aggregatedData={userOpUsage.value}
-        data={userOpUsageTimeSeries.value}
-        selectedChart={props.selectedChart}
-        selectedChartQueryParam={props.selectedChartQueryParam}
-      />
-    </div>
+    <TotalSponsoredCard
+      aggregatedData={userOpUsage.value}
+      data={userOpUsageTimeSeries.value}
+      selectedChart={props.selectedChart}
+      selectedChartQueryParam={props.selectedChartQueryParam}
+    />
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
@@ -385,24 +383,22 @@ async function AsyncAppHighlightsCard(props: {
     universalBridgeUsage.status === "fulfilled"
   ) {
     return (
-      <div>
-        <ProjectHighlightsCard
-          selectedChart={props.selectedChart}
-          selectedChartQueryParam="appHighlights"
-          teamSlug={props.params.team_slug}
-          projectSlug={props.params.project_slug}
-          userStats={
-            walletUserStatsTimeSeries.status === "fulfilled"
-              ? walletUserStatsTimeSeries.value
-              : []
-          }
-          volumeStats={
-            universalBridgeUsage.status === "fulfilled"
-              ? universalBridgeUsage.value
-              : []
-          }
-        />
-      </div>
+      <ProjectHighlightsCard
+        selectedChart={props.selectedChart}
+        selectedChartQueryParam={props.selectedChartQueryParam}
+        teamSlug={props.params.team_slug}
+        projectSlug={props.params.project_slug}
+        userStats={
+          walletUserStatsTimeSeries.status === "fulfilled"
+            ? walletUserStatsTimeSeries.value
+            : []
+        }
+        volumeStats={
+          universalBridgeUsage.status === "fulfilled"
+            ? universalBridgeUsage.value
+            : []
+        }
+      />
     );
   }
 

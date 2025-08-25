@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -7,11 +7,11 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
 
   return (
     <div className="">
-      <h3 className="mb-1 font-semibold text-lg tracking-tight">
+      <h3 className="mb-3 font-semibold text-lg tracking-tight">
         What is Engine?
       </h3>
 
-      <ul className="list-disc space-y-2 pl-3 text-muted-foreground text-sm">
+      <ul className="list-disc space-y-1.5 pl-3 text-muted-foreground text-sm">
         <li>Read, write, and deploy contracts at production scale</li>
         <li>
           Reliably parallelize and retry transactions with gas & nonce
@@ -21,8 +21,13 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
         <li>Built-in support for account abstraction, relayers, and more</li>
       </ul>
 
-      <div className="mt-4 flex justify-start gap-3">
-        <Button asChild size="sm" variant="outline">
+      <div className="mt-5 flex justify-start gap-3">
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className="rounded-full bg-card"
+        >
           <Link
             className="gap-2"
             href="https://portal.thirdweb.com/engine"
@@ -30,14 +35,19 @@ function EngineInfoSection(props: { team_slug: string; project_slug: string }) {
             target="_blank"
           >
             Learn More
-            <ExternalLinkIcon className="size-3 text-muted-foreground" />
+            <ArrowUpRightIcon className="size-3.5 text-muted-foreground" />
           </Link>
         </Button>
 
-        <Button asChild size="sm" variant="outline">
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className="rounded-full bg-card"
+        >
           <Link className="gap-2" href={`${engineLinkPrefix}/sandbox`}>
             Try Demo Engine
-            <ArrowRightIcon className="size-3 text-muted-foreground" />
+            <ArrowRightIcon className="size-3.5 text-muted-foreground" />
           </Link>
         </Button>
       </div>

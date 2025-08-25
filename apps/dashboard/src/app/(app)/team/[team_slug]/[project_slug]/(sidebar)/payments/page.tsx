@@ -56,8 +56,13 @@ export default async function Page(props: {
       header={{
         client,
         title: "Payments",
-        description:
-          "Payments allow you to create advanced payment flows to monetize your app through product sales, peer to peer payments, token sales, and more.",
+        description: (
+          <>
+            Payments allow you to create advanced payment flows to monetize your
+            app through <br className="max-sm:hidden" /> product sales, peer to
+            peer payments, token sales, and more.
+          </>
+        ),
         actions: {
           primary: {
             component: (
@@ -65,7 +70,7 @@ export default async function Page(props: {
                 clientId={project.publishableKey}
                 teamId={project.teamId}
               >
-                <Button className="gap-1.5 rounded-full">
+                <Button className="gap-1.5 rounded-full" size="sm">
                   <PlusIcon className="size-4" />
                   Create Payment
                 </Button>

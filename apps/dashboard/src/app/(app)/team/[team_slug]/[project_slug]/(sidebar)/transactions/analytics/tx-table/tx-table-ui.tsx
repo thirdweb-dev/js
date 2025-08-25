@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { format, formatDistanceToNowStrict } from "date-fns";
-import { ArrowLeftRightIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
+import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useId, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -85,18 +85,13 @@ export function TransactionsTableUI(props: {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-4 rounded-lg rounded-b-none px-6 py-6 lg:flex-row lg:justify-between">
-        <div className="flex flex-row items-center gap-2">
-          <div className="p-4 rounded-full bg-background border border-border">
-            <ArrowLeftRightIcon className="size-5 text-muted-foreground" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-xl tracking-tight">
-              Transaction History
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              Transactions sent from server wallets
-            </p>
-          </div>
+        <div>
+          <h2 className="font-semibold text-2xl tracking-tight">
+            Transaction History
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Transactions sent from server wallets
+          </p>
         </div>
 
         <div className="flex items-center justify-end gap-5 border-border border-t pt-4 lg:border-none lg:pt-0">

@@ -13,8 +13,8 @@ export function EmptyStateCard({
   description?: string;
 }) {
   return (
-    <Card className="container min-h-[300px] p-2 md:min-h-[400px]">
-      <div className="flex h-full flex-col items-center justify-center gap-2 rounded-md border border-dashed text-center">
+    <Card className="min-h-[300px] p-2 md:min-h-[400px] flex flex-col grow">
+      <div className="flex h-full grow flex-col items-center justify-center gap-2 rounded-md border border-dashed text-center">
         <EmptyStateContent
           description={description}
           link={link}
@@ -37,7 +37,7 @@ export function EmptyStateContent(props: {
       : undefined);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-2 text-foreground">
+    <div className="flex w-full flex-col items-center justify-center gap-2 text-foreground grow">
       <div className="flex size-10 items-center justify-center rounded-full border bg-background">
         <PlugIcon className="size-5 text-muted-foreground" />
       </div>

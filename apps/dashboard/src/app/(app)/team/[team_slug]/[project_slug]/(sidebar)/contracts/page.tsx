@@ -42,8 +42,13 @@ export default async function Page(props: {
       header={{
         client,
         title: "Contracts",
-        description:
-          "Read, write, and deploy smart contracts on any EVM compatible blockchain. Deploy contracts from templates, or build your own from scratch.",
+        description: (
+          <>
+            Read, write, and deploy smart contracts on any EVM compatible
+            blockchain. <br className="max-sm:hidden" /> Deploy contracts from
+            templates, or build your own from scratch
+          </>
+        ),
         actions: {
           primary: {
             label: "Deploy Contract",
@@ -78,10 +83,6 @@ export default async function Page(props: {
           {
             type: "webhooks",
             href: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
-          },
-          {
-            type: "settings",
-            href: `/team/${params.team_slug}/${params.project_slug}/settings/contracts`,
           },
         ],
       }}

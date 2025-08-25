@@ -61,12 +61,12 @@ export default async function Page(props: {
             component: (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="gap-1.5 rounded-full">
+                  <Button className="gap-1.5 rounded-full" size="sm">
                     <PlusIcon className="size-4" />
                     Create Token
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="!max-w-md">
                   <DialogHeader>
                     <DialogTitle>Create Token</DialogTitle>
                   </DialogHeader>

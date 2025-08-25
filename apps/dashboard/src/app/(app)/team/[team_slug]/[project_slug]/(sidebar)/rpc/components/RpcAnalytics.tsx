@@ -66,7 +66,7 @@ export async function RPCAnalytics(props: {
 
   if (totalRequests < 1) {
     return (
-      <div className="container flex max-w-7xl grow flex-col">
+      <div className="flex grow flex-col">
         <RpcFTUX clientId={props.projectClientId} />
       </div>
     );

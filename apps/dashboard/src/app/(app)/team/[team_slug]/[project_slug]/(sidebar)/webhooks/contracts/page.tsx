@@ -52,12 +52,6 @@ export default async function ContractsPage(props: {
             external: true,
           },
         },
-        links: [
-          {
-            type: "docs",
-            href: "https://portal.thirdweb.com/insight/webhooks",
-          },
-        ],
       }}
       tabs={[
         {

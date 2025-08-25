@@ -126,6 +126,9 @@ export function ProjectSidebarLayout(props: {
       ]}
       footerSidebarLinks={[
         {
+          separator: true,
+        },
+        {
           href: `${props.layoutPath}/webhooks/contracts`,
           icon: WebhookIcon,
           isActive: (pathname) => {

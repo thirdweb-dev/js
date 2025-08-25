@@ -55,12 +55,6 @@ export default async function Page(props: {
             external: true,
           },
         },
-        links: [
-          {
-            type: "docs",
-            href: "https://portal.thirdweb.com/payments/webhooks",
-          },
-        ],
       }}
       tabs={[
         {

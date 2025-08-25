@@ -80,18 +80,18 @@ export function ServerWalletsTableUI({
     <div>
       <div className="overflow-hidden rounded-xl border border-border bg-card">
         <div className="flex flex-col lg:flex-row lg:justify-between p-4 lg:px-6 py-5 lg:items-center gap-5">
-          <div className="flex flex-row items-center gap-2">
-            <div className="p-4 rounded-full bg-background border border-border">
-              <WalletProductIcon className="size-5 text-muted-foreground" />
+          <div>
+            <div className="flex mb-3">
+              <div className="p-2 rounded-full bg-background border border-border">
+                <WalletProductIcon className="size-5 text-muted-foreground" />
+              </div>
             </div>
-            <div>
-              <h2 className="font-semibold text-2xl tracking-tight">
-                Server Wallets
-              </h2>
-              <p className="text-muted-foreground text-sm">
-                Create and manage server wallets for your project
-              </p>
-            </div>
+            <h2 className="font-semibold text-2xl tracking-tight">
+              Server Wallets
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Create and manage server wallets for your project
+            </p>
           </div>
 
           <div className="flex flex-col items-start lg:items-end gap-5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">

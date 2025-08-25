@@ -131,7 +131,7 @@ export function DedicatedEngineSubscriptionButton(props: { team: Team }) {
   const isMobile = useIsMobile();
 
   const trigger = (
-    <Button className="gap-1.5 rounded-full">
+    <Button className="gap-2 rounded-full" size="sm">
       <PlusIcon className="size-4" />
       Deploy Dedicated Engine
     </Button>

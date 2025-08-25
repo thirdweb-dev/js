@@ -56,9 +56,14 @@ export default async function Page(props: {
         header={{
           client,
           title: "Wallets",
-          description:
-            "Create wallets for your users with flexible authentication options. Choose from email/phone verification, OAuth, passkeys, or external wallet connections.",
-
+          description: (
+            <>
+              Create wallets for your users with flexible authentication
+              options.
+              <br className="max-sm:hidden" /> Choose from email/phone
+              verification, OAuth, passkeys, or external wallet connections
+            </>
+          ),
           actions: {
             primary: {
               label: "Documentation",
