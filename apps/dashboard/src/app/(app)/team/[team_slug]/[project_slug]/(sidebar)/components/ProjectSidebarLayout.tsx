@@ -14,6 +14,7 @@ import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-l
 import { Badge } from "@/components/ui/badge";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
+import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
 import { TokenIcon } from "@/icons/TokenIcon";
@@ -53,6 +54,11 @@ export function ProjectSidebarLayout(props: {
               href: `${props.layoutPath}/contracts`,
               icon: ContractIcon,
               label: "Contracts",
+            },
+            {
+              href: `${props.layoutPath}/ai`,
+              icon: NebulaIcon,
+              label: "AI",
             },
           ],
         },
