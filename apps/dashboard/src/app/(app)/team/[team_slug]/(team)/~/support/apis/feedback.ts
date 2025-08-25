@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
+import { API_SERVER_SECRET } from "@/constants/server-envs";
 import { getVercelEnv } from "@/utils/vercel";
 
 type SupportFeedbackInput = {
@@ -27,29 +29,29 @@ export async function submitSupportFeedback(
   const input = parsed.data;
 
   try {
-    const apiKey = process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID;
-    if (!apiKey) {
-      return { error: "NEXT_PUBLIC_DASHBOARD_CLIENT_ID not configured" };
+    if (!API_SERVER_SECRET) {
+      return { error: "API_SERVER_SECRET not configured" };
     }
 
-    // Use the main API host, not SIWA
-    const apiHost = process.env.NEXT_PUBLIC_THIRDWEB_API_HOST;
-    if (!apiHost) {
+    if (!NEXT_PUBLIC_THIRDWEB_API_HOST) {
       return { error: "NEXT_PUBLIC_THIRDWEB_API_HOST not configured" };
     }
 
-    const response = await fetch(`${apiHost}/v1/csat/saveCSATFeedback`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-service-api-key": apiKey,
+    const response = await fetch(
+      `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/csat/saveCSATFeedback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-service-api-key": API_SERVER_SECRET,
+        },
+        body: JSON.stringify({
+          rating: input.rating,
+          feedback: input.feedback,
+          ticket_id: input.ticketId,
+        }),
       },
-      body: JSON.stringify({
-        rating: input.rating,
-        feedback: input.feedback,
-        ticket_id: input.ticketId,
-      }),
-    });
+    );
 
     if (!response.ok) {
       // Check if we're in a preview environment (Vercel preview deployments)
