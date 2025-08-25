@@ -144,7 +144,7 @@ const apisLinks = [
 const aiLinks = [
   {
     href: "/ai/chat",
-    name: "Chat API",
+    name: "Blockchain LLM",
   },
   {
     href: "/ai/mcp",
