@@ -2,14 +2,12 @@
 
 import { SplitIcon } from "lucide-react";
 import { useMemo } from "react";
-import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useSplitDistributeFunds } from "@/hooks/useSplit";
-import { parseError } from "@/utils/errorParser";
 
 export const DistributeButton = ({
   contract,
@@ -25,6 +23,7 @@ export const DistributeButton = ({
   isLoggedIn: boolean;
 }) => {
   const validBalances = balances.filter((item) => item.value !== 0n);
+
   const numTransactions = useMemo(() => {
     if (
       validBalances.length === 1 &&
@@ -38,20 +37,10 @@ export const DistributeButton = ({
     return validBalances?.filter((b) => b.value !== 0n).length;
   }, [validBalances, balancesIsPending]);
 
-  const mutation = useSplitDistributeFunds(contract);
+  const distributeFundsMutation = useSplitDistributeFunds(contract);
 
   const distributeFunds = () => {
-    mutation.mutate(undefined, {
-      onError: (error) => {
-        toast.error("Failed to process transaction", {
-          description: parseError(error),
-        });
-        console.error(error);
-      },
-      onSuccess: () => {
-        toast.success("Funds splitted successfully");
-      },
-    });
+    distributeFundsMutation.mutateAsync();
   };
 
   if (balancesIsError) {
@@ -59,7 +48,7 @@ export const DistributeButton = ({
       <TransactionButton
         client={contract.client}
         isLoggedIn={isLoggedIn}
-        isPending={mutation.isPending}
+        isPending={distributeFundsMutation.isPending}
         onClick={distributeFunds}
         size="sm"
         transactionCount={undefined}
@@ -86,7 +75,7 @@ export const DistributeButton = ({
     <TransactionButton
       client={contract.client}
       isLoggedIn={isLoggedIn}
-      isPending={mutation.isPending}
+      isPending={distributeFundsMutation.isPending}
       onClick={distributeFunds}
       transactionCount={numTransactions === 1 ? undefined : numTransactions}
       txChainID={contract.chain.id}

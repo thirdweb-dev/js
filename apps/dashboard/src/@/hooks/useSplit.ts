@@ -7,6 +7,7 @@ import {
 import { toast } from "sonner";
 import {
   type Chain,
+  getAddress,
   NATIVE_TOKEN_ADDRESS,
   sendAndConfirmTransaction,
   type ThirdwebClient,
@@ -98,7 +99,8 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
         .filter((token) => token.value !== 0n)
         .map(async (currency) => {
           const transaction =
-            currency.name === "Native Token"
+            getAddress(currency.tokenAddress) ===
+            getAddress(NATIVE_TOKEN_ADDRESS)
               ? distribute({ contract })
               : distributeByToken({
                   contract,
@@ -108,6 +110,7 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
             account,
             transaction,
           });
+
           toast.promise(promise, {
             error: (err) => ({
               message: `Error distributing ${currency.name}`,
@@ -116,6 +119,8 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
             loading: `Distributing ${currency.name}`,
             success: `Successfully distributed ${currency.name}`,
           });
+
+          await promise;
         });
 
       return await Promise.all(distributions);
