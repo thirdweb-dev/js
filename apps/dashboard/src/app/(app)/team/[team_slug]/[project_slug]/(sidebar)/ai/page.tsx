@@ -45,30 +45,45 @@ export default async function Page(props: {
     teamId: project.teamId,
   });
 
-  const { range, interval, defaultRange } = getFiltersFromSearchParams({
-    defaultRange: "last-30" as DurationId,
+  const defaultRange = "last-30" as DurationId;
+  const { range, interval } = getFiltersFromSearchParams({
+    defaultRange,
     from: searchParams.from,
     interval: searchParams.interval,
     to: searchParams.to,
   });
 
   return (
-    <ResponsiveSearchParamsProvider>
+    <ResponsiveSearchParamsProvider value={searchParams}>
       <ProjectPage
-        project={project}
         header={{
+          client,
           title: "AI",
-          description:
-            "Interact with any EVM chain with natural language",
-          docsLink: "https://portal.thirdweb.com/ai/chat",
+          description: "Interact with any EVM chain with natural language",
+          actions: {
+            primary: {
+              label: "Documentation",
+              href: "https://portal.thirdweb.com/ai/chat",
+              external: true,
+            },
+            secondary: {
+              label: "API Reference",
+              href: "https://api.thirdweb.com/reference#tag/ai/post/ai/chat",
+              external: true,
+            },
+          },
           links: [
             {
+              href: "https://portal.thirdweb.com/ai/chat",
+              type: "docs",
+            },
+            {
               href: "https://api.thirdweb.com/reference#tag/ai/post/ai/chat",
-              label: "API Reference",
+              type: "api",
             },
             {
               href: "https://playground.thirdweb.com/ai/chat",
-              label: "Playground",
+              type: "playground",
             },
           ],
         }}

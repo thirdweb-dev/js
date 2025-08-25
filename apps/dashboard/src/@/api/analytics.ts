@@ -236,10 +236,7 @@ const cached_getAiUsage = unstable_cache(
   },
 );
 
-export function getAiUsage(
-  params: AnalyticsQueryParams,
-  authToken: string,
-) {
+export function getAiUsage(params: AnalyticsQueryParams, authToken: string) {
   return cached_getAiUsage(normalizedParams(params), authToken);
 }
 

@@ -1,4 +1,4 @@
-import { ActivityIcon, MessageSquareIcon, CoinsIcon } from "lucide-react";
+import { ActivityIcon, MessageSquareIcon } from "lucide-react";
 import { Suspense } from "react";
 import { getAiUsage } from "@/api/analytics";
 import type { Range } from "@/components/analytics/date-range-selector";
@@ -9,10 +9,6 @@ function AiSummaryInner(props: {
   stats: AIUsageStats[] | undefined;
   isPending: boolean;
 }) {
-  const totalRequests = props.stats?.reduce((acc, curr) => {
-    return acc + curr.totalRequests;
-  }, 0);
-
   const totalSessions = props.stats?.reduce((acc, curr) => {
     return acc + curr.totalSessions;
   }, 0);
@@ -22,21 +18,15 @@ function AiSummaryInner(props: {
   }, 0);
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-2 gap-4">
       <StatCard
         icon={ActivityIcon}
-        isPending={props.isPending}
-        label="Requests"
-        value={totalRequests || 0}
-      />
-      <StatCard
-        icon={MessageSquareIcon}
         isPending={props.isPending}
         label="Sessions"
         value={totalSessions || 0}
       />
       <StatCard
-        icon={CoinsIcon}
+        icon={MessageSquareIcon}
         isPending={props.isPending}
         label="Tokens"
         value={totalTokens || 0}
@@ -66,10 +56,7 @@ async function AsyncAiSummary(props: {
   const aggregatedStats = await aggregatedStatsPromise.catch(() => null);
 
   return (
-    <AiSummaryInner
-      stats={aggregatedStats || undefined}
-      isPending={false}
-    />
+    <AiSummaryInner stats={aggregatedStats || undefined} isPending={false} />
   );
 }
 
@@ -80,9 +67,7 @@ export function AiSummary(props: {
   range: Range;
 }) {
   return (
-    <Suspense
-      fallback={<AiSummaryInner stats={undefined} isPending={true} />}
-    >
+    <Suspense fallback={<AiSummaryInner stats={undefined} isPending={true} />}>
       <AsyncAiSummary
         projectId={props.projectId}
         teamId={props.teamId}

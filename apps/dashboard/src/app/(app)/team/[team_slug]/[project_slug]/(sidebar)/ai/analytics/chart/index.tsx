@@ -14,10 +14,7 @@ type AiAnalyticsProps = {
   isPending: boolean;
 };
 
-function AiAnalyticsUI({
-  stats,
-  isPending,
-}: AiAnalyticsProps) {
+function AiAnalyticsUI({ stats, isPending }: AiAnalyticsProps) {
   return (
     <AiTokenUsageChartCardUI
       title="Token Usage"
@@ -28,18 +25,13 @@ function AiAnalyticsUI({
   );
 }
 
-type AsyncAiAnalyticsProps = Omit<
-  AiAnalyticsProps,
-  "stats" | "isPending"
-> & {
+type AsyncAiAnalyticsProps = Omit<AiAnalyticsProps, "stats" | "isPending"> & {
   teamId: string;
   projectId: string;
   authToken: string;
 };
 
-async function AsyncAiAnalytics(
-  props: AsyncAiAnalyticsProps,
-) {
+async function AsyncAiAnalytics(props: AsyncAiAnalyticsProps) {
   const range = props.range ?? getLastNDaysRange("last-30");
 
   const stats = await getAiUsage(
@@ -57,12 +49,7 @@ async function AsyncAiAnalytics(
   });
 
   return (
-    <AiAnalyticsUI
-      {...props}
-      isPending={false}
-      range={range}
-      stats={stats}
-    />
+    <AiAnalyticsUI {...props} isPending={false} range={range} stats={stats} />
   );
 }
 
@@ -70,9 +57,7 @@ export function AiAnalytics(props: AsyncAiAnalyticsProps) {
   return (
     <ResponsiveSuspense
       searchParamsUsed={["from", "to", "interval"]}
-      fallback={
-        <AiAnalyticsUI {...props} isPending={true} stats={[]} />
-      }
+      fallback={<AiAnalyticsUI {...props} isPending={true} stats={[]} />}
     >
       <AsyncAiAnalytics {...props} />
     </ResponsiveSuspense>
