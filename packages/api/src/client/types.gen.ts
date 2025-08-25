@@ -3096,8 +3096,5 @@ export type TransferTokenWithUsdResponse =
 	TransferTokenWithUsdResponses[keyof TransferTokenWithUsdResponses];
 
 export type ClientOptions = {
-	baseUrl:
-		| "https://api.thirdweb-dev.com"
-		| "http://localhost:3030"
-		| (string & {});
+	baseUrl: "https://api.thirdweb.com" | "http://localhost:3030" | (string & {});
 };
