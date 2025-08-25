@@ -36,22 +36,17 @@ export async function submitSupportFeedback(
     });
 
     if (!response.ok) {
-      if (response.status === 404) {
-        // CSAT endpoint doesn't exist in development, log locally
-        console.log(
-          "📝 CSAT endpoint not available in development, logging locally:",
+      if (response.status === 404 && process.env.NODE_ENV !== "production") {
+        // Only in non-prod, simulate success if the endpoint isn't deployed yet
+        console.debug(
+          "CSAT endpoint not available; treating as success in dev",
           {
             rating: data.rating,
-            feedback: data.feedback,
             ticket_id: data.ticketId,
-            timestamp: new Date().toISOString(),
-            environment: "development",
+            env: process.env.NODE_ENV,
           },
         );
-
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
+        await new Promise((resolve) => setTimeout(resolve, 300));
         return { success: true };
       }
 
