@@ -23,7 +23,7 @@ export const sidebar: SideBar = {
         },
         {
           name: "API Reference",
-          href: "https://api.thirdweb-dev.com/reference#tag/ai/post/ai/chat",
+          href: "https://api.thirdweb.com/reference#tag/ai/post/ai/chat",
         },
       ],
     },
