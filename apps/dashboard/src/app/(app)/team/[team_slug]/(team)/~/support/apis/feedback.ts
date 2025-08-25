@@ -1,5 +1,7 @@
 "use server";
 
+import { getVercelEnv } from "@/utils/vercel";
+
 interface FeedbackData {
   rating: number;
   feedback: string;
@@ -36,14 +38,17 @@ export async function submitSupportFeedback(
     });
 
     if (!response.ok) {
-      if (response.status === 404 && process.env.NODE_ENV !== "production") {
-        // Only in non-prod, simulate success if the endpoint isn't deployed yet
+      // Check if we're in a preview environment (Vercel preview deployments)
+      const vercelEnv = getVercelEnv();
+      const isPreview = vercelEnv === "preview" || vercelEnv === "development";
+      if (response.status === 404 && isPreview) {
+        // Only in preview/dev, simulate success if the endpoint isn't deployed yet
         console.debug(
-          "CSAT endpoint not available; treating as success in dev",
+          "CSAT endpoint not available; treating as success in preview/dev",
           {
             rating: data.rating,
             ticket_id: data.ticketId,
-            env: process.env.NODE_ENV,
+            vercel_env: vercelEnv,
           },
         );
         await new Promise((resolve) => setTimeout(resolve, 300));
