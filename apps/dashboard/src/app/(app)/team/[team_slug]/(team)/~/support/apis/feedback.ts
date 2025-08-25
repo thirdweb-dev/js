@@ -31,13 +31,10 @@ export async function submitSupportFeedback(
   const input = parsed.data;
 
   try {
-    if (!NEXT_PUBLIC_DASHBOARD_CLIENT_ID) {
-      return { error: "NEXT_PUBLIC_DASHBOARD_CLIENT_ID not configured" };
-    }
-
-    if (!NEXT_PUBLIC_THIRDWEB_API_HOST) {
-      return { error: "NEXT_PUBLIC_THIRDWEB_API_HOST not configured" };
-    }
+    // Use fallback client ID if not configured (following codebase pattern)
+    const clientId = NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "dummy-build-client";
+    const vercelEnv = getVercelEnv();
+    const isPreview = vercelEnv === "preview" || vercelEnv === "development";
 
     const response = await fetch(
       `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/csat/saveCSATFeedback`,
@@ -45,7 +42,7 @@ export async function submitSupportFeedback(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-service-api-key": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
+          "x-service-api-key": clientId,
         },
         body: JSON.stringify({
           rating: input.rating,
@@ -56,9 +53,6 @@ export async function submitSupportFeedback(
     );
 
     if (!response.ok) {
-      // Check if we're in a preview environment (Vercel preview deployments)
-      const vercelEnv = getVercelEnv();
-      const isPreview = vercelEnv === "preview" || vercelEnv === "development";
       if (response.status === 404 && isPreview) {
         // Only in preview/dev, simulate success if the endpoint isn't deployed yet
         console.debug(
