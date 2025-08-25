@@ -14,11 +14,11 @@ type InfraServiceCardProps = {
 
 export function InfraServiceCard({ title, status }: InfraServiceCardProps) {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-3">
       {/* Header row with status and optional action */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{title}</h3>
+        <div className="flex items-center gap-2.5">
+          <h3 className="text-2xl font-semibold tracking-tight">{title}</h3>
           <Badge
             className="gap-2"
             variant={

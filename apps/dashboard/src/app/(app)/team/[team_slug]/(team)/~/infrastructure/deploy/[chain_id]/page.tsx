@@ -1,11 +1,13 @@
-import { ArrowUpDownIcon } from "lucide-react";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "@/api/account/get-account";
 import { getMembers } from "@/api/team/team-members";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { getChain } from "../../../../../../../(dashboard)/(chain)/utils";
@@ -45,47 +47,55 @@ export default async function DeployInfrastructureOnChainPage(props: {
   const client = getClientThirdwebClient();
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col items-center gap-4 md:flex-row">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          Deploy Infrastructure on
-        </h2>
-        <Card>
-          <CardContent className="flex gap-4 items-center p-4">
-            <span className="flex gap-2 truncate text-left items-center">
-              {chain.icon && (
-                <ChainIconClient
-                  className="size-6"
-                  client={client}
-                  loading="lazy"
-                  src={chain.icon?.url}
-                />
-              )}
-              {cleanChainName(chain.name)}
-            </span>
-
-            <Badge className="gap-2" variant="outline">
-              <span className="text-muted-foreground">Chain ID</span>
-              {chain.chainId}
-            </Badge>
-            <Button
-              asChild
-              className="text-muted-foreground p-0 hover:text-foreground size-4"
-              size="icon"
-              variant="link"
-            >
-              <Link href={`/team/${params.team_slug}/~/infrastructure/deploy`}>
-                <ArrowUpDownIcon className="size-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col pb-20">
+      {/* breadcrumb */}
+      <div className="border-b border-dashed py-3">
+        <Breadcrumb className="container max-w-7xl">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                href={`/team/${params.team_slug}/~/infrastructure/deploy`}
+              >
+                {" "}
+                Deploy Infrastructure{" "}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink>{cleanChainName(chain.name)}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
-      <DeployInfrastructureForm
-        chain={chain}
-        isOwner={accountMemberInfo.role === "OWNER"}
-        teamSlug={params.team_slug}
-      />
+
+      {/* header */}
+      <div className="border-b py-10">
+        <div className="container max-w-7xl">
+          <div className="flex mb-4">
+            <div className="p-2 rounded-full bg-card border">
+              <ChainIconClient
+                className="size-8"
+                client={client}
+                loading="lazy"
+                src={chain.icon?.url}
+              />
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Deploy Infrastructure on {cleanChainName(chain.name)}
+          </h2>
+        </div>
+      </div>
+
+      {/* form */}
+      <div className="container max-w-7xl pt-8">
+        <DeployInfrastructureForm
+          chain={chain}
+          isOwner={accountMemberInfo.role === "OWNER"}
+          teamSlug={params.team_slug}
+        />
+      </div>
     </div>
   );
 }

@@ -66,109 +66,104 @@ export default async function DeployInfrastructureOnChainPage(props: {
       : "N/A";
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Chain header */}
-      <div className="flex flex-col items-center gap-4 md:flex-row">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          Infrastructure for
-        </h2>
-        <Card>
-          <CardContent className="flex gap-4 items-center p-4">
-            <span className="flex gap-2 truncate text-left items-center">
-              {chain.icon && (
-                <ChainIconClient
-                  className="size-6"
-                  client={client}
-                  loading="lazy"
-                  src={chain.icon?.url}
-                />
-              )}
-              {cleanChainName(chain.name)}
-            </span>
+    <div className="pb-20">
+      <div className="border-b py-10">
+        {/* header */}
+        <div className="container max-w-7xl">
+          <div className="flex mb-4">
+            <div className="rounded-full border bg-card p-2">
+              <ChainIconClient
+                className="size-8"
+                client={client}
+                loading="lazy"
+                src={chain.icon?.url}
+              />
+            </div>
+          </div>
 
-            <Badge className="gap-2" variant="outline">
-              <span className="text-muted-foreground">Chain ID</span>
-              {chain.chainId}
-            </Badge>
+          <h2 className="text-3xl font-semibold tracking-tight">
+            {cleanChainName(chain.name)} Infrastructure
+          </h2>
+        </div>
+      </div>
+
+      <div className="container max-w-7xl pt-8 flex flex-col gap-8">
+        {PRODUCTS.map((product) => {
+          const hasSku = chainSubscription.skus.includes(product.sku);
+
+          // Map sku to chain service key
+          const skuToServiceKey: Record<string, string> = {
+            "chain:infra:account_abstraction": "account-abstraction",
+            "chain:infra:insight": "insight",
+            "chain:infra:rpc": "rpc-edge",
+          };
+
+          const serviceKey = skuToServiceKey[product.sku];
+          const chainService = chain.services.find(
+            (s) => s.service === serviceKey,
+          );
+          const serviceEnabled =
+            chainService?.enabled ?? chainService?.status === "enabled";
+
+          let status: "active" | "pending" | "inactive";
+          if (hasSku && serviceEnabled) {
+            status = "active";
+          } else if (hasSku && !serviceEnabled) {
+            status = "pending";
+          } else {
+            status = "inactive";
+          }
+
+          return (
+            <InfraServiceCard
+              key={product.sku}
+              status={status}
+              title={product.title}
+            />
+          );
+        })}
+
+        <Separator />
+        {/* Subscription summary */}
+        <Card>
+          <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
+            {/* Left: header + info */}
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2">
+                <h3 className="text-lg font-semibold">Subscription details </h3>
+                {chainSubscription.isLegacy && (
+                  <Badge className="gap-0.5" variant="outline">
+                    <span>Enterprise</span>
+                    <ToolTipLabel
+                      label={
+                        <span className="text-xs font-normal">
+                          This subscription is part of an enterprise agreement
+                          and cannot be modified through the dashboard. Please
+                          contact your account executive for any modifications.
+                        </span>
+                      }
+                    >
+                      <InfoIcon className="size-3 ml-1 cursor-help" />
+                    </ToolTipLabel>
+                  </Badge>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-8">
+                <div className="flex gap-2 items-center">
+                  <span className="text-muted-foreground">Renews on</span>
+                  <span>{formattedRenewalDate}</span>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <span className="text-muted-foreground">Amount due</span>
+                  <span>{formattedAmountDue}</span>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
-
-      {PRODUCTS.map((product) => {
-        const hasSku = chainSubscription.skus.includes(product.sku);
-
-        // Map sku to chain service key
-        const skuToServiceKey: Record<string, string> = {
-          "chain:infra:account_abstraction": "account-abstraction",
-          "chain:infra:insight": "insight",
-          "chain:infra:rpc": "rpc-edge",
-        };
-
-        const serviceKey = skuToServiceKey[product.sku];
-        const chainService = chain.services.find(
-          (s) => s.service === serviceKey,
-        );
-        const serviceEnabled =
-          chainService?.enabled ?? chainService?.status === "enabled";
-
-        let status: "active" | "pending" | "inactive";
-        if (hasSku && serviceEnabled) {
-          status = "active";
-        } else if (hasSku && !serviceEnabled) {
-          status = "pending";
-        } else {
-          status = "inactive";
-        }
-
-        return (
-          <InfraServiceCard
-            key={product.sku}
-            status={status}
-            title={product.title}
-          />
-        );
-      })}
-
-      <Separator />
-      {/* Subscription summary */}
-      <Card>
-        <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-          {/* Left: header + info */}
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <h3 className="text-lg font-semibold">Subscription details </h3>
-              {chainSubscription.isLegacy && (
-                <Badge className="gap-0.5" variant="outline">
-                  <span>Enterprise</span>
-                  <ToolTipLabel
-                    label={
-                      <span className="text-xs font-normal">
-                        This subscription is part of an enterprise agreement and
-                        cannot be modified through the dashboard. Please contact
-                        your account executive for any modifications.
-                      </span>
-                    }
-                  >
-                    <InfoIcon className="size-3 ml-1 cursor-help" />
-                  </ToolTipLabel>
-                </Badge>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-8">
-              <div className="flex gap-2 items-center">
-                <span className="text-muted-foreground">Renews on</span>
-                <span>{formattedRenewalDate}</span>
-              </div>
-
-              <div className="flex gap-2 items-center">
-                <span className="text-muted-foreground">Amount due</span>
-                <span>{formattedAmountDue}</span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
+import { CheckIcon, InfoIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { getChainInfraCheckoutURL } from "@/actions/billing";
 import { reportChainInfraRpcOmissionAgreed } from "@/analytics/report";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,11 +117,11 @@ export function DeployInfrastructureForm(props: {
 
   const bundleHint = useMemo(() => {
     if (selectedCount === 1) {
-      return "Add one more add-on to unlock a 10% bundle discount.";
+      return "Add one more add-on to unlock a 10% bundle discount";
     } else if (selectedCount === 2) {
-      return "Add another add-on to increase your bundle discount to 15%.";
+      return "Add another add-on to increase your bundle discount to 15%";
     } else if (selectedCount >= 3) {
-      return "🎉 Congrats! You unlocked the maximum 15% bundle discount.";
+      return "Congrats! You unlocked the maximum 15% bundle discount";
     }
     return null;
   }, [selectedCount]);
@@ -234,8 +236,8 @@ export function DeployInfrastructureForm(props: {
   return (
     <div className="flex flex-col gap-8 lg:flex-row">
       {/* Left column: service selection + frequency */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-lg font-semibold">Select Services</h3>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-xl font-semibold tracking-tight">Services</h3>
 
         {/* RPC (now optional) */}
         <div className="flex flex-col gap-2 mb-6">
@@ -258,13 +260,11 @@ export function DeployInfrastructureForm(props: {
 
         {/* Optional add-ons */}
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <p className="text-muted-foreground text-sm">Add-ons</p>
-            {bundleHint && (
-              <p className="text-xs font-medium text-primary">{bundleHint}</p>
-            )}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <h3 className="text-xl font-semibold tracking-tight">Add-ons</h3>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+
+          <div className="space-y-4">
             {/* Insight */}
             <ServiceCard
               description={SERVICE_CONFIG.insight.description}
@@ -304,14 +304,21 @@ export function DeployInfrastructureForm(props: {
               price={pricePerService.accountAbstraction}
               selected={includeAA}
             />
+
+            {bundleHint && (
+              <Alert variant="default" className="relative overflow-hidden">
+                <InfoIcon className="size-5" />
+                <AlertTitle>{bundleHint}</AlertTitle>
+              </Alert>
+            )}
           </div>
         </div>
       </div>
 
       {/* Right column: order summary */}
-      <div className="w-full lg:max-w-sm border rounded-md p-6 bg-muted/30 h-fit">
-        <h3 className="font-medium mb-4">Order Summary</h3>
-        <div className="space-y-2 text-sm">
+      <div className="w-full lg:max-w-sm border rounded-xl p-4 bg-card h-fit">
+        <h3 className="font-semibold mb-4 text-lg">Order Summary</h3>
+        <div className="space-y-3 text-sm">
           {selectedOrder.map((key) => (
             <div className="flex justify-between" key={key}>
               <span>{SERVICE_CONFIG[key].label}</span>
@@ -329,15 +336,16 @@ export function DeployInfrastructureForm(props: {
             </div>
           ))}
 
-          <div className="flex justify-between pt-2 border-t mt-2">
+          <div className="flex justify-between pt-3 border-t mt-3">
             <span>Subtotal</span>
             <span>
               {formatUSD(subtotal)}
               {periodLabel}
             </span>
           </div>
+
           {bundleDiscount > 0 && (
-            <div className="flex justify-between text-green-600">
+            <div className="flex justify-between text-green-600 font-medium">
               <span>
                 Bundle Discount (
                 {Object.values(selectedServices).filter(Boolean).length === 2
@@ -485,50 +493,52 @@ function ServiceCard(props: {
     icon,
     onToggle,
   } = props;
+
+  const IconComp = getIcon(icon);
   return (
     <button
       className={cn(
-        "flex flex-col items-start gap-3 rounded-lg p-4 text-left transition-colors border",
-        disabled
-          ? "border-primary bg-primary/10"
-          : selected
-            ? "border-primary bg-primary/10 hover:bg-primary/10 hover:border-primary/50"
-            : "hover:border-primary/50 hover:bg-muted/40",
+        "flex bg-card flex-col items-start rounded-xl p-4 text-left transition-colors border relative",
+        disabled && "opacity-50",
       )}
       disabled={disabled}
       onClick={() => !disabled && onToggle()}
       type="button"
     >
-      <div className="flex items-center justify-between w-full">
-        <h4 className="font-semibold text-lg leading-none flex gap-2 items-center">
-          {(() => {
-            const IconComp = getIcon(icon);
-            return <IconComp className="size-4" />;
-          })()}
-          {label}
-          {required && <Badge variant="outline">Always Included</Badge>}
-        </h4>
-        {!disabled && (
-          <span
-            className={cn(
-              "size-4 rounded-full border flex items-center justify-center transition-colors",
-              selected ? "bg-primary border-primary" : "",
-            )}
-          >
-            {selected && <span className="size-2 bg-card rounded-full" />}
-          </span>
-        )}
+      <div className="flex mb-4">
+        <div className="rounded-full p-2 bg-card border">
+          <IconComp className="size-4 text-muted-foreground" />
+        </div>
       </div>
+
+      {!disabled && (
+        <span
+          className={cn(
+            "absolute top-4 right-4 size-6 rounded-full border-2 border-active-border flex items-center justify-center transition-colors",
+            selected && "border-foreground bg-foreground",
+          )}
+        >
+          {selected && (
+            <CheckIcon className="size-4 text-inverted-foreground" />
+          )}
+        </span>
+      )}
+
+      <h4 className="font-semibold text-lg mb-1 flex gap-2 items-center">
+        {label}
+        {required && <Badge variant="outline">Always Included</Badge>}
+      </h4>
       <p className="text-muted-foreground text-sm min-h-[48px]">
         {description}
       </p>
-      <p className="mt-auto font-medium flex items-center gap-2">
+
+      <p className="mt-auto pt-3 font-medium flex items-center gap-2">
         {originalPrice && (
           <span className="text-muted-foreground line-through text-xs">
             {formatUSD(originalPrice)}
           </span>
         )}
-        <span>
+        <span className="font-medium">
           {formatUSD(price)}
           {periodLabel}
         </span>
