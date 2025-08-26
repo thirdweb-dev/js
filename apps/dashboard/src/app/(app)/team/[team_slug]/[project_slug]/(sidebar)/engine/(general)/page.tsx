@@ -1,3 +1,4 @@
+import { DatabaseIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team/get-team";
@@ -56,6 +57,7 @@ export default async function Page(props: {
     <ProjectPage
       header={{
         client,
+        icon: DatabaseIcon,
         title: "Engine",
         description: "Manage your deployed Engine instances.",
         actions: {

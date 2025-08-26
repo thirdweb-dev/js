@@ -235,7 +235,7 @@ export function CreateContractWebhookButton({
           size="sm"
           onClick={handleOpenModal}
         >
-          <PlusIcon className="size-4" />
+          <PlusIcon className="size-3.5" />
           Create Webhook
         </Button>
       </DialogTrigger>

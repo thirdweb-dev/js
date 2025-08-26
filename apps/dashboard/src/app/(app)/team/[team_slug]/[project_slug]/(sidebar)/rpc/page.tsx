@@ -1,3 +1,4 @@
+import { RssIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
@@ -47,17 +48,17 @@ export default async function Page(props: {
   return (
     <ProjectPage
       header={{
+        icon: RssIcon,
         client,
         title: "RPC",
-        description:
-          "Remote Procedure Call (RPC) provides reliable access to querying data and interacting with the blockchain through global edge RPCs.",
-        actions: {
-          primary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
-            external: true,
-          },
-        },
+        description: (
+          <>
+            Remote Procedure Call (RPC) provides reliable access to{" "}
+            <br className="max-sm:hidden" /> querying data and interacting with
+            the blockchain through global edge RPCs
+          </>
+        ),
+        actions: null,
         links: [
           {
             type: "docs",

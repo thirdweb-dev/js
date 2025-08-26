@@ -132,7 +132,7 @@ export function DedicatedEngineSubscriptionButton(props: { team: Team }) {
 
   const trigger = (
     <Button className="gap-2 rounded-full" size="sm">
-      <PlusIcon className="size-4" />
+      <PlusIcon className="size-3.5" />
       Deploy Dedicated Engine
     </Button>
   );

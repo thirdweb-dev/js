@@ -7,6 +7,7 @@ import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-fi
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { InAppWalletUsersPageContent } from "@/components/in-app-wallet-users-content/in-app-wallet-users-content";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
 import { InAppWalletAnalytics } from "./analytics/chart";
@@ -54,6 +55,7 @@ export default async function Page(props: {
     <ResponsiveSearchParamsProvider value={searchParams}>
       <ProjectPage
         header={{
+          icon: WalletProductIcon,
           client,
           title: "Wallets",
           description: (
@@ -64,17 +66,9 @@ export default async function Page(props: {
               verification, OAuth, passkeys, or external wallet connections
             </>
           ),
-          actions: {
-            primary: {
-              label: "Documentation",
-              href: "https://portal.thirdweb.com/wallets",
-              external: true,
-            },
-            secondary: {
-              label: "API Reference",
-              href: "https://api.thirdweb.com/reference#tag/wallets",
-              external: true,
-            },
+          actions: null,
+          settings: {
+            href: `/team/${params.team_slug}/${params.project_slug}/settings/wallets`,
           },
           links: [
             {
@@ -88,10 +82,6 @@ export default async function Page(props: {
             {
               type: "api",
               href: "https://api.thirdweb.com/reference#tag/wallets",
-            },
-            {
-              type: "settings",
-              href: `/team/${params.team_slug}/${params.project_slug}/settings/wallets`,
             },
           ],
         }}

@@ -3,10 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
+  ArrowDownToLineIcon,
   CircleAlertIcon,
-  DownloadIcon,
   ExternalLinkIcon,
-  ImportIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -108,11 +107,11 @@ export function ImportEngineButton(props: {
         <Dialog>
           <DialogTrigger asChild>
             <Button
-              className="gap-2 rounded-full border"
+              className="gap-2 rounded-full bg-card"
               size="sm"
-              variant="secondary"
+              variant="outline"
             >
-              <ImportIcon className="size-4" />
+              <ArrowDownToLineIcon className="size-3.5" />
               Import Engine
             </Button>
           </DialogTrigger>
@@ -188,7 +187,7 @@ export function ImportEngineButton(props: {
                 {importMutation.isPending ? (
                   <Spinner className="size-4" />
                 ) : (
-                  <DownloadIcon className="size-4" />
+                  <ArrowDownToLineIcon className="size-4" />
                 )}
                 Import
               </Button>

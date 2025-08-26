@@ -7,7 +7,7 @@ import {
   HomeIcon,
   LockIcon,
   RssIcon,
-  SettingsIcon,
+  Settings2Icon,
   WebhookIcon,
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
@@ -138,7 +138,7 @@ export function ProjectSidebarLayout(props: {
         },
         {
           href: `${props.layoutPath}/settings`,
-          icon: SettingsIcon,
+          icon: Settings2Icon,
           label: "Project Settings",
         },
         {

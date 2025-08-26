@@ -6,6 +6,7 @@ import type { DurationId } from "@/components/analytics/date-range-selector";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { NebulaIcon } from "@/icons/NebulaIcon";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
 import { AiAnalytics } from "./analytics/chart";
@@ -57,21 +58,11 @@ export default async function Page(props: {
     <ResponsiveSearchParamsProvider value={searchParams}>
       <ProjectPage
         header={{
+          icon: NebulaIcon,
           client,
           title: "AI",
           description: "Interact with any EVM chain with natural language",
-          actions: {
-            primary: {
-              label: "Documentation",
-              href: "https://portal.thirdweb.com/ai/chat",
-              external: true,
-            },
-            secondary: {
-              label: "API Reference",
-              href: "https://api.thirdweb.com/reference#tag/ai/post/ai/chat",
-              external: true,
-            },
-          },
+          actions: null,
           links: [
             {
               href: "https://portal.thirdweb.com/ai/chat",

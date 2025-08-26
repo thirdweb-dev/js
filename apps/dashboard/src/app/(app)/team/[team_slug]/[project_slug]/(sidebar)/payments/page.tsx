@@ -6,6 +6,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { PayIcon } from "@/icons/PayIcon";
 import { loginRedirect } from "@/utils/redirects";
 import { AdvancedSection } from "./components/AdvancedSection.client";
 import { PayAnalytics } from "./components/PayAnalytics";
@@ -56,6 +57,7 @@ export default async function Page(props: {
       header={{
         client,
         title: "Payments",
+        icon: PayIcon,
         description: (
           <>
             Payments allow you to create advanced payment flows to monetize your
@@ -77,11 +79,9 @@ export default async function Page(props: {
               </CreatePaymentLinkButton>
             ),
           },
-          secondary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/payments",
-            external: true,
-          },
+        },
+        settings: {
+          href: `/team/${params.team_slug}/${params.project_slug}/settings/payments`,
         },
         links: [
           {
@@ -100,10 +100,10 @@ export default async function Page(props: {
             type: "webhooks",
             href: `/team/${params.team_slug}/${params.project_slug}/webhooks/payments`,
           },
-          {
-            type: "settings",
-            href: `/team/${params.team_slug}/${params.project_slug}/settings/payments`,
-          },
+          // {
+          //   type: "settings",
+          //   href: `/team/${params.team_slug}/${params.project_slug}/settings/payments`,
+          // },
         ],
       }}
       footer={{

@@ -1,5 +1,5 @@
 import { Button } from "@workspace/ui/components/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, WebhookIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -33,6 +33,7 @@ export default async function Page(props: {
     <ProjectPage
       header={{
         client,
+        icon: WebhookIcon,
         title: "Webhooks",
         description: "Get notified for Bridge, Swap and Onramp events.",
         actions: {
@@ -42,19 +43,20 @@ export default async function Page(props: {
                 clientId={project.publishableKey}
                 teamId={project.teamId}
               >
-                <Button className="gap-1.5 rounded-full">
-                  <PlusIcon className="size-4" />
+                <Button className="gap-2 rounded-full" size="sm">
+                  <PlusIcon className="size-3.5" />
                   <span>Create Webhook</span>
                 </Button>
               </CreatePaymentWebhookButton>
             ),
           },
-          secondary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/payments/webhooks",
-            external: true,
-          },
         },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/payments/webhooks",
+          },
+        ],
       }}
       tabs={[
         {

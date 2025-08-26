@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@workspace/ui/components/button";
-import { CoinsIcon, ImagesIcon, ImportIcon } from "lucide-react";
+import { ArrowDownToLineIcon, CoinsIcon, ImagesIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -23,15 +23,15 @@ export function ImportTokenButton(props: {
   return (
     <>
       <Button
-        variant="secondary"
-        className="gap-1.5 rounded-full border"
+        variant="outline"
+        className="gap-2 rounded-full bg-card"
         size="sm"
         onClick={() => {
           reportAssetImportStarted();
           setImportModalOpen(true);
         }}
       >
-        <ImportIcon className="size-4" />
+        <ArrowDownToLineIcon className="size-3.5 text-muted-foreground" />
         Import Token
       </Button>
 
