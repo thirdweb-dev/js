@@ -21,7 +21,7 @@ type ProjectPageProps = {
 
 export function ProjectPage(props: React.PropsWithChildren<ProjectPageProps>) {
   return (
-    <div className={cn("flex flex-col pb-20", props.footer && "pb-0")}>
+    <div className="flex flex-col grow">
       <div className={cn(!props.tabs && "border-b")}>
         <ProjectPageHeader {...props.header} />
         {props.tabs && (
@@ -33,8 +33,9 @@ export function ProjectPage(props: React.PropsWithChildren<ProjectPageProps>) {
       </div>
 
       <main className="container max-w-7xl pt-6">{props.children}</main>
+      <div className="h-20" />
       {props.footer && (
-        <div className="border-t mt-20">
+        <div className="border-t mt-auto">
           <ProjectPageFooter {...props.footer} />
         </div>
       )}
