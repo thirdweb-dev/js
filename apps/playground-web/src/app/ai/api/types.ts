@@ -22,8 +22,8 @@ export type NebulaUserMessage = {
 };
 
 export type NebulaTxData = {
-  chainId: number;
+  chain_id: number;
   data: `0x${string}`;
   to: string;
-  value?: string;
+  value: string;
 };

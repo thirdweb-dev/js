@@ -84,7 +84,7 @@ function AISection() {
           description="Integrate the most advanced blockchain model into your applications"
           href="/ai/chat"
           icon={MessageCircleIcon}
-          title="Chat API"
+          title="Blockchain LLM"
         />
         <ArticleCardIndex
           description="For agents and humans. Use the thirdweb API with natural language"

@@ -119,7 +119,7 @@ export async function promptNebula(params: {
 
         if (data.type === "sign_transaction") {
           try {
-            const parsedTxData = JSON.parse(data.data) as NebulaTxData;
+            const parsedTxData = data.data as NebulaTxData;
             params.handleStream({
               data: parsedTxData,
               event: "action",
@@ -133,7 +133,7 @@ export async function promptNebula(params: {
 
         if (data.type === "sign_swap") {
           try {
-            const swapData = JSON.parse(data.data) as NebulaSwapData;
+            const swapData = data.data as NebulaSwapData;
             params.handleStream({
               data: swapData,
               event: "action",

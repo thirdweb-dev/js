@@ -58,7 +58,12 @@ data: {
   "request_id": "9efc7f6a-8576-4d9c-8603-f6c72aa72164",
   "type": "sign_transaction",
   "source": "executor",
-  "data": "{\"chainId\": 11155111, \"to\": \"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045\", \"data\": \"0x\", \"value\": \"0x5af3107a4000\"}"
+  "data": {
+    "chain_id": 11155111,
+    "to": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "data": "0x",
+    "value": "0x5af3107a4000"
+  }
 }
 ```
 
@@ -90,52 +95,57 @@ for await (const event of events) {
 	if (!event.data) {
 		continue;
 	}
+	const parsedEventData = JSON.parse(event.data);
 	switch (event.event) {
 		case "init": {
-			console.log("Init event", event.data);
+			console.log("Init event", parsedEventData);
             // handle init event (session id and request id)
 			break;
 		}
 		case "presence": {
-			console.log("Presence event", event.data);
+			console.log("Presence event", parsedEventData);
             // handle intermediate thinking steps
 			break;
 		}
 		case "delta": {
-			console.log("Delta event", event.data);
+			console.log("Delta event", parsedEventData);
             // handle delta event (streamed output text response)
 			break;
 		}
 		case "action": {
-			const data = JSON.parse(event.data);
-
 			// handle transaction signing
-			if (data.type === "sign_transaction") {
-				const transactionData = JSON.parse(data.data);
+			if (parsedEventData.type === "sign_transaction") {
+				const transactionData = parsedEventData.data;
 				console.log("Sign transaction event", transactionData);
 			}
 
 			// handle swap signing
-			if (data.type === "sign_swap") {
-				const swapData = JSON.parse(data.data);
+			if (parsedEventData.type === "sign_swap") {
+				const swapData = parsedEventData.data;
 				console.log("Sign swap event", swapData);
+			}
+
+			// handle transaction monitoring
+			if (parsedEventData.type === "monitor_transaction") {
+				const transactionId = parsedEventData.data.transaction_id;
+				console.log("Monitor transaction event", transactionId);
 			}
 
 			break;
 		}
 		case "image": {
-			const data = JSON.parse(event.data);
+			const imageData = parsedEventData.data;
 			// handle image rendering
-			console.log("Image data", data);
+			console.log("Image data", imageData);
 			break;
 		}
 		case "context": {
-			console.log("Context event", event.data);
+			console.log("Context event", parsedEventData);
 			// handle context changes (chain ids, wallet address, etc)
 			break;
 		}
 		case "error": {
-			console.log("Error event", event.data);
+			console.log("Error event", parsedEventData);
 			// handle error event (error message)
 			break;
 		}

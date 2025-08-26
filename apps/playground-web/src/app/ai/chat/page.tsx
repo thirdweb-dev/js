@@ -13,6 +13,6 @@ export default function ChatPage() {
 }
 
 export const metadata = {
-  title: "AI Chat API - Playground",
+  title: "Blockchain LLM - Playground",
   description: "Chat with thirdweb AI for blockchain interactions",
 };
