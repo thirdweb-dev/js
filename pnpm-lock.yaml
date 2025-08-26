@@ -189,7 +189,7 @@ importers:
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       nextjs-toploader:
         specifier: ^1.6.12
-        version: 1.6.12(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.6.12(next@15.3.5(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       nuqs:
         specifier: ^2.4.3
         version: 2.4.3(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
@@ -367,7 +367,7 @@ importers:
         version: 5.60.2(@types/node@22.14.1)(typescript@5.8.3)
       next-sitemap:
         specifier: ^4.2.3
-        version: 4.2.3(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+        version: 4.2.3(next@15.3.5(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       postcss:
         specifier: 8.5.6
         version: 8.5.6
@@ -5826,6 +5826,7 @@ packages:
 
   '@simplewebauthn/types@9.0.1':
     resolution: {integrity: sha512-tGSRP1QvsAvsJmnOlRQyw/mvK9gnPtjEc5fg2+m8n+QUa+D7rvrKkOYyfpy42GTs90X3RDOnqJgfHt+qO67/+w==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -31956,14 +31957,6 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-sitemap@4.2.3(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)):
-    dependencies:
-      '@corex/deepmerge': 4.0.43
-      '@next/env': 13.5.8
-      fast-glob: 3.3.3
-      minimist: 1.2.8
-      next: 15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-
   next-sitemap@4.2.3(next@15.3.5(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)):
     dependencies:
       '@corex/deepmerge': 4.0.43
@@ -32003,14 +31996,6 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
-
-  nextjs-toploader@1.6.12(next@15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      next: 15.3.5(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      nprogress: 0.2.0
-      prop-types: 15.8.1
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
 
   nextjs-toploader@1.6.12(next@15.3.5(@opentelemetry/api@1.9.0)(@playwright/test@1.53.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:

@@ -1,5 +1,3 @@
-"use server";
-
 import { z } from "zod";
 
 type SupportFeedbackInput = {
@@ -19,6 +17,8 @@ const SupportFeedbackSchema = z.object({
 export async function submitSupportFeedback(
   data: SupportFeedbackInput,
 ): Promise<{ success: true } | { error: string }> {
+  "use server";
+
   const parsed = SupportFeedbackSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues.map((i) => i.message).join(", ") };
