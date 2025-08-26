@@ -1,5 +1,6 @@
+"use server";
+
 import { z } from "zod";
-import { getVercelEnv } from "@/utils/vercel";
 
 type SupportFeedbackInput = {
   ticketId: string;
@@ -18,8 +19,6 @@ const SupportFeedbackSchema = z.object({
 export async function submitSupportFeedback(
   data: SupportFeedbackInput,
 ): Promise<{ success: true } | { error: string }> {
-  "use server";
-
   const parsed = SupportFeedbackSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.issues.map((i) => i.message).join(", ") };
@@ -27,25 +26,21 @@ export async function submitSupportFeedback(
   const input = parsed.data;
 
   try {
-    const apiKey = process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID;
-    if (!apiKey) {
-      return { error: "NEXT_PUBLIC_DASHBOARD_CLIENT_ID not configured" };
+    const serviceKey = process.env.SERVICE_AUTH_KEY_SIWA;
+    if (!serviceKey) {
+      return { error: "SERVICE_AUTH_KEY_SIWA not configured" };
     }
 
-    // Use the main API host, not SIWA
-    const apiHost = process.env.NEXT_PUBLIC_THIRDWEB_API_HOST;
-    if (!apiHost) {
-      return { error: "NEXT_PUBLIC_THIRDWEB_API_HOST not configured" };
+    const apiUrl = process.env.NEXT_PUBLIC_SIWA_URL;
+    if (!apiUrl) {
+      return { error: "NEXT_PUBLIC_SIWA_URL not configured" };
     }
 
-    const vercelEnv = getVercelEnv();
-    const isPreview = vercelEnv === "preview" || vercelEnv === "development";
-
-    const response = await fetch(`${apiHost}/v1/csat/saveCSATFeedback`, {
+    const response = await fetch(`${apiUrl}/v1/csat/saveCSATFeedback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-service-api-key": apiKey,
+        "x-service-api-key": serviceKey,
       },
       body: JSON.stringify({
         rating: input.rating,
@@ -55,22 +50,8 @@ export async function submitSupportFeedback(
     });
 
     if (!response.ok) {
-      if (response.status === 404 && isPreview) {
-        // Only in preview/dev, simulate success if the endpoint isn't deployed yet
-        console.debug(
-          "CSAT endpoint not available; treating as success in preview/dev",
-          {
-            rating: input.rating,
-            ticket_id: input.ticketId,
-            vercel_env: vercelEnv,
-          },
-        );
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return { success: true };
-      }
-
       const errorText = await response.text();
-      console.error("❌ CSAT endpoint error:", {
+      console.error("CSAT feedback submission failed:", {
         status: response.status,
         statusText: response.statusText,
         error: errorText,

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
 import { submitSupportFeedback } from "../apis/feedback";
@@ -33,10 +34,6 @@ interface SupportCaseDetailsProps {
   team: Team;
 }
 
-// Helper function to generate localStorage key for feedback submission
-const getFeedbackSubmittedKey = (ticketId: string) =>
-  `feedback_submitted_${ticketId}`;
-
 export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
@@ -47,14 +44,11 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [feedback, setFeedback] = useState("");
 
   // Check if feedback has already been submitted for this ticket
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(() => {
-    if (typeof window !== "undefined") {
-      return (
-        localStorage.getItem(getFeedbackSubmittedKey(ticket.id)) === "true"
-      );
-    }
-    return false;
-  });
+  const [feedbackSubmitted, setFeedbackSubmitted] = useLocalStorage(
+    `feedback_submitted_${ticket.id}`,
+    false,
+    false,
+  );
 
   const handleStarClick = (starIndex: number) => {
     setRating(starIndex + 1);
@@ -78,8 +72,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
         throw new Error(result.error);
       }
 
-      // Mark feedback as submitted in localStorage
-      localStorage.setItem(getFeedbackSubmittedKey(ticket.id), "true");
+      // Mark feedback as submitted
       setFeedbackSubmitted(true);
 
       toast.success("Thank you for your feedback!");
@@ -89,7 +82,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
       console.error("Failed to submit feedback:", error);
       toast.error("Failed to submit feedback. Please try again.");
     }
-  }, [rating, feedback, ticket.id, team.id]);
+  }, [rating, feedback, ticket.id, team.id, setFeedbackSubmitted]);
 
   const handleSendReply = async () => {
     if (!team.unthreadCustomerId) {
