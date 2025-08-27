@@ -1,17 +1,18 @@
 import type { Preview } from "@storybook/nextjs";
-import "@workspace/ui/global.css";
+import "../src/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Button } from "@workspace/ui/components/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { Inter as interFont } from "next/font/google";
 import { ThemeProvider, useTheme } from "next-themes";
 // biome-ignore lint/style/useImportType: ok
 import React, { useEffect } from "react";
 import { Toaster } from "sonner";
+import { Button } from "../src/components/button";
 
 const queryClient = new QueryClient();
 
 const fontSans = interFont({
+  display: "swap",
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -47,7 +48,6 @@ const preview: Preview = {
       },
     },
   },
-
   decorators: [
     (Story) => {
       return (

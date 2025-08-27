@@ -5,6 +5,7 @@ import tailwindcssAnimate from "tailwindcss-animate";
 const config: Config = {
   content: [
     "./src/**/*.{ts,tsx}",
+    ".storybook/**/*.{ts,tsx}",
     // Note: when importing this config in website project,
     // add a relative path to the ui package here
   ],

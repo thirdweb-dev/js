@@ -20,7 +20,8 @@
     "@workspace/ui",
     "@types/flexsearch",
     "@radix-ui/react-slot",
-    "tailwindcss-animate"
+    "tailwindcss-animate",
+    "class-variance-authority"
   ],
   "next": true,
   "project": ["src/**"]
