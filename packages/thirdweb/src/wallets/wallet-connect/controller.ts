@@ -142,6 +142,7 @@ export async function connectWC(
           "eth_sign",
           "personal_sign",
           "eth_signTypedData",
+          "eth_signTypedData_v4",
           "wallet_switchEthereumChain",
           "wallet_addEthereumChain",
         ],
@@ -185,8 +186,8 @@ export async function connectWC(
     }
   }
 
-  if (wcOptions?.onDisplayUri) {
-    provider.events.removeListener("display_uri", wcOptions.onDisplayUri);
+  if (onDisplayUri) {
+    provider.events.removeListener("display_uri", onDisplayUri);
   }
 
   return onConnect(

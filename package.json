@@ -62,7 +62,7 @@
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs",
     "lint": "pnpm dlx sherif@latest -i remark-gfm -i eslint && turbo run lint",
-    "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
+    "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula --filter=./packages/ai-sdk-provider",
     "playground:build": "turbo run build --filter=./apps/playground-web",
     "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
     "portal:build": "turbo run build --filter=./apps/portal",
