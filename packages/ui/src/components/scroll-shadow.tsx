@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@workspace/ui/lib/utils";
 import { useLayoutEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
 
 export function ScrollShadow(props: {
   children: React.ReactNode;

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { Button } from "@workspace/ui/components/button";
+import { BadgeContainer } from "@workspace/ui/storybook/utils";
 import { ImageIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/button";
-import { BadgeContainer } from "@/storybook/utils";
 import { Img } from "./img";
 
 const meta = {

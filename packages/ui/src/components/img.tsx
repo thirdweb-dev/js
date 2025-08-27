@@ -1,6 +1,6 @@
 "use client";
+import { cn } from "@workspace/ui/lib/utils";
 import { useLayoutEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 
 type imgElementProps = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,

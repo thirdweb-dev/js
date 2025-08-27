@@ -1,5 +1,5 @@
+import { cn } from "@workspace/ui/lib/utils";
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import { ScrollShadow } from "./scroll-shadow";
 
 const Table = React.forwardRef<

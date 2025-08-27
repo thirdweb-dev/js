@@ -1,4 +1,4 @@
-import { Code } from "../../../../components/code/code";
+import { CodeServer } from "@/components/code/code";
 import { airdropExample } from "../constants";
 
 export function AirdropCode() {
@@ -15,7 +15,7 @@ export function AirdropCode() {
       <h3 className="mb-2 font-semibold text-xl tracking-tight">
         Send Airdrop Transaction Request
       </h3>
-      <Code code={engineAirdropSendCode} lang="typescript" />
+      <CodeServer code={engineAirdropSendCode} lang="typescript" />
 
       <div className="h-8" />
 
@@ -28,7 +28,7 @@ export function AirdropCode() {
           of the transaction using the following code.
         </p>
       </div>
-      <Code code={engineAirdropGetStatus} lang="typescript" />
+      <CodeServer code={engineAirdropGetStatus} lang="typescript" />
     </div>
   );
 }

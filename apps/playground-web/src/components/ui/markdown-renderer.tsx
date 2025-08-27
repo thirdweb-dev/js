@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import CodeClient from "../code/code.client";
+import { CodeClient } from "../code/code.client";
 
 export const MarkdownRenderer: React.FC<{
   markdownText: string;

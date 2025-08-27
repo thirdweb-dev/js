@@ -1,10 +1,20 @@
 import { lazy, Suspense } from "react";
-import { CodeLoading } from "../../../../components/code/code.client";
+import { LoadingDots } from "../../../../components/ui/LoadingDots";
 import type { ConnectPlaygroundOptions } from "./types";
 
-const CodeClient = lazy(
-  () => import("../../../../components/code/code.client"),
+const CodeClient = lazy(() =>
+  import("../../../../components/code/code.client").then((m) => ({
+    default: m.CodeClient,
+  })),
 );
+
+function CodeLoading() {
+  return (
+    <div className="flex min-h-[300px] grow items-center justify-center rounded-lg border bg-card">
+      <LoadingDots />
+    </div>
+  );
+}
 
 export function CodeGen(props: { connectOptions: ConnectPlaygroundOptions }) {
   return (
@@ -14,8 +24,6 @@ export function CodeGen(props: { connectOptions: ConnectPlaygroundOptions }) {
           className="xl:h-[calc(100vh-100px)]"
           code={getCode(props.connectOptions)}
           lang="tsx"
-          // Need to add max-h in both places - TODO figure out a better way
-          loader={<CodeLoading />}
           scrollableClassName="xl:h-[calc(100vh-100px)]"
         />
       </Suspense>

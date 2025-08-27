@@ -1,10 +1,10 @@
 "use client";
 
+import { useClipboard } from "@workspace/ui/hooks/useClipboard";
+import { cn } from "@workspace/ui/lib/utils";
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { ScrollShadow } from "@/components/ui/ScrollShadow"; // Adjusted path for portal
-import { useClipboard } from "@/hooks/useClipboard"; // Adjusted path for portal
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button"; // Adjusted path for portal
+import { Button } from "../button";
+import { ScrollShadow } from "../scroll-shadow";
 
 export function CodeBlockContainer(props: {
   codeToCopy: string;
@@ -16,7 +16,7 @@ export function CodeBlockContainer(props: {
   shadowColor?: string;
   onCopy?: (code: string) => void;
 }) {
-  const { hasCopied, onCopy: onClipboardCopy } = useClipboard(props.codeToCopy); // Renamed onCopy to avoid conflict
+  const { hasCopied, onCopy } = useClipboard(props.codeToCopy);
 
   return (
     <div
@@ -42,7 +42,7 @@ export function CodeBlockContainer(props: {
           props.copyButtonClassName,
         )}
         onClick={() => {
-          onClipboardCopy(); // Use renamed function
+          onCopy();
           props.onCopy?.(props.codeToCopy);
         }}
         size="sm"

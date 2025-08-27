@@ -15,7 +15,7 @@ import {
   UnrealEngineIcon,
 } from "@/icons";
 import { cn } from "@/lib/utils";
-import { CodeClient, CodeLoading } from "../code/code.client";
+import { CodeClient } from "../code/code.client";
 
 type AuthMethod =
   | "email"
@@ -927,7 +927,6 @@ function AuthMethodsTabsContent() {
                                 ? "csharp"
                                 : "typescript"
                           }
-                          loader={<CodeLoading />}
                           className="text-sm"
                         />
                       ),

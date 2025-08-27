@@ -15,7 +15,8 @@
 		"fast-xml-parser",
 		"@workspace/ui",
 		"tailwindcss-animate",
-		"@radix-ui/react-tooltip"
+		"@radix-ui/react-tooltip",
+		"shiki"
 	],
 	"next": true,
 	"project": ["src/**"]

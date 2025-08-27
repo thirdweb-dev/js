@@ -2,7 +2,7 @@ import { Code2Icon, EyeIcon } from "lucide-react";
 import type { JSX } from "react";
 import type { BundledLanguage } from "shiki";
 import { ClientOnly } from "../ClientOnly";
-import { Code } from "./code";
+import { CodeServer } from "./code";
 
 type CodeExampleProps = {
   preview: JSX.Element;
@@ -35,7 +35,7 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
       <div className="grid grid-cols-1 overflow-hidden rounded-lg border bg-card md:grid-cols-2">
         <div className="flex grow flex-col border-b md:border-r md:border-b-0">
           <TabName icon={Code2Icon} name="Code" />
-          <Code
+          <CodeServer
             className="h-full rounded-none border-none"
             code={code}
             lang={lang}

@@ -5,7 +5,8 @@
     "server-only",
     "@workspace/ui",
     "tailwindcss-animate",
-    "@radix-ui/react-tooltip"
+    "@radix-ui/react-tooltip",
+    "prettier"
   ],
   "next": true,
   "project": ["src/**"]

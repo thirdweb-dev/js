@@ -3,7 +3,7 @@ import { baseSepolia } from "thirdweb/chains";
 import { useActiveAccount, useLinkProfile, useProfiles } from "thirdweb/react";
 import { createWallet, type WalletId } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import CodeClient, { CodeLoading } from "../code/code.client";
+import { CodeClient } from "../code/code.client";
 import { StyledConnectButton } from "../styled-connect-button";
 import { Button } from "../ui/button";
 
@@ -20,7 +20,6 @@ export function LinkedAccounts() {
           <CodeClient
             code={JSON.stringify(profiles || [], null, 2)}
             lang={"json"}
-            loader={<CodeLoading />}
           />
         </div>
       ) : (

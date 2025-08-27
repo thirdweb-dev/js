@@ -17,7 +17,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
-import { CodeClient, CodeLoading } from "@/components/code/code.client";
+import { CodeClient } from "@/components/code/code.client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -724,7 +724,6 @@ function ResponseSection(props: {
           className="rounded-none border-none bg-transparent"
           code={formattedData || ""}
           lang="json"
-          loader={<CodeLoading />}
           scrollableClassName="h-full"
           scrollableContainerClassName="h-full"
           // shadowColor="hsl(var(--muted)/50%)"

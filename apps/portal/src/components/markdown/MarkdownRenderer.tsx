@@ -1,8 +1,7 @@
 import { onlyText } from "react-children-utilities"; // Assuming this dependency is available
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm"; // Assuming this dependency is available
-import type { BundledLanguage } from "shiki"; // For CodeClient lang prop
-import { CodeClient, CodeLoading } from "@/components/code/code.client"; // Adjusted path for portal
+import { CodeClient, type CodeProps } from "@/components/code/code.client"; // Adjusted path for portal
 import { PlainTextCodeBlock } from "@/components/code/plaintext-code"; // Adjusted path for portal
 import { InlineCode } from "@/components/ui/inline-code"; // Adjusted path for portal
 import {
@@ -85,18 +84,14 @@ export const MarkdownRenderer: React.FC<{
                   </div>
                 );
               }
-              const language = inheritedClassName.replace(
-                "language-",
-                "",
-              ) as BundledLanguage;
+              const language = inheritedClassName.replace("language-", "");
+
               return (
                 <div className="my-4">
                   <CodeClient
-                    lang={language}
-                    {...cleanedProps(props)}
+                    lang={language as CodeProps["lang"]}
                     className={markdownProps.code?.className}
                     code={codeStr.trim()}
-                    loader={<CodeLoading />} // Basic loader
                   />
                 </div>
               );

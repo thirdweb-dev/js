@@ -1,4 +1,4 @@
-import { Badge } from "@/components/badge";
+import { Badge } from "@workspace/ui/components/badge";
 
 function StoryBadge(props: { label: string }) {
   return (

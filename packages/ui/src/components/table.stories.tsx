@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
+import { cn } from "@workspace/ui/lib/utils";
+import { BadgeContainer } from "@workspace/ui/storybook/utils";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { BadgeContainer } from "@/storybook/utils";
 import { Badge } from "./badge";
 import {
   Table,
