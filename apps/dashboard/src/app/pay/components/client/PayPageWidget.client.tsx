@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { createThirdwebClient, NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
 import { AutoConnect, CheckoutWidget } from "thirdweb/react";
 import { checksumAddress } from "thirdweb/utils";
+import { createWallet } from "thirdweb/wallets";
 import {
   reportPaymentLinkBuyFailed,
   reportPaymentLinkBuySuccessful,
@@ -54,6 +55,15 @@ export function PayPageWidget({
         }
       />
       <CheckoutWidget
+        connectOptions={{
+          wallets: [
+            createWallet("io.metamask"),
+            createWallet("io.rabby"),
+            createWallet("com.okex.wallet"),
+            createWallet("walletConnect"),
+          ],
+          showAllWallets: true,
+        }}
         amount={amount ? toTokens(amount, token.decimals) : "0"}
         chain={chain}
         client={
