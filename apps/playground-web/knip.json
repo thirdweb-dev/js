@@ -1,7 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignore": ["src/components/ui/**", "src/app/insight/utils.ts"],
-  "ignoreDependencies": ["server-only", "@workspace/ui", "tailwindcss-animate"],
+  "ignoreDependencies": [
+    "server-only",
+    "@workspace/ui",
+    "tailwindcss-animate",
+    "@radix-ui/react-tooltip"
+  ],
   "next": true,
   "project": ["src/**"]
 }

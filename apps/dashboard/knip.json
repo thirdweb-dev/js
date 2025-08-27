@@ -1,21 +1,22 @@
 {
-  "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": [
-    "src/@/components/ui/**",
-    "src/@/components/misc/AnnouncementBanner.tsx",
-    "src/@/components/cmd-k-search/index.tsx",
-    "src/@/lib/search.ts"
-  ],
-  "ignoreBinaries": ["only-allow"],
-  "ignoreDependencies": [
-    "@thirdweb-dev/service-utils",
-    "@thirdweb-dev/vault-sdk",
-    "thirdweb",
-    "@types/color",
-    "fast-xml-parser",
-    "@workspace/ui",
-    "tailwindcss-animate"
-  ],
-  "next": true,
-  "project": ["src/**"]
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"ignore": [
+		"src/@/components/ui/**",
+		"src/@/components/misc/AnnouncementBanner.tsx",
+		"src/@/components/cmd-k-search/index.tsx",
+		"src/@/lib/search.ts"
+	],
+	"ignoreBinaries": ["only-allow"],
+	"ignoreDependencies": [
+		"@thirdweb-dev/service-utils",
+		"@thirdweb-dev/vault-sdk",
+		"thirdweb",
+		"@types/color",
+		"fast-xml-parser",
+		"@workspace/ui",
+		"tailwindcss-animate",
+		"@radix-ui/react-tooltip"
+	],
+	"next": true,
+	"project": ["src/**"]
 }

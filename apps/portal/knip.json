@@ -2,8 +2,6 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
     "next.config.{js,ts,cjs,mjs}",
-    "app/**/route.{js,jsx,ts,tsx}",
-    "app/**/{icon,apple-icon}.{js,jsx,ts,tsx}",
     "src/app/**/{error,layout,loading,not-found,page,template,default}.{js,jsx,ts,tsx,mdx}",
     "scripts/*.ts"
   ],
@@ -21,7 +19,8 @@
     "@types/flexsearch",
     "@radix-ui/react-slot",
     "tailwindcss-animate",
-    "class-variance-authority"
+    "class-variance-authority",
+    "@radix-ui/react-tooltip"
   ],
   "next": true,
   "project": ["src/**"]

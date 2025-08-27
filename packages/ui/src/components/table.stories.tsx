@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { BadgeContainer } from "@/storybook/utils";
+import { Badge } from "./badge";
 import {
   Table,
   TableBody,
@@ -9,14 +12,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { BadgeContainer } from "@/storybook/utils";
-import { cn } from "../../lib/utils";
-import { Badge } from "./badge";
+} from "./table";
 
 const meta = {
   component: Component,
-  title: "Shadcn/Table",
+  title: "ui/table",
 } satisfies Meta<typeof Component>;
 
 export default meta;
