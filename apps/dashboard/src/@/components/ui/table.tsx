@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "./ScrollShadow";
 
 const Table = React.forwardRef<
   HTMLTableElement,

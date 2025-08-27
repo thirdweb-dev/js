@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
 import { useShowMore } from "@/hooks/useShowMore";
 import { cn } from "@/lib/utils";

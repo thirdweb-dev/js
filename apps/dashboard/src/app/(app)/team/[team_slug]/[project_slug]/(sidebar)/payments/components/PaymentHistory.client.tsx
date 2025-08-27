@@ -10,7 +10,7 @@ import {
 } from "@/api/universal-bridge/developer";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { formatTokenAmount } from "./format";

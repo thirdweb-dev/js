@@ -8,7 +8,7 @@ import type { Project } from "@/api/project/projects";
 import type { Team } from "@/api/team/get-team";
 import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { Button } from "@/components/ui/button";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { SearchInput } from "./SearchInput";

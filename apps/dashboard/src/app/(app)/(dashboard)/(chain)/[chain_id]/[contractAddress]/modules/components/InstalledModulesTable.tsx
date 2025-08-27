@@ -4,7 +4,7 @@ import { CircleSlashIcon } from "lucide-react";
 import type { ThirdwebContract } from "thirdweb/contract";
 import type { Account } from "thirdweb/wallets";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { ModuleCard } from "./module-card";
 import { useAllModuleContractInfo } from "./moduleContractInfo";
 

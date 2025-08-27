@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Img } from "@/components/ui/Img";
 import { Input } from "@/components/ui/input";
 import { LoadingDots } from "@/components/ui/LoadingDots";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { ConnectPlaygroundOptions } from "./types";

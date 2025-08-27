@@ -1,4 +1,4 @@
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { cn } from "../../lib/utils";
 import { CopyButton } from "../ui/CopyButton";
 

@@ -22,7 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";

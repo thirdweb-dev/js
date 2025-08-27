@@ -1,9 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
+import { useLayoutEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import styles from "./ScrollShadow.module.css";
 
 export function ScrollShadow(props: {
   children: React.ReactNode;
@@ -20,7 +18,7 @@ export function ScrollShadow(props: {
   const shadowRightEl = useRef<HTMLDivElement>(null);
   const wrapperEl = useRef<HTMLDivElement>(null);
 
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     const content = scrollableEl.current;
     const shadowTop = shadowTopEl.current;
     const shadowBottom = shadowBottomEl.current;
@@ -95,47 +93,39 @@ export function ScrollShadow(props: {
       }
     >
       <div
-        className={cn(
-          styles.scrollShadowTop,
-          styles.scrollShadowY,
-          props.shadowClassName,
-        )}
+        className={props.shadowClassName}
         ref={shadowTopEl}
         style={{
+          ...scrollShadowTop,
+          ...scrollShadowY,
           display: props.disableTopShadow ? "none" : "block",
           opacity: "0",
         }}
       />
       <div
-        className={cn(
-          styles.scrollShadowBottom,
-          styles.scrollShadowY,
-          props.shadowClassName,
-        )}
+        className={props.shadowClassName}
         ref={shadowBottomEl}
         style={{
+          ...scrollShadowBottom,
+          ...scrollShadowY,
           opacity: "0",
         }}
       />
       <div
-        className={cn(
-          styles.scrollShadowLeft,
-          styles.scrollShadowX,
-          props.shadowClassName,
-        )}
+        className={props.shadowClassName}
         ref={shadowLeftEl}
         style={{
+          ...scrollShadowLeft,
+          ...scrollShadowX,
           opacity: "0",
         }}
       />
       <div
-        className={cn(
-          styles.scrollShadowRight,
-          styles.scrollShadowX,
-          props.shadowClassName,
-        )}
+        className={props.shadowClassName}
         ref={shadowRightEl}
         style={{
+          ...scrollShadowRight,
+          ...scrollShadowX,
           opacity: "0",
         }}
       />
@@ -149,3 +139,40 @@ export function ScrollShadow(props: {
     </div>
   );
 }
+
+const scrollShadowY: React.CSSProperties = {
+  position: "absolute",
+  left: 0,
+  width: "100%",
+  height: 32,
+  pointerEvents: "none",
+};
+
+const scrollShadowX: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  width: 32,
+  height: "100%",
+  pointerEvents: "none",
+};
+
+const scrollShadowTop: React.CSSProperties = {
+  top: 0,
+  background: "linear-gradient(to bottom, var(--shadow), transparent)",
+  opacity: 0,
+};
+
+const scrollShadowBottom: React.CSSProperties = {
+  bottom: 0,
+  background: "linear-gradient(to top, var(--shadow), transparent)",
+};
+
+const scrollShadowLeft: React.CSSProperties = {
+  left: 0,
+  background: "linear-gradient(to right, var(--shadow), transparent)",
+};
+
+const scrollShadowRight: React.CSSProperties = {
+  right: 0,
+  background: "linear-gradient(to left, var(--shadow), transparent)",
+};

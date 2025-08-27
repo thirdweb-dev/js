@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow"; // Path within portal/components/ui
+import { ScrollShadow } from "@/components/ui/ScrollShadow"; // Path within portal/components/ui
 import { cn } from "@/lib/utils"; // Adjusted path for portal
 
 const Table = React.forwardRef<

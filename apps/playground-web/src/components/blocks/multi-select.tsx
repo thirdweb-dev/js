@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useShowMore } from "../../lib/useShowMore";
 import { Input } from "../ui/input";
-import { ScrollShadow } from "../ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "../ui/ScrollShadow";
 
 interface MultiSelectProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

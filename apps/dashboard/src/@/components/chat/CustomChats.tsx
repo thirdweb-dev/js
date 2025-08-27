@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../app/(app)/components/ThirdwebMiniLogo";
 import { SupportTicketForm } from "../../../app/(app)/team/[team_slug]/(team)/~/support/_components/SupportTicketForm";

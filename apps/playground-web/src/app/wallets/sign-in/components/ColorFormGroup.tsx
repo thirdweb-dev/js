@@ -2,7 +2,7 @@ import { SearchIcon, SectionIcon } from "lucide-react";
 import { useState } from "react";
 import { darkTheme, lightTheme, type Theme } from "thirdweb/react";
 import { Input } from "@/components/ui/input";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { ColorInput } from "./ColorInput";
 import type { ConnectPlaygroundOptions } from "./types";
 
