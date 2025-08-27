@@ -222,3 +222,17 @@ export const TransactionPayment: Story = {
     backgrounds: { default: "light" },
   },
 };
+
+export const PaymentId: Story = {
+  args: {
+    client: storyClient,
+    completedStatuses: mockBuyCompletedStatuses,
+    hasPaymentId: true,
+    preparedQuote: simpleBuyQuote,
+    theme: "light",
+    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+  },
+};
