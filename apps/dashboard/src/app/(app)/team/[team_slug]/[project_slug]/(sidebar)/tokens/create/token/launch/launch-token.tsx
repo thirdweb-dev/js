@@ -5,7 +5,7 @@ import {
   ImageOffIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
 import {
@@ -68,7 +68,16 @@ export function LaunchTokenStatus(props: {
   const { createTokenFunctions } = props;
   const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [contractAddress, _setContractAddress] = useState<string | null>(null);
+
+  // needed to add a ref to avoid `executeSteps` using the stale value of state `contractAddress` because of closure
+  const contractAddressRef = useRef<string | null>(null);
+
+  const setContractAddress = useCallback((address: string) => {
+    _setContractAddress(address);
+    contractAddressRef.current = address;
+  }, []);
+
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
@@ -241,10 +250,10 @@ export function LaunchTokenStatus(props: {
           : "ERC20Asset",
     });
 
-    if (contractAddress) {
+    if (contractAddressRef.current) {
       props.onLaunchSuccess({
         chainId: Number(formValues.chain),
-        contractAddress,
+        contractAddress: contractAddressRef.current,
       });
     }
   }
