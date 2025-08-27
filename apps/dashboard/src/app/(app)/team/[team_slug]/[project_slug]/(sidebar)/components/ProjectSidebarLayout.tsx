@@ -23,7 +23,6 @@ import { WalletProductIcon } from "@/icons/WalletProductIcon";
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
-  hasEngineInstances: boolean;
 }) {
   return (
     <FullWidthSidebarLayout
@@ -110,17 +109,12 @@ export function ProjectSidebarLayout(props: {
               icon: LockIcon,
               label: "Vault",
             },
-            ...(props.hasEngineInstances
-              ? [
-                  {
-                    href: `${props.layoutPath}/engine`,
-                    icon: DatabaseIcon,
-                    label: (
-                      <span className="flex items-center gap-2">Engine</span>
-                    ),
-                  },
-                ]
-              : []),
+            // linkely want to move this to `team` level eventually
+            {
+              href: `${props.layoutPath}/engine`,
+              icon: DatabaseIcon,
+              label: "Engine",
+            },
           ],
         },
       ]}
