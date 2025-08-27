@@ -20,7 +20,9 @@
     "@radix-ui/react-slot",
     "tailwindcss-animate",
     "class-variance-authority",
-    "@radix-ui/react-tooltip"
+    "@radix-ui/react-tooltip",
+    "react-children-utilities",
+    "react-markdown"
   ],
   "next": true,
   "project": ["src/**"]

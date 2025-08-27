@@ -8,7 +8,7 @@ const meta = {
       appDirectory: true,
     },
   },
-  title: "blocks/MarkdownRenderer",
+  title: "ui/markdown-renderer",
 } satisfies Meta<typeof Story>;
 
 export default meta;

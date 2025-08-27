@@ -6,7 +6,10 @@
     "@workspace/ui",
     "tailwindcss-animate",
     "@radix-ui/react-tooltip",
-    "prettier"
+    "prettier",
+    "react-children-utilities",
+    "react-markdown",
+    "remark-gfm"
   ],
   "next": true,
   "project": ["src/**"]
