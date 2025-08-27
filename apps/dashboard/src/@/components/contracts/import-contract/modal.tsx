@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { useDashboardRouter } from "@/lib/DashboardRouter";

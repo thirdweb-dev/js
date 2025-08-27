@@ -24,11 +24,11 @@ import { toast } from "sonner";
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { Button } from "@/components/ui/button";
 import { ScrollShadow } from "@/components/ui/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner";
 import { Toaster } from "@/components/ui/sonner";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { ThirdwebIcon } from "@/icons/thirdweb";
-import { Spinner } from "../ui/Spinner/Spinner";
 import { getChatResponse, sendFeedback } from "./api";
 
 interface Message {

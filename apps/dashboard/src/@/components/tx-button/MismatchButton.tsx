@@ -41,7 +41,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { LOCAL_NODE_PKEY } from "@/constants/misc";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";

@@ -20,7 +20,7 @@ import { Card } from "@/components/ui/card";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";

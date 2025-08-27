@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { reSubscribePlan } from "@/actions/billing";
 import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import { tryCatch } from "@/utils/try-catch";

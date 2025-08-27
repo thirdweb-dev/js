@@ -18,7 +18,7 @@ import {
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { createEcosystem } from "../../actions/create-ecosystem";
 

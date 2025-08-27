@@ -16,7 +16,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { Label } from "@/components/ui/label";
 import { ScrollShadow } from "@/components/ui/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Select,
   SelectContent,

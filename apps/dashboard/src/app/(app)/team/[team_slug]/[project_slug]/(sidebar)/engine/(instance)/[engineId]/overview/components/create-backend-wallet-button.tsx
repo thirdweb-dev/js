@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Select,
   SelectContent,

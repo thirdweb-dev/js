@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";

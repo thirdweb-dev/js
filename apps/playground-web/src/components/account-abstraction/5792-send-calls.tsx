@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Spinner } from "../ui/Spinner/Spinner";
+import { Spinner } from "../ui/Spinner";
 
 const chain = sepolia;
 

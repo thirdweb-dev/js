@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/button";
 import { BadgeContainer } from "@/storybook/utils";
-import { Button } from "../ui/button";
-import { Spinner } from "../ui/Spinner/Spinner";
-import { Img } from "./Img";
+import { Img } from "./img";
 
 const meta = {
   component: Story,
-  title: "blocks/Img",
+  title: "ui/img",
 } satisfies Meta<typeof Story>;
 
 export default meta;
@@ -54,7 +53,7 @@ function Story() {
           className="size-20"
           skeleton={
             <div className="flex items-center justify-center rounded-lg border">
-              <Spinner className="size-6" />
+              <Loader2 className="size-6 animate-spin" />
             </div>
           }
           src={undefined}

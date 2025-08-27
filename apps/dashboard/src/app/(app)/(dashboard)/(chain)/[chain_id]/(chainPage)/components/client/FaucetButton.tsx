@@ -43,7 +43,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY,

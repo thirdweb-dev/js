@@ -13,7 +13,7 @@ import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { reportContractPublished } from "@/analytics/report";
 import { CustomConnectWallet } from "@/components/connect-wallet";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   DASHBOARD_ENGINE_RELAYER_URL,
   DASHBOARD_FORWARDER_ADDRESS,

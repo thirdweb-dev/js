@@ -7,8 +7,8 @@ import {
   RefreshCwIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DynamicHeight } from "../../ui/DynamicHeight";
-import { Spinner } from "../../ui/Spinner/Spinner";
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Spinner } from "@/components/ui/Spinner";
 
 export type MultiStepState<T extends string> = {
   id: T;

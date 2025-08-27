@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { FileInput } from "@/components/blocks/FileInput";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardStorageUpload } from "@/hooks/useDashboardStorageUpload";
 
 export const IconUpload: React.FC<{

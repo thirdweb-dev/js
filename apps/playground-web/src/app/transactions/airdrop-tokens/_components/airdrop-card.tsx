@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Spinner } from "../../../../components/ui/Spinner/Spinner";
+import { Spinner } from "../../../../components/ui/Spinner";
 import { cn } from "../../../../lib/utils";
 import type { EngineTxStatus } from "../../types";
 import { airdropExample } from "../constants";

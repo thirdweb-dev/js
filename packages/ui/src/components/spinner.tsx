@@ -1,13 +1,12 @@
-import { cn } from "../../../lib/utils";
-import style from "./Spinner.module.css";
+import { cn } from "@/lib/utils";
 
 export function Spinner(props: { className?: string }) {
   return (
     <svg
-      className={cn(style.loader, props.className || "size-4")}
+      className={cn("animate-spin ease-linear", props.className)}
       viewBox="0 0 50 50"
     >
-      <title>loading</title>
+      <title>Loading</title>
       <circle
         cx="25"
         cy="25"
@@ -15,6 +14,7 @@ export function Spinner(props: { className?: string }) {
         r="20"
         stroke="currentColor"
         strokeWidth="4"
+        className="animate-spinner"
       />
     </svg>
   );

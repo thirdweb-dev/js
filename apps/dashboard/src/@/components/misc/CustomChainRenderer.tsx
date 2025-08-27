@@ -2,7 +2,7 @@ import { SettingsIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { OPSponsoredChains } from "@/constants/chains";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";

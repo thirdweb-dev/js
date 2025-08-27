@@ -32,6 +32,7 @@ const config: Config = {
         "caret-blink": "caret-blink 1.25s ease-out infinite",
         skeleton: "skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "text-shimmer": "text-shimmer 1.25s linear infinite",
+        spinner: "spinner 1.5s ease-in-out infinite",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -123,6 +124,11 @@ const config: Config = {
         "text-shimmer": {
           "0%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "-100% 50%" },
+        },
+        spinner: {
+          "0%": { strokeDasharray: "1, 150", strokeDashoffset: "0" },
+          "50%": { strokeDasharray: "90, 150", strokeDashoffset: "-35" },
+          "100%": { strokeDasharray: "90, 150", strokeDashoffset: "-124" },
         },
       },
     },

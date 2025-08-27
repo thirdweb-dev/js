@@ -7,7 +7,7 @@ import { apiServerProxy } from "@/actions/proxies";
 import { reportUpsellClicked, reportUpsellShown } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { pollWithTimeout } from "@/utils/pollWithTimeout";

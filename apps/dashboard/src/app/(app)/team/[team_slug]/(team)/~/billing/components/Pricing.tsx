@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import type { Team } from "@/api/team/get-team";
 import { PricingCard } from "@/components/billing/pricing-card";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { PRO_CONTACT_US_URL } from "@/constants/pro";
 import { useStripeRedirectEvent } from "@/hooks/stripe/redirect-event";
 import { useDashboardRouter } from "@/lib/DashboardRouter";

@@ -46,7 +46,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Form } from "@/components/ui/form";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useIsAdmin } from "@/hooks/useContractRoles";
 import { useTxNotifications } from "@/hooks/useTxNotifications";

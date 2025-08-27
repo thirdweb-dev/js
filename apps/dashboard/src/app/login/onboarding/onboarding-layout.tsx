@@ -8,7 +8,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
 
 type OnboardingStep = {

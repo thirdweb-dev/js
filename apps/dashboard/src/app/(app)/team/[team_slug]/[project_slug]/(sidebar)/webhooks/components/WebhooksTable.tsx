@@ -15,7 +15,7 @@ import { TWTable } from "@/components/blocks/TWTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useTestWebhook } from "../hooks/useTestWebhook";
 import { CreateContractWebhookButton } from "./CreateWebhookModal";

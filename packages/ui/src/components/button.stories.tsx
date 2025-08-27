@@ -5,7 +5,7 @@ import { BadgeContainer } from "@/storybook/utils";
 
 const meta = {
   component: Component,
-  title: "Shadcn/Buttons",
+  title: "ui/button",
 } satisfies Meta<typeof Component>;
 
 export default meta;

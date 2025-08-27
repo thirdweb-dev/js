@@ -11,7 +11,7 @@ import {
 import { useDebounce } from "use-debounce";
 import { useCustomConnectModal } from "@/components/connect-wallet";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 
 type AddChainToWalletProps = {

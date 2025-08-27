@@ -16,7 +16,7 @@ import {
 } from "thirdweb/tokens";
 import { reportAssetCreationStepConfigured } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { StepCard } from "../_common/step-card";
 import {

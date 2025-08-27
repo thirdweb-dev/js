@@ -8,7 +8,7 @@ import { useActiveAccount } from "thirdweb/react";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Table,
   TableBody,

@@ -3,7 +3,7 @@
 import { EmptyChartState } from "@/components/analytics/empty-chart-state";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 
 type ServiceStatus = "active" | "pending" | "inactive";
 

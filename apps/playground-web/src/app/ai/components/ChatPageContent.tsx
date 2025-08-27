@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import { Img } from "../../../components/ui/Img";
-import { Spinner } from "../../../components/ui/Spinner/Spinner";
+import { Spinner } from "../../../components/ui/Spinner";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { type NebulaContext, promptNebula } from "../api/chat";
 import type { NebulaUserMessage } from "../api/types";

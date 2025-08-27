@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useEngineCreateAccessToken } from "@/hooks/useEngine";
 import { parseError } from "@/utils/errorParser";
 

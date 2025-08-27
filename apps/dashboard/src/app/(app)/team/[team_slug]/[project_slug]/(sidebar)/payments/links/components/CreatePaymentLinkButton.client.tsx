@@ -31,7 +31,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { parseErrorToMessage } from "@/utils/errorParser";
 import { resolveAddressAndEns } from "@/utils/resolveAddressAndEns";
