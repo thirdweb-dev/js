@@ -124,7 +124,7 @@ export function WalletFiatSelection({
                   Connect a Wallet
                 </Text>
                 <Text color="secondaryText" size="xs">
-                  Use a different wallet to pay
+                  Pay with any web3 wallet
                 </Text>
               </Container>
             </Container>
@@ -169,7 +169,7 @@ export function WalletFiatSelection({
                   Pay with Card
                 </Text>
                 <Text color="secondaryText" size="xs">
-                  Buy crypto and bridge in one step
+                  Onramp and pay in one step
                 </Text>
               </Container>
             </Container>
