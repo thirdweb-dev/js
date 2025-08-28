@@ -1,5 +1,5 @@
 "use client";
-import type { Token } from "../../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
@@ -28,7 +28,11 @@ export interface DirectPaymentProps {
   /**
    * Called when user continues with the payment
    */
-  onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
+  onContinue: (
+    amount: string,
+    token: TokenWithPrices,
+    receiverAddress: Address,
+  ) => void;
 
   /**
    * Whether to show thirdweb branding in the widget.

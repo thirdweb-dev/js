@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { Quote } from "../../../bridge/index.js";
-import type { Token } from "../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../bridge/types/Token.js";
 import type { Address } from "../../../utils/address.js";
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
@@ -23,7 +23,7 @@ export type PaymentMethod =
   | {
       type: "wallet";
       payerWallet: Wallet;
-      originToken: Token;
+      originToken: TokenWithPrices;
       balance: bigint;
       quote: Quote;
     }
@@ -43,7 +43,7 @@ export interface PaymentMachineContext {
 
   // Target requirements (resolved in init state)
   destinationAmount?: string;
-  destinationToken?: Token;
+  destinationToken?: TokenWithPrices;
   receiverAddress?: Address;
 
   // User selections (set in methodSelection state)
@@ -73,7 +73,7 @@ export interface PaymentMachineContext {
 type PaymentMachineEvent =
   | {
       type: "DESTINATION_CONFIRMED";
-      destinationToken: Token;
+      destinationToken: TokenWithPrices;
       destinationAmount: string;
       receiverAddress: Address;
     }
