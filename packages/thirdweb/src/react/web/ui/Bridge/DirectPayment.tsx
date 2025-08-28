@@ -3,9 +3,6 @@ import type { Token } from "../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
-import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
 import { Container, Line } from "../components/basic.js";
@@ -13,7 +10,6 @@ import { Button } from "../components/buttons.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
-import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
@@ -35,11 +31,6 @@ export interface DirectPaymentProps {
   onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
 
   /**
-   * Connect options for wallet connection
-   */
-  connectOptions?: PayEmbedConnectOptions;
-
-  /**
    * Whether to show thirdweb branding in the widget.
    * @default true
    */
@@ -50,12 +41,9 @@ export function DirectPayment({
   uiOptions,
   client,
   onContinue,
-  connectOptions,
   showThirdwebBranding = true,
 }: DirectPaymentProps) {
-  const activeAccount = useActiveAccount();
   const chain = defineChain(uiOptions.paymentInfo.token.chainId);
-  const theme = useCustomTheme();
   const handleContinue = () => {
     onContinue(
       uiOptions.paymentInfo.amount,
@@ -188,23 +176,9 @@ export function DirectPayment({
 
       {/* Action button */}
       <Container flex="column">
-        {activeAccount ? (
-          <Button fullWidth onClick={handleContinue} variant="primary">
-            {buyNow}
-          </Button>
-        ) : (
-          <ConnectButton
-            client={client}
-            connectButton={{
-              label: buyNow,
-              style: {
-                width: "100%",
-              },
-            }}
-            theme={theme}
-            {...connectOptions}
-          />
-        )}
+        <Button fullWidth onClick={handleContinue} variant="primary">
+          {buyNow}
+        </Button>
 
         {showThirdwebBranding ? (
           <div>
