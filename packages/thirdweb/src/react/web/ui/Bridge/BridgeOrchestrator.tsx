@@ -389,6 +389,7 @@ export function BridgeOrchestrator({
             preparedQuote={state.context.quote}
             uiOptions={uiOptions}
             windowAdapter={webWindowAdapter}
+            hasPaymentId={!!paymentLinkId}
           />
         )}
 

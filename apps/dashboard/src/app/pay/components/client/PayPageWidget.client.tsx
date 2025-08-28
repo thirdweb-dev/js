@@ -60,6 +60,7 @@ export function PayPageWidget({
             createWallet("io.metamask"),
             createWallet("io.rabby"),
             createWallet("com.okex.wallet"),
+            createWallet("me.rainbow"),
             createWallet("walletConnect"),
           ],
           showAllWallets: true,
