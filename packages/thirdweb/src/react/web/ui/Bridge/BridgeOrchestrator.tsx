@@ -277,7 +277,6 @@ export function BridgeOrchestrator({
       {state.value === "init" && uiOptions.mode === "direct_payment" && (
         <DirectPayment
           client={client}
-          connectOptions={modifiedConnectOptions}
           onContinue={handleRequirementsResolved}
           showThirdwebBranding={showThirdwebBranding}
           uiOptions={uiOptions}

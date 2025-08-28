@@ -121,7 +121,7 @@ export function WalletFiatSelection({
               </Container>
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
                 <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-                  Connect Another Wallet
+                  Connect a Wallet
                 </Text>
                 <Text color="secondaryText" size="xs">
                   Use a different wallet to pay

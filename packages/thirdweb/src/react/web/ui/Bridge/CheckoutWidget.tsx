@@ -27,6 +27,9 @@ import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
+import { Container } from "../components/basic.js";
+import { Text } from "../components/text.js";
+import { Button } from "../components/buttons.js";
 
 export type CheckoutWidgetProps = {
   /**
@@ -418,6 +421,19 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         uiOptions={bridgeDataQuery.data.data}
         supportedTokens={props.supportedTokens}
       />
+    );
+  }
+
+  if (bridgeDataQuery.isError) {
+    content = (
+      <Container flex="column" center="both" gap="md" p="md" py="xl">
+        <Text center size="md" weight={600}>
+          Something went wrong.
+        </Text>
+        <Button variant="ghost" onClick={() => bridgeDataQuery.refetch()}>
+          Retry
+        </Button>
+      </Container>
     );
   }
 
