@@ -170,7 +170,7 @@ describe("toProvider", () => {
     expect(result).toBeGreaterThan(0n);
   });
 
-  test("should throw error when account is not connected", async () => {
+  test("should return empty array when account is not connected", async () => {
     const walletWithoutAccount = {
       ...mockWallet,
       getAccount: () => undefined,
@@ -187,17 +187,22 @@ describe("toProvider", () => {
         method: "eth_accounts",
         params: [],
       }),
-    ).rejects.toThrow("Account not connected");
+    ).resolves.toEqual([]);
   });
 
   test("should use custom connect override when provided", async () => {
-    const customConnect = vi.fn().mockResolvedValue(mockAccount);
+    const walletWithoutAccount = {
+      ...mockWallet,
+      getAccount: () => undefined,
+    };
+
+    const customConnect = vi.fn().mockResolvedValue(walletWithoutAccount);
 
     const provider = toProvider({
       chain: ANVIL_CHAIN,
       client: TEST_CLIENT,
       connectOverride: customConnect,
-      wallet: mockWallet,
+      wallet: walletWithoutAccount,
     });
 
     await provider.request({
@@ -205,6 +210,6 @@ describe("toProvider", () => {
       params: [],
     });
 
-    expect(customConnect).toHaveBeenCalledWith(mockWallet);
+    expect(customConnect).toHaveBeenCalledWith(walletWithoutAccount);
   });
 });

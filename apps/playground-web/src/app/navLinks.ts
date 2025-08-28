@@ -20,6 +20,10 @@ const ai: ShadcnSidebarLink = {
       href: "/ai/chat",
       label: "Blockchain LLM",
     },
+    {
+      href: "/ai/ai-sdk",
+      label: "AI SDK",
+    },
   ],
 };
 
