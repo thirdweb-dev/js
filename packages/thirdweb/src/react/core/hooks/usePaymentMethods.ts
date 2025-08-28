@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Quote } from "../../../bridge/index.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
-import type { Token } from "../../../bridge/types/Token.js";
+import type { Token, TokenWithPrices } from "../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../utils/domains.js";
 import { getClientFetch } from "../../../utils/fetch.js";
@@ -82,7 +82,7 @@ export function usePaymentMethods(options: {
 
       const {
         data: allValidOriginTokens,
-      }: { data: { quote: Quote; balance: string; token: Token }[] } =
+      }: { data: { quote: Quote; balance: string; token: TokenWithPrices }[] } =
         await response.json();
 
       // Sort by enough balance to pay THEN gross balance

@@ -1,5 +1,5 @@
 import { stringify } from "viem";
-import type { Token } from "../../bridge/index.js";
+import type { TokenWithPrices } from "../../bridge/types/Token.js";
 import { base } from "../../chains/chain-definitions/base.js";
 import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
 import { polygon } from "../../chains/chain-definitions/polygon.js";
@@ -19,7 +19,7 @@ import { toWei } from "../../utils/units.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
 
-export const ETH: Token = {
+export const ETH: TokenWithPrices = {
   address: NATIVE_TOKEN_ADDRESS,
   chainId: 10,
   decimals: 18,
@@ -32,7 +32,7 @@ export const ETH: Token = {
   symbol: "ETH",
 };
 
-export const USDC: Token = {
+export const USDC: TokenWithPrices = {
   address: getDefaultToken(base, "USDC")?.address ?? "",
   chainId: base.id,
   decimals: 6,
@@ -45,7 +45,7 @@ export const USDC: Token = {
   symbol: "USDC",
 };
 
-export const UNI: Token = {
+export const UNI: TokenWithPrices = {
   address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
   chainId: 10,
   decimals: 18,

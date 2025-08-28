@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useMemo } from "react";
-import type { Token } from "../../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
@@ -46,7 +46,7 @@ export type UIOptions = Prettify<
   } & (
     | {
         mode: "fund_wallet";
-        destinationToken: Token;
+        destinationToken: TokenWithPrices;
         initialAmount?: string;
         presetOptions?: [number, number, number];
       }
@@ -54,7 +54,7 @@ export type UIOptions = Prettify<
         mode: "direct_payment";
         paymentInfo: {
           sellerAddress: Address;
-          token: Token;
+          token: TokenWithPrices;
           amount: string;
           feePayer?: "sender" | "receiver";
         };
@@ -235,7 +235,7 @@ export function BridgeOrchestrator({
 
   // Handle requirements resolved from FundWallet and DirectPayment
   const handleRequirementsResolved = useCallback(
-    (amount: string, token: Token, receiverAddress: Address) => {
+    (amount: string, token: TokenWithPrices, receiverAddress: Address) => {
       send({
         destinationAmount: amount,
         destinationToken: token,
