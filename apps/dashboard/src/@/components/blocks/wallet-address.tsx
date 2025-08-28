@@ -48,7 +48,7 @@ export function WalletAddress(props: {
     return (
       <ToolTipLabel hoverable label={address}>
         <span className="flex items-center gap-2 underline-offset-4 hover:underline">
-          <div className="flex size-6 items-center justify-center rounded-full border bg-background">
+          <div className="flex size-5 items-center justify-center rounded-full border bg-background">
             <XIcon className="size-4 text-muted-foreground" />
           </div>
           Invalid Address
@@ -62,7 +62,7 @@ export function WalletAddress(props: {
     return (
       <div className="flex items-center gap-2 py-2">
         <CircleSlashIcon
-          className={cn("size-6 text-muted-foreground/70", props.iconClassName)}
+          className={cn("size-5 text-muted-foreground/70", props.iconClassName)}
         />
         <span
           className={cn("cursor-pointer font-mono text-sm", props.className)}
@@ -208,6 +208,13 @@ function WalletAvatar(props: {
         <Img
           className={cn("size-5 object-cover", props.iconClassName)}
           src={resolvedAvatarSrc}
+          fallback={
+            <Blobbie
+              address={props.address}
+              className={props.iconClassName}
+              size={20}
+            />
+          }
         />
       ) : props.fallbackIcon ? (
         props.fallbackIcon
@@ -215,7 +222,7 @@ function WalletAvatar(props: {
         <Blobbie
           address={props.address}
           className={props.iconClassName}
-          size={24}
+          size={20}
         />
       )}
     </div>
