@@ -38,7 +38,7 @@ import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
-import { getInitialTickValue } from "./utils/calculate-tick";
+import { getInitialTickValue, isValidTickValue } from "./utils/calculate-tick";
 
 export function CreateTokenAssetPage(props: {
   accountAddress: string;
@@ -113,6 +113,25 @@ export function CreateTokenAssetPage(props: {
 
     const chain = getChain(Number(params.values.chain));
 
+    let initialTick: number | undefined;
+
+    if (params.values.saleEnabled && saleAmount !== 0) {
+      initialTick = await getInitialTickValue({
+        startingPricePerToken: Number(
+          params.values.erc20Asset_poolMode.startingPricePerToken,
+        ),
+        tokenAddress: params.values.erc20Asset_poolMode.tokenAddress,
+        chain,
+        client: props.client,
+      });
+
+      if (!isValidTickValue(initialTick)) {
+        throw new Error(
+          "Invalid starting price per token. Change price and try again",
+        );
+      }
+    }
+
     const contractAddress = await createToken({
       account,
       chain: chain,
@@ -123,12 +142,13 @@ export function CreateTokenAssetPage(props: {
               kind: "pool",
               config: {
                 amount: BigInt(saleAmount),
-                initialTick: getInitialTickValue({
-                  startingPricePerToken: Number(
-                    params.values.erc20Asset_poolMode.startingPricePerToken,
-                  ),
-                }),
+                initialTick: initialTick,
                 developerRewardBps: 1250, // 12.5%
+                currency:
+                  getAddress(params.values.erc20Asset_poolMode.tokenAddress) ===
+                  getAddress(NATIVE_TOKEN_ADDRESS)
+                    ? undefined
+                    : params.values.erc20Asset_poolMode.tokenAddress,
               },
             }
           : undefined,
@@ -442,14 +462,23 @@ export function CreateTokenAssetPage(props: {
           setClaimConditions: DropERC20_setClaimConditions,
         },
       }}
-      onLaunchSuccess={(params) => {
-        createTokenOnUniversalBridge({
-          chainId: params.chainId,
-          client: props.client,
-          tokenAddress: params.contractAddress,
-          // TODO: UPDATE THIS WHEN WE ALLOW CUSTOM CURRENCY PAIRING
-          pairedTokenAddress: NATIVE_TOKEN_ADDRESS,
-        });
+      onLaunchSuccess={(values, contractAddress) => {
+        if (values.saleMode === "erc20-asset:pool") {
+          createTokenOnUniversalBridge({
+            chainId: Number(values.chain),
+            client: props.client,
+            tokenAddress: contractAddress,
+            pairedTokenAddress: values.erc20Asset_poolMode.tokenAddress,
+          });
+        } else if (values.saleMode === "drop-erc20:token-drop") {
+          createTokenOnUniversalBridge({
+            chainId: Number(values.chain),
+            client: props.client,
+            tokenAddress: contractAddress,
+            pairedTokenAddress: undefined,
+          });
+        }
+
         revalidatePathAction(
           `/team/${props.teamSlug}/project/${props.projectId}/tokens`,
           "page",

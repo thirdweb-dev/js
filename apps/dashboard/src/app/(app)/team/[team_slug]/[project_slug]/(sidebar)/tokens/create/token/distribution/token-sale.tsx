@@ -4,6 +4,7 @@ import { DollarSignIcon, XIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Badge } from "@/components/ui/badge";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { DecimalInput } from "@/components/ui/decimal-input";
@@ -147,9 +148,6 @@ function PoolConfig(props: {
   chainId: string;
   client: ThirdwebClient;
 }) {
-  const { idToChain } = useAllChainsData();
-  const chainMeta = idToChain.get(Number(props.chainId));
-
   const totalSupply = Number(props.form.watch("supply"));
   const sellSupply = Math.floor(
     (totalSupply *
@@ -189,7 +187,7 @@ function PoolConfig(props: {
         </Select>
       </FormFieldSetup>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:max-w-[536px]">
+      <div className="flex flex-col lg:flex-row gap-4">
         {/* supply % */}
         <FormFieldSetup
           errorMessage={
@@ -199,6 +197,7 @@ function PoolConfig(props: {
           helperText={`${compactNumberFormatter.format(sellSupply)} tokens`}
           isRequired
           label="Sell % of Total Supply"
+          className="lg:max-w-[220px] grow"
         >
           <div className="relative">
             <DecimalInput
@@ -230,10 +229,11 @@ function PoolConfig(props: {
           }
           isRequired
           label="Starting price per token"
+          className="grow lg:max-w-sm"
         >
-          <div className="relative">
+          <div className="relative grid grid-cols-2">
             <DecimalInput
-              className="pr-10"
+              className="pr-10 rounded-r-none"
               onChange={(value) => {
                 props.form.setValue(
                   "erc20Asset_poolMode.startingPricePerToken",
@@ -247,9 +247,29 @@ function PoolConfig(props: {
                 "erc20Asset_poolMode.startingPricePerToken",
               )}
             />
-            <span className="-translate-y-1/2 absolute top-1/2 right-3 text-sm text-muted-foreground">
-              {chainMeta?.nativeCurrency.symbol || "ETH"}
-            </span>
+
+            <TokenSelector
+              addNativeTokenIfMissing={true}
+              chainId={Number(props.chainId)}
+              className="bg-background border-l-0 rounded-l-none"
+              client={props.client}
+              disableAddress={true}
+              popoverContentClassName="!w-[320px]"
+              onChange={(value) => {
+                props.form.setValue(
+                  "erc20Asset_poolMode.tokenAddress",
+                  value.address,
+                  {
+                    shouldValidate: true,
+                  },
+                );
+              }}
+              selectedToken={{
+                address: props.form.watch("erc20Asset_poolMode.tokenAddress"),
+                chainId: Number(props.chainId),
+              }}
+              showCheck={true}
+            />
           </div>
         </FormFieldSetup>
       </div>

@@ -59,10 +59,10 @@ export function CreateTokenAssetPageUI(props: {
   accountAddress: string;
   client: ThirdwebClient;
   createTokenFunctions: CreateTokenFunctions;
-  onLaunchSuccess: (params: {
-    chainId: number;
-    contractAddress: string;
-  }) => void;
+  onLaunchSuccess: (
+    formValues: CreateAssetFormValues,
+    contractAddress: string,
+  ) => void;
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
@@ -138,6 +138,7 @@ export function CreateTokenAssetPageUI(props: {
       erc20Asset_poolMode: {
         startingPricePerToken: "0.000000001", // 1gwei per token
         saleAllocationPercentage: "100",
+        tokenAddress: nativeTokenAddress,
       },
       dropERC20Mode: {
         pricePerToken: "0.1",
@@ -166,9 +167,13 @@ export function CreateTokenAssetPageUI(props: {
           client={props.client}
           form={tokenInfoForm}
           onChainUpdated={() => {
-            // reset the token address to the native token address on chain change
             tokenDistributionForm.setValue(
               "dropERC20Mode.saleTokenAddress",
+              nativeTokenAddress,
+            );
+
+            tokenDistributionForm.setValue(
+              "erc20Asset_poolMode.tokenAddress",
               nativeTokenAddress,
             );
           }}

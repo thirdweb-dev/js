@@ -56,10 +56,10 @@ export function LaunchTokenStatus(props: {
   values: CreateAssetFormValues;
   onPrevious: () => void;
   client: ThirdwebClient;
-  onLaunchSuccess: (params: {
-    chainId: number;
-    contractAddress: string;
-  }) => void;
+  onLaunchSuccess: (
+    formValues: CreateAssetFormValues,
+    contractAddress: string,
+  ) => void;
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
@@ -251,10 +251,7 @@ export function LaunchTokenStatus(props: {
     });
 
     if (contractAddressRef.current) {
-      props.onLaunchSuccess({
-        chainId: Number(formValues.chain),
-        contractAddress: contractAddressRef.current,
-      });
+      props.onLaunchSuccess(formValues, contractAddressRef.current);
     }
   }
 
