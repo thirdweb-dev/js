@@ -303,7 +303,6 @@ export function LaunchNFT(props: {
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
-  const isPending = steps.some((step) => step.status.type === "pending");
 
   const isPriceSame = props.values.nfts.every(
     (nft) => nft.price_amount === props.values.nfts[0]?.price_amount,
@@ -392,30 +391,25 @@ export function LaunchNFT(props: {
             />
           </div>
 
-          <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">
-            {isComplete && contractLink ? (
-              <div>
-                <Button asChild className="gap-2">
-                  <Link href={contractLink}>
-                    View NFT <ArrowRightIcon className="size-4" />
-                  </Link>
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
-
-            <Button
-              disabled={isPending}
-              onClick={() => {
-                setIsModalOpen(false);
-                // reset steps
-                setSteps([]);
-              }}
-              variant="outline"
-            >
-              {isComplete ? "Close" : "Cancel"}
-            </Button>
+          <div className="mt-2 flex justify-end gap-4 border-border border-t bg-card p-6">
+            {!isComplete ? (
+              <Button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  // reset steps
+                  setSteps([]);
+                }}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+            ) : contractLink ? (
+              <Button asChild className="gap-2">
+                <Link href={contractLink}>
+                  View NFT Collection <ArrowRightIcon className="size-4" />
+                </Link>
+              </Button>
+            ) : null}
           </div>
         </DialogContent>
       </Dialog>

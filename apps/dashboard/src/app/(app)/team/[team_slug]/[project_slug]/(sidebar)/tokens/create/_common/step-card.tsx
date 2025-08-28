@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export function StepCard(props: {
   title: string;
+  errorMessage?: string;
   prevButton:
     | undefined
     | {
@@ -35,40 +36,50 @@ export function StepCard(props: {
       {props.children}
 
       {(props.prevButton || props.nextButton) && (
-        <div className="flex justify-end gap-3 border-t p-4 md:p-6">
-          {props.prevButton && (
-            <Button
-              className="gap-2"
-              onClick={() => {
-                props.prevButton?.onClick();
-              }}
-              variant="outline"
-            >
-              <ArrowLeftIcon className="size-4" />
-              Back
-            </Button>
+        <div className="flex justify-between items-center gap-3 border-t p-4 md:px-6 md:py-5">
+          {props.errorMessage ? (
+            <div className="text-destructive-text text-sm">
+              {props.errorMessage}
+            </div>
+          ) : (
+            <div />
           )}
 
-          {nextButton && nextButton.type !== "custom" && (
-            <Button
-              className="gap-2"
-              disabled={nextButton.disabled}
-              onClick={() => {
-                if (nextButton.type === "click") {
-                  nextButton.onClick();
-                }
-              }}
-              type="submit"
-              variant="default"
-            >
-              Next
-              <ArrowRightIcon className="size-4" />
-            </Button>
-          )}
+          <div className="flex gap-3">
+            {props.prevButton && (
+              <Button
+                className="gap-2"
+                onClick={() => {
+                  props.prevButton?.onClick();
+                }}
+                variant="outline"
+              >
+                <ArrowLeftIcon className="size-4" />
+                Back
+              </Button>
+            )}
 
-          {props.nextButton &&
-            props.nextButton.type === "custom" &&
-            props.nextButton.custom}
+            {nextButton && nextButton.type !== "custom" && (
+              <Button
+                className="gap-2"
+                disabled={nextButton.disabled}
+                onClick={() => {
+                  if (nextButton.type === "click") {
+                    nextButton.onClick();
+                  }
+                }}
+                type="submit"
+                variant="default"
+              >
+                Next
+                <ArrowRightIcon className="size-4" />
+              </Button>
+            )}
+
+            {props.nextButton &&
+              props.nextButton.type === "custom" &&
+              props.nextButton.custom}
+          </div>
         </div>
       )}
     </div>
