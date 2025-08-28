@@ -22,14 +22,14 @@ import type { ConnectButton_connectModalOptions } from "../../../core/hooks/conn
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
+import { Container } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
+import { Text } from "../components/text.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
-import { Container } from "../components/basic.js";
-import { Text } from "../components/text.js";
-import { Button } from "../components/buttons.js";
 
 export type CheckoutWidgetProps = {
   /**
