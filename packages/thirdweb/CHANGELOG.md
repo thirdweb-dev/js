@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.105.38
+
+### Patch Changes
+
+- [#7936](https://github.com/thirdweb-dev/js/pull/7936) [`76cfecb`](https://github.com/thirdweb-dev/js/commit/76cfecb3054c03d952980a38842607300824a3bd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates copy on the payment widgets
+
+- [#7937](https://github.com/thirdweb-dev/js/pull/7937) [`44e6e11`](https://github.com/thirdweb-dev/js/commit/44e6e115d9519dd75ae9efa20c8be069fee067ea) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Allows using the checkout widget without a wallet connected
+
+- [#7922](https://github.com/thirdweb-dev/js/pull/7922) [`f3ad6ef`](https://github.com/thirdweb-dev/js/commit/f3ad6efcf829e23435c4e2859809a74be877809d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle already connected wallets in 1193 provider
+
 ## 5.105.37
 
 ### Patch Changes
