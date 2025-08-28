@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.39
+
+### Patch Changes
+
+- [#7942](https://github.com/thirdweb-dev/js/pull/7942) [`50c6371`](https://github.com/thirdweb-dev/js/commit/50c6371e1ec12e296839987a6c25d9814dea2208) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to exclude prices from Bridge.tokens
+
 ## 5.105.38
 
 ### Patch Changes
