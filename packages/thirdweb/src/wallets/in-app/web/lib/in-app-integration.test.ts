@@ -73,8 +73,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       if (!executedLog) {
         throw new Error("No executed log found");
       }
-      expect(executedLog.args.to).toBe(account.address);
-      expect(executedLog.args.value).toBe(0n);
+      expect(executedLog.args.user).toBe(account.address);
     });
 
     it("should sponsor gas for a 4337 smart account", async () => {
