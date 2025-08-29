@@ -67,6 +67,14 @@ export async function SharedCrossChainPage(props: {
   const isModularCore = (await getContractPageMetadata(serverContract))
     .isModularCore;
 
+  if (!isModularCore) {
+    redirectToContractLandingPage({
+      chainIdOrSlug: props.chainIdOrSlug,
+      contractAddress: props.contractAddress,
+      projectMeta: props.projectMeta,
+    });
+  }
+
   let twCloneFactoryContract: Readonly<
     ContractOptions<[], `0x${string}`>
   > | null = null;

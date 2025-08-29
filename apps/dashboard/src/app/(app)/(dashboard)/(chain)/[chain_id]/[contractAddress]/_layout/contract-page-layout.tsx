@@ -35,7 +35,7 @@ export function ContractPageLayout(props: {
   } = props;
 
   return (
-    <div>
+    <div className="flex flex-col grow">
       <div className="border-border border-b py-8">
         <div className="container flex flex-col gap-4">
           <div className="flex flex-col justify-between gap-4 md:flex-row">
