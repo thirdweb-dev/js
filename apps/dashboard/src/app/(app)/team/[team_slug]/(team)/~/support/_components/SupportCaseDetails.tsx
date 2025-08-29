@@ -1,7 +1,8 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ChevronDownIcon, UserIcon } from "lucide-react";
+import { ChevronDownIcon, StarIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { AutoResizeTextarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../../../../components/ThirdwebMiniLogo";
+import { checkFeedbackStatus, submitSupportFeedback } from "../apis/feedback";
 import { sendMessageToTicket } from "../apis/support";
 import type { SupportMessage, SupportTicket } from "../types/tickets";
 import {
@@ -36,6 +38,77 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [localMessages, setLocalMessages] = useState(ticket.messages || []);
+
+  // rating/feedback
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState("");
+
+  // Check if feedback has already been submitted for this ticket
+  const feedbackStatusQuery = useQuery({
+    queryKey: ["feedbackStatus", ticket.id],
+    queryFn: async () => {
+      const result = await checkFeedbackStatus(ticket.id);
+      if ("error" in result) {
+        throw new Error(result.error);
+      }
+      return result.hasFeedback;
+    },
+    enabled: ticket.status === "closed",
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+
+  const feedbackSubmitted = feedbackStatusQuery.data ?? false;
+  const isLoading = feedbackStatusQuery.isLoading;
+  const hasError = feedbackStatusQuery.isError;
+
+  const handleStarClick = (starIndex: number) => {
+    setRating(starIndex + 1);
+  };
+
+  const queryClient = useQueryClient();
+  const submitFeedbackMutation = useMutation({
+    mutationFn: async () => {
+      if (rating === 0) {
+        throw new Error("Please select a rating");
+      }
+      const result = await submitSupportFeedback({
+        rating,
+        feedback,
+        ticketId: ticket.id,
+      });
+      if ("error" in result) {
+        throw new Error(result.error);
+      }
+      return result;
+    },
+    onSuccess: () => {
+      toast.success("Thank you for your feedback!");
+      setRating(0);
+      setFeedback("");
+      // mark as submitted immediately
+      queryClient.setQueryData(["feedbackStatus", ticket.id], true);
+    },
+    onError: (err) => {
+      console.error("Failed to submit feedback:", err);
+      const msg = err instanceof Error ? err.message : String(err ?? "");
+      let message = "Failed to submit feedback. Please try again.";
+      if (/network|fetch/i.test(msg)) {
+        message = "Network error. Please check your connection and try again.";
+      } else if (
+        /validation|Rating must be|Please select a rating/i.test(msg)
+      ) {
+        message = msg; // show precise user-facing validation error
+      } else if (/API Server error/i.test(msg)) {
+        message = "Server error. Please try again later.";
+      }
+      toast.error(message);
+    },
+  });
+
+  const handleSendFeedback = () => {
+    submitFeedbackMutation.mutate();
+  };
 
   const handleSendReply = async () => {
     if (!team.unthreadCustomerId) {
@@ -149,11 +222,88 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
           )}
         </div>
 
-        {ticket.status === "closed" && (
+        {ticket.status === "closed" && isLoading && (
+          <div className="border-t p-6">
+            <div className="flex items-center gap-2">
+              <Spinner className="size-4" />
+              <span className="text-muted-foreground text-sm">
+                Checking feedback status...
+              </span>
+            </div>
+          </div>
+        )}
+
+        {ticket.status === "closed" && !isLoading && !feedbackSubmitted && (
           <div className="border-t p-6">
             <p className="text-muted-foreground text-sm">
-              This ticket is closed. If you need further assistance, please
-              create a new ticket.
+              This ticket is closed. Give us a quick rating to let us know how
+              we did!
+            </p>
+            {hasError && (
+              <p className="text-destructive text-xs mt-2">
+                Couldn't verify prior feedback right now — you can still submit
+                a rating.
+              </p>
+            )}
+
+            <div className="flex gap-2 mb-6 mt-4">
+              {[1, 2, 3, 4, 5].map((starValue) => (
+                <button
+                  key={`star-${starValue}`}
+                  type="button"
+                  onClick={() => handleStarClick(starValue - 1)}
+                  className="transition-colors"
+                  aria-label={`Rate ${starValue} out of 5 stars`}
+                >
+                  <StarIcon
+                    size={32}
+                    className={cn(
+                      "transition-colors",
+                      starValue <= rating
+                        ? "text-pink-500 fill-current stroke-current"
+                        : "text-muted-foreground fill-current stroke-current",
+                      "hover:text-pink-500",
+                    )}
+                    strokeWidth={starValue <= rating ? 2 : 1}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <div className="relative">
+              <AutoResizeTextarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                placeholder="Optional: Tell us how we can improve."
+                maxLength={1000}
+                className="text-sm w-full bg-card text-foreground rounded-lg p-4 pr-28 min-h-[100px] resize-none border border-border focus:outline-none placeholder:text-muted-foreground"
+              />
+              <Button
+                type="button"
+                onClick={handleSendFeedback}
+                disabled={submitFeedbackMutation.isPending || rating === 0}
+                className="absolute bottom-3 right-3 rounded-full h-auto py-2 px-4"
+                variant="secondary"
+                size="sm"
+              >
+                {submitFeedbackMutation.isPending ? (
+                  <>
+                    <Spinner className="size-4 mr-2" />
+                    Sending...
+                  </>
+                ) : (
+                  "Send Feedback"
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {ticket.status === "closed" && feedbackSubmitted && (
+          <div className="border-t p-6">
+            <p className="text-muted-foreground text-sm">
+              Thank you for your feedback! We appreciate your input and will use
+              it to improve our service.
             </p>
           </div>
         )}
