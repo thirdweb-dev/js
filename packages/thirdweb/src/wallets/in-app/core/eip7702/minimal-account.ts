@@ -14,6 +14,9 @@ import type { SignedAuthorization } from "../../../../transaction/actions/eip770
 import { toSerializableTransaction } from "../../../../transaction/actions/to-serializable-transaction.js";
 import type { SendTransactionResult } from "../../../../transaction/types.js";
 import { getAddress } from "../../../../utils/address.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
+import { withCache } from "../../../../utils/promise/withCache.js";
 import { randomBytesHex } from "../../../../utils/random.js";
 import type {
   Account,
@@ -23,11 +26,8 @@ import {
   executeWithSignature,
   getQueuedTransactionHash,
 } from "../../../smart/lib/bundler.js";
-import type { BundlerOptions } from "../../../smart/types.js";
 import { getDefaultBundlerUrl } from "../../../smart/lib/constants.js";
-import { getClientFetch } from "../../../../utils/fetch.js";
-import { stringify } from "../../../../utils/json.js";
-import { withCache } from "../../../../utils/promise/withCache.js";
+import type { BundlerOptions } from "../../../smart/types.js";
 
 interface DelegationContractResponse {
   id: string;
@@ -48,10 +48,10 @@ async function getDelegationContractAddress(args: {
 }): Promise<string> {
   const { client, chain, bundlerUrl } = args;
   const url = bundlerUrl ?? getDefaultBundlerUrl(chain);
-  
+
   // Create a cache key based on the bundler URL to ensure we cache per chain/bundler
   const cacheKey = `delegation-contract:${url}`;
-  
+
   return withCache(
     async () => {
       const fetchWithHeaders = getClientFetch(client);
@@ -77,7 +77,7 @@ async function getDelegationContractAddress(args: {
       }
 
       const result: DelegationContractResponse = await response.json();
-      
+
       if ((result as any).error) {
         throw new Error(
           `Delegation contract RPC error: ${JSON.stringify((result as any).error)}`,
@@ -92,11 +92,9 @@ async function getDelegationContractAddress(args: {
 
       return result.result.delegationContract;
     },
-    { cacheKey }
+    { cacheKey, cacheTime: 24 * 60 * 60 * 1000 }, // cache for 24 hours
   );
 }
-
-
 
 export const create7702MinimalAccount = (args: {
   client: ThirdwebClient;
@@ -123,7 +121,10 @@ export const create7702MinimalAccount = (args: {
       client,
       chain,
     });
-    const isMinimalAccount = await is7702MinimalAccount(eoaContract, delegationContractAddress);
+    const isMinimalAccount = await is7702MinimalAccount(
+      eoaContract,
+      delegationContractAddress,
+    );
     if (!isMinimalAccount) {
       // if not, sign authorization
       let nonce = firstTx.nonce
@@ -150,7 +151,7 @@ export const create7702MinimalAccount = (args: {
       // send transaction from executor, needs signature
       const wrappedCalls = {
         calls: txs.map((tx) => ({
-          data: tx.data ?? "0x", // will throw if undefined address
+          data: tx.data ?? "0x",
           target: getAddress(tx.to ?? ""),
           value: tx.value ?? 0n,
         })),
