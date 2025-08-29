@@ -3,7 +3,6 @@ import type { ThirdwebClient } from "thirdweb";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
-import { OPSponsoredChains } from "@/constants/chains";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { cn } from "@/lib/utils";
@@ -32,7 +31,6 @@ export const CustomChainRenderer = ({
   const { idToChain } = useAllChainsData();
   const storedChain = idToChain.get(chain.id);
   const isDeprecated = storedChain?.status === "deprecated";
-  const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
     <div className="flex min-h-[48px] w-full cursor-pointer justify-start rounded-lg px-2 py-1 hover:bg-accent">
@@ -68,16 +66,6 @@ export const CustomChainRenderer = ({
               {isDeprecated && (
                 <div className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl border px-2 py-1 font-medium text-xs">
                   Deprecated
-                </div>
-              )}
-              {isSponsored && (
-                <div
-                  className="flex shrink-0 cursor-not-allowed items-center overflow-hidden rounded-xl px-2 py-1 font-medium text-xs"
-                  style={{
-                    background: "linear-gradient(to right, #701953, #5454B2)",
-                  }}
-                >
-                  Sponsored
                 </div>
               )}
             </div>
