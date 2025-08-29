@@ -1,9 +1,8 @@
 import { Button } from "@workspace/ui/components/button";
-import { ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon, Settings2Icon } from "lucide-react";
 import Link from "next/link";
 import type { ThirdwebClient } from "thirdweb";
 import { cn } from "@/lib/utils";
-import { ProjectAvatar } from "../avatar/project-avatar";
 import { type ActionLink, LinkGroup } from "./header/link-group";
 
 type Action =
@@ -58,12 +57,17 @@ export type ProjectPageHeaderProps = {
   title: string;
   description?: React.ReactNode;
   imageUrl?: string | null;
+  icon: React.FC<{ className?: string }>;
+  isProjectIcon?: boolean;
   actions: {
     primary: Action;
     secondary?: Action;
   } | null;
 
   links?: ActionLink[];
+  settings?: {
+    href: string;
+  };
 
   // TODO: add task card component
   task?: never;
@@ -71,50 +75,81 @@ export type ProjectPageHeaderProps = {
 
 export function ProjectPageHeader(props: ProjectPageHeaderProps) {
   return (
-    <header className="flex flex-col gap-4 container max-w-7xl py-6">
-      {/* main row */}
-      <div className="flex flex-row items-center justify-between">
-        {/* left */}
-        <div className="flex flex-col gap-4">
-          {/* image */}
-          {props.imageUrl !== undefined && (
-            <ProjectAvatar
-              className="size-12"
-              client={props.client}
-              src={props.imageUrl ?? undefined}
-            />
+    <header className="container max-w-7xl py-6 relative">
+      {/* top row */}
+      <div className="flex justify-between items-start mb-4">
+        {/* left - icon */}
+        <div className="flex">
+          {props.isProjectIcon ? (
+            <props.icon />
+          ) : (
+            <div className="border rounded-full p-2.5 bg-card">
+              <props.icon className="size-5 text-muted-foreground" />
+            </div>
           )}
-          {/* title */}
-          <div className="flex flex-col gap-1 max-w-3xl">
-            <h2 className="text-3xl font-semibold tracking-tight line-clamp-1">
-              {props.title}
-            </h2>
-            <p className="text-sm text-muted-foreground line-clamp-3 md:line-clamp-2">
-              {props.description}
-            </p>
-          </div>
         </div>
 
-        {/* right */}
-        {/* TODO: add "current task" card component */}
+        {/* right - buttons */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
+            {props.links && props.links.length > 0 && (
+              <LinkGroup links={props.links} />
+            )}
+
+            {props.settings && (
+              <Link href={props.settings.href}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full gap-2 bg-card"
+                >
+                  <Settings2Icon className="size-4 text-muted-foreground" />
+                  Settings
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* hide on mobile */}
+          {props.actions && (
+            <div className="hidden lg:flex items-center gap-3">
+              {props.actions.secondary && (
+                <Action action={props.actions.secondary} variant="secondary" />
+              )}
+
+              {props.actions.primary && (
+                <Action action={props.actions.primary} />
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* actions row */}
-      {props.actions && (
-        <div className="flex flex-row items-center justify-between">
-          {/* left actions */}
-          <div className="flex flex-row items-center gap-3">
-            {props.actions.primary && <Action action={props.actions.primary} />}
-            {props.actions.secondary && (
+      <div className="space-y-4">
+        {/* mid row */}
+        <div className="space-y-1 max-w-3xl">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            {props.title}
+          </h2>
+          {/* description */}
+          <p className="text-sm text-muted-foreground line-clamp-3 md:line-clamp-2">
+            {props.description}
+          </p>
+        </div>
+
+        {/* bottom row - hidden on desktop */}
+        {props.actions && (
+          <div className="flex items-center gap-3 lg:hidden">
+            {props.actions?.primary && (
+              <Action action={props.actions.primary} />
+            )}
+
+            {props.actions?.secondary && (
               <Action action={props.actions.secondary} variant="secondary" />
             )}
           </div>
-          {/* right actions */}
-          {props.links && props.links.length > 0 && (
-            <LinkGroup links={props.links} />
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }

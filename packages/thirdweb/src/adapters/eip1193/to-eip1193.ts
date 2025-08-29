@@ -115,18 +115,29 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
       if (request.method === "eth_accounts") {
         const account = wallet.getAccount();
         if (!account) {
-          throw new Error("Account not connected");
+          return [];
         }
         return [account.address];
       }
       if (request.method === "eth_requestAccounts") {
+        const connectedAccount = wallet.getAccount();
+        if (connectedAccount) {
+          return [connectedAccount.address];
+        }
         const account = connectOverride
           ? await connectOverride(wallet)
-          : await wallet.connect({
-              client,
-            });
+          : await wallet
+              .connect({
+                client,
+              })
+              .catch((e) => {
+                console.error("Error connecting wallet", e);
+                return null;
+              });
         if (!account) {
-          throw new Error("Unable to connect wallet");
+          throw new Error(
+            "Unable to connect wallet - try passing a connectOverride function",
+          );
         }
         return [account.address];
       }

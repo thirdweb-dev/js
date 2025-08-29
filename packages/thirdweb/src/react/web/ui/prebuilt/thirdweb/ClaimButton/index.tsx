@@ -10,8 +10,8 @@ import type { PreparedTransaction } from "../../../../../../transaction/prepare-
 import type { BaseTransactionOptions } from "../../../../../../transaction/types.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useReadContract } from "../../../../../core/hooks/contract/useReadContract.js";
-import { useSendAndConfirmTransaction } from "../../../../../core/hooks/transaction/useSendAndConfirmTransaction.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useSendAndConfirmTransaction } from "../../../../hooks/transaction/useSendAndConfirmTransaction.js";
 import { TransactionButton } from "../../../TransactionButton/index.js";
 import type {
   ClaimButtonProps,
@@ -126,7 +126,15 @@ export function ClaimButton(props: ClaimButtonProps) {
     tokenId: claimParams.type === "ERC1155" ? claimParams.tokenId : undefined,
   });
   const account = useActiveAccount();
-  const { mutateAsync } = useSendAndConfirmTransaction();
+  const { mutateAsync } = useSendAndConfirmTransaction({
+    payModal:
+      typeof payModal === "object"
+        ? {
+            ...payModal,
+            metadata: payModal.metadata || payMetadata,
+          }
+        : payModal,
+  });
   return (
     <TransactionButton
       payModal={{

@@ -59,7 +59,7 @@ export {
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 export { useEstimateGas } from "../react/core/hooks/transaction/useEstimateGas.js";
 export { useEstimateGasCost } from "../react/core/hooks/transaction/useEstimateGasCost.js";
-export { useSendAndConfirmTransaction } from "../react/core/hooks/transaction/useSendAndConfirmTransaction.js";
+export { useSendAndConfirmTransactionCore as useSendAndConfirmTransaction } from "../react/core/hooks/transaction/useSendAndConfirmTransaction.js";
 export { useSendBatchTransaction } from "../react/core/hooks/transaction/useSendBatchTransaction.js";
 // transaction
 export type {

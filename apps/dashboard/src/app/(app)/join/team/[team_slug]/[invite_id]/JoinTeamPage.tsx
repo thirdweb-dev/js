@@ -8,7 +8,7 @@ import type { Team } from "@/api/team/get-team";
 import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ThirdwebMiniLogo } from "../../../../components/ThirdwebMiniLogo";
 

@@ -8,7 +8,6 @@ import {
   useActiveAccount,
   useInvalidateContractQuery,
   useReadContract,
-  useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import {
@@ -21,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 type BurnTabProps = {
@@ -48,7 +48,7 @@ function BurnTab({ contract, tokenId, isLoggedIn }: BurnTabProps) {
     isERC1155,
     { contract },
   );
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const { mutate, isPending } = useSendAndConfirmTx();
 
   const onSubmit = (data: { to: string; amount: string }) => {
     const transaction = isErc721

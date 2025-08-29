@@ -22,8 +22,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { fetchTopContracts, type TrendingContract } from "@/lib/search";

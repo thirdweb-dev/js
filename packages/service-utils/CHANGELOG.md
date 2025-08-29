@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.8
+
+### Patch Changes
+
+- [#7921](https://github.com/thirdweb-dev/js/pull/7921) [`d4a44f5`](https://github.com/thirdweb-dev/js/commit/d4a44f5b5f6ec3594a9f521aee5e73f3a5cdc031) Thanks [@jnsdls](https://github.com/jnsdls)! - add reason code type into team capabilities response
+
 ## 0.10.7
 
 ### Patch Changes

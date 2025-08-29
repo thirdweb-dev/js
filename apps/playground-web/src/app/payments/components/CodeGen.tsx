@@ -1,19 +1,26 @@
 import { lazy, Suspense } from "react";
-import { CodeLoading } from "../../../components/code/code.client";
+import { LoadingDots } from "../../../components/ui/LoadingDots";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
-const CodeClient = lazy(() => import("../../../components/code/code.client"));
+const CodeClient = lazy(() =>
+  import("../../../components/code/code.client").then((m) => ({
+    default: m.CodeClient,
+  })),
+);
+
+function CodeLoading() {
+  return (
+    <div className="flex min-h-[300px] grow items-center justify-center bg-card border rounded-lg">
+      <LoadingDots />
+    </div>
+  );
+}
 
 export function CodeGen(props: { options: BridgeComponentsPlaygroundOptions }) {
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
-        <CodeClient
-          className="grow"
-          code={getCode(props.options)}
-          lang="tsx"
-          loader={<CodeLoading />}
-        />
+        <CodeClient className="grow" code={getCode(props.options)} lang="tsx" />
       </Suspense>
     </div>
   );

@@ -26,6 +26,7 @@ import type {
 } from "@/components/analytics/date-range-selector";
 import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
+import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
@@ -108,9 +109,16 @@ export default async function ProjectOverviewPage(props: PageProps) {
       <ProjectPage
         header={{
           client,
+          isProjectIcon: true,
+          icon: () => (
+            <ProjectAvatar
+              className="size-12"
+              client={client}
+              src={project.image ?? ""}
+            />
+          ),
           title: project.name,
           description: "Your project's overview and analytics",
-          imageUrl: project.image,
           // explicitly NO actions on the overview page
           actions: null,
         }}

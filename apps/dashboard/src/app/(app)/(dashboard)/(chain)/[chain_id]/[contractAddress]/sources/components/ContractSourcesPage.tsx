@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useContractSources } from "@/hooks/contract-ui/useContractSources";
 import { useResolveContractAbi } from "@/hooks/useResolveContractAbi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";

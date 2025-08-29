@@ -7,20 +7,17 @@ import {
   getAccountsOfSigner,
   isAccountDeployed,
 } from "thirdweb/extensions/erc4337";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 
 export function CreateAccountButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
 }) {
-  const sendTxMutation = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const address = useActiveAccount()?.address;
 
@@ -63,14 +60,14 @@ export function CreateAccountButton(props: {
       isLoggedIn={props.isLoggedIn}
       variant="default"
       size="sm"
-      isPending={sendTxMutation.isPending}
+      isPending={sendAndConfirmTx.isPending}
       onClick={() => {
         const tx = createAccount({
           admin: address,
           contract: props.contract,
           data: "0x",
         });
-        sendTxMutation.mutate(tx);
+        sendAndConfirmTx.mutate(tx);
       }}
       transactionCount={undefined}
       txChainID={props.contract.chain.id}

@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { UploadImage } from "../../../../components/blocks/upload-image";
-import { Spinner } from "../../../../components/ui/Spinner/Spinner";
+import { Spinner } from "../../../../components/ui/Spinner";
 import { tryCatch } from "../../../../lib/try-catch";
 import { useEngineTxStatus } from "../../_hooks/useEngineTxStatus";
 import { mint_erc1155_nft_with_engine } from "../../actions";

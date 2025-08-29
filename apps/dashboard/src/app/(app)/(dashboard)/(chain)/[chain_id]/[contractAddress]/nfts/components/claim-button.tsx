@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { isAddress, type ThirdwebContract } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const claimFormSchema = z.object({
@@ -61,7 +62,7 @@ export function NFTClaimButton({ contract, isLoggedIn }: NFTClaimButtonProps) {
     resolver: zodResolver(claimFormSchema),
     defaultValues: { amount: "1", to: address },
   });
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const account = useActiveAccount();
   const [open, setOpen] = useState(false);
 

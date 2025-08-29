@@ -11,7 +11,7 @@ import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { Button } from "@/components/ui/button";
 import { InlineCode } from "@/components/ui/inline-code";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Sheet,
   SheetContent,

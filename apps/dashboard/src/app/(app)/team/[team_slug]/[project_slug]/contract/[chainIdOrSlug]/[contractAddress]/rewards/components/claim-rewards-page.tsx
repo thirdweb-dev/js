@@ -9,11 +9,12 @@ import {
   type ThirdwebContract,
   toTokens,
 } from "thirdweb";
-import { TokenIcon, TokenProvider, useSendTransaction } from "thirdweb/react";
+import { TokenIcon, TokenProvider } from "thirdweb/react";
 import { claimRewards } from "thirdweb/tokens";
 import { DistributionBarChart } from "@/components/blocks/distribution-chart";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { TransactionButton } from "@/components/tx-button";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { parseError } from "@/utils/errorParser";
 import { tryCatch } from "@/utils/try-catch";
@@ -37,7 +38,7 @@ export function ClaimRewardsPage(props: {
   };
   chainSlug: string;
 }) {
-  const sendTx = useSendTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const router = useDashboardRouter();
 
   async function handleClaim() {
@@ -47,7 +48,7 @@ export function ClaimRewardsPage(props: {
     });
 
     const claimRewardsResult = await tryCatch(
-      sendTx.mutateAsync(claimRewardsTx),
+      sendAndConfirmTx.mutateAsync(claimRewardsTx),
     );
 
     if (claimRewardsResult.error) {
@@ -66,7 +67,7 @@ export function ClaimRewardsPage(props: {
       recipient={props.reward.recipient}
       developer={props.reward.developer}
       handleClaim={handleClaim}
-      isClaimPending={sendTx.isPending}
+      isClaimPending={sendAndConfirmTx.isPending}
       client={props.assetContractClient.client}
       chain={props.assetContractClient.chain}
       chainSlug={props.chainSlug}

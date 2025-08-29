@@ -6,7 +6,10 @@ export {
   DEFAULT_DEVELOPER_ADDRESS,
   DEFAULT_DEVELOPER_REWARD_BPS,
 } from "../tokens/constants.js";
-export { createToken, prepareCreateToken } from "../tokens/create-token.js";
+export {
+  getTokenAddressFromReceipt,
+  prepareCreateToken,
+} from "../tokens/create-token.js";
 export { distributeToken } from "../tokens/distribute-token.js";
 export {
   getDeployedContractFactory,

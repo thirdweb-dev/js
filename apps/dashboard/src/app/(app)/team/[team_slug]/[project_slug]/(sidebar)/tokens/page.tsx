@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { TokenIcon } from "@/icons/TokenIcon";
 import { loginRedirect } from "@/utils/redirects";
 import { Cards, ImportTokenButton } from "./cards";
 
@@ -53,6 +54,7 @@ export default async function Page(props: {
   return (
     <ProjectPage
       header={{
+        icon: TokenIcon,
         client,
         title: "Tokens",
         description: "Create and manage tokens for your project",
@@ -61,8 +63,8 @@ export default async function Page(props: {
             component: (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="gap-1.5 rounded-full" size="sm">
-                    <PlusIcon className="size-4" />
+                  <Button className="gap-2 rounded-full" size="sm">
+                    <PlusIcon className="size-3.5" />
                     Create Token
                   </Button>
                 </DialogTrigger>

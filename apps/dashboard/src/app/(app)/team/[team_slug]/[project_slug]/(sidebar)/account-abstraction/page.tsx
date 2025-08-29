@@ -11,6 +11,7 @@ import {
 } from "@/components/analytics/date-range-selector";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
 import { getAbsoluteUrl } from "@/utils/vercel";
 import { AccountAbstractionSummary } from "./AccountAbstractionAnalytics/AccountAbstractionSummary";
 import { SmartWalletsBillingAlert } from "./Alerts";
@@ -93,22 +94,14 @@ export default async function Page(props: {
   return (
     <ProjectPage
       header={{
+        icon: SmartAccountIcon,
         client,
         title: "Account Abstraction",
         description:
           "Integrate EIP-7702 and EIP-4337 compliant smart accounts for gasless sponsorships and more.",
-
-        actions: {
-          primary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/transactions/sponsor",
-            external: true,
-          },
-          secondary: {
-            label: "Playground",
-            href: "https://playground.thirdweb.com/account-abstraction/eip-7702",
-            external: true,
-          },
+        actions: null,
+        settings: {
+          href: `/team/${params.team_slug}/${params.project_slug}/settings/account-abstraction`,
         },
         links: [
           {
@@ -118,10 +111,6 @@ export default async function Page(props: {
           {
             type: "playground",
             href: "https://playground.thirdweb.com/account-abstraction/eip-7702",
-          },
-          {
-            type: "settings",
-            href: `/team/${params.team_slug}/${params.project_slug}/settings/account-abstraction`,
           },
         ],
       }}

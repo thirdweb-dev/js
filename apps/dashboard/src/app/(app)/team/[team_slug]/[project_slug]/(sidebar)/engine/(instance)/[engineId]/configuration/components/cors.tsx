@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { InlineCode } from "@/components/ui/inline-code";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
 import {
   useEngineCorsConfiguration,

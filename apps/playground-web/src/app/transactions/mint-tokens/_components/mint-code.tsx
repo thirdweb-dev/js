@@ -1,4 +1,4 @@
-import { Code } from "../../../../components/code/code";
+import { CodeServer } from "@/components/code/code";
 import { mintExample } from "../constants";
 
 export function MintCode() {
@@ -15,7 +15,7 @@ export function MintCode() {
       <h3 className="mb-2 font-semibold text-xl tracking-tight">
         Send Transaction Request to Mint Dynamic NFTs
       </h3>
-      <Code code={engineMintCode} lang="typescript" />
+      <CodeServer code={engineMintCode} lang="typescript" />
 
       <div className="h-8" />
 
@@ -28,7 +28,7 @@ export function MintCode() {
           the transaction using the following code.
         </p>
       </div>
-      <Code code={getEngineStatusCode} lang="typescript" />
+      <CodeServer code={getEngineStatusCode} lang="typescript" />
     </div>
   );
 }

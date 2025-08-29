@@ -16,7 +16,7 @@ import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,

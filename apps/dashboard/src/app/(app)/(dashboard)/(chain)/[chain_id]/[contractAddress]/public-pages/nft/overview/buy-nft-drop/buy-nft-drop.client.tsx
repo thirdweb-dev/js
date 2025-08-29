@@ -4,12 +4,13 @@ import type { NFT, ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc721";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { getClaimParams } from "thirdweb/utils";
 import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
 } from "@/analytics/report";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 import { getCurrencyMeta } from "../../../erc20/_utils/getCurrencyMeta";
 import {
@@ -27,7 +28,7 @@ export type BuyNFTDropProps = Omit<
 >;
 
 export function BuyNFTDrop(props: BuyNFTDropProps) {
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const account = useActiveAccount();
 
   const handleSubmit = async (form: BuyNFTDropForm) => {

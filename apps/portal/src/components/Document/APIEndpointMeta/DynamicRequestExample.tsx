@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import CodeClient, { CodeLoading } from "../../code/code.client";
+import { CodeClient } from "../../code/code.client";
 import { Details } from "../Details";
 import type { APIParameter } from "./ApiEndpoint";
 import { RequestExample } from "./RequestExample";
@@ -59,7 +59,6 @@ function InlineParameterItem({ param }: { param: APIParameter }) {
             }
             className="rounded-none border-none"
             lang="json"
-            loader={<CodeLoading />}
             scrollableContainerClassName="m-0"
             scrollableClassName="max-h-[200px]"
           />
@@ -146,7 +145,6 @@ export function DynamicRequestExample(props: DynamicRequestExampleProps) {
               <CodeClient
                 className="rounded-none border-none"
                 code={example.code}
-                loader={<CodeLoading />}
                 scrollableContainerClassName="m-0"
                 lang={example.lang}
               />
@@ -166,7 +164,6 @@ export function DynamicRequestExample(props: DynamicRequestExampleProps) {
                     <CodeClient
                       className="rounded-none border-none"
                       code={selectedExample.code}
-                      loader={<CodeLoading />}
                       scrollableContainerClassName="m-0"
                       lang={selectedExample.lang}
                     />

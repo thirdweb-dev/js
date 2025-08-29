@@ -22,7 +22,7 @@ import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";

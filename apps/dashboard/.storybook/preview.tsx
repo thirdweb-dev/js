@@ -1,14 +1,13 @@
 import type { Preview } from "@storybook/nextjs";
-import "../src/global.css";
+import "@workspace/ui/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Button } from "@workspace/ui/components/button";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { ThemeProvider, useTheme } from "next-themes";
 import { Inter as interFont } from "next/font/google";
-// biome-ignore lint/style/useImportType: <explanation>
-import React from "react";
-import { useEffect } from "react";
+import { ThemeProvider, useTheme } from "next-themes";
+// biome-ignore lint/style/useImportType: ok
+import React, { useEffect } from "react";
 import { Toaster } from "sonner";
-import { Button } from "../src/@/components/ui/button";
 
 const queryClient = new QueryClient();
 
@@ -69,9 +68,7 @@ const preview: Preview = {
 
 export default preview;
 
-function StoryLayout(props: {
-  children: React.ReactNode;
-}) {
+function StoryLayout(props: { children: React.ReactNode }) {
   const { setTheme, theme } = useTheme();
 
   useEffect(() => {

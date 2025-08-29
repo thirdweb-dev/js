@@ -8,7 +8,7 @@ import {
 } from "thirdweb/react";
 import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import CodeClient from "../code/code.client";
+import { CodeClient } from "../code/code.client";
 
 export function Eip5792GetCapabilitiesPreview() {
   const capabilities = useCapabilities();
@@ -48,7 +48,6 @@ export function Eip5792GetCapabilitiesPreview() {
               className="max-h-[500px] w-[400px] overflow-y-auto"
               code={JSON.stringify(capabilities.data, null, 2)}
               lang="json"
-              loader={<div className="mt-24 w-full">Loading...</div>}
               scrollableClassName="h-full"
               scrollableContainerClassName="h-full"
             />

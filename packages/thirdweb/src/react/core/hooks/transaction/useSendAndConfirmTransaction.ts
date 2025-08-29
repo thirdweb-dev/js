@@ -54,7 +54,7 @@ type SendAndConfirmTransactionConfig = {
  * ```
  * @transaction
  */
-export function useSendAndConfirmTransaction(
+export function useSendAndConfirmTransactionCore(
   config: SendAndConfirmTransactionConfig = {},
 ): UseMutationResult<
   TransactionReceipt,

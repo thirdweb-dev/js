@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from "react";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "./ScrollShadow";
 import { ToolTipLabel } from "./tooltip";
 
 export type TabLink = {

@@ -2,7 +2,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 import { getClientFetch } from "../utils/fetch.js";
 import { ApiError } from "./types/Errors.js";
-import type { Token } from "./types/Token.js";
+import type { Token, TokenWithPrices } from "./types/Token.js";
 
 /**
  * Retrieves supported Universal Bridge tokens based on the provided filters.
@@ -128,9 +128,20 @@ import type { Token } from "./types/Token.js";
  * @bridge
  * @beta
  */
-export async function tokens(options: tokens.Options): Promise<tokens.Result> {
-  const { client, chainId, tokenAddress, symbol, name, limit, offset } =
-    options;
+export async function tokens<
+  IncludePrices extends boolean = true,
+  R extends Token | TokenWithPrices = TokenWithPrices,
+>(options: tokens.Options<IncludePrices>): Promise<R[]> {
+  const {
+    client,
+    chainId,
+    tokenAddress,
+    symbol,
+    name,
+    limit,
+    offset,
+    includePrices,
+  } = options;
 
   const clientFetch = getClientFetch(client);
   const url = new URL(`${getThirdwebBaseUrl("bridge")}/v1/tokens`);
@@ -153,6 +164,9 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
   if (offset !== null && offset !== undefined) {
     url.searchParams.set("offset", offset.toString());
   }
+  if (includePrices !== undefined) {
+    url.searchParams.set("includePrices", includePrices.toString());
+  }
 
   const response = await clientFetch(url.toString());
   if (!response.ok) {
@@ -165,7 +179,7 @@ export async function tokens(options: tokens.Options): Promise<tokens.Result> {
     });
   }
 
-  const { data }: { data: Token[] } = await response.json();
+  const { data }: { data: R[] } = await response.json();
   return data;
 }
 
@@ -173,7 +187,7 @@ export declare namespace tokens {
   /**
    * Input parameters for {@link tokens}.
    */
-  type Options = {
+  type Options<IncludePrices extends boolean> = {
     /** Your {@link ThirdwebClient} instance. */
     client: ThirdwebClient;
     /** Filter by a specific chain ID. */
@@ -188,12 +202,14 @@ export declare namespace tokens {
     limit?: number;
     /** Number of tokens to skip (min: 0, default: 0). */
     offset?: number | null;
+    /** Whether or not to include prices for the tokens. Setting this to false will speed up the request. */
+    includePrices?: IncludePrices;
   };
 
   /**
    * The result returned from {@link Bridge.tokens}.
    */
-  type Result = Token[];
+  type Result<T extends Token | TokenWithPrices> = T[];
 }
 
 /**
@@ -254,7 +270,7 @@ export async function add(options: add.Options): Promise<add.Result> {
     });
   }
 
-  const { data }: { data: Token } = await response.json();
+  const { data }: { data: TokenWithPrices } = await response.json();
   return data;
 }
 
@@ -274,5 +290,5 @@ export declare namespace add {
   /**
    * The result returned from {@link Bridge.add}.
    */
-  type Result = Token;
+  type Result = TokenWithPrices;
 }

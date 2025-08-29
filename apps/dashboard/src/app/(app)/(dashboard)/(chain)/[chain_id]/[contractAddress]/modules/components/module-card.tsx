@@ -8,10 +8,8 @@ import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { toast } from "sonner";
 import {
   getContract,
-  sendTransaction,
   type ThirdwebClient,
   type ThirdwebContract,
-  waitForReceipt,
 } from "thirdweb";
 import { uninstallModuleByProxy } from "thirdweb/modules";
 import type { Account } from "thirdweb/wallets";
@@ -28,8 +26,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { ModuleInstance } from "./module-instance";
 import { useModuleContractInfo } from "./moduleContractInfo";
 
@@ -50,6 +49,7 @@ type ModuleCardProps = {
 export function ModuleCard(props: ModuleCardProps) {
   const { contract, moduleAddress, ownerAccount } = props;
   const [isUninstallModalOpen, setIsUninstallModalOpen] = useState(false);
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const contractInfo = useModuleContractInfo(
     getContract({
@@ -60,7 +60,7 @@ export function ModuleCard(props: ModuleCardProps) {
   );
 
   const uninstallMutation = useMutation({
-    mutationFn: async (account: Account) => {
+    mutationFn: async () => {
       const uninstallTransaction = uninstallModuleByProxy({
         chain: contract.chain,
         client: contract.client,
@@ -69,12 +69,7 @@ export function ModuleCard(props: ModuleCardProps) {
         moduleProxyAddress: moduleAddress,
       });
 
-      const txResult = await sendTransaction({
-        account,
-        transaction: uninstallTransaction,
-      });
-
-      await waitForReceipt(txResult);
+      await sendAndConfirmTx.mutateAsync(uninstallTransaction);
     },
     onError(error) {
       toast.error("Failed to uninstall module");
@@ -87,12 +82,7 @@ export function ModuleCard(props: ModuleCardProps) {
   });
 
   const handleRemove = async () => {
-    if (!ownerAccount) {
-      toast.error("Wallet is not connected");
-      return;
-    }
-
-    uninstallMutation.mutate(ownerAccount);
+    uninstallMutation.mutate();
   };
 
   if (!contractInfo) {

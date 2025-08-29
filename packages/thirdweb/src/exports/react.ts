@@ -66,7 +66,6 @@ export {
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 export { useEstimateGas } from "../react/core/hooks/transaction/useEstimateGas.js";
 export { useEstimateGasCost } from "../react/core/hooks/transaction/useEstimateGasCost.js";
-export { useSendAndConfirmTransaction } from "../react/core/hooks/transaction/useSendAndConfirmTransaction.js";
 export { useSendBatchTransaction } from "../react/core/hooks/transaction/useSendBatchTransaction.js";
 // transaction
 export type {
@@ -101,7 +100,6 @@ export { useConnectionManager } from "../react/core/providers/connection-manager
 // Social
 export { useSocialProfiles } from "../react/core/social/useSocialProfiles.js";
 export type { AccountBalanceInfo } from "../react/core/utils/account.js";
-
 // utils
 export { createContractQuery } from "../react/core/utils/createQuery.js";
 // tokens
@@ -126,6 +124,7 @@ export {
   WalletProvider,
   type WalletProviderProps,
 } from "../react/core/wallet/provider.js";
+export { useSendAndConfirmTransaction } from "../react/web/hooks/transaction/useSendAndConfirmTransaction.js";
 export { useSendTransaction } from "../react/web/hooks/transaction/useSendTransaction.js";
 export { useAutoConnect } from "../react/web/hooks/wallets/useAutoConnect.js";
 export { useLinkProfile } from "../react/web/hooks/wallets/useLinkProfile.js";

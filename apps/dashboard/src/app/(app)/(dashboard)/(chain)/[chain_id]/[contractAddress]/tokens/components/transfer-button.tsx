@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress, type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { z } from "zod";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { TransactionButton } from "@/components/tx-button";
@@ -28,6 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const transferFormSchema = z.object({
@@ -62,7 +62,7 @@ export function TokenTransferButton(props: {
     defaultValues: { amount: "0", to: "" },
     resolver: zodResolver(transferFormSchema),
   });
-  const sendAndConfirmTransaction = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   async function onSubmit(values: TransferFormValues) {
     const transferTx = ERC20Ext.transfer({
@@ -71,7 +71,7 @@ export function TokenTransferButton(props: {
       to: values.to,
     });
 
-    const transferTxPromise = sendAndConfirmTransaction.mutateAsync(transferTx);
+    const transferTxPromise = sendAndConfirmTx.mutateAsync(transferTx);
 
     toast.promise(transferTxPromise, {
       error: (error) => ({
@@ -149,7 +149,7 @@ export function TokenTransferButton(props: {
               <TransactionButton
                 client={props.contract.client}
                 isLoggedIn={props.isLoggedIn}
-                isPending={sendAndConfirmTransaction.isPending}
+                isPending={sendAndConfirmTx.isPending}
                 type="submit"
                 transactionCount={1}
                 txChainID={props.contract.chain.id}

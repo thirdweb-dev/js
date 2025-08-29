@@ -3,7 +3,7 @@
 import { CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   useEngineWalletCredentials,
   useHasEngineFeature,

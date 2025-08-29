@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { DownloadableCode } from "@/components/blocks/code/downloadable-code";
 import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useCsvUpload } from "@/hooks/useCsvUpload";
 import { AirdropCSVTable } from "./airdrop-csv-table";
 

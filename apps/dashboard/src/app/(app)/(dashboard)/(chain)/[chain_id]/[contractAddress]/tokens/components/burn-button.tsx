@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type ThirdwebContract, toUnits } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
@@ -27,6 +26,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const burnSchema = z.object({
@@ -45,7 +45,7 @@ export function TokenBurnButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
 }) {
-  const sendConfirmation = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const form = useForm<z.infer<typeof burnSchema>>({
     defaultValues: { amount: "0" },
     resolver: zodResolver(burnSchema),
@@ -65,7 +65,7 @@ export function TokenBurnButton(props: {
       contract: props.contract,
     });
 
-    const txPromise = sendConfirmation.mutateAsync(burnTokensTx);
+    const txPromise = sendAndConfirmTx.mutateAsync(burnTokensTx);
 
     toast.promise(txPromise, {
       error: (error) => ({
@@ -123,7 +123,7 @@ export function TokenBurnButton(props: {
               client={props.contract.client}
               disabled={!form.formState.isDirty}
               isLoggedIn={props.isLoggedIn}
-              isPending={sendConfirmation.isPending}
+              isPending={sendAndConfirmTx.isPending}
               transactionCount={1}
               txChainID={props.contract.chain.id}
               type="submit"

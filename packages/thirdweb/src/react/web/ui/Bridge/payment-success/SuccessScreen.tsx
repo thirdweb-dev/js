@@ -42,6 +42,11 @@ export interface SuccessScreenProps {
   windowAdapter: WindowAdapter;
 
   client: ThirdwebClient;
+
+  /**
+   * Whether or not this payment is associated with a payment ID. If it does, we show a different message.
+   */
+  hasPaymentId?: boolean;
 }
 
 type ViewState = "success" | "detail";
@@ -53,6 +58,7 @@ export function SuccessScreen({
   onDone,
   windowAdapter,
   client,
+  hasPaymentId = false,
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
   const [viewState, setViewState] = useState<ViewState>("success");
@@ -120,7 +126,11 @@ export function SuccessScreen({
         </Text>
 
         <Text center color="secondaryText" size="sm">
-          Your cross-chain payment has been completed successfully.
+          {hasPaymentId
+            ? "You can now close this page and return to the application."
+            : uiOptions.mode === "transaction"
+              ? "Click continue to execute your transaction."
+              : "Your payment has been completed successfully."}
         </Text>
       </Container>
       <Spacer y="lg" />
@@ -135,9 +145,11 @@ export function SuccessScreen({
           View Payment Receipt
         </Button>
 
-        <Button fullWidth onClick={onDone} variant="accent">
-          {uiOptions.mode === "transaction" ? "Continue" : "Done"}
-        </Button>
+        {!hasPaymentId && (
+          <Button fullWidth onClick={onDone} variant="accent">
+            {uiOptions.mode === "transaction" ? "Continue" : "Done"}
+          </Button>
+        )}
       </Container>
 
       {/* CSS Animations */}

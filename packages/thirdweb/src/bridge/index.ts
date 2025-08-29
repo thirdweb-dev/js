@@ -17,7 +17,7 @@ export type {
   RouteTransaction,
 } from "./types/Route.js";
 export type { Status } from "./types/Status.js";
-export type { Token } from "./types/Token.js";
+export type { Token, TokenWithPrices } from "./types/Token.js";
 export type { WebhookPayload } from "./Webhook.js";
 export * as Webhook from "./Webhook.js";
 export { parse } from "./Webhook.js";

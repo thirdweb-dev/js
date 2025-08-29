@@ -9,7 +9,6 @@ import {
   type Chain,
   getAddress,
   NATIVE_TOKEN_ADDRESS,
-  sendAndConfirmTransaction,
   type ThirdwebClient,
   type ThirdwebContract,
 } from "thirdweb";
@@ -21,6 +20,7 @@ import { getWalletBalance } from "thirdweb/wallets";
 import invariant from "tiny-invariant";
 import { parseError } from "../utils/errorParser";
 import { tryCatch } from "../utils/try-catch";
+import { useSendAndConfirmTx } from "./useSendTx";
 
 function getTokenBalancesQuery(params: {
   ownerAddress: string;
@@ -79,6 +79,7 @@ export function useOwnedTokenBalances(params: {
 export function useSplitDistributeFunds(contract: ThirdwebContract) {
   const account = useActiveAccount();
   const queryClient = useQueryClient();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const params = {
     ownerAddress: contract.address, // because we want to fetch the balance of split contract
@@ -106,10 +107,7 @@ export function useSplitDistributeFunds(contract: ThirdwebContract) {
                   contract,
                   tokenAddress: currency.tokenAddress,
                 });
-          const promise = sendAndConfirmTransaction({
-            account,
-            transaction,
-          });
+          const promise = sendAndConfirmTx.mutateAsync(transaction);
 
           toast.promise(promise, {
             error: (err) => ({

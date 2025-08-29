@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { getSortedDeployedContracts } from "@/api/project/getSortedDeployedContracts";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { ContractTable } from "@/components/contract-components/tables/contract-table";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { DeployViaCLIOrImportCard } from "../../../../../account/contracts/_components/DeployViaCLIOrImportCard";
 
 export function DeployedContractsPage(props: {

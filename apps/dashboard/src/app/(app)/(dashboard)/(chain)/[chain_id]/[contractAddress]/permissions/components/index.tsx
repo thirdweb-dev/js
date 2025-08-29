@@ -5,11 +5,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -18,6 +14,7 @@ import {
   createSetAllRoleMembersTx,
   getAllRoleMembers,
 } from "@/hooks/contract-ui/permissions";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 import { ContractPermission } from "./contract-permission";
 
@@ -36,7 +33,7 @@ export function Permissions({
   const allRoleMembers = useReadContract(getAllRoleMembers, {
     contract,
   });
-  const sendTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const transformedQueryData = useMemo(() => {
     if (!allRoleMembers.data) {
@@ -86,7 +83,7 @@ export function Permissions({
             roleMemberMap: cleanedValues,
           });
 
-          sendTx.mutate(tx, {
+          sendAndConfirmTx.mutate(tx, {
             onError: (error) => {
               toast.error("Failed to update permissions", {
                 description: parseError(error),
@@ -115,7 +112,7 @@ export function Permissions({
         <div className="flex justify-end gap-3 p-4 lg:p-6">
           <Button
             variant="outline"
-            disabled={!allRoleMembers.data || sendTx.isPending}
+            disabled={!allRoleMembers.data || sendAndConfirmTx.isPending}
             onClick={() => form.reset(allRoleMembers.data)}
             className="gap-2 bg-background"
           >
@@ -125,13 +122,15 @@ export function Permissions({
           <TransactionButton
             client={contract.client}
             isLoggedIn={isLoggedIn}
-            isPending={sendTx.isPending}
+            isPending={sendAndConfirmTx.isPending}
             transactionCount={undefined}
             txChainID={contract.chain.id}
             type="submit"
             variant="default"
           >
-            {sendTx.isPending ? "Updating permissions" : "Update permissions"}
+            {sendAndConfirmTx.isPending
+              ? "Updating permissions"
+              : "Update permissions"}
           </TransactionButton>
         </div>
       </form>

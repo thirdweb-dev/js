@@ -22,8 +22,11 @@ import type { ConnectButton_connectModalOptions } from "../../../core/hooks/conn
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
+import { Container } from "../components/basic.js";
+import { Button } from "../components/buttons.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
+import { Text } from "../components/text.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
@@ -418,6 +421,19 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
         uiOptions={bridgeDataQuery.data.data}
         supportedTokens={props.supportedTokens}
       />
+    );
+  }
+
+  if (bridgeDataQuery.isError) {
+    content = (
+      <Container flex="column" center="both" gap="md" p="md" py="xl">
+        <Text center size="md" weight={600}>
+          Something went wrong.
+        </Text>
+        <Button variant="ghost" onClick={() => bridgeDataQuery.refetch()}>
+          Retry
+        </Button>
+      </Container>
     );
   }
 

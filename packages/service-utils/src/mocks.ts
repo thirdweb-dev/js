@@ -92,6 +92,12 @@ export const validTeamResponse: TeamResponse = {
     rpc: {
       enabled: true,
       rateLimit: 1000,
+      websockets: {
+        enabled: false,
+        reasonCode: "enterprise_plan_required",
+        maxConnections: 0,
+        maxSubscriptions: 0,
+      },
     },
     storage: {
       download: {

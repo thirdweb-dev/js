@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
 import { useStore } from "@/lib/reactive";

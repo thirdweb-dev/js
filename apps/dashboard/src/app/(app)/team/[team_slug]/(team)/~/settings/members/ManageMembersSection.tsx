@@ -23,7 +23,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { FiltersSection, type MemberSortId } from "./_common";
 
 type RoleFilterValue = "ALL ROLES" | TeamAccountRole;

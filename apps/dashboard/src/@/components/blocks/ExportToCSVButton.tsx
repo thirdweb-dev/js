@@ -3,7 +3,7 @@ import { DownloadIcon } from "lucide-react";
 import Papa from "papaparse";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "../../lib/utils";
 
 export function ExportToCSVButton(props: {

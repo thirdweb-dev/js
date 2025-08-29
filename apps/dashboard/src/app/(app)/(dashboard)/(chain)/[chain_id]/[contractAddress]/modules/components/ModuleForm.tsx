@@ -7,10 +7,8 @@ import { toast } from "sonner";
 import {
   type Chain,
   getContract,
-  sendTransaction,
   type ThirdwebClient,
   type ThirdwebContract,
-  waitForReceipt,
 } from "thirdweb";
 import {
   checkModulesCompatibility,
@@ -27,7 +25,7 @@ import type { Account } from "thirdweb/wallets";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { TransactionButton } from "@/components/tx-button";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Select,
   SelectContent,
@@ -40,6 +38,7 @@ import {
   useAllVersions,
   usePublishedContractsQuery,
 } from "@/hooks/contract-hooks";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import {
   ModuleInstallParams,
   useModuleInstallParams,
@@ -76,7 +75,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
   const { register, watch, formState, resetField, reset, setValue } = form;
   const { contract, account } = props;
   const { errors } = formState;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const { data, isPending, isFetching } = usePublishedContractsQuery({
     address: watch("publisherAddress"),
     client: contract.client,
@@ -124,12 +123,7 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         version: watch("version"),
       });
 
-      const txResult = await sendTransaction({
-        account,
-        transaction: installTransaction,
-      });
-
-      await waitForReceipt(txResult);
+      await sendAndConfirmTx.mutateAsync(installTransaction);
     },
     onError(err) {
       toast.error("Failed to install module");

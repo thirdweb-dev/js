@@ -7,11 +7,7 @@ import {
   primarySaleRecipient,
   setPrimarySaleRecipient,
 } from "thirdweb/extensions/common";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { z } from "zod";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
 import { SolidityInput } from "@/components/solidity-inputs";
@@ -25,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { AddressOrEnsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { parseError } from "@/utils/errorParser";
@@ -48,7 +45,7 @@ export const SettingsPrimarySale = ({
   const query = useReadContract(primarySaleRecipient, {
     contract,
   });
-  const mutation = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const transformedQueryData = {
     primary_sale_recipient: query.data,
@@ -70,7 +67,7 @@ export const SettingsPrimarySale = ({
       saleRecipient,
     });
 
-    mutation.mutate(transaction, {
+    sendAndConfirmTx.mutate(transaction, {
       onError: (error) => {
         toast.error("Error updating primary sale address", {
           description: parseError(error),
@@ -131,7 +128,7 @@ export const SettingsPrimarySale = ({
                 client={contract.client}
                 disabled={query.isPending}
                 isLoggedIn={isLoggedIn}
-                isPending={mutation.isPending}
+                isPending={sendAndConfirmTx.isPending}
                 transactionCount={undefined}
                 txChainID={contract.chain.id}
                 type="submit"

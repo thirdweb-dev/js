@@ -1,5 +1,5 @@
 import { add, tokens } from "../../bridge/Token.js";
-import type { Token } from "../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { withCache } from "../../utils/promise/withCache.js";
 
@@ -7,7 +7,7 @@ export async function getToken(
   client: ThirdwebClient,
   tokenAddress: string,
   chainId: number,
-): Promise<Token> {
+): Promise<TokenWithPrices> {
   return withCache(
     async () => {
       const result = await tokens({

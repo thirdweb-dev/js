@@ -14,16 +14,50 @@ The thirdweb API exposes a standard OpenAI-compatible chat completion API that a
 - Search the web
 - And more!
 
-You can use the API with the HTTP API directly, or with any OpenAI-compatible client library.
+You can use the API with the HTTP API directly, the AI SDK or with any OpenAI-compatible client library.
 
 <Tabs defaultValue="api">
   <TabsList>
     <TabsTrigger value="api">HTTP API</TabsTrigger>
+    <TabsTrigger value="ai-sdk">Vercel AI SDK</TabsTrigger>
     <TabsTrigger value="openai">OpenAI Client</TabsTrigger>
   </TabsList>
   <TabsContent value="api">
     <OpenApiEndpoint path="/ai/chat" method="POST" />
   </TabsContent>
+
+  <TabsContent value="ai-sdk">
+    ### Usage with the Vercel AI SDK
+
+    The `@thirdweb-dev/ai-sdk-provider` is a lightweight provider that lets you use thirdweb AI with the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).
+
+    ```ts
+    import { streamText } from "ai";
+    import { createThirdwebAI } from "@thirdweb-dev/ai-sdk-provider";
+
+    const thirdwebAI = createThirdwebAI({
+      secretKey: "<your-project-secret-key>",
+    });
+
+    const result = streamText({
+      model: thirdwebAI.chat({
+        context: {
+          chain_ids: [8453], // optional chain ids
+          from: "0x...", // optional wallet address
+          auto_execute_transactions: true, // defaults to false
+        },
+      }),
+      tools: thirdwebAI.tools(),
+      messages: [
+        {
+          role: "user",
+          content: "Swap 0.01 ETH to USDC",
+        },
+      ],
+    });
+  ```
+  </TabsContent>
+
   <TabsContent value="openai">
 
 ### Using the OpenAI Client
@@ -41,7 +75,7 @@ chat_completion = client.chat.completions.create(
 	model="t0",
 	messages=[{"role": "user", "content": "Transfer 10 USDC to vitalik.eth"}],
 	stream=False,
-    extra_body={ "context": { "from": "0x...", "chain_ids": [8453] }}
+  extra_body={ "context": { "from": "0x...", "chain_ids": [8453] }}
 )
 
 print(chat_completion)
@@ -52,4 +86,6 @@ print(chat_completion)
 ### Going further
 
 - [Handle streaming responses](/ai/chat/streaming)
+- [Transaction Execution](/ai/chat/execution)
+- [Use the Vercel AI SDK](/ai/chat/ai-sdk)
 - [Full API Reference](https://api.thirdweb.com/reference#tag/ai/post/ai/chat)

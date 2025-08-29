@@ -2,24 +2,24 @@ import type { Hex as ox__Hex } from "ox";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Action } from "./BridgeAction.js";
-import type { Token } from "./Token.js";
+import type { TokenWithPrices } from "./Token.js";
 
 export type Route = {
-  originToken: Token;
-  destinationToken: Token;
+  originToken: TokenWithPrices;
+  destinationToken: TokenWithPrices;
 };
 
 export type RouteQuoteStep = {
-  originToken: Token;
-  destinationToken: Token;
+  originToken: TokenWithPrices;
+  destinationToken: TokenWithPrices;
   originAmount: bigint;
   destinationAmount: bigint;
   estimatedExecutionTimeMs: number;
 };
 
 export type RouteStep = {
-  originToken: Token;
-  destinationToken: Token;
+  originToken: TokenWithPrices;
+  destinationToken: TokenWithPrices;
   originAmount: bigint;
   destinationAmount: bigint;
   estimatedExecutionTimeMs: number;

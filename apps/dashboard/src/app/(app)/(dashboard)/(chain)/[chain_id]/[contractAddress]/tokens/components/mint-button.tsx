@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { TransactionButton } from "@/components/tx-button";
@@ -28,6 +28,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const mintFormSchema = z.object({
@@ -47,7 +48,7 @@ export function TokenMintButton(props: {
   isLoggedIn: boolean;
 }) {
   const address = useActiveAccount()?.address;
-  const sendAndConfirmTransaction = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const form = useForm<MintFormValues>({
     resolver: zodResolver(mintFormSchema),
     defaultValues: { amount: "" },
@@ -66,7 +67,7 @@ export function TokenMintButton(props: {
       to: address,
     });
 
-    const mintTxPromise = sendAndConfirmTransaction.mutateAsync(mintTx);
+    const mintTxPromise = sendAndConfirmTx.mutateAsync(mintTx);
     toast.promise(mintTxPromise, {
       error: (err) => ({
         message: "Failed to mint tokens",
@@ -118,7 +119,7 @@ export function TokenMintButton(props: {
                   client={props.contract.client}
                   disabled={!form.formState.isDirty || !form.formState.isValid}
                   isLoggedIn={props.isLoggedIn}
-                  isPending={sendAndConfirmTransaction.isPending}
+                  isPending={sendAndConfirmTx.isPending}
                   transactionCount={1}
                   txChainID={props.contract.chain.id}
                   type="submit"

@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import type { ResultItem } from "./StatusCodes";
 
 function transformPrometheusData(timeseriesDatapoints: ResultItem[]) {

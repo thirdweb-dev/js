@@ -1,3 +1,4 @@
+import { WebhookIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getSupportedWebhookChains } from "@/api/insight/webhooks";
@@ -33,6 +34,7 @@ export default async function ContractsPage(props: {
     <ProjectPage
       header={{
         client,
+        icon: WebhookIcon,
         title: "Webhooks",
         description:
           "Get notified about blockchain events, transactions and more.",
@@ -46,12 +48,13 @@ export default async function ContractsPage(props: {
               />
             ),
           },
-          secondary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/insight/webhooks",
-            external: true,
-          },
         },
+        links: [
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/payments/webhooks",
+          },
+        ],
       }}
       tabs={[
         {

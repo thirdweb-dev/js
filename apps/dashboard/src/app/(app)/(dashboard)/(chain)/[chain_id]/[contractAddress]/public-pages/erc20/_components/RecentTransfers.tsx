@@ -115,7 +115,6 @@ function RecentTransfersUI(props: {
                           <WalletAddress
                             address={transfer.from_address}
                             client={props.client}
-                            iconClassName="size-4.5"
                           />
                           <ArrowRightIcon className="size-4 text-muted-foreground/50 absolute -right-1 lg:right-3" />
                         </div>
@@ -133,7 +132,6 @@ function RecentTransfersUI(props: {
                             address={transfer.to_address}
                             client={props.client}
                             key={transfer.log_index}
-                            iconClassName="size-4.5"
                           />
                         </div>
                       ))}

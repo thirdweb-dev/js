@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import { isAddress, isValidENSName } from "thirdweb/utils";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useEns } from "@/hooks/contract-hooks";
 import type { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";

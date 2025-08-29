@@ -1,7 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
 import * as z from "zod";
 import { addressSchema, socialUrlsSchema } from "../../_common/schema";
-import { getInitialTickValue, isValidTickValue } from "../utils/calculate-tick";
 
 export const tokenInfoFormSchema = z.object({
   chain: z.string().min(1, "Chain is required"),
@@ -37,17 +36,8 @@ export const tokenDistributionFormSchema = z.object({
   airdropEnabled: z.boolean(),
   // sales ---
   erc20Asset_poolMode: z.object({
-    startingPricePerToken: priceAmountSchema.refine((value) => {
-      const numValue = Number(value);
-      if (numValue === 0) {
-        return false;
-      }
-      const tick = getInitialTickValue({
-        startingPricePerToken: Number(value),
-      });
-
-      return isValidTickValue(tick);
-    }, "Invalid price"),
+    startingPricePerToken: priceAmountSchema,
+    tokenAddress: addressSchema,
     saleAllocationPercentage: z.string().refine(
       (value) => {
         const number = Number(value);

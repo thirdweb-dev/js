@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ExternalLinkIcon, ImportIcon } from "lucide-react";
+import { ArrowDownToLineIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -234,7 +234,7 @@ function ImportForm(props: {
               {addContractToProject.isPending ? (
                 <Spinner className="size-4" />
               ) : (
-                <ImportIcon className="size-4" />
+                <ArrowDownToLineIcon className="size-4" />
               )}
 
               {addContractToProject.isPending ? "Importing" : "Import"}

@@ -20,7 +20,7 @@ import {
   toSerializableTransaction,
   toWei,
 } from "thirdweb";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { parseAbiParams, stringify, toFunctionSelector } from "thirdweb/utils";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { SolidityInput } from "@/components/solidity-inputs";
@@ -31,9 +31,10 @@ import { Button } from "@/components/ui/button";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { PlainTextCodeBlock } from "@/components/ui/code/plaintext-code";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 
 function formatResponseData(data: unknown): {
   type: "json" | "text";
@@ -264,7 +265,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = (
     data: mutationData,
     error: mutationError,
     isPending: mutationLoading,
-  } = useSendAndConfirmTransaction();
+  } = useSendAndConfirmTx();
 
   const {
     mutate: readFn,

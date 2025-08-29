@@ -1,5 +1,5 @@
 import { Grid2x2XIcon } from "lucide-react";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 

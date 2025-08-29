@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 
 export function UnexpectedValueErrorMessage(props: {
   value: unknown;

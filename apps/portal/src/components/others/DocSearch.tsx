@@ -10,11 +10,11 @@ import { CommandIcon, FileTextIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { SearchResult } from "@/app/api/search/types";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Spinner } from "../ui/Spinner/Spinner";
 import { DynamicHeight } from "./DynamicHeight";
 
 const suggestedLinks: { title: string; href: string }[] = [

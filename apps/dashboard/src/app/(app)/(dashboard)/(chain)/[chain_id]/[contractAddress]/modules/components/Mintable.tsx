@@ -4,11 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import {
-  type PreparedTransaction,
-  sendAndConfirmTransaction,
-  type ThirdwebClient,
-} from "thirdweb";
+import type { PreparedTransaction, ThirdwebClient } from "thirdweb";
 import {
   grantRoles,
   hasAllRoles,
@@ -40,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { NFTMetadataInputLimited } from "@/types/modified-types";
 import { parseAttributes } from "@/utils/parseAttributes";
@@ -73,7 +70,7 @@ const MINTER_ROLE = 1n;
 
 function MintableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const isErc721 = props.contractInfo.name === "MintableERC721";
 
   const primarySaleRecipientQuery = useReadContract(
@@ -106,10 +103,7 @@ function MintableModule(props: ModuleInstanceProps) {
           user: ownerAccount.address,
         });
 
-        await sendAndConfirmTransaction({
-          account: ownerAccount,
-          transaction: grantRoleTx,
-        });
+        await sendAndConfirmTx.mutateAsync(grantRoleTx);
       }
 
       let mintTx: PreparedTransaction;
@@ -137,12 +131,15 @@ function MintableModule(props: ModuleInstanceProps) {
         throw new Error("Invalid token ID");
       }
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: mintTx,
-      });
+      await sendAndConfirmTx.mutateAsync(mintTx);
     },
-    [contract, ownerAccount, hasMinterRole.data, props.contractInfo.name],
+    [
+      contract,
+      ownerAccount,
+      hasMinterRole.data,
+      props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   const update = useCallback(
@@ -163,12 +160,14 @@ function MintableModule(props: ModuleInstanceProps) {
         primarySaleRecipient: values.primarySaleRecipient,
       });
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: setSaleConfigTx,
-      });
+      await sendAndConfirmTx.mutateAsync(setSaleConfigTx);
     },
-    [contract, ownerAccount, props.contractInfo.name],
+    [
+      contract,
+      ownerAccount,
+      props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   return (

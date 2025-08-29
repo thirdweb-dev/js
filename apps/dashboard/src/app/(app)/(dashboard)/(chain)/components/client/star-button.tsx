@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { StarIcon } from "lucide-react";
 import { apiServerProxy } from "@/actions/proxies";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useFavoriteChainIds } from "@/hooks/favorite-chains";
 import { cn } from "@/lib/utils";

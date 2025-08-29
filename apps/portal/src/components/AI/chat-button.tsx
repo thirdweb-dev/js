@@ -3,8 +3,8 @@
 import { MessageCircleIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import { lazy, Suspense, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
-import { Spinner } from "../ui/Spinner/Spinner";
 
 const Chat = lazy(() =>
   import("./chat").then((mod) => ({ default: mod.Chat })),

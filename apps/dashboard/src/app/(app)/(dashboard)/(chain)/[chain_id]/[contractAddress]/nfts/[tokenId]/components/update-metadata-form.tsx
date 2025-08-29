@@ -12,7 +12,7 @@ import {
   updateMetadata as updateMetadata1155,
   updateTokenURI as updateTokenURI1155,
 } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import type { NFTMetadata } from "thirdweb/utils";
 import { OpenSeaPropertyBadge } from "@/components/badges/opensea";
 import { FileInput } from "@/components/blocks/FileInput";
@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { NFTMetadataInputLimited } from "@/types/modified-types";
 import { parseAttributes } from "@/utils/parseAttributes";
@@ -110,7 +111,7 @@ export function UpdateNftMetadata({
     external_url,
   } = getUploadedNFTMediaMeta(form);
 
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const updateMetadataNotifications = useTxNotifications(
     "NFT metadata updated successfully",
     "Failed to update NFT metadata",

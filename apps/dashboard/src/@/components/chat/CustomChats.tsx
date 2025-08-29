@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { cn } from "@/lib/utils";
 import { ThirdwebMiniLogo } from "../../../app/(app)/components/ThirdwebMiniLogo";
 import { SupportTicketForm } from "../../../app/(app)/team/[team_slug]/(team)/~/support/_components/SupportTicketForm";
@@ -413,15 +413,15 @@ function StyledMarkdownRenderer(props: {
 }) {
   return (
     <MarkdownRenderer
-      className="[&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0"
+      className="text-sm text-foreground [&>*:first-child]:mt-0 [&>*:first-child]:border-none [&>*:first-child]:pb-0 [&>*:last-child]:mb-0 leading-relaxed"
       code={{
-        className: "bg-card",
         ignoreFormattingErrors: true,
       }}
       inlineCode={{ className: "border-none" }}
+      li={{ className: "text-foreground leading-relaxed" }}
       markdownText={props.text}
       p={{
-        className: props.type === "assistant" ? "" : "leading-normal",
+        className: "text-foreground leading-relaxed",
       }}
       skipHtml
     />

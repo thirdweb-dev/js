@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { revalidatePathAction } from "@/actions/revalidate";
 import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createSupportTicket } from "../apis/support";
 import { SupportForm_SelectInput } from "./shared/SupportForm_SelectInput";

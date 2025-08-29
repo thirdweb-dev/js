@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { getBatchesToReveal, reveal } from "thirdweb/extensions/erc721";
-import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import * as z from "zod";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { TransactionButton } from "@/components/tx-button";
@@ -36,6 +36,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const revealFormSchema = z.object({
@@ -56,7 +57,7 @@ export function NFTRevealButton({
     contract,
   });
 
-  const sendTxMutation = useSendAndConfirmTransaction();
+  const sendTxMutation = useSendAndConfirmTx();
 
   const form = useForm<RevealFormData>({
     resolver: zodResolver(revealFormSchema),

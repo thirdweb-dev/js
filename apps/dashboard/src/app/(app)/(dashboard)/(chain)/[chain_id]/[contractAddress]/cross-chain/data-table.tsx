@@ -18,7 +18,6 @@ import {
   getRpcClient,
   prepareContractCall,
   prepareTransaction,
-  sendAndConfirmTransaction,
   type ThirdwebClient,
 } from "thirdweb";
 import type {
@@ -52,6 +51,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { ProjectMeta } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/types";
 import {
@@ -178,6 +178,8 @@ export function DataTable({
     return Array.from(chainMap.values());
   }, [data, customChainData]);
 
+  const sendAndConfirmTx = useSendAndConfirmTx();
+
   const form = useForm<FormSchema>({
     defaultValues: {
       amounts: {
@@ -216,10 +218,7 @@ export function DataTable({
       ],
     });
 
-    await sendAndConfirmTransaction({
-      account: activeAccount,
-      transaction: sendErc20Tx,
-    });
+    await sendAndConfirmTx.mutateAsync(sendErc20Tx);
   };
 
   const crossChainTransferNotifications = useTxNotifications(
@@ -368,10 +367,7 @@ export function DataTable({
           to: "0x4e59b44847b379578588920cA78FbF26c0B4956C",
         });
 
-        await sendAndConfirmTransaction({
-          account: activeAccount,
-          transaction: tx,
-        });
+        await sendAndConfirmTx.mutateAsync(tx);
 
         const code = await eth_getCode(
           getRpcClient({

@@ -1,3 +1,4 @@
+import { LockIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -35,15 +36,10 @@ export default async function VaultPage(props: {
       header={{
         client,
         title: "Vault",
+        icon: LockIcon,
         description:
           "Secure, non-custodial key management system for your server wallets.",
-        actions: {
-          primary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/vault",
-            external: true,
-          },
-        },
+        actions: null,
         links: [
           {
             type: "docs",

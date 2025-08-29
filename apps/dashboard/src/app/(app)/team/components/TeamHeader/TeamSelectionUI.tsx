@@ -8,7 +8,7 @@ import type { Team } from "@/api/team/get-team";
 import { GradientAvatar } from "@/components/blocks/avatar/gradient-avatar";
 import { TeamPlanBadge } from "@/components/blocks/TeamPlanBadge";
 import { Button } from "@/components/ui/button";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Separator } from "@/components/ui/separator";
 import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";

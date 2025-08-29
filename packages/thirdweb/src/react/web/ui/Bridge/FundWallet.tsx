@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
 import { useRef, useState } from "react";
-import type { Token } from "../../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { type Address, getAddress } from "../../../../utils/address.js";
 import { numberToPlainString } from "../../../../utils/formatNumber.js";
@@ -46,7 +46,11 @@ export interface FundWalletProps {
   /**
    * Called when continue is clicked with the resolved requirements
    */
-  onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
+  onContinue: (
+    amount: string,
+    token: TokenWithPrices,
+    receiverAddress: Address,
+  ) => void;
 
   /**
    * Quick buy amounts

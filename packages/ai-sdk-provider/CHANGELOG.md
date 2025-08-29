@@ -1,0 +1,13 @@
+# @thirdweb-dev/ai-sdk-provider
+
+## 0.1.1
+
+### Patch Changes
+
+- [#7944](https://github.com/thirdweb-dev/js/pull/7944) [`ac3a95e`](https://github.com/thirdweb-dev/js/commit/ac3a95ebbb2aa6b8fe068606e019e9cb9d10b151) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Proper type inference
+
+## 0.1.0
+
+### Minor Changes
+
+- [#7922](https://github.com/thirdweb-dev/js/pull/7922) [`f3ad6ef`](https://github.com/thirdweb-dev/js/commit/f3ad6efcf829e23435c4e2859809a74be877809d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Initial release

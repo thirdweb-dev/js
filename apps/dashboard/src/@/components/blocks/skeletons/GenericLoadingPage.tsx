@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
 
 export function GenericLoadingPage({ className }: { className?: string }) {

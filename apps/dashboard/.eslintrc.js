@@ -95,6 +95,30 @@ module.exports = {
               'Import "posthog-js" directly only within the analytics helpers ("src/@/analytics/*"). Use the exported helpers from "@/analytics/track" elsewhere.',
             name: "posthog-js",
           },
+          {
+            importNames: ["useSendTransaction"],
+            message:
+              'Use `import { useSendAndConfirmTx } from "@/hooks/useSendTx";` instead',
+            name: "thirdweb/react",
+          },
+          {
+            importNames: ["useSendAndConfirmTransaction"],
+            message:
+              'Use `import { useSendAndConfirmTx } from "@/hooks/useSendTx";` instead',
+            name: "thirdweb/react",
+          },
+          {
+            importNames: ["sendTransaction"],
+            message:
+              'Use `import { useSendAndConfirmTx } from "@/hooks/useSendTx";` instead if used in react component',
+            name: "thirdweb",
+          },
+          {
+            importNames: ["sendAndConfirmTransaction"],
+            message:
+              'Use `import { useSendAndConfirmTx } from "@/hooks/useSendTx";` instead if used in react component',
+            name: "thirdweb",
+          },
         ],
         patterns: [
           {

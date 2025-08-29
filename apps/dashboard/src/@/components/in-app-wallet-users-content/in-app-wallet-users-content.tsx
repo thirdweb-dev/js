@@ -10,7 +10,7 @@ import type { WalletUser } from "thirdweb/wallets";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   ToolTipLabel,
   Tooltip,

@@ -5,16 +5,16 @@ import {
   type ThirdwebClient,
 } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import type { TokenMetadata } from "@/api/universal-bridge/tokens";
+import type { TokenMetadata } from "@/api/universal-bridge/types";
 import { Img } from "@/components/blocks/Img";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/Spinner";
 import { fallbackChainIcon } from "@/constants/chain";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useTokensData } from "@/hooks/tokens";
 import { cn } from "@/lib/utils";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
-import { Spinner } from "../ui/Spinner/Spinner";
 
 type Option = { label: string; value: string };
 

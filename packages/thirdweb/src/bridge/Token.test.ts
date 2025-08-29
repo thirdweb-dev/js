@@ -22,7 +22,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("tokens", () => {
       expect(token).toHaveProperty("decimals");
       expect(token).toHaveProperty("symbol");
       expect(token).toHaveProperty("name");
-      expect(token).toHaveProperty("priceUsd");
+      expect(token).toHaveProperty("prices");
 
       if (token) {
         expect(typeof token.chainId).toBe("number");
@@ -30,8 +30,26 @@ describe.runIf(process.env.TW_SECRET_KEY)("tokens", () => {
         expect(typeof token.decimals).toBe("number");
         expect(typeof token.symbol).toBe("string");
         expect(typeof token.name).toBe("string");
-        expect(typeof token.priceUsd).toBe("number");
       }
+    }
+  });
+
+  it("should exclude prices if includePrices is false", async () => {
+    // Setup
+    const client = TEST_CLIENT;
+
+    // Test
+    const result = await tokens({
+      client,
+      includePrices: false,
+    });
+
+    // Verify
+    expect(result).toBeInstanceOf(Array);
+
+    // All tokens should not have prices
+    for (const token of result) {
+      expect(token.prices).toBeUndefined();
     }
   });
 

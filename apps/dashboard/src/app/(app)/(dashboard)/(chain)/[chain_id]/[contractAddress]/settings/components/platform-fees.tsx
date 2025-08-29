@@ -7,11 +7,7 @@ import {
   getPlatformFeeInfo,
   setPlatformFeeInfo,
 } from "thirdweb/extensions/common";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import z from "zod";
 import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
@@ -26,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { AddressOrEnsSchema, BasisPointsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { parseError } from "@/utils/errorParser";
@@ -53,7 +50,7 @@ export function SettingsPlatformFees({
   isLoggedIn: boolean;
 }) {
   const address = useActiveAccount()?.address;
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const platformFeesQuery = useReadContract(getPlatformFeeInfo, { contract });
   const platformFeeInfo = platformFeesQuery.data
     ? {

@@ -19,10 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import CodeClient from "../../../../components/code/code.client";
-import { LoadingDots } from "../../../../components/ui/LoadingDots";
+import { CodeClient } from "../../../../components/code/code.client";
 import { Label } from "../../../../components/ui/label";
-import { Spinner } from "../../../../components/ui/Spinner/Spinner";
+import { Spinner } from "../../../../components/ui/Spinner";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 import { useEngineTxStatus } from "../../_hooks/useEngineTxStatus";
 import { claim_erc1155_nft_with_engine } from "../../actions";
@@ -147,11 +146,6 @@ export function EngineWebhooksPreview() {
               className="grow rounded-none border-none"
               code={JSON.stringify(engineTxStatusQuery.data, null, 2)}
               lang="json"
-              loader={
-                <div className="flex grow items-center justify-center">
-                  <LoadingDots />
-                </div>
-              }
               scrollableContainerClassName="h-full"
             />
           </div>

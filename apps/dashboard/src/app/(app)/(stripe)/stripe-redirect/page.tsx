@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { stripeRedirectPageChannel } from "@/hooks/stripe/redirect-event";
 
 export default function ClosePage() {

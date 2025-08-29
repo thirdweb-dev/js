@@ -3,7 +3,7 @@
 import { formatDistance } from "date-fns";
 import { useMemo } from "react";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Table,
   TableBody,

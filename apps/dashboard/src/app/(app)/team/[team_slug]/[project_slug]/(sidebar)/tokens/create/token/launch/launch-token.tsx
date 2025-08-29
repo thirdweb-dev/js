@@ -5,7 +5,7 @@ import {
   ImageOffIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
 import {
@@ -56,10 +56,10 @@ export function LaunchTokenStatus(props: {
   values: CreateAssetFormValues;
   onPrevious: () => void;
   client: ThirdwebClient;
-  onLaunchSuccess: (params: {
-    chainId: number;
-    contractAddress: string;
-  }) => void;
+  onLaunchSuccess: (
+    formValues: CreateAssetFormValues,
+    contractAddress: string,
+  ) => void;
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
@@ -68,7 +68,16 @@ export function LaunchTokenStatus(props: {
   const { createTokenFunctions } = props;
   const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [contractAddress, setContractAddress] = useState<string | null>(null);
+  const [contractAddress, _setContractAddress] = useState<string | null>(null);
+
+  // needed to add a ref to avoid `executeSteps` using the stale value of state `contractAddress` because of closure
+  const contractAddressRef = useRef<string | null>(null);
+
+  const setContractAddress = useCallback((address: string) => {
+    _setContractAddress(address);
+    contractAddressRef.current = address;
+  }, []);
+
   const activeWallet = useActiveWallet();
   const walletRequiresApproval = activeWallet?.id !== "inApp";
 
@@ -157,7 +166,6 @@ export function LaunchTokenStatus(props: {
   }
 
   const isComplete = steps.every((step) => step.status.type === "completed");
-  const isPending = steps.some((step) => step.status.type === "pending");
 
   async function executeStep(stepId: StepId, gasless: boolean) {
     const params = {
@@ -241,11 +249,8 @@ export function LaunchTokenStatus(props: {
           : "ERC20Asset",
     });
 
-    if (contractAddress) {
-      props.onLaunchSuccess({
-        chainId: Number(formValues.chain),
-        contractAddress,
-      });
+    if (contractAddressRef.current) {
+      props.onLaunchSuccess(formValues, contractAddressRef.current);
     }
   }
 
@@ -429,30 +434,25 @@ export function LaunchTokenStatus(props: {
             />
           </div>
 
-          <div className="mt-2 flex justify-between gap-4 border-border border-t bg-card p-6">
-            {isComplete && contractLink ? (
-              <div>
-                <Button asChild className="gap-2">
-                  <Link href={contractLink}>
-                    View Coin <ArrowRightIcon className="size-4" />
-                  </Link>
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
-
-            <Button
-              disabled={isPending}
-              onClick={() => {
-                setIsModalOpen(false);
-                // reset steps
-                setSteps([]);
-              }}
-              variant="outline"
-            >
-              {isComplete ? "Close" : "Cancel"}
-            </Button>
+          <div className="mt-2 flex justify-end gap-4 border-border border-t bg-card p-6">
+            {!isComplete ? (
+              <Button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  // reset steps
+                  setSteps([]);
+                }}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+            ) : contractLink ? (
+              <Button asChild className="gap-2">
+                <Link href={contractLink}>
+                  View Coin <ArrowRightIcon className="size-4" />
+                </Link>
+              </Button>
+            ) : null}
           </div>
         </DialogContent>
       </Dialog>

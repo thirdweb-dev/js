@@ -1,4 +1,5 @@
 import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { ArrowLeftRightIcon } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -91,6 +92,7 @@ export default async function TransactionsAnalyticsPage(props: {
     <ProjectPage
       header={{
         client,
+        icon: ArrowLeftRightIcon,
         title: "Transactions",
         description: (
           <>
@@ -99,18 +101,7 @@ export default async function TransactionsAnalyticsPage(props: {
             server wallets, sponsor gas, monitor transaction status, and more
           </>
         ),
-        actions: {
-          primary: {
-            label: "Documentation",
-            href: "https://portal.thirdweb.com/transactions",
-            external: true,
-          },
-          secondary: {
-            label: "API Reference",
-            href: "https://api.thirdweb.com/reference#tag/transactions",
-            external: true,
-          },
-        },
+        actions: null,
         links: [
           {
             type: "docs",

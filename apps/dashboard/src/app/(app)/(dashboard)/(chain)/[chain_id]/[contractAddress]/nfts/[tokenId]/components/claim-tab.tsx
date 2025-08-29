@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { isAddress, type ThirdwebContract } from "thirdweb";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import {
@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const claimFormSchema = z.object({
@@ -54,7 +55,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
     resolver: zodResolver(claimFormSchema),
     defaultValues: { amount: "1", to: address },
   });
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const account = useActiveAccount();
 
   return (

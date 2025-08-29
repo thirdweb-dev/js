@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AbiFunction } from "abitype";
 import { toFunctionSelector } from "viem";
-import type { Token } from "../../../bridge/index.js";
+import type { TokenWithPrices } from "../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { CompilerMetadata } from "../../../contract/actions/compiler-metadata.js";
@@ -34,7 +34,7 @@ interface TransactionDetails {
   usdValueDisplay: string | null;
   txCostDisplay: string;
   gasCostDisplay: string | null;
-  tokenInfo: Token | null;
+  tokenInfo: TokenWithPrices | null;
   costWei: bigint;
   gasCostWei: bigint | null;
   totalCost: string;

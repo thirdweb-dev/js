@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { WalletAddress } from "@/components/blocks/wallet-address";
-import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import type { UniversalBridgeWalletStats } from "@/types/analytics";
 import { toUSD } from "@/utils/number";

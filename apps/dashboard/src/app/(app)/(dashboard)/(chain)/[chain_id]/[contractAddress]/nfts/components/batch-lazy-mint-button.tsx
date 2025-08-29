@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import { MinterOnly } from "@/components/contracts/roles/minter-only";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { BatchLazyMint } from "./batch-upload/batch-lazy-mint";
 
@@ -40,7 +41,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
     },
   );
 
-  const sendTxMutation = useSendAndConfirmTransaction();
+  const sendTxMutation = useSendAndConfirmTx();
 
   const txNotifications = useTxNotifications(
     "Batch uploaded successfully",

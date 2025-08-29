@@ -4,7 +4,6 @@ import {
   getAddress,
   getContract,
   NATIVE_TOKEN_ADDRESS,
-  sendAndConfirmTransaction,
   type ThirdwebClient,
   toUnits,
   toWei,
@@ -19,9 +18,10 @@ import {
 } from "thirdweb/extensions/erc20";
 import { useActiveAccount } from "thirdweb/react";
 import {
-  createToken,
   distributeToken,
   getDeployedEntrypointERC20,
+  getTokenAddressFromReceipt,
+  prepareCreateToken,
 } from "thirdweb/tokens";
 import type { ClaimConditionsInput } from "thirdweb/utils";
 import { create7702MinimalAccount } from "thirdweb/wallets/smart";
@@ -34,11 +34,12 @@ import {
 } from "@/constants/addresses";
 import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useAddContractToProject } from "@/hooks/project-contracts";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { pollWithTimeout } from "@/utils/pollWithTimeout";
 import { createTokenOnUniversalBridge } from "../_apis/create-token-on-bridge";
 import type { CreateAssetFormValues } from "./_common/form";
 import { CreateTokenAssetPageUI } from "./create-token-page.client";
-import { getInitialTickValue } from "./utils/calculate-tick";
+import { getInitialTickValue, isValidTickValue } from "./utils/calculate-tick";
 
 export function CreateTokenAssetPage(props: {
   accountAddress: string;
@@ -53,6 +54,7 @@ export function CreateTokenAssetPage(props: {
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
   const getChain = useGetV5DashboardChain();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   function getAccount(gasless: boolean) {
     if (!activeAccount) {
@@ -113,7 +115,26 @@ export function CreateTokenAssetPage(props: {
 
     const chain = getChain(Number(params.values.chain));
 
-    const contractAddress = await createToken({
+    let initialTick: number | undefined;
+
+    if (params.values.saleEnabled && saleAmount !== 0) {
+      initialTick = await getInitialTickValue({
+        startingPricePerToken: Number(
+          params.values.erc20Asset_poolMode.startingPricePerToken,
+        ),
+        tokenAddress: params.values.erc20Asset_poolMode.tokenAddress,
+        chain,
+        client: props.client,
+      });
+
+      if (!isValidTickValue(initialTick)) {
+        throw new Error(
+          "Invalid starting price per token. Change price and try again",
+        );
+      }
+    }
+
+    const createTokenTx = await prepareCreateToken({
       account,
       chain: chain,
       client: props.client,
@@ -123,12 +144,13 @@ export function CreateTokenAssetPage(props: {
               kind: "pool",
               config: {
                 amount: BigInt(saleAmount),
-                initialTick: getInitialTickValue({
-                  startingPricePerToken: Number(
-                    params.values.erc20Asset_poolMode.startingPricePerToken,
-                  ),
-                }),
+                initialTick: initialTick,
                 developerRewardBps: 1250, // 12.5%
+                currency:
+                  getAddress(params.values.erc20Asset_poolMode.tokenAddress) ===
+                  getAddress(NATIVE_TOKEN_ADDRESS)
+                    ? undefined
+                    : params.values.erc20Asset_poolMode.tokenAddress,
               },
             }
           : undefined,
@@ -142,6 +164,9 @@ export function CreateTokenAssetPage(props: {
       },
       developerAddress: "0x1Af20C6B23373350aD464700B5965CE4B0D2aD94",
     });
+
+    const receipt = await sendAndConfirmTx.mutateAsync(createTokenTx);
+    const contractAddress = await getTokenAddressFromReceipt(receipt);
 
     // add contract to project in background
     addContractToProject.mutateAsync({
@@ -172,8 +197,7 @@ export function CreateTokenAssetPage(props: {
     values: CreateAssetFormValues;
     gasless: boolean;
   }) {
-    const { values, gasless } = params;
-    const account = getAccount(gasless);
+    const { values } = params;
     const contract = getDeployedContract({ chain: values.chain });
 
     const airdropTx = await distributeToken({
@@ -186,18 +210,16 @@ export function CreateTokenAssetPage(props: {
       tokenAddress: contract.address,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: airdropTx,
-    });
+    await sendAndConfirmTx.mutateAsync(airdropTx);
   }
 
   async function ERC20Asset_approveAirdropTokens(params: {
     values: CreateAssetFormValues;
     gasless: boolean;
   }) {
-    const { values, gasless } = params;
-    const account = getAccount(gasless);
+    const { values } = params;
+    // TODO - when gasless is enabled - change how the tx is sent
+    // const account = getAccount(params.gasless);
     const contract = getDeployedContract({ chain: values.chain });
 
     const totalAmountToAirdrop = values.airdropAddresses.reduce(
@@ -220,10 +242,7 @@ export function CreateTokenAssetPage(props: {
       spender: entrypoint.address,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: approvalTx,
-    });
+    await sendAndConfirmTx.mutateAsync(approvalTx);
   }
 
   // DropERC20 ----
@@ -317,10 +336,7 @@ export function CreateTokenAssetPage(props: {
       contract,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: airdropTx,
-    });
+    await sendAndConfirmTx.mutateAsync(airdropTx);
   }
 
   async function DropERC20_mintTokens(params: {
@@ -360,10 +376,7 @@ export function CreateTokenAssetPage(props: {
       to: account.address,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: claimTx,
-    });
+    await sendAndConfirmTx.mutateAsync(claimTx);
   }
 
   async function DropERC20_setClaimConditions(params: {
@@ -419,10 +432,7 @@ export function CreateTokenAssetPage(props: {
       phases,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: preparedTx,
-    });
+    await sendAndConfirmTx.mutateAsync(preparedTx);
   }
 
   return (
@@ -442,14 +452,23 @@ export function CreateTokenAssetPage(props: {
           setClaimConditions: DropERC20_setClaimConditions,
         },
       }}
-      onLaunchSuccess={(params) => {
-        createTokenOnUniversalBridge({
-          chainId: params.chainId,
-          client: props.client,
-          tokenAddress: params.contractAddress,
-          // TODO: UPDATE THIS WHEN WE ALLOW CUSTOM CURRENCY PAIRING
-          pairedTokenAddress: NATIVE_TOKEN_ADDRESS,
-        });
+      onLaunchSuccess={(values, contractAddress) => {
+        if (values.saleMode === "erc20-asset:pool") {
+          createTokenOnUniversalBridge({
+            chainId: Number(values.chain),
+            client: props.client,
+            tokenAddress: contractAddress,
+            pairedTokenAddress: values.erc20Asset_poolMode.tokenAddress,
+          });
+        } else if (values.saleMode === "drop-erc20:token-drop") {
+          createTokenOnUniversalBridge({
+            chainId: Number(values.chain),
+            client: props.client,
+            tokenAddress: contractAddress,
+            pairedTokenAddress: undefined,
+          });
+        }
+
         revalidatePathAction(
           `/team/${props.teamSlug}/project/${props.projectId}/tokens`,
           "page",

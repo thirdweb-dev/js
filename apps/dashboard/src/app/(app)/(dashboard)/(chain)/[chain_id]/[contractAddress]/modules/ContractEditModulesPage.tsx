@@ -5,7 +5,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { getInstalledModules, owner } from "thirdweb/modules";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { InstalledModulesTable } from "./components/InstalledModulesTable";
 import { InstallModuleForm } from "./components/ModuleForm";
 

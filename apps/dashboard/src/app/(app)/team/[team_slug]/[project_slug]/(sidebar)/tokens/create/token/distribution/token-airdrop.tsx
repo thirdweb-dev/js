@@ -16,7 +16,7 @@ import { DropZone } from "@/components/blocks/drop-zone/drop-zone";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { InlineCode } from "@/components/ui/inline-code";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   Sheet,
   SheetContent,

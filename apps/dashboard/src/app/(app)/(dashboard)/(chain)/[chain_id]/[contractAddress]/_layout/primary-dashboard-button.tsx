@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Spinner } from "@/components/ui/Spinner";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import type { EVMContractInfo } from "@/hooks/useActiveChainId";

@@ -93,6 +93,32 @@ import { TransactionModal } from "../../ui/TransactionButton/TransactionModal.js
  * };
  * ```
  *
+ * ### Configuring the Pay Modal
+ *
+ * When the wallet does not have enough funds to send the transaction, a modal is shown to the user to buy the required funds and then continue with the transaction.
+ *
+ * You can configure the pay modal by passing a [`SendTransactionPayModalConfig`](https://portal.thirdweb.com/references/typescript/v5/SendTransactionPayModalConfig) object to the `payModal` config.
+ *
+ * ```tsx
+ * import { useSendTransaction } from "thirdweb/react";
+ *
+ * const sendTx = useSendTransaction({
+ *   payModal: {
+ *     theme: "light",
+ *   },
+ * });
+ * ```
+ *
+ * By default, the pay modal is enabled. You can disable it by passing `payModal: false` to the config.
+ *
+ * ```tsx
+ * import { useSendTransaction } from "thirdweb/react";
+ *
+ * const sendTx = useSendTransaction({
+ *   payModal: false,
+ * });
+ * ```
+ *
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
