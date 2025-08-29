@@ -9,23 +9,16 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { useId, useState } from "react";
 import { toast } from "sonner";
-import {
-  padHex,
-  sendAndConfirmTransaction,
-  type ThirdwebContract,
-  toTokens,
-  waitForReceipt,
-} from "thirdweb";
+import { padHex, type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
   claimTo,
   type getActiveClaimCondition,
   getApprovalForTransaction,
 } from "thirdweb/extensions/erc20";
-import { useActiveAccount, useSendTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { getClaimParams, maxUint256 } from "thirdweb/utils";
 import {
   reportAssetBuyFailed,
@@ -37,9 +30,9 @@ import { DecimalInput } from "@/components/ui/decimal-input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
-import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { tryCatch } from "@/utils/try-catch";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
@@ -65,13 +58,8 @@ export function TokenDropClaim(props: {
   const [quantity, setQuantity] = useState("1");
   const account = useActiveAccount();
 
-  const { theme } = useTheme();
-
-  const sendClaimTx = useSendTransaction({
-    payModal: {
-      theme: getSDKTheme(theme === "light" ? "light" : "dark"),
-    },
-  });
+  const sendAndConfirmApproveTx = useSendAndConfirmTx();
+  const sendAndConfirmClaimTx = useSendAndConfirmTx();
 
   const [successScreen, setSuccessScreen] = useState<
     | undefined
@@ -116,10 +104,7 @@ export function TokenDropClaim(props: {
         });
 
         const approveTxResult = await tryCatch(
-          sendAndConfirmTransaction({
-            account,
-            transaction: approveTx,
-          }),
+          sendAndConfirmApproveTx.mutateAsync(approveTx),
         );
 
         if (approveTxResult.error) {
@@ -152,8 +137,8 @@ export function TokenDropClaim(props: {
       }
 
       async function sendAndConfirm() {
-        const result = await sendClaimTx.mutateAsync(transaction);
-        return await waitForReceipt(result);
+        const result = await sendAndConfirmClaimTx.mutateAsync(transaction);
+        return result;
       }
 
       setStepsUI({

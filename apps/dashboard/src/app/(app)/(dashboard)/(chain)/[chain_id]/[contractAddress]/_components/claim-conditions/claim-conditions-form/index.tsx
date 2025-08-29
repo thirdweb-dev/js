@@ -28,11 +28,7 @@ import {
   ZERO_ADDRESS,
 } from "thirdweb";
 import { decimals } from "thirdweb/extensions/erc20";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import * as z from "zod";
 import { ZodError } from "zod";
@@ -49,6 +45,7 @@ import { Form } from "@/components/ui/form";
 import { Spinner } from "@/components/ui/Spinner";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useIsAdmin } from "@/hooks/useContractRoles";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import {
   type ClaimConditionInput,
@@ -222,7 +219,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     Record<number, SnapshotEntry[] | undefined>
   >({});
 
-  const sendTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const tokenDecimals = useReadContract(decimals, {
     contract,
@@ -305,7 +302,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
 
   const isFetchingData =
     claimConditionsQuery.isFetching ||
-    sendTx.isPending ||
+    sendAndConfirmTx.isPending ||
     // Need to make sure the tokenDecimals.data is present when interacting with ERC20 claim conditions
     (isErc20 && tokenDecimals.isLoading);
 
@@ -428,7 +425,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         },
         phasesWithSnapshots,
       );
-      await sendTx.mutateAsync(tx);
+      await sendAndConfirmTx.mutateAsync(tx);
 
       saveClaimPhaseNotification.onSuccess();
     } catch (error) {
@@ -559,7 +556,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
               >
                 <ClaimConditionsPhase
                   contract={contract}
-                  isPending={sendTx.isPending}
+                  isPending={sendAndConfirmTx.isPending}
                   onRemove={() => {
                     formFields.remove(index);
                     // Clean up snapshot when phase is removed
@@ -594,7 +591,8 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 <DropdownMenuTrigger asChild>
                   <Button
                     disabled={
-                      sendTx.isPending || (!isMultiPhase && phases?.length > 0)
+                      sendAndConfirmTx.isPending ||
+                      (!isMultiPhase && phases?.length > 0)
                     }
                     size="sm"
                     variant="outline"
@@ -649,7 +647,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 client={contract.client}
                 disabled={claimConditionsQuery.isPending}
                 isLoggedIn={isLoggedIn}
-                isPending={sendTx.isPending}
+                isPending={sendAndConfirmTx.isPending}
                 transactionCount={undefined}
                 txChainID={contract.chain.id}
                 type="submit"

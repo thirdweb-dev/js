@@ -5,9 +5,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { prepareTransaction, type ThirdwebClient, toWei } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { Input } from "@/components/ui/input";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 
 export function DepositNative(props: {
@@ -17,7 +17,7 @@ export function DepositNative(props: {
   isLoggedIn: boolean;
   client: ThirdwebClient;
 }) {
-  const sendTransaction = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const [amount, setAmount] = useState("");
 
   return (
@@ -36,7 +36,7 @@ export function DepositNative(props: {
         disabled={amount.length === 0 || Number.parseFloat(amount) <= 0}
         isLoggedIn={props.isLoggedIn}
         className="border-l-0 rounded-l-none px-6"
-        isPending={sendTransaction.isPending}
+        isPending={sendAndConfirmTx.isPending}
         onClick={() => {
           const transaction = prepareTransaction({
             // eslint-disable-next-line no-restricted-syntax
@@ -45,7 +45,7 @@ export function DepositNative(props: {
             to: props.address,
             value: toWei(amount),
           });
-          sendTransaction.mutate(transaction, {
+          sendAndConfirmTx.mutate(transaction, {
             onSuccess: () => {
               toast.success("Deposit successful");
               setAmount("");

@@ -8,9 +8,9 @@ import {
 } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as VoteExt from "thirdweb/extensions/vote";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import type { Account } from "thirdweb/wallets";
 import invariant from "tiny-invariant";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 
 export async function tokensDelegated(
   options: BaseTransactionOptions<{ account: Account | undefined }>,
@@ -81,7 +81,7 @@ export async function votingTokenDecimals(options: BaseTransactionOptions) {
 }
 
 export function useDelegateMutation() {
-  const { mutateAsync } = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   return useMutation({
     mutationFn: async (contract: ThirdwebContract) => {
@@ -97,7 +97,7 @@ export function useDelegateMutation() {
         contract: tokenContract,
         delegatee: contract.address,
       });
-      return await mutateAsync(transaction);
+      return await sendAndConfirmTx.mutateAsync(transaction);
     },
   });
 }

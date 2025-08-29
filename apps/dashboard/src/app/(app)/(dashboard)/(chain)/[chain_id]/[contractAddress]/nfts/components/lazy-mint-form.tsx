@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
 import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { OpenSeaPropertyBadge } from "@/components/badges/opensea";
 import { FileInput } from "@/components/blocks/FileInput";
 import { PropertiesFormControl } from "@/components/contracts/properties.shared";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { NFTMetadataInputLimited } from "@/types/modified-types";
 import { parseAttributes } from "@/utils/parseAttributes";
@@ -53,7 +54,7 @@ export function LazyMintNftForm({
   isLoggedIn,
 }: LazyMintNftFormParams) {
   const address = useActiveAccount()?.address;
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const form = useForm<NFTMetadataInputLimited>();
 

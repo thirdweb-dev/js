@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { transferBatch } from "thirdweb/extensions/erc20";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 import { type AirdropAddressInput, AirdropUpload } from "./airdrop-upload";
 
@@ -24,7 +24,7 @@ export function TokenAirdropForm(props: {
     defaultValues: { addresses: [] },
   });
 
-  const sendTransaction = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const addresses = form.watch("addresses");
   // The real number should be slightly higher since there's a lil bit of overhead cost
   const estimateGasCost =
@@ -41,7 +41,7 @@ export function TokenAirdropForm(props: {
       contract,
     });
 
-    const sendTxPromise = sendTransaction.mutateAsync(tx);
+    const sendTxPromise = sendAndConfirmTx.mutateAsync(tx);
     toast.promise(sendTxPromise, {
       success: "Tokens airdropped successfully",
       error: (err) => ({
@@ -85,7 +85,7 @@ export function TokenAirdropForm(props: {
         <TransactionButton
           client={contract.client}
           isLoggedIn={isLoggedIn}
-          isPending={sendTransaction.isPending}
+          isPending={sendAndConfirmTx.isPending}
           transactionCount={1}
           txChainID={contract.chain.id}
           type="submit"

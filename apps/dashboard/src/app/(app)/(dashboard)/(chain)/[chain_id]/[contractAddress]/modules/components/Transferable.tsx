@@ -6,7 +6,6 @@ import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { sendAndConfirmTransaction } from "thirdweb";
 import {
   TransferableERC20,
   TransferableERC721,
@@ -29,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
@@ -46,7 +46,7 @@ export type TransferableModuleFormValues = z.infer<typeof formSchema>;
 
 function TransferableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const isTransferEnabledQuery = useReadContract(
     props.contractInfo.name === "TransferableERC721"
       ? TransferableERC721.isTransferEnabled
@@ -79,10 +79,7 @@ function TransferableModule(props: ModuleInstanceProps) {
           enableTransfer: transferEnabled,
         });
 
-        await sendAndConfirmTransaction({
-          account: ownerAccount,
-          transaction: setTransferableTx,
-        });
+        await sendAndConfirmTx.mutateAsync(setTransferableTx);
       }
 
       await Promise.all(
@@ -99,10 +96,7 @@ function TransferableModule(props: ModuleInstanceProps) {
             target: address,
           });
 
-          await sendAndConfirmTransaction({
-            account: ownerAccount,
-            transaction: setTransferableForTx,
-          });
+          await sendAndConfirmTx.mutateAsync(setTransferableForTx);
         }),
       );
     },
@@ -111,6 +105,7 @@ function TransferableModule(props: ModuleInstanceProps) {
       ownerAccount,
       isTransferEnabledQuery.data,
       props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
     ],
   );
 

@@ -6,16 +6,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { type ThirdwebContract, toTokens } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { TransactionButton } from "@/components/tx-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { tokensDelegated, votingTokenDecimals } from "@/hooks/useVote";
 import { parseError } from "@/utils/errorParser";
 
@@ -62,7 +59,7 @@ export function Proposal({ proposal, contract, isLoggedIn }: ProposalProps) {
     queryOptions: { enabled: !!account },
   });
 
-  const sendTx = useSendAndConfirmTransaction();
+  const sendTx = useSendAndConfirmTx();
 
   const [voteType, setVoteType] = useState<VoteExt.VoteType | null>(null);
 

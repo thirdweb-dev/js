@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { setSharedMetadata } from "thirdweb/extensions/erc721";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { FileInput } from "@/components/blocks/FileInput";
 import { TransactionButton } from "@/components/tx-button";
 import {
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import type { NFTMetadataInputLimited } from "@/types/modified-types";
 import { parseError } from "@/utils/errorParser";
 import { parseAttributes } from "@/utils/parseAttributes";
@@ -44,7 +45,7 @@ export function SharedMetadataForm({
   isLoggedIn: boolean;
 }) {
   const address = useActiveAccount()?.address;
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const form = useForm<NFTMetadataInputLimited>();
 
   const setFile = (file: File) => {

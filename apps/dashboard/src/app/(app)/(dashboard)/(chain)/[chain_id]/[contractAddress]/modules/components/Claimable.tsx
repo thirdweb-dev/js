@@ -15,7 +15,6 @@ import {
   getContract,
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
-  sendAndConfirmTransaction,
   type ThirdwebClient,
   toTokens,
   ZERO_ADDRESS,
@@ -53,6 +52,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { addressSchema } from "../zod-schemas";
 import { CurrencySelector } from "./CurrencySelector";
@@ -76,7 +76,7 @@ function ClaimableModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
   const account = useActiveAccount();
   const [tokenId, setTokenId] = useState<string>("");
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const isValidTokenId = positiveIntegerRegex.test(tokenId);
 
   const primarySaleRecipientQuery = useReadContract(
@@ -189,12 +189,9 @@ function ClaimableModule(props: ModuleInstanceProps) {
         throw new Error("Invalid tokenId");
       }
 
-      await sendAndConfirmTransaction({
-        account: account,
-        transaction: mintTx,
-      });
+      await sendAndConfirmTx.mutateAsync(mintTx);
     },
-    [contract, account, props.contractInfo.name],
+    [contract, account, props.contractInfo.name, sendAndConfirmTx.mutateAsync],
   );
 
   const setClaimCondition = useCallback(
@@ -236,12 +233,14 @@ function ClaimableModule(props: ModuleInstanceProps) {
         throw new Error("Invalid tokenId");
       }
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: setClaimConditionTx,
-      });
+      await sendAndConfirmTx.mutateAsync(setClaimConditionTx);
     },
-    [contract, ownerAccount, props.contractInfo.name],
+    [
+      contract,
+      ownerAccount,
+      props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   const setPrimarySaleRecipient = useCallback(
@@ -260,12 +259,14 @@ function ClaimableModule(props: ModuleInstanceProps) {
         primarySaleRecipient: values.primarySaleRecipient,
       });
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: setSaleConfigTx,
-      });
+      await sendAndConfirmTx.mutateAsync(setSaleConfigTx);
     },
-    [contract, ownerAccount, props.contractInfo.name],
+    [
+      contract,
+      ownerAccount,
+      props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   return (

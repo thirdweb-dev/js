@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import * as VoteExt from "thirdweb/extensions/vote";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 export function ProposalButton({
@@ -35,7 +35,7 @@ export function ProposalButton({
   isLoggedIn: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const sendTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const form = useForm<{ description: string }>({
     defaultValues: {
       description: "",
@@ -51,7 +51,7 @@ export function ProposalButton({
       values: [0n],
     });
 
-    await sendTx.mutateAsync(tx, {
+    await sendAndConfirmTx.mutateAsync(tx, {
       onError: (error) => {
         toast.error("Failed to create proposal", {
           description: parseError(error),
@@ -105,7 +105,7 @@ export function ProposalButton({
 
             <div className="mt-6 flex flex-row justify-end gap-3">
               <Button
-                disabled={sendTx.isPending}
+                disabled={sendAndConfirmTx.isPending}
                 onClick={() => setOpen(false)}
                 variant="outline"
               >
@@ -114,7 +114,7 @@ export function ProposalButton({
               <TransactionButton
                 client={contract.client}
                 isLoggedIn={isLoggedIn}
-                isPending={sendTx.isPending}
+                isPending={sendAndConfirmTx.isPending}
                 transactionCount={1}
                 txChainID={contract.chain.id}
                 type="submit"

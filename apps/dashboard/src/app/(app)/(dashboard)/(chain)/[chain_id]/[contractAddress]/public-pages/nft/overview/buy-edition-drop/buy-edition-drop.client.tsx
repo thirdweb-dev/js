@@ -9,7 +9,7 @@ import { type ThirdwebContract, toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { maxUint256 } from "thirdweb/utils";
 import * as z from "zod";
 import {
@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 import { PublicPageConnectButton } from "../../../_components/PublicPageConnectButton";
 import { SupplyClaimedProgress } from "../../../_components/supply-claimed-progress";
@@ -57,7 +58,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
     reValidateMode: "onChange",
   });
   const nftAmountToClaim = Number(form.watch("amount"));
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const account = useActiveAccount();
 
   const queryClient = useQueryClient();

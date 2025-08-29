@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress, type ThirdwebContract } from "thirdweb";
 import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import {
@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 
 interface MintSupplyTabProps {
   contract: ThirdwebContract;
@@ -47,7 +48,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
     resolver: zodResolver(mintAdditionalSupplyFormSchema),
   });
 
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   function onSubmit(values: z.input<typeof mintAdditionalSupplyFormSchema>) {
     const transaction = mintAdditionalSupplyTo({

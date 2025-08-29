@@ -12,6 +12,7 @@ import { forwardRef, useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   prepareTransaction,
+  // eslint-disable-next-line no-restricted-imports
   sendTransaction,
   type ThirdwebClient,
   toWei,

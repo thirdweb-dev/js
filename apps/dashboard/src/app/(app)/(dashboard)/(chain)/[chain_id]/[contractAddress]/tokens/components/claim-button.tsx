@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { isAddress, type ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 
 const claimFormSchema = z.object({
@@ -54,7 +55,7 @@ export function TokenClaimButton(props: {
   contract: ThirdwebContract;
   isLoggedIn: boolean;
 }) {
-  const sendAndConfirmTransaction = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const account = useActiveAccount();
 
   const form = useForm<ClaimFormValues>({
@@ -80,7 +81,7 @@ export function TokenClaimButton(props: {
     });
 
     if (approveTx) {
-      const approveTxPromise = sendAndConfirmTransaction.mutateAsync(approveTx);
+      const approveTxPromise = sendAndConfirmTx.mutateAsync(approveTx);
       toast.promise(approveTxPromise, {
         error: (error) => ({
           loading: "Approve Spending for claiming tokens",
@@ -93,7 +94,7 @@ export function TokenClaimButton(props: {
       await approveTxPromise;
     }
 
-    const claimTxPromise = sendAndConfirmTransaction.mutateAsync(transaction);
+    const claimTxPromise = sendAndConfirmTx.mutateAsync(transaction);
 
     toast.promise(claimTxPromise, {
       error: (error) => ({

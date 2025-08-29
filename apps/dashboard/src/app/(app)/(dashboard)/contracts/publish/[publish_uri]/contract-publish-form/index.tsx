@@ -9,7 +9,7 @@ import {
   getContractPublisher,
   publishContract,
 } from "thirdweb/extensions/thirdweb";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { reportContractPublished } from "@/analytics/report";
 import { CustomConnectWallet } from "@/components/connect-wallet";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
   DASHBOARD_FORWARDER_ADDRESS,
 } from "@/constants/misc";
 import { useEns, useFunctionParamsFromABI } from "@/hooks/contract-hooks";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
@@ -44,7 +45,7 @@ export function ContractPublishForm(props: {
     "Failed to publish contract",
   );
   const account = useActiveAccount();
-  const sendTx = useSendAndConfirmTransaction({
+  const sendAndConfirmTx = useSendAndConfirmTx({
     gasless: {
       experimentalChainlessSupport: true,
       provider: "engine",
@@ -179,7 +180,7 @@ export function ContractPublishForm(props: {
     form.watch("deployType") === "autoFactory" ? constructorParams : [];
 
   // during loading and after success we should stay in loading state
-  const isPending = sendTx.isPending || sendTx.isSuccess;
+  const isPending = sendAndConfirmTx.isPending || sendAndConfirmTx.isSuccess;
 
   const formId = useId();
 
@@ -252,7 +253,7 @@ export function ContractPublishForm(props: {
             previousMetadata: props.publishMetadata,
           });
 
-          sendTx.mutate(tx, {
+          sendAndConfirmTx.mutate(tx, {
             onError: (err) => {
               console.error("Failed to publish contract", err);
               onError(err);
@@ -390,9 +391,9 @@ export function ContractPublishForm(props: {
                 type="submit"
               >
                 {isPending && <Spinner className="size-4" />}
-                {sendTx.isSuccess
+                {sendAndConfirmTx.isSuccess
                   ? "Preparing page"
-                  : sendTx.isPending
+                  : sendAndConfirmTx.isPending
                     ? "Publishing contract"
                     : "Publish Contract"}
               </Button>

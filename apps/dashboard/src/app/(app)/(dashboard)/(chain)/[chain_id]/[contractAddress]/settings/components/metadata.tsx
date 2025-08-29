@@ -10,7 +10,7 @@ import {
   getContractMetadata,
   setContractMetadata,
 } from "thirdweb/extensions/common";
-import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import { resolveScheme } from "thirdweb/storage";
 import { z } from "zod";
 import { FileInput } from "@/components/blocks/FileInput";
@@ -28,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { CommonContractSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
 import { parseError } from "@/utils/errorParser";
@@ -68,7 +69,7 @@ export const SettingsMetadata = ({
   isLoggedIn: boolean;
 }) => {
   const metadata = useReadContract(getContractMetadata, { contract });
-  const sendTransaction = useSendAndConfirmTransaction();
+  const sendTransaction = useSendAndConfirmTx();
 
   const transformedQueryData = useMemo(() => {
     let socialUrls: z.infer<typeof SocialUrlSchema> = {

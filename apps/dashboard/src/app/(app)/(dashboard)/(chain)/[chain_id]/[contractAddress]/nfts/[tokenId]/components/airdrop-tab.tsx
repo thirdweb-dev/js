@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { cn } from "@/lib/utils";
 import {
@@ -44,7 +45,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
   }>({
     defaultValues: { addresses: [] },
   });
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const addresses = watch("addresses");
   const [open, setOpen] = useState(false);
   const airdropNotifications = useTxNotifications(

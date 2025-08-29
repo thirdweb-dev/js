@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import type { ThirdwebContract } from "thirdweb";
 import { mintTo as erc721MintTo } from "thirdweb/extensions/erc721";
 import { mintTo as erc1155MintTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { OpenSeaPropertyBadge } from "@/components/badges/opensea";
 import { FileInput } from "@/components/blocks/FileInput";
 import { PropertiesFormControl } from "@/components/contracts/properties.shared";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import type { NFTMetadataInputLimited } from "@/types/modified-types";
 import { parseAttributes } from "@/utils/parseAttributes";
@@ -81,7 +82,7 @@ export function NFTMintForm({
     external_url,
   } = getUploadedNFTMediaMeta(form);
 
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const nftMintNotifications = useTxNotifications(
     "NFT minted successfully",
     "Failed to mint NFT",

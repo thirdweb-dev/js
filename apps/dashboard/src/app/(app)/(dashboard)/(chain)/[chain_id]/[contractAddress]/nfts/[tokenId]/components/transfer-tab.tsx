@@ -4,11 +4,7 @@ import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
 import { transferFrom } from "thirdweb/extensions/erc721";
 import { isERC1155, safeTransferFrom } from "thirdweb/extensions/erc1155";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { SolidityInput } from "@/components/solidity-inputs";
 import { TransactionButton } from "@/components/tx-button";
@@ -21,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 type TransferTabProps = {
@@ -47,7 +44,7 @@ function TransferTab({ contract, tokenId, isLoggedIn }: TransferTabProps) {
     { contract },
   );
 
-  const sendTxAndConfirm = useSendAndConfirmTransaction();
+  const sendTxAndConfirm = useSendAndConfirmTx();
 
   if (checking1155) {
     return <GenericLoadingPage />;

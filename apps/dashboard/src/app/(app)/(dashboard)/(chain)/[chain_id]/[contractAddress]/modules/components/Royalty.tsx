@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction, type ThirdwebClient } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { RoyaltyERC721, RoyaltyERC1155 } from "thirdweb/modules";
 import { useReadContract } from "thirdweb/react";
 import { z } from "zod";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { addressSchema } from "../zod-schemas";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
@@ -33,7 +34,7 @@ import type { ModuleInstanceProps } from "./module-instance";
 
 function RoyaltyModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const isErc721 = props.contractInfo.name === "RoyaltyERC721";
 
   const defaultRoyaltyInfoQuery = useReadContract(
@@ -70,12 +71,9 @@ function RoyaltyModule(props: ModuleInstanceProps) {
         tokenId: BigInt(values.tokenId),
       });
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: setRoyaltyForTokenTx,
-      });
+      await sendAndConfirmTx.mutateAsync(setRoyaltyForTokenTx);
     },
-    [contract, ownerAccount, isErc721],
+    [contract, ownerAccount, isErc721, sendAndConfirmTx.mutateAsync],
   );
 
   const setTransferValidator = useCallback(
@@ -95,13 +93,16 @@ function RoyaltyModule(props: ModuleInstanceProps) {
           validator: values.transferValidator,
         });
 
-        await sendAndConfirmTransaction({
-          account: ownerAccount,
-          transaction: setTransferValidatorTx,
-        });
+        await sendAndConfirmTx.mutateAsync(setTransferValidatorTx);
       }
     },
-    [contract, ownerAccount, transferValidatorQuery.data, isErc721],
+    [
+      contract,
+      ownerAccount,
+      transferValidatorQuery.data,
+      isErc721,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   const setDefaultRoyaltyInfo = useCallback(
@@ -128,13 +129,16 @@ function RoyaltyModule(props: ModuleInstanceProps) {
           royaltyRecipient: values.recipient,
         });
 
-        await sendAndConfirmTransaction({
-          account: ownerAccount,
-          transaction: setSaleConfigTx,
-        });
+        await sendAndConfirmTx.mutateAsync(setSaleConfigTx);
       }
     },
-    [contract, ownerAccount, defaultRoyaltyInfoQuery.data, isErc721],
+    [
+      contract,
+      ownerAccount,
+      defaultRoyaltyInfoQuery.data,
+      isErc721,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   return (
