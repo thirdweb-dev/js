@@ -48,32 +48,6 @@ export type MonitorTransactionOutput = z.infer<
   typeof AgentActionMonitorTransactionOutputData
 >;
 
-export function createTools(_config: ThirdwebConfig): Record<string, Tool> {
-  return {
-    sign_transaction: {
-      id: "thirdweb.sign_transaction" as const,
-      name: "sign_transaction",
-      description: "Sign a transaction",
-      inputSchema: AgentActionSignTransactionData,
-      outputSchema: AgentActionTransactionOutputData,
-    } as const,
-    sign_swap: {
-      id: "thirdweb.sign_swap" as const,
-      name: "sign_swap",
-      description: "Sign a swap transaction",
-      inputSchema: AgentActionSignSwapData,
-      outputSchema: AgentActionTransactionOutputData,
-    } as const,
-    monitor_transaction: {
-      id: "thirdweb.monitor_transaction" as const,
-      name: "monitor_transaction",
-      description: "Monitor a transaction",
-      inputSchema: AgentActionMonitorTransactionData,
-      outputSchema: AgentActionMonitorTransactionOutputData,
-    } as const,
-  } as const;
-}
-
 export type SignTransactionInput = z.infer<
   typeof AgentActionSignTransactionData
 >;
@@ -81,3 +55,29 @@ export type SignSwapInput = z.infer<typeof AgentActionSignSwapData>;
 export type MonitorTransactionInput = z.infer<
   typeof AgentActionMonitorTransactionData
 >;
+
+export function createTools(_config: ThirdwebConfig) {
+  return {
+    sign_transaction: {
+      id: "thirdweb.sign_transaction" as const,
+      name: "sign_transaction",
+      description: "Sign a transaction",
+      inputSchema: AgentActionSignTransactionData,
+      outputSchema: AgentActionTransactionOutputData,
+    } satisfies Tool<SignTransactionInput, TransactionOutput>,
+    sign_swap: {
+      id: "thirdweb.sign_swap" as const,
+      name: "sign_swap",
+      description: "Sign a swap transaction",
+      inputSchema: AgentActionSignSwapData,
+      outputSchema: AgentActionTransactionOutputData,
+    } satisfies Tool<SignSwapInput, TransactionOutput>,
+    monitor_transaction: {
+      id: "thirdweb.monitor_transaction" as const,
+      name: "monitor_transaction",
+      description: "Monitor a transaction",
+      inputSchema: AgentActionMonitorTransactionData,
+      outputSchema: AgentActionMonitorTransactionOutputData,
+    } satisfies Tool<MonitorTransactionInput, MonitorTransactionOutput>,
+  } as const;
+}

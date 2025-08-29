@@ -1,6 +1,6 @@
 # Usage with the Vercel AI SDK
 
-The `@thirdweb-dev/ai-sdk-provider` A thin provider that plugs thirdweb into the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).
+The `@thirdweb-dev/ai-sdk-provider` is a lightweight provider that lets you use thirdweb AI with the [Vercel AI SDK](https://ai-sdk.dev/docs/introduction).
 
 It standardizes message parts, exposes wallet-aware tools (`sign_transaction`, `sign_swap`), and ships types/utilities so you can build chat UIs that execute on-chain actions from AI responses.
 
@@ -67,7 +67,6 @@ export async function POST(req: Request) {
     },
   });
 }
-
 ```
 
 #### Client side (React, using `useChat`)
