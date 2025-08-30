@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.40
+
+### Patch Changes
+
+- [#7946](https://github.com/thirdweb-dev/js/pull/7946) [`597431e`](https://github.com/thirdweb-dev/js/commit/597431ec1dc7b6a8b52b6676256e77d96b9a16b1) Thanks [@MananTank](https://github.com/MananTank)! - Add Pay Modal integration in `useSendAndConfirmTransaction` hook similar to `useSendTransaction` hook
+
 ## 5.105.39
 
 ### Patch Changes
