@@ -1,0 +1,185 @@
+import {Callout, Step, Steps} from "@doc";
+
+# Migrate to thirdweb AI
+
+If you previously used the Nebula endpoints (nebula-api.thirdweb.com/chat) for thirdweb AI features, this guide that will teach you how
+to migrate to the thirdweb API.
+
+<Callout variant="info" title="Nebula Deprecation"> As of August 14, 2025 Nebula (blockchain LLM) has officially been deprecated and re-branded to thirdweb AI </Callout>
+
+**Endpoint Changes:**
+- Old URL: `https://nebula-api.thirdweb.com/chat`
+- New URL: `https://api.thirdweb.com/ai/chat`
+
+
+## Benefits of thirdweb API
+
+- Standard Chat Format: Follows industry-standard conversational AI patterns
+- Better Message History: Support for multi-turn conversations with role-based messages
+- Structured Context: Type-safe object format instead of string parsing
+- Enhanced Session Management: More flexible session handling
+- Future-Proof: Aligned with modern chat API standards
+
+## Quick Reference
+
+| First API Field | Second API Field        | Notes                                       |
+|-----------------|-------------------------|---------------------------------------------|
+| message         | messages[].content      | Single string → Array of message objects    |
+| session_id      | context.session_id      | Moved inside context object (optional)      |
+| context (string)| context (object)        | String format → Structured object           |
+| walletAddress   | context.from            | Renamed field                               |
+| chainIds        | context.chain_ids       | Renamed field                               |
+
+## Request Structure Comparison
+
+Before (Nebula API)
+
+```typescript
+fetch("<https://nebula-api.thirdweb.com/chat>", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-secret-key": "your-secret-key",
+  },
+  body: JSON.stringify({
+    message: "Send 0.01 ETH to vitalik.eth",
+    stream: false,
+    session_id: "your-session-id",
+    context: "{ chainIds: [1]; walletAddress: '0x123...'; }",
+  }),
+});
+```
+
+## After (thirdweb AI Chat API)
+
+```typescript
+fetch("<https://api.thirdweb.com/ai/chat>", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-secret-key": "your-secret-key",
+  },
+  body: JSON.stringify({
+    context: {
+      chain_ids: [1],
+      from: "0x123...",
+      session_id: "your-session-id", // Optional
+    },
+    messages: [
+      {
+        role: "user",
+        content: "Send 0.01 ETH to vitalik.eth",
+      },
+    ],
+    stream: false,
+  }),
+});
+```
+
+## Migration Steps
+
+<Steps>
+
+<Step title="Update Endpoint URL">
+
+Change your base URL from:
+
+`<https://nebula-api.thirdweb.com/chat>`
+
+to
+
+`<https://api.thirdweb.com/ai/chat>`
+
+</Step>
+
+<Step title="Restructure Message Format">
+Convert the single message field to a messages array:
+
+Before: 
+
+```typescript
+message: "Your message here"
+```
+
+After:
+
+```typescript
+messages: [
+  {
+    role: "user",    content: "Your message here"  }
+]
+```
+
+Supported roles:
+- **user** - Messages from the user
+- **assistant** - Messages from the AI
+- **system** - System messages for context
+
+
+</Step>
+
+<Step title="Update Context Structure">
+Old format (string):
+
+```typescript
+context: "{ chainIds: [1, 137]; walletAddress: '0x123...'; }"
+```
+
+New format (object):
+
+```typescript
+context: {
+  chain_ids: [1, 137],  
+  from: "0x123...",  
+  session_id: "optional-session-id"
+}
+```
+
+</Step>
+
+<Step title="Map Fields">
+
+| Old Field     | New Field          | Required | Notes                          |
+|---------------|--------------------|----------|--------------------------------|
+| walletAddress | context.from       | Optional | Wallet that executes transactions |
+| chainIds      | context.chain_ids  | Optional | Array of chain IDs             |
+| session_id    | context.session_id | Optional | Now nested in context          |
+
+</Step>
+
+<Step title="Session Manangement">
+- Session ID is now optional and nested within the context object
+- If not provided, a new session will be created automatically
+- Sssions enable conversation continuity
+</Step>
+</Steps>
+
+### Example Migration Function
+
+```typescript
+function migrateToNewAPI(oldRequest) {
+  // Parse old context string  const contextString = oldRequest.context;  const contextData = parseContextString(contextString); // Implement this helper
+  return {
+    context: {
+      chain_ids: contextData.chainIds,
+      from: contextData.walletAddress,
+      session_id: oldRequest.session_id,
+    },
+    messages: [
+      {
+        role: "user",
+        content: oldRequest.message,
+      },
+    ],
+    stream: oldRequest.stream || false,
+  };
+}
+```
+
+### Test Migration
+
+1. Update your endpoint URL
+2. Transform your request payload structure
+3. Test with a simple message first
+4. Verify session continuity works as expected
+5. Test complex scenarios with multiple messages
