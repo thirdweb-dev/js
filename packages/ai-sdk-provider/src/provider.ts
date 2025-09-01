@@ -26,15 +26,24 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
 
   private config: ThirdwebConfig;
   private settings: ThirdwebSettings;
+  private sessionStore: SessionStore;
+  private chatId: string;
 
   constructor(
     modelId: string,
     settings: ThirdwebSettings,
     config: ThirdwebConfig,
+    sessionStore: SessionStore,
+    chatId?: string,
   ) {
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
+    this.sessionStore = sessionStore;
+    this.chatId = chatId || this.generateRandomChatId();
+    if (this.chatId && settings.context?.session_id) {
+      this.sessionStore.setSessionId(this.chatId, settings.context.session_id);
+    }
   }
 
   private getHeaders() {
@@ -59,6 +68,39 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
     }
 
     return headers;
+  }
+
+  private getSessionId() {
+    return this.sessionStore.getSessionId(this.chatId);
+  }
+
+  private setSessionId(sessionId: string) {
+    this.sessionStore.setSessionId(this.chatId, sessionId);
+  }
+
+  private generateRandomChatId(): string {
+    // Use crypto.randomUUID if available (modern browsers and Node.js 14.17+)
+    if (
+      typeof crypto !== "undefined" &&
+      typeof crypto.randomUUID === "function"
+    ) {
+      return crypto.randomUUID();
+    }
+
+    // Fallback for older environments - generate a random string
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+
+    // Generate timestamp prefix for uniqueness
+    const timestamp = Date.now().toString(36);
+
+    // Add random suffix
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    return `chat_${timestamp}_${result}`;
   }
 
   private convertMessages(prompt: LanguageModelV2CallOptions["prompt"]) {
@@ -122,14 +164,12 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
       .reverse()
       .find((m) => m.role === "user" || m.role === "tool");
     const messages =
-      this.settings.context?.session_id && lastUserMessage
-        ? [lastUserMessage]
-        : allMessages;
+      this.getSessionId() && lastUserMessage ? [lastUserMessage] : allMessages;
 
     const body = {
       messages,
       stream: false,
-      context: this.settings.context,
+      context: { ...this.settings.context, session_id: this.getSessionId() },
     };
 
     const response = await fetch(
@@ -187,14 +227,12 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
       .reverse()
       .find((m) => m.role === "user" || m.role === "tool");
     const messages =
-      this.settings.context?.session_id && lastUserMessage
-        ? [lastUserMessage]
-        : allMessages;
+      this.getSessionId() && lastUserMessage ? [lastUserMessage] : allMessages;
 
     const body = {
       messages,
       stream: true,
-      context: this.settings.context,
+      context: { ...this.settings.context, session_id: this.getSessionId() },
     };
 
     const response = await fetch(
@@ -220,6 +258,7 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
+    const self = this;
 
     return {
       stream: new ReadableStream<LanguageModelV2StreamPart>({
@@ -358,6 +397,7 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
                       if (currentEvent === "init") {
                         const parsed = JSON.parse(data);
                         if (parsed.session_id) {
+                          self.setSessionId(parsed.session_id);
                           controller.enqueue({
                             type: "response-metadata",
                             id: parsed.session_id || "",
@@ -498,13 +538,21 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
 
 export class ThirdwebProvider implements ProviderV2 {
   private config: ThirdwebConfig;
+  private session: SessionStore;
 
   constructor(config: ThirdwebConfig = {}) {
     this.config = config;
+    this.session = new SessionStore();
   }
 
-  chat(settings: ThirdwebSettings = {}) {
-    return new ThirdwebLanguageModel("t0-latest", settings, this.config);
+  chat(id?: string, settings: ThirdwebSettings = {}) {
+    return new ThirdwebLanguageModel(
+      "t0-latest",
+      settings,
+      this.config,
+      this.session,
+      id,
+    );
   }
 
   tools() {
@@ -512,7 +560,12 @@ export class ThirdwebProvider implements ProviderV2 {
   }
 
   languageModel(modelId: string, settings: ThirdwebSettings = {}) {
-    return new ThirdwebLanguageModel(modelId, settings, this.config);
+    return new ThirdwebLanguageModel(
+      modelId,
+      settings,
+      this.config,
+      this.session,
+    );
   }
 
   textEmbeddingModel(_modelId: string): EmbeddingModelV2<string> {
@@ -523,6 +576,22 @@ export class ThirdwebProvider implements ProviderV2 {
 
   imageModel(_modelId: string): ImageModelV2 {
     throw new Error("Image models are not supported by thirdweb AI yet");
+  }
+}
+
+class SessionStore {
+  private sessionId: Map<string, string> = new Map();
+
+  getSessionId(chatId: string) {
+    return this.sessionId.get(chatId) || null;
+  }
+
+  setSessionId(chatId: string, sessionId: string) {
+    this.sessionId.set(chatId, sessionId);
+  }
+
+  clearSessionId(chatId: string) {
+    this.sessionId.delete(chatId);
   }
 }
 

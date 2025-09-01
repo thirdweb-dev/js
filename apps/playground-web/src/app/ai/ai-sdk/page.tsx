@@ -29,7 +29,7 @@ export default function Page() {
         icon={BotIcon}
         title={title}
         description={description}
-        docsLink="https://portal.thirdweb.com/ai/chat?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/ai/chat/ai-sdk?utm_source=playground"
       >
         <ChatExample />
         <div className="h-8" />
@@ -69,12 +69,10 @@ const thirdwebAI = createThirdwebAI({
 });
 
 export async function POST(req: Request) {
-  const { messages, sessionId } = await req.json();
-
+  const { messages, id } = await req.json();
   const result = streamText({
-    model: thirdwebAI.chat({
+    model: thirdwebAI.chat(id, {
       context: {
-        session_id: sessionId, // session id for continuity
         chain_ids: [8453], // optional chain ids
         from: "0x...", // optional from address
         auto_execute_transactions: true, // optional, defaults to false
@@ -86,14 +84,6 @@ export async function POST(req: Request) {
 
   return result.toUIMessageStreamResponse({
     sendReasoning: true, // optional, to send reasoning steps to the client
-    messageMetadata({ part }) {
-      // record session id for continuity
-      if (part.type === "finish-step") {
-        return {
-          session_id: part.response.id,
-        };
-      }
-    },
   });
 }
 
@@ -122,33 +112,19 @@ import { useState } from 'react';
 import { ThirdwebAiMessage } from '@thirdweb-dev/ai-sdk-provider';
 
 export default function Page() {
-  const [sessionId, setSessionId] = useState('');
-  const { messages, sendMessage, status } = useChat<ThirdwebAiMessage>({
+  const { messages, sendMessage } = useChat<ThirdwebAiMessage>({
     transport: new DefaultChatTransport({
       // see server implementation below
       api: '/api/chat',
     }),
-    onFinish: ({ message }) => {
-      // record session id for continuity
-      setSessionId(message.metadata?.session_id ?? '');
-    },
   });
-
-  const send = (message: string) => {
-      sendMessage({ text: message }, {
-        body: {
-          // send session id for continuity
-          sessionId,
-        },
-      });
-  }
 
   return (
     <>
       {messages.map(message => (
         <RenderMessage message={message} />
       ))}
-      <ChatInputBox send={send} />
+      <ChatInputBox send={sendMessage} />
     </>
   );
 }`}
