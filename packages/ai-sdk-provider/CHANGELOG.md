@@ -1,5 +1,11 @@
 # @thirdweb-dev/ai-sdk-provider
 
+## 0.1.2
+
+### Patch Changes
+
+- [#7956](https://github.com/thirdweb-dev/js/pull/7956) [`6ef2f3b`](https://github.com/thirdweb-dev/js/commit/6ef2f3b37a0e66a737d26d6753d507baa9329d56) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Auto handle session ids
+
 ## 0.1.1
 
 ### Patch Changes
