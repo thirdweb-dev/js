@@ -24,8 +24,6 @@ Create a thirdweb ai provider instance and compatible with the Vercel AI SDK by 
 
 Then pass a `thirdwebAI.chat()` instance as the model for the `streamText` function and configure the model context with the `context` option.
 
-For continuous conversations, you can extract the session id from the response and send it back to the client by overriding the `messageMetadata` function as shown below.
-
 ```ts
 // src/app/api/chat/route.ts
 
@@ -40,12 +38,11 @@ const thirdwebAI = createThirdwebAI({
 });
 
 export async function POST(req: Request) {
-  const { messages, sessionId } = await req.json();
+  const { messages, id } = await req.json();
 
   const result = streamText({
-    model: thirdwebAI.chat({
+    model: thirdwebAI.chat(id, {
       context: {
-        session_id: sessionId, // session id for continuity
         chain_ids: [8453], // optional chain ids
         from: "0x...", // optional from address
         auto_execute_transactions: true, // optional, defaults to false
@@ -57,17 +54,11 @@ export async function POST(req: Request) {
 
   return result.toUIMessageStreamResponse({
     sendReasoning: true, // optional, to send reasoning steps to the client
-    messageMetadata({ part }) {
-      // record session id for continuity
-      if (part.type === "finish-step") {
-        return {
-          session_id: part.response.id,
-        };
-      }
-    },
   });
 }
 ```
+
+Continuous conversations are handled automatically. You can create a new conversation by passing a new `id` to the `thirdwebAI.chat()` function.
 
 #### Client side (React, using `useChat`)
 
@@ -77,45 +68,34 @@ Use `useChat<ThirdwebAiMessage>()` to get typed objects from `useChat()`. This w
 "use client";
 
 import { useState } from "react";
-import { useChat, DefaultChatTransport } from "@ai-sdk/react";
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { useChat, type UseChatHelpers } from "@ai-sdk/react";
 import type { ThirdwebAiMessage } from "@thirdweb-dev/ai-sdk-provider";
 
 export function Chat() {
-  const [sessionId, setSessionId] = useState("");
-
   const { messages, sendMessage, addToolResult, status } =
     useChat<ThirdwebAiMessage>({
       transport: new DefaultChatTransport({ api: "/api/chat" }),
-      onFinish: ({ message }) => {
-        // save session id for continuity
-        setSessionId(message.metadata?.session_id ?? "");
-      },
+      // send tool results automatically
+      sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls
     });
 
-    const send = (message: string) => {
-    sendMessage(
-      { text: message },
-      {
-        body: {
-          // send session id for continuity
-          sessionId,
-        },
-      },
-    );
-  };
-
   // You can render messages and reasoning steps as you normally would
-  // Use your own UI or the vercel ai sdk UI
+  // Use your own UI or the vercel ai elements UI components
   // When a tool part arrives (e.g., message.parts[0].type === "tool-sign_transaction"),
-  // you can render a thirdweb `TransactionButton` wired to the provided input to execute the transaction.
-  return return (
+  // you can render a transaction button with the input to execute the transaction.
+  return (
     <>
       {messages.map((message) => (
-        <RenderMessage message={message} />
+        <RenderMessage 
+          key={message.id}
+          message={message}
+          addToolResult={addToolResult}
+        />
       ))}
-      <ChatInputBox send={send} />
+      <ChatInputBox send={sendMessage} />
     </>
-  );;
+  );
 }
 ```
 
@@ -134,11 +114,9 @@ Then on result, you can call the `addToolResult` function to add the tool result
 ```tsx
 export function RenderMessage(props: {
   message: ThirdwebAiMessage;
-  sessionId: string;
-  addToolResult: (toolResult: ThirdwebAiMessage) => void;
-  sendMessage: (message: string) => void;
+  addToolResult: UseChatHelpers<ThirdwebAiMessage>["addToolResult"];
 }) {
-  const { message, sessionId, addToolResult, sendMessage } = props;
+  const { message, addToolResult } = props;
   return (
     <>
       {message.parts.map((part, i) => {
@@ -163,33 +141,19 @@ export function RenderMessage(props: {
                   })
                 }
                 onTransactionSent={(transaction) => {
-                  // add the tool result to the messages array
+                  // send the tool result to the model to continue the conversation
                   addToolResult({
                     tool: "sign_transaction",
-                    toolCallId,
+                    toolCallId: part.toolCallId,
                     output: {
                       transaction_hash: transaction.transactionHash,
                       chain_id: transaction.chain.id,
                     },
                   });
-                  // send the message to the model to continue the conversation
-                  sendMessage(undefined, {
-                    body: {
-                      // send session id for continuity
-                      sessionId,
-                    },
-                  });
                 }}
                 onError={(error) => {
-                  // in case of error, send the error message to the model
-                  sendMessage(
-                    { text: `Transaction failed: ${error.message}` },
-                    {
-                      body: {
-                        sessionId,
-                      },
-                    },
-                  );
+                  // in case of error, show error UI or send the error message to the model
+                 console.error(error);
                 }}
               >
                 Sign Transaction

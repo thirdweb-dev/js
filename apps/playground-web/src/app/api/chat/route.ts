@@ -11,27 +11,15 @@ const thirdwebAI = createThirdwebAI({
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { messages, sessionId }: { messages: UIMessage[]; sessionId: string } =
-    body;
+  const { messages, id }: { messages: UIMessage[]; id: string } = body;
 
   const result = streamText({
-    model: thirdwebAI.chat({
-      context: {
-        session_id: sessionId,
-      },
-    }),
+    model: thirdwebAI.chat(id),
     messages: convertToModelMessages(messages),
     tools: thirdwebAI.tools(),
   });
 
   return result.toUIMessageStreamResponse({
     sendReasoning: true,
-    messageMetadata({ part }) {
-      if (part.type === "finish-step") {
-        return {
-          session_id: part.response.id,
-        };
-      }
-    },
   });
 }

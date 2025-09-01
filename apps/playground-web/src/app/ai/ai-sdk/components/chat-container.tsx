@@ -1,8 +1,11 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
+import { type UseChatHelpers, useChat } from "@ai-sdk/react";
 import type { ThirdwebAiMessage } from "@thirdweb-dev/ai-sdk-provider";
-import { DefaultChatTransport } from "ai";
+import {
+  DefaultChatTransport,
+  lastAssistantMessageIsCompleteWithToolCalls,
+} from "ai";
 import { useMemo, useState } from "react";
 import { defineChain, prepareTransaction } from "thirdweb";
 import {
@@ -31,30 +34,19 @@ import { Loader } from "../../../../components/loader";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 
 export function ChatContainer() {
-  const [sessionId, setSessionId] = useState("");
-
   const { messages, sendMessage, status, addToolResult } =
     useChat<ThirdwebAiMessage>({
       transport: new DefaultChatTransport({
         api: "/api/chat",
       }),
-      onFinish: ({ message }) => {
-        setSessionId(message.metadata?.session_id ?? "");
-      },
+      sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     });
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim()) {
-      sendMessage(
-        { text: input },
-        {
-          body: {
-            sessionId,
-          },
-        },
-      );
+      sendMessage({ text: input });
       setInput("");
     }
   };
@@ -101,7 +93,6 @@ export function ChatContainer() {
                             addToolResult={addToolResult}
                             sendMessage={sendMessage}
                             toolCallId={part.toolCallId}
-                            sessionId={sessionId}
                           />
                         );
                       case "tool-sign_swap":
@@ -113,7 +104,6 @@ export function ChatContainer() {
                             addToolResult={addToolResult}
                             sendMessage={sendMessage}
                             toolCallId={part.toolCallId}
-                            sessionId={sessionId}
                           />
                         );
                       default:
@@ -158,14 +148,13 @@ type SignTransactionButtonProps = {
         { type: "tool-sign_transaction" }
       >["input"]
     | undefined;
-  addToolResult: ReturnType<typeof useChat<ThirdwebAiMessage>>["addToolResult"];
+  addToolResult: UseChatHelpers<ThirdwebAiMessage>["addToolResult"];
+  sendMessage: UseChatHelpers<ThirdwebAiMessage>["sendMessage"];
   toolCallId: string;
-  sendMessage: ReturnType<typeof useChat<ThirdwebAiMessage>>["sendMessage"];
-  sessionId: string;
 };
 
 const SignTransactionButton = (props: SignTransactionButtonProps) => {
-  const { input, addToolResult, toolCallId, sendMessage, sessionId } = props;
+  const { input, addToolResult, toolCallId, sendMessage } = props;
   const transactionData: {
     chain_id: number;
     to: string;
@@ -209,21 +198,9 @@ const SignTransactionButton = (props: SignTransactionButtonProps) => {
               chain_id: transaction.chain.id,
             },
           });
-          sendMessage(undefined, {
-            body: {
-              sessionId,
-            },
-          });
         }}
         onError={(error) => {
-          sendMessage(
-            { text: `Transaction failed: ${error.message}` },
-            {
-              body: {
-                sessionId,
-              },
-            },
-          );
+          sendMessage({ text: `Transaction failed: ${error.message}` });
         }}
       >
         Sign Transaction
@@ -241,13 +218,12 @@ type SignSwapButtonProps = {
         { type: "tool-sign_swap" }
       >["input"]
     | undefined;
-  addToolResult: ReturnType<typeof useChat<ThirdwebAiMessage>>["addToolResult"];
+  addToolResult: UseChatHelpers<ThirdwebAiMessage>["addToolResult"];
+  sendMessage: UseChatHelpers<ThirdwebAiMessage>["sendMessage"];
   toolCallId: string;
-  sendMessage: ReturnType<typeof useChat<ThirdwebAiMessage>>["sendMessage"];
-  sessionId: string;
 };
 const SignSwapButton = (props: SignSwapButtonProps) => {
-  const { input, addToolResult, toolCallId, sendMessage, sessionId } = props;
+  const { input, addToolResult, toolCallId, sendMessage } = props;
   const transactionData: {
     chain_id: number;
     to: string;
@@ -293,21 +269,9 @@ const SignSwapButton = (props: SignSwapButtonProps) => {
               chain_id: transaction.chain.id,
             },
           });
-          sendMessage(undefined, {
-            body: {
-              sessionId,
-            },
-          });
         }}
         onError={(error) => {
-          sendMessage(
-            { text: `Transaction failed: ${error.message}` },
-            {
-              body: {
-                sessionId,
-              },
-            },
-          );
+          sendMessage({ text: `Transaction failed: ${error.message}` });
         }}
       >
         Sign swap
