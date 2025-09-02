@@ -1,4 +1,6 @@
-import { UploadIcon } from "lucide-react";
+import { ArrowDownToLineIcon, UploadIcon } from "lucide-react";
+import Papa from "papaparse";
+import { handleDownload } from "@/components/blocks/download-file-button";
 import { FormFieldSetup } from "@/components/blocks/FormFieldSetup";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import type { SnapshotEntry } from "../../legacy-zod-schema";
 import { useClaimConditionsFormContext } from "../index";
 
 /**
@@ -118,10 +121,10 @@ export const ClaimerSelection = () => {
 
         {/* Edit or See Snapshot */}
         {snapshot ? (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
             {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
-              className="gap-2 rounded-md"
+              className="gap-2"
               disabled={disabledSnapshotButton}
               onClick={() => setOpenIndex(phaseIndex)}
               size="sm"
@@ -129,6 +132,21 @@ export const ClaimerSelection = () => {
               {isAdmin ? "Edit" : "See"} Claimer Snapshot
               <UploadIcon className="size-4" />
             </Button>
+
+            {snapshot && snapshot.length > 0 && (
+              <Button
+                className="gap-2 rounded bg-background"
+                variant="outline"
+                disabled={disabledSnapshotButton}
+                onClick={() => {
+                  downloadSnapshotAsCSV(snapshot);
+                }}
+                size="sm"
+              >
+                <ArrowDownToLineIcon className="size-4" />
+                Download
+              </Button>
+            )}
 
             <div
               className={cn(
@@ -151,3 +169,25 @@ export const ClaimerSelection = () => {
     </FormFieldSetup>
   );
 };
+
+function downloadSnapshotAsCSV(snapshot: SnapshotEntry[]) {
+  const csvData = snapshot.map((entry) => ({
+    address: entry.address,
+    maxClaimable:
+      entry.maxClaimable === "0" ? "" : entry.maxClaimable?.toString() || "",
+    price: entry.price?.toString() || "",
+    currencyAddress: entry.currencyAddress || "",
+  }));
+
+  const csvContent = Papa.unparse(csvData, {
+    header: true,
+    delimiter: ",",
+    quotes: false,
+  });
+
+  handleDownload({
+    fileContent: csvContent,
+    fileNameWithExtension: "snapshot.csv",
+    fileFormat: "text/csv",
+  });
+}
