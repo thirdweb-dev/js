@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.41
+
+### Patch Changes
+
+- [#7966](https://github.com/thirdweb-dev/js/pull/7966) [`af6a306`](https://github.com/thirdweb-dev/js/commit/af6a306955aaf6a76fc22e3f8fd4e78854680d9c) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `country` code option to payment widgets
+
 ## 5.105.40
 
 ### Patch Changes
