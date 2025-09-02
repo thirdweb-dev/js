@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "app.pluswallet",
-  name: "Plus Wallet",
-  homepage: "https://pluswallet.app",
-  image_id: "2c21491b-58ce-47bb-ace9-bdef71f43600",
+  id: "io.useglyph",
+  name: "Glyph Wallet",
+  homepage: "https://useglyph.io/",
+  image_id: "glyph.png",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/plus-wallet-app/id6467651848",
-    android: "https://play.google.com/store/apps/details?id=com.PlusWallet",
+    ios: null,
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -19,10 +19,10 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "io.useglyph",
   mobile: {
-    native: "pluswallet://",
-    universal: "https://pluswallet.app",
+    native: null,
+    universal: null,
   },
   desktop: {
     native: null,

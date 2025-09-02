@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.walletconnect.com",
-  name: "Sample",
-  homepage: "https://walletconnect.com",
-  image_id: "171f0822-acf5-4eba-4392-a2d16db90400",
+  id: "org.dailychain.wallet",
+  name: "Daily Wallet",
+  homepage: "https://wallet.dailychain.org",
+  image_id: "8b54bbc5-5d39-4251-9b69-cde070bbd000",
   app: {
     browser: null,
     ios: null,
-    android: null,
+    android: "https://play.google.com/store/apps/details?id=com.wallet.daily",
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://cloud.walletconnect.com",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.walletconnect.com",
+  rdns: null,
   mobile: {
-    native: null,
-    universal: null,
+    native: "dailywallet://",
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

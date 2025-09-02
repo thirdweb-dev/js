@@ -2,15 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.purechain",
-  name: "PureWallet",
-  homepage: "https://purechain.com",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
+  id: "io.prettygood.x",
+  name: "PrettyGood Keyboard",
+  homepage: "https://x.prettygood.io/",
+  image_id: "ae26de70-87f2-4dea-d5ce-dcdb1a442400",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
-    android:
-      "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
+    ios: null,
+    android: "https://play.google.com/store/apps/details?id=com.pgk.keyboard",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
+    native: "pgk://wallet",
+    universal: "https://x.prettygood.io/wallet",
   },
   desktop: {
     native: "",

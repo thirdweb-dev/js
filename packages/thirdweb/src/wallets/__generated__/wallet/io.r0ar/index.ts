@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.purechain",
-  name: "PureWallet",
-  homepage: "https://purechain.com",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
+  id: "io.r0ar",
+  name: "r0ar platform",
+  homepage: "https://r0ar.io",
+  image_id: "c29756b6-3a78-4af2-e2d1-ab743fe30e00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
+    ios: "https://apps.apple.com/br/app/r0ar-wallet",
     android:
-      "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
+      "https://play.google.com/store/apps/details?id=com.roar_wallet&pcampaignid=web_share",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
+    native: "Roarwallet://",
+    universal: "",
   },
   desktop: {
     native: "",

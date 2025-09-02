@@ -2,27 +2,27 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.walletconnect.com",
-  name: "Sample",
-  homepage: "https://walletconnect.com",
-  image_id: "171f0822-acf5-4eba-4392-a2d16db90400",
+  id: "com.example.subdomain",
+  name: "Key3",
+  homepage: "https://key3.ai",
+  image_id: "76bda797-d3e7-4dfe-ccf2-a940c5e8a700",
   app: {
     browser: null,
-    ios: null,
+    ios: "https://apps.apple.com/us/app/key3-crypto-wallet-keyboard/id6742847091",
     android: null,
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://cloud.walletconnect.com",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.walletconnect.com",
+  rdns: "com.example.subdomain",
   mobile: {
-    native: null,
-    universal: null,
+    native: "walletapp://",
+    universal: "https://www.key3.ai/",
   },
   desktop: {
     native: null,

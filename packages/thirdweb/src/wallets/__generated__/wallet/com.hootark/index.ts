@@ -2,30 +2,31 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.walletconnect.com",
-  name: "Sample",
-  homepage: "https://walletconnect.com",
-  image_id: "171f0822-acf5-4eba-4392-a2d16db90400",
+  id: "com.hootark",
+  name: "HootArk",
+  homepage: "https://www.hootark.com/",
+  image_id: "c5f74b15-89cc-4f1f-8387-d3ffeb7a3400",
   app: {
     browser: null,
     ios: null,
-    android: null,
+    android:
+      "https://play.google.com/store/apps/details?id=com.bose.meta.browser",
     mac: null,
     windows: null,
     linux: null,
-    chrome: "https://cloud.walletconnect.com",
+    chrome: null,
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: "com.walletconnect.com",
+  rdns: null,
   mobile: {
-    native: null,
-    universal: null,
+    native: "HootArk://",
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -3,16 +3,16 @@
 
 export const wallet = {
   id: "app.imem",
-  name: "iMe",
+  name: "iMe Messenger & Crypto Wallet ",
   homepage: "https://imem.app/",
-  image_id: "25aa3abf-901b-4d82-bb89-c5ade54c0c00",
+  image_id: "1ba9d09a-f247-40a7-58d4-85a92db5f200",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/ime-messenger/id1450480822",
-    android: "https://play.google.com/store/apps/details?id=com.iMe.android",
-    mac: "",
-    windows: null,
-    linux: null,
+    android: "https://play.google.com/store/apps/details?id=com.iMe.android&hl",
+    mac: "https://imem.app/desktop",
+    windows: "https://imem.app/desktop",
+    linux: "https://imem.app/desktop",
     chrome: null,
     firefox: null,
     safari: null,
@@ -21,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "wc://",
-    universal: null,
+    native: null,
+    universal: "https://imem.app/download",
   },
   desktop: {
     native: null,

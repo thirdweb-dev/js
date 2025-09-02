@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://ecoinwallet.org/link",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;
