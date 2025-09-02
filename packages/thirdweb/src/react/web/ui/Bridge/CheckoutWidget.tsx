@@ -194,6 +194,11 @@ export type CheckoutWidgetProps = {
   currency?: SupportedFiatCurrency;
 
   /**
+   * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+   */
+  country?: string;
+
+  /**
    * Custom label for the main action button.
    */
   buttonLabel?: string;
@@ -400,6 +405,7 @@ export function CheckoutWidget(props: CheckoutWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        country={props.country}
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}

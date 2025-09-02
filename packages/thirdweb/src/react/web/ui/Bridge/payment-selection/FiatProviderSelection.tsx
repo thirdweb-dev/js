@@ -28,6 +28,7 @@ interface FiatProviderSelectionProps {
   toAddress: string;
   toAmount?: string;
   currency?: SupportedFiatCurrency;
+  country: string | undefined;
 }
 
 const PROVIDERS = [
@@ -59,6 +60,7 @@ export function FiatProviderSelection({
   toAddress,
   toAmount,
   currency,
+  country,
 }: FiatProviderSelectionProps) {
   const theme = useCustomTheme();
 
@@ -70,6 +72,7 @@ export function FiatProviderSelection({
     currency: currency || "USD",
     receiver: checksumAddress(toAddress),
     tokenAddress: checksumAddress(toTokenAddress),
+    country,
   });
 
   const quotes = useMemo(() => {
