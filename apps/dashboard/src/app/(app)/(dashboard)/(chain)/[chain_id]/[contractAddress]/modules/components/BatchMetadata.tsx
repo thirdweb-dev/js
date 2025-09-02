@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction, type ThirdwebClient } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { BatchMetadataERC721, BatchMetadataERC1155 } from "thirdweb/modules";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { parseAttributes } from "@/utils/parseAttributes";
 import { fileBufferOrStringSchema } from "../zod-schemas";
@@ -63,7 +64,7 @@ export type UploadMetadataFormValues = z.infer<typeof uploadMetadataFormSchema>;
 
 function BatchMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const uploadMetadata = useCallback(
     async (values: UploadMetadataFormValues) => {
       if (!ownerAccount) {
@@ -80,12 +81,14 @@ function BatchMetadataModule(props: ModuleInstanceProps) {
         metadatas: [nft],
       });
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: uploadMetadataTx,
-      });
+      await sendAndConfirmTx.mutateAsync(uploadMetadataTx);
     },
-    [contract, ownerAccount, props.contractInfo.name],
+    [
+      contract,
+      ownerAccount,
+      props.contractInfo.name,
+      sendAndConfirmTx.mutateAsync,
+    ],
   );
 
   return (

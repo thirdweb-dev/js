@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { CircleAlertIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { sendAndConfirmTransaction, type ThirdwebClient } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { OpenEditionMetadataERC721 } from "thirdweb/modules";
 import { z } from "zod";
 import { TransactionButton } from "@/components/tx-button";
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { ModuleCardUI, type ModuleCardUIProps } from "./module-card";
 import type { ModuleInstanceProps } from "./module-instance";
@@ -42,7 +43,7 @@ export type SetSharedMetadataFormValues = z.infer<
 
 function OpenEditionMetadataModule(props: ModuleInstanceProps) {
   const { contract, ownerAccount } = props;
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const setSharedMetadata = useCallback(
     async (values: SetSharedMetadataFormValues) => {
       if (!ownerAccount) {
@@ -59,12 +60,9 @@ function OpenEditionMetadataModule(props: ModuleInstanceProps) {
         },
       });
 
-      await sendAndConfirmTransaction({
-        account: ownerAccount,
-        transaction: setSharedMetadataTx,
-      });
+      await sendAndConfirmTx.mutateAsync(setSharedMetadataTx);
     },
-    [contract, ownerAccount],
+    [contract, ownerAccount, sendAndConfirmTx.mutateAsync],
   );
 
   return (

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
+import { getUniversalBridgeTokens } from "@/api/universal-bridge/token-list";
 
 export function useTokensData({
   chainId,

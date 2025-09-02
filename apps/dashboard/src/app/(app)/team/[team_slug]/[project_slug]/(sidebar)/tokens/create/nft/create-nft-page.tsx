@@ -1,11 +1,6 @@
 "use client";
 import { useRef } from "react";
-import {
-  encode,
-  getContract,
-  sendAndConfirmTransaction,
-  type ThirdwebClient,
-} from "thirdweb";
+import { encode, getContract, type ThirdwebClient } from "thirdweb";
 import { deployERC721Contract, deployERC1155Contract } from "thirdweb/deploys";
 import { multicall } from "thirdweb/extensions/common";
 import {
@@ -26,6 +21,7 @@ import { reportContractDeployed } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
 import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useAddContractToProject } from "@/hooks/project-contracts";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import type { CreateNFTCollectionAllValues } from "./_common/form";
 import { CreateNFTPageUI } from "./create-nft-page-ui";
 
@@ -42,7 +38,7 @@ export function CreateNFTPage(props: {
   const addContractToProject = useAddContractToProject();
   const contractAddressRef = useRef<string | undefined>(undefined);
   const getChain = useGetV5DashboardChain();
-
+  const sendAndConfirmTx = useSendAndConfirmTx();
   function getAccount(params: { gasless: boolean }) {
     if (!activeAccount) {
       throw new Error("Wallet is not connected");
@@ -163,10 +159,10 @@ export function CreateNFTPage(props: {
     const contract = getDeployedContract({
       chain: values.collectionInfo.chain,
     });
-
-    const account = getAccount({
-      gasless: params.gasless,
-    });
+    // TODO - when gasless is enabled - change how the tx is sent
+    // const account = getAccount({
+    //   gasless: params.gasless,
+    // });
 
     const lazyMintFn = ercType === "erc721" ? lazyMint721 : lazyMint1155;
 
@@ -175,10 +171,7 @@ export function CreateNFTPage(props: {
       nfts: values.nfts,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction,
-    });
+    await sendAndConfirmTx.mutateAsync(transaction);
   }
 
   async function handleSetClaimConditionsERC721(params: {
@@ -189,10 +182,10 @@ export function CreateNFTPage(props: {
     const contract = getDeployedContract({
       chain: values.collectionInfo.chain,
     });
-
-    const account = getAccount({
-      gasless: params.gasless,
-    });
+    // TODO - when gasless is enabled - change how the tx is sent
+    // const account = getAccount({
+    //   gasless: params.gasless,
+    // });
 
     const firstNFT = values.nfts[0];
     if (!firstNFT) {
@@ -215,10 +208,7 @@ export function CreateNFTPage(props: {
       ],
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction,
-    });
+    await sendAndConfirmTx.mutateAsync(transaction);
   }
 
   async function handleSetClaimConditionsERC1155(params: {
@@ -234,9 +224,10 @@ export function CreateNFTPage(props: {
       chain: values.collectionInfo.chain,
     });
 
-    const account = getAccount({
-      gasless: params.gasless,
-    });
+    // TODO - when gasless is enabled - change how the tx is sent
+    // const account = getAccount({
+    //   gasless: params.gasless,
+    // });
 
     const endIndexExclusive = batch.startIndex + batch.count;
     const nfts = values.nfts.slice(batch.startIndex, endIndexExclusive);
@@ -286,10 +277,7 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: tx,
-    });
+    await sendAndConfirmTx.mutateAsync(tx);
   }
 
   async function handleSetAdmins(params: {
@@ -331,10 +319,7 @@ export function CreateNFTPage(props: {
       data: encodedTxs,
     });
 
-    await sendAndConfirmTransaction({
-      account,
-      transaction: tx,
-    });
+    await sendAndConfirmTx.mutateAsync(tx);
   }
 
   return (

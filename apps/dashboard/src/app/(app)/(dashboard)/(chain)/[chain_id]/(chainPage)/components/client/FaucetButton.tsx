@@ -17,7 +17,6 @@ import type { Chain, ChainMetadata } from "thirdweb/chains";
 import {
   useActiveAccount,
   useActiveWalletChain,
-  useSendTransaction,
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
@@ -48,6 +47,7 @@ import {
   NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
   NEXT_PUBLIC_TURNSTILE_SITE_KEY,
 } from "@/constants/public-envs";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { parseError } from "@/utils/errorParser";
 import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 
@@ -310,7 +310,7 @@ function SendFundsToFaucetModalContent(props: {
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
   const switchActiveWalletChain = useSwitchActiveWalletChain();
-  const sendTxMutation = useSendTransaction({
+  const sendAndConfirmTx = useSendAndConfirmTx({
     payModal: false,
   });
   const switchChainMutation = useMutation({
@@ -334,7 +334,7 @@ function SendFundsToFaucetModalContent(props: {
       value: toWei(values.amount.toString()),
     });
 
-    const promise = sendTxMutation.mutateAsync(sendNativeTokenTx);
+    const promise = sendAndConfirmTx.mutateAsync(sendNativeTokenTx);
 
     toast.promise(promise, {
       error: `Failed to send ${values.amount} ${props.chainMeta.nativeCurrency.symbol} to faucet`,
@@ -404,11 +404,11 @@ function SendFundsToFaucetModalContent(props: {
             {activeChain.id === props.chain.id ? (
               <Button
                 className="mt-4 w-full gap-2"
-                disabled={sendTxMutation.isPending}
+                disabled={sendAndConfirmTx.isPending}
                 key="submit"
                 type="submit"
               >
-                {sendTxMutation.isPending && <Spinner className="size-4" />}
+                {sendAndConfirmTx.isPending && <Spinner className="size-4" />}
                 Send funds to faucet
               </Button>
             ) : (

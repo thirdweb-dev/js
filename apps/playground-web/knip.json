@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": ["src/components/ui/**", "src/app/insight/utils.ts"],
+  "ignore": ["src/components/**", "src/app/insight/utils.ts"],
   "ignoreDependencies": [
     "server-only",
     "@workspace/ui",
@@ -9,7 +9,8 @@
     "prettier",
     "react-children-utilities",
     "react-markdown",
-    "remark-gfm"
+    "remark-gfm",
+    "@thirdweb-dev/ai-sdk-provider"
   ],
   "next": true,
   "project": ["src/**"]

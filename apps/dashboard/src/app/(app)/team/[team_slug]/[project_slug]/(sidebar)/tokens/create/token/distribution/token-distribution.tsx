@@ -50,6 +50,7 @@ export function TokenDistributionFieldset(props: {
             onClick: props.onPrevious,
           }}
           title="Coin Distribution"
+          errorMessage={distributionError}
         >
           <div>
             <div className="p-4 md:px-6 md:py-6">
@@ -60,13 +61,19 @@ export function TokenDistributionFieldset(props: {
                 isRequired
                 label="Total Supply"
               >
-                <div className="relative max-w-96">
+                <div className="relative lg:max-w-xs">
                   <Input id={supplyId} {...form.register("supply")} />
                   <span className="-translate-y-1/2 absolute top-1/2 right-3 text-muted-foreground text-sm">
                     {props.tokenSymbol || "Tokens"}
                   </span>
                 </div>
               </FormFieldSetup>
+
+              <div className="h-6" />
+
+              <TokenDistributionBarChart
+                distributionFormValues={form.watch()}
+              />
             </div>
 
             {form.watch("saleMode") === "drop-erc20:token-drop" ? (
@@ -85,18 +92,6 @@ export function TokenDistributionFieldset(props: {
             )}
 
             <TokenAirdropSection client={props.client} form={form} />
-
-            <div className="flex flex-col gap-3 p-4 py-8 md:px-6 border-t border-dashed">
-              <TokenDistributionBarChart
-                distributionFormValues={form.watch()}
-              />
-
-              {distributionError && (
-                <div className="text-destructive-text text-sm">
-                  {distributionError}
-                </div>
-              )}
-            </div>
           </div>
         </StepCard>
       </form>
@@ -125,7 +120,7 @@ function getDistributionError(form: TokenDistributionForm) {
   const totalSumOfSupply = totalAirdrop + saleSupply + ownerSupply;
 
   if (totalSumOfSupply > supply) {
-    return "Token distribution exceeds total supply";
+    return "Token allocation exceeds total supply";
   }
 
   return undefined;

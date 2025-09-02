@@ -21,6 +21,23 @@ For any already deployed contracts, you can use the thirdweb dashboard to import
 
 </Details>
 
+<Details summary="Does it cost money to deploy contracts on thirdweb?">
+Only thirdweb pre-built contracts have mint fees or fees taken on primary sales for the following contracts which have a primary recipient field:
+
+- Drop Contracts: DropERC20, DropERC721, DropERC1155, OpenEdition
+- Token Contracts: TokenERC20, TokenERC721, TokenERC1155
+- Specialized Contracts: , LoyaltyCard, BurnToClaim, MarketplaceV3
+
+There is a 2% convenience fee for deploying from the dashboard and a 0.5% protocol fee that is integrated into the contract. 
+
+The 2.5% fee will be automatically deducted from primary sales executed through these contracts. For example, an asset listed at 0.1 ETH will distribute 0.0975 ETH to the seller and 0.0025 ETH to the platform.
+
+The fee applies only to prebuilt contracts deployed via the thirdweb dashboard. Custom contracts or externally deployed contracts are not subject to fees. 
+
+The fee is charged from the primary sale, including a claim or mint action when there is a price on the NFT (non-zero). The fee is paid in the same currency as the claiming or minting price.
+
+</Details>
+
 <Details summary="Are thirdweb contracts audited?">
 Yes, thirdweb pre-built contracts are audited by third-party security firms. You can see the attached
 audit reports for each contract linked on the contract page on Explore. 

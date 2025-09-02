@@ -7,5 +7,8 @@ export type Token = {
   symbol: string;
   name: string;
   iconUri?: string;
+};
+
+export type TokenWithPrices = Token & {
   prices: Record<string, number>;
 };

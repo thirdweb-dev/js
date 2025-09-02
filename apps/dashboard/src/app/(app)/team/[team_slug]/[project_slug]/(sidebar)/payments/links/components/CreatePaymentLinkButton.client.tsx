@@ -11,7 +11,7 @@ import { checksumAddress } from "thirdweb/utils";
 import z from "zod";
 import { reportPaymentLinkCreated } from "@/analytics/report";
 import { createPaymentLink } from "@/api/universal-bridge/developer";
-import { getUniversalBridgeTokens } from "@/api/universal-bridge/tokens";
+import { getUniversalBridgeTokens } from "@/api/universal-bridge/token-list";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { Button } from "@/components/ui/button";

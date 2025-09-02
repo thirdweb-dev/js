@@ -6,11 +6,8 @@ import {
   getDefaultRoyaltyInfo,
   setDefaultRoyaltyInfo,
 } from "thirdweb/extensions/common";
-import {
-  useActiveAccount,
-  useReadContract,
-  useSendAndConfirmTransaction,
-} from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
+
 import { z } from "zod";
 import { BasisPointsInput } from "@/components/blocks/BasisPointsInput";
 import { AdminOnly } from "@/components/contracts/roles/admin-only";
@@ -25,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { AddressOrEnsSchema, BasisPointsSchema } from "@/schema/schemas";
 import type { ExtensionDetectedState } from "@/types/ExtensionDetectedState";
@@ -70,7 +68,7 @@ export function SettingsRoyalties({
   const royaltyInfo = query.data
     ? { fee_recipient: query.data[0], seller_fee_basis_points: query.data[1] }
     : undefined;
-  const mutation = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const form = useForm<z.input<typeof CommonRoyaltySchema>>({
     defaultValues: royaltyInfo,
     resolver: zodResolver(CommonRoyaltySchema),
@@ -96,7 +94,7 @@ export function SettingsRoyalties({
               royaltyBps: BigInt(d.seller_fee_basis_points),
               royaltyRecipient: d.fee_recipient,
             });
-            mutation.mutate(transaction, {
+            sendAndConfirmTx.mutate(transaction, {
               onError: (error) => {
                 console.error(error);
                 onError(error);
@@ -174,7 +172,7 @@ export function SettingsRoyalties({
                 variant="default"
                 disabled={query.isPending || !form.formState.isDirty}
                 isLoggedIn={isLoggedIn}
-                isPending={mutation.isPending}
+                isPending={sendAndConfirmTx.isPending}
                 transactionCount={undefined}
                 txChainID={contract.chain.id}
                 type="submit"

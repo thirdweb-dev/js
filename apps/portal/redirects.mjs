@@ -865,6 +865,11 @@ const infrastructureRedirects = {
   "/storage/how-storage-works": "/infrastructure/storage/how-storage-works",
   "/storage/upload-to-ipfs":
     "/infrastructure/storage/how-to-use-storage/upload-files-to-ipfs",
+  // infrastructure redirects to external portal
+  "/infrastructure/storage/:path*":
+    "https://portal.thirdweb.com/references/typescript/v5/functions#storage",
+  "/infrastructure/rpc-edge/:path*":
+    "https://portal.thirdweb.com/references/typescript/v5/functions#rpc",
 };
 
 const glossaryRedirects = {

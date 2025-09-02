@@ -5,9 +5,9 @@ import type { ThirdwebContract } from "thirdweb";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { TransactionButton } from "@/components/tx-button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 
 export function ResetClaimEligibility({
@@ -23,7 +23,7 @@ export function ResetClaimEligibility({
   isLoggedIn: boolean;
   isMultiphase: boolean;
 }) {
-  const sendTxMutation = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
 
   const txNotification = useTxNotifications(
     "Successfully reset claim eligibility",
@@ -52,7 +52,7 @@ export function ResetClaimEligibility({
       }
     })();
 
-    sendTxMutation.mutate(tx, {
+    sendAndConfirmTx.mutate(tx, {
       onError: (error) => {
         txNotification.onError(error);
       },
@@ -70,7 +70,7 @@ export function ResetClaimEligibility({
     <TransactionButton
       client={contract.client}
       isLoggedIn={isLoggedIn}
-      isPending={sendTxMutation.isPending}
+      isPending={sendAndConfirmTx.isPending}
       onClick={handleResetClaimEligibility}
       size="sm"
       variant="outline"
@@ -79,7 +79,7 @@ export function ResetClaimEligibility({
       type="button"
       className="text-destructive-text bg-card"
     >
-      {sendTxMutation.isPending ? (
+      {sendAndConfirmTx.isPending ? (
         "Resetting Eligibility"
       ) : (
         <div className="flex items-center gap-2">

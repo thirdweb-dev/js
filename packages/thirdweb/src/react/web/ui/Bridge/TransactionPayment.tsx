@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import type { Token } from "../../../../bridge/index.js";
+import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import {
@@ -46,7 +46,11 @@ export interface TransactionPaymentProps {
   /**
    * Called when user confirms transaction execution
    */
-  onContinue: (amount: string, token: Token, receiverAddress: Address) => void;
+  onContinue: (
+    amount: string,
+    token: TokenWithPrices,
+    receiverAddress: Address,
+  ) => void;
 
   /**
    * Request to execute the transaction immediately (skips funding flow)

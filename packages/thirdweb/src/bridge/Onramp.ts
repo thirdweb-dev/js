@@ -7,7 +7,7 @@ import { getClientFetch } from "../utils/fetch.js";
 import { stringify } from "../utils/json.js";
 import { ApiError } from "./types/Errors.js";
 import type { RouteStep } from "./types/Route.js";
-import type { Token } from "./types/Token.js";
+import type { TokenWithPrices } from "./types/Token.js";
 
 // export status within the Onramp module
 export { status } from "./OnrampStatus.js";
@@ -33,7 +33,7 @@ type OnrampPrepareQuoteResponseData = {
   currency: string;
   currencyAmount: number;
   destinationAmount: bigint;
-  destinationToken: Token;
+  destinationToken: TokenWithPrices;
   timestamp?: number;
   expiration?: number;
   steps: RouteStep[];

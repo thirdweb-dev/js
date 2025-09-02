@@ -55,7 +55,7 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
   );
 };
 
-function TabName(props: {
+export function TabName(props: {
   name: string;
   icon: React.FC<{ className: string }>;
 }) {

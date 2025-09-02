@@ -13,8 +13,8 @@ import {
 import type { BaseTransactionOptions } from "../../../../../../transaction/types.js";
 import { useReadContract } from "../../../../../core/hooks/contract/useReadContract.js";
 import type { TransactionButtonProps } from "../../../../../core/hooks/transaction/transaction-button-utils.js";
-import { useSendAndConfirmTransaction } from "../../../../../core/hooks/transaction/useSendAndConfirmTransaction.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useSendAndConfirmTransaction } from "../../../../hooks/transaction/useSendAndConfirmTransaction.js";
 import { TransactionButton } from "../../../TransactionButton/index.js";
 
 export type CreateDirectListingButtonProps = Omit<
@@ -88,7 +88,15 @@ export function CreateDirectListingButton(
     },
     tokenId,
   });
-  const { mutateAsync } = useSendAndConfirmTransaction();
+  const { mutateAsync } = useSendAndConfirmTransaction({
+    payModal:
+      typeof payModal === "object"
+        ? {
+            ...payModal,
+            metadata: payModal.metadata || payMetadata,
+          }
+        : payModal,
+  });
 
   const prepareTransaction = useCallback(async () => {
     if (!account) {

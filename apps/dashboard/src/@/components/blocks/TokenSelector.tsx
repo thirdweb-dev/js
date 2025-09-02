@@ -5,7 +5,7 @@ import {
   type ThirdwebClient,
 } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
-import type { TokenMetadata } from "@/api/universal-bridge/tokens";
+import type { TokenMetadata } from "@/api/universal-bridge/types";
 import { Img } from "@/components/blocks/Img";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";

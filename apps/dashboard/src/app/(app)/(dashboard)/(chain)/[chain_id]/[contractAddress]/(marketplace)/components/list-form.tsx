@@ -28,7 +28,7 @@ import type {
   CreateListingParams,
 } from "thirdweb/extensions/marketplace";
 import { createAuction, createListing } from "thirdweb/extensions/marketplace";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { shortenAddress } from "thirdweb/utils";
 import { CurrencySelector } from "@/components/blocks/CurrencySelector";
 import { NFTMediaWithEmptyState } from "@/components/blocks/nft-media";
@@ -54,6 +54,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useDashboardOwnedNFTs } from "@/hooks/useDashboardOwnedNFTs";
+import { useSendAndConfirmTx } from "@/hooks/useSendTx";
 import { useTxNotifications } from "@/hooks/useTxNotifications";
 import { useOwnedNFTsInsight } from "@/hooks/useWalletNFTs";
 import { cn } from "@/lib/utils";
@@ -122,7 +123,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     chain: contract.chain,
   });
 
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTx();
   const listingNotifications = useTxNotifications(
     "NFT listed Successfully",
     "Failed to list NFT",

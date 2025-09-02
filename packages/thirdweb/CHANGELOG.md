@@ -1,5 +1,27 @@
 # thirdweb
 
+## 5.105.40
+
+### Patch Changes
+
+- [#7946](https://github.com/thirdweb-dev/js/pull/7946) [`597431e`](https://github.com/thirdweb-dev/js/commit/597431ec1dc7b6a8b52b6676256e77d96b9a16b1) Thanks [@MananTank](https://github.com/MananTank)! - Add Pay Modal integration in `useSendAndConfirmTransaction` hook similar to `useSendTransaction` hook
+
+## 5.105.39
+
+### Patch Changes
+
+- [#7942](https://github.com/thirdweb-dev/js/pull/7942) [`50c6371`](https://github.com/thirdweb-dev/js/commit/50c6371e1ec12e296839987a6c25d9814dea2208) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to exclude prices from Bridge.tokens
+
+## 5.105.38
+
+### Patch Changes
+
+- [#7936](https://github.com/thirdweb-dev/js/pull/7936) [`76cfecb`](https://github.com/thirdweb-dev/js/commit/76cfecb3054c03d952980a38842607300824a3bd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates copy on the payment widgets
+
+- [#7937](https://github.com/thirdweb-dev/js/pull/7937) [`44e6e11`](https://github.com/thirdweb-dev/js/commit/44e6e115d9519dd75ae9efa20c8be069fee067ea) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Allows using the checkout widget without a wallet connected
+
+- [#7922](https://github.com/thirdweb-dev/js/pull/7922) [`f3ad6ef`](https://github.com/thirdweb-dev/js/commit/f3ad6efcf829e23435c4e2859809a74be877809d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle already connected wallets in 1193 provider
+
 ## 5.105.37
 
 ### Patch Changes
