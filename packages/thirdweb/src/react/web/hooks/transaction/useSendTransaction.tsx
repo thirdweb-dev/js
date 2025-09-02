@@ -111,6 +111,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     if (payModal === false) return;
     setRootEl(
       <TransactionModal
+        country={payModal?.country}
         client={data.tx.client}
         localeId={payModal?.locale || "en_US"}
         modalMode={data.mode}

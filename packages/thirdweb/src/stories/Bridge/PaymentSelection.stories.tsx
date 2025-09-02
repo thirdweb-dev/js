@@ -32,6 +32,7 @@ const meta = {
     onError: (error) => console.error("Error:", error),
     onPaymentMethodSelected: (_paymentMethod) => {},
     theme: "dark",
+    country: "US",
   },
   argTypes: {
     connectLocale: {

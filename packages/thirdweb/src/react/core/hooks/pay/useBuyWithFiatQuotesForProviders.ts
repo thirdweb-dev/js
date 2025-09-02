@@ -33,6 +33,10 @@ type UseBuyWithFiatQuotesForProvidersParams = {
    * The fiat currency (e.g., "USD"). Defaults to "USD".
    */
   currency?: string;
+  /**
+   * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+   */
+  country?: string;
 };
 
 /**
@@ -89,6 +93,7 @@ export function useBuyWithFiatQuotesForProviders(
           onramp: provider,
           receiver: params.receiver,
           tokenAddress: params.tokenAddress,
+          country: params.country,
         });
       },
       queryKey: ["onramp-prepare", provider, params],
