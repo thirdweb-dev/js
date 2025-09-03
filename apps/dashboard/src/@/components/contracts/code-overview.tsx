@@ -361,7 +361,7 @@ const data = await response.json();`,
     read: `curl https://api.thirdweb.com/v1/contracts/read \\
   --request POST \\
   --header 'Content-Type: application/json' \\
-  --header 'x-client-id: <YOUR_CLIENT_ID>' \\
+  --header 'x-secret-key: <YOUR_SECRET_KEY>' \\
   --data '{
   "calls": [
     {
