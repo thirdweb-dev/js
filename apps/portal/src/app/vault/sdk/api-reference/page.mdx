@@ -1,130 +1,270 @@
-# API Reference
+import {
+  createVaultClient,
+  ping,
+  createEoa,
+  listEoas,
+  parseTransaction,
+  signTransaction,
+  createAccessToken,
+} from "@thirdweb-dev/vault-sdk";
+import "dotenv/config";
 
-This section lists every exported function from **@thirdweb-dev/vault-sdk** grouped by broad capability. All functions are fully typed – hover in your editor for exact type information.
+// --- CONFIGURACIÓN ---
 
----
+const SECRET_KEY = process.env.VAULT_SECRET_KEY!;
+const SIG_TOKEN = process.env.VAULT_SIG_TOKEN!;
+const BASE_TOKEN = process.env.VAULT_BASE_TOKEN!;
 
-## 1. Client utilities
+const TARGET_ADDRESS = "0x6561fF4034De957fAFeA20b3aCC5E6E9FEb21aCE";
 
-| Function | Description |
-| --- | --- |
-| `createVaultClient({ secretKey })` | Uses your project secret key to establish a connection to your Vault instance and returns a `VaultClient`. Create **one** client per Vault instance and reuse it. |
-| `ping({ client, request })` | Health-check endpoint mainly used in examples and tests. Returns the current server time. |
+async function main() {
+  // 1. Crear cliente del Vault
+  const client = await createVaultClient({ secretKey: SECRET_KEY });
 
-```ts
-const client = await createVaultClient({ secretKey: "PROJECT_SECRET_KEY" });
-await ping({ client, request: { message: "pong?" } });
-```
+  // 2. Hacer ping al Vault (opcional)
+  const pingResult = await ping({ client, request: { message: "pong?" } });
+  console.log("Ping response:", pingResult);
 
----
+  // 3. Crear un EOA con metadata que incluya la dirección
+  const eoa = await createEoa({
+    client,
+    request: {
+      metadata: {
+        label: "Wallet externa",
+        externalAddress: TARGET_ADDRESS,
+      },
+    },
+  });
+  console.log("Nuevo EOA creado (metadatos):", eoa);
 
-## 2. Service Accounts
+  // 4. Crear una transacción ficticia desde la dirección
+  const tx = parseTransaction({
+    to: "0xAbC123456789abcdef123456789abcdef1234567", // dirección de destino ficticia
+    value: 0n,
+    chainId: 1,
+    maxFeePerGas: 30n * 10n ** 9n,
+    maxPriorityFeePerGas: 1n * 10n ** 9n,
+    gasLimit: 21_000,
+  });
 
-| Function | When to use |
-| --- | --- |
-| `createServiceAccount({ request })` | Bootstrap a brand-new Vault. Returns the **admin key** and **rotation code**. _Run once during provisioning_. |
-| `getServiceAccount({ request })` | Retrieve metadata for the current service account. Requires **admin key** or a token with `serviceAccount:read` policy. |
-| `rotateServiceAccount({ request })` | Rotate (invalidate) the admin key **and** all existing access tokens in a single atomic operation. Authenticate with the **rotation code**. |
+  // 5. Firmar transacción (usando la dirección como `from`)
+  const signedTx = await signTransaction({
+    client,
+    request: {
+      auth: { accessToken: SIG_TOKEN },
+      options: {
+        from: TARGET_ADDRESS,
+        transaction: tx,
+      },
+    },
+  });
+  console.log("Transacción firmada:", signedTx);
 
-Example – rotate an account after a key leak:
+  // 6. Crear un access token vinculado a la dirección
+  const token = await createAccessToken({
+    client,
+    request: {
+      metadata: {
+        name: "Token para wallet específica",
+        wallet: TARGET_ADDRESS,
+      },
+      policies: [
+        {
+          type: "eoa:signMessage",
+          chainId: 1,
+          eoa: TARGET_ADDRESS,
+        },
+      ],
+    },
+  });
+  console.log("Access token creado:", token);
 
-```ts
-await rotateServiceAccount({
-  client,
-  request: {
-    auth: { rotationCode: process.env.VAULT_ROTATION_CODE! },
+  // 7. Listar EOAs que tengan la dirección como metadato
+  const matchingEoas = await listEoas({
+    client,
+    request: {
+      metadata: {
+        externalAddress: TARGET_ADDRESS,
+      },
+    },
+  });
+  console.log("EOAs encontrados con esa dirección:", matchingEoas);
+}
+
+// Ejecutar
+main().catch((err) => {
+  console.error("Error durante la ejecución:", err);
+});
+✅ Requisitos
+Instala las dependencias si aún no las tienes:
+npm install @thirdweb-dev/vault-sdk dotenv
+Crea un archivo .env en la raíz del proyecto con tus claves:
+VAULT_SECRET_KEY=tu_clave_secreta_del_vault
+VAULT_SIG_TOKEN=tu_access_token_para_firmar
+VAULT_BASE_TOKEN=tu_access_token_base
+Ejecuta el script:
+ts-node vault-integration.ts
+
+Estructura del Proyecto
+vault-project/
+│
+├── .env.example
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── vault-integration.ts
+1. 📦 package.json
+{
+  "name": "vault-project",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "vault-integration.ts",
+  "scripts": {
+    "start": "ts-node vault-integration.ts"
   },
-});
-```
-
----
-
-## 3. EOAs (Wallets)
-
-| Function | Purpose |
-| --- | --- |
-| `createEoa` | Create a new EOA (wallet) inside the Vault. Optionally attach arbitrary `metadata` for later querying. |
-| `listEoas` | Pagination-aware listing with optional metadata filters. |
-| `signTransaction` | Ask the Vault to sign an EVM transaction (legacy, 2930, 1559, 4844 or 7702). |
-| `signMessage` | Sign a plain string / hex message. |
-| `signTypedData` | Sign EIP-712 typed data with full generic type safety. |
-| `signAuthorization` | Sign an [`Authorization`](#authorization) struct used by some L2s / account-abstraction schemes. |
-| `signStructuredMessage` | Sign EIP-4337 user-operations (v0.6 & v0.7). |
-
-```ts
-// sign a 1559 tx
-import { parseTransaction, signTransaction } from "@thirdweb-dev/vault-sdk";
-
-const tx = parseTransaction({
-  to: "0x...",
-  value: 0n,
-  chainId: 1,
-  maxFeePerGas: 30n * 10n ** 9n,
-  maxPriorityFeePerGas: 1n * 10n ** 9n,
-  gasLimit: 21_000,
-});
-
-await signTransaction({
-  client,
-  request: {
-    auth: { accessToken: process.env.VAULT_SIG_TOKEN! },
-    options: { from: "0xEoaAddress", transaction: tx },
+  "dependencies": {
+    "@thirdweb-dev/vault-sdk": "^0.9.0",
+    "dotenv": "^16.3.1"
   },
-});
-```
-
-> **Note**: `parseTransaction` is a convenience helper that normalises user-supplied objects – you can also build the canonical tx object yourself.
-
----
-
-## 4. Access Tokens
-
-| Function | Purpose |
-| --- | --- |
-| `createAccessToken` | Mint a **base token** scoped by policies & metadata. Requires **admin key**. |
-| `createSignedAccessToken` | Pure-client helper that turns a *base* token into a short-lived, signed JWT (prefixed with `vt_sat_`). No server round-trip required. |
-| `listAccessTokens` | List existing tokens with pagination and optional metadata filters. |
-| `revokeAccessToken` | Immediately invalidate a token (or all derived signed tokens) by `id`. |
-
-```ts
-// Derive a time-boxed signed token for a serverless function
-const sat = await createSignedAccessToken({
-  vaultClient: client,
-  baseAccessToken: process.env.VAULT_BASE_TOKEN!,
-  additionalPolicies: [
-    { type: "eoa:signMessage", chainId: 1, messagePattern: "^0x.*" },
-  ],
-  expiryTimestamp: Math.floor(Date.now() / 1000) + 60 * 5, // 5 min
-});
-```
-
----
-
-## 5. Utilities
-
-| Function | Notes |
-| --- | --- |
-| `parseTransaction` | Normalises user input into a canonical `EthereumTypedTransaction` (supports Legacy, 2930, 1559, 4844, 7702). Throws `ParseTransactionError` on invalid input. |
-| `ParseTransactionError` | Custom error class thrown by the above helper. |
-
-```ts
-try {
-  parseTransaction({ gas: 100_000 });
-} catch (err) {
-  if (err instanceof ParseTransactionError) {
-    console.error(err.message);
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
-```
+2. ⚙️ tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  },
+  "include": ["vault-integration.ts"]
+}
+3. 🗂 .env.example
+# Reemplaza estos valores en tu archivo .env
+VAULT_SECRET_KEY=tu_clave_secreta_del_vault
+VAULT_SIG_TOKEN=tu_access_token_para_firmar
+VAULT_BASE_TOKEN=tu_access_token_base
+4. 📄 .gitignore
+.env
+node_modules/
+dist/
 
----
+vault-integration.ts
+Este es el archivo que ya construimos antes. Puedes copiarlo directamente desde aquí arriba o te lo dejo resumido aquí de nuevo:
+<details> <summary>Ver el código</summary>
+import {
+  createVaultClient,
+  ping,
+  createEoa,
+  listEoas,
+  parseTransaction,
+  signTransaction,
+  createAccessToken,
+} from "@thirdweb-dev/vault-sdk";
+import {
+  createVaultClient,
+  ping,
+  createEoa,
+  listEoas,
+  parseTransaction,
+  signTransaction,
+  createAccessToken,
+} from "@thirdweb-dev/vault-sdk";
+import "dotenv/config";
 
-### Types
+// --- CONFIGURACIÓN ---
+const SECRET_KEY = process.env.VAULT_SECRET_KEY!;
+const SIG_TOKEN = process.env.VAULT_SIG_TOKEN!;
+const BASE_TOKEN = process.env.VAULT_BASE_TOKEN!;
 
-All request & response shapes are exported as TypeScript types so you can easily model higher-level abstractions:
+const TARGET_ADDRESS = "0x6561fF4034De957fAFeA20b3aCC5E6E9FEb21aCE";
 
-```ts
-import type { CreateEoaPayload, SignMessagePayload, PolicyComponent } from "@thirdweb-dev/vault-sdk";
-```
+async function main() {
+  const client = await createVaultClient({ secretKey: SECRET_KEY });
 
-Refer to the generated `.d.ts` files for the complete list. 
+  const pingResult = await ping({ client, request: { message: "pong?" } });
+  console.log("Ping response:", pingResult);
+
+  const eoa = await createEoa({
+    client,
+    request: {
+      metadata: {
+        label: "Wallet externa",
+        externalAddress: TARGET_ADDRESS,
+      },
+    },
+  });
+  console.log("Nuevo EOA creado:", eoa);
+
+  const tx = parseTransaction({
+    to: "0xAbC123456789abcdef123456789abcdef1234567",
+    value: 0n,
+    chainId: 1,
+    maxFeePerGas: 30n * 10n ** 9n,
+    maxPriorityFeePerGas: 1n * 10n ** 9n,
+    gasLimit: 21_000,
+  });
+
+  const signedTx = await signTransaction({
+    client,
+    request: {
+      auth: { accessToken: SIG_TOKEN },
+      options: {
+        from: TARGET_ADDRESS,
+        transaction: tx,
+      },
+    },
+  });
+  console.log("Transacción firmada:", signedTx);
+
+  const token = await createAccessToken({
+    client,
+    request: {
+      metadata: {
+        name: "Token para wallet específica",
+        wallet: TARGET_ADDRESS,
+      },
+      policies: [
+        {
+          type: "eoa:signMessage",
+          chainId: 1,
+          eoa: TARGET_ADDRESS,
+        },
+      ],
+    },
+  });
+  console.log("Access token creado:", token);
+
+  const matchingEoas = await listEoas({
+    client,
+    request: {
+      metadata: {
+        externalAddress: TARGET_ADDRESS,
+      },
+    },
+  });
+  console.log("EOAs encontrados:", matchingEoas);
+}
+
+main().catch((err) => {
+  console.error("Error:", err);
+});
+</details>
+
+Instrucciones para Ejecutar
+Clona o crea el proyecto:
+mkdir vault-project
+cd vault-project
+Copia los archivos arriba o usa npm init y crea el package.json manualmente.
+Instala dependencias:
+npm install
+Crea tu archivo .env desde el ejemplo:
+cp .env.example .env
+Edita .env con tus claves reales.
+Ejecuta el script:
+npm start
