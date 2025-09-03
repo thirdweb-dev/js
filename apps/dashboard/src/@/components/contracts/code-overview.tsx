@@ -90,9 +90,9 @@ var events = await contract.Events("{{function}}");`,
     unity: `// Download the .unitypackage from the latest release:
 // https://github.com/thirdweb-dev/unity-sdk/releases
 // and drag it into your project`,
-    dotnet: `// Download the .unitypackage from the latest release:
-// https://github.com/thirdweb-dev/unity-sdk/releases
-// and drag it into your project`,
+    dotnet: `// Install the thirdweb SDK via NuGet:
+// dotnet add package Thirdweb
+// Or search for "Thirdweb" in your NuGet package manager`,
   },
   read: {
     javascript: `import { readContract } from "thirdweb";
@@ -223,7 +223,7 @@ var contract = await ThirdwebManager.Instance.GetContract(
 var contract = await ThirdwebContract.Create(
   client,
   "{{contract_address}}",
-  {{chainId}
+  {{chainId}}
 );`,
   },
   write: {
