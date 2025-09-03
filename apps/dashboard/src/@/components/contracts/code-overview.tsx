@@ -342,17 +342,12 @@ const data = await response.json();`,
 });
 
 const data = await response.json();`,
-    events: `const response = await fetch('https://api.thirdweb.com/v1/contracts/events', {
-  method: 'POST',
+    events: `const response = await fetch('https://api.thirdweb.com/v1/contracts/{{chainId}}/{{contract_address}}/events?eventSignature={{function}}', {
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     'x-secret-key': '<YOUR_SECRET_KEY>'
-  },
-  body: JSON.stringify({
-    contractAddress: "{{contract_address}}",
-    eventName: "{{function}}",
-    chainId: {{chainId}}
-  })
+  }
 });
 
 const data = await response.json();`,
@@ -386,15 +381,10 @@ const data = await response.json();`,
   "chainId": {{chainId}},
   "from": "<YOUR_WALLET_ADDRESS>"
 }'`,
-    events: `curl https://api.thirdweb.com/v1/contracts/events \\
-  --request POST \\
+    events: `curl https://api.thirdweb.com/v1/contracts/{{chainId}}/{{contract_address}}/events?eventSignature={{function}} \\
+  --request GET \\
   --header 'Content-Type: application/json' \\
-  --header 'x-secret-key: <YOUR_SECRET_KEY>' \\
-  --data '{
-  "contractAddress": "{{contract_address}}",
-  "eventName": "{{function}}",
-  "chainId": {{chainId}}
-}'`,
+  --header 'x-secret-key: <YOUR_SECRET_KEY>'`,
   },
 };
 
