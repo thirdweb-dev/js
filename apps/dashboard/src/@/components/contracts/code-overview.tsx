@@ -849,7 +849,13 @@ export function CodeOverview(props: {
           </div>
         )}
         <div className="flex flex-col gap-2">
-          {environment === "react-native" || environment === "unity" ? (
+          {environment === "api" || environment === "curl" ? (
+            <p className="text-sm text-muted-foreground">
+              No SDK install required for API/cURL. Call the HTTP endpoints
+              directly. Keep your secret key server-side; use client IDs in
+              frontends.
+            </p>
+          ) : environment === "react-native" || environment === "unity" ? (
             <p className="text-sm text-muted-foreground">
               Install the latest version of the SDK.{" "}
               <UnderlineLink
@@ -972,32 +978,76 @@ export function CodeOverview(props: {
             <CodeSegment
               environment={environment}
               setEnvironment={setEnvironment}
-              snippet={formatSnippet(
-                // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                COMMANDS[tab as keyof typeof COMMANDS] as any,
-                {
+              snippet={(() => {
+                const selectedFn =
+                  tab === "read" ? read : tab === "write" ? write : event;
+                const commandsKey = tab as "read" | "write" | "events";
+
+                const baseSnippet = formatSnippet(COMMANDS[commandsKey], {
                   args:
                     abi
                       ?.filter(
                         (f) => f.type === "function" || f.type === "event",
                       )
-                      ?.find(
-                        (f) =>
-                          f.name ===
-                          (tab === "read"
-                            ? read?.name
-                            : tab === "write"
-                              ? write?.name
-                              : event?.name),
-                      )
+                      ?.find((f) => f.name === selectedFn?.name)
                       ?.inputs.map((i) => i.name || "") || [],
 
                   chainId,
                   contractAddress,
                   extensionNamespace,
-                  fn: tab === "read" ? read : tab === "write" ? write : event,
-                },
-              )}
+                  fn: selectedFn,
+                });
+
+                // Add API snippet if it exists
+                const apiSnippet = COMMANDS.api[commandsKey]
+                  ? formatSnippet(
+                      { api: COMMANDS.api[commandsKey] },
+                      {
+                        args:
+                          abi
+                            ?.filter(
+                              (f) =>
+                                f.type === "function" || f.type === "event",
+                            )
+                            ?.find((f) => f.name === selectedFn?.name)
+                            ?.inputs.map((i) => i.name || "") || [],
+
+                        chainId,
+                        contractAddress,
+                        extensionNamespace,
+                        fn: selectedFn,
+                      },
+                    )
+                  : {};
+
+                // Add cURL snippet if it exists
+                const curlSnippet = COMMANDS.curl[commandsKey]
+                  ? formatSnippet(
+                      { curl: COMMANDS.curl[commandsKey] },
+                      {
+                        args:
+                          abi
+                            ?.filter(
+                              (f) =>
+                                f.type === "function" || f.type === "event",
+                            )
+                            ?.find((f) => f.name === selectedFn?.name)
+                            ?.inputs.map((i) => i.name || "") || [],
+
+                        chainId,
+                        contractAddress,
+                        extensionNamespace,
+                        fn: selectedFn,
+                      },
+                    )
+                  : {};
+
+                return {
+                  ...baseSnippet,
+                  ...apiSnippet,
+                  ...curlSnippet,
+                };
+              })()}
             />
           </div>
         </div>
