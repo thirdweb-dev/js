@@ -258,7 +258,8 @@ var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", 
   "calls": [
     {
       "contractAddress": "{{contract_address}}",
-      "method": "{{function}}"
+      "method": "{{function}}",
+      "params": [{{args}}]
     }
   ],
   "chainId": {{chainId}}

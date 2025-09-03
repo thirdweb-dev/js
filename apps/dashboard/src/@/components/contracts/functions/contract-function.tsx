@@ -120,16 +120,19 @@ function ContractFunctionInner(props: ContractFunctionProps) {
     fn,
   });
 
-  const apiSnippet = formatSnippet(
-    { api: COMMANDS.api[commandsKey] },
-    {
-      args: fn.inputs?.map((i) => i.name || ""),
-      chainId: contract.chain.id,
-      contractAddress: contract.address,
-      extensionNamespace,
-      fn,
-    },
-  );
+  // Safety check: Only include API snippet if the command exists in COMMANDS.api
+  const apiSnippet = COMMANDS.api[commandsKey]
+    ? formatSnippet(
+        { api: COMMANDS.api[commandsKey] },
+        {
+          args: fn.inputs?.map((i) => i.name || ""),
+          chainId: contract.chain.id,
+          contractAddress: contract.address,
+          extensionNamespace,
+          fn,
+        },
+      )
+    : {};
 
   const codeSnippet = {
     ...baseSnippet,
