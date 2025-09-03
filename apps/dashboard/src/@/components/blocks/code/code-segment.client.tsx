@@ -10,7 +10,8 @@ export type CodeEnvironment =
   | "typescript"
   | "react"
   | "react-native"
-  | "unity";
+  | "unity"
+  | "api";
 
 type SupportedEnvironment = {
   environment: CodeEnvironment;
@@ -35,6 +36,10 @@ const Environments: SupportedEnvironment[] = [
   {
     environment: "react-native",
     title: "React Native",
+  },
+  {
+    environment: "api",
+    title: "API",
   },
   {
     environment: "unity",
@@ -124,7 +129,9 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
                 ? "tsx"
                 : activeEnvironment === "unity"
                   ? "cpp"
-                  : activeEnvironment
+                  : activeEnvironment === "api"
+                    ? "bash"
+                    : activeEnvironment
           }
         />
       )}

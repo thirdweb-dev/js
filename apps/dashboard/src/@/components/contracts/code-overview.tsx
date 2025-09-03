@@ -65,6 +65,17 @@ export default function Component() {
     events: [preparedEvent]
   });
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+    address: "{{contract_address}}", 
+    chainId: {{chainId}}, 
+    abi: "optional-abi"
+);
+
+// Listen to contract events
+var events = await contract.Events("{{function}}");`,
   },
   install: {
     javascript: "npm i thirdweb",
@@ -100,6 +111,17 @@ export default function Component() {
     params: [{{args}}]
   });
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+    address: "{{contract_address}}", 
+    chainId: {{chainId}}, 
+    abi: "optional-abi"
+);
+
+// Read from the contract
+var result = await contract.Read<T>(contract, "{{function}}", {{args}});`,
   },
   setup: {
     javascript: `import { createThirdwebClient, getContract } from "thirdweb";
@@ -165,11 +187,12 @@ function App() {
 `,
     unity: `using Thirdweb;
 
-// Reference the SDK
-var sdk = ThirdwebManager.Instance.SDK;
-
 // Get your contract
-var contract = sdk.GetContract("{{contract_address}}");`,
+var contract = await ThirdwebManager.Instance.GetContract(
+    address: "{{contract_address}}", 
+    chainId: {{chainId}}, 
+    abi: "optional-abi"
+);`,
   },
   write: {
     javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
@@ -213,6 +236,58 @@ export default function Component() {
     sendTransaction(transaction);
   }
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+    address: "{{contract_address}}", 
+    chainId: {{chainId}}, 
+    abi: "optional-abi"
+);
+
+// Write to the contract
+var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", weiValue, {{args}});`,
+  },
+  api: {
+    read: `curl https://api.thirdweb.com/v1/contracts/read \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-client-id: YOUR_CLIENT_ID' \\
+  # OR use secret key (backend only, not frontend): --header 'x-secret-key: YOUR_SECRET_KEY' \\
+  --data '{
+  "calls": [
+    {
+      "contractAddress": "{{contract_address}}",
+      "method": "{{function}}"
+    }
+  ],
+  "chainId": {{chainId}}
+}'`,
+    write: `curl -X POST https://api.thirdweb.com/v1/contracts/write \\
+-H "Content-Type: application/json" \\
+-H "x-secret-key: YOUR_SECRET_KEY" \\
+# Note: Secret key should only be used in backend environments, not frontend \\
+-d '{
+  "calls": [
+    {
+      "contractAddress": "{{contract_address}}",
+      "method": "{{function}}",
+      "params": [{{args}}]
+    }
+  ],
+  "chainId": {{chainId}},
+  "from": "0x1234567890123456789012345678901234567890"
+}'`,
+    events: `curl https://api.thirdweb.com/v1/contracts/events \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-client-id: YOUR_CLIENT_ID' \\
+  # OR use secret key (backend only, not frontend): --header 'x-secret-key: YOUR_SECRET_KEY' \\
+  --data '{
+  "contractAddress": "{{contract_address}}",
+  "eventName": "{{function}}",
+  "chainId": {{chainId}}
+}'`,
   },
 };
 
@@ -489,6 +564,9 @@ export function formatSnippet(
                   : "write"
                 : "event",
           });
+          break;
+        case "api":
+          // For API, we don't need special extension handling, just use the standard templates
           break;
       }
     }

@@ -112,13 +112,29 @@ function ContractFunctionInner(props: ContractFunctionProps) {
       : "write"
     : ("events" as const);
 
-  const codeSnippet = formatSnippet(COMMANDS[commandsKey], {
+  const baseSnippet = formatSnippet(COMMANDS[commandsKey], {
     args: fn.inputs?.map((i) => i.name || ""),
     chainId: contract.chain.id,
     contractAddress: contract.address,
     extensionNamespace,
     fn,
   });
+
+  const apiSnippet = formatSnippet(
+    { api: COMMANDS.api[commandsKey] },
+    {
+      args: fn.inputs?.map((i) => i.name || ""),
+      chainId: contract.chain.id,
+      contractAddress: contract.address,
+      extensionNamespace,
+      fn,
+    },
+  );
+
+  const codeSnippet = {
+    ...baseSnippet,
+    ...apiSnippet,
+  };
 
   return (
     <div className="flex flex-col gap-1.5">
