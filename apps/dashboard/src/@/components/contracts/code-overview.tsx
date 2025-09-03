@@ -441,20 +441,17 @@ return (
 
 public async void ConnectWallet()
 {
-    // Reference to your Thirdweb SDK
-    var sdk = ThirdwebManager.Instance.SDK;
-
-    // Configure the connection
-    var connection = new WalletConnection(
-      provider: WalletProvider.SmartWallet,        // The wallet provider you want to connect to (Required)
-      chainId: 1,                                  // The chain you want to connect to (Required)
-      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional)
-      email: "email@email.com",                    // If using an email wallet as personal wallet (Optional)
-      personalWallet: WalletProvider.LocalWallet   // The personal wallet you want to use with your Account (Optional)
+    var wallet = await ConnectWallet(
+        new WalletOptions(
+            provider: WalletProvider.InAppWallet,
+            chainId: {{chainId}},
+            inAppWalletOptions: new InAppWalletOptions(
+                authprovider: AuthProvider.Google,
+                executionMode: ExecutionMode.EIP7702Sponsored
+            )
+        )
     );
-
-    // Connect the wallet
-    string address = await sdk.wallet.Connect(connection);
+    string address = await wallet.GetAddress();
 }`,
     },
   },
