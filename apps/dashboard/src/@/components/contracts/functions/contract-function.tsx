@@ -112,13 +112,47 @@ function ContractFunctionInner(props: ContractFunctionProps) {
       : "write"
     : ("events" as const);
 
-  const codeSnippet = formatSnippet(COMMANDS[commandsKey], {
+  const baseSnippet = formatSnippet(COMMANDS[commandsKey], {
     args: fn.inputs?.map((i) => i.name || ""),
     chainId: contract.chain.id,
     contractAddress: contract.address,
     extensionNamespace,
     fn,
   });
+
+  // Safety check: Only include API snippet if the command exists in COMMANDS.api
+  const apiSnippet = COMMANDS.api[commandsKey]
+    ? formatSnippet(
+        { api: COMMANDS.api[commandsKey] },
+        {
+          args: fn.inputs?.map((i) => i.name || ""),
+          chainId: contract.chain.id,
+          contractAddress: contract.address,
+          extensionNamespace,
+          fn,
+        },
+      )
+    : {};
+
+  // Safety check: Only include cURL snippet if the command exists in COMMANDS.curl
+  const curlSnippet = COMMANDS.curl[commandsKey]
+    ? formatSnippet(
+        { curl: COMMANDS.curl[commandsKey] },
+        {
+          args: fn.inputs?.map((i) => i.name || ""),
+          chainId: contract.chain.id,
+          contractAddress: contract.address,
+          extensionNamespace,
+          fn,
+        },
+      )
+    : {};
+
+  const codeSnippet = {
+    ...baseSnippet,
+    ...apiSnippet,
+    ...curlSnippet,
+  };
 
   return (
     <div className="flex flex-col gap-1.5">
