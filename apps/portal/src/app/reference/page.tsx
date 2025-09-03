@@ -1,5 +1,5 @@
 import { createMetadata } from "@/components/Document";
-import ModernApiReference from "./ModernApiReference";
+import ScalarApiReference from "./ScalarClient";
 
 export const metadata = createMetadata({
   image: {
@@ -11,5 +11,5 @@ export const metadata = createMetadata({
 });
 
 export default function ApiReferencePage() {
-  return <ModernApiReference />;
+  return <ScalarApiReference />;
 }
