@@ -91,6 +91,11 @@ export interface PaymentSelectionProps {
    */
   currency?: SupportedFiatCurrency;
 
+  /**
+   * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+   */
+  country: string | undefined;
+
   supportedTokens?: SupportedTokens;
 }
 
@@ -115,6 +120,7 @@ export function PaymentSelection({
   supportedTokens,
   feePayer,
   currency,
+  country,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -298,6 +304,7 @@ export function PaymentSelection({
 
         {currentStep.type === "fiatProviderSelection" && (
           <FiatProviderSelection
+            country={country}
             client={client}
             onProviderSelected={handleOnrampProviderSelected}
             toAddress={receiverAddress || ""}

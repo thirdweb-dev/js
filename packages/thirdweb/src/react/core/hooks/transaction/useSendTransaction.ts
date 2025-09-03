@@ -90,6 +90,10 @@ export type SendTransactionPayModalConfig =
             },
       ) => void;
       showThirdwebBranding?: boolean;
+      /**
+       * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+       */
+      country?: string;
     }
   | false;
 

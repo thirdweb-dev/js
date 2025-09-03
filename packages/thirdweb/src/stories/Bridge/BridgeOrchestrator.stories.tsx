@@ -42,6 +42,7 @@ const meta = {
     onError: (error) => console.error("Bridge error:", error),
     theme: "dark",
     uiOptions: FUND_WALLET_UI_OPTIONS.usdcDefault,
+    country: "US",
   },
   argTypes: {
     onCancel: { action: "flow cancelled" },
