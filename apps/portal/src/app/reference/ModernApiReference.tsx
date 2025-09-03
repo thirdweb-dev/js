@@ -305,15 +305,15 @@ function JsonViewer({ data, title, defaultOpen = false }: JsonViewerProps) {
             Schema
           </Badge>
           {isOpen ? (
-            <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+            <ChevronDownIcon className="size-4 text-muted-foreground" />
           ) : (
-            <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+            <ChevronRightIcon className="size-4 text-muted-foreground" />
           )}
         </div>
       </button>
       {isOpen && (
         <div className="p-4 bg-muted/20">
-          <pre className="text-xs bg-background border border-border p-4 rounded-lg overflow-x-auto max-h-80 overflow-y-auto font-mono">
+          <pre className="text-xs bg-background border border-border p-4 rounded-lg overflow-auto max-h-80 font-mono">
             <code className="text-foreground">
               {JSON.stringify(data, null, 2)}
             </code>
@@ -374,18 +374,18 @@ function CodeExample({
           onClick={copyToClipboard}
           className="h-6 px-2 text-xs"
         >
-          <CopyIcon className="h-3 w-3 mr-1" />
+          <CopyIcon className="size-3 mr-1" />
           {copied ? "Copied!" : "Copy"}
         </Button>
       </div>
       {highlightedCode ? (
         <div
-          className="text-xs bg-background p-4 overflow-x-auto max-h-80 overflow-y-auto border-l border-r border-b border-border rounded-b-lg [&_pre]:m-0 [&_pre]:bg-transparent [&_code]:bg-transparent"
+          className="text-xs bg-background p-4 overflow-auto max-h-80 border-x border-b border-border rounded-b-lg [&_pre]:m-0 [&_pre]:bg-transparent [&_code]:bg-transparent"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: Shiki generates safe HTML for syntax highlighting
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
         />
       ) : (
-        <pre className="text-xs bg-background p-4 overflow-x-auto max-h-80 overflow-y-auto font-mono border-l border-r border-b border-border rounded-b-lg">
+        <pre className="text-xs bg-background p-4 overflow-auto max-h-80 font-mono border-x border-b border-border rounded-b-lg">
           <code className="text-foreground">{code}</code>
         </pre>
       )}
@@ -556,7 +556,7 @@ function ModernApiReferenceContent() {
                   : "text-muted-foreground hover:text-foreground hover:bg-violet-800/15 border-transparent hover:border-violet-800/50"
               }`}
             >
-              <HomeIcon className="h-4 w-4 mr-2" />
+              <HomeIcon className="size-4 mr-2" />
               Introduction
             </button>
           </div>
@@ -572,9 +572,9 @@ function ModernApiReferenceContent() {
                   className="flex items-center w-full px-3 py-1.5 text-sm hover:bg-violet-800/20 rounded-lg hover:border-violet-800/50 border border-transparent transition-colors duration-300 mb-1"
                 >
                   {expandedGroups[tag] ? (
-                    <ChevronDownIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <ChevronDownIcon className="size-4 mr-2 text-muted-foreground" />
                   ) : (
-                    <ChevronRightIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <ChevronRightIcon className="size-4 mr-2 text-muted-foreground" />
                   )}
                   <span className="text-foreground text-sm font-medium">
                     {tag}
@@ -616,7 +616,7 @@ function ModernApiReferenceContent() {
                       >
                         <Badge
                           variant="outline"
-                          className={`mr-2 text-xs font-mono uppercase flex-shrink-0 ${getMethodColor(
+                          className={`mr-2 text-xs font-mono uppercase shrink-0 ${getMethodColor(
                             method,
                           )}`}
                         >
@@ -662,9 +662,9 @@ function ModernApiReferenceContent() {
                 {/* Key Features */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
                   <div className="text-center space-y-3 p-6 rounded-lg border border-border bg-card/30">
-                    <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mx-auto">
+                    <div className="size-12 rounded-lg bg-blue-500/10 flex items-center justify-center mx-auto">
                       <svg
-                        className="w-6 h-6 text-blue-600"
+                        className="size-6 text-blue-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -687,9 +687,9 @@ function ModernApiReferenceContent() {
                   </div>
 
                   <div className="text-center space-y-3 p-6 rounded-lg border border-border bg-card/30">
-                    <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center mx-auto">
+                    <div className="size-12 rounded-lg bg-green-500/10 flex items-center justify-center mx-auto">
                       <svg
-                        className="w-6 h-6 text-green-600"
+                        className="size-6 text-green-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -712,9 +712,9 @@ function ModernApiReferenceContent() {
                   </div>
 
                   <div className="text-center space-y-3 p-6 rounded-lg border border-border bg-card/30">
-                    <div className="w-12 h-12 rounded-lg bg-purple-500/10 flex items-center justify-center mx-auto">
+                    <div className="size-12 rounded-lg bg-purple-500/10 flex items-center justify-center mx-auto">
                       <svg
-                        className="w-6 h-6 text-purple-600"
+                        className="size-6 text-purple-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -751,7 +751,7 @@ function ModernApiReferenceContent() {
                   </p>
                   <ol className="space-y-4 text-sm">
                     <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                      <div className="size-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                         1
                       </div>
                       <div>
@@ -760,7 +760,7 @@ function ModernApiReferenceContent() {
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                      <div className="size-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                         2
                       </div>
                       <div>
@@ -769,7 +769,7 @@ function ModernApiReferenceContent() {
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                      <div className="size-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                         3
                       </div>
                       <div>
@@ -888,7 +888,7 @@ function ModernApiReferenceContent() {
                       );
                     }}
                   >
-                    <ExternalLinkIcon className="h-4 w-4 mr-2" />
+                    <ExternalLinkIcon className="size-4 mr-2" />
                     View in API Reference
                   </Button>
                 </div>
@@ -903,14 +903,14 @@ function ModernApiReferenceContent() {
                         value="request"
                         className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:border border-border rounded-md py-2 text-sm"
                       >
-                        <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                        <span className="size-2 rounded-full bg-blue-500"></span>
                         Request
                       </TabsTrigger>
                       <TabsTrigger
                         value="response"
                         className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:border border-border rounded-md py-2 text-sm"
                       >
-                        <span className="h-2 w-2 rounded-full bg-green-500"></span>
+                        <span className="size-2 rounded-full bg-green-500"></span>
                         Response
                       </TabsTrigger>
                     </TabsList>
