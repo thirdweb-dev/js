@@ -134,9 +134,24 @@ function ContractFunctionInner(props: ContractFunctionProps) {
       )
     : {};
 
+  // Safety check: Only include cURL snippet if the command exists in COMMANDS.curl
+  const curlSnippet = COMMANDS.curl[commandsKey]
+    ? formatSnippet(
+        { curl: COMMANDS.curl[commandsKey] },
+        {
+          args: fn.inputs?.map((i) => i.name || ""),
+          chainId: contract.chain.id,
+          contractAddress: contract.address,
+          extensionNamespace,
+          fn,
+        },
+      )
+    : {};
+
   const codeSnippet = {
     ...baseSnippet,
     ...apiSnippet,
+    ...curlSnippet,
   };
 
   return (

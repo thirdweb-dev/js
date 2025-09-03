@@ -70,8 +70,7 @@ export default function Component() {
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
     address: "{{contract_address}}", 
-    chainId: {{chainId}}, 
-    abi: "optional-abi"
+    chainId: {{chainId}},
 );
 
 // Listen to contract events
@@ -116,12 +115,15 @@ export default function Component() {
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
     address: "{{contract_address}}", 
-    chainId: {{chainId}}, 
-    abi: "optional-abi"
+    chainId: {{chainId}}
 );
 
 // Read from the contract
-var result = await contract.Read<T>(contract, "{{function}}", {{args}});`,
+var result = await contract.Read<T>(
+  contract,
+  "{{function}}",
+  {{args}}
+);`,
   },
   setup: {
     javascript: `import { createThirdwebClient, getContract } from "thirdweb";
@@ -190,8 +192,7 @@ function App() {
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
     address: "{{contract_address}}", 
-    chainId: {{chainId}}, 
-    abi: "optional-abi"
+    chainId: {{chainId}}
 );`,
   },
   write: {
@@ -241,14 +242,74 @@ export default function Component() {
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
     address: "{{contract_address}}", 
-    chainId: {{chainId}}, 
-    abi: "optional-abi"
+    chainId: {{chainId}}
 );
 
 // Write to the contract
-var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", weiValue, {{args}});`,
+var transactionReceipt = await contract.Write(
+  wallet,
+  contract,
+  "{{function}}",
+  weiValue,
+  {{args}}
+);`,
   },
   api: {
+    read: `const response = await fetch('https://api.thirdweb.com/v1/contracts/read', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  },
+  body: JSON.stringify({
+    calls: [
+      {
+        contractAddress: "{{contract_address}}",
+        method: "{{function}}",
+        params: [{{args}}]
+      }
+    ],
+    chainId: {{chainId}}
+  })
+});
+
+const data = await response.json();`,
+    write: `const response = await fetch('https://api.thirdweb.com/v1/contracts/write', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  },
+  body: JSON.stringify({
+    calls: [
+      {
+        contractAddress: "{{contract_address}}",
+        method: "{{function}}",
+        params: [{{args}}]
+      }
+    ],
+    chainId: {{chainId}},
+    from: "<YOUR_WALLET_ADDRESS>"
+  })
+});
+
+const data = await response.json();`,
+    events: `const response = await fetch('https://api.thirdweb.com/v1/contracts/events', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  },
+  body: JSON.stringify({
+    contractAddress: "{{contract_address}}",
+    eventName: "{{function}}",
+    chainId: {{chainId}}
+  })
+});
+
+const data = await response.json();`,
+  },
+  curl: {
     read: `# OR use secret key (backend only, not frontend): --header 'x-secret-key: <YOUR_SECRET_KEY>'
 curl https://api.thirdweb.com/v1/contracts/read \\
   --request POST \\
@@ -264,8 +325,7 @@ curl https://api.thirdweb.com/v1/contracts/read \\
   ],
   "chainId": {{chainId}}
 }'`,
-    write: `# Note: Secret key should only be used in backend environments, not frontend
-curl -X POST https://api.thirdweb.com/v1/contracts/write \\
+    write: `curl -X POST https://api.thirdweb.com/v1/contracts/write \\
 -H "Content-Type: application/json" \\
 -H "x-secret-key: <YOUR_SECRET_KEY>" \\
 -d '{
@@ -277,13 +337,12 @@ curl -X POST https://api.thirdweb.com/v1/contracts/write \\
     }
   ],
   "chainId": {{chainId}},
-  "from": "0x1234567890123456789012345678901234567890"
+  "from": "<YOUR_WALLET_ADDRESS>"
 }'`,
-    events: `# OR use secret key (backend only, not frontend): --header 'x-secret-key: <YOUR_SECRET_KEY>'
-curl https://api.thirdweb.com/v1/contracts/events \\
+    events: `curl https://api.thirdweb.com/v1/contracts/events \\
   --request POST \\
   --header 'Content-Type: application/json' \\
-  --header 'x-client-id: <YOUR_CLIENT_ID>' \\
+  --header 'x-secret-key: <YOUR_SECRET_KEY>' \\
   --data '{
   "contractAddress": "{{contract_address}}",
   "eventName": "{{function}}",
@@ -612,7 +671,7 @@ export function CodeOverview(props: {
     | undefined;
 
   const [environment, setEnvironment] = useState<CodeEnvironment>(
-    defaultEnvironment || "javascript",
+    defaultEnvironment || "api",
   );
 
   const [tab, setTab] = useState("write");
