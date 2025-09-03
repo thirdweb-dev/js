@@ -2,7 +2,7 @@
 
 import { ApiReferenceReact } from "@scalar/api-reference-react";
 import "@scalar/api-reference-react/style.css";
-import "./scaler-app.css";
+import "./scalar.css";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 

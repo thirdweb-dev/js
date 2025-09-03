@@ -9,3 +9,7 @@
   position: sticky;
   top: var(--sticky-top-height);
 }
+
+.scalar-app .references-navigation-list {
+  height: calc(100vh - var(--sticky-top-height));
+}
