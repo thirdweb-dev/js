@@ -12,6 +12,7 @@ export type CodeEnvironment =
   | "typescript"
   | "react"
   | "react-native"
+  | "dotnet"
   | "unity"
   | "curl";
 
@@ -42,6 +43,10 @@ const Environments: SupportedEnvironment[] = [
   {
     environment: "react-native",
     title: "React Native",
+  },
+  {
+    environment: "dotnet",
+    title: ".NET",
   },
   {
     environment: "unity",
@@ -133,7 +138,8 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
               : activeEnvironment === "react" ||
                   activeEnvironment === "react-native"
                 ? "tsx"
-                : activeEnvironment === "unity"
+                : activeEnvironment === "unity" ||
+                    activeEnvironment === "dotnet"
                   ? "cpp"
                   : activeEnvironment === "api"
                     ? "javascript"

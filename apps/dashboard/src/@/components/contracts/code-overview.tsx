@@ -69,9 +69,16 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-    address: "{{contract_address}}", 
-    chainId: {{chainId}},
+  address: "{{contract_address}}", 
+  chainId: {{chainId}},
 );
+
+// Listen to contract events
+var events = await contract.Events("{{function}}");`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(client, "{{contract_address}}", {{chainId}});
 
 // Listen to contract events
 var events = await contract.Events("{{function}}");`,
@@ -81,6 +88,9 @@ var events = await contract.Events("{{function}}");`,
     react: "npm i thirdweb",
     "react-native": "npm i thirdweb",
     unity: `// Download the .unitypackage from the latest release:
+// https://github.com/thirdweb-dev/unity-sdk/releases
+// and drag it into your project`,
+    dotnet: `// Download the .unitypackage from the latest release:
 // https://github.com/thirdweb-dev/unity-sdk/releases
 // and drag it into your project`,
   },
@@ -114,8 +124,23 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-    address: "{{contract_address}}", 
-    chainId: {{chainId}}
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);
+
+// Read from the contract
+var result = await contract.Read<T>(
+  contract,
+  "{{function}}",
+  {{args}}
+);`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}}
 );
 
 // Read from the contract
@@ -191,8 +216,16 @@ function App() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-    address: "{{contract_address}}", 
-    chainId: {{chainId}}
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}
 );`,
   },
   write: {
@@ -241,8 +274,25 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-    address: "{{contract_address}}", 
-    chainId: {{chainId}}
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);
+
+// Write to the contract
+var transactionReceipt = await contract.Write(
+  wallet,
+  contract,
+  "{{function}}",
+  weiValue,
+  {{args}}
+);`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}}
 );
 
 // Write to the contract
@@ -310,8 +360,7 @@ const data = await response.json();`,
 const data = await response.json();`,
   },
   curl: {
-    read: `# OR use secret key (backend only, not frontend): --header 'x-secret-key: <YOUR_SECRET_KEY>'
-curl https://api.thirdweb.com/v1/contracts/read \\
+    read: `curl https://api.thirdweb.com/v1/contracts/read \\
   --request POST \\
   --header 'Content-Type: application/json' \\
   --header 'x-client-id: <YOUR_CLIENT_ID>' \\
