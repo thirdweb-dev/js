@@ -249,11 +249,11 @@ var contract = await ThirdwebManager.Instance.GetContract(
 var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", weiValue, {{args}});`,
   },
   api: {
-    read: `curl https://api.thirdweb.com/v1/contracts/read \\
+    read: `# OR use secret key (backend only, not frontend): --header 'x-secret-key: <YOUR_SECRET_KEY>'
+curl https://api.thirdweb.com/v1/contracts/read \\
   --request POST \\
   --header 'Content-Type: application/json' \\
-  --header 'x-client-id: YOUR_CLIENT_ID' \\
-  # OR use secret key (backend only, not frontend): --header 'x-secret-key: YOUR_SECRET_KEY' \\
+  --header 'x-client-id: <YOUR_CLIENT_ID>' \\
   --data '{
   "calls": [
     {
@@ -264,10 +264,10 @@ var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", 
   ],
   "chainId": {{chainId}}
 }'`,
-    write: `curl -X POST https://api.thirdweb.com/v1/contracts/write \\
+    write: `# Note: Secret key should only be used in backend environments, not frontend
+curl -X POST https://api.thirdweb.com/v1/contracts/write \\
 -H "Content-Type: application/json" \\
--H "x-secret-key: YOUR_SECRET_KEY" \\
-# Note: Secret key should only be used in backend environments, not frontend \\
+-H "x-secret-key: <YOUR_SECRET_KEY>" \\
 -d '{
   "calls": [
     {
@@ -279,11 +279,11 @@ var transactionReceipt = await contract.Write(wallet, contract, "{{function}}", 
   "chainId": {{chainId}},
   "from": "0x1234567890123456789012345678901234567890"
 }'`,
-    events: `curl https://api.thirdweb.com/v1/contracts/events \\
+    events: `# OR use secret key (backend only, not frontend): --header 'x-secret-key: <YOUR_SECRET_KEY>'
+curl https://api.thirdweb.com/v1/contracts/events \\
   --request POST \\
   --header 'Content-Type: application/json' \\
-  --header 'x-client-id: YOUR_CLIENT_ID' \\
-  # OR use secret key (backend only, not frontend): --header 'x-secret-key: YOUR_SECRET_KEY' \\
+  --header 'x-client-id: <YOUR_CLIENT_ID>' \\
   --data '{
   "contractAddress": "{{contract_address}}",
   "eventName": "{{function}}",
