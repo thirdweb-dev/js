@@ -28,7 +28,6 @@ import { WalletEntryButton } from "../WalletEntryButton.js";
 function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
-  specifiedWallets: Wallet[];
   size: "compact" | "wide";
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
@@ -39,17 +38,11 @@ function AllWalletsUI(props: {
   const setSelectionData = useSetSelectionData();
 
   const walletList = useMemo(() => {
-    return walletInfos
-      .filter((wallet) => {
-        return (
-          props.specifiedWallets.findIndex((x) => x.id === wallet.id) === -1
-        );
-      })
-      .filter(
-        (info) =>
-          info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
-      );
-  }, [props.specifiedWallets]);
+    return walletInfos.filter(
+      (info) =>
+        info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
+    );
+  }, []);
 
   const fuseInstance = useMemo(() => {
     return new Fuse(walletList, {
