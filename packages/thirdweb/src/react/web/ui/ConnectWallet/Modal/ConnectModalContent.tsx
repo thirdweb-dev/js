@@ -173,7 +173,6 @@ export const ConnectModalContent = (props: {
         onSelect={setScreen}
         recommendedWallets={props.recommendedWallets}
         size={props.size}
-        specifiedWallets={props.wallets}
       />
     </Suspense>
   );
