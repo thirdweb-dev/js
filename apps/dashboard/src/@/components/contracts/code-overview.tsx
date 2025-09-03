@@ -130,7 +130,6 @@ var contract = await ThirdwebManager.Instance.GetContract(
 
 // Read from the contract
 var result = await contract.Read<T>(
-  contract,
   "{{function}}",
   {{args}}
 );`,
@@ -145,7 +144,6 @@ var contract = await ThirdwebContract.Create(
 
 // Read from the contract
 var result = await contract.Read<T>(
-  contract,
   "{{function}}",
   {{args}}
 );`,
