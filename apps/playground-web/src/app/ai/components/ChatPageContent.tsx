@@ -31,115 +31,15 @@ import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import { Img } from "../../../components/ui/Img";
 import { Spinner } from "../../../components/ui/Spinner";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
-import { type NebulaContext, promptNebula } from "../api/chat";
-import type { NebulaUserMessage } from "../api/types";
+import { promptNebula } from "../api/chat";
+import type {
+  ChatMessage,
+  NebulaContext,
+  NebulaUserMessage,
+  WalletMeta,
+} from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
 import { resolveSchemeWithErrorHandler } from "./resolveSchemeWithErrorHandler";
-
-// Simplified types for the playground version
-type WalletMeta = {
-  walletId: string;
-  address: string;
-};
-
-type NebulaUserMessageContentItem =
-  | {
-      type: "image";
-      image_url: string | null;
-      b64: string | null;
-    }
-  | {
-      type: "text";
-      text: string;
-    }
-  | {
-      type: "transaction";
-      transaction_hash: string;
-      chain_id: number;
-    };
-
-type NebulaUserMessageContent = NebulaUserMessageContentItem[];
-
-type ChatMessage =
-  | {
-      type: "user";
-      content: NebulaUserMessageContent;
-    }
-  | {
-      text: string;
-      type: "error";
-    }
-  | {
-      texts: string[];
-      type: "presence";
-    }
-  | {
-      // assistant type message loaded from history doesn't have request_id
-      request_id: string | undefined;
-      text: string;
-      type: "assistant";
-    }
-  | {
-      type: "action";
-      subtype: "sign_transaction";
-      request_id: string;
-      data: NebulaTxData;
-    }
-  | {
-      type: "action";
-      subtype: "sign_swap";
-      request_id: string;
-      data: NebulaSwapData;
-    }
-  | {
-      type: "image";
-      request_id: string;
-      data: {
-        width: number;
-        height: number;
-        url: string;
-      };
-    };
-
-type NebulaTxData = {
-  chain_id: number;
-  data: `0x${string}`;
-  to: string;
-  value?: string;
-};
-
-type NebulaSwapData = {
-  action: string;
-  transaction: {
-    chainId: number;
-    to: `0x${string}`;
-    data: `0x${string}`;
-    value?: string;
-  };
-  to: {
-    address: `0x${string}`;
-    amount: string;
-    chain_id: number;
-    decimals: number;
-    symbol: string;
-  };
-  from: {
-    address: `0x${string}`;
-    amount: string;
-    chain_id: number;
-    decimals: number;
-    symbol: string;
-  };
-  intent: {
-    amount: string;
-    destinationChainId: number;
-    destinationTokenAddress: `0x${string}`;
-    originChainId: number;
-    originTokenAddress: `0x${string}`;
-    receiver: `0x${string}`;
-    sender: `0x${string}`;
-  };
-};
 
 export function ChatPageContent(props: {
   client: ThirdwebClient;
@@ -752,7 +652,7 @@ function RenderMessage(props: {
                     transaction={() =>
                       prepareTransaction({
                         client: THIRDWEB_CLIENT,
-                        chain: defineChain(message.data.transaction.chainId),
+                        chain: defineChain(message.data.transaction.chain_id),
                         data: message.data.transaction.data,
                         to: message.data.transaction.to,
                         value: message.data.transaction.value
@@ -768,7 +668,7 @@ function RenderMessage(props: {
                       props.sendMessage({
                         content: [
                           {
-                            chain_id: message.data.transaction.chainId,
+                            chain_id: message.data.transaction.chain_id,
                             transaction_hash: tx.transactionHash,
                             type: "transaction",
                           },
@@ -785,7 +685,7 @@ function RenderMessage(props: {
               ) : (
                 <ConnectButton
                   client={THIRDWEB_CLIENT}
-                  chain={defineChain(message.data.transaction.chainId)}
+                  chain={defineChain(message.data.transaction.chain_id)}
                 />
               )}
             </div>

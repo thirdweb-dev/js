@@ -453,6 +453,8 @@ class ThirdwebLanguageModel implements LanguageModelV2 {
                                 action: parsed.data.action,
                                 intent: parsed.data.intent,
                                 transaction: parsed.data.transaction,
+                                from_token: parsed.data.from_token,
+                                to_token: parsed.data.to_token,
                               } satisfies SignSwapInput;
                               break;
 

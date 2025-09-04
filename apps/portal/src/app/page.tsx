@@ -237,7 +237,7 @@ function ArticleCardIndex(props: {
     <div className="rounded-lg border bg-card p-4 hover:border-active-border relative">
       <div className="flex mb-3">
         <div className="p-2 rounded-full border bg-background">
-          <props.icon className="size-5 text-muted-foreground" />
+          <props.icon className="size-4 text-muted-foreground" />
         </div>
       </div>
       <h3 className="mb-0.5 font-medium text-lg tracking-tight">

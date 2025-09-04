@@ -56,7 +56,8 @@ export function NotificationsButton(props: { accountId: string }) {
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
       <PopoverContent
         align="end"
-        className="max-h-[90vh] min-h-[500px] w-[400px] max-w-md p-0"
+        sideOffset={8}
+        className="max-h-[90vh] min-h-[550px] w-[450px] max-w-md p-0 flex flex-col rounded-xl overflow-hidden"
       >
         <NotificationList {...manager} />
       </PopoverContent>

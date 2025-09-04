@@ -16,81 +16,81 @@ export type GetSessionStateForSignerParams = {
 export const FN_SELECTOR = "0x74e25eb2" as const;
 const FN_INPUTS = [
   {
-    name: "signer",
     type: "address",
+    name: "signer",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
+    type: "tuple",
     components: [
       {
-        components: [
-          {
-            name: "remaining",
-            type: "uint256",
-          },
-          {
-            name: "target",
-            type: "address",
-          },
-          {
-            name: "selector",
-            type: "bytes4",
-          },
-          {
-            name: "index",
-            type: "uint256",
-          },
-        ],
+        type: "tuple[]",
         name: "transferValue",
-        type: "tuple[]",
-      },
-      {
         components: [
           {
+            type: "uint256",
             name: "remaining",
-            type: "uint256",
           },
           {
-            name: "target",
             type: "address",
+            name: "target",
           },
           {
-            name: "selector",
             type: "bytes4",
+            name: "selector",
           },
           {
-            name: "index",
             type: "uint256",
+            name: "index",
           },
         ],
+      },
+      {
+        type: "tuple[]",
         name: "callValue",
-        type: "tuple[]",
-      },
-      {
         components: [
           {
+            type: "uint256",
             name: "remaining",
-            type: "uint256",
           },
           {
-            name: "target",
             type: "address",
+            name: "target",
           },
           {
-            name: "selector",
             type: "bytes4",
+            name: "selector",
           },
           {
-            name: "index",
             type: "uint256",
+            name: "index",
           },
         ],
-        name: "callParams",
+      },
+      {
         type: "tuple[]",
+        name: "callParams",
+        components: [
+          {
+            type: "uint256",
+            name: "remaining",
+          },
+          {
+            type: "address",
+            name: "target",
+          },
+          {
+            type: "bytes4",
+            name: "selector",
+          },
+          {
+            type: "uint256",
+            name: "index",
+          },
+        ],
       },
     ],
-    type: "tuple",
   },
 ] as const;
 

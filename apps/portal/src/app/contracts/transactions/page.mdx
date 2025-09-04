@@ -13,16 +13,4 @@ import {
 
 Query all transactions for any deployed contract on any EVM chain.
 
-<Tabs defaultValue="http">
-  <TabsList>
-    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
-      <EngineIcon className="w-4 h-4 mr-2" />
-      HTTP
-    </TabsTrigger>
-  </TabsList>
-
-  <TabsContent value="http">
-    <OpenApiEndpoint path="/v1/contracts/{chainId}/{address}/transactions" method="GET" />
-
-  </TabsContent>
-</Tabs>
+<OpenApiEndpoint path="/v1/contracts/{chainId}/{address}/transactions" method="GET" />

@@ -4,7 +4,6 @@ import { getInAppWalletUsage } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getProjects, type Project } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
-import { DismissibleAlert } from "@/components/blocks/dismissible-alert";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { Changelog } from "./_components/Changelog";
@@ -63,15 +62,8 @@ export default async function Page(props: {
           team={team}
         />
 
-        {team.billingPlan === "free" ? (
+        {team.billingPlan === "free" && (
           <FreePlanUpsellBannerUI highlightPlan="growth" teamSlug={team.slug} />
-        ) : (
-          <DismissibleAlert
-            preserveState={true}
-            description="Engines, contracts, project settings, and more are now managed within projects. Open or create a project to access them."
-            localStorageId={`${team.id}-engines-alert`}
-            title="Looking for Engines?"
-          />
         )}
 
         <Changelog />

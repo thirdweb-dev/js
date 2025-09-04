@@ -33,6 +33,7 @@ type ModalProps = {
   payOptions: PayUIOptions;
   onTxSent: (data: WaitForReceiptOptions) => void;
   modalMode: "buy" | "deposit";
+  country?: string;
 };
 
 export function TransactionModal(props: ModalProps) {
@@ -116,6 +117,7 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
 
   return (
     <BridgeOrchestrator
+      country={props.country}
       client={props.client}
       connectLocale={localeQuery.data}
       connectOptions={undefined}

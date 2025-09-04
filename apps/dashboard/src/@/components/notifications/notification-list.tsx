@@ -21,15 +21,15 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex w-full flex-1 flex-col">
+    <div className="flex flex-col overflow-hidden grow">
       <TabButtons
-        tabClassName="!text-sm hover:!bg-transparent !px-0 !py-1"
-        tabContainerClassName="space-x-6 px-4 pt-2"
+        tabClassName="hover:bg-transparent"
+        tabContainerClassName="pt-1.5 px-4"
         tabs={[
           {
             isActive: activeTab === "inbox",
             name: (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 Inbox
                 {props.unreadNotificationsCount > 0 && (
                   <Badge variant="secondary">
@@ -49,7 +49,7 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
       />
 
       <div
-        className="h-full w-full flex-1 overflow-y-auto"
+        className="flex-1 overflow-y-auto overscroll-contain flex flex-col grow"
         ref={scrollContainerRef}
       >
         {activeTab === "inbox" ? (
@@ -93,9 +93,9 @@ function InboxTab(
   },
 ) {
   return props.unreadNotifications.length === 0 ? (
-    <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-        <BellIcon className="h-4 w-4 text-muted-foreground" />
+    <div className="flex grow flex-col items-center justify-center gap-4 p-4 text-center">
+      <div className="p-2 bg-card rounded-full border">
+        <BellIcon className="size-5 text-muted-foreground" />
       </div>
       <p className="text-muted-foreground text-sm">No new notifications</p>
     </div>
@@ -131,9 +131,9 @@ function ArchiveTab(
   },
 ) {
   return props.archivedNotifications.length === 0 ? (
-    <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
-      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-        <ArchiveIcon className="h-4 w-4 text-muted-foreground" />
+    <div className="flex grow flex-col items-center justify-center gap-4 p-4 text-center">
+      <div className="p-2 bg-card rounded-full border">
+        <ArchiveIcon className="size-5 text-muted-foreground" />
       </div>
       <p className="text-muted-foreground text-sm">No archived notifications</p>
     </div>

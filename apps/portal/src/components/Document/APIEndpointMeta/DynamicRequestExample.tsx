@@ -27,7 +27,7 @@ interface DynamicRequestExampleProps {
 
 function InlineParameterItem({ param }: { param: APIParameter }) {
   return (
-    <div className="flex flex-col gap-2 p-3 bg-muted/30 rounded-lg">
+    <div className="flex flex-col gap-2 p-3 rounded-lg">
       <div className="flex items-center gap-2 flex-wrap">
         <code className="text-foreground text-sm font-mono bg-background px-2 py-1 rounded border">
           {param.name}

@@ -193,6 +193,9 @@ export type TransactionWidgetProps = {
    */
   currency?: SupportedFiatCurrency;
 
+  /** The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support. */
+  country?: string;
+
   /**
    * Custom label for the main action button.
    */
@@ -442,6 +445,7 @@ export function TransactionWidget(props: TransactionWidgetProps) {
     // Show normal bridge orchestrator
     content = (
       <BridgeOrchestrator
+        country={props.country}
         supportedTokens={props.supportedTokens}
         client={props.client}
         connectLocale={localeQuery.data}

@@ -192,7 +192,7 @@ function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
                                 acc +
                                 Number(
                                   toTokens(
-                                    curr.destinationAmount,
+                                    BigInt(curr.destinationAmount),
                                     curr.destinationToken.decimals,
                                   ),
                                 ),

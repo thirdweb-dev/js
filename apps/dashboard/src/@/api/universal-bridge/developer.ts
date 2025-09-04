@@ -297,38 +297,53 @@ export type PaymentsResponse = {
     totalCount: number;
   };
 };
+
+type BridgePaymentType = "buy" | "sell" | "transfer";
+type OnrampPaymentType = "onramp";
+
 export type Payment = {
+  // common
   id: string;
-  blockNumber?: bigint;
-  transactionId: string;
+  createdAt: string;
   clientId: string;
-  sender: string;
   receiver: string;
-  developerFeeRecipient: string;
-  developerFeeBps: number;
   transactions: Array<{
     chainId: number;
     transactionHash: string;
   }>;
   status: "PENDING" | "COMPLETED" | "FAILED" | "NOT_FOUND";
-  type: "buy" | "sell" | "transfer";
-  originAmount: bigint;
-  destinationAmount: bigint;
-  purchaseData: unknown;
-  originToken: {
-    address: string;
-    symbol: string;
-    decimals: number;
-    chainId: number;
-  };
+
+  destinationAmount: string;
   destinationToken: {
     address: string;
     symbol: string;
     decimals: number;
     chainId: number;
   };
-  createdAt: string;
-};
+  purchaseData: unknown;
+} & (
+  | {
+      type: BridgePaymentType;
+      transactionId: string;
+      blockNumber?: string;
+      sender: string;
+      developerFeeRecipient: string;
+      developerFeeBps: number;
+      originAmount: string;
+      originToken: {
+        address: string;
+        symbol: string;
+        decimals: number;
+        chainId: number;
+      };
+    }
+  | {
+      onrampId: string;
+      type: OnrampPaymentType;
+    }
+);
+
+export type BridgePayment = Extract<Payment, { type: BridgePaymentType }>;
 
 export async function getPayments(props: {
   clientId: string;

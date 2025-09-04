@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowDownToLineIcon,
-  CircleAlertIcon,
-  CircleHelpIcon,
-  PlusIcon,
-} from "lucide-react";
+import { CircleAlertIcon, CircleHelpIcon, PlusIcon } from "lucide-react";
 import {
   createContext,
   Fragment,
@@ -652,7 +647,6 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 txChainID={contract.chain.id}
                 type="submit"
               >
-                <ArrowDownToLineIcon className="size-3.5" />
                 {claimConditionsQuery.isPending
                   ? "Saving Phases"
                   : "Save Phases"}

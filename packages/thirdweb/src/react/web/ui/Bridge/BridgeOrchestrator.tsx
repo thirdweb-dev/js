@@ -126,6 +126,11 @@ export interface BridgeOrchestratorProps {
   paymentMethods?: ("crypto" | "card")[];
 
   /**
+   * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+   */
+  country: string | undefined;
+
+  /**
    * Whether to show thirdweb branding in the widget.
    * @default true
    */
@@ -148,6 +153,7 @@ export function BridgeOrchestrator({
   paymentMethods = ["crypto", "card"],
   showThirdwebBranding = true,
   supportedTokens,
+  country = "US",
 }: BridgeOrchestratorProps) {
   // Initialize adapters
   const adapters = useMemo(
@@ -319,6 +325,7 @@ export function BridgeOrchestrator({
             receiverAddress={state.context.receiverAddress}
             currency={uiOptions.currency}
             supportedTokens={supportedTokens}
+            country={country}
           />
         )}
 

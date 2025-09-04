@@ -3,7 +3,6 @@ import {
   BoxIcon,
   BracesIcon,
   BrainIcon,
-  ExternalLinkIcon,
   MessageCircleQuestionIcon,
   NetworkIcon,
   RocketIcon,
@@ -26,11 +25,6 @@ export const sidebar: SideBar = {
       href: `${insightSlug}/use-cases`,
       icon: <StickyNoteIcon />,
       name: "Use Cases",
-    },
-    {
-      href: "https://playground.thirdweb.com/insight",
-      icon: <ExternalLinkIcon />,
-      name: "Playground",
     },
     {
       href: `${insightSlug}/get-started`,

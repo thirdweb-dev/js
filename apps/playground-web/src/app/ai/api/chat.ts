@@ -1,45 +1,11 @@
 import { stream } from "fetch-event-stream";
-import type { NebulaTxData, NebulaUserMessage } from "./types";
-
-const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-
-export type NebulaContext = {
-  chainIds: string[] | null;
-  walletAddress: string | null;
-  sessionId: string | null;
-};
-
-type NebulaSwapData = {
-  action: string;
-  transaction: {
-    chainId: number;
-    to: `0x${string}`;
-    data: `0x${string}`;
-  };
-  to: {
-    address: `0x${string}`;
-    amount: string;
-    chain_id: number;
-    decimals: number;
-    symbol: string;
-  };
-  from: {
-    address: `0x${string}`;
-    amount: string;
-    chain_id: number;
-    decimals: number;
-    symbol: string;
-  };
-  intent: {
-    amount: string;
-    destinationChainId: number;
-    destinationTokenAddress: `0x${string}`;
-    originChainId: number;
-    originTokenAddress: `0x${string}`;
-    receiver: `0x${string}`;
-    sender: `0x${string}`;
-  };
-};
+import {
+  API_URL,
+  type NebulaContext,
+  type NebulaSwapData,
+  type NebulaTxData,
+  type NebulaUserMessage,
+} from "./types";
 
 export async function promptNebula(params: {
   message: NebulaUserMessage;
