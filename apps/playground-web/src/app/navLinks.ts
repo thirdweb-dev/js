@@ -17,12 +17,17 @@ const ai: ShadcnSidebarLink = {
   },
   links: [
     {
+      href: "/ai",
+      label: "Overview",
+      exactMatch: true,
+    },
+    {
       href: "/ai/chat",
       label: "Blockchain LLM",
     },
     {
       href: "/ai/ai-sdk",
-      label: "AI SDK",
+      label: "AI SDK Integration",
     },
   ],
 };
@@ -33,6 +38,11 @@ const wallets: ShadcnSidebarLink = {
     icon: WalletProductIcon,
   },
   links: [
+    {
+      label: "Overview",
+      href: "/wallets",
+      exactMatch: true,
+    },
     {
       href: "/wallets/sign-in/button",
       label: "Connect Button",
@@ -61,12 +71,16 @@ const wallets: ShadcnSidebarLink = {
       href: "/wallets/social",
       label: "Social Profiles",
     },
-
     {
       subMenu: {
         label: "Headless Components",
       },
       links: [
+        {
+          label: "Overview",
+          href: "/wallets/headless",
+          exactMatch: true,
+        },
         {
           href: "/wallets/headless/account-components",
           label: "Account Components",
@@ -90,6 +104,11 @@ const contracts: ShadcnSidebarLink = {
     icon: ContractIcon,
   },
   links: [
+    {
+      label: "Overview",
+      href: "/contracts",
+      exactMatch: true,
+    },
     {
       href: "/contracts/read",
       label: "Read Contract",
@@ -116,6 +135,11 @@ const tokens: ShadcnSidebarLink = {
   },
   links: [
     {
+      label: "Overview",
+      href: "/tokens",
+      exactMatch: true,
+    },
+    {
       href: "/tokens/token-components",
       label: "Token Components",
     },
@@ -132,6 +156,11 @@ const accountAbstractions: ShadcnSidebarLink = {
     icon: SmartAccountIcon,
   },
   links: [
+    {
+      label: "Overview",
+      href: "/account-abstraction",
+      exactMatch: true,
+    },
     {
       href: "/account-abstraction/eip-4337",
       label: "EIP-4337",
@@ -157,6 +186,11 @@ const payments: ShadcnSidebarLink = {
     icon: PayIcon,
   },
   links: [
+    {
+      label: "Overview",
+      href: "/payments",
+      exactMatch: true,
+    },
     {
       href: "/payments/ui-components",
       label: "UI Components",
@@ -186,6 +220,11 @@ const transactions: ShadcnSidebarLink = {
     icon: ArrowLeftRightIcon,
   },
   links: [
+    {
+      label: "Overview",
+      href: "/transactions",
+      exactMatch: true,
+    },
     {
       href: "/transactions/airdrop-tokens",
       label: "Airdrop Tokens",
