@@ -40,10 +40,6 @@ export function InsightFTUX(props: { clientId: string }) {
       ]}
       ctas={[
         {
-          href: "https://playground.thirdweb.com/insight",
-          label: "Try on Playground",
-        },
-        {
           href: "https://portal.thirdweb.com/insight",
           label: "View Docs",
         },

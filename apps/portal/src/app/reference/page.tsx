@@ -10,10 +10,12 @@ export const metadata = createMetadata({
   description: "Complete REST API reference for all thirdweb services",
 });
 
-export default function ApiReferencePage() {
+export default async function ApiReferencePage() {
+  const responses = await fetch("https://api.thirdweb.com/openapi.json");
+  const spec = await responses.json();
   return (
     <div className="container max-sm:px-0">
-      <ScalarApiReference />
+      <ScalarApiReference spec={spec} />
     </div>
   );
 }

@@ -615,6 +615,9 @@ importers:
       '@radix-ui/react-use-controllable-state':
         specifier: ^1.2.2
         version: 1.2.2(@types/react@19.1.8)(react@19.1.0)
+      '@scalar/api-reference-react':
+        specifier: ^0.7.42
+        version: 0.7.42(axios@1.10.0)(idb-keyval@6.2.2)(nprogress@0.2.0)(qrcode@1.5.3)(react@19.1.0)(tailwindcss@3.4.17)(typescript@5.8.3)
       '@tanstack/react-query':
         specifier: 5.81.5
         version: 5.81.5(react@19.1.0)
@@ -18079,7 +18082,7 @@ snapshots:
       '@babel/code-frame': 7.27.1
       '@babel/generator': 7.28.0
       '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.28.0
+      '@babel/parser': 7.28.3
       '@babel/template': 7.27.2
       '@babel/types': 7.28.2
       debug: 4.4.1(supports-color@8.1.1)

@@ -5,7 +5,6 @@ import {
   aiFeatureCards,
   contractsFeatureCards,
   type FeatureCardMetadata,
-  insightFeatureCards,
   paymentsFeatureCards,
   transactionsFeatureCards,
   walletsFeatureCards,
@@ -48,7 +47,6 @@ export default function Page() {
           title="Contracts"
         />
         <FeatureSection featureCards={paymentsFeatureCards} title="Payments" />
-        <FeatureSection featureCards={insightFeatureCards} title="Insight" />
         <FeatureSection
           featureCards={accountAbstractionsFeatureCards}
           title="Account Abstraction"
