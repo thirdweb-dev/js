@@ -883,12 +883,8 @@ function AuthMethodsTabsContent() {
         >
           <TabsList>
             {platforms.map((platform) => {
-              const IconComponent = platform.icon;
               return (
                 <TabsTrigger key={platform.id} value={platform.id}>
-                  <span className="mr-1 inline-flex size-4 items-center justify-center">
-                    <IconComponent />
-                  </span>
                   {platform.label}
                 </TabsTrigger>
               );

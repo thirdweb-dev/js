@@ -28,7 +28,7 @@ Monitor and get notified about transactions in your application, both on your pr
 <Tabs defaultValue="http">
 	<TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
-      <EngineIcon className="w-4 h-4 mr-2" />
+      <EngineIcon className="w-4 h-4" />
       HTTP
     </TabsTrigger>
 		<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
@@ -44,7 +44,7 @@ Monitor and get notified about transactions in your application, both on your pr
   Get the information about a transaction by its id.
 
   <OpenApiEndpoint path="/v1/transactions/{transactionId}" method="GET" />
-  
+
   ### List transactions
 
   List all transactions for your project with filtering and pagination.
@@ -59,7 +59,7 @@ Monitor and get notified about transactions in your application, both on your pr
 
     ```typescript
     import { Engine } from "thirdweb";
- 
+
     const executionResult = await Engine.getTransactionStatus({
         client,
         transactionId,  // the transaction id returned from enqueueTransaction
@@ -70,11 +70,11 @@ Monitor and get notified about transactions in your application, both on your pr
 
     ```typescript
     import { Engine } from "thirdweb";
- 
+
     const { transactionHash } = await Engine.waitForTransactionHash({
         client,
         transactionId, // the transaction id returned from enqueueTransaction
-    }); 
+    });
     ```
 
   </TabsContent>
