@@ -68,7 +68,7 @@ const ContractFunction: React.FC<{
 
 function ContractFunctionInner(props: ContractFunctionProps) {
   const { contract, fn } = props;
-  const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
+  const [environment, setEnvironment] = useState<CodeEnvironment>("api");
   const functionSelectorQuery = useContractFunctionSelectors(contract);
   const functionSelectors = functionSelectorQuery.data || [];
   const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
