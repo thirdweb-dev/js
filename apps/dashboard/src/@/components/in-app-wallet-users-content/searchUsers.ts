@@ -4,11 +4,10 @@ import type {
 } from "@thirdweb-dev/api";
 import { configure, listUserWallets } from "@thirdweb-dev/api";
 import type { WalletUser } from "thirdweb/wallets";
+import { THIRDWEB_API_HOST } from "@/constants/urls";
 import type { SearchType } from "./types";
 
 // Configure the API client to use the correct base URL
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 configure({
   override: {
     baseUrl: THIRDWEB_API_HOST,

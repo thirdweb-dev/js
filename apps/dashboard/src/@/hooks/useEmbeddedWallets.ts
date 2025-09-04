@@ -6,11 +6,10 @@ import type {
 import { configure, listUserWallets } from "@thirdweb-dev/api";
 import { useActiveAccount } from "thirdweb/react";
 import type { WalletUser } from "thirdweb/wallets";
+import { THIRDWEB_API_HOST } from "@/constants/urls";
 import { embeddedWalletsKeys } from "../query-keys/cache-keys";
 
 // Configure the API client to use the correct base URL
-const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 configure({
   override: {
     baseUrl: THIRDWEB_API_HOST,
