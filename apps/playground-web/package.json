@@ -17,6 +17,7 @@
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tooltip": "1.2.7",
     "@radix-ui/react-use-controllable-state": "^1.2.2",
+    "@scalar/api-reference-react": "^0.7.42",
     "@tanstack/react-query": "5.81.5",
     "@thirdweb-dev/ai-sdk-provider": "workspace:*",
     "@workspace/ui": "workspace:*",
@@ -77,8 +78,7 @@
     "prefix": "biome check ./src --fix",
     "prelint": "biome check ./src",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "update-insight-blueprints": "bun scripts/updateInsightBlueprints.ts"
+    "typecheck": "tsc --noEmit"
   },
   "version": "0.1.1"
 }

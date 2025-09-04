@@ -1,14 +1,12 @@
 "use client";
 
-import { ArrowLeftRightIcon, BotIcon } from "lucide-react";
+import { ArrowLeftRightIcon, BotIcon, Code2Icon } from "lucide-react";
 import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
 import { ContractIcon } from "../icons/ContractIcon";
-import { InsightIcon } from "../icons/InsightIcon";
 import { PayIcon } from "../icons/PayIcon";
 import { SmartAccountIcon } from "../icons/SmartAccountIcon";
 import { TokenIcon } from "../icons/TokenIcon";
 import { WalletProductIcon } from "../icons/WalletProductIcon";
-import { insightBlueprints } from "./insight/insightBlueprints";
 
 const ai: ShadcnSidebarLink = {
   subMenu: {
@@ -207,10 +205,6 @@ const payments: ShadcnSidebarLink = {
       href: "/payments/transactions",
       label: "Onchain Transaction",
     },
-    {
-      href: "/payments/backend",
-      label: "Payments API",
-    },
   ],
 };
 
@@ -240,36 +234,6 @@ const transactions: ShadcnSidebarLink = {
   ],
 };
 
-const insightLinks: ShadcnSidebarLink[] = insightBlueprints.map((blueprint) => {
-  return {
-    links: blueprint.paths.map((pathInfo) => {
-      return {
-        href: `/insight/${blueprint.id}?path=${pathInfo.path}`,
-        label: pathInfo.name,
-        exactMatch: true,
-      };
-    }),
-    subMenu: {
-      label: blueprint.name,
-    },
-  };
-});
-
-const insight: ShadcnSidebarLink = {
-  links: [
-    {
-      href: "/insight",
-      label: "Overview",
-      exactMatch: true,
-    },
-    ...insightLinks,
-  ],
-  subMenu: {
-    label: "Insight",
-    icon: InsightIcon,
-  },
-};
-
 export const sidebarLinks: ShadcnSidebarLink[] = [
   ai,
   wallets,
@@ -277,6 +241,10 @@ export const sidebarLinks: ShadcnSidebarLink[] = [
   contracts,
   payments,
   tokens,
-  insight,
   accountAbstractions,
+  {
+    href: "/reference",
+    label: "API Reference",
+    icon: Code2Icon,
+  },
 ];
