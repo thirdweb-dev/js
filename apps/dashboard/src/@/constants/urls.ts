@@ -1,5 +1,5 @@
 export const THIRDWEB_API_HOST =
-  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
+  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb-dev.com";
 
 export const THIRDWEB_PAY_DOMAIN =
   process.env.NEXT_PUBLIC_PAY_URL || "pay.thirdweb-dev.com";
