@@ -1,20 +1,23 @@
 import { format } from "date-fns";
 import { type ThirdwebClient, toTokens } from "thirdweb";
-import type { Payment } from "@/api/universal-bridge/developer";
+import type { BridgePayment } from "@/api/universal-bridge/developer";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { TableData } from "./common";
 import { formatTokenAmount } from "./format";
 
-export function TableRow(props: { purchase: Payment; client: ThirdwebClient }) {
+export function TableRow(props: {
+  purchase: BridgePayment;
+  client: ThirdwebClient;
+}) {
   const { purchase } = props;
   const originAmount = toTokens(
-    purchase.originAmount,
+    BigInt(purchase.originAmount),
     purchase.originToken.decimals,
   );
   const destinationAmount = toTokens(
-    purchase.destinationAmount,
+    BigInt(purchase.destinationAmount),
     purchase.destinationToken.decimals,
   );
   const type = (() => {

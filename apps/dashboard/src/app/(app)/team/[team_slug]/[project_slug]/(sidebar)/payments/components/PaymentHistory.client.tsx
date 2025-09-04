@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { type ThirdwebClient, toTokens } from "thirdweb";
 import {
+  type BridgePayment,
   getPayments,
   type Payment,
   type PaymentsResponse,
@@ -59,7 +60,9 @@ export function PaymentHistory(props: {
         <ExportToCSVButton
           fileName="transaction_history"
           getData={async () => {
-            return getCSVData(payPurchaseData?.data || []);
+            return getCSVData(
+              payPurchaseData?.data.filter(isBridgePayment) || [],
+            );
           }}
         />
       </div>
@@ -82,15 +85,17 @@ export function PaymentHistory(props: {
             <tbody>
               {(!isEmpty || isLoading) &&
                 (payPurchaseData && !isLoading
-                  ? payPurchaseData.data.map((purchase) => {
-                      return (
-                        <TableRow
-                          client={props.client}
-                          key={purchase.id}
-                          purchase={purchase}
-                        />
-                      );
-                    })
+                  ? payPurchaseData.data
+                      .filter(isBridgePayment)
+                      .map((purchase) => {
+                        return (
+                          <TableRow
+                            client={props.client}
+                            key={purchase.id}
+                            purchase={purchase}
+                          />
+                        );
+                      })
                   : new Array(pageSize).fill(0).map((_, i) => (
                       // biome-ignore lint/suspicious/noArrayIndexKey: ok
                       <SkeletonTableRow key={i} />
@@ -119,16 +124,20 @@ export function PaymentHistory(props: {
   );
 }
 
-function getCSVData(data: Payment[]) {
+function isBridgePayment(purchase: Payment): purchase is BridgePayment {
+  return purchase.type !== "onramp";
+}
+
+function getCSVData(data: BridgePayment[]) {
   const header = ["Type", "Bought", "Paid", "Status", "Recipient", "Date"];
 
   const rows: string[][] = data.map((purchase) => {
     const toAmount = toTokens(
-      purchase.destinationAmount,
+      BigInt(purchase.destinationAmount),
       purchase.destinationToken.decimals,
     );
     const fromAmount = toTokens(
-      purchase.originAmount,
+      BigInt(purchase.originAmount),
       purchase.originToken.decimals,
     );
     const type = (() => {
