@@ -81,134 +81,134 @@ export type CreateSessionWithSigParams = WithOverrides<{
 export const FN_SELECTOR = "0xb5051648" as const;
 const FN_INPUTS = [
   {
+    type: "tuple",
+    name: "sessionSpec",
     components: [
       {
-        name: "signer",
         type: "address",
+        name: "signer",
       },
       {
-        name: "isWildcard",
         type: "bool",
+        name: "isWildcard",
       },
       {
-        name: "expiresAt",
         type: "uint256",
+        name: "expiresAt",
       },
       {
+        type: "tuple[]",
+        name: "callPolicies",
         components: [
           {
-            name: "target",
             type: "address",
+            name: "target",
           },
           {
-            name: "selector",
             type: "bytes4",
+            name: "selector",
           },
           {
-            name: "maxValuePerUse",
             type: "uint256",
+            name: "maxValuePerUse",
           },
           {
+            type: "tuple",
+            name: "valueLimit",
             components: [
               {
-                name: "limitType",
                 type: "uint8",
+                name: "limitType",
               },
               {
+                type: "uint256",
                 name: "limit",
-                type: "uint256",
               },
               {
-                name: "period",
                 type: "uint256",
+                name: "period",
               },
             ],
-            name: "valueLimit",
-            type: "tuple",
           },
           {
+            type: "tuple[]",
+            name: "constraints",
             components: [
               {
-                name: "condition",
                 type: "uint8",
+                name: "condition",
               },
               {
-                name: "index",
                 type: "uint64",
+                name: "index",
               },
               {
-                name: "refValue",
                 type: "bytes32",
+                name: "refValue",
               },
               {
+                type: "tuple",
+                name: "limit",
                 components: [
                   {
-                    name: "limitType",
                     type: "uint8",
+                    name: "limitType",
                   },
                   {
+                    type: "uint256",
                     name: "limit",
-                    type: "uint256",
                   },
                   {
-                    name: "period",
                     type: "uint256",
+                    name: "period",
                   },
                 ],
-                name: "limit",
-                type: "tuple",
               },
             ],
-            name: "constraints",
-            type: "tuple[]",
           },
         ],
-        name: "callPolicies",
-        type: "tuple[]",
       },
       {
+        type: "tuple[]",
+        name: "transferPolicies",
         components: [
           {
-            name: "target",
             type: "address",
+            name: "target",
           },
           {
-            name: "maxValuePerUse",
             type: "uint256",
+            name: "maxValuePerUse",
           },
           {
+            type: "tuple",
+            name: "valueLimit",
             components: [
               {
-                name: "limitType",
                 type: "uint8",
+                name: "limitType",
               },
               {
+                type: "uint256",
                 name: "limit",
-                type: "uint256",
               },
               {
-                name: "period",
                 type: "uint256",
+                name: "period",
               },
             ],
-            name: "valueLimit",
-            type: "tuple",
           },
         ],
-        name: "transferPolicies",
-        type: "tuple[]",
       },
       {
-        name: "uid",
         type: "bytes32",
+        name: "uid",
       },
     ],
-    name: "sessionSpec",
-    type: "tuple",
   },
   {
-    name: "signature",
     type: "bytes",
+    name: "signature",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -316,23 +316,23 @@ export function createSessionWithSig(
   });
 
   return prepareContractCall({
-    accessList: async () => (await asyncOptions()).overrides?.accessList,
-    authorizationList: async () =>
-      (await asyncOptions()).overrides?.authorizationList,
     contract: options.contract,
-    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
-    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
-    gas: async () => (await asyncOptions()).overrides?.gas,
-    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
-    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
-    maxPriorityFeePerGas: async () =>
-      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    nonce: async () => (await asyncOptions()).overrides?.nonce,
     params: async () => {
       const resolvedOptions = await asyncOptions();
       return [resolvedOptions.sessionSpec, resolvedOptions.signature] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+    authorizationList: async () =>
+      (await asyncOptions()).overrides?.authorizationList,
   });
 }
