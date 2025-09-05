@@ -33,12 +33,12 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     switch (args.strategy) {
       case "email":
         return {
-          type: "email",
+          method: "email",
           email: args.email,
         };
       case "phone":
         return {
-          type: "phone",
+          method: "sms",
           phone: args.phoneNumber,
         };
     }
@@ -54,7 +54,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     throw new Error("Failed to send verification code");
   }
 
-  return await response.json();
+  return;
 };
 
 /**
