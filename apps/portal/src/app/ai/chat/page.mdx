@@ -20,7 +20,7 @@ You can use the API with the HTTP API directly, the AI SDK or with any OpenAI-co
   <TabsList>
     <TabsTrigger value="api">HTTP API</TabsTrigger>
     <TabsTrigger value="ai-sdk">Vercel AI SDK</TabsTrigger>
-    <TabsTrigger value="openai">OpenAI Client</TabsTrigger>
+    <TabsTrigger value="openai">OpenAI SDK</TabsTrigger>
   </TabsList>
   <TabsContent value="api">
     <OpenApiEndpoint path="/ai/chat" method="POST" />
@@ -60,9 +60,9 @@ You can use the API with the HTTP API directly, the AI SDK or with any OpenAI-co
 
   <TabsContent value="openai">
 
-### Using the OpenAI Client
+### Using the OpenAI SDK
 
-You can use the standard OpenAI client library to interact with the thirdweb AI model.
+You can use the standard OpenAI SDK library to interact with the thirdweb AI model.
 
 ```python
 from openai import OpenAI
@@ -72,8 +72,8 @@ client = OpenAI(
 	api_key="<your-project-secret-key>",
 )
 chat_completion = client.chat.completions.create(
-	model="t0",
-	messages=[{"role": "user", "content": "Transfer 10 USDC to vitalik.eth"}],
+	model="t0-latest",
+	messages=[{ "role": "user", "content": "Transfer 10 USDC to vitalik.eth" }],
 	stream=False,
   extra_body={ "context": { "from": "0x...", "chain_ids": [8453] }}
 )
