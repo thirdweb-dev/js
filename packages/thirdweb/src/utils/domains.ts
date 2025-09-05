@@ -15,6 +15,11 @@ type DomainOverrides = {
    */
   inAppWallet?: string;
   /**
+   * The base URL for the API server.
+   * @default "api.thirdweb.com"
+   */
+  api?: string;
+  /**
    * The base URL for the payment server.
    * @default "pay.thirdweb.com"
    */
@@ -54,6 +59,7 @@ type DomainOverrides = {
 export const DEFAULT_RPC_URL = "rpc.thirdweb.com";
 const DEFAULT_SOCIAL_URL = "social.thirdweb.com";
 const DEFAULT_IN_APP_WALLET_URL = "embedded-wallet.thirdweb.com";
+const DEFAULT_API_URL = "api.thirdweb.com";
 const DEFAULT_PAY_URL = "pay.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 const DEFAULT_BUNDLER_URL = "bundler.thirdweb.com";
@@ -64,6 +70,7 @@ const DEFAULT_BRIDGE_URL = "bridge.thirdweb.com";
 
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   analytics: DEFAULT_ANALYTICS_URL,
+  api: DEFAULT_API_URL,
   bridge: DEFAULT_BRIDGE_URL,
   bundler: DEFAULT_BUNDLER_URL,
   engineCloud: DEFAULT_ENGINE_CLOUD_URL,
@@ -78,6 +85,7 @@ let domains: { [k in keyof DomainOverrides]-?: string } = {
 export const setThirdwebDomains = (DomainOverrides: DomainOverrides) => {
   domains = {
     analytics: DomainOverrides.analytics ?? DEFAULT_ANALYTICS_URL,
+    api: DomainOverrides.api ?? DEFAULT_API_URL,
     bridge: DomainOverrides.bridge ?? DEFAULT_BRIDGE_URL,
     bundler: DomainOverrides.bundler ?? DEFAULT_BUNDLER_URL,
     engineCloud: DomainOverrides.engineCloud ?? DEFAULT_ENGINE_CLOUD_URL,
