@@ -124,7 +124,7 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
-    href: "https://api.thirdweb.com/reference",
+    href: "/reference",
     name: "HTTP API",
   },
   {

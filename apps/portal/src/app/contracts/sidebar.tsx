@@ -63,7 +63,7 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: "https://api.thirdweb.com/reference#tag/contracts",
+          href: "/reference#tag/contracts",
           icon: <CodeIcon />,
           name: "HTTP API",
         },
