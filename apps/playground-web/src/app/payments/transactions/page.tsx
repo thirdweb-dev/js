@@ -1,14 +1,12 @@
 import { ArrowLeftRightIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import { CodeExample } from "@/components/code/code-example";
-import {
-  PayTransactionButtonPreview,
-  PayTransactionPreview,
-} from "@/components/pay/transaction-button";
+import { PayTransactionButtonPreview } from "@/components/pay/transaction-button";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { createMetadata } from "@/lib/metadata";
+import { TransactionPlayground } from "./TransactionPlayground";
 
-const title = "Onchain Transaction Component";
+const title = "Onchain Transaction Components";
 const description =
   "Enable seamless onchain transactions for any contract with fiat or crypto with amounts calculated and automatic execution after funds are confirmed.";
 const ogDescription =
@@ -33,88 +31,86 @@ export default function Page() {
         docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
         title={title}
       >
-        <BuyOnchainAsset />
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight mb-1">
+            Transaction Widget
+          </h2>
+          <p className="text-base text-muted-foreground mb-6">
+            Render a prebuilt UI for performing transactions using any token or
+            fiat. <br /> It handles the complete payment flow, supporting both
+            crypto and fiat payments across 50+ chains.
+          </p>
+          <TransactionPlayground />
+        </div>
         <NoFundsPopup />
       </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function BuyOnchainAsset() {
-  return (
-    <CodeExample
-      code={`import { claimTo } from "thirdweb/extensions/erc1155";
-          import { TransactionWidget, useActiveAccount } from "thirdweb/react";
-
-        function App() {
-          const account = useActiveAccount();
-          const { data: nft } = useReadContract(getNFT, {
-            contract: nftContract,
-            tokenId: 0n,
-          });
-
-          return (
-        <TransactionWidget
-          amount={"0.001"}
-          client={THIRDWEB_CLIENT}
-          theme={theme === "light" ? "light" : "dark"}
-          transaction={claimTo({
-            contract: nftContract,
-            quantity: 1n,
-            tokenId: 2n,
-            to: account?.address || "",
-          })}
-          title={nft?.metadata?.name}
-          description={nft?.metadata?.description}
-          image={nft?.metadata?.image}
-        />
-          );
-        };`}
-      header={{
-        description: (
-          <>
-            Let your users pay for onchain transactions with fiat or crypto on
-            any chain.
-            <br />
-            Amounts are calculated automatically from the transaction, and will
-            get executed after the user has obtained the necessary funds via
-            onramp or swap.
-          </>
-        ),
-        title: "Transactions",
-      }}
-      lang="tsx"
-      preview={<PayTransactionPreview />}
-    />
-  );
-}
-
 function NoFundsPopup() {
   return (
     <CodeExample
-      code={`import { transfer } from "thirdweb/extensions/erc1155";
-          import { TransactionButton, useActiveAccount } from "thirdweb/react";
+      code={`
+import { transfer } from "thirdweb/extensions/erc20";
+import { TransactionButton, useActiveAccount } from "thirdweb/react";
+import { arbitrum } from "thirdweb/chains";
+import { getContract, createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_CLIENT_ID",
+});
 
 
-        function App() {
-          const account = useActiveAccount();
+const usdcContract = getContract({
+  address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+  chain: arbitrum,
+  client,
+});
 
-          return (
-            <TransactionButton
-              client={client}
-              transaction={() => {
-                if (!account) { throw new Error("No wallet connected"); }
-                return transfer({
-                  contract: usdcContract,
-                  amount: "50",
-                  to: account.address,
-                });
-              }}
-            >
-              Buy VIP Pass
-            </TransactionButton>
-          );
-        };`}
+function App() {
+const account = useActiveAccount();
+
+if (!account) {
+  return <ConnectButton client={client} />
+}
+
+return (
+  <div>
+    <p> Price: 50 USDC </p>
+    <TransactionButton
+      client={client}
+      transaction={() => {
+        if (!account) { throw new Error("No wallet connected"); }
+        return transfer({
+          contract: usdcContract,
+          amount: "50",
+          to: account.address,
+        });
+      }}
+    >
+      Buy VIP Pass
+    </TransactionButton>
+
+
+    <p> Price: 0.1 ETH </p>
+    <TransactionButton
+      client={client}
+      transaction={() => {
+        if (!account) { throw new Error("No wallet connected"); }
+        return transfer({
+          contract: usdcContract,
+          amount: "50",
+          to: account.address,
+        });
+      }}
+    >
+      Buy VIP Pass
+    </TransactionButton>
+  </div>
+);
+};`}
       header={{
         description: (
           <>
@@ -122,7 +118,7 @@ function NoFundsPopup() {
             the wallet if needed before executing the transaction.
           </>
         ),
-        title: "Automatic Onramp",
+        title: "Transaction Button",
       }}
       lang="tsx"
       preview={<PayTransactionButtonPreview />}

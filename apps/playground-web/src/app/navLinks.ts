@@ -190,10 +190,6 @@ const payments: ShadcnSidebarLink = {
       exactMatch: true,
     },
     {
-      href: "/payments/ui-components",
-      label: "UI Components",
-    },
-    {
       href: "/payments/fund-wallet",
       label: "Buy Crypto",
     },

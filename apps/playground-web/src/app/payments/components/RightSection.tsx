@@ -29,6 +29,7 @@ type Tab = "ui" | "code";
 export function RightSection(props: {
   options: BridgeComponentsPlaygroundOptions;
   tab?: string;
+  lockedWidget?: "buy" | "checkout" | "transaction";
 }) {
   const pathname = usePathname();
   const [previewTab, _setPreviewTab] = useState<Tab>(() => {
@@ -51,8 +52,10 @@ export function RightSection(props: {
           colors: props.options.theme.lightColorOverrides,
         });
 
+  const effectiveWidget = props.lockedWidget || props.options.payOptions.widget;
+
   let embed: React.ReactNode;
-  if (props.options.payOptions.widget === "buy") {
+  if (effectiveWidget === "buy") {
     embed = (
       <BuyWidget
         amount={props.options.payOptions.buyTokenAmount}
@@ -73,7 +76,7 @@ export function RightSection(props: {
     );
   }
 
-  if (props.options.payOptions.widget === "checkout") {
+  if (effectiveWidget === "checkout") {
     embed = (
       <CheckoutWidget
         amount={props.options.payOptions.buyTokenAmount}
@@ -101,7 +104,7 @@ export function RightSection(props: {
     );
   }
 
-  if (props.options.payOptions.widget === "transaction") {
+  if (effectiveWidget === "transaction") {
     embed = (
       <TransactionWidget
         client={THIRDWEB_CLIENT}

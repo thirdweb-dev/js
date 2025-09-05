@@ -60,20 +60,15 @@ export function PayTransactionButtonPreview() {
   const account = useActiveAccount();
   const { theme } = useTheme();
 
+  if (!account) {
+    return <StyledConnectButton />;
+  }
+
   return (
     <>
-      <StyledConnectButton />
-      <div className="h-10" />
       {account && (
         <div className="flex flex-col items-center justify-center gap-2">
-          <div className="flex items-center gap-2">
-            Price:{" "}
-            {USDC?.icon && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img alt={USDC.name} src={USDC.icon} width={16} />
-            )}
-            50 {USDC?.symbol}
-          </div>
+          <div className="flex items-center gap-2">Price: 50 USDC</div>
           <TransactionButton
             onError={(e) => {
               console.error(e);

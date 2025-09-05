@@ -13,13 +13,12 @@ type FeatureCardProps = {
   badge?: { label: string; variant?: "outline" | "success" | "default" };
   id: string;
   icon: React.FC<{ className?: string }>;
-  color?: "green" | "violet";
   setupTime?: number;
   features?: string[];
 } & (
   | {
       action?: never;
-      link: { href: string; label: string; target?: string };
+      link: { href: string; label: string };
     }
   | {
       action: React.ReactNode;
@@ -29,15 +28,15 @@ type FeatureCardProps = {
 
 export function FeatureCard(props: FeatureCardProps) {
   return (
-    <Card className="p-6 flex flex-col items-start gap-6 text-muted-foreground w-full">
-      <div className="flex-1 flex flex-col items-start gap-6 w-full">
-        <div className="relative w-full">
-          <div
-            className={
-              "border bg-background rounded-lg size-9 flex items-center justify-center"
-            }
-          >
-            <props.icon className={`size-5 text-foreground`} />
+    <Card className="p-4 flex flex-col gap-6 rounded-xl">
+      {/* body */}
+      <div className="flex-1 flex flex-col">
+        {/* icon and badge */}
+        <div className="relative w-full mb-4">
+          <div className="flex">
+            <div className="border bg-background rounded-full p-2.5">
+              <props.icon className="size-4 text-muted-foreground" />
+            </div>
           </div>
           {props.badge && (
             <Badge
@@ -48,50 +47,55 @@ export function FeatureCard(props: FeatureCardProps) {
             </Badge>
           )}
         </div>
-        <div className="flex flex-col gap-1">
-          <h3 className="font-semibold text-foreground">{props.title}</h3>
-          <p className="text-muted-foreground text-sm font-medium">
-            {props.description}
-          </p>
+
+        {/* title and description */}
+        <h3 className="font-semibold text-lg text-foreground mb-1">
+          {props.title}
+        </h3>
+        <p className="text-muted-foreground text-sm font-medium text-pretty">
+          {props.description}
+        </p>
+
+        <div className="h-5" />
+
+        <div className="space-y-3">
+          {props.setupTime && (
+            <p className="flex gap-1.5 items-center text-xs text-muted-foreground">
+              <ClockIcon className="size-3" />
+              {props.setupTime} minute{props.setupTime > 1 && "s"} setup time
+            </p>
+          )}
+
+          {props.features && (
+            <ul className="space-y-1.5">
+              {props.features.map((feature) => (
+                <li
+                  key={feature}
+                  className="flex gap-2 items-center text-xs text-muted-foreground"
+                >
+                  <span className="bg-muted-foreground size-1 rounded-full" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        {(props.setupTime || props.features) && (
-          <div className="flex justify-center gap-4 text-xs flex-col">
-            {props.setupTime && (
-              <p className="flex gap-2 items-center">
-                <ClockIcon className="size-3" />
-                {props.setupTime} minute{props.setupTime > 1 && "s"} setup time
-              </p>
-            )}
-            {props.features && (
-              <ul>
-                {props.features.map((feature) => (
-                  <li key={feature} className="flex gap-2 items-center mb-1.5">
-                    <span className="bg-violet-500 size-1.5 rounded-full" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* footer */}
       {props.link ? (
         <Button
           onClick={() => reportPaymentCardClick({ id: props.id })}
-          size="sm"
           variant="outline"
-          className="w-full gap-2 group text-foreground"
+          className="w-full gap-2 group text-foreground bg-background rounded-lg"
           asChild
         >
           <Link
             href={props.link.href}
-            target={props.link.target}
-            rel={
-              props.link.target === "_blank" ? "noopener noreferrer" : undefined
-            }
+            target={props.link.href.startsWith("http") ? "_blank" : undefined}
           >
             {props.link.label}
-            <ArrowRightIcon className="size-4 group-hover:translate-x-1 transition-all" />
+            <ArrowRightIcon className="size-4 group-hover:translate-x-1 transition-all text-muted-foreground" />
           </Link>
         </Button>
       ) : (

@@ -13,6 +13,7 @@ async function fetchTokensFromApi(chainId?: number) {
     url.searchParams.append("chainId", String(chainId));
   }
   url.searchParams.append("limit", "1000");
+  url.searchParams.append("includePrices", "false");
 
   const res = await fetch(url.toString(), {
     headers: {

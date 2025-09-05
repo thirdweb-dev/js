@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 import { Badge } from "@/components/ui/badge";
+import { BridgeIcon } from "@/icons/BridgeIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { NebulaIcon } from "@/icons/NebulaIcon";
@@ -71,6 +72,11 @@ export function ProjectSidebarLayout(props: {
               href: `${props.layoutPath}/payments`,
               icon: PayIcon,
               label: "Payments",
+            },
+            {
+              href: `${props.layoutPath}/bridge`,
+              icon: BridgeIcon,
+              label: "Bridge",
             },
             {
               href: `${props.layoutPath}/tokens`,

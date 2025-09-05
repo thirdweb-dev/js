@@ -1,9 +1,8 @@
 import { ShoppingBagIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
-import { CodeExample } from "@/components/code/code-example";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { StyledBuyWidgetPreview } from "@/components/universal-bridge/buy";
 import { createMetadata } from "@/lib/metadata";
+import { BuyPlayground } from "./BuyPlayground";
 
 const title = "Buy Crypto Component";
 const description =
@@ -29,41 +28,8 @@ export default function Page() {
         description={description}
         docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
       >
-        <StyledPayWidget />
+        <BuyPlayground />
       </PageLayout>
     </ThirdwebProvider>
-  );
-}
-
-function StyledPayWidget() {
-  return (
-    <CodeExample
-      code={`\
-import { BuyWidget } from "thirdweb/react";
-
-function App() {
-  return (
-      <BuyWidget
-        client={THIRDWEB_CLIENT}
-        title="Get Funds"
-        tokenAddress={NATIVE_TOKEN_ADDRESS}
-        chain={arbitrum}
-        amount={toWei("0.002")}
-      />
-  );
-}`}
-      header={{
-        description: (
-          <>
-            Inline component that allows users to buy any currency.
-            <br />
-            Customize theme, currency, amounts, payment methods and more.
-          </>
-        ),
-        title: "Buy Crypto",
-      }}
-      lang="tsx"
-      preview={<StyledBuyWidgetPreview />}
-    />
   );
 }

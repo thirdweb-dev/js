@@ -29,16 +29,18 @@ import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { TokenMetadata } from "@/lib/types";
 import { CollapsibleSection } from "../../wallets/sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../wallets/sign-in/components/ColorFormGroup";
-import type { BridgeComponentsPlaygroundOptions } from "../components/types";
+import type { BridgeComponentsPlaygroundOptions } from "./types";
 
 export function LeftSection(props: {
   options: BridgeComponentsPlaygroundOptions;
   setOptions: React.Dispatch<
     React.SetStateAction<BridgeComponentsPlaygroundOptions>
   >;
+  lockedWidget?: "buy" | "checkout" | "transaction";
 }) {
   const { options, setOptions } = props;
   const { theme, payOptions } = options;
+  const effectiveWidget = props.lockedWidget || payOptions.widget || "buy";
   const setThemeType = (themeType: "dark" | "light") => {
     setOptions((v) => ({
       ...v,
@@ -117,30 +119,32 @@ export function LeftSection(props: {
         title="Payment Options"
       >
         <div className="flex flex-col gap-6 pt-5">
-          <section className="flex flex-col gap-3">
-            <Label htmlFor={payModeId}>Widget</Label>
-            <CustomRadioGroup
-              id={payModeId}
-              onValueChange={(value) => {
-                setOptions(
-                  (v) =>
-                    ({
-                      ...v,
-                      payOptions: {
-                        ...v.payOptions,
-                        widget: value as "buy" | "checkout" | "transaction",
-                      },
-                    }) satisfies BridgeComponentsPlaygroundOptions,
-                );
-              }}
-              options={[
-                { label: "Buy", value: "buy" },
-                { label: "Checkout", value: "checkout" },
-                { label: "Transaction", value: "transaction" },
-              ]}
-              value={payOptions.widget || "buy"}
-            />
-          </section>
+          {props.lockedWidget === undefined && (
+            <section className="flex flex-col gap-3">
+              <Label htmlFor={payModeId}>Widget</Label>
+              <CustomRadioGroup
+                id={payModeId}
+                onValueChange={(value) => {
+                  setOptions(
+                    (v) =>
+                      ({
+                        ...v,
+                        payOptions: {
+                          ...v.payOptions,
+                          widget: value as "buy" | "checkout" | "transaction",
+                        },
+                      }) satisfies BridgeComponentsPlaygroundOptions,
+                  );
+                }}
+                options={[
+                  { label: "Buy", value: "buy" },
+                  { label: "Checkout", value: "checkout" },
+                  { label: "Transaction", value: "transaction" },
+                ]}
+                value={payOptions.widget || "buy"}
+              />
+            </section>
+          )}
 
           <section className="flex flex-col gap-3">
             <Label htmlFor="currency">Display Currency</Label>
@@ -156,7 +160,7 @@ export function LeftSection(props: {
                 }));
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-card">
                 <SelectValue placeholder="Select currency" />
               </SelectTrigger>
               <SelectContent>
@@ -188,9 +192,7 @@ export function LeftSection(props: {
           </section>
 
           {/* Shared Chain and Token Selection - Always visible for Buy and Checkout modes */}
-          {(!payOptions.widget ||
-            payOptions.widget === "buy" ||
-            payOptions.widget === "checkout") && (
+          {(effectiveWidget === "buy" || effectiveWidget === "checkout") && (
             <div className="space-y-4">
               {/* Chain selection */}
               <div className="flex flex-col gap-2">
@@ -200,6 +202,7 @@ export function LeftSection(props: {
                   disableTestnets={true}
                   onChange={handleChainChange}
                   placeholder="Select a chain"
+                  className="bg-card"
                 />
               </div>
 
@@ -215,6 +218,7 @@ export function LeftSection(props: {
                     onChange={handleTokenChange}
                     placeholder="Select a token"
                     selectedToken={selectedToken}
+                    className="bg-card"
                   />
                 </div>
               )}
@@ -224,7 +228,7 @@ export function LeftSection(props: {
           {/* Mode-specific form fields */}
           <div className="my-2">
             {/* Buy Mode - Amount and Payment Methods */}
-            {(!payOptions.widget || payOptions.widget === "buy") && (
+            {effectiveWidget === "buy" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={buyTokenAmountId}>Amount</Label>
@@ -305,7 +309,7 @@ export function LeftSection(props: {
             )}
 
             {/* Checkout Mode - Seller Address, Price and Payment Methods */}
-            {payOptions.widget === "checkout" && (
+            {effectiveWidget === "checkout" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={sellerAddressId}>Seller Address</Label>
@@ -407,7 +411,7 @@ export function LeftSection(props: {
             )}
 
             {/* Transaction Mode Options */}
-            {payOptions.widget === "transaction" && (
+            {effectiveWidget === "transaction" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>Transaction</Label>

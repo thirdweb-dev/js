@@ -157,6 +157,11 @@ const nextConfig = {
         destination: "/reference#tag/payments",
         permanent: false,
       },
+      {
+        source: "/payments/ui-components",
+        destination: "/payments",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

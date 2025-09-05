@@ -1,15 +1,15 @@
 "use client";
-import { use, useState } from "react";
-import { arbitrum } from "thirdweb/chains";
-import type { BridgeComponentsPlaygroundOptions } from "../components/types";
-import { LeftSection } from "./LeftSection";
-import { RightSection } from "./RightSection";
 
-// NOTE: Only set the values that are actually the default values used by PayEmbed component
-const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
+import { useState } from "react";
+import { arbitrum } from "thirdweb/chains";
+import { LeftSection } from "../components/LeftSection";
+import { RightSection } from "../components/RightSection";
+import type { BridgeComponentsPlaygroundOptions } from "../components/types";
+
+const defaultOptions: BridgeComponentsPlaygroundOptions = {
   payOptions: {
     buyTokenAddress: undefined,
-    buyTokenAmount: "0.002",
+    buyTokenAmount: "0.01",
     buyTokenChain: arbitrum,
     description: "",
     image: "",
@@ -18,7 +18,7 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
     sellerAddress: "0x0000000000000000000000000000000000000000",
     title: "",
     transactionData: "",
-    widget: "buy",
+    widget: "transaction",
     currency: "USD",
     showThirdwebBranding: true,
   },
@@ -29,21 +29,20 @@ const defaultConnectOptions: BridgeComponentsPlaygroundOptions = {
   },
 };
 
-export default function BridgeComponentsPlayground(props: {
-  searchParams: Promise<{ tab: string }>;
-}) {
-  const searchParams = use(props.searchParams);
-  const [options, setOptions] = useState<BridgeComponentsPlaygroundOptions>(
-    defaultConnectOptions,
-  );
+export function TransactionPlayground() {
+  const [options, setOptions] =
+    useState<BridgeComponentsPlaygroundOptions>(defaultOptions);
 
   return (
     <div className="relative flex flex-col-reverse gap-6 xl:min-h-[900px] xl:flex-row xl:gap-6">
       <div className="grow border-b pb-10 xl:mb-0 xl:border-r xl:border-b-0 xl:pr-6">
-        <LeftSection options={options} setOptions={setOptions} />
+        <LeftSection
+          lockedWidget="transaction"
+          options={options}
+          setOptions={setOptions}
+        />
       </div>
-
-      <RightSection options={options} tab={searchParams.tab} />
+      <RightSection lockedWidget="transaction" options={options} />
     </div>
   );
 }

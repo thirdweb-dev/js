@@ -3,8 +3,11 @@ import { type ThirdwebClient, toTokens } from "thirdweb";
 import type { BridgePayment } from "@/api/universal-bridge/developer";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
+import {
+  TableCell,
+  TableRow as TableRowComponent,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { TableData } from "./common";
 import { formatTokenAmount } from "./format";
 
 export function TableRow(props: {
@@ -31,20 +34,20 @@ export function TableRow(props: {
   })();
 
   return (
-    <tr
+    <TableRowComponent
       className="fade-in-0 border-border border-b duration-300"
       key={purchase.id}
     >
       {/* Paid */}
-      <TableData>{`${formatTokenAmount(originAmount)} ${purchase.originToken.symbol}`}</TableData>
+      <TableCell>{`${formatTokenAmount(originAmount)} ${purchase.originToken.symbol}`}</TableCell>
 
       {/* Bought */}
-      <TableData>
+      <TableCell>
         {`${formatTokenAmount(destinationAmount)} ${purchase.destinationToken.symbol}`}
-      </TableData>
+      </TableCell>
 
       {/* Type */}
-      <TableData>
+      <TableCell>
         <Badge
           className={cn(
             "capitalize",
@@ -56,10 +59,10 @@ export function TableRow(props: {
         >
           {type.toLowerCase()}
         </Badge>
-      </TableData>
+      </TableCell>
 
       {/* Status */}
-      <TableData>
+      <TableCell>
         <Badge
           className="capitalize"
           variant={
@@ -72,19 +75,19 @@ export function TableRow(props: {
         >
           {purchase.status.toLowerCase()}
         </Badge>
-      </TableData>
+      </TableCell>
 
       {/* Address */}
-      <TableData>
+      <TableCell>
         <WalletAddress address={purchase.sender} client={props.client} />
-      </TableData>
+      </TableCell>
 
       {/* Date */}
-      <TableData>
+      <TableCell>
         <p className="min-w-[180px] lg:min-w-auto">
           {format(new Date(purchase.createdAt), "LLL dd, y h:mm a")}
         </p>
-      </TableData>
-    </tr>
+      </TableCell>
+    </TableRowComponent>
   );
 }

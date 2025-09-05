@@ -1,11 +1,7 @@
-import { WebhookIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getSupportedWebhookChains } from "@/api/insight/webhooks";
 import { getProject } from "@/api/project/projects";
-import { ProjectPage } from "@/components/blocks/project-page/project-page";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
 import { ContractsWebhooksPageContent } from "../contract-webhooks/contract-webhooks-page";
 
 export default async function ContractsPage(props: {
@@ -19,11 +15,6 @@ export default async function ContractsPage(props: {
     notFound();
   }
 
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: project.teamId,
-  });
-
   let supportedChainIds: number[] = [];
   const supportedChainsRes = await getSupportedWebhookChains();
   if ("chains" in supportedChainsRes) {
@@ -31,47 +22,10 @@ export default async function ContractsPage(props: {
   }
 
   return (
-    <ProjectPage
-      header={{
-        client,
-        icon: WebhookIcon,
-        title: "Webhooks",
-        description:
-          "Get notified about blockchain events, transactions and more.",
-        actions: {
-          primary: {
-            component: (
-              <CreateContractWebhookButton
-                projectClientId={project.publishableKey}
-                supportedChainIds={supportedChainIds}
-                client={client}
-              />
-            ),
-          },
-        },
-        links: [
-          {
-            type: "docs",
-            href: "https://portal.thirdweb.com/payments/webhooks",
-          },
-        ],
-      }}
-      tabs={[
-        {
-          name: "Contracts",
-          path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
-        },
-        {
-          name: "Payments",
-          path: `/team/${params.team_slug}/${params.project_slug}/webhooks/payments`,
-        },
-      ]}
-    >
-      <ContractsWebhooksPageContent
-        authToken={authToken}
-        project={project}
-        supportedChainIds={supportedChainIds}
-      />
-    </ProjectPage>
+    <ContractsWebhooksPageContent
+      authToken={authToken}
+      project={project}
+      supportedChainIds={supportedChainIds}
+    />
   );
 }

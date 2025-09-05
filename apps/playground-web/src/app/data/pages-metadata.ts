@@ -165,12 +165,6 @@ export const contractsFeatureCards: FeatureCardMetadata[] = [
 
 export const paymentsFeatureCards: FeatureCardMetadata[] = [
   {
-    icon: BoxIcon,
-    title: "Payments UI Components",
-    link: "/payments/ui-components",
-    description: "Onramp, swap, and bridge over 1,000+ crypto tokens",
-  },
-  {
     icon: ShoppingBagIcon,
     title: "Buy Crypto",
     link: "/payments/fund-wallet",
@@ -186,7 +180,7 @@ export const paymentsFeatureCards: FeatureCardMetadata[] = [
   },
   {
     icon: ArrowLeftRightIcon,
-    title: "Transactions",
+    title: "Onchain Transaction",
     link: "/payments/transactions",
     description:
       "Enable users to pay for onchain transactions with fiat or crypto",
