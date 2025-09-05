@@ -187,6 +187,20 @@ function IntegrationCodeExamples(props: {
             </AlertDescription>
           </Alert>
         ),
+        api: (
+          <CodeServer
+            className="bg-background"
+            code={apiCodeExample(props.project)}
+            lang="javascript"
+          />
+        ),
+        curl: (
+          <CodeServer
+            className="bg-background"
+            code={curlCodeExample(props.project)}
+            lang="bash"
+          />
+        ),
       }}
     />
   );
@@ -221,6 +235,28 @@ var client = ThirdwebClient.Create(clientId: "${project.publishableKey}", bundle
 // For backend applications (Note: below shown secret key is not the full secret key)
 var client = ThirdwebClient.Create(secretKey: "${project.secretKeys[0]?.masked}");`;
 
+const apiCodeExample = (project: Project): string => `\
+// Server-side only: replace with your full secret key. Never expose in browser code.
+fetch('https://api.thirdweb.com/v1/wallets/server', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}'
+  },
+  body: JSON.stringify({
+    identifier: 'treasury-wallet-123'
+  })
+});`;
+
+const curlCodeExample = (project: Project): string => `\
+// Server-side only: replace with your full secret key. Never expose in browser code.
+curl https://api.thirdweb.com/v1/wallets/server \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-secret-key: ${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}' \\
+  --data '{
+  "identifier": "treasury-wallet-123"
+}'`;
 // products section ------------------------------------------------------------
 
 function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
