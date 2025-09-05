@@ -18,6 +18,7 @@ describe("Thirdweb Domains", () => {
     rpc: "rpc.thirdweb.com",
     social: "social.thirdweb.com",
     storage: "storage.thirdweb.com",
+    api: "api.thirdweb.com",
   };
 
   beforeEach(() => {
