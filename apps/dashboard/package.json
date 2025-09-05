@@ -23,6 +23,7 @@
     "@shazow/whatsabi": "0.22.2",
     "@tanstack/react-query": "5.81.5",
     "@tanstack/react-table": "^8.21.3",
+    "@thirdweb-dev/api": "workspace:*",
     "@thirdweb-dev/service-utils": "workspace:*",
     "@thirdweb-dev/vault-sdk": "workspace:*",
     "@vercel/functions": "2.2.2",
