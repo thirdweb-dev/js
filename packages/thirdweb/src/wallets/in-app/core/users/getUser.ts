@@ -120,7 +120,7 @@ export async function getUser({
         return {
           details: profile.details,
           type: (profile.type as string) === "siwe" ? "wallet" : profile.type,
-        };
+        } as Profile;
       }),
       smartAccountAddress: item.smartAccountAddress,
       userId: item.userId,

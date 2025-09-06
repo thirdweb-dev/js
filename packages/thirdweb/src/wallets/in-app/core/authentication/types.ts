@@ -2,7 +2,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { AuthOption, OAuthOption } from "../../../types.js";
+import type { OAuthOption } from "../../../types.js";
 import type { Ecosystem } from "../wallet/types.js";
 
 export type MultiStepAuthProviderType =
@@ -115,16 +115,298 @@ export type OAuthRedirectObject = {
   redirectUrl: string;
 };
 
-// TODO: type this better for each auth provider
-export type Profile = {
-  type: AuthOption;
+// Provider-specific profile types based on auth provider
+export type GoogleProfile = {
+  type: "google";
   details: {
-    id?: string;
-    email?: string;
-    phone?: string;
-    address?: Address;
+    email: string;
+    emailVerified: boolean;
+    familyName?: string;
+    givenName?: string;
+    hd: string;
+    id: string;
+    locale: string;
+    name?: string;
+    picture: string;
   };
 };
+
+export type FacebookProfile = {
+  type: "facebook";
+  details: {
+    email?: string;
+    firstName?: string;
+    id: string;
+    lastName?: string;
+    name?: string;
+    picture?: string;
+  };
+};
+
+export type AppleProfile = {
+  type: "apple";
+  details: {
+    email?: string;
+    emailVerified: boolean;
+    id: string;
+    isPrivateEmail: boolean;
+  };
+};
+
+export type GitHubProfile = {
+  type: "github";
+  details: {
+    avatar?: string | null;
+    id: string;
+    name?: string | null;
+    username: string;
+  };
+};
+
+export type DiscordProfile = {
+  type: "discord";
+  details: {
+    avatar: string;
+    email?: string;
+    emailVerified: boolean;
+    id: string;
+    username: string;
+  };
+};
+
+export type CoinbaseProfile = {
+  type: "coinbase";
+  details: {
+    avatar?: string;
+    id: string;
+    name: string;
+  };
+};
+
+export type XProfile = {
+  type: "x";
+  details: {
+    id: string;
+    name: string;
+    username: string;
+    profileImageUrl?: string;
+  };
+};
+
+export type SteamProfile = {
+  type: "steam";
+  details: {
+    avatar?: string;
+    id: string;
+    metadata: {
+      avatar: {
+        large?: string;
+        medium?: string;
+        small?: string;
+      };
+      personaname?: string;
+      profileurl?: string;
+      realname?: string;
+    };
+    username?: string;
+  };
+};
+
+export type TelegramProfile = {
+  type: "telegram";
+  details: {
+    firstName?: string;
+    id: string;
+    lastName?: string;
+    picture?: string;
+    username?: string;
+  };
+};
+
+export type TwitchProfile = {
+  type: "twitch";
+  details: {
+    avatar?: string;
+    description?: string;
+    email?: string;
+    id: string;
+    username: string;
+  };
+};
+
+export type LineProfile = {
+  type: "line";
+  details: {
+    avatar?: string;
+    id: string;
+    username?: string;
+  };
+};
+
+export type FarcasterProfile = {
+  type: "farcaster";
+  details: {
+    fid: string;
+    id: string;
+    walletAddress?: string;
+  };
+};
+
+export type PasskeyProfile = {
+  type: "passkey";
+  details: {
+    algorithm: string;
+    credentialId: string;
+    publicKey: string;
+  };
+};
+
+export type EmailProfile = {
+  type: "email";
+  details: {
+    email: string;
+    id: string;
+  };
+};
+
+export type PhoneProfile = {
+  type: "phone";
+  details: {
+    id: string;
+    phone: string;
+  };
+};
+
+export type GuestProfile = {
+  type: "guest";
+  details: {
+    id: string;
+  };
+};
+
+export type BackendProfile = {
+  type: "backend";
+  details: {
+    id: string;
+  };
+};
+
+// Additional types from Zod schemas that may be used
+export type SiweProfile = {
+  type: "siwe";
+  details: {
+    id: string;
+    walletAddress: string;
+  };
+};
+
+export type PreGenerationProfile = {
+  type: "pre_generation";
+  details: {
+    id: string;
+    pregeneratedIdentifier: string;
+  };
+};
+
+export type ServerProfile = {
+  type: "server";
+  details: {
+    identifier: string;
+  };
+};
+
+export type CustomJwtProfile = {
+  type: "custom_jwt";
+  details: {
+    authProviderId?: string;
+    email?: string;
+    id: string;
+    phone?: string;
+    walletAddress?: string;
+  };
+};
+
+export type CustomAuthEndpointProfile = {
+  type: "custom_auth_endpoint";
+  details: {
+    authProviderId?: string;
+    email?: string;
+    id: string;
+    phone?: string;
+    walletAddress?: string;
+  };
+};
+
+// For wallet auth (maps to existing "wallet" AuthOption)
+export type WalletProfile = {
+  type: "wallet";
+  details: {
+    id: string;
+    address: Address;
+  };
+};
+
+// TikTok profile (present in authOptions but not in Zod schemas)
+export type TikTokProfile = {
+  type: "tiktok";
+  details: {
+    id: string;
+    // Add more fields as needed when TikTok provider is implemented
+  };
+};
+
+// Discriminated union of all profile types
+export type Profile =
+  | GoogleProfile
+  | FacebookProfile
+  | AppleProfile
+  | GitHubProfile
+  | DiscordProfile
+  | CoinbaseProfile
+  | XProfile
+  | SteamProfile
+  | TelegramProfile
+  | TwitchProfile
+  | LineProfile
+  | FarcasterProfile
+  | PasskeyProfile
+  | EmailProfile
+  | PhoneProfile
+  | GuestProfile
+  | BackendProfile
+  | WalletProfile
+  | TikTokProfile
+  // Additional types that may be used in the future
+  | SiweProfile
+  | PreGenerationProfile
+  | ServerProfile
+  | CustomJwtProfile
+  | CustomAuthEndpointProfile;
+
+// Utility functions to safely access profile properties
+export function getProfileEmail(profile: Profile): string | undefined {
+  if ('email' in profile.details) {
+    return profile.details.email;
+  }
+  return undefined;
+}
+
+export function getProfilePhone(profile: Profile): string | undefined {
+  if ('phone' in profile.details) {
+    return profile.details.phone;
+  }
+  return undefined;
+}
+
+export function getProfileAddress(profile: Profile): Address | undefined {
+  if ('address' in profile.details) {
+    return profile.details.address;
+  }
+  if ('walletAddress' in profile.details) {
+    return profile.details.walletAddress as Address;
+  }
+  return undefined;
+}
 
 export type UserDetailsApiType = {
   status: string;
