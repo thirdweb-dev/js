@@ -32,7 +32,7 @@ export async function getContractEventAnalytics(params: {
 }): Promise<AnalyticsEntry[]> {
   const queryParams = [
     `chain=${params.chainId}`,
-    "group_by=time",
+    "group_by=block_timestamp",
     "aggregate=toStartOfDay(toDate(block_timestamp)) as time",
     "aggregate=count(block_timestamp) as count",
     params.startDate
