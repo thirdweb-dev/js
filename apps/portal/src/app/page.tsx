@@ -1,6 +1,7 @@
 import {
   ArrowUpRightIcon,
   BotIcon,
+  CoinsIcon,
   MessageCircleIcon,
   WebhookIcon,
   ZapIcon,
@@ -8,6 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
+import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 import { ChatButton } from "../components/AI/chat-button";
 import { Button } from "../components/ui/button";
 import {
@@ -18,7 +20,6 @@ import {
   UnityIcon,
   UnrealEngineIcon,
 } from "../icons";
-import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
@@ -150,8 +151,8 @@ function ReferenceSection() {
           />
           <SDKCard
             href="https://bridge.thirdweb.com/reference"
-            icon={BridgeIcon}
-            title="Payments"
+            icon={PaymentsIcon}
+            title="Payments & Bridge"
           />
           <SDKCard
             href="/bundler"
@@ -177,10 +178,16 @@ function LearningResourcesSection() {
           title="Wallets"
         />
         <ArticleCardIndex
-          description="Bridge and onramp tokens on any chain"
+          description="Create onchain payments and sell products"
           href="/payments"
-          icon={BridgeIcon}
+          icon={PaymentsIcon}
           title="Payments"
+        />
+        <ArticleCardIndex
+          description="Bridge, swap, and onramp tokens on any chain"
+          href="/bridge"
+          icon={CoinsIcon}
+          title="Bridge"
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
