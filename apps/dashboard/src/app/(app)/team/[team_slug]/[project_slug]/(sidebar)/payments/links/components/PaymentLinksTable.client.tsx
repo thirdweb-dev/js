@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { LinkIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { type PropsWithChildren, useState } from "react";
 import { toast } from "sonner";
 import { toTokens } from "thirdweb";
@@ -44,9 +44,9 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
   return (
     <section>
       <div className="mb-4">
-        <h2 className="font-semibold text-xl tracking-tight">Payments</h2>
+        <h2 className="font-semibold text-xl tracking-tight">Your Payments</h2>
         <p className="text-muted-foreground text-sm">
-          Payments you have created in this project.
+          The payments you have created in this project
         </p>
       </div>
       <PaymentLinksTableInner clientId={props.clientId} teamId={props.teamId} />
@@ -114,7 +114,6 @@ function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
   if (!paymentLinksQuery.isLoading && paymentLinksQuery.data?.length === 0) {
     return (
       <EmptyState
-        icon={LinkIcon}
         title="No payments configured yet"
         description="Create a payment to receive any token in seconds."
         buttons={[
@@ -123,7 +122,7 @@ function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
             clientId={props.clientId}
             teamId={props.teamId}
           >
-            <Button className="gap-1" variant="default" size="sm">
+            <Button className="gap-2 rounded-full" variant="default" size="sm">
               <PlusIcon className="size-4" />
               Create Payment
             </Button>

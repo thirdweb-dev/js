@@ -36,7 +36,7 @@ export function EndpointMetadata() {
         method: "POST",
         origin: "https://nebula-api.thirdweb.com",
         path: "/execute",
-        referenceUrl: "https://api.thirdweb.com/reference#tag/ai/ai/execute",
+        referenceUrl: "/reference#tag/ai/post/ai/chat",
         request: {
           queryParameters: [],
           bodyParameters: [

@@ -6,8 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { addUniversalBridgeTokenRoute } from "@/api/universal-bridge/tokens"; // Adjust the import path
-import { RouteDiscoveryCard } from "@/components/blocks/RouteDiscoveryCard";
-import { NetworkSelectorButton } from "@/components/misc/NetworkSelectorButton";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import {
   Form,
   FormControl,
@@ -20,6 +19,7 @@ import {
   type RouteDiscoveryValidationSchema,
   routeDiscoveryValidationSchema,
 } from "@/schema/validations";
+import { RouteDiscoveryCard } from "./RouteDiscoveryCard";
 
 export const RouteDiscovery = ({
   project,
@@ -96,27 +96,30 @@ export const RouteDiscovery = ({
         >
           <div>
             <h3 className="font-semibold text-xl tracking-tight">
-              Don't see your token listed?
+              Add a token to Bridge
             </h3>
-            <p className="mt-1.5 mb-4 text-foreground text-sm">
+            <p className="mt-1.5 mb-4 text-muted-foreground max-w-3xl text-sm text-pretty">
               Select your chain and input the token address to automatically
-              kick-off the token route discovery process. Please check back on
-              this page within 20-40 minutes of submitting this form.
+              kick-off the token route discovery process. <br /> This may take
+              up to 20-40 minutes to complete.
             </p>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 max-w-3xl">
               <FormField
                 control={form.control}
                 name="chainId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Blockchain</FormLabel>
+                    <FormLabel>Chain</FormLabel>
                     <FormControl>
-                      <NetworkSelectorButton
+                      <SingleNetworkSelector
+                        chainId={field.value}
+                        className="bg-background"
+                        disableChainId
+                        disableDeprecated
                         client={client}
-                        onSwitchChain={(chain) => {
-                          // Update the form field value
-                          field.onChange(chain.chainId);
+                        onChange={(chainId) => {
+                          field.onChange(chainId, { shouldValidate: true });
                         }}
                       />
                     </FormControl>

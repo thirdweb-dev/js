@@ -3,7 +3,6 @@ import {
   BlocksIcon,
   BotIcon,
   BoxIcon,
-  BracesIcon,
   CircleUserIcon,
   CreditCardIcon,
   DollarSignIcon,
@@ -24,7 +23,6 @@ import {
   UserIcon,
   WalletCardsIcon,
 } from "lucide-react";
-import { InsightIcon } from "../../icons/InsightIcon";
 
 export type FeatureCardMetadata = {
   icon: React.FC<{ className?: string }>;
@@ -109,6 +107,12 @@ export const headlessComponentsFeatureCards: FeatureCardMetadata[] = [
 
 export const transactionsFeatureCards: FeatureCardMetadata[] = [
   {
+    icon: UserIcon,
+    title: "From User Wallets",
+    link: "/transactions/users",
+    description: "Transactions from user wallets with monitoring and retries.",
+  },
+  {
     icon: PlaneIcon,
     title: "Airdrop Tokens",
     link: "/transactions/airdrop-tokens",
@@ -161,12 +165,6 @@ export const contractsFeatureCards: FeatureCardMetadata[] = [
 
 export const paymentsFeatureCards: FeatureCardMetadata[] = [
   {
-    icon: BoxIcon,
-    title: "Payments UI Components",
-    link: "/payments/ui-components",
-    description: "Onramp, swap, and bridge over 1,000+ crypto tokens",
-  },
-  {
     icon: ShoppingBagIcon,
     title: "Buy Crypto",
     link: "/payments/fund-wallet",
@@ -182,56 +180,10 @@ export const paymentsFeatureCards: FeatureCardMetadata[] = [
   },
   {
     icon: ArrowLeftRightIcon,
-    title: "Transactions",
+    title: "Onchain Transaction",
     link: "/payments/transactions",
     description:
       "Enable users to pay for onchain transactions with fiat or crypto",
-  },
-  {
-    icon: BracesIcon,
-    title: "Payments API",
-    link: "/payments/backend",
-    description: "Create customizable UIs or backend flows using the HTTP API",
-  },
-];
-
-export const insightFeatureCards: FeatureCardMetadata[] = [
-  {
-    icon: InsightIcon,
-    title: "Events",
-    link: "/insight",
-    description: "Query contract events on any supported EVM chain",
-  },
-  {
-    icon: InsightIcon,
-    title: "Transactions",
-    link: "/insight",
-    description: "Query transactions to and from specified recipients",
-  },
-  {
-    icon: InsightIcon,
-    title: "Tokens",
-    link: "/insight",
-    description: "Query token owners, transfers, prices, and more",
-  },
-  {
-    icon: InsightIcon,
-    title: "NFTs",
-    link: "/insight",
-    description:
-      "Query NFT balances, collections, transfers, metadata, and more.",
-  },
-  {
-    icon: InsightIcon,
-    title: "Wallets",
-    link: "/insight",
-    description: "Query transactions to and from specific wallets",
-  },
-  {
-    icon: InsightIcon,
-    title: "Contracts",
-    link: "/insight",
-    description: "Query a contract's ABI or metadata",
   },
 ];
 

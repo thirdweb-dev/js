@@ -7,36 +7,56 @@ import type {
 } from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
-	BuyTokenWithUsdData,
-	BuyTokenWithUsdErrors,
-	BuyTokenWithUsdResponses,
-	CreateWalletData,
-	CreateWalletErrors,
-	CreateWalletResponses,
+	BridgeSwapData,
+	BridgeSwapErrors,
+	BridgeSwapResponses,
+	ChatData,
+	ChatResponses,
+	CompleteAuthenticationData,
+	CompleteAuthenticationErrors,
+	CompleteAuthenticationResponses,
+	CreatePaymentData,
+	CreatePaymentErrors,
+	CreatePaymentResponses,
+	CreateServerWalletData,
+	CreateServerWalletErrors,
+	CreateServerWalletResponses,
+	CreateTokenData,
+	CreateTokenErrors,
+	CreateTokenResponses,
+	CreateUserWalletData,
+	CreateUserWalletErrors,
+	CreateUserWalletResponses,
 	DeployContractData,
 	DeployContractErrors,
 	DeployContractResponses,
-	GeneratePasskeyChallengeData,
-	GeneratePasskeyChallengeErrors,
-	GeneratePasskeyChallengeResponses,
-	GenerateSiwePayloadData,
-	GenerateSiwePayloadErrors,
-	GenerateSiwePayloadResponses,
 	GetContractEventsData,
 	GetContractEventsErrors,
 	GetContractEventsResponses,
+	GetContractMetadataData,
+	GetContractMetadataErrors,
+	GetContractMetadataResponses,
+	GetContractSignaturesData,
+	GetContractSignaturesErrors,
+	GetContractSignaturesResponses,
 	GetContractTransactionsData,
 	GetContractTransactionsErrors,
 	GetContractTransactionsResponses,
+	GetMyWalletData,
+	GetMyWalletErrors,
+	GetMyWalletResponses,
+	GetPaymentHistoryData,
+	GetPaymentHistoryErrors,
+	GetPaymentHistoryResponses,
+	GetTokenOwnersData,
+	GetTokenOwnersErrors,
+	GetTokenOwnersResponses,
 	GetTransactionByIdData,
 	GetTransactionByIdErrors,
 	GetTransactionByIdResponses,
 	GetWalletBalanceData,
 	GetWalletBalanceErrors,
 	GetWalletBalanceResponses,
-	GetWalletDetailsData,
-	GetWalletDetailsErrors,
-	GetWalletDetailsResponses,
 	GetWalletNftsData,
 	GetWalletNftsErrors,
 	GetWalletNftsResponses,
@@ -46,26 +66,37 @@ import type {
 	GetWalletTransactionsData,
 	GetWalletTransactionsErrors,
 	GetWalletTransactionsResponses,
-	InitOauthData,
-	InitOauthErrors,
+	InitiateAuthenticationData,
+	InitiateAuthenticationErrors,
+	InitiateAuthenticationResponses,
 	ListContractsData,
 	ListContractsErrors,
 	ListContractsResponses,
+	ListServerWalletsData,
+	ListServerWalletsErrors,
+	ListServerWalletsResponses,
+	ListTokensData,
+	ListTokensErrors,
+	ListTokensResponses,
 	ListTransactionsData,
 	ListTransactionsErrors,
 	ListTransactionsResponses,
-	ListWalletsData,
-	ListWalletsErrors,
-	ListWalletsResponses,
+	ListUserWalletsData,
+	ListUserWalletsErrors,
+	ListUserWalletsResponses,
+	LlmsTxtData,
+	LlmsTxtResponses,
+	McpServerData,
+	McpServerResponses,
+	PaymentsPurchaseData,
+	PaymentsPurchaseErrors,
+	PaymentsPurchaseResponses,
 	ReadContractData,
 	ReadContractErrors,
 	ReadContractResponses,
-	SellTokenForUsdData,
-	SellTokenForUsdErrors,
-	SellTokenForUsdResponses,
-	SendCodeData,
-	SendCodeErrors,
-	SendCodeResponses,
+	SendTokensData,
+	SendTokensErrors,
+	SendTokensResponses,
 	SendTransactionsData,
 	SendTransactionsErrors,
 	SendTransactionsResponses,
@@ -75,18 +106,8 @@ import type {
 	SignTypedDataData,
 	SignTypedDataErrors,
 	SignTypedDataResponses,
-	TransferTokenWithUsdData,
-	TransferTokenWithUsdErrors,
-	TransferTokenWithUsdResponses,
-	VerifyCodeData,
-	VerifyCodeErrors,
-	VerifyCodeResponses,
-	VerifyPasskeyData,
-	VerifyPasskeyErrors,
-	VerifyPasskeyResponses,
-	VerifySiweSignatureData,
-	VerifySiweSignatureErrors,
-	VerifySiweSignatureResponses,
+	SocialAuthenticationData,
+	SocialAuthenticationErrors,
 	WriteContractData,
 	WriteContractErrors,
 	WriteContractResponses,
@@ -110,54 +131,37 @@ export type Options<
 };
 
 /**
- * List Contracts
- * Retrieves a list of all smart contracts imported by the authenticated client on the thirdweb dashboard. This endpoint provides access to contracts that have been added to your dashboard for management and interaction. Results include contract metadata, deployment information, and import timestamps.
+ * Initiate Auth
+ * Start any authentication flow in one unified endpoint. This endpoint supports all authentication methods including SMS, email, OAuth, passkey, and SIWE (Sign-In with Ethereum).
  *
- * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ * **Supported Methods:**
+ * - **SMS** - Send verification code to phone number
+ * - **Email** - Send verification code to email address
+ * - **OAuth** - ⚠️ **DEPRECATED**: Use `/auth/social` instead for OAuth flows
+ * - **Passkey** - Generate WebAuthn challenge for biometric authentication
+ * - **SIWE** - Generate Sign-In with Ethereum payload
  *
- * **ABI Enrichment**: When `includeAbi=true`, the endpoint will fetch the contract ABI (Application Binary Interface) from the thirdweb contract service for each contract. The ABI contains function signatures, event definitions, and interface specifications required for contract interaction.
+ * **OAuth Migration:**
+ * The OAuth method in this endpoint is deprecated. Please use the new `/auth/social` endpoint instead:
+ * - **Old**: `POST /auth/initiate` with `{"method": "oauth", "provider": "google", "redirectUrl": "..."}`
+ * - **New**: `GET /auth/social?provider=google&redirectUrl=...`
  *
- * **Metadata Enrichment**: When `includeMetadata=true`, the endpoint will fetch additional metadata from the thirdweb contract metadata service for each contract. This includes information like contract name, description, compilation details, and more. The metadata is returned in an optional `metadata` object within each contract.
+ * **Flow:**
+ * 1. Choose your authentication method
+ * 2. Provide method-specific parameters
+ * 3. Receive challenge data to complete authentication
+ * 4. Use the /complete endpoint to finish the process
+ *
+ * NOTE: for custom authentication (JWT, auth-payload) and for guest authentication, you can skip this step and use the `/complete` endpoint directly.
+ *
+ * **Authentication:** Requires `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
  */
-export const listContracts = <ThrowOnError extends boolean = false>(
-	options?: Options<ListContractsData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).get<
-		ListContractsResponses,
-		ListContractsErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/contracts",
-		...options,
-	});
-};
-
-/**
- * Deploy Contract
- * Deploy a new smart contract to a blockchain network. This endpoint allows you to deploy contracts by providing the contract source URL, target chain, constructor parameters, and optional salt for deterministic deployment.
- *
- * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
- */
-export const deployContract = <ThrowOnError extends boolean = false>(
-	options?: Options<DeployContractData, ThrowOnError>,
+export const initiateAuthentication = <ThrowOnError extends boolean = false>(
+	options?: Options<InitiateAuthenticationData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		DeployContractResponses,
-		DeployContractErrors,
+		InitiateAuthenticationResponses,
+		InitiateAuthenticationErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -165,16 +169,8 @@ export const deployContract = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/contracts",
+		url: "/v1/auth/initiate",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -184,17 +180,46 @@ export const deployContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Read Contract Methods
- * Executes multiple read-only contract method calls in a single batch request. This endpoint allows efficient batch reading from multiple contracts on the same chain, significantly reducing the number of HTTP requests needed. Each call specifies the contract address, method signature, and optional parameters. Results are returned in the same order as the input calls, with individual success/failure status for each operation.
+ * Complete Auth
+ * Complete the authentication flow and receive your wallet credentials. After initiating authentication, use this endpoint to submit the required verification data.
  *
- * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ * **Completion Methods:**
+ * - **SMS/Email** - Submit the verification code you received
+ * - **Passkey** - Provide the WebAuthn signature response
+ * - **SIWE** - Submit your signed Ethereum message
+ * - **Guest** - Create an ephemeral guest wallet
+ * - **Custom (JWT, auth-payload)** - Send your JWT token or custom payload
+ *
+ * **Response:**
+ * - `isNewUser` - Whether this is a new wallet creation
+ * - `token` - JWT token for authenticated API requests
+ * - `type` - The authentication method used
+ * - `walletAddress` - Your new or existing wallet address
+ *
+ * **Next step - Verify your token:**
+ * ```javascript
+ * // Verify the token and get complete wallet details (server-side)
+ * fetch('/v1/wallets/me', {
+ * headers: {
+ * 'Authorization': 'Bearer ' + token,
+ * 'x-secret-key': 'your-secret-key'
+ * }
+ * })
+ * .then(response => response.json())
+ * .then(data => {
+ * console.log('Wallet verified:', data.result.address);
+ * console.log('Auth profiles:', data.result.profiles);
+ * });
+ * ```
+ *
+ * **Authentication:** Requires `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
  */
-export const readContract = <ThrowOnError extends boolean = false>(
-	options?: Options<ReadContractData, ThrowOnError>,
+export const completeAuthentication = <ThrowOnError extends boolean = false>(
+	options?: Options<CompleteAuthenticationData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		ReadContractResponses,
-		ReadContractErrors,
+		CompleteAuthenticationResponses,
+		CompleteAuthenticationErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -202,16 +227,8 @@ export const readContract = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/contracts/read",
+		url: "/v1/auth/complete",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -221,168 +238,161 @@ export const readContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Contract Transactions
- * Retrieves transactions for a specific smart contract address across one or more blockchain networks. This endpoint provides comprehensive transaction data including block information, gas details, transaction status, and function calls. Results can be filtered, paginated, and sorted to meet specific requirements.
+ * Social Auth
+ * Complete OAuth authentication with social providers in a single step. Unlike other auth methods that require separate initiate/complete calls, OAuth is handled entirely through redirects.
  *
- * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ * **OAuth Flow (Self-Contained):**
+ * 1. Redirect your user to this endpoint with provider and redirectUrl
+ * 2. User completes OAuth flow with the provider
+ * 3. User is redirected back to your redirectUrl with wallet credentials
+ *
+ * **Why OAuth is different:** OAuth providers handle the challenge/response flow externally, so no separate `/complete` step is needed.
+ *
+ * **Example:**
+ * Redirect user to: `GET /v1/auth/social?provider=google&redirectUrl=https://myapp.com/auth/callback`
+ *
+ * **Callback Handling:**
+ * After OAuth completion, user arrives at your redirectUrl with an `authResult` query parameter:
+ * ```
+ * https://myapp.com/auth/callback?authResult=%7B%22storedToken%22%3A%7B%22authDetails%22%3A%7B...%7D%2C%22cookieString%22%3A%22eyJ...%22%7D%7D
+ * ```
+ *
+ * **Extract JWT token in your callback:**
+ * ```javascript
+ * // Parse the authResult from URL
+ * const urlParams = new URLSearchParams(window.location.search);
+ * const authResultString = urlParams.get('authResult');
+ * const authResult = JSON.parse(authResultString!);
+ *
+ * // Extract the JWT token
+ * const token = authResult.storedToken.cookieString;
+ * ```
+ *
+ * **Verify and use the JWT token:**
+ * ```javascript
+ * // Use the JWT token for authenticated requests
+ * fetch('/v1/wallets/me', {
+ * headers: {
+ * 'Authorization': 'Bearer ' + token,
+ * 'x-secret-key': 'your-secret-key'
+ * }
+ * })
+ * .then(response => response.json())
+ * .then(data => {
+ * console.log('Wallet verified:', data.result.address);
+ * console.log('Auth profiles:', data.result.profiles);
+ * });
+ * ```
+ *
+ * **Authentication Options:**
+ * Choose one of two ways to provide your client credentials:
+ *
+ * **Option 1: Query Parameter (Recommended for OAuth flows)**
+ * ```
+ * GET /v1/auth/social?provider=google&redirectUrl=https://myapp.com/callback&clientId=your_client_id
+ * ```
+ *
+ * **Option 2: Header (Alternative)**
+ * ```
+ * GET /v1/auth/social?provider=google&redirectUrl=https://myapp.com/callback
+ * Headers: x-client-id: your_client_id
+ * ```
  */
-export const getContractTransactions = <ThrowOnError extends boolean = false>(
-	options: Options<GetContractTransactionsData, ThrowOnError>,
+export const socialAuthentication = <ThrowOnError extends boolean = false>(
+	options: Options<SocialAuthenticationData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).get<
-		GetContractTransactionsResponses,
-		GetContractTransactionsErrors,
+		unknown,
+		SocialAuthenticationErrors,
 		ThrowOnError
 	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/contracts/{address}/transactions",
+		url: "/v1/auth/social",
 		...options,
 	});
 };
 
 /**
- * Get Contract Events
- * Retrieves events emitted by a specific smart contract address across one or more blockchain networks. This endpoint provides comprehensive event data including block information, transaction details, event topics, and optional ABI decoding. Results can be filtered, paginated, and sorted to meet specific requirements.
+ * Get My Wallet
+ * Retrieve the authenticated user's wallet information including wallet addresses and linked authentication wallets. This endpoint provides comprehensive user data for the currently authenticated session.
  *
- * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
- */
-export const getContractEvents = <ThrowOnError extends boolean = false>(
-	options: Options<GetContractEventsData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		GetContractEventsResponses,
-		GetContractEventsErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/contracts/{address}/events",
-		...options,
-	});
-};
-
-/**
- * Write Contract Methods
- * Executes write operations (transactions) on smart contracts. This is a convenience endpoint that simplifies contract interaction by accepting method signatures and parameters directly, without requiring manual transaction encoding. All calls are executed against the same contract address and chain, making it ideal for batch operations.
+ * **Returns:**
+ * - Primary wallet address
+ * - Smart wallet address (if available)
+ * - Wallet creation timestamp
+ * - Public key in hexadecimal format (if available)
+ * - All linked authentication profiles (email, phone, OAuth providers)
  *
- * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ * **Authentication:** Requires `Authorization: Bearer <jwt>` header with a valid user authentication token.
  */
-export const writeContract = <ThrowOnError extends boolean = false>(
-	options?: Options<WriteContractData, ThrowOnError>,
+export const getMyWallet = <ThrowOnError extends boolean = false>(
+	options?: Options<GetMyWalletData, ThrowOnError>,
 ) => {
-	return (options?.client ?? _heyApiClient).post<
-		WriteContractResponses,
-		WriteContractErrors,
+	return (options?.client ?? _heyApiClient).get<
+		GetMyWalletResponses,
+		GetMyWalletErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
 				scheme: "bearer",
 				type: "http",
 			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
 		],
-		url: "/v1/contracts/write",
+		url: "/v1/wallets/me",
 		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
 	});
 };
 
 /**
- * List Wallets
- * Get all wallet details with pagination for your project.
+ * List User Wallets
+ * Get all user wallet details with filtering and pagination for your project.
  *
  * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
  */
-export const listWallets = <ThrowOnError extends boolean = false>(
-	options?: Options<ListWalletsData, ThrowOnError>,
+export const listUserWallets = <ThrowOnError extends boolean = false>(
+	options?: Options<ListUserWalletsData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).get<
-		ListWalletsResponses,
-		ListWalletsErrors,
+		ListUserWalletsResponses,
+		ListUserWalletsErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
 				name: "x-secret-key",
 				type: "apiKey",
 			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/wallets",
+		url: "/v1/wallets/user",
 		...options,
 	});
 };
 
 /**
- * Create Wallet
- * Creates a server wallet from a unique identifier. If the wallet already exists, it will return the existing wallet. Requires project authentication with `x-secret-key` header.
+ * Create User Wallet
+ * Create a user wallet with a wallet based on their authentication strategy. This endpoint creates a wallet in advance that can be claimed later when the user authenticates.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
  */
-export const createWallet = <ThrowOnError extends boolean = false>(
-	options?: Options<CreateWalletData, ThrowOnError>,
+export const createUserWallet = <ThrowOnError extends boolean = false>(
+	options?: Options<CreateUserWalletData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		CreateWalletResponses,
-		CreateWalletErrors,
+		CreateUserWalletResponses,
+		CreateUserWalletErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
 				name: "x-secret-key",
 				type: "apiKey",
 			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/wallets",
+		url: "/v1/wallets/user",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -392,8 +402,62 @@ export const createWallet = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Wallet Native Balance
- * Get native token balance for a wallet address across multiple blockchain networks. This endpoint retrieves native token balances (ETH, MATIC, BNB, etc.) for a given wallet address on multiple chains simultaneously, making it efficient for cross-chain native balance checking.
+ * List Server Wallets
+ * Get all server wallet details with pagination for your project.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ */
+export const listServerWallets = <ThrowOnError extends boolean = false>(
+	options?: Options<ListServerWalletsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListServerWalletsResponses,
+		ListServerWalletsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/server",
+		...options,
+	});
+};
+
+/**
+ * Create Server Wallet
+ * Creates a server wallet from a unique identifier. If the wallet already exists, it will return the existing wallet.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ */
+export const createServerWallet = <ThrowOnError extends boolean = false>(
+	options?: Options<CreateServerWalletData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		CreateServerWalletResponses,
+		CreateServerWalletErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/server",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Balance
+ * Get native or ERC20 token balance for a wallet address. Can retrieve live balances for any ERC20 token on a signle chain, or native token balances across multiple chains.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
@@ -410,14 +474,6 @@ export const getWalletBalance = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
 		url: "/v1/wallets/{address}/balance",
 		...options,
@@ -425,7 +481,7 @@ export const getWalletBalance = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Wallet Transactions
+ * Get Transactions
  * Retrieves transactions for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive transaction data including both incoming and outgoing transactions, with block information, gas details, transaction status, and function calls. Results can be filtered, paginated, and sorted to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -443,14 +499,6 @@ export const getWalletTransactions = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
 		url: "/v1/wallets/{address}/transactions",
 		...options,
@@ -458,7 +506,7 @@ export const getWalletTransactions = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Wallet Tokens
+ * Get Tokens
  * Retrieves token balances for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive token data including ERC-20 tokens with their balances, metadata, and price information. Results can be filtered by chain and paginated to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -476,14 +524,6 @@ export const getWalletTokens = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
 		url: "/v1/wallets/{address}/tokens",
 		...options,
@@ -491,7 +531,7 @@ export const getWalletTokens = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Wallet NFTs
+ * Get NFTs
  * Retrieves NFTs for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive NFT data including metadata, attributes, and collection information. Results can be filtered by chain and paginated to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -509,14 +549,6 @@ export const getWalletNfts = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
 		url: "/v1/wallets/{address}/nfts",
 		...options,
@@ -524,65 +556,162 @@ export const getWalletNfts = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Wallet Details
- * Retrieves detailed user information for a previously created wallet. This endpoint fetches user data including authentication details and linked accounts.
+ * Sign Message
+ * Signs an arbitrary message using the specified wallet. This endpoint supports both text and hexadecimal message formats. The signing is performed using thirdweb Engine with smart wallet support for gasless transactions.
+ *
+ * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ */
+export const signMessage = <ThrowOnError extends boolean = false>(
+	options?: Options<SignMessageData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignMessageResponses,
+		SignMessageErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/sign-message",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Sign Typed Data
+ * Signs structured data according to the EIP-712 standard using the specified wallet. This is commonly used for secure message signing in DeFi protocols, NFT marketplaces, and other dApps that require structured data verification. The typed data includes domain separation and type definitions for enhanced security.
+ *
+ * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ */
+export const signTypedData = <ThrowOnError extends boolean = false>(
+	options?: Options<SignTypedDataData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignTypedDataResponses,
+		SignTypedDataErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/sign-typed-data",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Send Tokens
+ * Send tokens to multiple recipients in a single transaction batch. Supports native tokens (ETH, MATIC, etc.), ERC20 tokens, ERC721 NFTs, and ERC1155 tokens. The token type is automatically determined based on the provided parameters and ERC165 interface detection:
+ *
+ * - **Native Token**: No `tokenAddress` provided
+ * - **ERC20**: `tokenAddress` provided, no `tokenId`
+ * - **ERC721/ERC1155**: `tokenAddress` and `tokenId` provided. Auto detects contract type:
+ * - ERC721: quantity must be '1'
+ * - ERC1155: any quantity allowed (including '1')
+ *
+ * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ */
+export const sendTokens = <ThrowOnError extends boolean = false>(
+	options?: Options<SendTokensData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SendTokensResponses,
+		SendTokensErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/send",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * List Contracts
+ * Retrieves a list of all smart contracts imported by the authenticated client on the thirdweb dashboard. This endpoint provides access to contracts that have been added to your dashboard for management and interaction. Results include contract metadata, deployment information, and import timestamps.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ *
+ * **Note**: For detailed contract metadata including compilation information, ABI, and source code, use the dedicated metadata endpoint: `GET /v1/contracts/{chainId}/{address}/metadata`.
+ */
+export const listContracts = <ThrowOnError extends boolean = false>(
+	options?: Options<ListContractsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListContractsResponses,
+		ListContractsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/contracts",
+		...options,
+	});
+};
+
+/**
+ * Deploy Contract
+ * Deploy a new smart contract to a blockchain network using raw bytecode. This endpoint allows you to deploy contracts by providing the contract bytecode, ABI, constructor parameters, and optional salt for deterministic deployment.
  *
  * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
  */
-export const getWalletDetails = <ThrowOnError extends boolean = false>(
-	options: Options<GetWalletDetailsData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		GetWalletDetailsResponses,
-		GetWalletDetailsErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/wallets/{address}",
-		...options,
-	});
-};
-
-/**
- * Send Login Code
- * Send email or phone code for wallet authentication
- */
-export const sendCode = <ThrowOnError extends boolean = false>(
-	options?: Options<SendCodeData, ThrowOnError>,
+export const deployContract = <ThrowOnError extends boolean = false>(
+	options?: Options<DeployContractData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		SendCodeResponses,
-		SendCodeErrors,
+		DeployContractResponses,
+		DeployContractErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
 				scheme: "bearer",
 				type: "http",
 			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
 		],
-		url: "/v1/wallets/login/code",
+		url: "/v1/contracts",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -592,15 +721,17 @@ export const sendCode = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Login with Code
- * Verify email or phone code for wallet authentication
+ * Read Contract
+ * Executes multiple read-only contract method calls in a single batch request. This endpoint allows efficient batch reading from multiple contracts on the same chain, significantly reducing the number of HTTP requests needed. Each call specifies the contract address, method signature, and optional parameters. Results are returned in the same order as the input calls, with individual success/failure status for each operation.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
-export const verifyCode = <ThrowOnError extends boolean = false>(
-	options?: Options<VerifyCodeData, ThrowOnError>,
+export const readContract = <ThrowOnError extends boolean = false>(
+	options?: Options<ReadContractData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		VerifyCodeResponses,
-		VerifyCodeErrors,
+		ReadContractResponses,
+		ReadContractErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -608,16 +739,8 @@ export const verifyCode = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/wallets/login/code/verify",
+		url: "/v1/contracts/read",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -627,94 +750,30 @@ export const verifyCode = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Login with OAuth
- * Initiate OAuth flow for a given provider (google, apple, github, etc). Open this URL in a browser to begin authentication. After authentication, the user will be redirected to the redirect URL with an authResult parameter.
+ * Write Contract
+ * Executes write operations (transactions) on smart contracts. This is a convenience endpoint that simplifies contract interaction by accepting method signatures and parameters directly, without requiring manual transaction encoding. All calls are executed against the same contract address and chain, making it ideal for batch operations.
+ *
+ * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
  */
-export const initOauth = <ThrowOnError extends boolean = false>(
-	options: Options<InitOauthData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		unknown,
-		InitOauthErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/wallets/login/oauth/{provider}",
-		...options,
-	});
-};
-
-/**
- * Generate Passkey Challenge
- * Generate passkey challenge for wallet authentication
- */
-export const generatePasskeyChallenge = <ThrowOnError extends boolean = false>(
-	options: Options<GeneratePasskeyChallengeData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		GeneratePasskeyChallengeResponses,
-		GeneratePasskeyChallengeErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/wallets/login/passkey",
-		...options,
-	});
-};
-
-/**
- * Login with Passkey
- * Verify passkey challenge for wallet authentication
- */
-export const verifyPasskey = <ThrowOnError extends boolean = false>(
-	options?: Options<VerifyPasskeyData, ThrowOnError>,
+export const writeContract = <ThrowOnError extends boolean = false>(
+	options?: Options<WriteContractData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		VerifyPasskeyResponses,
-		VerifyPasskeyErrors,
+		WriteContractResponses,
+		WriteContractErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
 				scheme: "bearer",
 				type: "http",
 			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
 		],
-		url: "/v1/wallets/login/passkey/verify",
+		url: "/v1/contracts/write",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -724,15 +783,17 @@ export const verifyPasskey = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Generate SIWE Payload
- * Generate SIWE payload for wallet authentication
+ * Get Transactions
+ * Retrieves transactions for a specific smart contract address on a specific blockchain network. This endpoint provides comprehensive transaction data including block information, gas details, transaction status, and function calls. Results can be filtered, paginated, and sorted to meet specific requirements.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
-export const generateSiwePayload = <ThrowOnError extends boolean = false>(
-	options: Options<GenerateSiwePayloadData, ThrowOnError>,
+export const getContractTransactions = <ThrowOnError extends boolean = false>(
+	options: Options<GetContractTransactionsData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).get<
-		GenerateSiwePayloadResponses,
-		GenerateSiwePayloadErrors,
+		GetContractTransactionsResponses,
+		GetContractTransactionsErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -740,30 +801,24 @@ export const generateSiwePayload = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/wallets/login/siwe",
+		url: "/v1/contracts/{chainId}/{address}/transactions",
 		...options,
 	});
 };
 
 /**
- * Login with SIWE
- * Verify SIWE signature for wallet authentication
+ * Get Events
+ * Retrieves events emitted by a specific smart contract address on a specific blockchain network. This endpoint provides comprehensive event data including block information, transaction details, event topics, and optional ABI decoding. Results can be filtered, paginated, and sorted to meet specific requirements.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
-export const verifySiweSignature = <ThrowOnError extends boolean = false>(
-	options?: Options<VerifySiweSignatureData, ThrowOnError>,
+export const getContractEvents = <ThrowOnError extends boolean = false>(
+	options: Options<GetContractEventsData, ThrowOnError>,
 ) => {
-	return (options?.client ?? _heyApiClient).post<
-		VerifySiweSignatureResponses,
-		VerifySiweSignatureErrors,
+	return (options.client ?? _heyApiClient).get<
+		GetContractEventsResponses,
+		GetContractEventsErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -771,21 +826,88 @@ export const verifySiweSignature = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
+		],
+		url: "/v1/contracts/{chainId}/{address}/events",
+		...options,
+	});
+};
+
+/**
+ * Get Metadata
+ * Retrieves detailed metadata for a specific smart contract from the thirdweb contract metadata service. This includes compilation information, ABI, documentation, and other contract-related metadata. Note: Source code is excluded from the response to keep it lightweight and suitable for programmatic access.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ *
+ * **Metadata Source**: The metadata is fetched from the thirdweb contract metadata service and includes detailed Solidity compilation information, contract ABI, and developer documentation.
+ */
+export const getContractMetadata = <ThrowOnError extends boolean = false>(
+	options: Options<GetContractMetadataData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetContractMetadataResponses,
+		GetContractMetadataErrors,
+		ThrowOnError
+	>({
+		security: [
 			{
 				name: "x-secret-key",
 				type: "apiKey",
 			},
+		],
+		url: "/v1/contracts/{chainId}/{address}/metadata",
+		...options,
+	});
+};
+
+/**
+ * Get Signatures
+ * Retrieves human-readable ABI signatures for a specific smart contract. This endpoint fetches the contract metadata from the thirdweb service, extracts the ABI, and converts it into an array of human-readable function and event signatures that can be used directly with contract interaction methods.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ *
+ * **Usage**: The returned signatures can be used directly in contract read/write operations or event filtering. Each signature follows the standard Solidity format and includes function parameters, return types, state mutability, and event indexing information.
+ */
+export const getContractSignatures = <ThrowOnError extends boolean = false>(
+	options: Options<GetContractSignaturesData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetContractSignaturesResponses,
+		GetContractSignaturesErrors,
+		ThrowOnError
+	>({
+		security: [
 			{
-				scheme: "bearer",
-				type: "http",
+				name: "x-secret-key",
+				type: "apiKey",
 			},
 		],
-		url: "/v1/wallets/login/siwe/verify",
+		url: "/v1/contracts/{chainId}/{address}/signatures",
 		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
+	});
+};
+
+/**
+ * Get Transaction
+ * Retrieves detailed information about a specific transaction using its unique identifier. Returns comprehensive transaction data including execution status, blockchain details, and any associated metadata.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const getTransactionById = <ThrowOnError extends boolean = false>(
+	options: Options<GetTransactionByIdData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetTransactionByIdResponses,
+		GetTransactionByIdErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/transactions/{transactionId}",
+		...options,
 	});
 };
 
@@ -808,14 +930,6 @@ export const listTransactions = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
 		url: "/v1/transactions",
 		...options,
@@ -824,7 +938,7 @@ export const listTransactions = <ThrowOnError extends boolean = false>(
 
 /**
  * Send Transactions
- * Submits a blockchain transaction. Supports three types of transactions: native token transfers, encoded transactions with custom data, and smart contract method calls. The transaction type is determined by the 'type' field in the request body.
+ * Submits pre-encoded blockchain transactions with custom data payloads. This endpoint is for low-level transaction submission where you have already encoded the transaction data. For smart contract method calls, use /v1/contracts/write. For native token transfers, use /v1/wallets/send.
  *
  * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
  */
@@ -838,16 +952,12 @@ export const sendTransactions = <ThrowOnError extends boolean = false>(
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
 				scheme: "bearer",
 				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
 			},
 		],
 		url: "/v1/transactions",
@@ -860,17 +970,170 @@ export const sendTransactions = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Transaction by ID
- * Retrieves detailed information about a specific transaction using its unique identifier. Returns comprehensive transaction data including execution status, blockchain details, and any associated metadata.
+ * Create Payment
+ * Create a payment to be executed. Users can complete the payment via hosted UI (link is returned), a transaction execution referencing the product ID, or embedded widgets with the product ID.
+ *
+ * **Authentication**: This endpoint requires project authentication.
+ */
+export const createPayment = <ThrowOnError extends boolean = false>(
+	options?: Options<CreatePaymentData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		CreatePaymentResponses,
+		CreatePaymentErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Payment History
+ * Get payment history for a specific payment link
+ */
+export const getPaymentHistory = <ThrowOnError extends boolean = false>(
+	options: Options<GetPaymentHistoryData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetPaymentHistoryResponses,
+		GetPaymentHistoryErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/{id}",
+		...options,
+	});
+};
+
+/**
+ * Complete Payment
+ * Completes a payment using its default token and amount. If the user does not have sufficient funds in the product's default payment token a 402 status will be returned containing a link and raw quote for purchase fulfillment.
+ *
+ * **Authentication**: This endpoint requires project authentication.
+ */
+export const paymentsPurchase = <ThrowOnError extends boolean = false>(
+	options: Options<PaymentsPurchaseData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		PaymentsPurchaseResponses,
+		PaymentsPurchaseErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/{id}",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * List Tokens
+ * Lists or search existing tokens based on the provided filters. Supports querying by chain ID, token address, symbol, and/or name.
+ *
+ *
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
-export const getTransactionById = <ThrowOnError extends boolean = false>(
-	options: Options<GetTransactionByIdData, ThrowOnError>,
+export const listTokens = <ThrowOnError extends boolean = false>(
+	options?: Options<ListTokensData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListTokensResponses,
+		ListTokensErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/tokens",
+		...options,
+	});
+};
+
+/**
+ * Create Token
+ * Create a new ERC20 token with the provided metadata and starting price. The token is immediately available for purchase using thirdweb Payments.
+ *
+ * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ */
+export const createToken = <ThrowOnError extends boolean = false>(
+	options?: Options<CreateTokenData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		CreateTokenResponses,
+		CreateTokenErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/tokens",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Owners
+ * Retrieves a paginated list of owners for a given ERC-20 token contract on a specific chain.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const getTokenOwners = <ThrowOnError extends boolean = false>(
+	options: Options<GetTokenOwnersData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).get<
-		GetTransactionByIdResponses,
-		GetTransactionByIdErrors,
+		GetTokenOwnersResponses,
+		GetTokenOwnersErrors,
 		ThrowOnError
 	>({
 		security: [
@@ -878,49 +1141,37 @@ export const getTransactionById = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/transactions/{transactionId}",
+		url: "/v1/tokens/{chainId}/{address}/owners",
 		...options,
 	});
 };
 
 /**
- * Sign Message
- * Signs an arbitrary message using a connected wallet. This endpoint supports both text and hexadecimal message formats. The signing is performed using thirdweb Engine with smart account support for gasless transactions.
+ * Swap or Bridge Tokens
+ * Swap one token for another using the optimal route available. You can specify a tokenIn amount (if exact='input') or tokenOut amount (if exact='output'), but not both. The corresponding output or input amount will be returned as the quote.
  *
  * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
  */
-export const signMessage = <ThrowOnError extends boolean = false>(
-	options?: Options<SignMessageData, ThrowOnError>,
+export const bridgeSwap = <ThrowOnError extends boolean = false>(
+	options?: Options<BridgeSwapData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		SignMessageResponses,
-		SignMessageErrors,
+		BridgeSwapResponses,
+		BridgeSwapErrors,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
 				scheme: "bearer",
 				type: "http",
 			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
 		],
-		url: "/v1/sign/message",
+		url: "/v1/bridge/swap",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -930,17 +1181,21 @@ export const signMessage = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Sign Typed Data
- * Signs structured data according to the EIP-712 standard. This is commonly used for secure message signing in DeFi protocols, NFT marketplaces, and other dApps that require structured data verification. The typed data includes domain separation and type definitions for enhanced security.
+ * Chat
+ * Thirdweb AI chat completion API (BETA).
  *
- * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ * Send natural language queries to interact with any EVM chain, read data, prepare transactions, swap tokens, deploy contracts, payments and more.
+ *
+ * Compatible with standard OpenAI API chat completion format, can be used raw or with any popular AI library.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
-export const signTypedData = <ThrowOnError extends boolean = false>(
-	options?: Options<SignTypedDataData, ThrowOnError>,
+export const chat = <ThrowOnError extends boolean = false>(
+	options?: Options<ChatData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		SignTypedDataResponses,
-		SignTypedDataErrors,
+		ChatResponses,
+		unknown,
 		ThrowOnError
 	>({
 		security: [
@@ -948,16 +1203,8 @@ export const signTypedData = <ThrowOnError extends boolean = false>(
 				name: "x-client-id",
 				type: "apiKey",
 			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/sign/typed-data",
+		url: "/ai/chat",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -967,34 +1214,36 @@ export const signTypedData = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Buy Token
- * Purchase tokens using a USD amount. The system will automatically handle wallet creation if needed, check your wallet balance, and execute the optimal cross-chain route to get the tokens you want.
+ * MCP Server
+ * Model Context Protocol (MCP) server endpoint that exposes all thirdweb API endpoints as MCP tools. This allows LLMs and AI assistants to interact with the thirdweb API through the standardized MCP protocol.
  *
- * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ * Add this MCP server to any MCP client:
+ *
+ * ```json
+ * {
+ * "mcpServers": {
+ * "thirdweb-api": {
+ * "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
+ * }
+ * }
+ * }
+ * ```
  */
-export const buyTokenWithUsd = <ThrowOnError extends boolean = false>(
-	options?: Options<BuyTokenWithUsdData, ThrowOnError>,
+export const mcpServer = <ThrowOnError extends boolean = false>(
+	options?: Options<McpServerData, ThrowOnError>,
 ) => {
 	return (options?.client ?? _heyApiClient).post<
-		BuyTokenWithUsdResponses,
-		BuyTokenWithUsdErrors,
+		McpServerResponses,
+		unknown,
 		ThrowOnError
 	>({
 		security: [
 			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
 				name: "x-secret-key",
 				type: "apiKey",
 			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
 		],
-		url: "/v1/tokens/buy",
+		url: "/mcp",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -1004,75 +1253,18 @@ export const buyTokenWithUsd = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Sell Token
- * Sell tokens for a USD amount. The system will automatically handle the optimal cross-chain route to convert your tokens to USD.
- *
- * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
+ * llms.txt
+ * The full openAPI reference for the thirdweb API in LLMs.txt format. Useful for AI assistants to understand the API and its capabilities. No authentication is required. Copy paste the contents of [https://api.thirdweb.com/llms.txt](https://api.thirdweb.com/llms.txt) into your source code to make your AI assistant understand the API and its capabilities.
  */
-export const sellTokenForUsd = <ThrowOnError extends boolean = false>(
-	options?: Options<SellTokenForUsdData, ThrowOnError>,
+export const llmsTxt = <ThrowOnError extends boolean = false>(
+	options?: Options<LlmsTxtData, ThrowOnError>,
 ) => {
-	return (options?.client ?? _heyApiClient).post<
-		SellTokenForUsdResponses,
-		SellTokenForUsdErrors,
+	return (options?.client ?? _heyApiClient).get<
+		LlmsTxtResponses,
+		unknown,
 		ThrowOnError
 	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/tokens/sell",
+		url: "/llms.txt",
 		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
-	});
-};
-
-/**
- * Transfer Token
- * Transfer tokens worth a USD amount to another wallet address. The system will calculate the required token amount based on current prices and execute the transfer.
- *
- * **Authentication**: This endpoint requires project authentication and wallet authentication. For backend usage, use `x-secret-key` header. For frontend usage, use `x-client-id` + `Authorization: Bearer <jwt>` headers.
- */
-export const transferTokenWithUsd = <ThrowOnError extends boolean = false>(
-	options?: Options<TransferTokenWithUsdData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).post<
-		TransferTokenWithUsdResponses,
-		TransferTokenWithUsdErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-		],
-		url: "/v1/tokens/transfer",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
 	});
 };

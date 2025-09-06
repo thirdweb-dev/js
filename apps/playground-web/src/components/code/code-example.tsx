@@ -24,10 +24,10 @@ export const CodeExample: React.FC<CodeExampleProps> = ({
     <div className="relative z-0">
       {header && (
         <div className="mb-4">
-          <h2 className="font-semibold text-xl tracking-tight capitalize">
+          <h2 className="font-semibold text-xl tracking-tight capitalize mb-1">
             {header.title}
           </h2>
-          <p className="max-w-4xl text-muted-foreground text-balance text-sm md:text-base">
+          <p className="max-w-5xl text-muted-foreground text-sm md:text-base text-pretty">
             {header.description}
           </p>
         </div>

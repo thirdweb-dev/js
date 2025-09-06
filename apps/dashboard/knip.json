@@ -8,6 +8,7 @@
   ],
   "ignoreBinaries": ["only-allow"],
   "ignoreDependencies": [
+    "@thirdweb-dev/api",
     "@thirdweb-dev/service-utils",
     "@thirdweb-dev/vault-sdk",
     "thirdweb",

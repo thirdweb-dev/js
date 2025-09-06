@@ -5,9 +5,19 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
  * Represents the filters for the "Executed" event.
  */
 export type ExecutedEventFilters = Partial<{
-  to: AbiParameterToPrimitiveType<{
+  user: AbiParameterToPrimitiveType<{
     type: "address";
-    name: "to";
+    name: "user";
+    indexed: true;
+  }>;
+  signer: AbiParameterToPrimitiveType<{
+    type: "address";
+    name: "signer";
+    indexed: true;
+  }>;
+  executor: AbiParameterToPrimitiveType<{
+    type: "address";
+    name: "executor";
     indexed: true;
   }>;
 }>;
@@ -26,7 +36,9 @@ export type ExecutedEventFilters = Partial<{
  * contract,
  * events: [
  *  executedEvent({
- *  to: ...,
+ *  user: ...,
+ *  signer: ...,
+ *  executor: ...,
  * })
  * ],
  * });
@@ -34,7 +46,8 @@ export type ExecutedEventFilters = Partial<{
  */
 export function executedEvent(filters: ExecutedEventFilters = {}) {
   return prepareEvent({
+    signature:
+      "event Executed(address indexed user, address indexed signer, address indexed executor, uint256 batchSize)",
     filters,
-    signature: "event Executed(address indexed to, uint256 value, bytes data)",
   });
 }

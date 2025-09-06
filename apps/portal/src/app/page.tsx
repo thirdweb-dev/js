@@ -139,11 +139,7 @@ function ReferenceSection() {
       <section>
         <SectionTitle anchorId="backend" title="Backend APIs" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SDKCard
-            href="https://api.thirdweb.com/reference"
-            icon={ConnectIcon}
-            title="HTTP API"
-          />
+          <SDKCard href="/reference" icon={ConnectIcon} title="HTTP API" />
           <SDKCard
             href="https://engine.thirdweb.com/reference"
             icon={EngineIcon}

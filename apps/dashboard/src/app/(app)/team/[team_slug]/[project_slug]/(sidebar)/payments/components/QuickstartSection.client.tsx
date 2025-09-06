@@ -30,7 +30,6 @@ export function QuickStartSection(props: {
           description="Create hosted payment UIs to receive any token in seconds."
           icon={LinkIcon}
           id="payment_links"
-          color="violet"
           badge={{
             label: "New",
             variant: "success",
@@ -47,8 +46,7 @@ export function QuickStartSection(props: {
               teamId={props.teamId}
             >
               <Button
-                className="w-full gap-2 group text-foreground"
-                size="sm"
+                className="w-full gap-2 group text-foreground bg-background"
                 variant="outline"
               >
                 <PlusIcon className="size-4" />
@@ -63,7 +61,6 @@ export function QuickStartSection(props: {
           icon={BadgeDollarSignIcon}
           id="fees"
           setupTime={1}
-          color="violet"
           features={[
             "Fees on every purchase",
             "Custom percentage",
@@ -79,7 +76,6 @@ export function QuickStartSection(props: {
           description="Instantly add payments to your React app with prebuilt components."
           icon={CodeIcon}
           id="components"
-          color="violet"
           setupTime={2}
           features={[
             "Drop-in components",
@@ -89,7 +85,6 @@ export function QuickStartSection(props: {
           link={{
             href: "https://portal.thirdweb.com/payments/products",
             label: "Get Started",
-            target: "_blank",
           }}
         />
       </div>
