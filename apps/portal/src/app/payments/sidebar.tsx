@@ -38,6 +38,22 @@ export const sidebar: SideBar = {
           name: "Send a Payment",
         },
         {
+          href: `bridge/sell`,
+          name: "Sell Tokens",
+        },
+        {
+          href: `bridge/swap`,
+          name: "Swap Tokens",
+        },
+        {
+          href: `bridge/tokens`,
+          name: "Get Token Prices",
+        },
+        {
+          href: `bridge/routes`,
+          name: "Get Routes",
+        },
+        {
           href: `${paymentsSlug}/webhooks`,
           name: "Webhooks",
         },
