@@ -36,6 +36,10 @@ const links = [
     name: "Payments",
   },
   {
+    href: "/bridge",
+    name: "Bridge",
+  },
+  {
     href: "/transactions",
     name: "Transactions",
   },
@@ -124,7 +128,7 @@ export const connectLinks: Array<{
 
 const apisLinks = [
   {
-    href: "/reference",
+    href: "https://api.thirdweb.com/reference",
     name: "HTTP API",
   },
   {
