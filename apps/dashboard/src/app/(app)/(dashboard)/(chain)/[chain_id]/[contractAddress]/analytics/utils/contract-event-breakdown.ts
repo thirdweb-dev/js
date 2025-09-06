@@ -27,7 +27,7 @@ export async function getContractEventBreakdown(params: {
   endDate?: Date;
 }): Promise<EventBreakdownEntry[]> {
   const queryParams = [
-    `chain=${params.chainId}`,
+    `chain_id=${params.chainId}`,
     "group_by=block_timestamp",
     "group_by=topic_0 as event_signature",
     "aggregate=toStartOfDay(toDate(block_timestamp)) as time",

@@ -20,7 +20,7 @@ export async function getTotalContractEvents(params: {
   chainId: number;
 }): Promise<{ count: number }> {
   const queryParams = [
-    `chain=${params.chainId}`,
+    `chain_id=${params.chainId}`,
     "aggregate=count(block_number) as total",
   ].join("&");
 
