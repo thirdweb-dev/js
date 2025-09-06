@@ -34,6 +34,7 @@ export type NebulaContext = {
   chainIds: string[] | null;
   walletAddress: string | null;
   sessionId: string | null;
+  autoExecuteTransactions?: boolean;
 };
 
 export type NebulaSwapData = {
