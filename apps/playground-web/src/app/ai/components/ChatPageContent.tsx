@@ -49,6 +49,18 @@ export function ChatPageContent(props: {
   const connectionStatus = useActiveWalletConnectionStatus();
   const connectedWallets = useConnectedWallets();
   const setActiveWallet = useSetActiveWallet();
+  const [chatAbortController, setChatAbortController] = useState<
+    AbortController | undefined
+  >();
+
+  const [isChatStreaming, setIsChatStreaming] = useState(false);
+  const [enableAutoScroll, setEnableAutoScroll] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
+
+  // User-configurable context options
+  const [userWalletAddress, setUserWalletAddress] = useState("");
+  const [userChainIds, setUserChainIds] = useState("");
+  const [userAutoExecute, setUserAutoExecute] = useState(false);
 
   const [userHasSubmittedMessage, setUserHasSubmittedMessage] = useState(false);
   const [messages, setMessages] = useState<Array<ChatMessage>>(() => {
@@ -70,17 +82,30 @@ export function ChatPageContent(props: {
   const contextFilters = useMemo(() => {
     // Parse user-entered chain IDs
     const userChainIdArray = userChainIds
-      .split(',')
-      .map(id => id.trim())
-      .filter(id => id !== '' && !isNaN(Number(id)));
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => id !== "" && !isNaN(Number(id)));
 
     return {
-      chainIds: userChainIdArray.length > 0 ? userChainIdArray : (_contextFilters?.chainIds || []),
+      chainIds:
+        userChainIdArray.length > 0
+          ? userChainIdArray
+          : _contextFilters?.chainIds || [],
       sessionId: _contextFilters?.sessionId || null,
-      walletAddress: userWalletAddress.trim() || address || _contextFilters?.walletAddress || null,
+      walletAddress:
+        userWalletAddress.trim() ||
+        address ||
+        _contextFilters?.walletAddress ||
+        null,
       autoExecuteTransactions: userAutoExecute,
     } satisfies NebulaContext;
-  }, [_contextFilters, address, userWalletAddress, userChainIds, userAutoExecute]);
+  }, [
+    _contextFilters,
+    address,
+    userWalletAddress,
+    userChainIds,
+    userAutoExecute,
+  ]);
 
   const setContextFilters = useCallback((v: NebulaContext | undefined) => {
     _setContextFilters(v);
@@ -113,19 +138,6 @@ export function ChatPageContent(props: {
       return _contextFilters;
     });
   }, []);
-
-  const [chatAbortController, setChatAbortController] = useState<
-    AbortController | undefined
-  >();
-
-  const [isChatStreaming, setIsChatStreaming] = useState(false);
-  const [enableAutoScroll, setEnableAutoScroll] = useState(false);
-  const [showConnectModal, setShowConnectModal] = useState(false);
-
-  // User-configurable context options
-  const [userWalletAddress, setUserWalletAddress] = useState("");
-  const [userChainIds, setUserChainIds] = useState("");
-  const [userAutoExecute, setUserAutoExecute] = useState(false);
 
   const handleSendMessage = useCallback(
     async (message: NebulaUserMessage) => {
@@ -748,7 +760,10 @@ function ContextOptionsBar(props: {
     <div className="mb-4 rounded-lg border bg-card p-3">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
-          <label htmlFor="wallet-address" className="text-sm font-medium text-muted-foreground">
+          <label
+            htmlFor="wallet-address"
+            className="text-sm font-medium text-muted-foreground"
+          >
             Wallet Address:
           </label>
           <input
@@ -761,9 +776,12 @@ function ContextOptionsBar(props: {
             style={{ width: "200px" }}
           />
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <label htmlFor="chain-ids" className="text-sm font-medium text-muted-foreground">
+          <label
+            htmlFor="chain-ids"
+            className="text-sm font-medium text-muted-foreground"
+          >
             Chain IDs:
           </label>
           <input
@@ -776,7 +794,7 @@ function ContextOptionsBar(props: {
             style={{ width: "100px" }}
           />
         </div>
-        
+
         <div className="flex items-center gap-2">
           <input
             id="auto-execute"
@@ -785,7 +803,10 @@ function ContextOptionsBar(props: {
             onChange={(e) => props.onAutoExecuteChange(e.target.checked)}
             className="w-4 h-4 text-primary border-border rounded focus:ring-ring"
           />
-          <label htmlFor="auto-execute" className="text-sm font-medium text-muted-foreground">
+          <label
+            htmlFor="auto-execute"
+            className="text-sm font-medium text-muted-foreground"
+          >
             Auto Execute Transactions
           </label>
         </div>
