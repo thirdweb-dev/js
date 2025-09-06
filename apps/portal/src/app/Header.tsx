@@ -48,10 +48,6 @@ const links = [
     name: "Tokens",
   },
   {
-    href: "/insight",
-    name: "Insight",
-  },
-  {
     href: "/reference",
     name: "API Reference",
   },
@@ -128,7 +124,7 @@ const apisLinks = [
     name: "HTTP API",
   },
   {
-    href: "https://insight.thirdweb.com/reference",
+    href: "/insight",
     name: "Insight",
   },
   {
