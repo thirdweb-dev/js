@@ -1,9 +1,7 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { stringify } from "../../../../../utils/json.js";
-import {
-  getLoginCallbackUrl,
-  getLoginUrl,
-} from "../../../core/authentication/getLoginPath.js";
+import { getLoginCallbackUrl } from "../../../core/authentication/getLoginPath.js";
 import type {
   AuthStoredTokenWithCookieReturnType,
   MultiStepAuthArgsType,
@@ -16,7 +14,7 @@ import type { Ecosystem } from "../../../core/wallet/types.js";
  */
 export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
   const { client, ecosystem } = args;
-  const url = getLoginUrl({ authOption: args.strategy, client, ecosystem });
+  const url = `${getThirdwebBaseUrl("api")}/v1/auth/initiate`;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -35,10 +33,12 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     switch (args.strategy) {
       case "email":
         return {
+          method: "email",
           email: args.email,
         };
       case "phone":
         return {
+          method: "sms",
           phone: args.phoneNumber,
         };
     }
@@ -54,7 +54,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     throw new Error("Failed to send verification code");
   }
 
-  return await response.json();
+  return;
 };
 
 /**
