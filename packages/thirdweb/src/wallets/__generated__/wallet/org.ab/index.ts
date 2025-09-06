@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.purechain",
-  name: "PureWallet",
-  homepage: "https://purechain.com",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
+  id: "org.ab",
+  name: "ABWallet",
+  homepage: "https://ab.org/abwallet",
+  image_id: "c2cb1d47-305e-45da-cdb8-b55b73ea4300",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
+    ios: "https://apps.apple.com/us/app/ab-wallet/id6745787849",
     android:
-      "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
+      "https://play.google.com/store/apps/details?id=org.ab.abwallet.android.release",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
+    native: "abwallet://walletconnect",
+    universal: "",
   },
   desktop: {
     native: "",

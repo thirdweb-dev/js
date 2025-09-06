@@ -23,10 +23,11 @@ export const wallet = {
   rdns: "com.okex.wallet",
   mobile: {
     native: "okex://main",
-    universal: "https://www.okx.com/ul/yG45x2",
+    universal:
+      "https://www.okx.com/download?appendQuery=true&deeplink=okx://web3/wallet/walletConnect",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

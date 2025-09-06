@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "app.edge",
-  name: "Edge Wallet",
+  name: "Edge",
   homepage: "https://edge.app/",
-  image_id: "f601bc29-4298-422f-dbf7-34dac2884f00",
+  image_id: "f0261e29-4981-4e16-4441-165e2d5d6300",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/edge-bitcoin-wallet/id1344400091",
@@ -25,7 +25,7 @@ export const wallet = {
     universal: "https://deep.edge.app/wc",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -2,15 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.purechain",
-  name: "PureWallet",
-  homepage: "https://purechain.com",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
+  id: "com.coldwallet",
+  name: "Cold Wallet",
+  homepage: "https://coldwallet.com/",
+  image_id: "fa63c977-9637-4d85-960d-058da23e4300",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
-    android:
-      "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
+    ios: "https://apps.apple.com/us/app/cold-wallet-crypto-wallet-app/id6467651848",
+    android: "https://play.google.com/store/apps/details?id=com.PlusWallet",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
+    native: "pluswallet://",
+    universal: "https://coldwallet.com/",
   },
   desktop: {
     native: "",

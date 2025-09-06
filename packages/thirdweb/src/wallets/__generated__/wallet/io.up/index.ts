@@ -8,7 +8,7 @@ export const wallet = {
   image_id: "f1a3f4d4-871f-42db-89ab-bb36b5c01f00",
   app: {
     browser: null,
-    ios: "",
+    ios: null,
     android: "https://play.google.com/store/apps/details?id=io.up.wallet&hl=en",
     mac: null,
     windows: null,

@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.purechain",
-  name: "PureWallet",
-  homepage: "https://purechain.com",
-  image_id: "ea64c6aa-13aa-440f-f503-0013acb37800",
+  id: "world.freedom",
+  name: "Freedom World",
+  homepage: "https://freedom.world/wallet",
+  image_id: "cfeba020-3a45-4c42-e2ca-7c2720b16c00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/purewallet/id6738949168?platform=iphone",
+    ios: "https://apps.apple.com/th/app/freedom-wallet/id1606936073",
     android:
-      "https://play.google.com/store/apps/details?id=com.nslab.purewalletp&pli=1",
+      "https://play.google.com/store/apps/details?id=com.bitazza.freedom.wallet&hl=en&gl=US",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "purewalletp://",
-    universal: "https://purewallet.ai/api",
+    native: "freedom-wallet://freedom.world/",
+    universal: "https://freedom.world/",
   },
   desktop: {
     native: "",
