@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
+import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 import { ChatButton } from "../components/AI/chat-button";
 import { Button } from "../components/ui/button";
 import {
@@ -19,13 +20,11 @@ import {
   UnityIcon,
   UnrealEngineIcon,
 } from "../icons";
-import { BridgeIcon } from "../icons/products/BridgeIcon";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
-import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 
 export default function Page() {
   return (
