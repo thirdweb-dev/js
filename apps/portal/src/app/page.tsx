@@ -1,6 +1,7 @@
 import {
   ArrowUpRightIcon,
   BotIcon,
+  CoinsIcon,
   MessageCircleIcon,
   WebhookIcon,
   ZapIcon,
@@ -24,6 +25,7 @@ import { EngineIcon } from "../icons/products/EngineIcon";
 import { InsightIcon } from "../icons/products/InsightIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
+import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 
 export default function Page() {
   return (
@@ -154,8 +156,8 @@ function ReferenceSection() {
           />
           <SDKCard
             href="https://bridge.thirdweb.com/reference"
-            icon={BridgeIcon}
-            title="Payments"
+            icon={PaymentsIcon}
+            title="Payments & Bridge"
           />
           <SDKCard
             href="/bundler"
@@ -181,10 +183,16 @@ function LearningResourcesSection() {
           title="Wallets"
         />
         <ArticleCardIndex
-          description="Bridge and onramp tokens on any chain"
+          description="Create onchain payments and sell products"
           href="/payments"
-          icon={BridgeIcon}
+          icon={PaymentsIcon}
           title="Payments"
+        />
+        <ArticleCardIndex
+          description="Bridge, swap, and onramp tokens on any chain"
+          href="/bridge"
+          icon={CoinsIcon}
+          title="Bridge"
         />
         <ArticleCardIndex
           description="Reliable transactions and monitoring"
