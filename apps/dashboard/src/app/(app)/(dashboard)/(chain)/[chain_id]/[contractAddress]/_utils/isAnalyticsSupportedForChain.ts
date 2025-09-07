@@ -19,6 +19,12 @@ export async function isInsightSupportedForChain(
     );
 
     if (!res.ok) {
+      const errorText = await res.text();
+      console.error(
+        "failed to fetch chain services for chain",
+        chainId,
+        errorText,
+      );
       return false;
     }
 
