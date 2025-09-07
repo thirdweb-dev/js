@@ -3,8 +3,8 @@ import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 import { getVercelEnv } from "@/utils/vercel";
 
 type InsightAggregationEntry = {
-  event_signature: string;
-  time: string;
+  topic_0: string;
+  day: string;
   count: number;
 };
 
@@ -26,12 +26,18 @@ export async function getContractEventBreakdown(params: {
   startDate?: Date;
   endDate?: Date;
 }): Promise<EventBreakdownEntry[]> {
+  const daysDifference =
+    params.startDate && params.endDate
+      ? Math.ceil(
+          (params.endDate.getTime() - params.startDate.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 30;
   const queryParams = [
     `chain=${params.chainId}`,
-    "group_by=time",
-    "group_by=topic_0 as event_signature",
-    "aggregate=toStartOfDay(toDate(block_timestamp)) as time",
-    "aggregate=count(*) as count",
+    "group_by=day",
+    "group_by=topic_0",
+    `limit=${daysDifference * 10}`, // at most 10 topics per day
     params.startDate
       ? `filter_block_timestamp_gte=${getUnixTime(params.startDate)}`
       : "",
@@ -42,14 +48,13 @@ export async function getContractEventBreakdown(params: {
     .filter(Boolean)
     .join("&");
 
-  const res = await fetch(
-    `https://insight.${thirdwebDomain}.com/v1/events/${params.contractAddress}?${queryParams}`,
-    {
-      headers: {
-        "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-      },
+  const url = `https://insight.${thirdwebDomain}.com/v1/events/${params.contractAddress}?${queryParams}`;
+
+  const res = await fetch(url, {
+    headers: {
+      "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     },
-  );
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch analytics data");
@@ -63,17 +68,16 @@ export async function getContractEventBreakdown(params: {
     if (
       typeof value === "object" &&
       value !== null &&
-      "time" in value &&
+      "day" in value &&
       "count" in value &&
-      "event_signature" in value &&
-      typeof value.event_signature === "string" &&
-      typeof value.time === "string" &&
-      typeof value.count === "number"
+      "topic_0" in value &&
+      typeof value.topic_0 === "string" &&
+      typeof value.day === "string"
     ) {
       collectedAggregations.push({
-        count: value.count,
-        event_signature: value.event_signature,
-        time: value.time,
+        count: Number(value.count),
+        topic_0: value.topic_0,
+        day: value.day,
       });
     }
   }
@@ -84,15 +88,15 @@ export async function getContractEventBreakdown(params: {
   > = new Map();
 
   for (const value of collectedAggregations) {
-    const mapKey = value.time;
+    const mapKey = value.day;
     let valueForDay = dayToFunctionBreakdownMap.get(mapKey);
     if (!valueForDay) {
       valueForDay = {};
       dayToFunctionBreakdownMap.set(mapKey, valueForDay);
     }
 
-    valueForDay[value.event_signature] =
-      (valueForDay[value.event_signature] || 0) + value.count;
+    valueForDay[value.topic_0] =
+      (valueForDay[value.topic_0] || 0) + value.count;
   }
 
   const values: EventBreakdownEntry[] = [];
