@@ -13,7 +13,7 @@ export const sidebar: SideBar = {
       icon: <ZapIcon />,
     },
     {
-      href: "https://playground.thirdweb.com/",
+      href: "https://playground.thirdweb.com/payments",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },
@@ -38,19 +38,19 @@ export const sidebar: SideBar = {
           name: "Send a Payment",
         },
         {
-          href: `bridge/sell`,
+          href: `/bridge/sell`,
           name: "Sell Tokens",
         },
         {
-          href: `bridge/swap`,
+          href: `/bridge/swap`,
           name: "Swap Tokens",
         },
         {
-          href: `bridge/tokens`,
+          href: `/bridge/tokens`,
           name: "Get Token Prices",
         },
         {
-          href: `bridge/routes`,
+          href: `/bridge/routes`,
           name: "Get Routes",
         },
         {
