@@ -87,7 +87,7 @@ export function ChatBar(props: {
                   <PopoverContent className="w-72">
                     <div>
                       <p className="mb-3 text-muted-foreground text-sm">
-                        Get access to image uploads by signing in to Nebula
+                        Get access to image uploads by signing in to thirdweb
                       </p>
                       <Button
                         className="w-full"

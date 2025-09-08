@@ -14,6 +14,7 @@ type ProxyActionParams = {
   body?: string;
   headers?: Record<string, string>;
   parseAsText?: boolean;
+  signal?: AbortSignal;
 };
 
 type ProxyActionResult<T> =

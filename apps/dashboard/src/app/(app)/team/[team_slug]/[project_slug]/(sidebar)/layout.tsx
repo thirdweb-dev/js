@@ -19,6 +19,7 @@ export default async function ProjectLayout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
+
   const [accountAddress, teams, account, authToken, team, project] =
     await Promise.all([
       getAuthTokenWalletAddress(),
