@@ -35,6 +35,10 @@
           }
         }
       },
+      "formatter": {
+        "enabled": true,
+        "indentStyle": "space"
+      },
       "includes": ["package.json"]
     }
   ]

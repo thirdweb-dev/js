@@ -1,6 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
   "extends": "//",
+  "root": false,
   "overrides": [
     {
       "assist": {
@@ -9,6 +10,10 @@
             "useSortedKeys": "off"
           }
         }
+      },
+      "formatter": {
+        "enabled": true,
+        "indentStyle": "space"
       },
       "includes": ["package.json"]
     }

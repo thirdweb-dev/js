@@ -1321,6 +1321,9 @@ importers:
       '@tanstack/react-query':
         specifier: 5.81.5
         version: 5.81.5(react@19.1.0)
+      '@thirdweb-dev/api':
+        specifier: workspace:*
+        version: link:../api
       '@thirdweb-dev/engine':
         specifier: workspace:*
         version: link:../engine

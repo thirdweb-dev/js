@@ -1,14 +1,9 @@
-import type { Chain } from "../../chains/types.js";
 import {
-  getChainDecimals,
-  getChainNativeCurrencyName,
-  getChainSymbol,
-} from "../../chains/utils.js";
+  getWalletBalance as apiGetWalletBalance,
+  configure,
+} from "@thirdweb-dev/api";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { getContract } from "../../contract/contract.js";
-import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
-import { getRpcClient } from "../../rpc/rpc.js";
-import { toTokens } from "../../utils/units.js";
 import type { Account } from "../interfaces/wallet.js";
 
 type GetTokenBalanceOptions = {
@@ -43,33 +38,40 @@ export async function getTokenBalance(
   options: GetTokenBalanceOptions,
 ): Promise<GetTokenBalanceResult> {
   const { account, client, chain, tokenAddress } = options;
-  // erc20 case
-  if (tokenAddress) {
-    // load balanceOf dynamically to avoid circular dependency
-    const { getBalance } = await import(
-      "../../extensions/erc20/read/getBalance.js"
-    );
-    return getBalance({
+
+  // Configure the API client with credentials from the thirdweb client
+  configure({
+    clientId: client.clientId,
+    secretKey: client.secretKey,
+  });
+
+  const response = await apiGetWalletBalance({
+    path: {
       address: account.address,
-      contract: getContract({ address: tokenAddress, chain, client }),
-    });
+    },
+    query: {
+      chainId: [chain.id],
+      ...(tokenAddress && { tokenAddress }),
+    },
+  });
+
+  if (!response.data?.result || response.data.result.length === 0) {
+    throw new Error("No balance data returned from API");
   }
-  // native token case
-  const rpcRequest = getRpcClient({ chain, client });
 
-  const [nativeSymbol, nativeDecimals, nativeName, nativeBalance] =
-    await Promise.all([
-      getChainSymbol(chain),
-      getChainDecimals(chain),
-      getChainNativeCurrencyName(chain),
-      eth_getBalance(rpcRequest, { address: account.address }),
-    ]);
+  // Get the first result (should match our chain)
+  const balanceData = response.data.result[0];
 
+  if (!balanceData) {
+    throw new Error("Balance data not found for the specified chain");
+  }
+
+  // Transform API response to match the existing GetTokenBalanceResult interface
   return {
-    decimals: nativeDecimals,
-    displayValue: toTokens(nativeBalance, nativeDecimals),
-    name: nativeName,
-    symbol: nativeSymbol,
-    value: nativeBalance,
+    decimals: balanceData.decimals,
+    displayValue: balanceData.displayValue,
+    name: balanceData.name,
+    symbol: balanceData.symbol,
+    value: BigInt(balanceData.value),
   };
 }
