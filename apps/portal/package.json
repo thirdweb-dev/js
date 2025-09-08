@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@dirtycajunrice/klee": "^1.0.6",
-    "@mdx-js/loader": "3.1.0",
+    "@mdx-js/loader": "3.1.1",
     "@mdx-js/react": "3.1.0",
     "@next/mdx": "15.3.5",
     "@radix-ui/react-dialog": "1.1.14",
