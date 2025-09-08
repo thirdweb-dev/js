@@ -3,11 +3,11 @@ import { ScalarApiReference } from "./ScalarClient";
 
 export const metadata = createMetadata({
   image: {
-    title: "API Reference",
+    title: "thirdweb API Reference",
     icon: "thirdweb",
   },
   title: "thirdweb API Reference",
-  description: "Complete REST API reference for all thirdweb services",
+  description: "A Unified interface for Web3 development",
 });
 
 export default async function ApiReferencePage() {
@@ -19,3 +19,5 @@ export default async function ApiReferencePage() {
     </div>
   );
 }
+
+export const revalidate = 3600;
