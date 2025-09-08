@@ -64,4 +64,5 @@ module.exports = [
   "/enterprise",
   "/token",
   "/vault",
+  "/monetize/bridge",
 ];
