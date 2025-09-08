@@ -242,7 +242,7 @@ function getGasStationUrl(chainId: 137 | 80002): string {
     case 137:
       return "https://gasstation.polygon.technology/v2";
     case 80002:
-      return "https://gasstation-testnet.polygon.technology/v2";
+      return "https://gasstation.polygon.technology/amoy";
   }
 }
 
