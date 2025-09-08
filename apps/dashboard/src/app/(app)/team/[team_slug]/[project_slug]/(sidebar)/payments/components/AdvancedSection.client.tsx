@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightLeftIcon, CodeIcon, WebhookIcon } from "lucide-react";
+import { CodeIcon, WebhookIcon } from "lucide-react";
 import { FeatureCard } from "./FeatureCard.client";
 
 export function AdvancedSection({
@@ -24,7 +24,6 @@ export function AdvancedSection({
           description="Build your own branded experiences with the HTTP API or TypeScript SDK."
           icon={CodeIcon}
           setupTime={10}
-          color="green"
           id="http_api"
           features={["Route discovery", "Real-time token prices"]}
           link={{
@@ -37,26 +36,11 @@ export function AdvancedSection({
           description="Create Webhooks to get notified on each purchase or transaction."
           icon={WebhookIcon}
           setupTime={5}
-          color="green"
           id="webhooks"
           features={["Instant events", "Transaction verification"]}
           link={{
             href: `/team/${teamSlug}/${projectSlug}/webhooks/payments`,
             label: "Setup Webhooks",
-          }}
-        />
-        <FeatureCard
-          title="Swap Tokens"
-          icon={ArrowRightLeftIcon}
-          setupTime={5}
-          color="green"
-          id="swap_tokens"
-          features={["Swap any token", "Cross-chain swaps"]}
-          description="Swap tokens cross-chain with dedicated swapping endpoints."
-          link={{
-            href: `https://portal.thirdweb.com/payments/swap`,
-            label: "Setup Swaps",
-            target: "_blank",
           }}
         />
       </div>

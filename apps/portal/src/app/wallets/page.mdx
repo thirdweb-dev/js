@@ -39,31 +39,24 @@ Create wallets for your users with flexible authentication options. Choose from 
 <Tabs defaultValue="http">
   <TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
-      <EngineIcon className="w-4 h-4 mr-2" />
       HTTP
     </TabsTrigger>
     <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
-      <TypeScriptIcon className="w-4 h-4 mr-2" />
       TypeScript
     </TabsTrigger>
     <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
-      <ReactIcon className="w-4 h-4 mr-2" />
       React
     </TabsTrigger>
     <TabsTrigger value="reactnative" className="flex items-center gap-2 [&>p]:mb-0">
-      <ReactIcon className="w-4 h-4 mr-2" />
       React Native
     </TabsTrigger>
     <TabsTrigger value="unity" className="flex items-center gap-2 [&>p]:mb-0">
-      <UnityIcon className="w-4 h-4 mr-2" />
       Unity
     </TabsTrigger>
     <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
-      <DotNetIcon className="w-4 h-4 mr-2" />
       .NET
     </TabsTrigger>
     <TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
-      <UnrealEngineIcon className="w-4 h-4 mr-2" />
       Unreal Engine
     </TabsTrigger>
   </TabsList>
@@ -83,7 +76,7 @@ Start authentication with email, phone, passkey, or SIWE
 
 <OpenApiEndpoint path="/v1/auth/initiate" method="POST" />
 
-### Complete Authentication  
+### Complete Authentication
 Verify and complete the authentication process:
 
 <OpenApiEndpoint path="/v1/auth/complete" method="POST" />
@@ -390,8 +383,8 @@ Retrieve authenticated user's wallet details:
         try {
             var inAppWalletOptions = new InAppWalletOptions(email: "myepicemail@domain.id");
             var options = new WalletOptions(
-                provider: WalletProvider.InAppWallet, 
-                chainId: 1, 
+                provider: WalletProvider.InAppWallet,
+                chainId: 1,
                 inAppWalletOptions: inAppWalletOptions
             );
             var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
@@ -419,13 +412,13 @@ Retrieve authenticated user's wallet details:
 
     ```csharp
     using Thirdweb;
- 
+
     // For native applications
     var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
-    
+
     // For frontend applications
     var client = ThirdwebClient.Create(clientId: "yourClientId");
-    
+
     // For backend applications
     var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
     ```
@@ -463,9 +456,9 @@ Retrieve authenticated user's wallet details:
     ```csharp
     // Get a contract instance
     var contract = await ThirdwebContract.Create(
-      client, 
-      "contractAddress", 
-      chainId, 
+      client,
+      "contractAddress",
+      chainId,
     );
 
     // Read a value from the contract

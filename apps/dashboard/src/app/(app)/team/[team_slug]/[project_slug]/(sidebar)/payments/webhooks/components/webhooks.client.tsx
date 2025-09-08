@@ -156,7 +156,7 @@ const formSchema = z.object({
   version: z.string(),
 });
 
-export function CreatePaymentWebhookButton(
+function CreatePaymentWebhookButton(
   props: PropsWithChildren<PayWebhooksPageProps>,
 ) {
   const [open, setOpen] = useState(false);

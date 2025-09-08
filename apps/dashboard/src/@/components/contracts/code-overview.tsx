@@ -65,6 +65,23 @@ export default function Component() {
     events: [preparedEvent]
   });
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+  address: "{{contract_address}}", 
+  chainId: {{chainId}},
+);
+
+// Listen to contract events
+var events = await contract.Events("{{function}}");`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(client, "{{contract_address}}", {{chainId}});
+
+// Listen to contract events
+var events = await contract.Events("{{function}}");`,
   },
   install: {
     javascript: "npm i thirdweb",
@@ -73,6 +90,9 @@ export default function Component() {
     unity: `// Download the .unitypackage from the latest release:
 // https://github.com/thirdweb-dev/unity-sdk/releases
 // and drag it into your project`,
+    dotnet: `// Install the thirdweb SDK via NuGet:
+// dotnet add package Thirdweb
+// Or search for "Thirdweb" in your NuGet package manager`,
   },
   read: {
     javascript: `import { readContract } from "thirdweb";
@@ -100,6 +120,33 @@ export default function Component() {
     params: [{{args}}]
   });
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);
+
+// Read from the contract
+var result = await contract.Read<T>(
+  "{{function}}",
+  {{args}}
+);`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}}
+);
+
+// Read from the contract
+var result = await contract.Read<T>(
+  "{{function}}",
+  {{args}}
+);`,
   },
   setup: {
     javascript: `import { createThirdwebClient, getContract } from "thirdweb";
@@ -165,11 +212,19 @@ function App() {
 `,
     unity: `using Thirdweb;
 
-// Reference the SDK
-var sdk = ThirdwebManager.Instance.SDK;
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);`,
+    dotnet: `using Thirdweb;
 
 // Get your contract
-var contract = sdk.GetContract("{{contract_address}}");`,
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}}
+);`,
   },
   write: {
     javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
@@ -213,6 +268,123 @@ export default function Component() {
     sendTransaction(transaction);
   }
 }`,
+    unity: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebManager.Instance.GetContract(
+  address: "{{contract_address}}", 
+  chainId: {{chainId}}
+);
+
+// Write to the contract
+var transactionReceipt = await contract.Write(
+  wallet,
+  contract,
+  "{{function}}",
+  weiValue,
+  {{args}}
+);`,
+    dotnet: `using Thirdweb;
+
+// Get your contract
+var contract = await ThirdwebContract.Create(
+  client,
+  "{{contract_address}}",
+  {{chainId}}
+);
+
+// Write to the contract
+var transactionReceipt = await contract.Write(
+  wallet,
+  contract,
+  "{{function}}",
+  weiValue,
+  {{args}}
+);`,
+  },
+  api: {
+    read: `const response = await fetch('https://api.thirdweb.com/v1/contracts/read', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  },
+  body: JSON.stringify({
+    calls: [
+      {
+        contractAddress: "{{contract_address}}",
+        method: "{{function}}",
+        params: [{{args}}]
+      }
+    ],
+    chainId: {{chainId}}
+  })
+});
+
+const data = await response.json();`,
+    write: `const response = await fetch('https://api.thirdweb.com/v1/contracts/write', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  },
+  body: JSON.stringify({
+    calls: [
+      {
+        contractAddress: "{{contract_address}}",
+        method: "{{function}}",
+        params: [{{args}}]
+      }
+    ],
+    chainId: {{chainId}},
+    from: "<YOUR_WALLET_ADDRESS>"
+  })
+});
+
+const data = await response.json();`,
+    events: `const response = await fetch('https://api.thirdweb.com/v1/contracts/{{chainId}}/{{contract_address}}/events?eventSignature={{function}}', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'x-secret-key': '<YOUR_SECRET_KEY>'
+  }
+});
+
+const data = await response.json();`,
+  },
+  curl: {
+    read: `curl https://api.thirdweb.com/v1/contracts/read \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-secret-key: <YOUR_SECRET_KEY>' \\
+  --data '{
+  "calls": [
+    {
+      "contractAddress": "{{contract_address}}",
+      "method": "{{function}}",
+      "params": [{{args}}]
+    }
+  ],
+  "chainId": {{chainId}}
+}'`,
+    write: `curl -X POST https://api.thirdweb.com/v1/contracts/write \\
+-H "Content-Type: application/json" \\
+-H "x-secret-key: <YOUR_SECRET_KEY>" \\
+-d '{
+  "calls": [
+    {
+      "contractAddress": "{{contract_address}}",
+      "method": "{{function}}",
+      "params": [{{args}}]
+    }
+  ],
+  "chainId": {{chainId}},
+  "from": "<YOUR_WALLET_ADDRESS>"
+}'`,
+    events: `curl https://api.thirdweb.com/v1/contracts/{{chainId}}/{{contract_address}}/events?eventSignature={{function}} \\
+  --request GET \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-secret-key: <YOUR_SECRET_KEY>'`,
   },
 };
 
@@ -269,20 +441,17 @@ return (
 
 public async void ConnectWallet()
 {
-    // Reference to your Thirdweb SDK
-    var sdk = ThirdwebManager.Instance.SDK;
-
-    // Configure the connection
-    var connection = new WalletConnection(
-      provider: WalletProvider.SmartWallet,        // The wallet provider you want to connect to (Required)
-      chainId: 1,                                  // The chain you want to connect to (Required)
-      password: "myEpicPassword",                  // If using a local wallet as personal wallet (Optional)
-      email: "email@email.com",                    // If using an email wallet as personal wallet (Optional)
-      personalWallet: WalletProvider.LocalWallet   // The personal wallet you want to use with your Account (Optional)
+    var wallet = await ConnectWallet(
+        new WalletOptions(
+            provider: WalletProvider.InAppWallet,
+            chainId: {{chainId}},
+            inAppWalletOptions: new InAppWalletOptions(
+                authprovider: AuthProvider.Google,
+                executionMode: ExecutionMode.EIP7702Sponsored
+            )
+        )
     );
-
-    // Connect the wallet
-    string address = await sdk.wallet.Connect(connection);
+    string address = await wallet.GetAddress();
 }`,
     },
   },
@@ -490,6 +659,9 @@ export function formatSnippet(
                 : "event",
           });
           break;
+        case "api":
+          // For API, we don't need special extension handling, just use the standard templates
+          break;
       }
     }
     // end hacks on hacks on hacks -- now just hacks on hacks from here on out
@@ -533,7 +705,7 @@ export function CodeOverview(props: {
     | undefined;
 
   const [environment, setEnvironment] = useState<CodeEnvironment>(
-    defaultEnvironment || "javascript",
+    defaultEnvironment || "api",
   );
 
   const [tab, setTab] = useState("write");
@@ -677,7 +849,13 @@ export function CodeOverview(props: {
           </div>
         )}
         <div className="flex flex-col gap-2">
-          {environment === "react-native" || environment === "unity" ? (
+          {environment === "api" || environment === "curl" ? (
+            <p className="text-sm text-muted-foreground">
+              No SDK install required for API/cURL. Call the HTTP endpoints
+              directly. Keep your secret key server-side; use client IDs in
+              frontends.
+            </p>
+          ) : environment === "react-native" || environment === "unity" ? (
             <p className="text-sm text-muted-foreground">
               Install the latest version of the SDK.{" "}
               <UnderlineLink
@@ -800,32 +978,76 @@ export function CodeOverview(props: {
             <CodeSegment
               environment={environment}
               setEnvironment={setEnvironment}
-              snippet={formatSnippet(
-                // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                COMMANDS[tab as keyof typeof COMMANDS] as any,
-                {
+              snippet={(() => {
+                const selectedFn =
+                  tab === "read" ? read : tab === "write" ? write : event;
+                const commandsKey = tab as "read" | "write" | "events";
+
+                const baseSnippet = formatSnippet(COMMANDS[commandsKey], {
                   args:
                     abi
                       ?.filter(
                         (f) => f.type === "function" || f.type === "event",
                       )
-                      ?.find(
-                        (f) =>
-                          f.name ===
-                          (tab === "read"
-                            ? read?.name
-                            : tab === "write"
-                              ? write?.name
-                              : event?.name),
-                      )
+                      ?.find((f) => f.name === selectedFn?.name)
                       ?.inputs.map((i) => i.name || "") || [],
 
                   chainId,
                   contractAddress,
                   extensionNamespace,
-                  fn: tab === "read" ? read : tab === "write" ? write : event,
-                },
-              )}
+                  fn: selectedFn,
+                });
+
+                // Add API snippet if it exists
+                const apiSnippet = COMMANDS.api[commandsKey]
+                  ? formatSnippet(
+                      { api: COMMANDS.api[commandsKey] },
+                      {
+                        args:
+                          abi
+                            ?.filter(
+                              (f) =>
+                                f.type === "function" || f.type === "event",
+                            )
+                            ?.find((f) => f.name === selectedFn?.name)
+                            ?.inputs.map((i) => i.name || "") || [],
+
+                        chainId,
+                        contractAddress,
+                        extensionNamespace,
+                        fn: selectedFn,
+                      },
+                    )
+                  : {};
+
+                // Add cURL snippet if it exists
+                const curlSnippet = COMMANDS.curl[commandsKey]
+                  ? formatSnippet(
+                      { curl: COMMANDS.curl[commandsKey] },
+                      {
+                        args:
+                          abi
+                            ?.filter(
+                              (f) =>
+                                f.type === "function" || f.type === "event",
+                            )
+                            ?.find((f) => f.name === selectedFn?.name)
+                            ?.inputs.map((i) => i.name || "") || [],
+
+                        chainId,
+                        contractAddress,
+                        extensionNamespace,
+                        fn: selectedFn,
+                      },
+                    )
+                  : {};
+
+                return {
+                  ...baseSnippet,
+                  ...apiSnippet,
+                  ...curlSnippet,
+                };
+              })()}
             />
           </div>
         </div>

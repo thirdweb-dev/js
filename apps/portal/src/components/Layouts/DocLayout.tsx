@@ -26,7 +26,7 @@ export function DocLayout(props: DocLayoutProps) {
   return (
     <div
       className={cn(
-        "container text-muted-foreground relative flex flex-col gap-12 xl:grid",
+        "container relative flex flex-col gap-12 xl:grid",
         props.sideBar.links.length > 0
           ? props.showTableOfContents !== false
             ? "xl:grid-cols-[220px_720px_1fr]"

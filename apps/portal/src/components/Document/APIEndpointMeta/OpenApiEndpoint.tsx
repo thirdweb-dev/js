@@ -500,12 +500,10 @@ async function OpenApiEndpointInner({
   }
 }
 
-const BASE_API_URL = "https://api.thirdweb.com";
-
 function generateReferenceUrl(
   tag: string,
   path: string,
   method: string,
 ): string {
-  return `${BASE_API_URL}/reference#tag/${tag.toLowerCase()}/${method.toLowerCase()}${path}`;
+  return `/reference#tag/${tag.toLowerCase()}/${method.toLowerCase()}${path}`;
 }

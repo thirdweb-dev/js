@@ -21,10 +21,21 @@ const AgentActionSignSwapDataIntent = z.object({
   max_steps: z.number(),
 });
 
+const AgentActionSignSwapDataToken = z.object({
+  address: z.string(),
+  chain_id: z.number(),
+  amount: z.string(),
+  symbol: z.string(),
+  decimals: z.number(),
+  price: z.number().nullable(),
+});
+
 const AgentActionSignSwapData = z.object({
   action: z.string(),
   intent: AgentActionSignSwapDataIntent,
   transaction: AgentActionSignTransactionData,
+  from_token: AgentActionSignSwapDataToken,
+  to_token: AgentActionSignSwapDataToken,
 });
 
 const AgentActionTransactionOutputData = z.object({

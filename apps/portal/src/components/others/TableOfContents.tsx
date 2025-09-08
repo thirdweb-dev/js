@@ -1,6 +1,5 @@
 "use client";
 
-import { BookOpenTextIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -124,12 +123,10 @@ export function TableOfContentsSideBar(props: {
         visibility: hideNav ? "hidden" : "visible",
       }}
     >
-      <div className="bg-card text-sm p-4 border rounded-lg shadow-sm">
-        <div className="font-medium flex items-center">
-          <BookOpenTextIcon className="mr-2 size-4" />
+      <div className="text-sm">
+        <div className="font-medium mb-4 text-foreground border-b pb-4 text-base">
           On this page
         </div>
-        <hr className="my-4 border-t" />
         <div
           ref={tocRef}
           style={{
@@ -184,7 +181,7 @@ function TOCLink(props: {
   return (
     <Link
       className={cn(
-        "block overflow-hidden text-ellipsis font-medium text-muted-foreground transition-colors hover:text-foreground data-[active='true']:text-foreground",
+        "block overflow-hidden text-ellipsis text-muted-foreground transition-colors hover:text-foreground data-[active='true']:text-foreground",
         props.linkClassName,
       )}
       href={props.href}

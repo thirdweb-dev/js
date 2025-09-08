@@ -104,7 +104,6 @@ export function WalletAuth(props: {
             }}
             recommendedWallets={undefined}
             size={props.size}
-            specifiedWallets={[]}
           />
         </Suspense>
       );

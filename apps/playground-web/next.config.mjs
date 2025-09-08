@@ -147,6 +147,21 @@ const nextConfig = {
         destination: "/wallets/ecosystem-wallet",
         permanent: false,
       },
+      {
+        source: "/insight",
+        destination: "https://insight.thirdweb.com/reference",
+        permanent: false,
+      },
+      {
+        source: "/payments/backend",
+        destination: "/reference#tag/payments",
+        permanent: false,
+      },
+      {
+        source: "/payments/ui-components",
+        destination: "/payments",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

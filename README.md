@@ -172,6 +172,8 @@ See our [open source page](https://thirdweb.com/open-source) for more informatio
 - [Documentation](https://portal.thirdweb.com/)
 - [Templates](https://thirdweb.com/templates)
 - [YouTube](https://www.youtube.com/c/thirdweb)
+- [X/Twitter](https://x.com/thirdweb)
+- [Telegram](https://t.me/officialthirdweb)
 
 ## Support
 

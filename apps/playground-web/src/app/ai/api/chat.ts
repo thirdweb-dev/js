@@ -22,7 +22,9 @@ export async function promptNebula(params: {
     body.context = {
       chain_ids: params.context.chainIds?.map(Number) || [],
       session_id: params.context.sessionId ?? undefined,
-      wallet_address: params.context.walletAddress,
+      from: params.context.walletAddress ?? undefined,
+      auto_execute_transactions:
+        params.context.autoExecuteTransactions || false,
     };
   }
 

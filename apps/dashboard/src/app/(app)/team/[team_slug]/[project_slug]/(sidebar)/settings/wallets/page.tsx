@@ -1,6 +1,3 @@
-import { Button } from "@workspace/ui/components/button";
-import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -8,6 +5,7 @@ import { getTeamBySlug } from "@/api/team/get-team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { loginRedirect } from "@/utils/redirects";
+import { ProjectSettingsBreadcrumb } from "../_components/project-settings-breadcrumb";
 import { getSMSCountryTiers } from "./api/sms";
 import { InAppWalletSettingsPage } from "./components";
 
@@ -41,15 +39,13 @@ export default async function Page(props: {
   });
 
   return (
-    <div className="flex flex-col gap-4 md:gap-6">
-      <div className="flex flex-row items-center gap-2">
-        <Button variant="outline" size="icon" className="rounded-full" asChild>
-          <Link href={`/team/${team_slug}/${project_slug}/settings`}>
-            <ArrowLeftIcon className="size-4" />
-          </Link>
-        </Button>
-        <h2 className="text-2xl font-medium">Wallets</h2>
-      </div>
+    <div className="flex flex-col gap-6">
+      <ProjectSettingsBreadcrumb
+        teamSlug={team_slug}
+        projectSlug={project_slug}
+        page="Wallets"
+      />
+
       <InAppWalletSettingsPage
         client={client}
         project={project}

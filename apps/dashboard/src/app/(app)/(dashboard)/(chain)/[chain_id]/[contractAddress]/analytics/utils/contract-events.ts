@@ -30,11 +30,17 @@ export async function getContractEventAnalytics(params: {
   startDate?: Date;
   endDate?: Date;
 }): Promise<AnalyticsEntry[]> {
+  const daysDifference =
+    params.startDate && params.endDate
+      ? Math.ceil(
+          (params.endDate.getTime() - params.startDate.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 30;
   const queryParams = [
     `chain=${params.chainId}`,
-    "group_by=time",
-    "aggregate=toStartOfDay(toDate(block_timestamp)) as time",
-    "aggregate=count(block_timestamp) as count",
+    "group_by=day",
+    `limit=${daysDifference}`,
     params.startDate
       ? `filter_block_timestamp_gte=${getUnixTime(params.startDate)}`
       : "",
@@ -45,17 +51,17 @@ export async function getContractEventAnalytics(params: {
     .filter(Boolean)
     .join("&");
 
-  const res = await fetch(
-    `https://insight.${thirdwebDomain}.com/v1/events/${params.contractAddress}?${queryParams}`,
-    {
-      headers: {
-        "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-      },
+  const url = `https://insight.${thirdwebDomain}.com/v1/events/${params.contractAddress}?${queryParams}`;
+
+  const res = await fetch(url, {
+    headers: {
+      "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
     },
-  );
+  });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch analytics data");
+    const errorText = await res.text();
+    throw new Error(`Failed to fetch analytics data: ${errorText}`);
   }
 
   const json = (await res.json()) as InsightResponse;
@@ -67,14 +73,13 @@ export async function getContractEventAnalytics(params: {
     if (
       typeof value === "object" &&
       value !== null &&
-      "time" in value &&
+      "day" in value &&
       "count" in value &&
-      typeof value.time === "string" &&
-      typeof value.count === "number"
+      typeof value.day === "string"
     ) {
       values.push({
-        count: value.count,
-        time: new Date(value.time),
+        count: Number(value.count),
+        time: new Date(value.day),
       });
     }
   }

@@ -61,10 +61,6 @@ export default async function Page(props: {
             href: "https://portal.thirdweb.com/insight",
           },
           {
-            type: "playground",
-            href: "https://playground.thirdweb.com/insight",
-          },
-          {
             type: "api",
             href: "https://insight-api.thirdweb.com/reference",
           },
@@ -73,44 +69,6 @@ export default async function Page(props: {
             href: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
           },
         ],
-      }}
-      footer={{
-        center: {
-          links: [
-            {
-              href: "https://www.youtube.com/watch?v=U2aW7YIUJVw",
-              label:
-                "Blockchain Data on Any EVM - Quick and Easy REST APIs for Onchain Data",
-            },
-            {
-              href: "https://www.youtube.com/watch?v=HvqewXLVRig",
-              label: "Build a Whale Alerts Telegram Bot with Insight",
-            },
-          ],
-          title: "Tutorials",
-        },
-        left: {
-          links: [
-            {
-              href: "https://portal.thirdweb.com/insight",
-              label: "Overview",
-            },
-            {
-              href: "https://insight-api.thirdweb.com/reference",
-              label: "API Reference",
-            },
-          ],
-          title: "Documentation",
-        },
-        right: {
-          links: [
-            {
-              href: "https://playground.thirdweb.com/insight",
-              label: "API Playground",
-            },
-          ],
-          title: "Demos",
-        },
       }}
     >
       <ResponsiveSearchParamsProvider value={searchParams}>

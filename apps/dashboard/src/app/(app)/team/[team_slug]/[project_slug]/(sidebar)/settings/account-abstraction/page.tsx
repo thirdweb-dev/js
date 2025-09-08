@@ -1,6 +1,4 @@
-import { Button } from "@workspace/ui/components/button";
-import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
-import Link from "next/link";
+import { CircleAlertIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -13,6 +11,7 @@ import { loginRedirect } from "@/utils/redirects";
 import { DefaultFactoriesSection } from "../../account-abstraction/factories/AccountFactories";
 import { YourFactoriesSection } from "../../account-abstraction/factories/AccountFactories/your-factories";
 import { AccountAbstractionSettingsPage } from "../../account-abstraction/settings/SponsorshipPolicies";
+import { ProjectSettingsBreadcrumb } from "../_components/project-settings-breadcrumb";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -46,50 +45,51 @@ export default async function Page(props: {
   const bundlerService = project.services.find((s) => s.name === "bundler");
 
   return (
-    <div className="flex flex-col gap-4 md:gap-8">
-      <div className="flex flex-row items-center gap-2">
-        <Button variant="outline" size="icon" className="rounded-full" asChild>
-          <Link href={`/team/${team_slug}/${project_slug}/settings`}>
-            <ArrowLeftIcon className="size-4" />
-          </Link>
-        </Button>
-        <h2 className="text-2xl font-medium">Account Abstraction</h2>
+    <div>
+      <ProjectSettingsBreadcrumb
+        teamSlug={team_slug}
+        projectSlug={project_slug}
+        page="Account Abstraction"
+      />
+
+      <div className="space-y-8 mt-6">
+        {!bundlerService ? (
+          <Alert variant="warning">
+            <CircleAlertIcon className="size-5" />
+            <AlertTitle>Account Abstraction service is disabled</AlertTitle>
+            <AlertDescription>
+              Enable Account Abstraction service in{" "}
+              <UnderlineLink
+                href={`/team/${team_slug}/${project_slug}/settings`}
+              >
+                project settings
+              </UnderlineLink>{" "}
+              to configure the sponsorship rules
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <>
+            <AccountAbstractionSettingsPage
+              bundlerService={bundlerService}
+              client={client}
+              project={project}
+              teamId={team.id}
+              teamSlug={team.slug}
+              validTeamPlan={getValidTeamPlan(team)}
+            />
+
+            <DefaultFactoriesSection />
+            <YourFactoriesSection
+              authToken={authToken}
+              clientThirdwebClient={client}
+              projectId={project.id}
+              projectSlug={project.slug}
+              teamId={team.id}
+              teamSlug={team.slug}
+            />
+          </>
+        )}
       </div>
-
-      {!bundlerService ? (
-        <Alert variant="warning">
-          <CircleAlertIcon className="size-5" />
-          <AlertTitle>Account Abstraction service is disabled</AlertTitle>
-          <AlertDescription>
-            Enable Account Abstraction service in{" "}
-            <UnderlineLink href={`/team/${team_slug}/${project_slug}/settings`}>
-              project settings
-            </UnderlineLink>{" "}
-            to configure the sponsorship rules
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <>
-          <AccountAbstractionSettingsPage
-            bundlerService={bundlerService}
-            client={client}
-            project={project}
-            teamId={team.id}
-            teamSlug={team.slug}
-            validTeamPlan={getValidTeamPlan(team)}
-          />
-
-          <DefaultFactoriesSection />
-          <YourFactoriesSection
-            authToken={authToken}
-            clientThirdwebClient={client}
-            projectId={project.id}
-            projectSlug={project.slug}
-            teamId={team.id}
-            teamSlug={team.slug}
-          />
-        </>
-      )}
     </div>
   );
 }

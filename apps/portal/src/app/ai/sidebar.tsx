@@ -30,8 +30,12 @@ export const sidebar: SideBar = {
           href: "/ai/chat/ai-sdk",
         },
         {
+          name: "OpenAI SDK",
+          href: "/ai/chat/openai-sdk",
+        },
+        {
           name: "API Reference",
-          href: "https://api.thirdweb.com/reference#tag/ai/post/ai/chat",
+          href: "/reference#tag/ai/post/ai/chat",
         },
       ],
     },

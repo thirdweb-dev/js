@@ -24,8 +24,7 @@ export function EndpointMetadata() {
         method: "GET",
         origin: "https://nebula-api.thirdweb.com",
         path: "/session/list",
-        referenceUrl:
-          "https://api.thirdweb.com/reference#tag/ai/ai/list-session",
+        referenceUrl: "/reference#tag/ai/ai/list-session",
         request: {
           bodyParameters: [],
           headers: [nebulaSecretKeyHeaderParameter],

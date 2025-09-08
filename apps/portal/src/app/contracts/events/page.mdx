@@ -18,15 +18,15 @@ Query and listen to contract events for any deployed contract on any EVM chain.
 <Tabs defaultValue="http">
   <TabsList>
     <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
-      <EngineIcon className="w-4 h-4 mr-2" />
+      <EngineIcon className="w-4 h-4" />
       HTTP
     </TabsTrigger>
     <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
-      <TypeScriptIcon className="w-4 h-4 mr-2" />
+      <TypeScriptIcon className="w-4 h-4" />
       TypeScript
     </TabsTrigger>
     <TabsTrigger value="react" className="flex items-center gap-2 [&>p]:mb-0">
-      <ReactIcon className="w-4 h-4 mr-2" />
+      <ReactIcon className="w-4 h-4" />
       React
     </TabsTrigger>
   </TabsList>
@@ -88,11 +88,11 @@ Read more on how to [generate extension functions using the CLI](/contracts/gene
     ```jsx
     import { useContractEvents } from "thirdweb/react";
     import { prepareEvent } from "thirdweb";
-     
+
     const myEvent = prepareEvent({
       signature: "event Transfer(address indexed from, address indexed to, uint256 value)",
     });
-     
+
     function YourComponent() {
       const { data: contractEvents } = useContractEvents({
         contract,
@@ -118,7 +118,7 @@ Read more on how to [generate extension functions using the CLI](/contracts/gene
     ```jsx
     import { useContractEvents } from "thirdweb/react";
     import { transferEvent } from "thirdweb/extensions/erc20";
-     
+
     function YourComponent() {
       const { data: contractEvents } = useContractEvents({
         contract,

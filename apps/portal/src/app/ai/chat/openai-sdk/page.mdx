@@ -1,0 +1,107 @@
+# Usage with the OpenAI SDK
+
+The thirdweb AI model can be accessed using the standard OpenAI Python/Typescript SDK by configuring it to use thirdweb's API endpoint. This allows you to leverage familiar OpenAI patterns while accessing thirdweb's blockchain-specific AI capabilities.
+
+## Setup and Configuration
+
+First, install the OpenAI Python SDK and configure it to use thirdweb's AI endpoint:
+
+```bash
+pip install openai
+```
+
+Configure the client with your thirdweb secret key:
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.thirdweb.com/ai", 
+    api_key=os.environ.get("THIRDWEB_SECRET_KEY")
+)
+```
+
+**Important**: Store your `THIRDWEB_SECRET_KEY` as an environment variable for security. You can obtain your secret key from the [thirdweb dashboard](https://thirdweb.com/dashboard).
+
+## Making AI Requests
+
+The thirdweb AI model (`t0-latest`) can understand and execute blockchain operations through natural language. Use the `extra_body` parameter to provide blockchain context:
+
+```python
+chat_completion = client.chat.completions.create(
+    model="t0-latest",
+    messages=[{
+        "role": "user",
+        "content": "Swap 0.01 ETH to USDC, then transfer 10 USDC to vitalik.eth",
+    }],
+    stream=True,
+    extra_body={
+        "context": {
+            "from": "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b",
+            "chain_ids": [8453],
+            "auto_execute_transactions": False
+        }
+    },
+)
+```
+
+### Context Parameters
+
+- **`from`**: The wallet address that will execute transactions
+- **`chain_ids`**: Array of blockchain network IDs to operate on (e.g., `[1]` for Ethereum, `[8453]` for Base)
+- **`auto_execute_transactions`**: Set to `true` to automatically execute transactions, or `false` to return transaction data for manual execution
+
+## Handling Streaming Responses
+
+The thirdweb AI model supports streaming responses with different event types. Here's how to handle them:
+
+```python
+import json
+
+# Buffer message chunks and print once at the end
+message_parts = []
+
+for event in chat_completion:
+    event_type = getattr(event, "type", None)
+
+    # Handle thinking steps
+    if event_type == "presence":
+        data = getattr(event, "data", None)
+        print(f"[presence] {data}" if data is not None else "[presence]")
+        continue
+
+    # Handle actions (transaction preparations, chain changes, etc.)
+    if isinstance(event_type, str):
+        data = getattr(event, "data", None)
+        try:
+            data_str = json.dumps(data, separators=(",", ":"))
+        except Exception:
+            data_str = str(data)
+        print(f"\n\n[{event_type}] - {data_str if data_str is not None else ""}")
+        continue
+
+    # Handle message content
+    v = getattr(event, "v", None)
+    if v is not None:
+        message_parts.append(str(v))
+
+# Print the final message
+if message_parts:
+    print("\n\n[message] " + "".join(message_parts))
+```
+
+### Event Types
+
+- **`init`**: Initializes the stream and provides session information
+- **`presence`**: Indicates the AI is thinking or processing
+- **`image`**: Contains image data
+- **`context`**: Contains context data
+- **`error`**: Contains error information if something goes wrong
+- **Action events**: 
+  - **`sign_transaction`**: Contains transaction data
+  - **`sign_swap`**: Contains swap data
+  - **`monitor_transaction`**: Contains queued transaction id
+- **Message content**: The actual response text from the AI
+
+The AI will return structured data for blockchain operations, including transaction details, gas estimates, and execution status when `auto_execute_transactions` is enabled.

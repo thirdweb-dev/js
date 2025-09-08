@@ -14,6 +14,9 @@ import type { SignedAuthorization } from "../../../../transaction/actions/eip770
 import { toSerializableTransaction } from "../../../../transaction/actions/to-serializable-transaction.js";
 import type { SendTransactionResult } from "../../../../transaction/types.js";
 import { getAddress } from "../../../../utils/address.js";
+import { getClientFetch } from "../../../../utils/fetch.js";
+import { stringify } from "../../../../utils/json.js";
+import { withCache } from "../../../../utils/promise/withCache.js";
 import { randomBytesHex } from "../../../../utils/random.js";
 import type {
   Account,
@@ -23,11 +26,140 @@ import {
   executeWithSignature,
   getQueuedTransactionHash,
 } from "../../../smart/lib/bundler.js";
+import { getDefaultBundlerUrl } from "../../../smart/lib/constants.js";
 import type { BundlerOptions } from "../../../smart/types.js";
 
-const MINIMAL_ACCOUNT_IMPLEMENTATION_ADDRESS =
-  "0xD6999651Fc0964B9c6B444307a0ab20534a66560";
+interface DelegationContractResponse {
+  id: string;
+  jsonrpc: string;
+  result: {
+    delegationContract: string;
+  };
+}
 
+/**
+ * Fetches the delegation contract address from the bundler using the tw_getDelegationContract RPC method
+ * @internal
+ */
+async function getDelegationContractAddress(args: {
+  client: ThirdwebClient;
+  chain: Chain;
+  bundlerUrl?: string;
+}): Promise<string> {
+  const { client, chain, bundlerUrl } = args;
+  const url = bundlerUrl ?? getDefaultBundlerUrl(chain);
+
+  // Create a cache key based on the bundler URL to ensure we cache per chain/bundler
+  const cacheKey = `delegation-contract:${url}`;
+
+  return withCache(
+    async () => {
+      const fetchWithHeaders = getClientFetch(client);
+
+      const response = await fetchWithHeaders(url, {
+        useAuthToken: true,
+        body: stringify({
+          id: 1,
+          jsonrpc: "2.0",
+          method: "tw_getDelegationContract",
+          params: [],
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch delegation contract: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const result: DelegationContractResponse = await response.json();
+
+      if ((result as any).error) {
+        throw new Error(
+          `Delegation contract RPC error: ${JSON.stringify((result as any).error)}`,
+        );
+      }
+
+      if (!result.result?.delegationContract) {
+        throw new Error(
+          "Invalid response: missing delegationContract in result",
+        );
+      }
+
+      return result.result.delegationContract;
+    },
+    { cacheKey, cacheTime: 24 * 60 * 60 * 1000 }, // cache for 24 hours
+  );
+}
+
+/**
+ * Creates an EIP-7702 account that enables EOA (Externally Owned Account) delegation
+ * to smart contract functionality. This allows an EOA to delegate its code execution
+ * to a minimal account contract, enabling features like batch transactions and sponsored gas.
+ *
+ * The minimal account leverages EIP-7702 authorization to delegate the EOA's code to a
+ * MinimalAccount contract, allowing the EOA to execute smart contract functions while
+ * maintaining its original address and private key control.
+ *
+ * @param args - Configuration object for creating the minimal account
+ * @param args.client - The thirdweb client instance for blockchain interactions
+ * @param args.adminAccount - The EOA account that will be delegated to the minimal account contract
+ * @param args.sponsorGas - Optional flag to enable sponsored gas transactions via bundler
+ *
+ * @returns An Account object with enhanced capabilities including batch transactions and EIP-5792 support
+ *
+ * @example
+ * ```typescript
+ * import { createThirdwebClient, sendBatchTransaction } from "thirdweb";
+ * import { privateKeyToAccount } from "thirdweb/wallets";
+ * import { create7702MinimalAccount } from "thirdweb/wallets/in-app";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * // Create a client
+ * const client = createThirdwebClient({
+ *   clientId: "your-client-id"
+ * });
+ *
+ * // Create an EOA account
+ * const adminAccount = privateKeyToAccount({
+ *   client,
+ *   privateKey: "0x..."
+ * });
+ *
+ * // Wrap it with a EIP-7702 account
+ * const minimal7702Account = create7702MinimalAccount({
+ *   client,
+ *   adminAccount,
+ *   sponsorGas: true // Enable sponsored transactions
+ * });
+ *
+ * // Send a batch of transactions
+ * const result = await sendBatchTransaction({
+ *   account: minimal7702Account,
+ *   transactions: [
+ *   {
+ *     to: "0x...",
+ *     data: "0x...",
+ *     value: 0n,
+ *     chainId: sepolia.id
+ *   },
+ *   {
+ *     to: "0x...",
+ *     data: "0x...",
+ *     value: 0n,
+ *     chainId: sepolia.id
+ *   }
+ * ]});
+ *
+ * console.log("Batch transaction hash:", result.transactionHash);
+ * ```
+ *
+ * @wallet
+ */
 export const create7702MinimalAccount = (args: {
   client: ThirdwebClient;
   adminAccount: Account;
@@ -49,7 +181,14 @@ export const create7702MinimalAccount = (args: {
     });
     // check if account has been delegated already
     let authorization: SignedAuthorization | undefined;
-    const isMinimalAccount = await is7702MinimalAccount(eoaContract);
+    const delegationContractAddress = await getDelegationContractAddress({
+      client,
+      chain,
+    });
+    const isMinimalAccount = await is7702MinimalAccount(
+      eoaContract,
+      delegationContractAddress,
+    );
     if (!isMinimalAccount) {
       // if not, sign authorization
       let nonce = firstTx.nonce
@@ -58,12 +197,12 @@ export const create7702MinimalAccount = (args: {
             await getNonce({
               client,
               address: adminAccount.address,
-              chain: getCachedChain(firstTx.chainId),
+              chain,
             }),
           );
       nonce += sponsorGas ? 0n : 1n;
       const auth = await adminAccount.signAuthorization?.({
-        address: MINIMAL_ACCOUNT_IMPLEMENTATION_ADDRESS,
+        address: getAddress(delegationContractAddress),
         chainId: firstTx.chainId,
         nonce,
       });
@@ -76,7 +215,7 @@ export const create7702MinimalAccount = (args: {
       // send transaction from executor, needs signature
       const wrappedCalls = {
         calls: txs.map((tx) => ({
-          data: tx.data ?? "0x", // will throw if undefined address
+          data: tx.data ?? "0x",
           target: getAddress(tx.to ?? ""),
           value: tx.value ?? 0n,
         })),
@@ -131,7 +270,7 @@ export const create7702MinimalAccount = (args: {
     const executeTx = execute({
       calls: txs.map((tx) => ({
         data: tx.data ?? "0x",
-        target: tx.to ?? "",
+        target: getAddress(tx.to ?? ""),
         value: tx.value ?? 0n,
       })),
       contract: eoaContract,
@@ -228,7 +367,7 @@ async function getNonce(args: {
     "../../../../rpc/actions/eth_getTransactionCount.js"
   ).then(({ eth_getTransactionCount }) =>
     eth_getTransactionCount(rpcRequest, {
-      address,
+      address: getAddress(address),
       blockTag: "pending",
     }),
   );
@@ -238,14 +377,14 @@ async function getNonce(args: {
 async function is7702MinimalAccount(
   // biome-ignore lint/suspicious/noExplicitAny: TODO properly type tw contract
   eoaContract: ThirdwebContract<any>,
+  delegationContractAddress: string,
 ): Promise<boolean> {
   const code = await getBytecode(eoaContract);
   const isDelegated = code.length > 0 && code.startsWith("0xef0100");
   const target = `0x${code.slice(8, 48)}`;
   return (
     isDelegated &&
-    target.toLowerCase() ===
-      MINIMAL_ACCOUNT_IMPLEMENTATION_ADDRESS.toLowerCase()
+    target.toLowerCase() === delegationContractAddress.toLowerCase()
   );
 }
 

@@ -4,14 +4,20 @@ import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { type ThirdwebClient, toTokens } from "thirdweb";
 import {
+  type BridgePayment,
   getPayments,
   type Payment,
   type PaymentsResponse,
 } from "@/api/universal-bridge/developer";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
-import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableContainer,
+  TableHeader,
+} from "@/components/ui/table";
 import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { formatTokenAmount } from "./format";
 import { TableRow } from "./PaymentsTableRow";
@@ -49,40 +55,43 @@ export function PaymentHistory(props: {
     <div className="w-full">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="font-semibold text-xl tracking-tight">
+          <h2 className="font-semibold text-2xl tracking-tight mb-1">
             Transaction History
           </h2>
           <p className="text-muted-foreground text-sm">
-            Past transactions from your project.
+            Track past transactions with amount, status, recipient, and date.
           </p>
         </div>
         <ExportToCSVButton
           fileName="transaction_history"
           getData={async () => {
-            return getCSVData(payPurchaseData?.data || []);
+            return getCSVData(
+              payPurchaseData?.data.filter(isBridgePayment) || [],
+            );
           }}
         />
       </div>
 
       <div className="h-5" />
 
-      <div>
-        <ScrollShadow className="overflow-hidden rounded-lg border">
-          <table className="w-full selection:bg-inverted selection:text-inverted-foreground ">
-            <thead>
-              <TableHeadingRow>
-                <TableHeading> Sent </TableHeading>
-                <TableHeading> Received </TableHeading>
-                <TableHeading>Type</TableHeading>
-                <TableHeading>Status</TableHeading>
-                <TableHeading>Recipient</TableHeading>
-                <TableHeading>Date</TableHeading>
-              </TableHeadingRow>
-            </thead>
-            <tbody>
-              {(!isEmpty || isLoading) &&
-                (payPurchaseData && !isLoading
-                  ? payPurchaseData.data.map((purchase) => {
+      <TableContainer>
+        <Table>
+          <TableHeader>
+            <TableHeadingRow>
+              <TableHeading> Sent </TableHeading>
+              <TableHeading> Received </TableHeading>
+              <TableHeading>Type</TableHeading>
+              <TableHeading>Status</TableHeading>
+              <TableHeading>Recipient</TableHeading>
+              <TableHeading>Date</TableHeading>
+            </TableHeadingRow>
+          </TableHeader>
+          <TableBody>
+            {(!isEmpty || isLoading) &&
+              (payPurchaseData && !isLoading
+                ? payPurchaseData.data
+                    .filter(isBridgePayment)
+                    .map((purchase) => {
                       return (
                         <TableRow
                           client={props.client}
@@ -91,44 +100,45 @@ export function PaymentHistory(props: {
                         />
                       );
                     })
-                  : new Array(pageSize).fill(0).map((_, i) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                      <SkeletonTableRow key={i} />
-                    )))}
-            </tbody>
-          </table>
+                : new Array(pageSize).fill(0).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                    <SkeletonTableRow key={i} />
+                  )))}
+          </TableBody>
+        </Table>
 
-          {isEmpty && !isLoading ? (
-            <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
-              No data available
-            </div>
-          ) : payPurchaseData ? (
-            <div className="my-8">
-              <PaginationButtons
-                activePage={page}
-                onPageClick={setPage}
-                totalPages={Math.ceil(
-                  payPurchaseData.meta.totalCount / pageSize,
-                )}
-              />
-            </div>
-          ) : null}
-        </ScrollShadow>
-      </div>
+        {isEmpty && !isLoading ? (
+          <div className="flex min-h-[150px] w-full items-center justify-center text-muted-foreground text-sm">
+            No data available
+          </div>
+        ) : payPurchaseData ? (
+          <div className="py-4 border-t">
+            <PaginationButtons
+              activePage={page}
+              onPageClick={setPage}
+              totalPages={Math.ceil(payPurchaseData.meta.totalCount / pageSize)}
+            />
+          </div>
+        ) : null}
+      </TableContainer>
     </div>
   );
 }
 
-function getCSVData(data: Payment[]) {
+function isBridgePayment(purchase: Payment): purchase is BridgePayment {
+  return purchase.type !== "onramp";
+}
+
+function getCSVData(data: BridgePayment[]) {
   const header = ["Type", "Bought", "Paid", "Status", "Recipient", "Date"];
 
   const rows: string[][] = data.map((purchase) => {
     const toAmount = toTokens(
-      purchase.destinationAmount,
+      BigInt(purchase.destinationAmount),
       purchase.destinationToken.decimals,
     );
     const fromAmount = toTokens(
-      purchase.originAmount,
+      BigInt(purchase.originAmount),
       purchase.originToken.decimals,
     );
     const type = (() => {

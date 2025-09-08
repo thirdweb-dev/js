@@ -1,4 +1,5 @@
 "use client";
+
 import type React from "react";
 import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { CodeClient } from "@/components/ui/code/code.client";
@@ -6,11 +7,14 @@ import { TabButtons } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 export type CodeEnvironment =
+  | "api"
   | "javascript"
   | "typescript"
   | "react"
   | "react-native"
-  | "unity";
+  | "dotnet"
+  | "unity"
+  | "curl";
 
 type SupportedEnvironment = {
   environment: CodeEnvironment;
@@ -20,6 +24,10 @@ type SupportedEnvironment = {
 type CodeSnippet = Partial<Record<CodeEnvironment, string>>;
 
 const Environments: SupportedEnvironment[] = [
+  {
+    environment: "api",
+    title: "API",
+  },
   {
     environment: "javascript",
     title: "JavaScript",
@@ -37,8 +45,16 @@ const Environments: SupportedEnvironment[] = [
     title: "React Native",
   },
   {
+    environment: "dotnet",
+    title: ".NET",
+  },
+  {
     environment: "unity",
     title: "Unity",
+  },
+  {
+    environment: "curl",
+    title: "cURL",
   },
 ];
 
@@ -122,9 +138,14 @@ export const CodeSegment: React.FC<CodeSegmentProps> = ({
               : activeEnvironment === "react" ||
                   activeEnvironment === "react-native"
                 ? "tsx"
-                : activeEnvironment === "unity"
+                : activeEnvironment === "unity" ||
+                    activeEnvironment === "dotnet"
                   ? "cpp"
-                  : activeEnvironment
+                  : activeEnvironment === "api"
+                    ? "javascript"
+                    : activeEnvironment === "curl"
+                      ? "bash"
+                      : activeEnvironment
           }
         />
       )}

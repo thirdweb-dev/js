@@ -120,7 +120,7 @@ export function ChatContainer() {
 
         <PromptInput
           onSubmit={handleSubmit}
-          className="mt-4 w-full max-w-2xl mx-auto relative"
+          className="mt-4 w-full max-w-2xl mx-auto relative border-x-0 border-b-0 rounded-t-none"
         >
           <PromptInputTextarea
             value={input}

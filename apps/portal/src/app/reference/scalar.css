@@ -1,0 +1,15 @@
+.scalar-app {
+  --scalar-background-1: hsl(var(--background));
+  --scalar-background-2: hsl(var(--card));
+}
+
+/* fixes sticky sidebar and header on mobile */
+.scalar-app .references-navigation-list,
+.scalar-app .references-header {
+  position: sticky;
+  top: var(--sticky-top-height);
+}
+
+.scalar-app .references-navigation-list {
+  height: calc(100vh - var(--sticky-top-height));
+}

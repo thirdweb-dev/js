@@ -231,13 +231,13 @@ function ImportForm(props: {
             </Button>
           ) : (
             <Button className="gap-2" type="submit">
-              {addContractToProject.isPending ? (
+              {form.formState.isSubmitting ? (
                 <Spinner className="size-4" />
               ) : (
                 <ArrowDownToLineIcon className="size-4" />
               )}
 
-              {addContractToProject.isPending ? "Importing" : "Import"}
+              {form.formState.isSubmitting ? "Importing" : "Import"}
             </Button>
           )}
         </div>
