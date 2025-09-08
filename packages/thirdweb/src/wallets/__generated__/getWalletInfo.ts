@@ -3393,6 +3393,13 @@ export async function getWalletInfo<TImage extends boolean>(
             )
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "io.kgen": {
+      return (
+        image
+          ? import("./wallet/io.kgen/image.js").then((img) => img.default)
+          : import("./wallet/io.kgen/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "io.r0ar": {
       return (
         image

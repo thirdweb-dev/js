@@ -2135,6 +2135,11 @@ const ALL_MINIMAL_WALLET_INFOS = [
     hasMobileSupport: true,
   },
   {
+    id: "io.kgen",
+    name: "KGeN Wallet",
+    hasMobileSupport: true,
+  },
+  {
     id: "io.r0ar",
     name: "r0ar platform",
     hasMobileSupport: true,

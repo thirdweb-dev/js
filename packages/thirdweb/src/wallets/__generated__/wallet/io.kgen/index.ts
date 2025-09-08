@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.fizen",
-  name: "Fizen Wallet",
-  homepage: "https://fizen.io",
-  image_id: "1160bfa2-b669-42ba-b224-13edcd40c700",
+  id: "io.kgen",
+  name: "KGeN Wallet",
+  homepage: "https://kgen.io/",
+  image_id: "77b4b806-d17e-4b24-597c-bc11c0a88100",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/fizen-wallet/id1621269508",
+    ios: "https://apps.apple.com/in/app/kgen/id6478902511",
     android:
-      "https://play.google.com/store/apps/details?id=com.fizen.io.wallet",
+      "https://play.google.com/store/apps/details?id=com.indiggcommunity&hl=en_IN",
     mac: null,
     windows: null,
     linux: null,
@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "fw://",
+    native: "kgen://app/wallet",
     universal: "",
   },
   desktop: {
