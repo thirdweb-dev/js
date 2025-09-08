@@ -32,20 +32,20 @@ const links = [
     name: "Wallets",
   },
   {
-    href: "/payments",
-    name: "Payments",
-  },
-  {
-    href: "/bridge",
-    name: "Bridge",
-  },
-  {
     href: "/transactions",
     name: "Transactions",
   },
   {
     href: "/contracts",
     name: "Contracts",
+  },
+  {
+    href: "/payments",
+    name: "Payments",
+  },
+  {
+    href: "/bridge",
+    name: "Bridge",
   },
   {
     href: "/tokens",
