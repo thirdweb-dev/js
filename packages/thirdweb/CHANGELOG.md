@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.43
+
+### Patch Changes
+
+- [#8029](https://github.com/thirdweb-dev/js/pull/8029) [`1759112`](https://github.com/thirdweb-dev/js/commit/1759112d722e11d2d9a902f2221e70636188015e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add signAuthorization support to 1193 provider
+
 ## 5.105.42
 
 ### Patch Changes
