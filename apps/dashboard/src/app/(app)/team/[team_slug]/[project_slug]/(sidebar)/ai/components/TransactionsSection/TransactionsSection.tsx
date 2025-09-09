@@ -190,6 +190,13 @@ export function TransactionsSection(props: { client: ThirdwebClient }) {
       }
 
       const response = await fetch(url.toString());
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch transactions: ${response.status} - ${await response.text()}`,
+        );
+      }
+
       const json = (await response.json()) as {
         data?: WalletTransaction[];
       };
