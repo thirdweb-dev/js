@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://purewallet.ai/api",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

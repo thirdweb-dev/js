@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "app.xverse",
-  name: "Xverse",
+  name: "Xverse Wallet",
   homepage: "https://www.xverse.app/",
   image_id: "785e20ef-c68c-4a85-6cb9-053443871e00",
   app: {

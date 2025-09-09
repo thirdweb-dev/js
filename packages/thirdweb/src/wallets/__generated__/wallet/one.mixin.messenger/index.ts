@@ -23,10 +23,10 @@ export const wallet = {
   rdns: "one.mixin.messenger",
   mobile: {
     native: "mixin://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://mixin.one",
   },
 } as const;

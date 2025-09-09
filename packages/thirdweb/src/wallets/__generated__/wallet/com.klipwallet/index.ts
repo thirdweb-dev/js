@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "klipwallet://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

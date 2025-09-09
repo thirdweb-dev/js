@@ -7,7 +7,7 @@ export const wallet = {
   homepage: "https://ctrl.xyz/",
   image_id: "55e59c54-43bf-434a-e966-547514f21500",
   app: {
-    browser: "https://ctrl.xyz/",
+    browser: "",
     ios: "https://apps.apple.com/us/app/ctrl-wallet/id6630386336",
     android: "https://play.google.com/store/apps/details?id=xyz.ctrl.wallet",
     mac: null,
@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: "",
-    universal: "https://ctrl.xyz/",
+    universal: "",
   },
 } as const;

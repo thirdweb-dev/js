@@ -2,9 +2,9 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.blockchain",
+  id: "com.blockchain.login",
   name: "Blockchain.com",
-  homepage: "https://www.blockchain.com/en/app",
+  homepage: "https://login.blockchain.com/auth/signup",
   image_id: "0884948c-c6ce-421e-b4bd-3d2adb261500",
   app: {
     browser: null,
@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://login.blockchain.com/app",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

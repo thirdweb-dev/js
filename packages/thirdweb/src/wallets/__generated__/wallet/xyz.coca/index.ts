@@ -5,10 +5,10 @@ export const wallet = {
   id: "xyz.coca",
   name: "COCA Wallet",
   homepage: "https://www.coca.xyz/",
-  image_id: "34c9a3a1-a331-4c30-f7bc-182861ccca00",
+  image_id: "16e75893-aee7-4884-2267-b561fb031d00",
   app: {
-    browser: "https://wirexapp.com/wirex-wallet",
-    ios: "https://apps.apple.com/app/id1594165139",
+    browser: null,
+    ios: "https://apps.apple.com/app/coca-crypto-and-defi/id1594165139",
     android: "https://play.google.com/store/apps/details?id=com.wirex.wallet",
     mac: null,
     windows: null,
@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: "https://wirexapp.com/wirex-wallet",
+    universal: null,
   },
 } as const;

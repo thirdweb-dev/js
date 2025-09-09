@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "com.walletconnect.com",
-  name: "SampleW",
+  name: "Sample",
   homepage: "https://walletconnect.com",
   image_id: "171f0822-acf5-4eba-4392-a2d16db90400",
   app: {
@@ -25,7 +25,7 @@ export const wallet = {
     universal: null,
   },
   desktop: {
-    native: "sampleW://",
-    universal: "https://wallet-connect.sampleW.com",
+    native: null,
+    universal: null,
   },
 } as const;

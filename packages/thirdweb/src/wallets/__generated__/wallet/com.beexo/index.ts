@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "beexo://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://app.beexo.com/",
   },
 } as const;
