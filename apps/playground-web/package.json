@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@abstract-foundation/agw-react": "^1.6.4",
+    "@use-glyph/sdk-react": "1.2.2",
     "@ai-sdk/react": "^2.0.25",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-avatar": "^1.1.10",

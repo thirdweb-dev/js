@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import {
   abstract,
+  apechain,
   arbitrum,
   arbitrumSepolia,
   base,
@@ -47,6 +48,7 @@ export function StyledConnectEmbed(
         polygonAmoy,
         arbitrumSepolia,
         abstract,
+        apechain,
       ]}
       client={THIRDWEB_CLIENT}
       className="!max-w-full"

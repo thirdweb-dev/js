@@ -1,9 +1,11 @@
 import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
+import { glyphWalletTW } from "@use-glyph/sdk-react";
 import { XIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   abstract,
+  apechain,
   arbitrum,
   arbitrumSepolia,
   base,
@@ -126,6 +128,7 @@ export function RightSection(props: {
         optimism,
         arbitrum,
         abstract,
+        apechain,
         sepolia,
         baseSepolia,
         optimismSepolia,
@@ -185,7 +188,7 @@ export function RightSection(props: {
             // TODO: should show the expanded connected modal here instead
             connectButton
           ) : (
-            <div className="relative overflow-hidden">
+            <div className="overflow-hidden relative">
               <ConnectEmbed
                 accountAbstraction={
                   connectOptions.enableAccountAbstraction
@@ -214,7 +217,7 @@ export function RightSection(props: {
               />
               {/* Fake X icon to make it looks exactly like a modal  */}
               <XIcon
-                className="absolute top-6 right-6 size-6 cursor-not-allowed"
+                className="absolute top-6 right-6 cursor-not-allowed size-6"
                 style={{
                   color: themeObj.colors.secondaryIconColor,
                 }}
@@ -238,6 +241,8 @@ function getWallets(connectOptions: ConnectPlaygroundOptions) {
     ...connectOptions.walletIds.map((id) => {
       if (id === "xyz.abs") {
         return abstractWallet();
+      } if( id === "io.useglyph") {
+        return glyphWalletTW();
       }
       return createWallet(id);
     }),
@@ -283,7 +288,7 @@ function TabButtons(props: {
 }) {
   return (
     <div>
-      <div className="flex justify-start gap-1 rounded-lg border bg-card p-1 md:inline-flex">
+      <div className="flex gap-1 justify-start p-1 rounded-lg border bg-card md:inline-flex">
         {props.tabs.map((tab) => (
           <Button
             className={cn(
