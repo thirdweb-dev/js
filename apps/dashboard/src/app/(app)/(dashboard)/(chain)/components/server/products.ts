@@ -62,8 +62,8 @@ export const products = [
     description: "The most powerful AI for interacting with the blockchain",
     icon: NebulaIcon,
     id: "nebula",
-    link: "https://thirdweb.com/nebula",
-    name: "Nebula",
+    link: "https://thirdweb.com/ai",
+    name: "thirdweb AI",
   },
 ] satisfies Array<{
   name: string;

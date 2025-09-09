@@ -42,7 +42,7 @@ export const SERVICE_DEFINITIONS = {
     description:
       "Advanced blockchain reasoning and execution capabilities with AI",
     name: "nebula",
-    title: "Nebula",
+    title: "thirdweb AI",
   },
   pay: {
     // all actions allowed

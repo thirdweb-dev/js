@@ -3,7 +3,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
-import { AppFooter } from "@/components/footers/app-footer";
 import {
   Collapsible,
   CollapsibleContent,
@@ -91,7 +90,6 @@ export function FullWidthSidebarLayout(props: {
         <main className="flex min-w-0 grow flex-col max-sm:w-full">
           {children}
         </main>
-        <AppFooter />
       </div>
     </div>
   );

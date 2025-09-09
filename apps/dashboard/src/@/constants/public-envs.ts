@@ -29,3 +29,6 @@ export const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
 
 export const NEXT_PUBLIC_DEMO_ENGINE_URL =
   process.env.NEXT_PUBLIC_DEMO_ENGINE_URL || "";
+
+export const NEXT_PUBLIC_THIRDWEB_AI_HOST =
+  process.env.NEXT_PUBLIC_THIRDWEB_AI_HOST || "https://nebula-api.thirdweb.com";

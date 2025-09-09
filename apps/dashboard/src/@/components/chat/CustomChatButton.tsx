@@ -28,7 +28,10 @@ export function CustomChatButton(props: {
   const closeModal = useCallback(() => setIsOpen(false), []);
   const ref = useRef<HTMLDivElement>(null);
 
-  if (layoutSegments[0] === "~" && layoutSegments[1] === "support") {
+  if (
+    (layoutSegments[0] === "~" && layoutSegments[1] === "support") ||
+    layoutSegments.includes("ai")
+  ) {
     return null;
   }
 
