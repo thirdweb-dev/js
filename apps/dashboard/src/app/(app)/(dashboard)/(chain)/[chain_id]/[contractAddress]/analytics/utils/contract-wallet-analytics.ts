@@ -30,11 +30,18 @@ export async function getContractUniqueWalletAnalytics(params: {
   startDate?: Date;
   endDate?: Date;
 }): Promise<TransactionAnalyticsEntry[]> {
+  const daysDifference =
+    params.startDate && params.endDate
+      ? Math.ceil(
+          (params.endDate.getTime() - params.startDate.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 30;
   const queryParams = [
     `chain=${params.chainId}`,
-    "group_by=time",
-    "aggregate=toStartOfDay(toDate(block_timestamp)) as time",
-    "aggregate=count(distinct from_address) as count",
+    "group_by=day",
+    "aggregate=count(distinct from_address)",
+    `limit=${daysDifference}`,
     params.startDate
       ? `filter_block_timestamp_gte=${getUnixTime(params.startDate)}`
       : "",
@@ -55,10 +62,12 @@ export async function getContractUniqueWalletAnalytics(params: {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch analytics data");
+    const errorText = await res.text();
+    throw new Error(`Failed to fetch wallet analytics data: ${errorText}`);
   }
 
   const json = (await res.json()) as InsightResponse;
+  console.log("wallet analytics json", json);
   const aggregations = Object.values(json.aggregations[0]);
 
   const returnValue: TransactionAnalyticsEntry[] = [];
@@ -67,14 +76,13 @@ export async function getContractUniqueWalletAnalytics(params: {
     if (
       typeof tx === "object" &&
       tx !== null &&
-      "time" in tx &&
+      "day" in tx &&
       "count" in tx &&
-      typeof tx.time === "string" &&
-      typeof tx.count === "number"
+      typeof tx.day === "string"
     ) {
       returnValue.push({
-        count: tx.count,
-        time: new Date(tx.time),
+        count: Number(tx.count),
+        time: new Date(tx.day),
       });
     }
   }

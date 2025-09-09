@@ -10,6 +10,7 @@ import {
 } from "@/components/analytics/date-range-selector";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { SkeletonContainer } from "@/components/ui/skeleton";
+import { formatNumber } from "@/lib/search";
 import {
   type AnalyticsQueryParams,
   type TotalQueryResult,
@@ -376,7 +377,7 @@ function AnalyticsStatUI(props: { label: string; data: number | undefined }) {
       <SkeletonContainer
         loadedData={props.data}
         render={(v) => {
-          return <dd className="font-normal text-xl">{v.toLocaleString()}</dd>;
+          return <dd className="font-normal text-xl">{formatNumber(v)}</dd>;
         }}
         skeletonData={10000}
       />

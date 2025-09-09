@@ -6,7 +6,7 @@ type InsightResponse = {
   aggregations: [
     {
       0: {
-        total: number;
+        count: number;
       };
     },
   ];
@@ -21,7 +21,7 @@ export async function getTotalContractUniqueWallets(params: {
 }): Promise<{ count: number }> {
   const queryParams = [
     `chain=${params.chainId}`,
-    "aggregate=count(distinct from_address) as total",
+    "aggregate=count(distinct from_address)",
   ].join("&");
 
   const res = await fetch(
@@ -34,12 +34,15 @@ export async function getTotalContractUniqueWallets(params: {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch analytics data");
+    const errorText = await res.text();
+    throw new Error(
+      `Failed to fetch unique wallets analytics data: ${errorText}`,
+    );
   }
 
   const json = (await res.json()) as InsightResponse;
 
   return {
-    count: json.aggregations[0][0].total,
+    count: json.aggregations[0][0].count,
   };
 }

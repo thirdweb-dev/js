@@ -26,12 +26,18 @@ export async function getContractFunctionBreakdown(params: {
   startDate?: Date;
   endDate?: Date;
 }): Promise<FunctionBreakdownEntry[]> {
+  const daysDifference =
+    params.startDate && params.endDate
+      ? Math.ceil(
+          (params.endDate.getTime() - params.startDate.getTime()) /
+            (1000 * 60 * 60 * 24),
+        )
+      : 30;
   const queryParams = [
     `chain=${params.chainId}`,
-    "group_by=time",
+    "group_by=day",
     "group_by=function_selector",
-    "aggregate=toStartOfDay(toDate(block_timestamp)) as time",
-    "aggregate=count(*) as count",
+    `limit=${daysDifference * 10}`, // at most 10 functions per day
     params.startDate
       ? `filter_block_timestamp_gte=${getUnixTime(params.startDate)}`
       : "",
@@ -68,17 +74,16 @@ export async function getContractFunctionBreakdown(params: {
     if (
       typeof value === "object" &&
       value !== null &&
-      "time" in value &&
+      "day" in value &&
       "count" in value &&
       "function_selector" in value &&
       typeof value.function_selector === "string" &&
-      typeof value.time === "string" &&
-      typeof value.count === "number"
+      typeof value.day === "string"
     ) {
       collectedAggregations.push({
-        count: value.count,
+        count: Number(value.count),
         function_selector: value.function_selector,
-        time: value.time,
+        time: value.day,
       });
     }
   }

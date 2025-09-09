@@ -61,7 +61,7 @@ export async function getContractEventAnalytics(params: {
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Failed to fetch analytics data: ${errorText}`);
+    throw new Error(`Failed to fetch events analytics data: ${errorText}`);
   }
 
   const json = (await res.json()) as InsightResponse;

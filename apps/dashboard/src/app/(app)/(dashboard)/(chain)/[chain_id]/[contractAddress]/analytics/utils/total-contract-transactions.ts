@@ -6,7 +6,7 @@ type InsightResponse = {
   aggregations: [
     {
       0: {
-        total: number;
+        count: number;
       };
     },
   ];
@@ -19,10 +19,9 @@ export async function getTotalContractTransactions(params: {
   contractAddress: string;
   chainId: number;
 }): Promise<{ count: number }> {
-  const queryParams = [
-    `chain=${params.chainId}`,
-    "aggregate=count(block_number) as total",
-  ].join("&");
+  const queryParams = [`chain=${params.chainId}`, "aggregate=count()"].join(
+    "&",
+  );
 
   const res = await fetch(
     `https://insight.${thirdwebDomain}.com/v1/transactions/${params.contractAddress}?${queryParams}`,
@@ -34,12 +33,15 @@ export async function getTotalContractTransactions(params: {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch analytics data");
+    const errorText = await res.text();
+    throw new Error(
+      `Failed to fetch transactions analytics data: ${errorText}`,
+    );
   }
 
   const json = (await res.json()) as InsightResponse;
 
   return {
-    count: json.aggregations[0][0].total,
+    count: json.aggregations[0][0].count,
   };
 }
