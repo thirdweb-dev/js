@@ -9,8 +9,8 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { defineChain, type ThirdwebClient } from "thirdweb";
+import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
 import { useWalletBalance } from "thirdweb/react";
 import {
   DEFAULT_ACCOUNT_FACTORY_V0_7,
@@ -48,6 +48,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { cn } from "@/lib/utils";
 import CreateServerWallet from "../components/create-server-wallet.client";
@@ -277,10 +278,7 @@ function ServerWalletTableRow(props: {
   const { wallet, project, teamSlug, client, chainId, showSmartAccount } =
     props;
 
-  const chain = useMemo(() => {
-    // eslint-disable-next-line no-restricted-syntax
-    return defineChain(chainId);
-  }, [chainId]);
+  const chain = useV5DashboardChain(chainId);
 
   const smartAccountAddressQuery = useQuery({
     queryFn: async () => {
@@ -458,10 +456,10 @@ function WalletBalanceCell(props: {
   chainId: number;
   client: ThirdwebClient;
 }) {
+  const chain = useV5DashboardChain(props.chainId);
   const balance = useWalletBalance({
     address: props.address,
-    // eslint-disable-next-line no-restricted-syntax
-    chain: defineChain(props.chainId),
+    chain: chain,
     client: props.client,
   });
 

@@ -3,8 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { defineChain } from "thirdweb/chains";
 import { getContract, resolveAbiFromContractApi } from "thirdweb/contract";
+import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { parseAddresses } from "../utils/webhookPayloadUtils";
 import type {
   AbiData,
@@ -29,6 +29,7 @@ export function useAbiMultiFetch({
   ) => EventSignature[] | FunctionSignature[];
   type: "event" | "transaction";
 }) {
+  const getChain = useGetV5DashboardChain();
   const pairs = useMemo(() => {
     const result: { chainId: string; address: string }[] = [];
     const seen = new Set<string>();
@@ -54,8 +55,7 @@ export function useAbiMultiFetch({
       return Promise.all(
         pairs.map(async ({ chainId, address }) => {
           try {
-            // eslint-disable-next-line no-restricted-syntax
-            const chainObj = defineChain(Number(chainId));
+            const chainObj = getChain(Number(chainId));
             const contract = getContract({
               address,
               chain: chainObj,
