@@ -1,5 +1,14 @@
 # thirdweb
 
+## 5.105.42
+
+### Patch Changes
+
+- [#7973](https://github.com/thirdweb-dev/js/pull/7973) [`b149019`](https://github.com/thirdweb-dev/js/commit/b149019318a3a9f73aab96b68a92daef41a961e2) Thanks [@shubham-yuga](https://github.com/shubham-yuga)! - Added Glyph wallet to supported wallets
+
+- [#8007](https://github.com/thirdweb-dev/js/pull/8007) [`4ff1cf7`](https://github.com/thirdweb-dev/js/commit/4ff1cf79794af0c2e52f4beacbcf0d5d69266365) Thanks [@nischitpra](https://github.com/nischitpra)! - Polygon amoy gasstation url fix
+  https://github.com/thirdweb-dev/js/pull/8004
+
 ## 5.105.41
 
 ### Patch Changes
