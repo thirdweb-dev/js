@@ -180,36 +180,49 @@ export const create7702MinimalAccount = (args: {
       abi: MinimalAccountAbi,
     });
     // check if account has been delegated already
-    let authorization: SignedAuthorization | undefined;
+    let authorization: SignedAuthorization | undefined =
+      firstTx.authorizationList?.[0];
     const delegationContractAddress = await getDelegationContractAddress({
       client,
       chain,
     });
-    const isMinimalAccount = await is7702MinimalAccount(
-      eoaContract,
-      delegationContractAddress,
-    );
-    if (!isMinimalAccount) {
-      // if not, sign authorization
-      let nonce = firstTx.nonce
-        ? BigInt(firstTx.nonce)
-        : BigInt(
-            await getNonce({
-              client,
-              address: adminAccount.address,
-              chain,
-            }),
-          );
-      nonce += sponsorGas ? 0n : 1n;
-      const auth = await adminAccount.signAuthorization?.({
-        address: getAddress(delegationContractAddress),
-        chainId: firstTx.chainId,
-        nonce,
-      });
-      if (!auth) {
-        throw new Error("Failed to sign authorization");
+    if (
+      authorization &&
+      authorization.address?.toLowerCase() !==
+        delegationContractAddress.toLowerCase()
+    ) {
+      throw new Error(
+        `Authorization address does not match expected delegation contract address. Expected ${delegationContractAddress} but got ${authorization.address}`,
+      );
+    }
+    // if the tx already has an authorization, use it, otherwise sign one
+    if (!authorization) {
+      const isMinimalAccount = await is7702MinimalAccount(
+        eoaContract,
+        delegationContractAddress,
+      );
+      if (!isMinimalAccount) {
+        // if not, sign authorization
+        let nonce = firstTx.nonce
+          ? BigInt(firstTx.nonce)
+          : BigInt(
+              await getNonce({
+                client,
+                address: adminAccount.address,
+                chain,
+              }),
+            );
+        nonce += sponsorGas ? 0n : 1n;
+        const auth = await adminAccount.signAuthorization?.({
+          address: getAddress(delegationContractAddress),
+          chainId: firstTx.chainId,
+          nonce,
+        });
+        if (!auth) {
+          throw new Error("Failed to sign authorization");
+        }
+        authorization = auth;
       }
-      authorization = auth;
     }
     if (sponsorGas) {
       // send transaction from executor, needs signature

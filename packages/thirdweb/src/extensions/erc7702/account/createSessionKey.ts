@@ -1,4 +1,7 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import {
@@ -68,7 +71,7 @@ export type CreateSessionKeyOptions = {
  * @extension ERC7702
  */
 export function createSessionKey(
-  options: BaseTransactionOptions<CreateSessionKeyOptions>,
+  options: BaseTransactionOptions<WithOverrides<CreateSessionKeyOptions>>,
 ) {
   const {
     contract,
@@ -161,6 +164,7 @@ export function createSessionKey(
       return { sessionSpec: req, signature };
     },
     contract,
+    overrides: options.overrides,
   });
 }
 
