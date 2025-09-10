@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.44
+
+### Patch Changes
+
+- [#8036](https://github.com/thirdweb-dev/js/pull/8036) [`ef15ba7`](https://github.com/thirdweb-dev/js/commit/ef15ba7c434f8c9bde3b6d45d43d90e74f20616b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - pass through authorizationList for injected providers
+
 ## 5.105.43
 
 ### Patch Changes
