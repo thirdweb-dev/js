@@ -199,9 +199,8 @@ function createAccount({
           };
       const params = [
         {
+          ...tx,
           ...gasFees,
-          accessList: tx.accessList,
-          data: tx.data,
           from: this.address,
           gas: tx.gas ? numberToHex(tx.gas) : undefined,
           nonce: tx.nonce ? numberToHex(tx.nonce) : undefined,
