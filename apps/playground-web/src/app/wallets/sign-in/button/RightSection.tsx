@@ -1,5 +1,4 @@
 import { abstractWallet } from "@abstract-foundation/agw-react/thirdweb";
-import { glyphWalletTW } from "@use-glyph/sdk-react";
 import { XIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -241,8 +240,6 @@ function getWallets(connectOptions: ConnectPlaygroundOptions) {
     ...connectOptions.walletIds.map((id) => {
       if (id === "xyz.abs") {
         return abstractWallet();
-      } if( id === "io.useglyph") {
-        return glyphWalletTW();
       }
       return createWallet(id);
     }),

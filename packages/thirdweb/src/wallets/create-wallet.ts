@@ -14,6 +14,7 @@ import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
 import { getCoinbaseWebProvider } from "./coinbase/coinbase-web.js";
 import { COINBASE } from "./constants.js";
 import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
+import { glyphWalletTW } from "./glyph/glyph-wallet.js";
 import { ecosystemWallet } from "./in-app/web/ecosystem.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
 import { getInjectedProvider } from "./injected/index.js";
@@ -185,6 +186,14 @@ export function createWallet<const ID extends WalletId>(
         providerFactory: () => getCoinbaseWebProvider(options),
       }) as Wallet<ID>;
     }
+
+    /**
+     * GLYPH WALLET
+     */
+    case id === "io.useglyph": {
+      return glyphWalletTW() as Wallet<ID>;
+    }
+
     /**
      * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone
      */
