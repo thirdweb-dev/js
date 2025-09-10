@@ -539,7 +539,12 @@ function AllowedDomainsSetting(props: {
 
   return (
     <SettingsCard
-      bottomText="This is only applicable for web applications"
+      bottomText={
+        <>
+          This is only applicable for web applications. Changes to domain
+          restrictions may take up to 5 minutes to take effect
+        </>
+      }
       errorText={form.getFieldState("domains", form.formState).error?.message}
       header={{
         description:

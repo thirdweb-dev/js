@@ -1,3 +1,4 @@
+import * as ox__Authorization from "ox/Authorization";
 import type { EIP1193Provider } from "viem";
 import {
   getTypesForEIP712Domain,
@@ -14,6 +15,7 @@ import {
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { AuthorizationRequest } from "../../transaction/actions/eip7702/authorization.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
@@ -263,6 +265,13 @@ function createAccount({
       return await provider.request({
         method: "personal_sign",
         params: [messageToSign, getAddress(account.address)],
+      });
+    },
+    async signAuthorization(authorization: AuthorizationRequest) {
+      const payload = ox__Authorization.getSignPayload(authorization);
+      return await provider.request({
+        method: "eth_sign",
+        params: [getAddress(account.address), payload],
       });
     },
     async signTypedData(typedData) {
