@@ -1307,7 +1307,7 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2
       '@privy-io/cross-app-connect':
-        specifier: '>=0.2.3'
+        specifier: ^0.2.3
         version: 0.2.3(@wagmi/core@2.17.3(@tanstack/query-core@5.81.5)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(viem@2.33.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(viem@2.33.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
       '@radix-ui/react-dialog':
         specifier: 1.1.14
@@ -1334,7 +1334,7 @@ importers:
         specifier: workspace:*
         version: link:../insight
       '@wagmi/core':
-        specifier: '>=2.17.2'
+        specifier: ^2.17.2
         version: 2.17.3(@tanstack/query-core@5.81.5)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@19.1.0))(viem@2.33.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
       '@walletconnect/sign-client':
         specifier: 2.20.1

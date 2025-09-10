@@ -1,5 +1,8 @@
 ---
-"thirdweb": patch
+"thirdweb": minor
 ---
 
-Added Glyph Wallet Connector to CreateWallet function
+Add Glyph wallet connector to `createWallet`, export the connector and also export new chains:
+
+- `apechain` (mainnet)
+- `curtis` (testnet)

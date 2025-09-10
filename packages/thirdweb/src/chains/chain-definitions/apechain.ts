@@ -13,8 +13,8 @@ export const apechain = /* @__PURE__ */ defineChain({
   id: 33139,
   name: "Ape Chain",
   nativeCurrency: {
-    name: 'ApeCoin',
-    symbol: 'APE',
+    name: "ApeCoin",
+    symbol: "APE",
     decimals: 18,
   },
 });
