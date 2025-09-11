@@ -6,6 +6,7 @@ import {
   serializeTypedData,
   stringify,
   validateTypedData,
+  withTimeout,
 } from "viem";
 import { isInsufficientFundsError } from "../../analytics/track/helpers.js";
 import {
@@ -400,6 +401,20 @@ async function onConnect({
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
     provider.removeListener("disconnect", onDisconnect);
+
+    // Experimental support for MetaMask disconnect
+    // https://github.com/MetaMask/metamask-improvement-proposals/blob/main/MIPs/mip-2.md
+    try {
+      // Adding timeout as not all wallets support this method and can hang
+      await withTimeout(
+        () =>
+          provider.request({
+            method: "wallet_revokePermissions",
+            params: [{ eth_accounts: {} }],
+          }),
+        { timeout: 100 },
+      );
+    } catch {}
   }
 
   async function onDisconnect() {
