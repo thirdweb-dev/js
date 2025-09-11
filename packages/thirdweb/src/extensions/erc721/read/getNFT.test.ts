@@ -51,7 +51,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
     `);
   });
 
-  it("with owner using indexer", async () => {
+  // skip until indexer restores owner functionality
+  it.skip("with owner using indexer", async () => {
     const nft = await getNFT({
       contract: { ...DOODLES_CONTRACT },
       includeOwner: true,
