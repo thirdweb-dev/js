@@ -9,12 +9,12 @@ import { resolveFunctionSelectors } from "@/lib/selectors";
 import { AssetPageView } from "../_components/asset-page-view";
 import { getContractCreator } from "../_components/getContractCreator";
 import { PageHeader } from "../_components/PageHeader";
-import { getTokenPriceData } from "./_apis/token-price-data";
 import { ContractHeaderUI } from "./_components/ContractHeader";
 import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
 import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
+import { DexScreener } from "./_components/dex-screener";
+import { mapChainIdToDexScreenerChainSlug } from "./_components/dex-screener-chains";
 import { BuyTokenEmbed } from "./_components/PayEmbedSection";
-import { TokenStats } from "./_components/PriceChart";
 import { RecentTransfers } from "./_components/RecentTransfers";
 import { fetchTokenInfoFromBridge } from "./_utils/fetch-coin-info";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
@@ -30,7 +30,6 @@ export async function ERC20PublicPage(props: {
     tokenDecimals,
     tokenInfoFromUB,
     functionSelectors,
-    tokenPriceData,
   ] = await Promise.all([
     getContractMetadata({
       contract: props.serverContract,
@@ -45,10 +44,6 @@ export async function ERC20PublicPage(props: {
       tokenAddress: props.serverContract.address,
     }),
     resolveFunctionSelectors(props.serverContract),
-    getTokenPriceData({
-      chainId: props.serverContract.chain.id,
-      contractAddress: props.serverContract.address,
-    }),
   ]);
 
   if (!contractMetadata.image && tokenInfoFromUB) {
@@ -83,10 +78,10 @@ export async function ERC20PublicPage(props: {
   return (
     <div className="flex grow flex-col">
       <AssetPageView assetType="coin" chainId={props.chainMetadata.chainId} />
-      <PageHeader containerClassName="max-w-5xl" />
+      <PageHeader containerClassName="max-w-7xl" />
 
       <div className="border-b">
-        <div className="container max-w-5xl">
+        <div className="container max-w-7xl">
           <ContractHeaderUI
             chainMetadata={props.chainMetadata}
             clientContract={props.clientContract}
@@ -105,57 +100,59 @@ export async function ERC20PublicPage(props: {
         </div>
       </div>
 
-      <div className="container flex max-w-5xl grow flex-col pt-8 pb-10">
-        <div className="flex grow flex-col gap-8">
-          {showBuyEmbed && (
-            <div className="sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-lg overflow-hidden relative">
-              <GridPattern
-                width={30}
-                height={30}
-                x={-1}
-                y={-1}
-                strokeDasharray={"4 2"}
-                className="text-border dark:text-border/70"
-                style={{
-                  maskImage:
-                    "linear-gradient(to bottom right,white,transparent,transparent)",
-                }}
-              />
-              <div className="sm:w-[420px] z-10">
-                <BuyEmbed
-                  chainMetadata={props.chainMetadata}
-                  claimConditionMeta={claimConditionMeta}
-                  clientContract={props.clientContract}
-                  tokenAddress={props.clientContract.address}
-                  tokenDecimals={tokenDecimals}
-                  tokenName={contractMetadata.name}
-                  tokenSymbol={contractMetadata.symbol}
-                />
-              </div>
-            </div>
-          )}
+      <div className="h-8" />
 
-          {tokenPriceData ? (
-            <>
-              <TokenStats
-                chainId={props.chainMetadata.chainId}
-                contractAddress={props.clientContract.address}
-                tokenPriceData={tokenPriceData}
-              />
-
-              <ContractAnalyticsOverview
-                chainId={props.chainMetadata.chainId}
-                chainSlug={props.chainMetadata.slug}
-                contractAddress={props.clientContract.address}
-              />
-            </>
-          ) : (
-            <ContractAnalyticsOverview
-              chainId={props.chainMetadata.chainId}
-              chainSlug={props.chainMetadata.slug}
-              contractAddress={props.clientContract.address}
+      {showBuyEmbed && (
+        <div className="container max-w-7xl pb-10">
+          <div className=" sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-lg overflow-hidden relative">
+            <GridPattern
+              width={30}
+              height={30}
+              x={-1}
+              y={-1}
+              strokeDasharray={"4 2"}
+              className="text-border dark:text-border/70"
+              style={{
+                maskImage:
+                  "linear-gradient(to bottom right,white,transparent,transparent)",
+              }}
             />
-          )}
+            <div className="sm:w-[420px] z-10">
+              <BuyEmbed
+                chainMetadata={props.chainMetadata}
+                claimConditionMeta={claimConditionMeta}
+                clientContract={props.clientContract}
+                tokenAddress={props.clientContract.address}
+                tokenDecimals={tokenDecimals}
+                tokenName={contractMetadata.name}
+                tokenSymbol={contractMetadata.symbol}
+              />
+            </div>
+          </div>{" "}
+        </div>
+      )}
+
+      {props.chainMetadata.chainId in mapChainIdToDexScreenerChainSlug && (
+        <div className="container max-w-7xl pb-10">
+          <DexScreener
+            chain={
+              mapChainIdToDexScreenerChainSlug[
+                props.chainMetadata
+                  .chainId as keyof typeof mapChainIdToDexScreenerChainSlug
+              ]
+            }
+            contractAddress={props.clientContract.address}
+          />
+        </div>
+      )}
+
+      <div className="container flex max-w-7xl grow flex-col pb-10">
+        <div className="flex grow flex-col gap-8">
+          <ContractAnalyticsOverview
+            chainId={props.chainMetadata.chainId}
+            chainSlug={props.chainMetadata.slug}
+            contractAddress={props.clientContract.address}
+          />
 
           <RecentTransfers
             chainMetadata={props.chainMetadata}
