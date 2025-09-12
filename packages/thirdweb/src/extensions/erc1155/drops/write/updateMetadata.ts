@@ -1,4 +1,7 @@
-import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../transaction/types.js";
 import type { NFT, NFTInput } from "../../../../utils/nft/parseNft.js";
 import * as BaseURICount from "../../../erc721/__generated__/IBatchMintMetadata/read/getBaseURICount.js";
 import * as BatchAtIndex from "../../__generated__/BatchMintMetadata/read/getBatchIdAtIndex.js";
@@ -116,12 +119,13 @@ async function getUpdateMetadataParams(
  * ```
  */
 export function updateMetadata(
-  options: BaseTransactionOptions<UpdateMetadataParams>,
+  options: BaseTransactionOptions<WithOverrides<UpdateMetadataParams>>,
 ) {
   const { contract } = options;
   return BatchBaseURI.updateBatchBaseURI({
     asyncParams: async () => getUpdateMetadataParams(options),
     contract,
+    overrides: options.overrides,
   });
 }
 

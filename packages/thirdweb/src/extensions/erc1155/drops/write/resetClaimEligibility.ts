@@ -1,5 +1,8 @@
 import type { Hex } from "viem";
-import type { BaseTransactionOptions } from "../../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
 import {
   isSetClaimConditionsSupported,
@@ -40,7 +43,9 @@ export type ResetClaimEligibilityParams = GetClaimConditionsParams;
  * ```
  */
 export function resetClaimEligibility(
-  options: BaseTransactionOptions<ResetClaimEligibilityParams> & {
+  options: BaseTransactionOptions<
+    WithOverrides<ResetClaimEligibilityParams>
+  > & {
     singlePhaseDrop?: boolean;
   },
 ) {
@@ -79,6 +84,7 @@ export function resetClaimEligibility(
         };
       },
       contract: options.contract,
+      overrides: options.overrides,
     });
   }
   // download existing conditions
@@ -101,6 +107,7 @@ export function resetClaimEligibility(
       };
     },
     contract: options.contract,
+    overrides: options.overrides,
   });
 }
 
