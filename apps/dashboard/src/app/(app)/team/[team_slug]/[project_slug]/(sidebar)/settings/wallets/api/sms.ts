@@ -8,6 +8,7 @@ export type SMSCountryTiers = {
   tier3: string[];
   tier4: string[];
   tier5: string[];
+  tier6: string[];
 };
 
 export async function getSMSCountryTiers() {
@@ -40,6 +41,7 @@ export async function getSMSCountryTiers() {
       tier3: [],
       tier4: [],
       tier5: [],
+      tier6: [],
     };
   }
 
@@ -53,6 +55,7 @@ export async function getSMSCountryTiers() {
       tier3: [],
       tier4: [],
       tier5: [],
+      tier6: [],
     };
   }
 }
