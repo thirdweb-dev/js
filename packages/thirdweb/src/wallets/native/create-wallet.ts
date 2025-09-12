@@ -10,6 +10,7 @@ import { getCoinbaseMobileProvider } from "../coinbase/coinbase-mobile.js";
 import { coinbaseWalletSDK } from "../coinbase/coinbase-wallet.js";
 import { COINBASE } from "../constants.js";
 import { isEcosystemWallet } from "../ecosystem/is-ecosystem-wallet.js";
+import { glyphWalletTW } from "../glyph/glyph-wallet.js";
 import { ecosystemWallet } from "../in-app/native/ecosystem.js";
 import { inAppWallet } from "../in-app/native/in-app.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -22,6 +23,7 @@ import type {
   WalletAutoConnectionOption,
   WalletId,
 } from "../wallet-types.js";
+
 
 /**
  * Creates a wallet based on the provided ID and arguments.
@@ -83,6 +85,13 @@ export function createWallet<const ID extends WalletId>(
         createOptions: options,
         providerFactory: () => getCoinbaseMobileProvider(options),
       }) as Wallet<ID>;
+    }
+
+    /**
+     * GLYPH WALLET
+     */
+    case id === "io.useglyph": {
+      return glyphWalletTW() as Wallet<ID>;
     }
 
     /**

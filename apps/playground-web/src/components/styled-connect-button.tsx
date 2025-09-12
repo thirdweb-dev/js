@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import {
   abstract,
+  apechain,
   arbitrum,
   arbitrumSepolia,
   base,
@@ -33,6 +34,7 @@ export function StyledConnectButton(
         polygonAmoy,
         arbitrumSepolia,
         abstract,
+        apechain,
         base,
         ethereum,
         polygon,

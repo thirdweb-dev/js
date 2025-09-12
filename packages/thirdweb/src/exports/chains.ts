@@ -2,6 +2,8 @@
 
 export { abstract } from "../chains/chain-definitions/abstract.js";
 export { abstractTestnet } from "../chains/chain-definitions/abstract-testnet.js";
+export { apechain } from "../chains/chain-definitions/apechain.js";
+export { curtis } from "../chains/chain-definitions/curtis.js";
 
 /**
  * PRE_DEFINED CHAINS
