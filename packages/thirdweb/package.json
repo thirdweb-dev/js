@@ -341,6 +341,7 @@
     "test:ui": "NODE_OPTIONS=--max-old-space-size=8192 vitest dev -c ./test/vitest.config.ts --coverage --ui",
     "test:watch": "vitest -c ./test/vitest.config.ts dev",
     "typedoc": "node scripts/typedoc.mjs && node scripts/parse.mjs",
+    "typecheck": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
     "update-version": "node scripts/version.mjs"
   },
   "sideEffects": false,

@@ -374,7 +374,7 @@ export function StepRunner({
         </Container>
 
         <Spacer y="md" />
-        <Text center color="secondaryText" size="xs">
+        <Text center color="secondaryText" size="xs" multiline>
           Keep this window open until all
           <br /> transactions are complete.
         </Text>

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
+import { radius } from "../../../core/design-system/index.js";
+import { Container } from "./basic.js";
 import { Skeleton } from "./Skeleton.js";
 
 /**
@@ -16,9 +18,19 @@ export const Img: React.FC<{
   className?: string;
   style?: React.CSSProperties;
   fallbackImage?: string;
+  fallback?: React.ReactNode;
   client: ThirdwebClient;
 }> = (props) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [_status, setStatus] = useState<"pending" | "fallback" | "loaded">(
+    "pending",
+  );
+
+  const status =
+    props.src === undefined
+      ? "pending"
+      : props.src === ""
+        ? "fallback"
+        : _status;
 
   const propSrc = props.src;
 
@@ -41,6 +53,7 @@ export const Img: React.FC<{
   };
 
   const src = getSrc();
+  const isLoaded = status === "loaded";
 
   return (
     <div
@@ -52,7 +65,24 @@ export const Img: React.FC<{
         position: "relative",
       }}
     >
-      {!isLoaded && <Skeleton height={heightPx} width={widthPx} />}
+      {status === "pending" && <Skeleton height={heightPx} width={widthPx} />}
+      {status === "fallback" &&
+        (props.fallback || (
+          <Container
+            bg="tertiaryBg"
+            borderColor="borderColor"
+            style={{
+              height: heightPx,
+              width: widthPx,
+              borderRadius: radius.md,
+              borderWidth: "1px",
+              borderStyle: "solid",
+            }}
+          >
+            <div />
+          </Container>
+        ))}
+
       <img
         alt={props.alt || ""}
         className={props.className}
@@ -67,10 +97,12 @@ export const Img: React.FC<{
             e.currentTarget.src !== props.fallbackImage
           ) {
             e.currentTarget.src = props.fallbackImage;
+          } else {
+            setStatus("fallback");
           }
         }}
         onLoad={() => {
-          setIsLoaded(true);
+          setStatus("loaded");
         }}
         src={src}
         style={{
