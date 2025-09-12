@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -12,11 +12,14 @@ import type {
   BridgePrepareRequest,
   BridgePrepareResult,
 } from "../../../../core/hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../../adapters/WindowAdapter.js";
 import { EmbedContainer } from "../../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import type { LocaleId } from "../../types.js";
+import { ErrorBanner } from "../ErrorBanner.js";
 import { PaymentDetails } from "../payment-details/PaymentDetails.js";
+import { SuccessScreen } from "../payment-success/SuccessScreen.js";
 import { QuoteLoader } from "../QuoteLoader.js";
 import { StepRunner } from "../StepRunner.js";
 import { useActiveWalletInfo } from "./hooks.js";
@@ -102,6 +105,17 @@ type SwapWidgetScreen =
       preparedQuote: BridgePrepareResult;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
+    }
+  | {
+      id: "5:success";
+      completedStatuses: CompletedStatusResult[];
+      preparedQuote: BridgePrepareResult;
+      buyToken: TokenWithPrices;
+      sellToken: TokenWithPrices;
+    }
+  | {
+      id: "error";
+      error: Error;
     };
 
 function SwapWidgetContent(props: SwapWidgetProps) {
@@ -110,6 +124,18 @@ function SwapWidgetContent(props: SwapWidgetProps) {
 
   // preload requests
   useBridgeChains(props.client);
+
+  const handleError = useCallback(
+    (error: Error) => {
+      console.error(error);
+      props.onError?.(error);
+      setScreen({
+        id: "error",
+        error,
+      });
+    },
+    [props.onError],
+  );
 
   // if wallet suddenly disconnects, show screen 1
   if (screen.id === "1:swap-ui" || !activeWalletInfo) {
@@ -138,9 +164,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           screen.quote.destinationAmount,
           screen.buyToken.decimals,
         )}
-        onError={() => {
-          // TODO
-        }}
+        onError={handleError}
         onQuoteReceived={(preparedQuote, request) => {
           setScreen({
             ...screen,
@@ -148,7 +172,6 @@ function SwapWidgetContent(props: SwapWidgetProps) {
             preparedQuote,
             request,
           });
-          // TODO
         }}
         receiver={activeWalletInfo.activeAccount.address}
         onBack={() => setScreen({ id: "1:swap-ui" })}
@@ -183,9 +206,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
             id: "4:execute",
           });
         }}
-        onError={(_error) => {
-          // TODO
-        }}
+        onError={handleError}
         paymentMethod={{
           quote: screen.quote,
           type: "wallet",
@@ -214,17 +235,53 @@ function SwapWidgetContent(props: SwapWidgetProps) {
             id: "3:preview",
           });
         }}
-        onCancel={() => {
-          // TODO
-        }}
-        onComplete={() => {
-          // TODO
+        onCancel={props.onCancel}
+        onComplete={(completedStatuses) => {
+          setScreen({
+            ...screen,
+            id: "5:success",
+            completedStatuses,
+          });
         }}
         request={screen.request}
         wallet={activeWalletInfo.activeWallet}
         windowAdapter={webWindowAdapter}
       />
     );
+  }
+
+  if (screen.id === "5:success") {
+    return (
+      <SuccessScreen
+        client={props.client}
+        completedStatuses={screen.completedStatuses}
+        onDone={() => {
+          setScreen({ id: "1:swap-ui" });
+        }}
+        preparedQuote={screen.preparedQuote}
+        uiOptions={{
+          destinationToken: screen.buyToken,
+          mode: "fund_wallet",
+          currency: props.currency,
+        }}
+        windowAdapter={webWindowAdapter}
+        hasPaymentId={false} // TODO Question: Do we need to expose this as prop?
+      />
+    );
+  }
+
+  if (screen.id === "error") {
+    <ErrorBanner
+      client={props.client}
+      error={screen.error}
+      onCancel={() => {
+        setScreen({ id: "1:swap-ui" });
+        props.onCancel?.();
+      }}
+      onRetry={() => {
+        setScreen({ id: "1:swap-ui" });
+      }}
+    />;
   }
 
   return null;
