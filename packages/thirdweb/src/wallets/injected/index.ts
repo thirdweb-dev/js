@@ -1,6 +1,7 @@
 import * as ox__Authorization from "ox/Authorization";
-import type { EIP1193Provider } from "viem";
+import * as ox__Signature from "ox/Signature";
 import {
+  type EIP1193Provider,
   getTypesForEIP712Domain,
   type SignTypedDataParameters,
   serializeTypedData,
@@ -188,7 +189,7 @@ function createAccount({
     async sendTransaction(tx: SendTransactionOption) {
       const gasFees = tx.gasPrice
         ? {
-            gasPrice: tx.gasPrice ? numberToHex(tx.gasPrice) : undefined,
+            gasPrice: numberToHex(tx.gasPrice),
           }
         : {
             maxFeePerGas: tx.maxFeePerGas
@@ -201,6 +202,9 @@ function createAccount({
       const params = [
         {
           ...tx,
+          authorizationList: tx.authorizationList
+            ? ox__Authorization.toRpcList(tx.authorizationList)
+            : undefined,
           ...gasFees,
           from: this.address,
           gas: tx.gas ? numberToHex(tx.gas) : undefined,
@@ -269,10 +273,25 @@ function createAccount({
     },
     async signAuthorization(authorization: AuthorizationRequest) {
       const payload = ox__Authorization.getSignPayload(authorization);
-      return await provider.request({
-        method: "eth_sign",
-        params: [getAddress(account.address), payload],
-      });
+      let signature: Hex | undefined;
+      try {
+        signature = await provider.request({
+          method: "eth_sign",
+          params: [getAddress(account.address), payload],
+        });
+      } catch {
+        // fallback to secp256k1_sign, some providers don't support eth_sign
+        signature = await provider.request({
+          // @ts-expect-error - overriding types here
+          method: "secp256k1_sign",
+          params: [payload],
+        });
+      }
+      if (!signature) {
+        throw new Error("Failed to sign authorization");
+      }
+      const parsedSignature = ox__Signature.fromHex(signature as Hex);
+      return { ...authorization, ...parsedSignature };
     },
     async signTypedData(typedData) {
       if (!provider || !account.address) {
