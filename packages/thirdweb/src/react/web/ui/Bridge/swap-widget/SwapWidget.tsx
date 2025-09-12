@@ -89,6 +89,7 @@ type SwapWidgetScreen =
       quote: Buy.quote.Result | Sell.quote.Result;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
+      sellTokenBalance: bigint;
     }
   | {
       id: "3:preview";
@@ -97,6 +98,7 @@ type SwapWidgetScreen =
       quote: Buy.quote.Result | Sell.quote.Result;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
+      sellTokenBalance: bigint;
     }
   | {
       id: "4:execute";
@@ -105,6 +107,7 @@ type SwapWidgetScreen =
       preparedQuote: BridgePrepareResult;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
+      sellTokenBalance: bigint;
     }
   | {
       id: "5:success";
@@ -186,7 +189,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           quote: screen.quote,
           type: "wallet",
           payerWallet: activeWalletInfo.activeWallet,
-          balance: 0n, // TODO - what is this?
+          balance: screen.sellTokenBalance,
           originToken: screen.sellToken,
         }}
       />
@@ -211,7 +214,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           quote: screen.quote,
           type: "wallet",
           payerWallet: activeWalletInfo.activeWallet,
-          balance: 0n, // TODO - what is this?
+          balance: screen.sellTokenBalance,
           originToken: screen.sellToken,
         }}
         preparedQuote={screen.preparedQuote}
@@ -233,6 +236,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           setScreen({
             ...screen,
             id: "3:preview",
+            sellTokenBalance: screen.sellTokenBalance,
           });
         }}
         onCancel={props.onCancel}

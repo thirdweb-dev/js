@@ -5,11 +5,14 @@ import { useState } from "react";
 import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
+import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import {
   getFiatSymbol,
   type SupportedFiatCurrency,
 } from "../../../../../pay/convert/type.js";
+import { getAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -19,6 +22,7 @@ import {
   spacing,
   type Theme,
 } from "../../../../core/design-system/index.js";
+import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
 import { Container } from "../../components/basic.js";
@@ -44,6 +48,7 @@ type SwapUIProps = {
     quote: Buy.quote.Result | Sell.quote.Result,
     selection: {
       buyToken: TokenWithPrices;
+      sellTokenBalance: bigint;
       sellToken: TokenWithPrices;
     },
   ) => void;
@@ -193,6 +198,13 @@ export function SwapUIBase(
   const isBuyAmountFetching = mode === "sell" && preparedResultQuery.isFetching;
   const isSellAmountFetching = mode === "buy" && preparedResultQuery.isFetching;
 
+  const sellTokenBalanceQuery = useTokenBalance({
+    chainId: props.sellToken?.chainId,
+    tokenAddress: props.sellToken?.address,
+    client: props.client,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+  });
+
   return (
     <Container p="md">
       {/* Sell  */}
@@ -261,10 +273,16 @@ export function SwapUIBase(
           disabled={!preparedResultQuery.data || preparedResultQuery.isFetching}
           fullWidth
           onClick={() => {
-            if (preparedResultQuery.data && props.buyToken && props.sellToken) {
+            if (
+              preparedResultQuery.data &&
+              props.buyToken &&
+              props.sellToken &&
+              sellTokenBalanceQuery.data
+            ) {
               props.onSwap(preparedResultQuery.data, {
                 buyToken: props.buyToken,
                 sellToken: props.sellToken,
+                sellTokenBalance: sellTokenBalanceQuery.data.value,
               });
             }
           }}
@@ -561,3 +579,21 @@ const SwitchButtonInner = /* @__PURE__ */ styled(Button)(() => {
     border: `1px solid ${theme.colors.borderColor}`,
   };
 });
+
+function useTokenBalance(props: {
+  chainId: number | undefined;
+  tokenAddress: string | undefined;
+  client: ThirdwebClient;
+  walletAddress: string | undefined;
+}) {
+  return useWalletBalance({
+    address: props.walletAddress,
+    chain: props.chainId ? defineChain(props.chainId) : undefined,
+    client: props.client,
+    tokenAddress: props.tokenAddress
+      ? getAddress(props.tokenAddress) === getAddress(NATIVE_TOKEN_ADDRESS)
+        ? undefined
+        : getAddress(props.tokenAddress)
+      : undefined,
+  });
+}
