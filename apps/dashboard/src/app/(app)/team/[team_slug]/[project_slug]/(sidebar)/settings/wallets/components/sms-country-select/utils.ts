@@ -5,6 +5,7 @@ export const tierPricing = {
   tier3: "$0.10 per SMS",
   tier4: "$0.20 per SMS",
   tier5: "$0.40 per SMS",
+  tier6: "$1.00 per SMS",
 } as const;
 
 // Country names mapped to ISO codes
@@ -20,6 +21,14 @@ export const countryNames: Record<string, string> = {
   AL: "Albania",
   AM: "Armenia",
   AO: "Angola",
+
+  // Tier 6
+  RU: "Russia/Kazakhstan",
+  PG: "Papua New Guinea",
+  UZ: "Uzbekistan",
+  TZ: "Tanzania",
+  KM: "Comoros",
+  BT: "Bhutan",
 
   // Tier 3
   AR: "Argentina",
@@ -243,6 +252,14 @@ export const countryPrefixes: Record<string, string> = {
   AL: "+355",
   AM: "+374",
   AO: "+244",
+
+  // Tier 6
+  RU: "+7",
+  PG: "+675",
+  UZ: "+998",
+  TZ: "+255",
+  KM: "+269",
+  BT: "+975",
 
   // Tier 3
   AR: "+54",
