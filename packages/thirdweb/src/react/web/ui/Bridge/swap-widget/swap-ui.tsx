@@ -40,17 +40,26 @@ type SwapUIProps = {
   theme: Theme | "light" | "dark";
   connectOptions: SwapWidgetConnectOptions | undefined;
   currency: SupportedFiatCurrency;
-  buyToken: TokenWithPrices | undefined;
-  sellToken: TokenWithPrices | undefined;
-  setBuyToken: (token: TokenWithPrices | undefined) => void;
-  setSellToken: (token: TokenWithPrices | undefined) => void;
-  onSwap: (quote: Buy.quote.Result | Sell.quote.Result) => void;
+  onSwap: (
+    quote: Buy.quote.Result | Sell.quote.Result,
+    selection: {
+      buyToken: TokenWithPrices;
+      sellToken: TokenWithPrices;
+    },
+  ) => void;
 };
 
 export function SwapUI(props: SwapUIProps) {
   const [screen, setScreen] = useState<
     "base" | "select-buy-token" | "select-sell-ui"
   >("base");
+
+  const [buyToken, setBuyToken] = useState<TokenWithPrices | undefined>(
+    undefined,
+  );
+  const [sellToken, setSellToken] = useState<TokenWithPrices | undefined>(
+    undefined,
+  );
 
   if (screen === "base") {
     return (
@@ -59,6 +68,10 @@ export function SwapUI(props: SwapUIProps) {
         onSelectToken={(type) => {
           setScreen(type === "buy" ? "select-buy-token" : "select-sell-ui");
         }}
+        buyToken={buyToken}
+        sellToken={sellToken}
+        setBuyToken={setBuyToken}
+        setSellToken={setSellToken}
       />
     );
   }
@@ -68,9 +81,9 @@ export function SwapUI(props: SwapUIProps) {
       <SelectBuyToken
         onBack={() => setScreen("base")}
         client={props.client}
-        selectedToken={props.buyToken}
+        selectedToken={buyToken}
         setSelectedToken={(token) => {
-          props.setBuyToken(token);
+          setBuyToken(token);
           setScreen("base");
         }}
       />
@@ -82,9 +95,9 @@ export function SwapUI(props: SwapUIProps) {
       <SelectSellToken
         onBack={() => setScreen("base")}
         client={props.client}
-        selectedToken={props.sellToken}
+        selectedToken={sellToken}
         setSelectedToken={(token) => {
-          props.setSellToken(token);
+          setSellToken(token);
           setScreen("base");
         }}
         activeWalletInfo={props.activeWalletInfo}
@@ -96,7 +109,13 @@ export function SwapUI(props: SwapUIProps) {
 }
 
 export function SwapUIBase(
-  props: SwapUIProps & { onSelectToken: (type: "buy" | "sell") => void },
+  props: SwapUIProps & {
+    onSelectToken: (type: "buy" | "sell") => void;
+    buyToken: TokenWithPrices | undefined;
+    sellToken: TokenWithPrices | undefined;
+    setBuyToken: (token: TokenWithPrices | undefined) => void;
+    setSellToken: (token: TokenWithPrices | undefined) => void;
+  },
 ) {
   const [mode, setMode] = useState<"buy" | "sell">("buy");
   const [_buyTokenAmount, setBuyTokenAmount] = useState<string>("");
@@ -242,8 +261,11 @@ export function SwapUIBase(
           disabled={!preparedResultQuery.data || preparedResultQuery.isFetching}
           fullWidth
           onClick={() => {
-            if (preparedResultQuery.data) {
-              props.onSwap(preparedResultQuery.data);
+            if (preparedResultQuery.data && props.buyToken && props.sellToken) {
+              props.onSwap(preparedResultQuery.data, {
+                buyToken: props.buyToken,
+                sellToken: props.sellToken,
+              });
             }
           }}
           style={{
