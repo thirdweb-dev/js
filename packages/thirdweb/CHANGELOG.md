@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.105.45
+
+### Patch Changes
+
+- [#8038](https://github.com/thirdweb-dev/js/pull/8038) [`0b45405`](https://github.com/thirdweb-dev/js/commit/0b454050b14806c103ea446e3667d0c970739912) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept pre signed authorizations for 7702 account transactions
+
+- [#8039](https://github.com/thirdweb-dev/js/pull/8039) [`dc1f7ab`](https://github.com/thirdweb-dev/js/commit/dc1f7ab2ee820be512776a413f7de362ff6b98ef) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support fully disconnecting from metamask on disconnect
+
+- [#8042](https://github.com/thirdweb-dev/js/pull/8042) [`ea80610`](https://github.com/thirdweb-dev/js/commit/ea8061048adddb9fb7648f29ce1f3041f250ddfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signAuthorization implementation for 1193 provider
+
+- [#8041](https://github.com/thirdweb-dev/js/pull/8041) [`3ad9f7d`](https://github.com/thirdweb-dev/js/commit/3ad9f7deba850b0a50e355111af11fd419db2efd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing overrides to common extension functions
+
 ## 5.105.44
 
 ### Patch Changes
