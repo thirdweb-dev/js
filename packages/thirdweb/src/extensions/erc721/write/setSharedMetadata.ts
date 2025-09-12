@@ -1,4 +1,7 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { setSharedMetadata as generatedSharedMetadata } from "../__generated__/ISharedMetadata/write/setSharedMetadata.js";
 
@@ -7,9 +10,9 @@ export { isSetSharedMetadataSupported } from "../__generated__/ISharedMetadata/w
 /**
  * @extension ERC721
  */
-export type SetSharedMetadataParams = {
+export type SetSharedMetadataParams = WithOverrides<{
   nft: NFTInput;
-};
+}>;
 
 /**
  * Sets the shared metadata for a OpenEdition contract.
@@ -69,6 +72,7 @@ export function setSharedMetadata(
       };
     },
     contract: options.contract,
+    overrides: options.overrides,
   });
 }
 
