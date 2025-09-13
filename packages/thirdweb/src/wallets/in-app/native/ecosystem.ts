@@ -48,7 +48,7 @@ import type { EcosystemWallet } from "../core/wallet/types.js";
  *
  * ### Connect to a restricted ecosystem wallet with your designated partner ID
  *
- * The parnter ID will be provided to you by the ecosystem with which you're integrating.
+ * The partner ID will be provided to you by the ecosystem with which you're integrating.
  *
  * ```ts
  * import { ecosystemWallet } from "thirdweb/wallets";

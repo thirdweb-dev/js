@@ -125,7 +125,7 @@ export function getRpcClient(
         inflight.request.id = index;
         // also assign the jsonrpc version
         inflight.request.jsonrpc = "2.0";
-        // assing the request to the requests array (so we don't have to map it again later)
+        // assign the request to the requests array (so we don't have to map it again later)
         requests[index] = inflight.request;
         return inflight;
       });

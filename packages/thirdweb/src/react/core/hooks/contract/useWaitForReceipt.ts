@@ -32,7 +32,7 @@ export function useWaitForReceipt(
     },
     queryKey: [
       "waitForReceipt",
-      // TODO: here chain can be undfined so we go to a `-1` chain but this feels wrong
+      // TODO: here chain can be undefined so we go to a `-1` chain but this feels wrong
       options?.chain.id || -1,
       options?.transactionHash,
     ] as const,

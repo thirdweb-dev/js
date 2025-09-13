@@ -37,7 +37,7 @@ type UseContractEventsOptions<
  *
  * ### Using event extensions
  *
- * The `thirdweb/extesions` export contains event definitions for many popular contracts.
+ * The `thirdweb/extensions` export contains event definitions for many popular contracts.
  * You can use these event definitions to watch for specific events with a type-safe API.
  *
  * ```jsx
