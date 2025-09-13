@@ -30,6 +30,7 @@ type InputProps = {
   variant: "outline" | "transparent";
   sm?: boolean;
   theme?: Theme;
+  bg?: keyof Theme["colors"];
 };
 
 export const Input = /* @__PURE__ */ StyledInput<InputProps>((props) => {
@@ -86,7 +87,7 @@ export const Input = /* @__PURE__ */ StyledInput<InputProps>((props) => {
         WebkitAppearance: "none",
       },
     appearance: "none",
-    background: "transparent",
+    background: props.bg ? theme.colors[props.bg] : "transparent",
     border: "none",
     borderRadius: radius.md,
     boxShadow: `0 0 0 1.5px ${

@@ -64,11 +64,10 @@ export function ModalHeader(props: {
   );
 }
 
-export const Line = /* @__PURE__ */ StyledDiv(() => {
+export const Line = /* @__PURE__ */ StyledDiv((props: { dashed?: boolean }) => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.separatorLine,
-    height: "1px",
+    borderTop: `1px ${props.dashed ? "dashed" : "solid"} ${theme.colors.separatorLine}`,
   };
 });
 
