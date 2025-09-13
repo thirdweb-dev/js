@@ -37,6 +37,10 @@ export const sidebar: SideBar = {
           name: "API Reference",
           href: "/reference#tag/ai/post/ai/chat",
         },
+        {
+          name: "Migrate from Nebula",
+          href: "/ai/chat/migrate-from-nebula",
+        },
       ],
     },
     { separator: true },
