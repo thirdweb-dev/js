@@ -34,3 +34,4 @@ storybook-static
 tsconfig.tsbuildinfo
 .cursor
 apps/dashboard/node-compile-cache
+.tmp/
