@@ -38,7 +38,7 @@ interface StepExecutorOptions {
   /** Prepared quote returned by Bridge.prepare */
   request: BridgePrepareRequest;
   /** Wallet instance providing getAccount() & sendTransaction */
-  wallet: Wallet;
+  wallet?: Wallet;
   /** Window adapter for opening on-ramp URLs (web / RN) */
   windowAdapter: WindowAdapter;
   /** Thirdweb client for API calls */
@@ -417,89 +417,98 @@ export function useStepExecutor(
         );
       }
 
-      // Then execute transactions
-      const account = wallet.getAccount();
-      if (!account) {
-        throw new ApiError({
-          code: "INVALID_INPUT",
-          message: "Wallet not connected",
-          statusCode: 400,
-        });
-      }
-
-      // Start from where we left off, or from the beginning
-      const startIndex = currentTxIndex ?? 0;
-
-      for (let i = startIndex; i < flatTxs.length; i++) {
-        if (abortController.signal.aborted) {
-          break;
+      if (flatTxs.length > 0) {
+        // Then execute transactions
+        if (!wallet) {
+          throw new ApiError({
+            code: "INVALID_INPUT",
+            message: "No wallet provided to execute transactions",
+            statusCode: 400,
+          });
+        }
+        const account = wallet.getAccount();
+        if (!account) {
+          throw new ApiError({
+            code: "INVALID_INPUT",
+            message: "Wallet not connected",
+            statusCode: 400,
+          });
         }
 
-        const currentTx = flatTxs[i];
-        if (!currentTx) {
-          continue; // Skip invalid index
-        }
+        // Start from where we left off, or from the beginning
+        const startIndex = currentTxIndex ?? 0;
 
-        setCurrentTxIndex(i);
-        const currentStepData = preparedQuote.steps[currentTx._stepIndex];
-        if (!currentStepData) {
-          throw new Error(`Invalid step index: ${currentTx._stepIndex}`);
-        }
-
-        // switch chain if needed
-        if (currentTx.chainId !== wallet.getChain()?.id) {
-          await wallet.switchChain(getCachedChain(currentTx.chainId));
-        }
-
-        // Check if we can batch transactions
-        const canBatch =
-          account.sendBatchTransaction !== undefined && i < flatTxs.length - 1; // Not the last transaction
-
-        if (canBatch) {
-          // Find consecutive transactions on the same chain
-          const batchTxs: FlattenedTx[] = [currentTx];
-          let j = i + 1;
-          while (j < flatTxs.length) {
-            const nextTx = flatTxs[j];
-            if (!nextTx || nextTx.chainId !== currentTx.chainId) {
-              break;
-            }
-            batchTxs.push(nextTx);
-            j++;
+        for (let i = startIndex; i < flatTxs.length; i++) {
+          if (abortController.signal.aborted) {
+            break;
           }
 
-          // Execute batch if we have multiple transactions
-          if (batchTxs.length > 1) {
-            await executeBatch(
-              batchTxs,
-              account,
-              completedStatusResults,
-              abortController.signal,
-            );
+          const currentTx = flatTxs[i];
+          if (!currentTx) {
+            continue; // Skip invalid index
+          }
 
-            // Mark all batched transactions as completed
-            for (const tx of batchTxs) {
-              setCompletedTxs((prev) => new Set(prev).add(tx._index));
+          setCurrentTxIndex(i);
+          const currentStepData = preparedQuote.steps[currentTx._stepIndex];
+          if (!currentStepData) {
+            throw new Error(`Invalid step index: ${currentTx._stepIndex}`);
+          }
+
+          // switch chain if needed
+          if (currentTx.chainId !== wallet.getChain()?.id) {
+            await wallet.switchChain(getCachedChain(currentTx.chainId));
+          }
+
+          // Check if we can batch transactions
+          const canBatch =
+            account.sendBatchTransaction !== undefined &&
+            i < flatTxs.length - 1; // Not the last transaction
+
+          if (canBatch) {
+            // Find consecutive transactions on the same chain
+            const batchTxs: FlattenedTx[] = [currentTx];
+            let j = i + 1;
+            while (j < flatTxs.length) {
+              const nextTx = flatTxs[j];
+              if (!nextTx || nextTx.chainId !== currentTx.chainId) {
+                break;
+              }
+              batchTxs.push(nextTx);
+              j++;
             }
 
-            // Skip ahead
-            i = j - 1;
-            continue;
+            // Execute batch if we have multiple transactions
+            if (batchTxs.length > 1) {
+              await executeBatch(
+                batchTxs,
+                account,
+                completedStatusResults,
+                abortController.signal,
+              );
+
+              // Mark all batched transactions as completed
+              for (const tx of batchTxs) {
+                setCompletedTxs((prev) => new Set(prev).add(tx._index));
+              }
+
+              // Skip ahead
+              i = j - 1;
+              continue;
+            }
           }
+
+          // Execute single transaction
+          await executeSingleTx(
+            currentTx,
+            account,
+            completedStatusResults,
+            abortController.signal,
+          );
+
+          // Mark transaction as completed
+          setCompletedTxs((prev) => new Set(prev).add(currentTx._index));
         }
-
-        // Execute single transaction
-        await executeSingleTx(
-          currentTx,
-          account,
-          completedStatusResults,
-          abortController.signal,
-        );
-
-        // Mark transaction as completed
-        setCompletedTxs((prev) => new Set(prev).add(currentTx._index));
       }
-
       // All done - check if we actually completed everything
       if (!abortController.signal.aborted) {
         setCurrentTxIndex(undefined);
