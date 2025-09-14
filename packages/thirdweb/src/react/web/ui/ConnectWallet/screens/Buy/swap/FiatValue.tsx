@@ -36,6 +36,7 @@ export function FiatValue(
       props.chain.id,
       getTokenAddress(props.token),
       deferredTokenAmount,
+      props.currency,
     ],
   });
 

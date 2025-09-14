@@ -369,8 +369,7 @@ export function BridgeOrchestrator({
 
       {state.value === "execute" &&
         state.context.quote &&
-        state.context.request &&
-        state.context.selectedPaymentMethod?.payerWallet && (
+        state.context.request && (
           <StepRunner
             autoStart={true}
             client={client}
