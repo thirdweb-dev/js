@@ -408,6 +408,14 @@ export function useStepExecutor(
     abortControllerRef.current = abortController;
 
     try {
+      if (flatTxs.length > 0 && !wallet) {
+        throw new ApiError({
+          code: "INVALID_INPUT",
+          message: "No wallet provided to execute transactions",
+          statusCode: 400,
+        });
+      }
+
       // Execute onramp first if configured and not already completed
       if (preparedQuote.type === "onramp" && onrampStatus === "pending") {
         await executeOnramp(
