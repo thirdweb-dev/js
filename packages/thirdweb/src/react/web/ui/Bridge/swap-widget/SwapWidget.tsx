@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { getAddress } from "thirdweb/utils";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { toTokens } from "../../../../../utils/units.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -22,8 +24,9 @@ import { SuccessScreen } from "../payment-success/SuccessScreen.js";
 import { QuoteLoader } from "../QuoteLoader.js";
 import { StepRunner } from "../StepRunner.js";
 import { useActiveWalletInfo } from "./hooks.js";
+import { getLastUsedTokens, setLastUsedTokens } from "./storage.js";
 import { SwapUI } from "./swap-ui.js";
-import type { SwapWidgetConnectOptions } from "./types.js";
+import type { SwapWidgetConnectOptions, TokenSelection } from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 
 export type SwapWidgetProps = {
@@ -233,6 +236,72 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });
   const activeWalletInfo = useActiveWalletInfo();
 
+  const [amountSelection, setAmountSelection] = useState<{
+    type: "buy" | "sell";
+    amount: string;
+  }>(() => {
+    if (props.prefill?.buyToken?.amount) {
+      return {
+        type: "buy",
+        amount: props.prefill.buyToken.amount,
+      };
+    }
+    if (props.prefill?.sellToken?.amount) {
+      return {
+        type: "sell",
+        amount: props.prefill.sellToken.amount,
+      };
+    }
+    return {
+      type: "buy",
+      amount: "",
+    };
+  });
+
+  const [buyToken, setBuyToken] = useState<TokenSelection | undefined>(() => {
+    if (props.prefill?.buyToken) {
+      return {
+        tokenAddress:
+          props.prefill.buyToken.tokenAddress ||
+          getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: props.prefill.buyToken.chainId,
+      };
+    }
+    const last = getLastUsedTokens()?.buyToken;
+    if (last) {
+      return {
+        tokenAddress: getAddress(last.tokenAddress),
+        chainId: last.chainId,
+      };
+    }
+    return undefined;
+  });
+  const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
+    if (props.prefill?.sellToken) {
+      return {
+        tokenAddress:
+          props.prefill.sellToken.tokenAddress ||
+          getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: props.prefill.sellToken.chainId,
+      };
+    }
+    const last = getLastUsedTokens()?.sellToken;
+    if (last) {
+      return {
+        tokenAddress: getAddress(last.tokenAddress),
+        chainId: last.chainId,
+      };
+    }
+    return undefined;
+  });
+
+  // persist selections to localStorage whenever they change
+  useEffect(() => {
+    if (buyToken) {
+      setLastUsedTokens({ buyToken, sellToken });
+    }
+  }, [buyToken, sellToken]);
+
   // preload requests
   useBridgeChains(props.client);
 
@@ -262,7 +331,12 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         connectOptions={props.connectOptions}
         currency={props.currency || "USD"}
         activeWalletInfo={activeWalletInfo}
-        prefill={props.prefill}
+        buyToken={buyToken}
+        sellToken={sellToken}
+        setBuyToken={setBuyToken}
+        setSellToken={setSellToken}
+        amountSelection={amountSelection}
+        setAmountSelection={setAmountSelection}
         onSwap={(quote, selection) => {
           setScreen({
             quote,
@@ -382,6 +456,11 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         completedStatuses={screen.completedStatuses}
         onDone={() => {
           setScreen({ id: "1:swap-ui" });
+          // clear amounts
+          setAmountSelection({
+            type: "buy",
+            amount: "",
+          });
         }}
         preparedQuote={screen.preparedQuote}
         uiOptions={{

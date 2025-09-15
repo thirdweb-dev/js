@@ -5,7 +5,7 @@ import {
   DiscIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
@@ -42,7 +42,6 @@ import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { SelectBuyToken } from "./select-buy-token.js";
 import { SelectSellToken } from "./select-sell-token.js";
-import { getLastUsedTokens, setLastUsedTokens } from "./storage.js";
 import type {
   ActiveWalletInfo,
   SwapWidgetConnectOptions,
@@ -67,92 +66,24 @@ type SwapUIProps = {
       mode: "buy" | "sell";
     },
   ) => void;
-  prefill:
-    | {
-        buyToken?: {
-          tokenAddress?: string;
-          chainId: number;
-          amount?: string;
-        };
-        sellToken?: {
-          tokenAddress?: string;
-          chainId: number;
-          amount?: string;
-        };
-      }
-    | undefined;
+  buyToken: TokenSelection | undefined;
+  sellToken: TokenSelection | undefined;
+  setBuyToken: (token: TokenSelection | undefined) => void;
+  setSellToken: (token: TokenSelection | undefined) => void;
+  amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  };
+  setAmountSelection: (amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  }) => void;
 };
 
 export function SwapUI(props: SwapUIProps) {
   const [screen, setScreen] = useState<
     "base" | "select-buy-token" | "select-sell-ui"
   >("base");
-
-  const [amountSelection, setAmountSelection] = useState<{
-    type: "buy" | "sell";
-    amount: string;
-  }>(() => {
-    if (props.prefill?.buyToken?.amount) {
-      return {
-        type: "buy",
-        amount: props.prefill.buyToken.amount,
-      };
-    }
-    if (props.prefill?.sellToken?.amount) {
-      return {
-        type: "sell",
-        amount: props.prefill.sellToken.amount,
-      };
-    }
-    return {
-      type: "buy",
-      amount: "",
-    };
-  });
-
-  const [buyToken, setBuyToken] = useState<TokenSelection | undefined>(() => {
-    if (props.prefill?.buyToken) {
-      return {
-        tokenAddress:
-          props.prefill.buyToken.tokenAddress ||
-          getAddress(NATIVE_TOKEN_ADDRESS),
-        chainId: props.prefill.buyToken.chainId,
-      };
-    }
-    const last = getLastUsedTokens()?.buyToken;
-    if (last) {
-      return {
-        tokenAddress: getAddress(last.tokenAddress),
-        chainId: last.chainId,
-      };
-    }
-    return undefined;
-  });
-  const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
-    if (props.prefill?.sellToken) {
-      return {
-        tokenAddress:
-          props.prefill.sellToken.tokenAddress ||
-          getAddress(NATIVE_TOKEN_ADDRESS),
-        chainId: props.prefill.sellToken.chainId,
-      };
-    }
-    const last = getLastUsedTokens()?.sellToken;
-    if (last) {
-      return {
-        tokenAddress: getAddress(last.tokenAddress),
-        chainId: last.chainId,
-      };
-    }
-    return undefined;
-  });
-
-  // persist selections to localStorage whenever they change
-  useEffect(() => {
-    if (buyToken) {
-      setLastUsedTokens({ buyToken, sellToken });
-    }
-  }, [buyToken, sellToken]);
 
   if (screen === "base") {
     return (
@@ -161,12 +92,6 @@ export function SwapUI(props: SwapUIProps) {
         onSelectToken={(type) => {
           setScreen(type === "buy" ? "select-buy-token" : "select-sell-ui");
         }}
-        buyToken={buyToken}
-        sellToken={sellToken}
-        setBuyToken={setBuyToken}
-        setSellToken={setSellToken}
-        amountSelection={amountSelection}
-        setAmountSelection={setAmountSelection}
       />
     );
   }
@@ -176,9 +101,9 @@ export function SwapUI(props: SwapUIProps) {
       <SelectBuyToken
         onBack={() => setScreen("base")}
         client={props.client}
-        selectedToken={buyToken}
+        selectedToken={props.buyToken}
         setSelectedToken={(token) => {
-          setBuyToken(token);
+          props.setBuyToken(token);
           setScreen("base");
         }}
       />
@@ -190,10 +115,10 @@ export function SwapUI(props: SwapUIProps) {
       <SelectSellToken
         onBack={() => setScreen("base")}
         client={props.client}
-        selectedToken={sellToken}
+        selectedToken={props.sellToken}
         theme={props.theme}
         setSelectedToken={(token) => {
-          setSellToken(token);
+          props.setSellToken(token);
           setScreen("base");
         }}
         activeWalletInfo={props.activeWalletInfo}
