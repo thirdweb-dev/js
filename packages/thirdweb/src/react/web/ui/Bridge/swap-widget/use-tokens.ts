@@ -57,7 +57,7 @@ export type TokenBalance = {
   token_address: string;
 };
 
-export type TokenBalancesResponse = {
+type TokenBalancesResponse = {
   result: {
     pagination: {
       hasMore: boolean;

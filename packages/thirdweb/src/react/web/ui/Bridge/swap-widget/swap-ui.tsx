@@ -223,7 +223,7 @@ function useTokenPrice(options: {
   });
 }
 
-export function SwapUIBase(
+function SwapUIBase(
   props: SwapUIProps & {
     onSelectToken: (type: "buy" | "sell") => void;
     buyToken: TokenSelection | undefined;

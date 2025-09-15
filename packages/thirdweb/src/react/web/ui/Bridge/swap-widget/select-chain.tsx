@@ -133,7 +133,7 @@ function ChainButtonSkeleton() {
   );
 }
 
-export function ChainButton(props: {
+function ChainButton(props: {
   chain: BridgeChain;
   client: ThirdwebClient;
   onClick: () => void;

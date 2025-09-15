@@ -122,7 +122,7 @@ export function SelectSellTokenDisconnectedUI(props: {
   );
 }
 
-export function SelectSellTokenConnected(
+function SelectSellTokenConnected(
   props: SelectSellTokenProps & {
     activeWalletInfo: ActiveWalletInfo;
   },
