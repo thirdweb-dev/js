@@ -30,7 +30,9 @@ import {
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
+import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
 import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW.js";
+import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
@@ -351,10 +353,34 @@ function SwapUIBase(
     walletAddress: props.activeWalletInfo?.activeAccount.address,
   });
 
+  const buyTokenBalanceQuery = useTokenBalance({
+    chainId: buyTokenWithPrices?.chainId,
+    tokenAddress: buyTokenWithPrices?.address,
+    client: props.client,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+  });
+
+  const notEnoughBalance = !!(
+    props.amountSelection.type === "sell" &&
+    sellTokenBalanceQuery.data?.value &&
+    sellTokenWithPrices?.decimals &&
+    props.amountSelection.amount &&
+    sellTokenBalanceQuery.data.value <
+      Number(
+        toUnits(props.amountSelection.amount, sellTokenWithPrices.decimals),
+      )
+  );
+
   return (
     <Container p="md">
       {/* Sell  */}
       <TokenSection
+        isConnected={!!props.activeWalletInfo}
+        notEnoughBalance={notEnoughBalance}
+        balance={{
+          data: sellTokenBalanceQuery.data?.value,
+          isFetching: sellTokenBalanceQuery.isFetching,
+        }}
         amount={{
           data: sellTokenAmount,
           isFetching: isSellAmountFetching,
@@ -388,6 +414,12 @@ function SwapUIBase(
 
       {/* Buy */}
       <TokenSection
+        isConnected={!!props.activeWalletInfo}
+        notEnoughBalance={false}
+        balance={{
+          data: buyTokenBalanceQuery.data?.value,
+          isFetching: buyTokenBalanceQuery.isFetching,
+        }}
         amount={{
           data: buyTokenAmount,
           isFetching: isBuyAmountFetching,
@@ -427,7 +459,11 @@ function SwapUIBase(
         />
       ) : (
         <Button
-          disabled={!preparedResultQuery.data || preparedResultQuery.isFetching}
+          disabled={
+            !preparedResultQuery.data ||
+            preparedResultQuery.isFetching ||
+            notEnoughBalance
+          }
           fullWidth
           onClick={() => {
             if (
@@ -524,6 +560,7 @@ function DecimalInput(props: {
 
 function TokenSection(props: {
   label: string;
+  notEnoughBalance: boolean;
   amount: {
     data: string;
     isFetching: boolean;
@@ -538,6 +575,11 @@ function TokenSection(props: {
   currency: SupportedFiatCurrency;
   onSelectToken: () => void;
   client: ThirdwebClient;
+  isConnected: boolean;
+  balance: {
+    data: bigint | undefined;
+    isFetching: boolean;
+  };
 }) {
   const chainQuery = useBridgeChains(props.client);
   const chain = chainQuery.data?.find(
@@ -567,9 +609,10 @@ function TokenSection(props: {
         style={{
           display: "flex",
           alignItems: "center",
-          minHeight: "60px",
           justifyContent: "space-between",
           gap: spacing.sm,
+          paddingBottom: spacing.sm,
+          paddingTop: spacing.xs,
         }}
       >
         {props.amount.isFetching ? (
@@ -603,24 +646,87 @@ function TokenSection(props: {
         )}
       </div>
 
-      {/* Fiat Value */}
-      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <Text size="md" color="secondaryText" weight={500}>
-          {getFiatSymbol(props.currency)}
-        </Text>
-        {props.amount.isFetching ? (
-          <Skeleton height={fontSize.md} width="50px" />
-        ) : (
-          <Text size="md" color="secondaryText" weight={500}>
-            {totalFiatValue === undefined
-              ? "0.00"
-              : totalFiatValue < 0.01
-                ? "~0.00"
-                : totalFiatValue.toFixed(2)}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Exceeds Balance / Fiat Value */}
+        {props.notEnoughBalance ? (
+          <Text size="md" color="danger" weight={500}>
+            {" "}
+            Exceeds Balance{" "}
           </Text>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <Text size="md" color="secondaryText" weight={500}>
+              {getFiatSymbol(props.currency)}
+            </Text>
+            {props.amount.isFetching ? (
+              <Skeleton height={fontSize.md} width="50px" />
+            ) : (
+              <div>
+                <DecimalRenderer value={totalFiatValue?.toFixed(5) || "0.00"} />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Balance */}
+        {props.isConnected && (
+          <div>
+            {props.balance.isFetching ||
+            props.balance.data === undefined ||
+            !props.selectedToken?.data ? (
+              <Skeleton height={fontSize.md} width="50px" />
+            ) : (
+              <Text
+                size="md"
+                color="secondaryText"
+                weight={500}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: spacing.xxs,
+                }}
+              >
+                <WalletDotIcon size={fontSize.sm} />
+                <DecimalRenderer
+                  value={formatTokenAmount(
+                    props.balance.data,
+                    props.selectedToken.data.decimals,
+                    5,
+                  )}
+                />
+              </Text>
+            )}
+          </div>
         )}
       </div>
     </Container>
+  );
+}
+
+function DecimalRenderer(props: { value: string }) {
+  const [integerPart, fractionPart] = props.value.split(".");
+  return (
+    <div style={{ display: "flex", alignItems: "baseline" }}>
+      <Text size="md" color="secondaryText" weight={500}>
+        {integerPart}.
+      </Text>
+      <Text size="sm" color="secondaryText" weight={500}>
+        {fractionPart || "00000"}
+      </Text>
+    </div>
   );
 }
 
