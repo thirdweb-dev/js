@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.105.48
+
+### Patch Changes
+
+- [#8052](https://github.com/thirdweb-dev/js/pull/8052) [`557f0e2`](https://github.com/thirdweb-dev/js/commit/557f0e29e86d2ef3e3b72988f714203b4ede1009) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Prevents incorrect failures in widget onramps.
+
 ## 5.105.47
 
 ### Patch Changes
