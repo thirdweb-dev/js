@@ -41,14 +41,6 @@ import { createWallet, injectedProvider } from "thirdweb/wallets";
 const client = createThirdwebClient({ clientId });
 
 const metamask = createWallet("io.metamask"); // pass the wallet id
-
-// if user has metamask installed, connect to it
-if (injectedProvider("io.metamask")) {
-	await metamask.connect({ client });
-}
-
-// open wallet connect modal so user can scan the QR code and connect
-else {
-	await metamask.connect({ client, walletConnect: { showQrModal: true } });
-}
+// if user has metamask installed, connect to it, otherwise opens a WalletConnect modal
+await metamask.connect({ client });
 ```
