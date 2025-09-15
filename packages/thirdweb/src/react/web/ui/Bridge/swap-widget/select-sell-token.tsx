@@ -4,10 +4,8 @@ import {
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import type { TokenWithPrices } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getToken } from "../../../../../pay/convert/get-token.js";
 import { toTokens } from "../../../../../utils/units.js";
 import {
   fontSize,
@@ -27,15 +25,15 @@ import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
 import { SelectChainButton } from "./SelectChainButton.js";
 import { SelectBridgeChain } from "./select-chain.js";
-import type { ActiveWalletInfo } from "./types.js";
+import type { ActiveWalletInfo, TokenSelection } from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 import { type TokenBalance, useTokenBalances } from "./use-tokens.js";
 
 type SelectSellTokenProps = {
   onBack: () => void;
   client: ThirdwebClient;
-  selectedToken: TokenWithPrices | undefined;
-  setSelectedToken: (token: TokenWithPrices) => void;
+  selectedToken: TokenSelection | undefined;
+  setSelectedToken: (token: TokenSelection) => void;
 };
 
 function getDefaultSelectedChain(
@@ -196,8 +194,8 @@ export function SelectSellTokenConnectedUI(
     setSelectedChain: (chain: BridgeChain) => void;
     search: string;
     setSearch: (search: string) => void;
-    selectedToken: TokenWithPrices | undefined;
-    setSelectedToken: (token: TokenWithPrices) => void;
+    selectedToken: TokenSelection | undefined;
+    setSelectedToken: (token: TokenSelection) => void;
     showAll: (() => void) | undefined;
   },
 ) {
@@ -296,7 +294,7 @@ export function SelectSellTokenConnectedUI(
                       onSelect={props.setSelectedToken}
                       isSelected={
                         props.selectedToken
-                          ? props.selectedToken.address.toLowerCase() ===
+                          ? props.selectedToken.tokenAddress?.toLowerCase() ===
                             token.token_address.toLowerCase()
                           : false
                       }
@@ -364,10 +362,9 @@ export function SelectSellTokenConnectedUI(
 function TokenButton(props: {
   token: TokenBalance;
   client: ThirdwebClient;
-  onSelect: (tokenWithPrices: TokenWithPrices) => void;
+  onSelect: (tokenWithPrices: TokenSelection) => void;
   isSelected: boolean;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
   const tokenBalanceInUnits = toTokens(
     BigInt(props.token.balance),
     props.token.decimals,
@@ -391,14 +388,10 @@ function TokenButton(props: {
       }}
       gap="sm"
       onClick={async () => {
-        setIsLoading(true);
-        const tokenWithPrices = await getToken(
-          props.client,
-          props.token.token_address,
-          props.token.chain_id,
-        );
-        setIsLoading(false);
-        props.onSelect(tokenWithPrices);
+        props.onSelect({
+          tokenAddress: props.token.token_address,
+          chainId: props.token.chain_id,
+        });
       }}
     >
       <Img
@@ -431,13 +424,9 @@ function TokenButton(props: {
             width: "100%",
           }}
         >
-          <Container flex="row" gap="xs" style={{ alignItems: "center" }}>
-            <Text size="md" color="primaryText" weight={500}>
-              {props.token.symbol}
-            </Text>
-
-            {isLoading && <Spinner color="secondaryText" size="sm" />}
-          </Container>
+          <Text size="md" color="primaryText" weight={500}>
+            {props.token.symbol}
+          </Text>
           <div>
             {formatTokenAmount(
               BigInt(props.token.balance),

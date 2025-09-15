@@ -39,6 +39,18 @@ type SwapWidgetProps = {
   onError?: (error: Error) => void;
   onCancel?: () => void;
   connectOptions?: SwapWidgetConnectOptions;
+  prefill?: {
+    buyToken?: {
+      tokenAddress?: string;
+      chainId: number;
+      amount?: string;
+    };
+    sellToken?: {
+      tokenAddress?: string;
+      chainId: number;
+      amount?: string;
+    };
+  };
 };
 
 export function SwapWidget(props: SwapWidgetProps) {
@@ -48,15 +60,7 @@ export function SwapWidget(props: SwapWidgetProps) {
       style={props.style}
       className={props.className}
     >
-      <SwapWidgetContent
-        client={props.client}
-        theme={props.theme}
-        connectOptions={props.connectOptions}
-        locale={props.locale}
-        currency={props.currency}
-        style={props.style}
-        showThirdwebBranding={props.showThirdwebBranding}
-      />
+      <SwapWidgetContent {...props} />
     </SwapWidgetContainer>
   );
 }
@@ -149,6 +153,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         connectOptions={props.connectOptions}
         currency={props.currency || "USD"}
         activeWalletInfo={activeWalletInfo}
+        prefill={props.prefill}
         onSwap={(quote, selection) => {
           setScreen({
             quote,

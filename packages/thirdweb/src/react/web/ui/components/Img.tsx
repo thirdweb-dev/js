@@ -77,6 +77,7 @@ export const Img: React.FC<{
               borderRadius: radius.md,
               borderWidth: "1px",
               borderStyle: "solid",
+              ...props.style,
             }}
           >
             <div />

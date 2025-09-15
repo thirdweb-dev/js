@@ -111,5 +111,7 @@ export function useTokenBalances(options: {
       const json = (await response.json()) as TokenBalancesResponse;
       return json.result;
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }

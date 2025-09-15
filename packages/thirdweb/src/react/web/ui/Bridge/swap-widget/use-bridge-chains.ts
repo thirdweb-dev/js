@@ -8,5 +8,7 @@ export function useBridgeChains(client: ThirdwebClient) {
     queryFn: () => {
       return chains({ client });
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }

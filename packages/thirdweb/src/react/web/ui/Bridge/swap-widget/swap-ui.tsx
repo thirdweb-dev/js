@@ -1,13 +1,14 @@
 import styled from "@emotion/styled";
 import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
+import { getToken } from "../../../../../pay/convert/get-token.js";
 import {
   getFiatSymbol,
   type SupportedFiatCurrency,
@@ -34,7 +35,12 @@ import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { SelectBuyToken } from "./select-buy-token.js";
 import { SelectSellToken } from "./select-sell-token.js";
-import type { ActiveWalletInfo, SwapWidgetConnectOptions } from "./types.js";
+import { getLastUsedTokens, setLastUsedTokens } from "./storage.js";
+import type {
+  ActiveWalletInfo,
+  SwapWidgetConnectOptions,
+  TokenSelection,
+} from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 import { cleanedChainName } from "./utils.js";
 
@@ -52,6 +58,20 @@ type SwapUIProps = {
       sellToken: TokenWithPrices;
     },
   ) => void;
+  prefill:
+    | {
+        buyToken?: {
+          tokenAddress?: string;
+          chainId: number;
+          amount?: string;
+        };
+        sellToken?: {
+          tokenAddress?: string;
+          chainId: number;
+          amount?: string;
+        };
+      }
+    | undefined;
 };
 
 export function SwapUI(props: SwapUIProps) {
@@ -59,12 +79,73 @@ export function SwapUI(props: SwapUIProps) {
     "base" | "select-buy-token" | "select-sell-ui"
   >("base");
 
-  const [buyToken, setBuyToken] = useState<TokenWithPrices | undefined>(
-    undefined,
-  );
-  const [sellToken, setSellToken] = useState<TokenWithPrices | undefined>(
-    undefined,
-  );
+  const [amountSelection, setAmountSelection] = useState<{
+    type: "buy" | "sell";
+    amount: string;
+  }>(() => {
+    if (props.prefill?.buyToken?.amount) {
+      return {
+        type: "buy",
+        amount: props.prefill.buyToken.amount,
+      };
+    }
+    if (props.prefill?.sellToken?.amount) {
+      return {
+        type: "sell",
+        amount: props.prefill.sellToken.amount,
+      };
+    }
+    return {
+      type: "buy",
+      amount: "",
+    };
+  });
+
+  const [buyToken, setBuyToken] = useState<TokenSelection | undefined>(() => {
+    if (props.prefill?.buyToken) {
+      return {
+        tokenAddress:
+          props.prefill.buyToken.tokenAddress ||
+          getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: props.prefill.buyToken.chainId,
+      };
+    }
+    const last = getLastUsedTokens()?.buyToken;
+    if (last) {
+      return {
+        tokenAddress: getAddress(last.tokenAddress),
+        chainId: last.chainId,
+      };
+    }
+    return undefined;
+  });
+  const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
+    if (props.prefill?.sellToken) {
+      return {
+        tokenAddress:
+          props.prefill.sellToken.tokenAddress ||
+          getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: props.prefill.sellToken.chainId,
+      };
+    }
+    const last = getLastUsedTokens()?.sellToken;
+    if (last) {
+      return {
+        tokenAddress: getAddress(last.tokenAddress),
+        chainId: last.chainId,
+      };
+    }
+    return undefined;
+  });
+
+  // persist selections to localStorage whenever they change
+  useEffect(() => {
+    if (buyToken) {
+      setLastUsedTokens({ buyToken, sellToken });
+    }
+  }, [buyToken, sellToken]);
+
+  console.log("prefill", props.prefill);
 
   if (screen === "base") {
     return (
@@ -77,6 +158,8 @@ export function SwapUI(props: SwapUIProps) {
         sellToken={sellToken}
         setBuyToken={setBuyToken}
         setSellToken={setSellToken}
+        amountSelection={amountSelection}
+        setAmountSelection={setAmountSelection}
       />
     );
   }
@@ -113,59 +196,106 @@ export function SwapUI(props: SwapUIProps) {
   return null;
 }
 
+function useTokenPrice(options: {
+  token: TokenSelection | undefined;
+  client: ThirdwebClient;
+}) {
+  return useQuery({
+    queryKey: ["token-price", options.token],
+    enabled: !!options.token,
+    queryFn: () => {
+      if (!options.token) {
+        throw new Error("Token is required");
+      }
+      return getToken(
+        options.client,
+        options.token.tokenAddress,
+        options.token.chainId,
+      );
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+}
+
 export function SwapUIBase(
   props: SwapUIProps & {
     onSelectToken: (type: "buy" | "sell") => void;
-    buyToken: TokenWithPrices | undefined;
-    sellToken: TokenWithPrices | undefined;
-    setBuyToken: (token: TokenWithPrices | undefined) => void;
-    setSellToken: (token: TokenWithPrices | undefined) => void;
+    buyToken: TokenSelection | undefined;
+    sellToken: TokenSelection | undefined;
+    setBuyToken: (token: TokenSelection | undefined) => void;
+    setSellToken: (token: TokenSelection | undefined) => void;
+    amountSelection: {
+      type: "buy" | "sell";
+      amount: string;
+    };
+    setAmountSelection: (amountSelection: {
+      type: "buy" | "sell";
+      amount: string;
+    }) => void;
   },
 ) {
-  const [mode, setMode] = useState<"buy" | "sell">("buy");
-  const [_buyTokenAmount, setBuyTokenAmount] = useState<string>("");
-  const [_sellTokenAmount, setSellTokenAmount] = useState<string>("");
+  const buyTokenQuery = useTokenPrice({
+    token: props.buyToken,
+    client: props.client,
+  });
+  const sellTokenQuery = useTokenPrice({
+    token: props.sellToken,
+    client: props.client,
+  });
+
+  const buyTokenWithPrices = buyTokenQuery.data;
+  const sellTokenWithPrices = sellTokenQuery.data;
 
   const preparedResultQuery = useQuery({
     queryKey: [
       "swap-quote",
-      mode,
-      props.buyToken,
-      props.sellToken,
-      _sellTokenAmount,
-      _buyTokenAmount,
+      props.amountSelection,
+      buyTokenWithPrices,
+      sellTokenWithPrices,
     ],
     enabled:
-      !!props.buyToken &&
-      !!props.sellToken &&
-      (mode === "buy" ? !!_buyTokenAmount : !!_sellTokenAmount),
+      !!buyTokenWithPrices &&
+      !!sellTokenWithPrices &&
+      !!props.amountSelection.amount,
     queryFn: async () => {
-      if (!props.buyToken || !props.sellToken || !props.activeWalletInfo) {
-        return;
+      if (
+        !buyTokenWithPrices ||
+        !sellTokenWithPrices ||
+        !props.activeWalletInfo ||
+        !props.amountSelection.amount
+      ) {
+        throw new Error("Invalid state");
       }
 
-      if (mode === "buy" && _buyTokenAmount) {
+      if (props.amountSelection.type === "buy") {
         const res = await Buy.quote({
-          buyAmountWei: toUnits(_buyTokenAmount, props.buyToken.decimals),
+          buyAmountWei: toUnits(
+            props.amountSelection.amount,
+            buyTokenWithPrices.decimals,
+          ),
           // origin = sell
-          originChainId: props.sellToken.chainId,
-          originTokenAddress: props.sellToken.address,
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
           // destination = buy
-          destinationChainId: props.buyToken.chainId,
-          destinationTokenAddress: props.buyToken.address,
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
           client: props.client,
         });
 
         return res;
-      } else if (mode === "sell" && _sellTokenAmount) {
+      } else if (props.amountSelection.type === "sell") {
         const res = await Sell.prepare({
-          amount: toUnits(_sellTokenAmount, props.sellToken.decimals),
+          amount: toUnits(
+            props.amountSelection.amount,
+            sellTokenWithPrices.decimals,
+          ),
           // origin = sell
-          originChainId: props.sellToken.chainId,
-          originTokenAddress: props.sellToken.address,
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
           // destination = buy
-          destinationChainId: props.buyToken.chainId,
-          destinationTokenAddress: props.buyToken.address,
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
           client: props.client,
           receiver: props.activeWalletInfo.activeAccount.address,
           sender: props.activeWalletInfo.activeAccount.address,
@@ -180,27 +310,38 @@ export function SwapUIBase(
   });
 
   const sellTokenAmount =
-    preparedResultQuery.data && mode === "buy" && props.sellToken
-      ? toTokens(
-          preparedResultQuery.data.originAmount,
-          props.sellToken.decimals,
-        )
-      : _sellTokenAmount;
+    props.amountSelection.type === "sell"
+      ? props.amountSelection.amount
+      : preparedResultQuery.data &&
+          props.amountSelection.type === "buy" &&
+          sellTokenWithPrices
+        ? toTokens(
+            preparedResultQuery.data.originAmount,
+            sellTokenWithPrices.decimals,
+          )
+        : "";
 
   const buyTokenAmount =
-    preparedResultQuery.data && mode === "sell" && props.buyToken
-      ? toTokens(
-          preparedResultQuery.data.destinationAmount,
-          props.buyToken.decimals,
-        )
-      : _buyTokenAmount;
+    props.amountSelection.type === "buy"
+      ? props.amountSelection.amount
+      : preparedResultQuery.data &&
+          props.amountSelection.type === "sell" &&
+          buyTokenWithPrices
+        ? toTokens(
+            preparedResultQuery.data.destinationAmount,
+            buyTokenWithPrices.decimals,
+          )
+        : "";
 
-  const isBuyAmountFetching = mode === "sell" && preparedResultQuery.isFetching;
-  const isSellAmountFetching = mode === "buy" && preparedResultQuery.isFetching;
+  // when buy amount is set, the sell amount is fetched
+  const isBuyAmountFetching =
+    props.amountSelection.type === "sell" && preparedResultQuery.isFetching;
+  const isSellAmountFetching =
+    props.amountSelection.type === "buy" && preparedResultQuery.isFetching;
 
   const sellTokenBalanceQuery = useTokenBalance({
-    chainId: props.sellToken?.chainId,
-    tokenAddress: props.sellToken?.address,
+    chainId: sellTokenWithPrices?.chainId,
+    tokenAddress: sellTokenWithPrices?.address,
     client: props.client,
     walletAddress: props.activeWalletInfo?.activeAccount.address,
   });
@@ -209,15 +350,22 @@ export function SwapUIBase(
     <Container p="md">
       {/* Sell  */}
       <TokenSection
-        amount={sellTokenAmount}
-        label="Sell"
-        isPending={isSellAmountFetching}
-        setAmount={(value) => {
-          setSellTokenAmount(value);
-          setBuyTokenAmount("");
-          setMode("sell");
+        amount={{
+          data: sellTokenAmount,
+          isFetching: isSellAmountFetching,
         }}
-        selectedToken={props.sellToken}
+        label="Sell"
+        setAmount={(value) => {
+          props.setAmountSelection({ type: "sell", amount: value });
+        }}
+        selectedToken={
+          props.sellToken
+            ? {
+                data: sellTokenQuery.data,
+                isFetching: sellTokenQuery.isFetching,
+              }
+            : undefined
+        }
         client={props.client}
         currency={props.currency}
         onSelectToken={() => props.onSelectToken("sell")}
@@ -230,22 +378,26 @@ export function SwapUIBase(
           const temp = props.sellToken;
           props.setSellToken(props.buyToken);
           props.setBuyToken(temp);
-          // reset amounts
-          setSellTokenAmount("");
-          setBuyTokenAmount("");
         }}
       />
 
       {/* Buy */}
       <TokenSection
-        isPending={isBuyAmountFetching}
-        amount={buyTokenAmount}
+        amount={{
+          data: buyTokenAmount,
+          isFetching: isBuyAmountFetching,
+        }}
         label="Buy"
-        selectedToken={props.buyToken}
+        selectedToken={
+          props.buyToken
+            ? {
+                data: buyTokenQuery.data,
+                isFetching: buyTokenQuery.isFetching,
+              }
+            : undefined
+        }
         setAmount={(value) => {
-          setBuyTokenAmount(value);
-          setSellTokenAmount("");
-          setMode("buy");
+          props.setAmountSelection({ type: "buy", amount: value });
         }}
         client={props.client}
         currency={props.currency}
@@ -275,13 +427,13 @@ export function SwapUIBase(
           onClick={() => {
             if (
               preparedResultQuery.data &&
-              props.buyToken &&
-              props.sellToken &&
+              buyTokenWithPrices &&
+              sellTokenWithPrices &&
               sellTokenBalanceQuery.data
             ) {
               props.onSwap(preparedResultQuery.data, {
-                buyToken: props.buyToken,
-                sellToken: props.sellToken,
+                buyToken: buyTokenWithPrices,
+                sellToken: sellTokenWithPrices,
                 sellTokenBalance: sellTokenBalanceQuery.data.value,
               });
             }
@@ -360,24 +512,31 @@ function DecimalInput(props: {
 
 function TokenSection(props: {
   label: string;
-  amount: string;
-  isPending: boolean;
+  amount: {
+    data: string;
+    isFetching: boolean;
+  };
   setAmount: (amount: string) => void;
-  selectedToken: TokenWithPrices | undefined;
+  selectedToken:
+    | {
+        data: TokenWithPrices | undefined;
+        isFetching: boolean;
+      }
+    | undefined;
   currency: SupportedFiatCurrency;
   onSelectToken: () => void;
   client: ThirdwebClient;
 }) {
   const chainQuery = useBridgeChains(props.client);
   const chain = chainQuery.data?.find(
-    (chain) => chain.chainId === props.selectedToken?.chainId,
+    (chain) => chain.chainId === props.selectedToken?.data?.chainId,
   );
 
-  const fiatPricePerToken = props.selectedToken?.prices[props.currency];
-  const totalFiatValue = !props.amount
+  const fiatPricePerToken = props.selectedToken?.data?.prices[props.currency];
+  const totalFiatValue = !props.amount.data
     ? undefined
     : fiatPricePerToken
-      ? fiatPricePerToken * Number(props.amount)
+      ? fiatPricePerToken * Number(props.amount.data)
       : undefined;
 
   return (
@@ -401,10 +560,10 @@ function TokenSection(props: {
           gap: spacing.sm,
         }}
       >
-        {props.isPending ? (
+        {props.amount.isFetching ? (
           <Skeleton height={fontSize.xxl} width="140px" />
         ) : (
-          <DecimalInput value={props.amount} setValue={props.setAmount} />
+          <DecimalInput value={props.amount.data} setValue={props.setAmount} />
         )}
 
         {!props.selectedToken ? (
@@ -434,23 +593,32 @@ function TokenSection(props: {
 
       {/* Fiat Value */}
       <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <Text size="lg" color="secondaryText" weight={500}>
+        <Text size="md" color="secondaryText" weight={500}>
           {getFiatSymbol(props.currency)}
         </Text>
-        <Text size="md" color="secondaryText" weight={500}>
-          {totalFiatValue === undefined
-            ? "0.00"
-            : totalFiatValue < 0.01
-              ? "~0.00"
-              : totalFiatValue.toFixed(2)}
-        </Text>
+        {props.amount.isFetching ? (
+          <Skeleton height={fontSize.md} width="50px" />
+        ) : (
+          <Text size="md" color="secondaryText" weight={500}>
+            {totalFiatValue === undefined
+              ? "0.00"
+              : totalFiatValue < 0.01
+                ? "~0.00"
+                : totalFiatValue.toFixed(2)}
+          </Text>
+        )}
       </div>
     </Container>
   );
 }
 
 function SelectedTokenButton(props: {
-  selectedToken: TokenWithPrices;
+  selectedToken:
+    | {
+        data: TokenWithPrices | undefined;
+        isFetching: boolean;
+      }
+    | undefined;
   client: ThirdwebClient;
   onSelectToken: () => void;
   chain: BridgeChain | undefined;
@@ -474,7 +642,11 @@ function SelectedTokenButton(props: {
       >
         {/* token icon */}
         <Img
-          src={props.selectedToken.iconUri || ""}
+          src={
+            props.selectedToken === undefined
+              ? undefined
+              : props.selectedToken.data?.iconUri || ""
+          }
           client={props.client}
           width={iconSize.lg}
           height={iconSize.lg}
@@ -484,37 +656,41 @@ function SelectedTokenButton(props: {
         />
 
         {/* chain icon */}
-        {props.chain && (
-          <Container
-            bg="modalBg"
+
+        <Container
+          bg="modalBg"
+          style={{
+            padding: "2px",
+            position: "absolute",
+            bottom: -2,
+            right: -2,
+            display: "flex",
+            borderRadius: radius.full,
+          }}
+        >
+          <Img
+            src={props.chain?.icon}
+            client={props.client}
+            width={iconSize.sm}
+            height={iconSize.sm}
             style={{
-              padding: "2px",
-              position: "absolute",
-              bottom: -2,
-              right: -2,
-              display: "flex",
               borderRadius: radius.full,
             }}
-          >
-            <Img
-              src={props.chain.icon}
-              client={props.client}
-              width={iconSize.sm}
-              height={iconSize.sm}
-              style={{
-                borderRadius: radius.full,
-              }}
-            />
-          </Container>
-        )}
+          />
+        </Container>
       </div>
 
       {/* token symbol and chain name */}
       <Container flex="column" style={{ gap: "2px" }}>
-        <Text size="md" color="primaryText" weight={500}>
-          {props.selectedToken.symbol}
-        </Text>
-        {props.chain && (
+        {props.selectedToken?.isFetching ? (
+          <Skeleton width="40px" height={fontSize.md} color="modalBg" />
+        ) : (
+          <Text size="md" color="primaryText" weight={500}>
+            {props.selectedToken?.data?.symbol}
+          </Text>
+        )}
+
+        {props.chain ? (
           <Text
             size="xs"
             color="secondaryText"
@@ -528,6 +704,8 @@ function SelectedTokenButton(props: {
           >
             {cleanedChainName(props.chain.name)}
           </Text>
+        ) : (
+          <Skeleton width="70px" height={fontSize.xs} color="modalBg" />
         )}
       </Container>
       <Container color="secondaryText">

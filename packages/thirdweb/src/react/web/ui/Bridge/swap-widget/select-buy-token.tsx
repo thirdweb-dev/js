@@ -1,9 +1,8 @@
 import { CheckIcon, DiscIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import type { Token, TokenWithPrices } from "../../../../../bridge/index.js";
+import type { Token } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getToken } from "../../../../../pay/convert/get-token.js";
 import {
   fontSize,
   iconSize,
@@ -21,14 +20,15 @@ import { Text } from "../../components/text.js";
 import { SearchInput } from "./SearchInput.js";
 import { SelectChainButton } from "./SelectChainButton.js";
 import { SelectBridgeChain } from "./select-chain.js";
+import type { TokenSelection } from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 import { useTokens } from "./use-tokens.js";
 
 type SelectBuyTokenProps = {
   onBack: () => void;
   client: ThirdwebClient;
-  selectedToken: TokenWithPrices | undefined;
-  setSelectedToken: (token: TokenWithPrices) => void;
+  selectedToken: TokenSelection | undefined;
+  setSelectedToken: (token: TokenSelection) => void;
 };
 
 function getDefaultSelectedChain(
@@ -110,8 +110,8 @@ export function SelectBuyTokenUI(
     setSelectedChain: (chain: BridgeChain) => void;
     search: string;
     setSearch: (search: string) => void;
-    selectedToken: TokenWithPrices | undefined;
-    setSelectedToken: (token: TokenWithPrices) => void;
+    selectedToken: TokenSelection | undefined;
+    setSelectedToken: (token: TokenSelection) => void;
     showMore: (() => void) | undefined;
   },
 ) {
@@ -178,7 +178,9 @@ export function SelectBuyTokenUI(
                     token={token}
                     client={props.client}
                     onSelect={props.setSelectedToken}
-                    isSelected={props.selectedToken?.address === token.address}
+                    isSelected={
+                      props.selectedToken?.tokenAddress === token.address
+                    }
                   />
                 ))}
 
@@ -242,10 +244,9 @@ export function SelectBuyTokenUI(
 function TokenButton(props: {
   token: Token;
   client: ThirdwebClient;
-  onSelect: (tokenWithPrices: TokenWithPrices) => void;
+  onSelect: (tokenWithPrices: TokenSelection) => void;
   isSelected: boolean;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
   return (
     <Button
       variant={props.isSelected ? "secondary" : "ghost-solid"}
@@ -262,14 +263,10 @@ function TokenButton(props: {
       }}
       gap="sm"
       onClick={async () => {
-        setIsLoading(true);
-        const tokenWithPrices = await getToken(
-          props.client,
-          props.token.address,
-          props.token.chainId,
-        );
-        setIsLoading(false);
-        props.onSelect(tokenWithPrices);
+        props.onSelect({
+          tokenAddress: props.token.address,
+          chainId: props.token.chainId,
+        });
       }}
     >
       <Img
@@ -290,24 +287,14 @@ function TokenButton(props: {
         </Text>
       </div>
 
-      {isLoading ? (
-        <Spinner
-          color="secondaryText"
-          size="md"
+      {props.isSelected && (
+        <CheckIcon
+          width={iconSize.md}
+          height={iconSize.md}
           style={{
             marginLeft: "auto",
           }}
         />
-      ) : (
-        props.isSelected && (
-          <CheckIcon
-            width={iconSize.md}
-            height={iconSize.md}
-            style={{
-              marginLeft: "auto",
-            }}
-          />
-        )
       )}
     </Button>
   );

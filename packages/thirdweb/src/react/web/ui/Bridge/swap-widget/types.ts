@@ -139,3 +139,8 @@ export type ActiveWalletInfo = {
   activeWallet: Wallet;
   activeAccount: Account;
 };
+
+export type TokenSelection = {
+  tokenAddress: string;
+  chainId: number;
+};
