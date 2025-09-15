@@ -6,7 +6,9 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import type { prepare as BuyPrepare } from "../../../../../bridge/Buy.js";
 import { Buy, Sell } from "../../../../../bridge/index.js";
+import type { prepare as SellPrepare } from "../../../../../bridge/Sell.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
@@ -28,6 +30,10 @@ import {
   type Theme,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import type {
+  BridgePrepareRequest,
+  BridgePrepareResult,
+} from "../../../../core/hooks/useBridgePrepare.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
 import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
@@ -57,15 +63,14 @@ type SwapUIProps = {
   connectOptions: SwapWidgetConnectOptions | undefined;
   currency: SupportedFiatCurrency;
   showThirdwebBranding: boolean;
-  onSwap: (
-    quote: Buy.quote.Result | Sell.quote.Result,
-    selection: {
-      buyToken: TokenWithPrices;
-      sellTokenBalance: bigint;
-      sellToken: TokenWithPrices;
-      mode: "buy" | "sell";
-    },
-  ) => void;
+  onSwap: (data: {
+    result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+    request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+    buyToken: TokenWithPrices;
+    sellTokenBalance: bigint;
+    sellToken: TokenWithPrices;
+    mode: "buy" | "sell";
+  }) => void;
   buyToken: TokenSelection | undefined;
   sellToken: TokenSelection | undefined;
   setBuyToken: (token: TokenSelection | undefined) => void;
@@ -191,7 +196,10 @@ function SwapUIBase(
       !!buyTokenWithPrices &&
       !!sellTokenWithPrices &&
       !!props.amountSelection.amount,
-    queryFn: async () => {
+    queryFn: async (): Promise<{
+      result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+      request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+    }> => {
       if (
         !buyTokenWithPrices ||
         !sellTokenWithPrices ||
@@ -202,8 +210,8 @@ function SwapUIBase(
       }
 
       if (props.amountSelection.type === "buy") {
-        const res = await Buy.quote({
-          buyAmountWei: toUnits(
+        const buyRequestOptions: BuyPrepare.Options = {
+          amount: toUnits(
             props.amountSelection.amount,
             buyTokenWithPrices.decimals,
           ),
@@ -214,11 +222,23 @@ function SwapUIBase(
           destinationChainId: buyTokenWithPrices.chainId,
           destinationTokenAddress: buyTokenWithPrices.address,
           client: props.client,
-        });
+          receiver: props.activeWalletInfo.activeAccount.address,
+          sender: props.activeWalletInfo.activeAccount.address,
+        };
 
-        return res;
+        const buyRequest: BridgePrepareRequest = {
+          type: "buy",
+          ...buyRequestOptions,
+        };
+
+        const res = await Buy.prepare(buyRequest);
+
+        return {
+          result: { type: "buy", ...res },
+          request: buyRequest,
+        };
       } else if (props.amountSelection.type === "sell") {
-        const res = await Sell.prepare({
+        const sellRequestOptions: SellPrepare.Options = {
           amount: toUnits(
             props.amountSelection.amount,
             sellTokenWithPrices.decimals,
@@ -232,12 +252,22 @@ function SwapUIBase(
           client: props.client,
           receiver: props.activeWalletInfo.activeAccount.address,
           sender: props.activeWalletInfo.activeAccount.address,
-        });
+        };
 
-        return res;
+        const res = await Sell.prepare(sellRequestOptions);
+
+        const sellRequest: BridgePrepareRequest = {
+          type: "sell",
+          ...sellRequestOptions,
+        };
+
+        return {
+          result: { type: "sell", ...res },
+          request: sellRequest,
+        };
       }
 
-      return null;
+      throw new Error("Invalid amount selection type");
     },
     refetchInterval: 20000,
   });
@@ -249,7 +279,7 @@ function SwapUIBase(
           props.amountSelection.type === "buy" &&
           sellTokenWithPrices
         ? toTokens(
-            preparedResultQuery.data.originAmount,
+            preparedResultQuery.data.result.originAmount,
             sellTokenWithPrices.decimals,
           )
         : "";
@@ -261,7 +291,7 @@ function SwapUIBase(
           props.amountSelection.type === "sell" &&
           buyTokenWithPrices
         ? toTokens(
-            preparedResultQuery.data.destinationAmount,
+            preparedResultQuery.data.result.destinationAmount,
             buyTokenWithPrices.decimals,
           )
         : "";
@@ -396,7 +426,9 @@ function SwapUIBase(
               sellTokenWithPrices &&
               sellTokenBalanceQuery.data
             ) {
-              props.onSwap(preparedResultQuery.data, {
+              props.onSwap({
+                result: preparedResultQuery.data.result,
+                request: preparedResultQuery.data.request,
                 buyToken: buyTokenWithPrices,
                 sellToken: sellTokenWithPrices,
                 sellTokenBalance: sellTokenBalanceQuery.data.value,

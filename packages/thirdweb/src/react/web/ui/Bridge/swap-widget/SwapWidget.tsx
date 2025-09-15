@@ -7,7 +7,6 @@ import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
-import { toTokens } from "../../../../../utils/units.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import type {
@@ -21,7 +20,6 @@ import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { ErrorBanner } from "../ErrorBanner.js";
 import { PaymentDetails } from "../payment-details/PaymentDetails.js";
 import { SuccessScreen } from "../payment-success/SuccessScreen.js";
-import { QuoteLoader } from "../QuoteLoader.js";
 import { StepRunner } from "../StepRunner.js";
 import { useActiveWalletInfo } from "./hooks.js";
 import { getLastUsedTokens, setLastUsedTokens } from "./storage.js";
@@ -201,8 +199,8 @@ type SwapWidgetScreen =
       mode: "buy" | "sell";
     }
   | {
-      id: "3:preview";
-      preparedQuote: BridgePrepareResult;
+      id: "2:preview";
+      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
       request: BridgePrepareRequest;
       quote: Buy.quote.Result | Sell.quote.Result;
       buyToken: TokenWithPrices;
@@ -211,19 +209,19 @@ type SwapWidgetScreen =
       mode: "buy" | "sell";
     }
   | {
-      id: "4:execute";
+      id: "3:execute";
       request: BridgePrepareRequest;
       quote: Buy.quote.Result | Sell.quote.Result;
-      preparedQuote: BridgePrepareResult;
+      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
       sellTokenBalance: bigint;
       mode: "buy" | "sell";
     }
   | {
-      id: "5:success";
+      id: "4:success";
       completedStatuses: CompletedStatusResult[];
-      preparedQuote: BridgePrepareResult;
+      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
     }
@@ -337,59 +335,23 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         setSellToken={setSellToken}
         amountSelection={amountSelection}
         setAmountSelection={setAmountSelection}
-        onSwap={(quote, selection) => {
+        onSwap={(data) => {
           setScreen({
-            quote,
-            id: "2:loading-quote",
-            ...selection,
+            id: "2:preview",
+            buyToken: data.buyToken,
+            sellToken: data.sellToken,
+            sellTokenBalance: data.sellTokenBalance,
+            mode: data.mode,
+            preparedQuote: data.result,
+            request: data.request,
+            quote: data.result,
           });
         }}
       />
     );
   }
 
-  if (screen.id === "2:loading-quote") {
-    console.log("screen", screen);
-    return (
-      <QuoteLoader
-        amount={
-          // if buy mode, set destination amount
-          // if sell mode, set origin amount
-          screen.mode === "buy"
-            ? toTokens(screen.quote.destinationAmount, screen.buyToken.decimals)
-            : toTokens(screen.quote.originAmount, screen.sellToken.decimals)
-        }
-        onError={handleError}
-        onQuoteReceived={(preparedQuote, request) => {
-          setScreen({
-            ...screen,
-            id: "3:preview",
-            preparedQuote,
-            request,
-          });
-        }}
-        receiver={activeWalletInfo.activeAccount.address}
-        onBack={() => setScreen({ id: "1:swap-ui" })}
-        uiOptions={{
-          destinationToken: screen.buyToken,
-          mode: "fund_wallet",
-          currency: props.currency,
-        }}
-        client={props.client}
-        destinationToken={screen.buyToken}
-        paymentMethod={{
-          quote: screen.quote,
-          type: "wallet",
-          payerWallet: activeWalletInfo.activeWallet,
-          balance: screen.sellTokenBalance,
-          originToken: screen.sellToken,
-          action: screen.mode,
-        }}
-      />
-    );
-  }
-
-  if (screen.id === "3:preview") {
+  if (screen.id === "2:preview") {
     return (
       <PaymentDetails
         client={props.client}
@@ -399,7 +361,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         onConfirm={() => {
           setScreen({
             ...screen,
-            id: "4:execute",
+            id: "3:execute",
           });
         }}
         onError={handleError}
@@ -421,7 +383,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
     );
   }
 
-  if (screen.id === "4:execute") {
+  if (screen.id === "3:execute") {
     return (
       <StepRunner
         autoStart={true}
@@ -429,7 +391,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         onBack={() => {
           setScreen({
             ...screen,
-            id: "3:preview",
+            id: "2:preview",
             sellTokenBalance: screen.sellTokenBalance,
           });
         }}
@@ -438,7 +400,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           props.onSuccess?.();
           setScreen({
             ...screen,
-            id: "5:success",
+            id: "4:success",
             completedStatuses,
           });
         }}
@@ -449,7 +411,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
     );
   }
 
-  if (screen.id === "5:success") {
+  if (screen.id === "4:success") {
     return (
       <SuccessScreen
         client={props.client}
