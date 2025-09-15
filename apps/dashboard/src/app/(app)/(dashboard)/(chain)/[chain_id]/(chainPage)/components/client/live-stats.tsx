@@ -168,8 +168,8 @@ export function ChainLiveStats(props: { rpc: string }) {
         )}
       </PrimaryInfoItem>
 
-      {/* Block Height */}
-      <PrimaryInfoItem title="Block Height" titleIcon={<PulseDot />}>
+      {/* Latest Block */}
+      <PrimaryInfoItem title="Latest Block" titleIcon={<PulseDot />}>
         {stats.isError ? (
           <p className="fade-in-0 animate-in text-destructive-text">N/A</p>
         ) : stats.data ? (
@@ -181,8 +181,8 @@ export function ChainLiveStats(props: { rpc: string }) {
         )}
       </PrimaryInfoItem>
 
-      {/* EIP-7702 Support */}
-      <PrimaryInfoItem title="EIP-7702 Support">
+      {/* EIP-7702 */}
+      <PrimaryInfoItem title="EIP-7702">
         {eip7702Support.isError ? (
           <Badge variant="destructive">Disabled</Badge>
         ) : eip7702Support.data ? (
