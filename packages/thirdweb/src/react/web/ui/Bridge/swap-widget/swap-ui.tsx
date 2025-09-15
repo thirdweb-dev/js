@@ -151,8 +151,6 @@ export function SwapUI(props: SwapUIProps) {
     }
   }, [buyToken, sellToken]);
 
-  console.log("prefill", props.prefill);
-
   if (screen === "base") {
     return (
       <SwapUIBase
