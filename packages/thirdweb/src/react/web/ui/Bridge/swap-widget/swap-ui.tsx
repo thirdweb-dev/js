@@ -361,7 +361,6 @@ function SwapUIBase(
   });
 
   const notEnoughBalance = !!(
-    props.amountSelection.type === "sell" &&
     sellTokenBalanceQuery.data?.value &&
     sellTokenWithPrices?.decimals &&
     props.amountSelection.amount &&
