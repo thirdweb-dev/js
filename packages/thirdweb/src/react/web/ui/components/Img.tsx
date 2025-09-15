@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
-import { radius } from "../../../core/design-system/index.js";
+import { radius, type Theme } from "../../../core/design-system/index.js";
 import { Container } from "./basic.js";
 import { Skeleton } from "./Skeleton.js";
 
@@ -20,6 +20,7 @@ export const Img: React.FC<{
   fallbackImage?: string;
   fallback?: React.ReactNode;
   client: ThirdwebClient;
+  skeletonColor?: keyof Theme["colors"];
 }> = (props) => {
   const [_status, setStatus] = useState<"pending" | "fallback" | "loaded">(
     "pending",
@@ -38,7 +39,14 @@ export const Img: React.FC<{
   const heightPx = `${props.height || props.width}px`;
 
   if (propSrc === undefined) {
-    return <Skeleton height={heightPx} width={widthPx} />;
+    return (
+      <Skeleton
+        height={heightPx}
+        width={widthPx}
+        color={props.skeletonColor}
+        style={props.style}
+      />
+    );
   }
 
   const getSrc = () => {
@@ -65,7 +73,14 @@ export const Img: React.FC<{
         position: "relative",
       }}
     >
-      {status === "pending" && <Skeleton height={heightPx} width={widthPx} />}
+      {status === "pending" && (
+        <Skeleton
+          height={heightPx}
+          width={widthPx}
+          color={props.skeletonColor}
+          style={props.style}
+        />
+      )}
       {status === "fallback" &&
         (props.fallback || (
           <Container

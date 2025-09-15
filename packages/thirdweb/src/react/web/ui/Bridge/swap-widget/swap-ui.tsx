@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  DiscIcon,
+} from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Buy, Sell } from "../../../../../bridge/index.js";
@@ -645,28 +649,26 @@ function SelectedTokenButton(props: {
       }}
     >
       {/* icons */}
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
+      <Container relative color="secondaryText">
         {/* token icon */}
         <Img
+          key={props.selectedToken?.data?.iconUri}
           src={
-            props.selectedToken === undefined
+            props.selectedToken?.data === undefined
               ? undefined
-              : props.selectedToken.data?.iconUri || ""
+              : props.selectedToken.data.iconUri || ""
           }
           client={props.client}
           width={iconSize.lg}
           height={iconSize.lg}
+          skeletonColor="modalBg"
+          fallback={<DiscIcon width={iconSize.lg} height={iconSize.lg} />}
           style={{
             borderRadius: radius.full,
           }}
         />
 
         {/* chain icon */}
-
         <Container
           bg="modalBg"
           style={{
@@ -683,12 +685,13 @@ function SelectedTokenButton(props: {
             client={props.client}
             width={iconSize.sm}
             height={iconSize.sm}
+            skeletonColor="modalBg"
             style={{
               borderRadius: radius.full,
             }}
           />
         </Container>
-      </div>
+      </Container>
 
       {/* token symbol and chain name */}
       <Container flex="column" style={{ gap: "2px" }}>

@@ -3,6 +3,7 @@ import type { Token } from "../../../../../bridge/index.js";
 import { tokens } from "../../../../../bridge/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isAddress } from "../../../../../utils/address.js";
+import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 
 export function useTokens(options: {
   client: ThirdwebClient;
@@ -82,8 +83,10 @@ export function useTokenBalances(options: {
       if (!options.chainId) {
         throw new Error("Chain ID is required");
       }
+      const baseUrl = getThirdwebBaseUrl("bridge");
+      const isDev = baseUrl.includes("thirdweb-dev");
       const url = new URL(
-        `https://api.thirdweb.com/v1/wallets/${options.walletAddress}/tokens`,
+        `https://api.${isDev ? "thirdweb-dev" : "thirdweb"}.com/v1/wallets/${options.walletAddress}/tokens`,
       );
       url.searchParams.set("chainId", options.chainId.toString());
       url.searchParams.set("limit", options.limit.toString());
