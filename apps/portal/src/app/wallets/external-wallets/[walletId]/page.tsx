@@ -188,16 +188,7 @@ import { createWallet, injectedProvider } from "thirdweb/wallets";
 const client = createThirdwebClient({ clientId });
 
 const wallet = createWallet("${id}"); // pass the wallet id
-
-// if the wallet extension is installed, connect to it
-if (injectedProvider("${id}")) {
-  await wallet.connect({ client });
-}
-
-// show error message to user that wallet is not installed
-else {
-  alert('wallet is not installed');
-}
+await wallet.connect({ client });
 `;
 }
 
@@ -209,12 +200,7 @@ import { createWallet } from "thirdweb/wallets";
 const client = createThirdwebClient({ clientId });
 
 const wallet = createWallet("${id}"); // pass the wallet id
-
-// open WalletConnect modal so user can scan the QR code and connect
-await wallet.connect({
-  client,
-  walletConnect: { showQrModal: true },
-});
+await wallet.connect({ client });
 `;
 }
 
@@ -226,19 +212,8 @@ import { createWallet, injectedProvider } from "thirdweb/wallets";
 const client = createThirdwebClient({ clientId });
 
 const wallet = createWallet("${id}"); // pass the wallet id
-
-// if user has wallet installed, connect to it
-if (injectedProvider("${id}")) {
-  await wallet.connect({ client });
-}
-
-// open WalletConnect modal so user can scan the QR code and connect
-else {
-  await wallet.connect({
-    client,
-    walletConnect: { showQrModal: true },
-  });
-}
+// if user has wallet installed, connects to it, otherwise opens a WalletConnect modal
+await wallet.connect({ client });
 `;
 }
 
@@ -257,20 +232,7 @@ function Example() {
       onClick={() =>
         connect(async () => {
           const wallet = createWallet("${id}"); // pass the wallet id
-
-          // if user has wallet installed, connect to it
-          if (injectedProvider("${id}")) {
-            await wallet.connect({ client });
-          }
-
-          // open WalletConnect modal so user can scan the QR code and connect
-          else {
-            await wallet.connect({
-              client,
-              walletConnect: { showQrModal: true },
-            });
-          }
-
+          await wallet.connect({ client });
           // return the wallet to set it as active wallet
           return wallet;
         })
@@ -298,13 +260,7 @@ function Example() {
       onClick={() =>
         connect(async () => {
           const wallet = createWallet("${id}"); // pass the wallet id
-
-          // open WalletConnect modal so user can scan the QR code and connect
-          await wallet.connect({
-            client,
-            walletConnect: { showQrModal: true },
-          });
-
+          await wallet.connect({ client });
           // return the wallet to set it as active wallet
           return wallet;
         })
@@ -330,19 +286,12 @@ function Example() {
   return (
     <button
       onClick={() => {
-        // if the wallet extension is installed, connect to it
-        if (injectedProvider("${id}")) {
-          connect(async () => {
-            const wallet = createWallet("${id}");
-            await wallet.connect({ client });
-            return wallet;
-          });
-        }
-
-        // show error message to user that wallet is not installed
-        else {
-          alert("wallet is not installed");
-        }
+        // if the wallet extension is installed, connect to it, otherwise opens a WalletConnect modal
+        connect(async () => {
+          const wallet = createWallet("${id}");
+          await wallet.connect({ client });
+          return wallet;
+        });
       }}
     >
       {isConnecting ? "Connecting..." : "Connect"}
