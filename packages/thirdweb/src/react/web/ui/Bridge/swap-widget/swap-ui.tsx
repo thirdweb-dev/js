@@ -191,23 +191,71 @@ function SwapUIBase(
       props.amountSelection,
       buyTokenWithPrices,
       sellTokenWithPrices,
+      props.activeWalletInfo?.activeAccount.address,
     ],
     enabled:
       !!buyTokenWithPrices &&
       !!sellTokenWithPrices &&
-      !!props.amountSelection.amount &&
-      !!props.activeWalletInfo,
-    queryFn: async (): Promise<{
-      result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
-      request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
-    }> => {
+      !!props.amountSelection.amount,
+    queryFn: async (): Promise<
+      | {
+          type: "preparedResult";
+          result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+          request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+        }
+      | {
+          type: "quote";
+          result: Buy.quote.Result | Sell.quote.Result;
+        }
+    > => {
       if (
         !buyTokenWithPrices ||
         !sellTokenWithPrices ||
-        !props.activeWalletInfo ||
         !props.amountSelection.amount
       ) {
         throw new Error("Invalid state");
+      }
+
+      if (!props.activeWalletInfo) {
+        if (props.amountSelection.type === "buy") {
+          const res = await Buy.quote({
+            amount: toUnits(
+              props.amountSelection.amount,
+              buyTokenWithPrices.decimals,
+            ),
+            // origin = sell
+            originChainId: sellTokenWithPrices.chainId,
+            originTokenAddress: sellTokenWithPrices.address,
+            // destination = buy
+            destinationChainId: buyTokenWithPrices.chainId,
+            destinationTokenAddress: buyTokenWithPrices.address,
+            client: props.client,
+          });
+
+          return {
+            type: "quote",
+            result: res,
+          };
+        }
+
+        const res = await Sell.quote({
+          amount: toUnits(
+            props.amountSelection.amount,
+            sellTokenWithPrices.decimals,
+          ),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: props.client,
+        });
+
+        return {
+          type: "quote",
+          result: res,
+        };
       }
 
       if (props.amountSelection.type === "buy") {
@@ -235,6 +283,7 @@ function SwapUIBase(
         const res = await Buy.prepare(buyRequest);
 
         return {
+          type: "preparedResult",
           result: { type: "buy", ...res },
           request: buyRequest,
         };
@@ -263,6 +312,7 @@ function SwapUIBase(
         };
 
         return {
+          type: "preparedResult",
           result: { type: "sell", ...res },
           request: sellRequest,
         };
@@ -425,7 +475,8 @@ function SwapUIBase(
               preparedResultQuery.data &&
               buyTokenWithPrices &&
               sellTokenWithPrices &&
-              sellTokenBalanceQuery.data
+              sellTokenBalanceQuery.data &&
+              preparedResultQuery.data.type === "preparedResult"
             ) {
               props.onSwap({
                 result: preparedResultQuery.data.result,
@@ -570,7 +621,7 @@ function TokenSection(props: {
           justifyContent: "space-between",
           gap: spacing.sm,
           paddingBottom: spacing.sm,
-          paddingTop: spacing.xs,
+          paddingTop: spacing.sm,
         }}
       >
         {props.amount.isFetching ? (
@@ -756,9 +807,9 @@ function SelectedTokenButton(props: {
       </Container>
 
       {/* token symbol and chain name */}
-      <Container flex="column">
+      <Container flex="column" style={{ gap: "2px" }}>
         {props.selectedToken?.isFetching ? (
-          <Skeleton width="40px" height={fontSize.md} color="modalBg" />
+          <Skeleton width="40px" height={fontSize.sm} color="modalBg" />
         ) : (
           <Text size="sm" color="primaryText" weight={500}>
             {props.selectedToken?.data?.symbol}
