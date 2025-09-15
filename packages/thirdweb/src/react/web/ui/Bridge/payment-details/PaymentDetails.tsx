@@ -101,6 +101,7 @@ export function PaymentDetails({
               : preparedQuote.intent.destinationTokenAddress,
         });
       }
+      return true;
     },
     queryKey: ["payment_details", preparedQuote.type],
   });
@@ -276,7 +277,7 @@ export function PaymentDetails({
               receiver={preparedQuote.intent.receiver}
               sender={
                 preparedQuote.intent.sender ||
-                paymentMethod.payerWallet.getAccount()?.address
+                paymentMethod.payerWallet?.getAccount()?.address
               }
               toAmount={displayData.destinationAmount}
               toToken={displayData.destinationToken}

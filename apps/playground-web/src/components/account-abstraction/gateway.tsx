@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "../ui/table";
 
-const url = `http://${process.env.NEXT_PUBLIC_API_URL}`;
+const url = `https://${process.env.NEXT_PUBLIC_API_URL}`;
 
 const chain = baseSepolia;
 const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";

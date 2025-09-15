@@ -34,7 +34,7 @@ interface SupportCaseDetailsProps {
   team: Team;
 }
 
-export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
+function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const [replyMessage, setReplyMessage] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [localMessages, setLocalMessages] = useState(ticket.messages || []);
@@ -42,6 +42,15 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   // rating/feedback
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState("");
+  // non-blocking warning when status check fails
+  const [statusCheckFailed, setStatusCheckFailed] = useState(false);
+
+  // Helper function to handle status check errors consistently
+  const handleStatusCheckError = (_error: unknown) => {
+    // Set degraded state for warning banner
+    setStatusCheckFailed(true);
+    return;
+  };
 
   // Check if feedback has already been submitted for this ticket
   const feedbackStatusQuery = useQuery({
@@ -49,18 +58,25 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
     queryFn: async () => {
       const result = await checkFeedbackStatus(ticket.id);
       if ("error" in result) {
-        throw new Error(result.error);
+        handleStatusCheckError(result.error);
+        return false; // Non-blocking: allow feedback submission despite status check failure
       }
+
+      // Clear degraded state on success
+      if (statusCheckFailed) setStatusCheckFailed(false);
+
       return result.hasFeedback;
     },
     enabled: ticket.status === "closed",
     staleTime: 60_000,
     gcTime: 5 * 60_000,
+    retry: 1, // Reduce retries since we want non-blocking behavior
   });
 
   const feedbackSubmitted = feedbackStatusQuery.data ?? false;
   const isLoading = feedbackStatusQuery.isLoading;
-  const hasError = feedbackStatusQuery.isError;
+  // query never throws; use local degraded flag for the inline warning
+  const hasError = statusCheckFailed;
 
   const handleStarClick = (starIndex: number) => {
     setRating(starIndex + 1);
@@ -70,29 +86,36 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
   const submitFeedbackMutation = useMutation({
     mutationFn: async () => {
       if (rating === 0) {
-        throw new Error("Please select a rating");
+        const error = "Please select a rating";
+        throw new Error(error);
       }
       const result = await submitSupportFeedback({
         rating,
         feedback,
         ticketId: ticket.id,
       });
+
       if ("error" in result) {
+        // Add more specific error information
+
         throw new Error(result.error);
       }
+
       return result;
     },
     onSuccess: () => {
       toast.success("Thank you for your feedback!");
+
       setRating(0);
       setFeedback("");
+
       // mark as submitted immediately
       queryClient.setQueryData(["feedbackStatus", ticket.id], true);
     },
     onError: (err) => {
-      console.error("Failed to submit feedback:", err);
       const msg = err instanceof Error ? err.message : String(err ?? "");
       let message = "Failed to submit feedback. Please try again.";
+
       if (/network|fetch/i.test(msg)) {
         message = "Network error. Please check your connection and try again.";
       } else if (
@@ -102,6 +125,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
       } else if (/API Server error/i.test(msg)) {
         message = "Server error. Please try again later.";
       }
+
       toast.error(message);
     },
   });
@@ -157,8 +181,7 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
       }
 
       setReplyMessage("");
-    } catch (error) {
-      console.error("Failed to send reply:", error);
+    } catch {
       toast.error("Failed to send Message. Please try again.");
 
       // Remove the optimistic message on error
@@ -233,73 +256,77 @@ export function SupportCaseDetails({ ticket, team }: SupportCaseDetailsProps) {
           </div>
         )}
 
-        {ticket.status === "closed" && !isLoading && !feedbackSubmitted && (
-          <div className="border-t p-6">
-            <p className="text-muted-foreground text-sm">
-              This ticket is closed. Give us a quick rating to let us know how
-              we did!
-            </p>
-            {hasError && (
-              <p className="text-destructive text-xs mt-2">
-                Couldn't verify prior feedback right now — you can still submit
-                a rating.
+        {ticket.status === "closed" &&
+          !isLoading &&
+          (!feedbackSubmitted || hasError) && (
+            <div className="border-t p-6">
+              <p className="text-muted-foreground text-sm">
+                This ticket is closed. Give us a quick rating to let us know how
+                we did!
               </p>
-            )}
+              {hasError && (
+                <div className="mt-2">
+                  <p className="text-destructive text-xs">
+                    Couldn't verify prior feedback right now — you can still
+                    submit a rating.
+                  </p>
+                </div>
+              )}
 
-            <div className="flex gap-2 mb-6 mt-4">
-              {[1, 2, 3, 4, 5].map((starValue) => (
-                <button
-                  key={`star-${starValue}`}
+              <div className="flex gap-2 mb-6 mt-4">
+                {[1, 2, 3, 4, 5].map((starValue) => (
+                  <button
+                    key={`star-${starValue}`}
+                    type="button"
+                    onClick={() => handleStarClick(starValue - 1)}
+                    className="transition-colors"
+                    aria-label={`Rate ${starValue} out of 5 stars`}
+                  >
+                    <StarIcon
+                      size={32}
+                      className={cn(
+                        "transition-colors",
+                        starValue <= rating
+                          ? "text-pink-500 fill-current stroke-current"
+                          : "text-muted-foreground fill-current stroke-current",
+                        "hover:text-pink-500",
+                      )}
+                      strokeWidth={starValue <= rating ? 2 : 1}
+                    />
+                  </button>
+                ))}
+              </div>
+
+              <div className="relative">
+                <AutoResizeTextarea
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  placeholder="Optional: Tell us how we can improve."
+                  maxLength={1000}
+                  className="text-sm w-full bg-card text-foreground rounded-lg p-4 pr-28 min-h-[100px] resize-none border border-border focus:outline-none placeholder:text-muted-foreground"
+                />
+                <Button
                   type="button"
-                  onClick={() => handleStarClick(starValue - 1)}
-                  className="transition-colors"
-                  aria-label={`Rate ${starValue} out of 5 stars`}
+                  onClick={handleSendFeedback}
+                  disabled={submitFeedbackMutation.isPending || rating === 0}
+                  className="absolute bottom-3 right-3 rounded-full h-auto py-2 px-4"
+                  variant="secondary"
+                  size="sm"
                 >
-                  <StarIcon
-                    size={32}
-                    className={cn(
-                      "transition-colors",
-                      starValue <= rating
-                        ? "text-pink-500 fill-current stroke-current"
-                        : "text-muted-foreground fill-current stroke-current",
-                      "hover:text-pink-500",
-                    )}
-                    strokeWidth={starValue <= rating ? 2 : 1}
-                  />
-                </button>
-              ))}
+                  {submitFeedbackMutation.isPending ? (
+                    <>
+                      <Spinner className="size-4 mr-2" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Feedback"
+                  )}
+                </Button>
+              </div>
             </div>
+          )}
 
-            <div className="relative">
-              <AutoResizeTextarea
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Optional: Tell us how we can improve."
-                maxLength={1000}
-                className="text-sm w-full bg-card text-foreground rounded-lg p-4 pr-28 min-h-[100px] resize-none border border-border focus:outline-none placeholder:text-muted-foreground"
-              />
-              <Button
-                type="button"
-                onClick={handleSendFeedback}
-                disabled={submitFeedbackMutation.isPending || rating === 0}
-                className="absolute bottom-3 right-3 rounded-full h-auto py-2 px-4"
-                variant="secondary"
-                size="sm"
-              >
-                {submitFeedbackMutation.isPending ? (
-                  <>
-                    <Spinner className="size-4 mr-2" />
-                    Sending...
-                  </>
-                ) : (
-                  "Send Feedback"
-                )}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {ticket.status === "closed" && feedbackSubmitted && (
+        {ticket.status === "closed" && feedbackSubmitted && !hasError && (
           <div className="border-t p-6">
             <p className="text-muted-foreground text-sm">
               Thank you for your feedback! We appreciate your input and will use
@@ -455,3 +482,5 @@ function TicketMessage(props: { message: SupportMessage }) {
     </div>
   );
 }
+
+export { SupportCaseDetails };

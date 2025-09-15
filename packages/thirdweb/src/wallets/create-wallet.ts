@@ -483,6 +483,8 @@ export function createWallet<const ID extends WalletId>(
         id,
         subscribe: emitter.subscribe,
         switchChain: async (c) => {
+          // TODO: this should actually throw an error if the chain switch fails
+          // but our useSwitchActiveWalletChain hook currently doesn't handle this
           try {
             await handleSwitchChain(c);
             chain = c;

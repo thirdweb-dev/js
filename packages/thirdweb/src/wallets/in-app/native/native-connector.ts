@@ -183,7 +183,6 @@ export class InAppNativeConnector implements InAppConnector {
           "../core/authentication/siwe.js"
         );
         return siweAuthenticate({
-          chain: params.chain,
           client: this.client,
           ecosystem: params.ecosystem,
           wallet: params.wallet,

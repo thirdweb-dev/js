@@ -17,18 +17,21 @@ export async function resolveEns(
       ensName: await resolveName({
         address: ensNameOrAddress,
         client,
-      }),
+      }).catch(() => null),
     };
   }
 
   if (!isValidENSName(ensNameOrAddress)) {
-    throw new Error("Invalid ENS name");
+    return {
+      address: null,
+      ensName: null,
+    };
   }
 
   const address = await resolveAddress({
     client,
     name: ensNameOrAddress,
-  });
+  }).catch(() => null);
 
   if (!address) {
     return {

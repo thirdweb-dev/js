@@ -154,6 +154,11 @@ export function useSendTransactionCore(args: {
         await switchChain(tx.chain);
         // in smart wallet case, account may change after chain switch
         _account = wallet.getAccount();
+
+        // ensure that the account has switched to the correct chain
+        if (wallet.getChain()?.id !== tx.chain.id) {
+          throw new Error(`Could not switch to chain ${tx.chain.id}`);
+        }
       }
 
       const account = _account;

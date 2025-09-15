@@ -193,6 +193,11 @@ export type BuyWidgetProps = {
    * Custom label for the main action button.
    */
   buttonLabel?: string;
+
+  /**
+   * The receiver address for the purchased funds.
+   */
+  receiverAddress?: Address;
 };
 
 // Enhanced UIOptions to handle unsupported token state
@@ -455,7 +460,7 @@ export function BuyWidget(props: BuyWidgetProps) {
         paymentMethods={props.paymentMethods}
         presetOptions={props.presetOptions}
         purchaseData={props.purchaseData}
-        receiverAddress={undefined}
+        receiverAddress={props.receiverAddress}
         uiOptions={bridgeDataQuery.data.data}
         showThirdwebBranding={props.showThirdwebBranding}
       />

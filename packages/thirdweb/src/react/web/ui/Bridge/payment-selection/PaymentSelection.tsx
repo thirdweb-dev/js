@@ -196,15 +196,17 @@ export function PaymentSelection({
   const handleOnrampProviderSelected = (
     provider: "coinbase" | "stripe" | "transak",
   ) => {
-    if (!payerWallet) {
-      onError(new Error("No wallet available for fiat payment"));
+    const recipientAddress =
+      receiverAddress || payerWallet?.getAccount()?.address;
+    if (!recipientAddress) {
+      onError(new Error("No recipient address available for fiat payment"));
       return;
     }
 
     const fiatPaymentMethod: PaymentMethod = {
-      currency: "USD",
+      currency: currency || "USD",
       onramp: provider,
-      payerWallet, // Default to USD for now
+      payerWallet,
       type: "fiat",
     };
     handlePaymentMethodSelected(fiatPaymentMethod);
@@ -307,7 +309,9 @@ export function PaymentSelection({
             country={country}
             client={client}
             onProviderSelected={handleOnrampProviderSelected}
-            toAddress={receiverAddress || ""}
+            toAddress={
+              receiverAddress || payerWallet?.getAccount()?.address || ""
+            }
             toAmount={destinationAmount}
             toChainId={destinationToken.chainId}
             toTokenAddress={destinationToken.address}

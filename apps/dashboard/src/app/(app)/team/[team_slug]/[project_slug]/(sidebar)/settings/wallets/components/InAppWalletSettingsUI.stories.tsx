@@ -66,6 +66,7 @@ function Variants(props: { currentPlan: Team["billingPlan"] }) {
             tier3: ["FR", "DE", "ES", "IT"],
             tier4: ["JP", "KR", "MX", "RU"],
             tier5: ["BR", "AR", "CO", "CL", "PE", "VE", "SA"],
+            tier6: ["RU", "PG", "UZ", "TZ", "KM", "BT"],
           }}
           teamId="bar"
           teamPlan={props.currentPlan}

@@ -1,5 +1,8 @@
 import { upload } from "../../../storage/upload.js";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import {
   type SetTokenURIParams,
@@ -11,10 +14,10 @@ export { isSetTokenURISupported as isUpdateTokenURISupported } from "../../erc72
 /**
  * @extension ERC721
  */
-export type UpdateTokenURIParams = {
+export type UpdateTokenURIParams = WithOverrides<{
   tokenId: bigint;
   newMetadata: NFTInput;
-};
+}>;
 
 /**
  * This function is an abstracted layer of the [`setTokenURI` extension](https://portal.thirdweb.com/references/typescript/v5/erc721/setTokenURI),
@@ -48,6 +51,7 @@ export function updateTokenURI(
   return setTokenURI({
     asyncParams: async () => getUpdateTokenParams(options),
     contract,
+    overrides: options.overrides,
   });
 }
 

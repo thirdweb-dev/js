@@ -133,6 +133,7 @@ export function QuoteLoader({
         toChainId: destinationToken.chainId,
         toToken: destinationToken.address,
       });
+      return true;
     },
     queryKey: ["loading_quote", paymentMethod.type],
   });

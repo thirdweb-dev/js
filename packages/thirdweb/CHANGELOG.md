@@ -1,5 +1,41 @@
 # thirdweb
 
+## 5.105.48
+
+### Patch Changes
+
+- [#8052](https://github.com/thirdweb-dev/js/pull/8052) [`557f0e2`](https://github.com/thirdweb-dev/js/commit/557f0e29e86d2ef3e3b72988f714203b4ede1009) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Prevents incorrect failures in widget onramps.
+
+## 5.105.47
+
+### Patch Changes
+
+- [#8048](https://github.com/thirdweb-dev/js/pull/8048) [`97e5080`](https://github.com/thirdweb-dev/js/commit/97e5080fdfd5b8b1106141012bdee2db2d27ae4c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix fiat payments with no wallets connected
+
+## 5.105.46
+
+### Patch Changes
+
+- [#8046](https://github.com/thirdweb-dev/js/pull/8046) [`224c9d0`](https://github.com/thirdweb-dev/js/commit/224c9d034f274c3e6cf510d3508856fc36501c63) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve WalletConnect chain switching reliability
+
+## 5.105.45
+
+### Patch Changes
+
+- [#8038](https://github.com/thirdweb-dev/js/pull/8038) [`0b45405`](https://github.com/thirdweb-dev/js/commit/0b454050b14806c103ea446e3667d0c970739912) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept pre signed authorizations for 7702 account transactions
+
+- [#8039](https://github.com/thirdweb-dev/js/pull/8039) [`dc1f7ab`](https://github.com/thirdweb-dev/js/commit/dc1f7ab2ee820be512776a413f7de362ff6b98ef) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support fully disconnecting from metamask on disconnect
+
+- [#8042](https://github.com/thirdweb-dev/js/pull/8042) [`ea80610`](https://github.com/thirdweb-dev/js/commit/ea8061048adddb9fb7648f29ce1f3041f250ddfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signAuthorization implementation for 1193 provider
+
+- [#8041](https://github.com/thirdweb-dev/js/pull/8041) [`3ad9f7d`](https://github.com/thirdweb-dev/js/commit/3ad9f7deba850b0a50e355111af11fd419db2efd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing overrides to common extension functions
+
+## 5.105.44
+
+### Patch Changes
+
+- [#8036](https://github.com/thirdweb-dev/js/pull/8036) [`ef15ba7`](https://github.com/thirdweb-dev/js/commit/ef15ba7c434f8c9bde3b6d45d43d90e74f20616b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - pass through authorizationList for injected providers
+
 ## 5.105.43
 
 ### Patch Changes

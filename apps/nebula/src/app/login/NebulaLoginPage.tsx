@@ -81,6 +81,38 @@ export function NebulaLoggedOutStatePage(props: {
         </div>
       </header>
 
+      {/* Deprecation banner */}
+      <div className="bg-destructive p-6">
+        <div className="container text-md text-destructive-foreground">
+          <h4 className="font-bold text-lg">
+            Nebula is now{" "}
+            <Link
+              className="underline text-destructive-foreground hover:text-destructive-foreground/80"
+              href="https://thirdweb.com/ai"
+              target="_blank"
+            >
+              thirdweb AI.
+            </Link>{" "}
+            This site will be deprecated on September 30, 2025.
+          </h4>
+          <p>
+            To continue using thirdweb AI, please sign in to the{" "}
+            <Link
+              className="underline text-destructive-foreground hover:text-destructive-foreground/80"
+              href="https://thirdweb.com/login"
+              target="_blank"
+            >
+              thirdweb dashboard
+            </Link>{" "}
+            and create a new project.
+          </p>
+          <p>
+            If you have any funds left in your Nebula account, please withdraw
+            them before September 30, 2025.
+          </p>
+        </div>
+      </div>
+
       {showPage === "connect" && (
         <NebulaLoginPage redirectPath={`/?${redirectPathParams}`} />
       )}

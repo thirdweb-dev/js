@@ -30,7 +30,7 @@ export type PaymentMethod =
     }
   | {
       type: "fiat";
-      payerWallet: Wallet;
+      payerWallet?: Wallet;
       currency: string;
       onramp: "stripe" | "coinbase" | "transak";
     };

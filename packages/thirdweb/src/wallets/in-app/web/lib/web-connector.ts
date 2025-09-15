@@ -365,7 +365,6 @@ export class InAppWebConnector implements InAppConnector {
       }
       case "wallet": {
         return siweAuthenticate({
-          chain: args.chain,
           client: this.client,
           ecosystem: this.ecosystem,
           wallet: args.wallet,

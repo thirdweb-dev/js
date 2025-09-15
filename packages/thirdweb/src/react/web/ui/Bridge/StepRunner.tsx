@@ -30,7 +30,7 @@ interface StepRunnerProps {
   /**
    * Wallet instance for executing transactions
    */
-  wallet: Wallet;
+  wallet?: Wallet;
 
   /**
    * Thirdweb client for API calls
