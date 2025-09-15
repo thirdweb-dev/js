@@ -36,7 +36,7 @@
     "react": "19.1.0",
     "react-children-utilities": "^2.10.0",
     "react-dom": "19.1.0",
-    "react-hook-form": "7.55.0",
+    "react-hook-form": "7.62.0",
     "react-markdown": "10.1.0",
     "react-pick-color": "^2.0.0",
     "remark-gfm": "4.0.1",
