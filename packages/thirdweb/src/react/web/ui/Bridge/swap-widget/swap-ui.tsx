@@ -26,6 +26,7 @@ import {
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
+import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
@@ -50,6 +51,7 @@ type SwapUIProps = {
   theme: Theme | "light" | "dark";
   connectOptions: SwapWidgetConnectOptions | undefined;
   currency: SupportedFiatCurrency;
+  showThirdwebBranding: boolean;
   onSwap: (
     quote: Buy.quote.Result | Sell.quote.Result,
     selection: {
@@ -449,6 +451,13 @@ export function SwapUIBase(
           Swap
         </Button>
       )}
+
+      {props.showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb />
+        </div>
+      ) : null}
     </Container>
   );
 }

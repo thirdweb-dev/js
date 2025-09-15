@@ -23,6 +23,16 @@ export function LightMode() {
   return <SwapWidget client={storyClient} currency="JPY" theme="light" />;
 }
 
+export function NoThirdwebBranding() {
+  return (
+    <SwapWidget
+      client={storyClient}
+      currency="JPY"
+      showThirdwebBranding={false}
+    />
+  );
+}
+
 export function CustomTheme() {
   return (
     <SwapWidget

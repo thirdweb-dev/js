@@ -16,7 +16,6 @@ import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecut
 import { webWindowAdapter } from "../../../adapters/WindowAdapter.js";
 import { EmbedContainer } from "../../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
-import type { LocaleId } from "../../types.js";
 import { ErrorBanner } from "../ErrorBanner.js";
 import { PaymentDetails } from "../payment-details/PaymentDetails.js";
 import { SuccessScreen } from "../payment-success/SuccessScreen.js";
@@ -27,18 +26,120 @@ import { SwapUI } from "./swap-ui.js";
 import type { SwapWidgetConnectOptions } from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 
-type SwapWidgetProps = {
+export type SwapWidgetProps = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
   client: ThirdwebClient;
+  /**
+   * Set the theme for the `SwapWidget` component. By default it is set to `"dark"`
+   *
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * @example
+   * ```ts
+   * import { lightTheme } from "thirdweb/react";
+   *
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   *
+   * function Example() {
+   *  return <SwapWidget client={client} theme={customTheme} />
+   * }
+   * ```
+   */
   theme?: "light" | "dark" | Theme;
   className?: string;
-  locale?: LocaleId;
+  /**
+   * The currency to use for the payment.
+   * @default "USD"
+   */
   currency?: SupportedFiatCurrency;
   style?: React.CSSProperties;
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
   showThirdwebBranding?: boolean;
+  /**
+   * Callback to be called when the swap is successful.
+   */
   onSuccess?: () => void;
+  /**
+   * Callback to be called when user encounters an error when swapping.
+   */
   onError?: (error: Error) => void;
+  /**
+   * Callback to be called when the user cancels the purchase.
+   */
   onCancel?: () => void;
   connectOptions?: SwapWidgetConnectOptions;
+  /**
+   * The prefill Buy and/or Sell tokens for the swap widget. If `tokenAddress` is not provided, the native token will be used
+   *
+   * @example
+   *
+   * ### Set an ERC20 token as the buy token
+   * ```ts
+   * <SwapWidget client={client} prefill={{
+   *  buyToken: {
+   *    chainId: 8453,
+   *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+   *  },
+   * }} />
+   * ```
+   *
+   * ### Set a native token as the sell token
+   *
+   * ```ts
+   * <SwapWidget client={client} prefill={{
+   *  sellToken: {
+   *    chainId: 8453,
+   *  },
+   * }} />
+   * ```
+   *
+   * ### Set 0.1 Base USDC as the buy token
+   * ```ts
+   * <SwapWidget client={client} prefill={{
+   *  buyToken: {
+   *    chainId: 8453,
+   *    amount: "0.1",
+   *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+   *  },
+   * }} />
+   * ```
+   *
+   * ### Set Base USDC as the buy token and Base native token as the sell token
+   * ```ts
+   * <SwapWidget client={client} prefill={{
+   *  buyToken: {
+   *    chainId: 8453,
+   *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+   *  },
+   *  sellToken: {
+   *    chainId: 8453,
+   *  },
+   * }} />
+   * ```
+   */
   prefill?: {
     buyToken?: {
       tokenAddress?: string;
@@ -148,6 +249,11 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   if (screen.id === "1:swap-ui" || !activeWalletInfo) {
     return (
       <SwapUI
+        showThirdwebBranding={
+          props.showThirdwebBranding === undefined
+            ? true
+            : props.showThirdwebBranding
+        }
         client={props.client}
         theme={props.theme || "dark"}
         connectOptions={props.connectOptions}

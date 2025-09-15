@@ -142,6 +142,10 @@ export {
   type CheckoutWidgetProps,
 } from "../react/web/ui/Bridge/CheckoutWidget.js";
 export {
+  SwapWidget,
+  type SwapWidgetProps,
+} from "../react/web/ui/Bridge/swap-widget/SwapWidget.js";
+export {
   TransactionWidget,
   type TransactionWidgetProps,
 } from "../react/web/ui/Bridge/TransactionWidget.js";
