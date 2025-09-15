@@ -195,7 +195,8 @@ function SwapUIBase(
     enabled:
       !!buyTokenWithPrices &&
       !!sellTokenWithPrices &&
-      !!props.amountSelection.amount,
+      !!props.amountSelection.amount &&
+      !!props.activeWalletInfo,
     queryFn: async (): Promise<{
       result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
       request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
@@ -656,7 +657,7 @@ function TokenSection(props: {
                   gap: spacing.xxs,
                 }}
               >
-                <WalletDotIcon size={fontSize.sm} />
+                <WalletDotIcon size={fontSize.xs} />
                 <DecimalRenderer
                   value={formatTokenAmount(
                     props.balance.data,
@@ -706,7 +707,8 @@ function SelectedTokenButton(props: {
       gap="xs"
       style={{
         borderRadius: radius.full,
-        padding: spacing.xs,
+        paddingBlock: spacing.xxs,
+        paddingInline: spacing.xs,
       }}
     >
       {/* icons */}
@@ -754,11 +756,11 @@ function SelectedTokenButton(props: {
       </Container>
 
       {/* token symbol and chain name */}
-      <Container flex="column" style={{ gap: "2px" }}>
+      <Container flex="column">
         {props.selectedToken?.isFetching ? (
           <Skeleton width="40px" height={fontSize.md} color="modalBg" />
         ) : (
-          <Text size="md" color="primaryText" weight={500}>
+          <Text size="sm" color="primaryText" weight={500}>
             {props.selectedToken?.data?.symbol}
           </Text>
         )}
@@ -782,7 +784,7 @@ function SelectedTokenButton(props: {
         )}
       </Container>
       <Container color="secondaryText">
-        <ChevronRightIcon width={iconSize.sm} height={iconSize.sm} />
+        <ChevronRightIcon width={iconSize.xs} height={iconSize.xs} />
       </Container>
     </Button>
   );

@@ -364,7 +364,7 @@ export function PaymentReceipt({
     <Container
       flex="column"
       fullHeight
-      p="lg"
+      p="md"
       style={{ maxHeight: "500px", minHeight: "250px", overflowY: "auto" }}
     >
       <ModalHeader onBack={onBack} title="Payment Receipt" />
@@ -374,10 +374,6 @@ export function PaymentReceipt({
       <Container flex="column" gap="lg">
         {/* Status Results */}
         <Container flex="column" gap="md">
-          <Text color="primaryText" size="md">
-            Transactions
-          </Text>
-
           {completedStatuses.map((status, index) => (
             <CompletedStepDetailCard
               key={`${status.type}-${index}`}
