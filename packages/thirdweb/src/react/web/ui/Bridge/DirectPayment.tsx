@@ -190,7 +190,7 @@ export function DirectPayment({
             <PoweredByThirdweb />
           </div>
         ) : null}
-        <Spacer y="lg" />
+        <Spacer y="md" />
       </Container>
     </WithHeader>
   );

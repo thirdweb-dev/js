@@ -268,7 +268,7 @@ export function PaymentSelection({
   }
 
   return (
-    <Container flex="column" p="lg">
+    <Container flex="column" p="md">
       <ModalHeader onBack={getBackHandler()} title={getStepTitle()} />
 
       <Spacer y="xl" />

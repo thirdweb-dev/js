@@ -362,7 +362,7 @@ export function FundWallet({
           <PoweredByThirdweb />
         </div>
       ) : null}
-      <Spacer y="lg" />
+      <Spacer y="md" />
     </WithHeader>
   );
 }

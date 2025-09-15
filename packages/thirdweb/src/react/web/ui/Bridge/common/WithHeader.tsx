@@ -39,8 +39,8 @@ export function WithHeader({
         />
       )}
 
-      <Container flex="column" px="lg">
-        <Spacer y="lg" />
+      <Container flex="column" px="md">
+        <Spacer y="md" />
 
         {(showTitle || uiOptions.metadata?.description) && (
           <>
@@ -54,14 +54,14 @@ export function WithHeader({
             {/* Description */}
             {uiOptions.metadata?.description && (
               <>
-                <Spacer y="xs" />
-                <Text color="secondaryText" size="sm">
+                <Spacer y="xxs" />
+                <Text color="secondaryText" size="sm" multiline>
                   {uiOptions.metadata?.description}
                 </Text>
               </>
             )}
 
-            <Spacer y="lg" />
+            <Spacer y="md" />
           </>
         )}
 

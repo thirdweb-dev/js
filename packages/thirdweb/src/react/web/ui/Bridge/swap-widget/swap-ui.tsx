@@ -685,7 +685,6 @@ function SelectedTokenButton(props: {
             client={props.client}
             width={iconSize.sm}
             height={iconSize.sm}
-            skeletonColor="modalBg"
             style={{
               borderRadius: radius.full,
             }}

@@ -431,7 +431,7 @@ export function TransactionPayment({
           <PoweredByThirdweb />
         </div>
       ) : null}
-      <Spacer y="lg" />
+      <Spacer y="md" />
     </WithHeader>
   );
 }

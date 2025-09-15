@@ -91,7 +91,7 @@ export function SuccessScreen({
   }
 
   return (
-    <Container flex="column" fullHeight p="lg">
+    <Container flex="column" fullHeight p="md">
       <ModalHeader title="Payment Complete" />
 
       <Spacer y="xl" />
@@ -121,7 +121,7 @@ export function SuccessScreen({
           />
         </Container>
 
-        <Text center color="primaryText" size="xl">
+        <Text center color="primaryText" size="xl" weight={600} trackingTight>
           Payment Successful!
         </Text>
 
