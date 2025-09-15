@@ -372,6 +372,11 @@ export function useStepExecutor(
 
         const status = statusResult.status;
         if (status === "COMPLETED") {
+          /*
+           * The occasional race condition can happen where the onramp provider gives us completed status before the token balance has updated in our RPC.
+           * We add this pause so the simulation doesn't fail on the next step.
+           */
+          await new Promise((resolve) => setTimeout(resolve, 2000));
           setOnrampStatus("completed");
           // Add type field for discriminated union
           const typedStatusResult = {
