@@ -228,7 +228,10 @@ function getBridgeParams(args: {
       }
 
       return {
-        amount: toUnits(amount, destinationToken.decimals),
+        amount:
+          paymentMethod.action === "buy"
+            ? toUnits(amount, destinationToken.decimals)
+            : toUnits(amount, paymentMethod.originToken.decimals),
         client,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
@@ -240,7 +243,7 @@ function getBridgeParams(args: {
         receiver,
         sender:
           sender || paymentMethod.payerWallet.getAccount()?.address || receiver,
-        type: "buy",
+        type: paymentMethod.action,
       };
   }
 }

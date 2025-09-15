@@ -64,6 +64,7 @@ type SwapUIProps = {
       buyToken: TokenWithPrices;
       sellTokenBalance: bigint;
       sellToken: TokenWithPrices;
+      mode: "buy" | "sell";
     },
   ) => void;
   prefill:
@@ -364,10 +365,9 @@ function SwapUIBase(
     sellTokenBalanceQuery.data?.value &&
     sellTokenWithPrices?.decimals &&
     props.amountSelection.amount &&
+    !!sellTokenAmount &&
     sellTokenBalanceQuery.data.value <
-      Number(
-        toUnits(props.amountSelection.amount, sellTokenWithPrices.decimals),
-      )
+      Number(toUnits(sellTokenAmount, sellTokenWithPrices.decimals))
   );
 
   return (
@@ -475,6 +475,7 @@ function SwapUIBase(
                 buyToken: buyTokenWithPrices,
                 sellToken: sellTokenWithPrices,
                 sellTokenBalance: sellTokenBalanceQuery.data.value,
+                mode: props.amountSelection.type,
               });
             }
           }}

@@ -124,7 +124,10 @@ export function usePaymentMethods(options: {
             ),
           )
         : sufficientBalanceQuotes;
-      return finalQuotes;
+      return finalQuotes.map((x) => ({
+        ...x,
+        action: "buy",
+      }));
     },
     queryKey: [
       "payment-methods",

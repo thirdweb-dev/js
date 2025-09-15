@@ -184,6 +184,43 @@ export function PaymentDetails({
               : undefined,
         };
       }
+
+      case "sell": {
+        const method =
+          paymentMethod.type === "wallet" ? paymentMethod : undefined;
+        if (!method) {
+          // can never happen
+          onError(new Error("Invalid payment method"));
+          return {
+            destinationAmount: "0",
+            destinationToken: undefined,
+            estimatedTime: 0,
+            originAmount: "0",
+            originToken: undefined,
+          };
+        }
+
+        return {
+          destinationAmount: formatTokenAmount(
+            preparedQuote.destinationAmount,
+            preparedQuote.steps[preparedQuote.steps.length - 1]
+              ?.destinationToken?.decimals ?? 18,
+          ),
+          destinationToken:
+            preparedQuote.steps[preparedQuote.steps.length - 1]
+              ?.destinationToken,
+          estimatedTime: preparedQuote.estimatedExecutionTimeMs,
+          originAmount: formatTokenAmount(
+            preparedQuote.originAmount,
+            method.originToken.decimals,
+          ),
+          originToken:
+            paymentMethod.type === "wallet"
+              ? paymentMethod.originToken
+              : undefined,
+        };
+      }
+
       case "onramp": {
         const method =
           paymentMethod.type === "fiat" ? paymentMethod : undefined;
@@ -214,7 +251,7 @@ export function PaymentDetails({
       }
       default: {
         throw new Error(
-          `Unsupported bridge prepare type: ${preparedQuote.type}`,
+          `Unsupported bridge prepare type: ${(preparedQuote as unknown as { type: string }).type}`,
         );
       }
     }

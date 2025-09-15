@@ -195,6 +195,7 @@ type SwapWidgetScreen =
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
       sellTokenBalance: bigint;
+      mode: "buy" | "sell";
     }
   | {
       id: "3:preview";
@@ -204,6 +205,7 @@ type SwapWidgetScreen =
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
       sellTokenBalance: bigint;
+      mode: "buy" | "sell";
     }
   | {
       id: "4:execute";
@@ -213,6 +215,7 @@ type SwapWidgetScreen =
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
       sellTokenBalance: bigint;
+      mode: "buy" | "sell";
     }
   | {
       id: "5:success";
@@ -272,12 +275,16 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   }
 
   if (screen.id === "2:loading-quote") {
+    console.log("screen", screen);
     return (
       <QuoteLoader
-        amount={toTokens(
-          screen.quote.destinationAmount,
-          screen.buyToken.decimals,
-        )}
+        amount={
+          // if buy mode, set destination amount
+          // if sell mode, set origin amount
+          screen.mode === "buy"
+            ? toTokens(screen.quote.destinationAmount, screen.buyToken.decimals)
+            : toTokens(screen.quote.originAmount, screen.sellToken.decimals)
+        }
         onError={handleError}
         onQuoteReceived={(preparedQuote, request) => {
           setScreen({
@@ -302,6 +309,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           payerWallet: activeWalletInfo.activeWallet,
           balance: screen.sellTokenBalance,
           originToken: screen.sellToken,
+          action: screen.mode,
         }}
       />
     );
@@ -327,6 +335,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           payerWallet: activeWalletInfo.activeWallet,
           balance: screen.sellTokenBalance,
           originToken: screen.sellToken,
+          action: screen.mode,
         }}
         preparedQuote={screen.preparedQuote}
         uiOptions={{
@@ -352,6 +361,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         }}
         onCancel={props.onCancel}
         onComplete={(completedStatuses) => {
+          props.onSuccess?.();
           setScreen({
             ...screen,
             id: "5:success",
@@ -386,17 +396,19 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   }
 
   if (screen.id === "error") {
-    <ErrorBanner
-      client={props.client}
-      error={screen.error}
-      onCancel={() => {
-        setScreen({ id: "1:swap-ui" });
-        props.onCancel?.();
-      }}
-      onRetry={() => {
-        setScreen({ id: "1:swap-ui" });
-      }}
-    />;
+    return (
+      <ErrorBanner
+        client={props.client}
+        error={screen.error}
+        onCancel={() => {
+          setScreen({ id: "1:swap-ui" });
+          props.onCancel?.();
+        }}
+        onRetry={() => {
+          setScreen({ id: "1:swap-ui" });
+        }}
+      />
+    );
   }
 
   return null;
