@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getAddress } from "thirdweb/utils";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import { getAddress } from "../../../../../utils/address.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import type {
