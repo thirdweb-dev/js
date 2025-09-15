@@ -184,6 +184,7 @@ export function SwapUI(props: SwapUIProps) {
         onBack={() => setScreen("base")}
         client={props.client}
         selectedToken={sellToken}
+        theme={props.theme}
         setSelectedToken={(token) => {
           setSellToken(token);
           setScreen("base");

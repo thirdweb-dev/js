@@ -12,6 +12,7 @@ import {
   iconSize,
   radius,
   spacing,
+  type Theme,
 } from "../../../../core/design-system/index.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
@@ -46,6 +47,7 @@ function getDefaultSelectedChain(
 export function SelectSellToken(
   props: SelectSellTokenProps & {
     activeWalletInfo: ActiveWalletInfo | undefined;
+    theme: Theme | "light" | "dark";
   },
 ) {
   if (props.activeWalletInfo) {
@@ -60,6 +62,7 @@ export function SelectSellToken(
     <SelectSellTokenDisconnectedUI
       onBack={props.onBack}
       client={props.client}
+      theme={props.theme}
     />
   );
 }
@@ -67,6 +70,7 @@ export function SelectSellToken(
 export function SelectSellTokenDisconnectedUI(props: {
   onBack: () => void;
   client: ThirdwebClient;
+  theme: Theme | "light" | "dark";
 }) {
   return (
     <Container>
@@ -111,6 +115,7 @@ export function SelectSellTokenDisconnectedUI(props: {
         <ConnectButton
           client={props.client}
           connectButton={{ style: { width: "100%" }, label: "Connect Wallet" }}
+          theme={props.theme}
         />
       </Container>
     </Container>

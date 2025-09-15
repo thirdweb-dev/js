@@ -72,7 +72,11 @@ export function ChainLoading() {
 export function Disconnected() {
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
-      <SelectSellTokenDisconnectedUI client={storyClient} onBack={() => {}} />
+      <SelectSellTokenDisconnectedUI
+        client={storyClient}
+        onBack={() => {}}
+        theme="dark"
+      />
     </SwapWidgetContainer>
   );
 }
