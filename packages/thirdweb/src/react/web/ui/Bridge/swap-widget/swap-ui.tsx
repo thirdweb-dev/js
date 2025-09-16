@@ -259,8 +259,8 @@ function SwapUIBase(
   });
 
   const notEnoughBalance = !!(
-    sellTokenBalanceQuery.data?.value &&
-    sellTokenWithPrices?.decimals &&
+    sellTokenBalanceQuery.data &&
+    sellTokenWithPrices &&
     props.amountSelection.amount &&
     !!sellTokenAmount &&
     sellTokenBalanceQuery.data.value <
@@ -339,7 +339,21 @@ function SwapUIBase(
         onSelectToken={() => props.onSelectToken("buy")}
       />
 
-      <Spacer y="lg" />
+      {/* error message */}
+      {preparedResultQuery.error ? (
+        <Text
+          size="sm"
+          color="danger"
+          center
+          style={{
+            paddingBlock: spacing.md,
+          }}
+        >
+          Failed to get a quote
+        </Text>
+      ) : (
+        <Spacer y="lg" />
+      )}
 
       {/* Button */}
       {!props.activeWalletInfo ? (
@@ -428,6 +442,7 @@ function useSwapQuote(params: {
       sellTokenWithPrices,
       activeWalletInfo?.activeAccount.address,
     ],
+    retry: false,
     enabled:
       !!buyTokenWithPrices && !!sellTokenWithPrices && !!amountSelection.amount,
     queryFn: async (): Promise<
@@ -665,7 +680,13 @@ function TokenSection(props: {
         }}
       >
         {props.amount.isFetching ? (
-          <Skeleton height={fontSize.xxl} width="140px" />
+          <Skeleton
+            height={fontSize.xxl}
+            width="140px"
+            style={{
+              borderRadius: radius.lg,
+            }}
+          />
         ) : (
           <DecimalInput value={props.amount.data} setValue={props.setAmount} />
         )}
