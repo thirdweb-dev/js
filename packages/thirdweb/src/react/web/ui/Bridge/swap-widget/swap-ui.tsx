@@ -307,6 +307,10 @@ function SwapUIBase(
           const temp = props.sellToken;
           props.setSellToken(props.buyToken);
           props.setBuyToken(temp);
+          props.setAmountSelection({
+            type: props.amountSelection.type === "buy" ? "sell" : "buy",
+            amount: props.amountSelection.amount,
+          });
         }}
       />
 
@@ -360,7 +364,7 @@ function SwapUIBase(
         <ConnectButton
           client={props.client}
           connectButton={{
-            label: "Connect Wallet",
+            label: "Swap",
             style: {
               width: "100%",
               borderRadius: radius.lg,
