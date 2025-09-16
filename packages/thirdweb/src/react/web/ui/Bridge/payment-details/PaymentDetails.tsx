@@ -269,7 +269,7 @@ export function PaymentDetails({
     <Container flex="column" fullHeight p="md">
       <ModalHeader onBack={onBack} title={title || "Payment Details"} />
 
-      <Spacer y="xl" />
+      <Spacer y="lg" />
 
       <Container flex="column">
         {/* Quote Summary */}

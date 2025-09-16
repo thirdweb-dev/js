@@ -60,7 +60,7 @@ export function TokenAndChain({
               height:
                 size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
               position: "absolute",
-              right: "-6px",
+              right: "-2px",
               width: size === "lg" || size === "xl" ? iconSize.sm : iconSize.xs,
             }}
           >
@@ -73,7 +73,7 @@ export function TokenAndChain({
         )}
       </Container>
 
-      <Container flex="column" gap="3xs" style={{ minWidth: 0 }}>
+      <Container flex="column" gap="4xs" style={{ minWidth: 0 }}>
         <Text
           color="primaryText"
           size={size === "xl" ? "lg" : "sm"}
@@ -83,6 +83,7 @@ export function TokenAndChain({
             whiteSpace: "nowrap",
           }}
           weight={600}
+          trackingTight
         >
           {token.name}
         </Text>

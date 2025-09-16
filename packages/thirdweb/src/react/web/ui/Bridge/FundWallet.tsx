@@ -150,7 +150,7 @@ export function FundWallet({
           style={{
             backgroundColor: theme.colors.tertiaryBg,
             border: `1px solid ${theme.colors.borderColor}`,
-            borderRadius: radius.md,
+            borderRadius: radius.lg,
             flexWrap: "nowrap",
           }}
         >
@@ -251,11 +251,11 @@ export function FundWallet({
         {/* Quick Amount Buttons */}
         {presetOptions && (
           <>
-            <Spacer y="md" />
+            <Spacer y="sm" />
             <Container
               center="x"
               flex="row"
-              gap="xs"
+              gap="sm"
               style={{
                 justifyContent: "space-evenly",
               }}
@@ -268,6 +268,7 @@ export function FundWallet({
                     backgroundColor: theme.colors.tertiaryBg,
                     flex: 1,
                     fontSize: fontSize.sm,
+                    borderRadius: radius.lg,
                     padding: `${spacing.sm} ${spacing.md}`,
                   }}
                   variant="outline"
@@ -279,7 +280,7 @@ export function FundWallet({
           </>
         )}
 
-        <Spacer y="md" />
+        <Spacer y="sm" />
 
         <Container
           center="y"
@@ -291,7 +292,7 @@ export function FundWallet({
           style={{
             backgroundColor: theme.colors.tertiaryBg,
             border: `1px solid ${theme.colors.borderColor}`,
-            borderRadius: radius.md,
+            borderRadius: radius.lg,
           }}
         >
           {receiver ? (
@@ -336,7 +337,7 @@ export function FundWallet({
           }}
           style={{
             fontSize: fontSize.md,
-            padding: `${spacing.sm} ${spacing.md}`,
+            borderRadius: radius.lg,
           }}
           variant="primary"
         >

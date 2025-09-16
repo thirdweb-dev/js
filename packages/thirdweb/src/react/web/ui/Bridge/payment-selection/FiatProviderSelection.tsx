@@ -189,7 +189,7 @@ export function FiatProviderSelection({
         >
           <Spinner color="secondaryText" size="xl" />
           <Spacer y="lg" />
-          <Text center color="primaryText" size="lg" weight={500}>
+          <Text center color="primaryText" size="lg" weight={600} trackingTight>
             Searching Providers
           </Text>
           <Spacer y="xs" />
