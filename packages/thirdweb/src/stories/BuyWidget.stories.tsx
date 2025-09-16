@@ -32,3 +32,25 @@ export function UnsupportedToken() {
     />
   );
 }
+
+export function OnlyCardSupported() {
+  return (
+    <BuyWidget
+      client={storyClient}
+      chain={base}
+      amount="0.1"
+      paymentMethods={["card"]}
+    />
+  );
+}
+
+export function OnlyCryptoSupported() {
+  return (
+    <BuyWidget
+      client={storyClient}
+      chain={base}
+      amount="0.1"
+      paymentMethods={["crypto"]}
+    />
+  );
+}

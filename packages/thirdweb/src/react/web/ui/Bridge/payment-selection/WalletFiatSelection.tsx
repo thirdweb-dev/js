@@ -38,10 +38,15 @@ export function WalletFiatSelection({
     <>
       {paymentMethods.includes("crypto") && (
         <>
-          <Text color="primaryText" size="md">
-            Pay with Crypto
-          </Text>
-          <Spacer y="md" />
+          {paymentMethods.length > 1 && (
+            <>
+              <Text color="primaryText" size="sm" weight={500}>
+                Pay with Crypto
+              </Text>
+              <Spacer y="sm" />
+            </>
+          )}
+
           {/* Connected Wallets */}
           {connectedWallets.length > 0 && (
             <>
@@ -134,13 +139,13 @@ export function WalletFiatSelection({
 
       {paymentMethods.includes("card") && (
         <>
-          <Spacer y="md" />
+          <Spacer y="lg" />
 
-          <Text color="primaryText" size="md">
+          <Text color="primaryText" size="sm" weight={500}>
             Pay with Card
           </Text>
 
-          <Spacer y="md" />
+          <Spacer y="sm" />
 
           <Button
             fullWidth

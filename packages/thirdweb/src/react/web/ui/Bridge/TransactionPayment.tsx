@@ -194,7 +194,7 @@ export function TransactionPayment({
         }}
       >
         {/* USD Value */}
-        <Text color="primaryText" size="xl" weight={700}>
+        <Text color="primaryText" size="xl" weight={600}>
           {transactionDataQuery.data?.usdValueDisplay ||
             transactionDataQuery.data?.txCostDisplay}
         </Text>

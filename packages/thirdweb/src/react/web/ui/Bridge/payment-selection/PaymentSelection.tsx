@@ -125,9 +125,16 @@ export function PaymentSelection({
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
 
-  const [currentStep, setCurrentStep] = useState<Step>({
-    type: "walletSelection",
-  });
+  const initialStep =
+    paymentMethods.length === 1 && paymentMethods[0] === "card"
+      ? {
+          type: "fiatProviderSelection" as const,
+        }
+      : {
+          type: "walletSelection" as const,
+        };
+
+  const [currentStep, setCurrentStep] = useState<Step>(initialStep);
 
   useQuery({
     queryFn: () => {
@@ -226,6 +233,9 @@ export function PaymentSelection({
   };
 
   const getBackHandler = () => {
+    if (paymentMethods.length === 1 && paymentMethods[0] === "card") {
+      return onBack;
+    }
     switch (currentStep.type) {
       case "walletSelection":
         return onBack;

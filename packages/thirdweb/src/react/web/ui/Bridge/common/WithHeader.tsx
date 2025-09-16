@@ -46,7 +46,7 @@ export function WithHeader({
           <>
             {/* title */}
             {showTitle && (
-              <Text color="primaryText" size="lg" weight={700}>
+              <Text color="primaryText" size="lg" weight={600}>
                 {uiOptions.metadata?.title || defaultTitle}
               </Text>
             )}
