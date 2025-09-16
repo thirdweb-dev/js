@@ -1,5 +1,9 @@
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { iconSize, spacing } from "../../../../core/design-system/index.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { Container } from "../../components/basic.js";
 import { Input } from "../../components/formElements.js";
 
@@ -22,6 +26,7 @@ export function SearchInput(props: {
             position: "absolute",
             left: spacing.sm,
             top: "50%",
+            borderRadius: radius.lg,
             transform: "translateY(-50%)",
           }}
         />

@@ -46,8 +46,8 @@ import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
-import { SelectBuyToken } from "./select-buy-token.js";
-import { SelectSellToken } from "./select-sell-token.js";
+import { DecimalRenderer } from "./common.js";
+import { SelectToken } from "./select-token-ui.js";
 import type {
   ActiveWalletInfo,
   SwapWidgetConnectOptions,
@@ -103,13 +103,22 @@ export function SwapUI(props: SwapUIProps) {
 
   if (screen === "select-buy-token") {
     return (
-      <SelectBuyToken
+      <SelectToken
+        activeWalletInfo={props.activeWalletInfo}
         onBack={() => setScreen("base")}
         client={props.client}
         selectedToken={props.buyToken}
         setSelectedToken={(token) => {
           props.setBuyToken(token);
           setScreen("base");
+          // if buy token is same as sell token, unset sell token
+          if (
+            props.sellToken &&
+            token.tokenAddress === props.sellToken.tokenAddress &&
+            token.chainId === props.sellToken.chainId
+          ) {
+            props.setSellToken(undefined);
+          }
         }}
       />
     );
@@ -117,14 +126,21 @@ export function SwapUI(props: SwapUIProps) {
 
   if (screen === "select-sell-ui") {
     return (
-      <SelectSellToken
+      <SelectToken
         onBack={() => setScreen("base")}
         client={props.client}
         selectedToken={props.sellToken}
-        theme={props.theme}
         setSelectedToken={(token) => {
           props.setSellToken(token);
           setScreen("base");
+          // if sell token is same as buy token, unset buy token
+          if (
+            props.buyToken &&
+            token.tokenAddress === props.buyToken.tokenAddress &&
+            token.chainId === props.buyToken.chainId
+          ) {
+            props.setBuyToken(undefined);
+          }
         }}
         activeWalletInfo={props.activeWalletInfo}
       />
@@ -609,11 +625,12 @@ function TokenSection(props: {
       bg="tertiaryBg"
       style={{ borderRadius: radius.lg, borderWidth: 1, borderStyle: "solid" }}
     >
-      {/* label */}
+      {/* row1 : label */}
       <Text size="md" color="primaryText" weight={500}>
         {props.label}
       </Text>
 
+      {/* row2 : amount and select token */}
       <div
         style={{
           display: "flex",
@@ -655,6 +672,7 @@ function TokenSection(props: {
         )}
       </div>
 
+      {/* row3 : fiat value/error and balance */}
       <div
         style={{
           display: "flex",
@@ -684,18 +702,23 @@ function TokenSection(props: {
               <Skeleton height={fontSize.md} width="50px" />
             ) : (
               <div>
-                <DecimalRenderer value={totalFiatValue?.toFixed(5) || "0.00"} />
+                <DecimalRenderer
+                  integerSize="md"
+                  fractionSize="sm"
+                  value={totalFiatValue?.toFixed(5) || "0.00"}
+                  color="secondaryText"
+                  weight={500}
+                />
               </div>
             )}
           </div>
         )}
 
         {/* Balance */}
-        {props.isConnected && (
+        {props.isConnected && props.selectedToken && (
           <div>
-            {props.balance.isFetching ||
-            props.balance.data === undefined ||
-            !props.selectedToken?.data ? (
+            {props.balance.data === undefined ||
+            props.selectedToken.data === undefined ? (
               <Skeleton height={fontSize.md} width="50px" />
             ) : (
               <Text
@@ -710,6 +733,10 @@ function TokenSection(props: {
               >
                 <WalletDotIcon size={fontSize.xs} />
                 <DecimalRenderer
+                  integerSize="md"
+                  fractionSize="sm"
+                  color="secondaryText"
+                  weight={500}
                   value={formatTokenAmount(
                     props.balance.data,
                     props.selectedToken.data.decimals,
@@ -722,20 +749,6 @@ function TokenSection(props: {
         )}
       </div>
     </Container>
-  );
-}
-
-function DecimalRenderer(props: { value: string }) {
-  const [integerPart, fractionPart] = props.value.split(".");
-  return (
-    <div style={{ display: "flex", alignItems: "baseline" }}>
-      <Text size="md" color="secondaryText" weight={500}>
-        {integerPart}.
-      </Text>
-      <Text size="sm" color="secondaryText" weight={500}>
-        {fractionPart || "00000"}
-      </Text>
-    </div>
   );
 }
 

@@ -26,30 +26,15 @@ export const Img: React.FC<{
     "pending",
   );
 
-  const status =
-    props.src === undefined
-      ? "pending"
-      : props.src === ""
-        ? "fallback"
-        : _status;
-
   const propSrc = props.src;
 
   const widthPx = `${props.width}px`;
   const heightPx = `${props.height || props.width}px`;
 
-  if (propSrc === undefined) {
-    return (
-      <Skeleton
-        height={heightPx}
-        width={widthPx}
-        color={props.skeletonColor}
-        style={props.style}
-      />
-    );
-  }
-
   const getSrc = () => {
+    if (propSrc === undefined) {
+      return undefined;
+    }
     try {
       return resolveScheme({
         client: props.client,
@@ -61,6 +46,10 @@ export const Img: React.FC<{
   };
 
   const src = getSrc();
+
+  const status =
+    src === undefined ? "pending" : src === "" ? "fallback" : _status;
+
   const isLoaded = status === "loaded";
 
   return (
@@ -120,7 +109,7 @@ export const Img: React.FC<{
         onLoad={() => {
           setStatus("loaded");
         }}
-        src={src}
+        src={src || undefined}
         style={{
           height: !isLoaded
             ? 0

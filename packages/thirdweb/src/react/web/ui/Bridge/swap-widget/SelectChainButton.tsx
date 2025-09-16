@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   fontSize,
   iconSize,
+  radius,
   spacing,
 } from "../../../../core/design-system/index.js";
 import { Button } from "../../components/buttons.js";
@@ -17,13 +18,15 @@ export function SelectChainButton(props: {
 }) {
   return (
     <Button
-      variant="secondary"
+      variant="outline"
+      bg="tertiaryBg"
       fullWidth
       style={{
         justifyContent: "flex-start",
         fontWeight: 500,
         fontSize: fontSize.md,
         padding: `${spacing.sm} ${spacing.sm}`,
+        borderRadius: radius.lg,
         minHeight: "48px",
       }}
       gap="sm"

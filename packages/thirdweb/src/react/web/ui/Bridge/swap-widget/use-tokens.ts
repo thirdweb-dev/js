@@ -73,15 +73,15 @@ export function useTokenBalances(options: {
   clientId: string;
   page: number;
   limit: number;
-  walletAddress: string;
+  walletAddress: string | undefined;
   chainId: number | undefined;
 }) {
   return useQuery({
     queryKey: ["bridge/v1/wallets", options],
-    enabled: !!options.chainId,
+    enabled: !!options.chainId && !!options.walletAddress,
     queryFn: async () => {
-      if (!options.chainId) {
-        throw new Error("Chain ID is required");
+      if (!options.chainId || !options.walletAddress) {
+        throw new Error("invalid options");
       }
       const baseUrl = getThirdwebBaseUrl("bridge");
       const isDev = baseUrl.includes("thirdweb-dev");

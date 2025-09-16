@@ -1,6 +1,7 @@
 import type { Meta } from "@storybook/react-vite";
 import { lightTheme } from "../../../react/core/design-system/index.js";
 import { SwapWidget } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
+import { ConnectButton } from "../../../react/web/ui/ConnectWallet/ConnectButton.js";
 import { storyClient } from "../../utils.js";
 
 const meta = {
@@ -8,6 +9,24 @@ const meta = {
     layout: "centered",
   },
   title: "Bridge/Swap/SwapWidget",
+  decorators: [
+    (Story) => {
+      return (
+        <div>
+          <Story />
+          <div
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              right: "20px",
+            }}
+          >
+            <ConnectButton client={storyClient} />
+          </div>
+        </div>
+      );
+    },
+  ],
 } satisfies Meta<typeof SwapWidget>;
 export default meta;
 

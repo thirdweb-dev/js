@@ -295,9 +295,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
 
   // persist selections to localStorage whenever they change
   useEffect(() => {
-    if (buyToken) {
-      setLastUsedTokens({ buyToken, sellToken });
-    }
+    setLastUsedTokens({ buyToken, sellToken });
   }, [buyToken, sellToken]);
 
   // preload requests
