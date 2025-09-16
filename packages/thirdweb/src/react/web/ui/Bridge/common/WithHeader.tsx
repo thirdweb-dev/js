@@ -40,7 +40,7 @@ export function WithHeader({
       )}
 
       <Container flex="column" px="md">
-        <Spacer y="md" />
+        <Spacer y="md+" />
 
         {(showTitle || uiOptions.metadata?.description) && (
           <>

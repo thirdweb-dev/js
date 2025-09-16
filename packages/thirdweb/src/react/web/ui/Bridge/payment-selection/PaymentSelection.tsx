@@ -280,7 +280,7 @@ export function PaymentSelection({
   }
 
   return (
-    <Container flex="column" p="md">
+    <Container flex="column" px="md" pb="md" pt="md+">
       <ModalHeader onBack={getBackHandler()} title={getStepTitle()} />
       <Spacer y="lg" />
 

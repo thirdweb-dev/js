@@ -23,7 +23,7 @@ export function BuyTokenEmbed(props: {
   const themeObj = getSDKTheme(theme === "light" ? "light" : "dark");
   return (
     <div className="bg-card rounded-2xl border overflow-hidden flex flex-col">
-      <div className="flex gap-2 p-4 border-b border-dashed">
+      <div className="flex gap-2.5 p-4 border-b border-dashed">
         <TabButton
           label="Swap"
           onClick={() => setTab("swap")}

@@ -177,6 +177,7 @@ export const spacing = {
   "4xs": "2px",
   lg: "24px",
   md: "16px",
+  "md+": "20px",
   sm: "12px",
   xl: "32px",
   xs: "8px",

@@ -51,7 +51,7 @@ export function SelectBridgeChainUI(
 
   return (
     <div>
-      <Container px="lg" py="md">
+      <Container px="md" py="md+">
         <ModalHeader onBack={props.onBack} title="Select Chain" />
       </Container>
       <Line />

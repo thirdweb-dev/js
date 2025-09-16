@@ -954,6 +954,7 @@ export function useNetworkSwitcherModal() {
       setRootEl(
         <CustomThemeProvider theme={props.theme}>
           <Modal
+            title="Switch Network"
             open={true}
             setOpen={(value) => {
               if (!value) {

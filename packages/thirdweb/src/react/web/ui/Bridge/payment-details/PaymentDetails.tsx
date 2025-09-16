@@ -266,7 +266,7 @@ export function PaymentDetails({
   const displayData = getDisplayData();
 
   return (
-    <Container flex="column" fullHeight p="md">
+    <Container flex="column" fullHeight px="md" pb="md" pt="md+">
       <ModalHeader onBack={onBack} title={title || "Payment Details"} />
 
       <Spacer y="lg" />

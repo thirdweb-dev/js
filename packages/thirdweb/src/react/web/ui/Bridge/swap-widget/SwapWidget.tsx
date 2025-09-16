@@ -346,6 +346,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
     }
     return undefined;
   });
+
   const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
     if (props.prefill?.sellToken) {
       return {

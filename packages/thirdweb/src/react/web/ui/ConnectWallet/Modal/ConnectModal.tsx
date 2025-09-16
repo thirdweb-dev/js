@@ -118,6 +118,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
 
   return (
     <Modal
+      title="Connect Wallet"
       hide={hideModal}
       open={isWalletModalOpen}
       setOpen={(value) => {

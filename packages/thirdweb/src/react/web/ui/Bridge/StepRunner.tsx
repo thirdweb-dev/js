@@ -249,7 +249,7 @@ export function StepRunner({
   };
 
   return (
-    <Container flex="column" fullHeight p="md">
+    <Container flex="column" fullHeight px="md" pb="md" pt="md+">
       <ModalHeader onBack={onBack} title={title || "Processing Payment"} />
 
       <Spacer y="xl" />

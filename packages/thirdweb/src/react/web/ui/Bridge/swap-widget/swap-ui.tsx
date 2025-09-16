@@ -43,6 +43,7 @@ import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { Img } from "../../components/Img.js";
+import { Modal } from "../../components/Modal.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
@@ -85,71 +86,6 @@ type SwapUIProps = {
   }) => void;
 };
 
-export function SwapUI(props: SwapUIProps) {
-  const [screen, setScreen] = useState<
-    "base" | "select-buy-token" | "select-sell-ui"
-  >("base");
-
-  if (screen === "base") {
-    return (
-      <SwapUIBase
-        {...props}
-        onSelectToken={(type) => {
-          setScreen(type === "buy" ? "select-buy-token" : "select-sell-ui");
-        }}
-      />
-    );
-  }
-
-  if (screen === "select-buy-token") {
-    return (
-      <SelectToken
-        activeWalletInfo={props.activeWalletInfo}
-        onBack={() => setScreen("base")}
-        client={props.client}
-        selectedToken={props.buyToken}
-        setSelectedToken={(token) => {
-          props.setBuyToken(token);
-          setScreen("base");
-          // if buy token is same as sell token, unset sell token
-          if (
-            props.sellToken &&
-            token.tokenAddress === props.sellToken.tokenAddress &&
-            token.chainId === props.sellToken.chainId
-          ) {
-            props.setSellToken(undefined);
-          }
-        }}
-      />
-    );
-  }
-
-  if (screen === "select-sell-ui") {
-    return (
-      <SelectToken
-        onBack={() => setScreen("base")}
-        client={props.client}
-        selectedToken={props.sellToken}
-        setSelectedToken={(token) => {
-          props.setSellToken(token);
-          setScreen("base");
-          // if sell token is same as buy token, unset buy token
-          if (
-            props.buyToken &&
-            token.tokenAddress === props.buyToken.tokenAddress &&
-            token.chainId === props.buyToken.chainId
-          ) {
-            props.setBuyToken(undefined);
-          }
-        }}
-        activeWalletInfo={props.activeWalletInfo}
-      />
-    );
-  }
-
-  return null;
-}
-
 function useTokenPrice(options: {
   token: TokenSelection | undefined;
   client: ThirdwebClient;
@@ -172,23 +108,11 @@ function useTokenPrice(options: {
   });
 }
 
-function SwapUIBase(
-  props: SwapUIProps & {
-    onSelectToken: (type: "buy" | "sell") => void;
-    buyToken: TokenSelection | undefined;
-    sellToken: TokenSelection | undefined;
-    setBuyToken: (token: TokenSelection | undefined) => void;
-    setSellToken: (token: TokenSelection | undefined) => void;
-    amountSelection: {
-      type: "buy" | "sell";
-      amount: string;
-    };
-    setAmountSelection: (amountSelection: {
-      type: "buy" | "sell";
-      amount: string;
-    }) => void;
-  },
-) {
+export function SwapUI(props: SwapUIProps) {
+  const [modalState, setModalState] = useState<
+    "select-buy-token" | "select-sell-token" | undefined
+  >(undefined);
+
   // Token Prices ----------------------------------------------------------------------------
   const buyTokenQuery = useTokenPrice({
     token: props.buyToken,
@@ -271,6 +195,66 @@ function SwapUIBase(
 
   return (
     <Container p="md">
+      <Modal
+        size="compact"
+        title="Select Token"
+        open={!!modalState}
+        crossContainerStyles={{
+          right: spacing.md,
+          top: spacing["md+"],
+          transform: "none",
+        }}
+        setOpen={(v) => {
+          if (!v) {
+            setModalState(undefined);
+          }
+        }}
+      >
+        {modalState === "select-buy-token" && (
+          <SelectToken
+            activeWalletInfo={props.activeWalletInfo}
+            onBack={() => setModalState(undefined)}
+            client={props.client}
+            selectedToken={props.buyToken}
+            setSelectedToken={(token) => {
+              props.setBuyToken(token);
+              setModalState(undefined);
+              // if buy token is same as sell token, unset sell token
+              if (
+                props.sellToken &&
+                token.tokenAddress.toLowerCase() ===
+                  props.sellToken.tokenAddress.toLowerCase() &&
+                token.chainId === props.sellToken.chainId
+              ) {
+                props.setSellToken(undefined);
+              }
+            }}
+          />
+        )}
+
+        {modalState === "select-sell-token" && (
+          <SelectToken
+            onBack={() => setModalState(undefined)}
+            client={props.client}
+            selectedToken={props.sellToken}
+            setSelectedToken={(token) => {
+              props.setSellToken(token);
+              setModalState(undefined);
+              // if sell token is same as buy token, unset buy token
+              if (
+                props.buyToken &&
+                token.tokenAddress.toLowerCase() ===
+                  props.buyToken.tokenAddress.toLowerCase() &&
+                token.chainId === props.buyToken.chainId
+              ) {
+                props.setBuyToken(undefined);
+              }
+            }}
+            activeWalletInfo={props.activeWalletInfo}
+          />
+        )}
+      </Modal>
+
       {/* Sell  */}
       <TokenSection
         isConnected={!!props.activeWalletInfo}
@@ -297,7 +281,7 @@ function SwapUIBase(
         }
         client={props.client}
         currency={props.currency}
-        onSelectToken={() => props.onSelectToken("sell")}
+        onSelectToken={() => setModalState("select-sell-token")}
       />
 
       {/* Switch */}
@@ -340,7 +324,7 @@ function SwapUIBase(
         }}
         client={props.client}
         currency={props.currency}
-        onSelectToken={() => props.onSelectToken("buy")}
+        onSelectToken={() => setModalState("select-buy-token")}
       />
 
       {/* error message */}

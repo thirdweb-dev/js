@@ -68,6 +68,7 @@ export function TransactionModal(props: ModalProps) {
   return (
     <CustomThemeProvider theme={props.theme}>
       <Modal
+        title="View Transaction"
         open={true}
         setOpen={(_open) => {
           if (!_open) {

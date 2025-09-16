@@ -36,7 +36,9 @@ export const Modal: React.FC<{
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
   size: "wide" | "compact";
+  title: string;
   hide?: boolean;
+  crossContainerStyles?: React.CSSProperties;
 }> = (props) => {
   const [open, setOpen] = useState(props.open);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ export const Modal: React.FC<{
                   width: "1px",
                 }}
               >
-                Connect Modal
+                {props.title}
               </Dialog.Title>
               {props.size === "compact" ? (
                 <DynamicHeight maxHeight={compactModalMaxHeight}>
@@ -128,7 +130,15 @@ export const Modal: React.FC<{
 
               {/* Close Icon */}
               {!props.hideCloseIcon && (
-                <CrossContainer>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: spacing.lg,
+                    top: spacing.lg,
+                    transform: "translateX(6px)",
+                    ...props.crossContainerStyles,
+                  }}
+                >
                   <Dialog.Close asChild>
                     <IconButton aria-label="Close" autoFocus type="button">
                       <Cross2Icon
@@ -140,7 +150,7 @@ export const Modal: React.FC<{
                       />
                     </IconButton>
                   </Dialog.Close>
-                </CrossContainer>
+                </div>
               )}
             </DialogContent>
           </Dialog.Content>
@@ -149,13 +159,6 @@ export const Modal: React.FC<{
     </Dialog.Root>
   );
 };
-
-const CrossContainer = /* @__PURE__ */ StyledDiv({
-  position: "absolute",
-  right: spacing.lg,
-  top: spacing.lg,
-  transform: "translateX(6px)",
-});
 
 const modalAnimationDesktop = keyframes`
   from {
@@ -190,7 +193,7 @@ const DialogContent = /* @__PURE__ */ StyledDiv((_) => {
     animation: `${modalAnimationDesktop} 300ms ease`,
     background: theme.colors.modalBg,
     border: `1px solid ${theme.colors.borderColor}`,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     boxShadow: shadow.lg,
     boxSizing: "border-box",
     color: theme.colors.primaryText,
@@ -208,7 +211,6 @@ const DialogContent = /* @__PURE__ */ StyledDiv((_) => {
       animation: `${modalAnimationMobile} 0.35s cubic-bezier(0.15, 1.15, 0.6, 1)`,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
-      borderRadius: radius.xl,
       bottom: 0,
       left: 0,
       maxWidth: "none !important",

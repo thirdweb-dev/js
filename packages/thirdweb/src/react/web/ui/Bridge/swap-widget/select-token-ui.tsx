@@ -182,7 +182,7 @@ function SelectTokenUI(
   if (screen === "select-token") {
     return (
       <Container>
-        <Container px="lg" py="md">
+        <Container px="md" py="md+">
           <ModalHeader onBack={props.onBack} title="Select Token" />
         </Container>
         <Line />
@@ -193,7 +193,7 @@ function SelectTokenUI(
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              minHeight: "400px",
+              height: "400px",
             }}
           >
             <Spinner color="secondaryText" size="xl" />
@@ -231,9 +231,9 @@ function SelectTokenUI(
                 }}
               >
                 {props.isFetching &&
-                  new Array(20).fill(0).map(() => (
-                    // biome-ignore lint/correctness/useJsxKeyInIterable: ok
-                    <TokenButtonSkeleton />
+                  new Array(20).fill(0).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                    <TokenButtonSkeleton key={i} />
                   ))}
 
                 {!props.isFetching && sortedOwnedTokens.length > 0 && (
@@ -267,8 +267,8 @@ function SelectTokenUI(
                       client={props.client}
                       onSelect={props.setSelectedToken}
                       isSelected={
-                        props.selectedToken?.tokenAddress ===
-                        token.token_address
+                        props.selectedToken?.tokenAddress.toLowerCase() ===
+                        token.token_address.toLowerCase()
                       }
                     />
                   ))}
@@ -307,7 +307,8 @@ function SelectTokenUI(
                       client={props.client}
                       onSelect={props.setSelectedToken}
                       isSelected={
-                        props.selectedToken?.tokenAddress === token.address
+                        props.selectedToken?.tokenAddress.toLowerCase() ===
+                        token.address.toLowerCase()
                       }
                     />
                   ))}
