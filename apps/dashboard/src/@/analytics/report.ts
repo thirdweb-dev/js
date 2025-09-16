@@ -547,3 +547,27 @@ export function reportChainInfraRpcOmissionAgreed(properties: {
 }) {
   posthog.capture("chain infra checkout rpc omission agreed", properties);
 }
+
+// ----------------------------
+// FEEDBACK
+// ----------------------------
+
+/**
+ * ### Why do we need to report this event?
+ * - To track user feedback and sentiment about the product
+ * - To identify common issues or feature requests
+ * - To measure user satisfaction and engagement
+ * - To prioritize product improvements based on user input
+ *
+ * ### Who is responsible for this event?
+ * @gisellechacon
+ */
+export function reportProductFeedback(properties: {
+  feedback: string;
+  source: "desktop" | "mobile";
+}) {
+  posthog.capture("product feedback submitted", {
+    feedback: properties.feedback,
+    source: properties.source,
+  });
+}
