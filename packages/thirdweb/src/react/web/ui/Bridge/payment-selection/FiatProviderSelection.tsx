@@ -79,9 +79,15 @@ export function FiatProviderSelection({
     return quoteQueries.map((q) => q.data).filter((q) => !!q);
   }, [quoteQueries]);
 
+  const isPending = quoteQueries.some((q) => q.isLoading);
+
   if (quoteQueries.every((q) => q.isError)) {
     return (
-      <Container center="both" flex="column" style={{ minHeight: "120px" }}>
+      <Container
+        center="both"
+        flex="column"
+        style={{ minHeight: "200px", flexGrow: 1 }}
+      >
         <Text color="secondaryText" size="sm">
           No quotes available
         </Text>
@@ -92,11 +98,17 @@ export function FiatProviderSelection({
   // TODO: add a "remember my choice" checkbox
 
   return (
-    <Container flex="column" gap="sm">
-      {quotes.length > 0 ? (
+    <Container
+      flex="column"
+      gap="xs"
+      style={{
+        flexGrow: 1,
+      }}
+    >
+      {!isPending ? (
         quotes
           .sort((a, b) => a.currencyAmount - b.currencyAmount)
-          .map((quote, index) => {
+          .map((quote) => {
             const provider = PROVIDERS.find(
               (p) => p.id === quote.intent.onramp,
             );
@@ -105,98 +117,92 @@ export function FiatProviderSelection({
             }
 
             return (
-              <Container
-                animate="fadein"
+              <Button
                 key={provider.id}
+                fullWidth
+                onClick={() => onProviderSelected(provider.id)}
                 style={{
-                  animationDelay: `${index * 100}ms`,
+                  border: `1px solid ${theme.colors.borderColor}`,
+                  borderRadius: radius.md,
+                  textAlign: "left",
                 }}
+                variant="secondary"
               >
-                <Button
-                  fullWidth
-                  onClick={() => onProviderSelected(provider.id)}
-                  style={{
-                    backgroundColor: theme.colors.tertiaryBg,
-                    border: `1px solid ${theme.colors.borderColor}`,
-                    borderRadius: radius.md,
-                    padding: `${spacing.sm} ${spacing.md}`,
-                    textAlign: "left",
-                  }}
-                  variant="secondary"
+                <Container
+                  flex="row"
+                  gap="sm"
+                  style={{ alignItems: "center", width: "100%" }}
                 >
-                  <Container
-                    flex="row"
-                    gap="sm"
-                    style={{ alignItems: "center", width: "100%" }}
-                  >
-                    <Container
-                      style={{
-                        alignItems: "center",
-                        borderRadius: "50%",
-                        display: "flex",
-                        height: `${iconSize.md}px`,
-                        justifyContent: "center",
-                        overflow: "hidden",
-                        padding: spacing.xs,
-                        width: `${iconSize.md}px`,
-                      }}
-                    >
-                      <Img
-                        alt={provider.name}
-                        client={client}
-                        height={iconSize.md}
-                        src={provider.iconUri}
-                        width={iconSize.md}
-                      />
-                    </Container>
-                    <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                      <Text
-                        color="primaryText"
-                        size="md"
-                        style={{ fontWeight: 600 }}
-                      >
-                        {provider.name}
-                      </Text>
-                    </Container>
-                    <Container
-                      flex="column"
-                      gap="3xs"
-                      style={{ alignItems: "flex-end" }}
-                    >
-                      <Text
-                        color="primaryText"
-                        size="sm"
-                        style={{ fontWeight: 500 }}
-                      >
-                        {formatCurrencyAmount(
-                          currency || "US",
-                          quote.currencyAmount,
-                        )}
-                      </Text>
-                      <Text color="secondaryText" size="xs">
-                        {formatNumber(
-                          Number(
-                            toTokens(
-                              quote.destinationAmount,
-                              quote.destinationToken.decimals,
-                            ),
-                          ),
-                          4,
-                        )}{" "}
-                        {quote.destinationToken.symbol}
-                      </Text>
-                    </Container>
+                  <Img
+                    alt={provider.name}
+                    client={client}
+                    height={iconSize.lg}
+                    src={provider.iconUri}
+                    width={iconSize.lg}
+                    style={{
+                      borderRadius: radius.full,
+                    }}
+                  />
+                  <Container flex="column" gap="3xs" style={{ flex: 1 }}>
+                    <Text color="primaryText" size="md" weight={500}>
+                      {provider.name}
+                    </Text>
                   </Container>
-                </Button>
-              </Container>
+                  <Container
+                    flex="column"
+                    gap="3xs"
+                    style={{ alignItems: "flex-end" }}
+                  >
+                    <Text
+                      color="primaryText"
+                      size="sm"
+                      style={{ fontWeight: 500 }}
+                    >
+                      {formatCurrencyAmount(
+                        currency || "US",
+                        quote.currencyAmount,
+                      )}
+                    </Text>
+                    <Text color="secondaryText" size="xs">
+                      {formatNumber(
+                        Number(
+                          toTokens(
+                            quote.destinationAmount,
+                            quote.destinationToken.decimals,
+                          ),
+                        ),
+                        4,
+                      )}{" "}
+                      {quote.destinationToken.symbol}
+                    </Text>
+                  </Container>
+                </Container>
+              </Button>
             );
           })
       ) : (
-        <Container center="both" flex="column" style={{ minHeight: "120px" }}>
-          <Spinner color="secondaryText" size="lg" />
-          <Spacer y="sm" />
-          <Text center color="secondaryText" size="sm">
-            Generating quotes...
+        <Container
+          center="both"
+          flex="column"
+          style={{ flexGrow: 1, paddingBottom: spacing.lg }}
+          px="md"
+        >
+          <Spinner color="secondaryText" size="xl" />
+          <Spacer y="lg" />
+          <Text center color="primaryText" size="lg" weight={500}>
+            Searching Providers
+          </Text>
+          <Spacer y="xs" />
+          <Text
+            center
+            color="secondaryText"
+            size="sm"
+            multiline
+            style={{
+              textWrap: "pretty",
+            }}
+          >
+            Searching for the best providers for this payment
           </Text>
         </Container>
       )}

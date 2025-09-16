@@ -163,7 +163,7 @@ export function QuoteLoader({
       <Spinner color="secondaryText" size="xl" />
       <Spacer y="md" />
       <Text center color="primaryText" size="lg" style={{ fontWeight: 600 }}>
-        Finding the best route...
+        Finding the best route
       </Text>
       <Spacer y="sm" />
       <Text center color="secondaryText" size="sm">

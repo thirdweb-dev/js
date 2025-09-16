@@ -282,10 +282,9 @@ export function PaymentSelection({
   return (
     <Container flex="column" p="md">
       <ModalHeader onBack={getBackHandler()} title={getStepTitle()} />
+      <Spacer y="lg" />
 
-      <Spacer y="xl" />
-
-      <Container flex="column">
+      <Container flex="column" style={{ minHeight: "300px" }}>
         {currentStep.type === "walletSelection" && (
           <WalletFiatSelection
             client={client}
