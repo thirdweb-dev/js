@@ -89,21 +89,21 @@ function useEIP7702Support(_rpcUrl: string) {
                 from: "0xdeadbeef00000000000000000000000000000000",
                 to: "0xdeadbeef00000000000000000000000000000000",
                 data: "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-                value: "0x0"
+                value: "0x0",
               },
               "latest",
               {
                 "0xdeadbeef00000000000000000000000000000000": {
-                  code: "0xef01000000000000000000000000000000000000000001"
-                }
-              }
+                  code: "0xef01000000000000000000000000000000000000000001",
+                },
+              },
             ],
           }),
           method: "POST",
         });
 
         const json = await res.json();
-        
+
         // If the response has a valid result object, EIP-7702 is enabled
         return {
           isSupported: !!json.result,
@@ -186,7 +186,11 @@ export function ChainLiveStats(props: { rpc: string }) {
         {eip7702Support.isError ? (
           <Badge variant="destructive">Disabled</Badge>
         ) : eip7702Support.data ? (
-          <Badge variant={eip7702Support.data.isSupported ? "success" : "destructive"}>
+          <Badge
+            variant={
+              eip7702Support.data.isSupported ? "success" : "destructive"
+            }
+          >
             {eip7702Support.data.isSupported ? "Enabled" : "Disabled"}
           </Badge>
         ) : (
