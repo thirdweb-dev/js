@@ -1,10 +1,10 @@
-import type { Meta } from "@storybook/react-vite";
+import type { Meta } from "@storybook/react";
 import { lightTheme } from "../../../react/core/design-system/index.js";
 import { SwapWidget } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
 import { ConnectButton } from "../../../react/web/ui/ConnectWallet/ConnectButton.js";
 import { storyClient } from "../../utils.js";
 
-const meta = {
+const meta: Meta<typeof SwapWidget> = {
   parameters: {
     layout: "centered",
   },
@@ -27,7 +27,7 @@ const meta = {
       );
     },
   ],
-} satisfies Meta<typeof SwapWidget>;
+};
 export default meta;
 
 export function BasicUsage() {

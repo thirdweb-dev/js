@@ -21,6 +21,9 @@ import type { UIOptions } from "../BridgeOrchestrator.js";
 import { PaymentOverview } from "./PaymentOverview.js";
 
 export interface PaymentDetailsProps {
+  title?: string;
+  confirmButtonLabel?: string;
+
   /**
    * The UI mode to use
    */
@@ -55,6 +58,8 @@ export interface PaymentDetailsProps {
 }
 
 export function PaymentDetails({
+  title,
+  confirmButtonLabel,
   uiOptions,
   client,
   paymentMethod,
@@ -262,7 +267,7 @@ export function PaymentDetails({
 
   return (
     <Container flex="column" fullHeight p="md">
-      <ModalHeader onBack={onBack} title="Payment Details" />
+      <ModalHeader onBack={onBack} title={title || "Payment Details"} />
 
       <Spacer y="xl" />
 
@@ -427,7 +432,7 @@ export function PaymentDetails({
         {/* Action Buttons */}
         <Container flex="column" gap="sm">
           <Button fullWidth onClick={handleConfirm} variant="accent">
-            Confirm Payment
+            {confirmButtonLabel || "Confirm Payment"}
           </Button>
         </Container>
       </Container>

@@ -352,6 +352,8 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   if (screen.id === "2:preview") {
     return (
       <PaymentDetails
+        title="Review Swap"
+        confirmButtonLabel="Swap"
         client={props.client}
         onBack={() => {
           setScreen({ id: "1:swap-ui" });
@@ -384,6 +386,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   if (screen.id === "3:execute") {
     return (
       <StepRunner
+        title="Processing Swap"
         autoStart={true}
         client={props.client}
         onBack={() => {

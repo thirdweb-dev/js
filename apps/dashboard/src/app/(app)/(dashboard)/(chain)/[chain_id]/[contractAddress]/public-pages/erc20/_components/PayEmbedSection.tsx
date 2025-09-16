@@ -64,6 +64,7 @@ export function BuyTokenEmbed(props: {
           }}
           theme={themeObj}
           tokenAddress={props.tokenAddress as `0x${string}`}
+          paymentMethods={["card"]}
         />
       )}
 
