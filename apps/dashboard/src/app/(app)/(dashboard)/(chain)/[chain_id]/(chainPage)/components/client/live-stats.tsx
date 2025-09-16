@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheckIcon, XIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
@@ -182,17 +181,34 @@ export function ChainLiveStats(props: { rpc: string }) {
       </PrimaryInfoItem>
 
       {/* EIP-7702 */}
-      <PrimaryInfoItem title="EIP-7702">
-        {eip7702Support.isError ? (
-          <Badge variant="destructive">Disabled</Badge>
-        ) : eip7702Support.data ? (
-          <Badge
-            variant={
-              eip7702Support.data.isSupported ? "success" : "destructive"
-            }
-          >
-            {eip7702Support.data.isSupported ? "Enabled" : "Disabled"}
-          </Badge>
+      <PrimaryInfoItem
+        title="EIP-7702"
+        titleIcon={
+          eip7702Support.data ? (
+            eip7702Support.data.isSupported ? (
+              <ToolTipLabel label="Enabled">
+                <CircleCheckIcon className="size-4 text-success-text" />
+              </ToolTipLabel>
+            ) : (
+              <ToolTipLabel label="Disabled">
+                <XIcon className="size-4 text-destructive-text" />
+              </ToolTipLabel>
+            )
+          ) : eip7702Support.isError ? (
+            <ToolTipLabel label="Disabled">
+              <XIcon className="size-4 text-destructive-text" />
+            </ToolTipLabel>
+          ) : null
+        }
+      >
+        {eip7702Support.data ? (
+          eip7702Support.data.isSupported ? (
+            "Enabled"
+          ) : (
+            "Disabled"
+          )
+        ) : eip7702Support.isError ? (
+          "Disabled"
         ) : (
           <div className="flex h-[28px] w-[80px] py-1">
             <Skeleton className="h-full w-full" />
