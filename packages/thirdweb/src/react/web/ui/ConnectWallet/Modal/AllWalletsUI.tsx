@@ -5,6 +5,7 @@ import Fuse from "fuse.js";
 import { useMemo, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import walletInfos from "../../../../../wallets/__generated__/wallet-infos.js";
+import { NON_SEARCHABLE_WALLETS } from "../../../../../wallets/constants.js";
 import { createWallet } from "../../../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -39,8 +40,7 @@ function AllWalletsUI(props: {
 
   const walletList = useMemo(() => {
     return walletInfos.filter(
-      (info) =>
-        info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
+      (info) => !NON_SEARCHABLE_WALLETS.includes(info.id),
     );
   }, []);
 

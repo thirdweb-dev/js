@@ -12,6 +12,7 @@ import {
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import walletInfos from "../../../../wallets/__generated__/wallet-infos.js";
+import { NON_SEARCHABLE_WALLETS } from "../../../../wallets/constants.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { createWallet } from "../../../../wallets/native/create-wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
@@ -100,10 +101,7 @@ export function AllWalletsList(
       .filter(
         (info) => !externalWallets.find((wallet) => wallet.id === info.id),
       )
-      .filter(
-        (info) =>
-          info.id !== "inApp" && info.id !== "embedded" && info.id !== "smart",
-      )
+      .filter((info) => !NON_SEARCHABLE_WALLETS.includes(info.id))
       .filter((info) => info.hasMobileSupport);
 
     const fuse = new Fuse(filteredWallets, {
