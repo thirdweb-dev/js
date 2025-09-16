@@ -189,6 +189,7 @@ function SwapUIBase(
     }) => void;
   },
 ) {
+  // Token Prices ----------------------------------------------------------------------------
   const buyTokenQuery = useTokenPrice({
     token: props.buyToken,
     client: props.client,
@@ -201,143 +202,16 @@ function SwapUIBase(
   const buyTokenWithPrices = buyTokenQuery.data;
   const sellTokenWithPrices = sellTokenQuery.data;
 
-  const preparedResultQuery = useQuery({
-    queryKey: [
-      "swap-quote",
-      props.amountSelection,
-      buyTokenWithPrices,
-      sellTokenWithPrices,
-      props.activeWalletInfo?.activeAccount.address,
-    ],
-    enabled:
-      !!buyTokenWithPrices &&
-      !!sellTokenWithPrices &&
-      !!props.amountSelection.amount,
-    queryFn: async (): Promise<
-      | {
-          type: "preparedResult";
-          result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
-          request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
-        }
-      | {
-          type: "quote";
-          result: Buy.quote.Result | Sell.quote.Result;
-        }
-    > => {
-      if (
-        !buyTokenWithPrices ||
-        !sellTokenWithPrices ||
-        !props.amountSelection.amount
-      ) {
-        throw new Error("Invalid state");
-      }
-
-      if (!props.activeWalletInfo) {
-        if (props.amountSelection.type === "buy") {
-          const res = await Buy.quote({
-            amount: toUnits(
-              props.amountSelection.amount,
-              buyTokenWithPrices.decimals,
-            ),
-            // origin = sell
-            originChainId: sellTokenWithPrices.chainId,
-            originTokenAddress: sellTokenWithPrices.address,
-            // destination = buy
-            destinationChainId: buyTokenWithPrices.chainId,
-            destinationTokenAddress: buyTokenWithPrices.address,
-            client: props.client,
-          });
-
-          return {
-            type: "quote",
-            result: res,
-          };
-        }
-
-        const res = await Sell.quote({
-          amount: toUnits(
-            props.amountSelection.amount,
-            sellTokenWithPrices.decimals,
-          ),
-          // origin = sell
-          originChainId: sellTokenWithPrices.chainId,
-          originTokenAddress: sellTokenWithPrices.address,
-          // destination = buy
-          destinationChainId: buyTokenWithPrices.chainId,
-          destinationTokenAddress: buyTokenWithPrices.address,
-          client: props.client,
-        });
-
-        return {
-          type: "quote",
-          result: res,
-        };
-      }
-
-      if (props.amountSelection.type === "buy") {
-        const buyRequestOptions: BuyPrepare.Options = {
-          amount: toUnits(
-            props.amountSelection.amount,
-            buyTokenWithPrices.decimals,
-          ),
-          // origin = sell
-          originChainId: sellTokenWithPrices.chainId,
-          originTokenAddress: sellTokenWithPrices.address,
-          // destination = buy
-          destinationChainId: buyTokenWithPrices.chainId,
-          destinationTokenAddress: buyTokenWithPrices.address,
-          client: props.client,
-          receiver: props.activeWalletInfo.activeAccount.address,
-          sender: props.activeWalletInfo.activeAccount.address,
-        };
-
-        const buyRequest: BridgePrepareRequest = {
-          type: "buy",
-          ...buyRequestOptions,
-        };
-
-        const res = await Buy.prepare(buyRequest);
-
-        return {
-          type: "preparedResult",
-          result: { type: "buy", ...res },
-          request: buyRequest,
-        };
-      } else if (props.amountSelection.type === "sell") {
-        const sellRequestOptions: SellPrepare.Options = {
-          amount: toUnits(
-            props.amountSelection.amount,
-            sellTokenWithPrices.decimals,
-          ),
-          // origin = sell
-          originChainId: sellTokenWithPrices.chainId,
-          originTokenAddress: sellTokenWithPrices.address,
-          // destination = buy
-          destinationChainId: buyTokenWithPrices.chainId,
-          destinationTokenAddress: buyTokenWithPrices.address,
-          client: props.client,
-          receiver: props.activeWalletInfo.activeAccount.address,
-          sender: props.activeWalletInfo.activeAccount.address,
-        };
-
-        const res = await Sell.prepare(sellRequestOptions);
-
-        const sellRequest: BridgePrepareRequest = {
-          type: "sell",
-          ...sellRequestOptions,
-        };
-
-        return {
-          type: "preparedResult",
-          result: { type: "sell", ...res },
-          request: sellRequest,
-        };
-      }
-
-      throw new Error("Invalid amount selection type");
-    },
-    refetchInterval: 20000,
+  // Swap Quote ----------------------------------------------------------------------------
+  const preparedResultQuery = useSwapQuote({
+    amountSelection: props.amountSelection,
+    buyTokenWithPrices: buyTokenWithPrices,
+    sellTokenWithPrices: sellTokenWithPrices,
+    activeWalletInfo: props.activeWalletInfo,
+    client: props.client,
   });
+
+  // Amount and Amount.fetching ------------------------------------------------------------
 
   const sellTokenAmount =
     props.amountSelection.type === "sell"
@@ -369,6 +243,7 @@ function SwapUIBase(
   const isSellAmountFetching =
     props.amountSelection.type === "buy" && preparedResultQuery.isFetching;
 
+  // token balances ------------------------------------------------------------
   const sellTokenBalanceQuery = useTokenBalance({
     chainId: sellTokenWithPrices?.chainId,
     tokenAddress: sellTokenWithPrices?.address,
@@ -391,6 +266,8 @@ function SwapUIBase(
     sellTokenBalanceQuery.data.value <
       Number(toUnits(sellTokenAmount, sellTokenWithPrices.decimals))
   );
+
+  // ----------------------------------------------------------------------------
 
   return (
     <Container p="md">
@@ -523,6 +400,152 @@ function SwapUIBase(
       ) : null}
     </Container>
   );
+}
+
+function useSwapQuote(params: {
+  amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  };
+  buyTokenWithPrices: TokenWithPrices | undefined;
+  sellTokenWithPrices: TokenWithPrices | undefined;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  client: ThirdwebClient;
+}) {
+  const {
+    amountSelection,
+    buyTokenWithPrices,
+    sellTokenWithPrices,
+    activeWalletInfo,
+    client,
+  } = params;
+
+  return useQuery({
+    queryKey: [
+      "swap-quote",
+      amountSelection,
+      buyTokenWithPrices,
+      sellTokenWithPrices,
+      activeWalletInfo?.activeAccount.address,
+    ],
+    enabled:
+      !!buyTokenWithPrices && !!sellTokenWithPrices && !!amountSelection.amount,
+    queryFn: async (): Promise<
+      | {
+          type: "preparedResult";
+          result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+          request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+        }
+      | {
+          type: "quote";
+          result: Buy.quote.Result | Sell.quote.Result;
+        }
+    > => {
+      if (
+        !buyTokenWithPrices ||
+        !sellTokenWithPrices ||
+        !amountSelection.amount
+      ) {
+        throw new Error("Invalid state");
+      }
+
+      if (!activeWalletInfo) {
+        if (amountSelection.type === "buy") {
+          const res = await Buy.quote({
+            amount: toUnits(
+              amountSelection.amount,
+              buyTokenWithPrices.decimals,
+            ),
+            // origin = sell
+            originChainId: sellTokenWithPrices.chainId,
+            originTokenAddress: sellTokenWithPrices.address,
+            // destination = buy
+            destinationChainId: buyTokenWithPrices.chainId,
+            destinationTokenAddress: buyTokenWithPrices.address,
+            client: client,
+          });
+
+          return {
+            type: "quote",
+            result: res,
+          };
+        }
+
+        const res = await Sell.quote({
+          amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+        });
+
+        return {
+          type: "quote",
+          result: res,
+        };
+      }
+
+      if (amountSelection.type === "buy") {
+        const buyRequestOptions: BuyPrepare.Options = {
+          amount: toUnits(amountSelection.amount, buyTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+          receiver: activeWalletInfo.activeAccount.address,
+          sender: activeWalletInfo.activeAccount.address,
+        };
+
+        const buyRequest: BridgePrepareRequest = {
+          type: "buy",
+          ...buyRequestOptions,
+        };
+
+        const res = await Buy.prepare(buyRequest);
+
+        return {
+          type: "preparedResult",
+          result: { type: "buy", ...res },
+          request: buyRequest,
+        };
+      } else if (amountSelection.type === "sell") {
+        const sellRequestOptions: SellPrepare.Options = {
+          amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+          receiver: activeWalletInfo.activeAccount.address,
+          sender: activeWalletInfo.activeAccount.address,
+        };
+
+        const res = await Sell.prepare(sellRequestOptions);
+
+        const sellRequest: BridgePrepareRequest = {
+          type: "sell",
+          ...sellRequestOptions,
+        };
+
+        return {
+          type: "preparedResult",
+          result: { type: "sell", ...res },
+          request: sellRequest,
+        };
+      }
+
+      throw new Error("Invalid amount selection type");
+    },
+    refetchInterval: 20000,
+  });
 }
 
 function DecimalInput(props: {

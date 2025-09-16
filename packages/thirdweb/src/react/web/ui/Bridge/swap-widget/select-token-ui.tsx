@@ -10,6 +10,8 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
+import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
+import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
 import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
@@ -98,7 +100,7 @@ export function SelectToken(props: SelectTokenUIProps) {
       {...props}
       ownedTokens={filteredOwnedTokens || []}
       allTokens={tokensQuery.data || []}
-      isPending={isFetching}
+      isFetching={isFetching}
       selectedChain={selectedChain}
       setSelectedChain={setSelectedChain}
       search={search}
@@ -120,7 +122,7 @@ export function SelectTokenUI(
   props: SelectTokenUIProps & {
     ownedTokens: TokenBalance[];
     allTokens: Token[];
-    isPending: boolean;
+    isFetching: boolean;
     selectedChain: BridgeChain | undefined;
     setSelectedChain: (chain: BridgeChain) => void;
     search: string;
@@ -134,9 +136,22 @@ export function SelectTokenUI(
     "select-token",
   );
 
+  // show tokens with icons first
+  const sortedOwnedTokens = useMemo(() => {
+    return props.ownedTokens.sort((a, b) => {
+      if (a.icon_uri && !b.icon_uri) {
+        return -1;
+      }
+      if (!a.icon_uri && b.icon_uri) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [props.ownedTokens]);
+
   const otherTokens = useMemo(() => {
     const ownedTokenSet = new Set(
-      props.ownedTokens.map((t) =>
+      sortedOwnedTokens.map((t) =>
         `${t.token_address}-${t.chain_id}`.toLowerCase(),
       ),
     );
@@ -144,11 +159,24 @@ export function SelectTokenUI(
       (token) =>
         !ownedTokenSet.has(`${token.address}-${token.chainId}`.toLowerCase()),
     );
-  }, [props.allTokens, props.ownedTokens]);
+  }, [props.allTokens, sortedOwnedTokens]);
+
+  // show tokens with icons first
+  const sortedOtherTokens = useMemo(() => {
+    return otherTokens.sort((a, b) => {
+      if (a.iconUri && !b.iconUri) {
+        return -1;
+      }
+      if (!a.iconUri && b.iconUri) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [otherTokens]);
 
   const noTokensFound =
-    !props.isPending &&
-    otherTokens.length === 0 &&
+    !props.isFetching &&
+    sortedOtherTokens.length === 0 &&
     props.ownedTokens.length === 0;
 
   if (screen === "select-token") {
@@ -196,21 +224,43 @@ export function SelectTokenUI(
               <Container
                 flex="column"
                 style={{
-                  maxHeight: "400px",
-                  minHeight: "300px",
+                  height: "400px",
                   overflowY: "auto",
                   scrollbarWidth: "none",
                   paddingBottom: spacing.md,
                 }}
               >
-                {props.isPending &&
+                {props.isFetching &&
                   new Array(20).fill(0).map(() => (
                     // biome-ignore lint/correctness/useJsxKeyInIterable: ok
                     <TokenButtonSkeleton />
                   ))}
 
-                {!props.isPending &&
-                  props.ownedTokens.map((token) => (
+                {!props.isFetching && sortedOwnedTokens.length > 0 && (
+                  <Container
+                    px="xs"
+                    py="xs"
+                    flex="row"
+                    gap="xs"
+                    center="y"
+                    color="secondaryText"
+                  >
+                    <WalletDotIcon size={iconSize.sm} />
+                    <Text
+                      size="sm"
+                      color="secondaryText"
+                      weight={500}
+                      style={{
+                        overflow: "unset",
+                      }}
+                    >
+                      Your Tokens
+                    </Text>
+                  </Container>
+                )}
+
+                {!props.isFetching &&
+                  sortedOwnedTokens.map((token) => (
                     <TokenButton
                       key={token.token_address}
                       token={token}
@@ -223,8 +273,34 @@ export function SelectTokenUI(
                     />
                   ))}
 
-                {!props.isPending &&
-                  otherTokens.map((token) => (
+                {!props.isFetching && sortedOwnedTokens.length > 0 && (
+                  <Container
+                    px="xs"
+                    py="xs"
+                    flex="row"
+                    gap="xs"
+                    center="y"
+                    color="secondaryText"
+                    style={{
+                      marginTop: spacing.sm,
+                    }}
+                  >
+                    <CoinsIcon size={iconSize.sm} />
+                    <Text
+                      size="sm"
+                      color="secondaryText"
+                      weight={500}
+                      style={{
+                        overflow: "unset",
+                      }}
+                    >
+                      Other Tokens
+                    </Text>
+                  </Container>
+                )}
+
+                {!props.isFetching &&
+                  sortedOtherTokens.map((token) => (
                     <TokenButton
                       key={token.address}
                       token={token}
