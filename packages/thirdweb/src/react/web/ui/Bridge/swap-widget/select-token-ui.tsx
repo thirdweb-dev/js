@@ -118,7 +118,7 @@ export function SelectToken(props: SelectTokenUIProps) {
   );
 }
 
-export function SelectTokenUI(
+function SelectTokenUI(
   props: SelectTokenUIProps & {
     ownedTokens: TokenBalance[];
     allTokens: Token[];

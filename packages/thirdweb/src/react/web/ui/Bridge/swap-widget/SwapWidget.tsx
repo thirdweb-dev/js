@@ -167,6 +167,78 @@ export function SwapWidget(props: SwapWidgetProps) {
   );
 }
 
+/**
+ * A widget for swapping tokens with cross-chain support
+ *
+ * @param props - Props of type [`SwapWidgetProps`](https://portal.thirdweb.com/references/typescript/v5/SwapWidgetProps) to configure the SwapWidget component.
+ *
+ * @example
+ * ### Basic usage
+ *
+ * By default, no tokens are selected in the widget UI.
+ *
+ * You can set specific tokens to buy or sell by default by passing the `prefill` prop. User can change these selections in the widget UI.
+ *
+ * ```tsx
+ * <SwapWidget client={client} />
+ * ```
+ *
+ * ### Set an ERC20 token to Buy by default
+ *
+ * ```tsx
+ * <SwapWidget client={client} prefill={{
+ *  buyToken: {
+ *    // Base USDC
+ *    chainId: 8453,
+ *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+ *  },
+ * }} />
+ * ```
+ *
+ * ### Set a native token to Sell by default
+ *
+ * By not specifying a `tokenAddress`, the native token will be used.
+ *
+ * ```tsx
+ * <SwapWidget client={client} prefill={{
+ *  // Base native token (ETH)
+ *  sellToken: {
+ *    chainId: 8453,
+ *  },
+ * }} />
+ * ```
+ *
+ * ### Set amount and token to Buy by default
+ *
+ * ```tsx
+ * <SwapWidget client={client} prefill={{
+ *  buyToken: {
+ *    // 0.1 Base USDC
+ *    chainId: 8453,
+ *    amount: "0.1",
+ *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+ *  },
+ * }} />
+ * ```
+ *
+ * ### Set both buy and sell tokens by default
+ *
+ * ```tsx
+ * <SwapWidget client={client} prefill={{
+ *  buyToken: {
+ *    // Base USDC
+ *    chainId: 8453,
+ *    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+ *  },
+ *  sellToken: {
+ *    // Polygon native token (MATIC)
+ *    chainId: 137,
+ *  },
+ * }} />
+ * ```
+ *
+ * @returns
+ */
 export function SwapWidgetContainer(props: {
   theme: SwapWidgetProps["theme"];
   className: string | undefined;
