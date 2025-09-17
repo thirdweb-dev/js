@@ -28,7 +28,6 @@ type AutoConnectCoreProps = {
   connectOverride?: (
     walletOrFn: Wallet | (() => Promise<Wallet>),
   ) => Promise<Wallet | null>;
-  getInstalledWallets?: () => Wallet[];
   setLastAuthProvider?: (
     authProvider: AuthArgsType["strategy"],
     storage: AsyncStorage,
@@ -69,7 +68,6 @@ const _autoConnectCore = async ({
   createWalletFn,
   manager,
   connectOverride,
-  getInstalledWallets,
   setLastAuthProvider,
 }: AutoConnectCoreProps): Promise<boolean> => {
   const { wallets, onConnect } = props;
@@ -120,7 +118,13 @@ const _autoConnectCore = async ({
   // in that case, we default to the passed chain to connect to
   const lastConnectedChain =
     (await getLastConnectedChain(storage)) || props.chain;
-  const availableWallets = [...wallets, ...(getInstalledWallets?.() ?? [])];
+  const availableWallets = lastConnectedWalletIds.map((id) => {
+    const specifiedWallet = wallets.find((w) => w.id === id);
+    if (specifiedWallet) {
+      return specifiedWallet;
+    }
+    return createWalletFn(id as WalletId);
+  });
   const activeWallet =
     lastActiveWalletId &&
     (availableWallets.find((w) => w.id === lastActiveWalletId) ||

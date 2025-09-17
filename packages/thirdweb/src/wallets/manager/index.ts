@@ -238,13 +238,12 @@ export function createConnectionManager(storage: AsyncStorage) {
   // save last connected wallet ids to storage
   effect(
     async () => {
-      const prevAccounts = (await getStoredConnectedWalletIds(storage)) || [];
       const accounts = connectedWallets.getValue();
       const ids = accounts.map((acc) => acc?.id).filter((c) => !!c) as string[];
 
       storage.setItem(
         CONNECTED_WALLET_IDS,
-        stringify(Array.from(new Set([...prevAccounts, ...ids]))),
+        stringify(Array.from(new Set([...ids]))),
       );
     },
     [connectedWallets],

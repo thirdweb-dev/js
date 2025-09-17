@@ -560,7 +560,7 @@ describe("Details Modal", () => {
     );
 
     // Add assertions to check if the modal is rendered correctly
-    expect(screen.getByText("Connect Modal")).toBeInTheDocument();
+    expect(screen.getByText("Manage Wallet")).toBeInTheDocument();
   });
 
   it("should call closeModal when the close button is clicked", async () => {
