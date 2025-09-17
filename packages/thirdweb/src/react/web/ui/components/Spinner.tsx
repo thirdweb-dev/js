@@ -22,6 +22,7 @@ export const Spinner: React.FC<{
         ...props.style,
       }}
       viewBox="0 0 50 50"
+      className="tw-spinner"
     >
       <Circle
         cx="25"

@@ -26,6 +26,7 @@ export const BackButton: React.FC<{
 }> = (props) => {
   return (
     <IconButton
+      className="tw-back-button"
       onClick={props.onClick}
       style={{ transform: "translateX(-25%)", ...props.style }}
       type="button"

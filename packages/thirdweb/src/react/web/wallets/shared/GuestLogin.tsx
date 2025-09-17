@@ -91,7 +91,12 @@ export function GuestLogin(props: {
   }, [done, guestLogin]);
 
   return (
-    <Container animate="fadein" flex="column" fullHeight>
+    <Container
+      animate="fadein"
+      flex="column"
+      fullHeight
+      className="tw-guest-login-screen"
+    >
       <Container
         expand
         flex="column"

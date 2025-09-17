@@ -58,9 +58,7 @@ describe("SendFunds screen", () => {
         token={{ nativeToken: true }}
       />,
     );
-    const element = container.querySelector(
-      "button.tw-sendfunds-screen-send-button",
-    );
+    const element = container.querySelector("button.tw-send-funds-button");
     expect(element?.innerHTML).toBe(en.sendFundsScreen.submitButton);
     vi.resetAllMocks();
   });

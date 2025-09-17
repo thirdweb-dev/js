@@ -197,6 +197,7 @@ export function SwapUI(props: SwapUIProps) {
   return (
     <Container p="md">
       <Modal
+        className="tw-modal__swap-widget"
         size="compact"
         title="Select Token"
         open={!!modalState}

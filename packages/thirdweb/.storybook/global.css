@@ -10,3 +10,8 @@ body {
   font-optical-sizing: auto;
   font-variation-settings: "slnt" 0;
 }
+
+/* Use this to debug the elements having tw- classes */
+/* [class*="tw-"] {
+  outline: 1px dotted yellow !important;
+} */

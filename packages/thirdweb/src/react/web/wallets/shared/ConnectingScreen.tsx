@@ -31,7 +31,12 @@ export const ConnectingScreen: React.FC<{
   const { locale } = props;
 
   return (
-    <Container animate="fadein" flex="column" fullHeight>
+    <Container
+      animate="fadein"
+      flex="column"
+      fullHeight
+      className="tw-connecting-wallet-screen"
+    >
       <Container
         p="lg"
         style={{
@@ -65,19 +70,27 @@ export const ConnectingScreen: React.FC<{
             animationDuration: "200ms",
           }}
         >
-          <Text center color="primaryText" size="lg" weight={600}>
+          <Text
+            center
+            color="primaryText"
+            size="lg"
+            weight={600}
+            className="tw-screen-title"
+            data-status={props.errorConnecting ? "failed" : "in-progress"}
+          >
             {props.errorConnecting ? locale.failed : locale.inProgress}
           </Text>
 
           <Spacer y="md" />
 
           {!props.errorConnecting ? (
-            <Text balance center multiline>
+            <Text balance center multiline className="tw-screen-description">
               {locale.instruction}
             </Text>
           ) : (
             <Container animate="fadein" center="x" flex="row">
               <Button
+                className="tw-retry-button"
                 fullWidth
                 onClick={props.onRetry}
                 style={{
@@ -99,7 +112,11 @@ export const ConnectingScreen: React.FC<{
           <Spacer y="xl" />
           <Line />
           <Container center="x" flex="row" p="lg">
-            <Button onClick={props.onGetStarted} variant="link">
+            <Button
+              onClick={props.onGetStarted}
+              variant="link"
+              className="tw-get-started-button"
+            >
               {locale.getStartedLink}
             </Button>
           </Container>

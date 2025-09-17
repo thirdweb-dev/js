@@ -14,6 +14,7 @@ import { CountrySelector, getCountrySelector } from "./CountrySelector.js";
 import type { SupportedSmsCountry } from "./supported-sms-countries.js";
 
 export function InputSelectionUI(props: {
+  className?: string;
   onSelect: (data: string) => void;
   placeholder: string;
   name: string;
@@ -63,6 +64,7 @@ export function InputSelectionUI(props: {
       }}
     >
       <InputContainer
+        className={props.className}
         data-error={renderingError}
         style={{
           display: "flex",

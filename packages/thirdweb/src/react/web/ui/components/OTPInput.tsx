@@ -21,7 +21,7 @@ export function OTPInput(props: {
   onEnter: () => void;
 }) {
   return (
-    <OTPInputContainer>
+    <OTPInputContainer className="tw-otp-input-container">
       <InputOTP
         maxLength={6}
         onChange={(newValue) => {

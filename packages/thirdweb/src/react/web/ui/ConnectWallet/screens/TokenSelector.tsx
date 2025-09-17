@@ -101,6 +101,7 @@ export function TokenSelector(props: {
   if (screen === "select-chain" && chainSelection) {
     return (
       <NetworkSelectorContent
+        className="tw-send-funds-screen tw-send-funds-screen__select-chain"
         chains={chainSelection.chains}
         client={props.client}
         closeModal={() => setScreen("base")}
@@ -131,6 +132,7 @@ export function TokenSelector(props: {
 
   return (
     <Container
+      className="tw-send-funds-screen tw-send-funds-screen__select-token"
       animate="fadein"
       style={{
         minHeight: "300px",

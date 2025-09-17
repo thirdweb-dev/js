@@ -23,6 +23,7 @@ import type { ConnectLocale } from "./locale/types.js";
  * @internal
  */
 export function WalletEntryButton(props: {
+  className?: string;
   wallet: Wallet;
   selectWallet: () => void;
   connectLocale: ConnectLocale;
@@ -56,6 +57,7 @@ export function WalletEntryButton(props: {
 
   return (
     <WalletButtonEl
+      className={props.className}
       data-active={props.isActive}
       onClick={selectWallet}
       type="button"
