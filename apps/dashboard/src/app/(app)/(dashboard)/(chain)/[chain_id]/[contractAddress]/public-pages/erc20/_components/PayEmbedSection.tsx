@@ -7,6 +7,9 @@ import { BuyWidget, SwapWidget } from "thirdweb/react";
 import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
+  reportTokenSwapCancelled,
+  reportTokenSwapFailed,
+  reportTokenSwapSuccessful,
 } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -81,6 +84,31 @@ export function BuyTokenEmbed(props: {
             buyToken: {
               chainId: props.chain.id,
             },
+          }}
+          onError={(error, quote) => {
+            reportTokenSwapFailed({
+              errorMessage: error.message,
+              buyTokenChainId: quote.intent.destinationChainId,
+              buyTokenAddress: quote.intent.destinationTokenAddress,
+              sellTokenChainId: quote.intent.originChainId,
+              sellTokenAddress: quote.intent.originTokenAddress,
+            });
+          }}
+          onSuccess={(quote) => {
+            reportTokenSwapSuccessful({
+              buyTokenChainId: quote.intent.destinationChainId,
+              buyTokenAddress: quote.intent.destinationTokenAddress,
+              sellTokenChainId: quote.intent.originChainId,
+              sellTokenAddress: quote.intent.originTokenAddress,
+            });
+          }}
+          onCancel={(quote) => {
+            reportTokenSwapCancelled({
+              buyTokenChainId: quote.intent.destinationChainId,
+              buyTokenAddress: quote.intent.destinationTokenAddress,
+              sellTokenChainId: quote.intent.originChainId,
+              sellTokenAddress: quote.intent.originTokenAddress,
+            });
           }}
         />
       )}

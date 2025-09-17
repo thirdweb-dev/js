@@ -250,6 +250,53 @@ export function reportAssetBuySuccessful(properties: {
   });
 }
 
+type TokenSwapParams = {
+  buyTokenChainId: number;
+  buyTokenAddress: string;
+  sellTokenChainId: number;
+  sellTokenAddress: string;
+};
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of successful token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapSuccessful(properties: TokenSwapParams) {
+  posthog.capture("token swap successful", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of failed token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapFailed(
+  properties: TokenSwapParams & {
+    errorMessage: string;
+  },
+) {
+  posthog.capture("token swap failed", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of cancelled token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapCancelled(properties: TokenSwapParams) {
+  posthog.capture("token swap cancelled", properties);
+}
+
 /**
  * ### Why do we need to report this event?
  * - To track number of failed asset purchases from the token page

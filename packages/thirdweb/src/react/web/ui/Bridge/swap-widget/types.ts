@@ -7,6 +7,7 @@ import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../../core/hooks/connection/ConnectButtonProps.js";
+import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 
 /**
  * Connection options for the `SwapWidget` component
@@ -149,3 +150,8 @@ export type TokenSelection = {
   tokenAddress: string;
   chainId: number;
 };
+
+export type SwapPreparedQuote = Extract<
+  BridgePrepareResult,
+  { type: "buy" | "sell" }
+>;

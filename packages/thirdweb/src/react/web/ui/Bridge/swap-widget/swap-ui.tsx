@@ -30,10 +30,7 @@ import {
   type Theme,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import type {
-  BridgePrepareRequest,
-  BridgePrepareResult,
-} from "../../../../core/hooks/useBridgePrepare.js";
+import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
 import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
@@ -51,6 +48,7 @@ import { DecimalRenderer } from "./common.js";
 import { SelectToken } from "./select-token-ui.js";
 import type {
   ActiveWalletInfo,
+  SwapPreparedQuote,
   SwapWidgetConnectOptions,
   TokenSelection,
 } from "./types.js";
@@ -65,8 +63,8 @@ type SwapUIProps = {
   currency: SupportedFiatCurrency;
   showThirdwebBranding: boolean;
   onSwap: (data: {
-    result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
-    request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+    result: SwapPreparedQuote;
+    request: BridgePrepareRequest;
     buyToken: TokenWithPrices;
     sellTokenBalance: bigint;
     sellToken: TokenWithPrices;
@@ -439,7 +437,7 @@ function useSwapQuote(params: {
     queryFn: async (): Promise<
       | {
           type: "preparedResult";
-          result: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+          result: SwapPreparedQuote;
           request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
         }
       | {

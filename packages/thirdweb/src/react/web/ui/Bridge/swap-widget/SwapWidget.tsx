@@ -9,10 +9,7 @@ import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { getAddress } from "../../../../../utils/address.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../../core/design-system/index.js";
-import type {
-  BridgePrepareRequest,
-  BridgePrepareResult,
-} from "../../../../core/hooks/useBridgePrepare.js";
+import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../../adapters/WindowAdapter.js";
 import { EmbedContainer } from "../../ConnectWallet/Modal/ConnectEmbed.js";
@@ -24,7 +21,11 @@ import { StepRunner } from "../StepRunner.js";
 import { useActiveWalletInfo } from "./hooks.js";
 import { getLastUsedTokens, setLastUsedTokens } from "./storage.js";
 import { SwapUI } from "./swap-ui.js";
-import type { SwapWidgetConnectOptions, TokenSelection } from "./types.js";
+import type {
+  SwapPreparedQuote,
+  SwapWidgetConnectOptions,
+  TokenSelection,
+} from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
 
 export type SwapWidgetProps = {
@@ -44,54 +45,6 @@ export type SwapWidgetProps = {
    * ```
    */
   client: ThirdwebClient;
-  /**
-   * Set the theme for the `SwapWidget` component. By default it is set to `"dark"`
-   *
-   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
-   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
-   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
-   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
-   * @example
-   * ```ts
-   * import { lightTheme } from "thirdweb/react";
-   *
-   * const customTheme = lightTheme({
-   *  colors: {
-   *    modalBg: 'red'
-   *  }
-   * })
-   *
-   * function Example() {
-   *  return <SwapWidget client={client} theme={customTheme} />
-   * }
-   * ```
-   */
-  theme?: "light" | "dark" | Theme;
-  className?: string;
-  /**
-   * The currency to use for the payment.
-   * @default "USD"
-   */
-  currency?: SupportedFiatCurrency;
-  style?: React.CSSProperties;
-  /**
-   * Whether to show thirdweb branding in the widget.
-   * @default true
-   */
-  showThirdwebBranding?: boolean;
-  /**
-   * Callback to be called when the swap is successful.
-   */
-  onSuccess?: () => void;
-  /**
-   * Callback to be called when user encounters an error when swapping.
-   */
-  onError?: (error: Error) => void;
-  /**
-   * Callback to be called when the user cancels the purchase.
-   */
-  onCancel?: () => void;
-  connectOptions?: SwapWidgetConnectOptions;
   /**
    * The prefill Buy and/or Sell tokens for the swap widget. If `tokenAddress` is not provided, the native token will be used
    *
@@ -153,6 +106,54 @@ export type SwapWidgetProps = {
       amount?: string;
     };
   };
+  /**
+   * Set the theme for the `SwapWidget` component. By default it is set to `"dark"`
+   *
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * @example
+   * ```ts
+   * import { lightTheme } from "thirdweb/react";
+   *
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   *
+   * function Example() {
+   *  return <SwapWidget client={client} theme={customTheme} />
+   * }
+   * ```
+   */
+  theme?: "light" | "dark" | Theme;
+  /**
+   * The currency to use for the payment.
+   * @default "USD"
+   */
+  currency?: SupportedFiatCurrency;
+  connectOptions?: SwapWidgetConnectOptions;
+  /**
+   * Whether to show thirdweb branding in the widget.
+   * @default true
+   */
+  showThirdwebBranding?: boolean;
+  /**
+   * Callback to be called when the swap is successful.
+   */
+  onSuccess?: (quote: SwapPreparedQuote) => void;
+  /**
+   * Callback to be called when user encounters an error when swapping.
+   */
+  onError?: (error: Error, quote: SwapPreparedQuote) => void;
+  /**
+   * Callback to be called when the user cancels the purchase.
+   */
+  onCancel?: (quote: SwapPreparedQuote) => void;
+  style?: React.CSSProperties;
+  className?: string;
 };
 
 /**
@@ -274,7 +275,7 @@ type SwapWidgetScreen =
     }
   | {
       id: "2:preview";
-      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+      preparedQuote: SwapPreparedQuote;
       request: BridgePrepareRequest;
       quote: Buy.quote.Result | Sell.quote.Result;
       buyToken: TokenWithPrices;
@@ -286,7 +287,7 @@ type SwapWidgetScreen =
       id: "3:execute";
       request: BridgePrepareRequest;
       quote: Buy.quote.Result | Sell.quote.Result;
-      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+      preparedQuote: SwapPreparedQuote;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
       sellTokenBalance: bigint;
@@ -295,12 +296,13 @@ type SwapWidgetScreen =
   | {
       id: "4:success";
       completedStatuses: CompletedStatusResult[];
-      preparedQuote: Extract<BridgePrepareResult, { type: "buy" | "sell" }>;
+      preparedQuote: SwapPreparedQuote;
       buyToken: TokenWithPrices;
       sellToken: TokenWithPrices;
     }
   | {
       id: "error";
+      preparedQuote: SwapPreparedQuote;
       error: Error;
     };
 
@@ -377,11 +379,12 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   useBridgeChains(props.client);
 
   const handleError = useCallback(
-    (error: Error) => {
+    (error: Error, quote: SwapPreparedQuote) => {
       console.error(error);
-      props.onError?.(error);
+      props.onError?.(error, quote);
       setScreen({
         id: "error",
+        preparedQuote: quote,
         error,
       });
     },
@@ -439,7 +442,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
             id: "3:execute",
           });
         }}
-        onError={handleError}
+        onError={(error) => handleError(error, screen.preparedQuote)}
         paymentMethod={{
           quote: screen.quote,
           type: "wallet",
@@ -471,9 +474,9 @@ function SwapWidgetContent(props: SwapWidgetProps) {
             sellTokenBalance: screen.sellTokenBalance,
           });
         }}
-        onCancel={props.onCancel}
+        onCancel={() => props.onCancel?.(screen.preparedQuote)}
         onComplete={(completedStatuses) => {
-          props.onSuccess?.();
+          props.onSuccess?.(screen.preparedQuote);
           setScreen({
             ...screen,
             id: "4:success",
@@ -519,7 +522,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         error={screen.error}
         onCancel={() => {
           setScreen({ id: "1:swap-ui" });
-          props.onCancel?.();
+          props.onCancel?.(screen.preparedQuote);
         }}
         onRetry={() => {
           setScreen({ id: "1:swap-ui" });
