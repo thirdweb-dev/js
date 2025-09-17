@@ -398,7 +398,7 @@ export function SwapUI(props: SwapUIProps) {
       {props.showThirdwebBranding ? (
         <div>
           <Spacer y="md" />
-          <PoweredByThirdweb />
+          <PoweredByThirdweb link="https://thirdweb.com/monetize/bridge" />
         </div>
       ) : null}
     </Container>

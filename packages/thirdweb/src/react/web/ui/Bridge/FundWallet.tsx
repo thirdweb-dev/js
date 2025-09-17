@@ -360,7 +360,7 @@ export function FundWallet({
       {showThirdwebBranding ? (
         <div>
           <Spacer y="md" />
-          <PoweredByThirdweb />
+          <PoweredByThirdweb link="https://playground.thirdweb.com/payments/fund-wallet" />
         </div>
       ) : null}
       <Spacer y="md" />

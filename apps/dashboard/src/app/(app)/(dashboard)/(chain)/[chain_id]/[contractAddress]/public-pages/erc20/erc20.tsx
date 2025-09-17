@@ -3,7 +3,8 @@ import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { decimals, getActiveClaimCondition } from "thirdweb/extensions/erc20";
-import { GridPattern } from "@/components/ui/background-patterns";
+import { BuyAndSwapEmbed } from "@/components/blocks/BuyAndSwapEmbed";
+import { GridPatternEmbedContainer } from "@/components/blocks/grid-pattern-embed-container";
 import { HAS_USED_DASHBOARD } from "@/constants/cookie";
 import { resolveFunctionSelectors } from "@/lib/selectors";
 import { AssetPageView } from "../_components/asset-page-view";
@@ -14,7 +15,6 @@ import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
 import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
 import { DexScreener } from "./_components/dex-screener";
 import { mapChainIdToDexScreenerChainSlug } from "./_components/dex-screener-chains";
-import { BuyTokenEmbed } from "./_components/PayEmbedSection";
 import { RecentTransfers } from "./_components/RecentTransfers";
 import { fetchTokenInfoFromBridge } from "./_utils/fetch-coin-info";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
@@ -104,31 +104,17 @@ export async function ERC20PublicPage(props: {
 
       {showBuyEmbed && (
         <div className="container max-w-7xl pb-10">
-          <div className=" sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-lg overflow-hidden relative">
-            <GridPattern
-              width={30}
-              height={30}
-              x={-1}
-              y={-1}
-              strokeDasharray={"4 2"}
-              className="text-border dark:text-border/70"
-              style={{
-                maskImage:
-                  "linear-gradient(to bottom right,white,transparent,transparent)",
-              }}
+          <GridPatternEmbedContainer>
+            <BuyEmbed
+              chainMetadata={props.chainMetadata}
+              claimConditionMeta={claimConditionMeta}
+              clientContract={props.clientContract}
+              tokenAddress={props.clientContract.address}
+              tokenDecimals={tokenDecimals}
+              tokenName={contractMetadata.name}
+              tokenSymbol={contractMetadata.symbol}
             />
-            <div className="sm:w-[420px] z-10">
-              <BuyEmbed
-                chainMetadata={props.chainMetadata}
-                claimConditionMeta={claimConditionMeta}
-                clientContract={props.clientContract}
-                tokenAddress={props.clientContract.address}
-                tokenDecimals={tokenDecimals}
-                tokenName={contractMetadata.name}
-                tokenSymbol={contractMetadata.symbol}
-              />
-            </div>
-          </div>{" "}
+          </GridPatternEmbedContainer>
         </div>
       )}
 
@@ -185,10 +171,12 @@ function BuyEmbed(props: {
 }) {
   if (!props.claimConditionMeta) {
     return (
-      <BuyTokenEmbed
+      <BuyAndSwapEmbed
         chain={props.clientContract.chain}
         client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
+        buyAmount={undefined}
+        pageType="asset"
       />
     );
   }

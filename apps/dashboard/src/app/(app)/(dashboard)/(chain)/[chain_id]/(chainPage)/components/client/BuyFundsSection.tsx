@@ -1,24 +1,24 @@
 "use client";
-import { useTheme } from "next-themes";
-import { defineChain, type ThirdwebClient } from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { BuyWidget } from "thirdweb/react";
-import { getSDKTheme } from "@/utils/sdk-component-theme";
+import { BuyAndSwapEmbed } from "@/components/blocks/BuyAndSwapEmbed";
+import { GridPatternEmbedContainer } from "@/components/blocks/grid-pattern-embed-container";
+import { defineDashboardChain } from "@/lib/defineDashboardChain";
 
 export function BuyFundsSection(props: {
   chain: ChainMetadata;
   client: ThirdwebClient;
 }) {
-  const { theme } = useTheme();
   return (
-    <section className="flex flex-col gap-4 items-center justify-center">
-      <BuyWidget
-        amount="0"
-        // eslint-disable-next-line no-restricted-syntax
-        chain={defineChain(props.chain.chainId)}
+    <GridPatternEmbedContainer>
+      <BuyAndSwapEmbed
         client={props.client}
-        theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
+        // eslint-disable-next-line no-restricted-syntax
+        chain={defineDashboardChain(props.chain.chainId, props.chain)}
+        buyAmount={undefined}
+        tokenAddress={undefined}
+        pageType="chain"
       />
-    </section>
+    </GridPatternEmbedContainer>
   );
 }

@@ -255,6 +255,7 @@ type TokenSwapParams = {
   buyTokenAddress: string;
   sellTokenChainId: number;
   sellTokenAddress: string;
+  pageType: "asset" | "bridge" | "chain";
 };
 
 /**

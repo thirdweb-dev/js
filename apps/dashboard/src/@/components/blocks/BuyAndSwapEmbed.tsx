@@ -16,10 +16,12 @@ import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
 
-export function BuyTokenEmbed(props: {
+export function BuyAndSwapEmbed(props: {
   client: ThirdwebClient;
   chain: Chain;
-  tokenAddress: string;
+  tokenAddress: string | undefined;
+  buyAmount: string | undefined;
+  pageType: "asset" | "bridge" | "chain";
 }) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
@@ -41,7 +43,7 @@ export function BuyTokenEmbed(props: {
 
       {tab === "buy" && (
         <BuyWidget
-          amount="1"
+          amount={props.buyAmount || "1"}
           chain={props.chain}
           className="!rounded-2xl !w-full !border-none"
           title=""
@@ -51,19 +53,23 @@ export function BuyTokenEmbed(props: {
           }}
           onError={(e) => {
             const errorMessage = parseError(e);
-            reportAssetBuyFailed({
-              assetType: "coin",
-              chainId: props.chain.id,
-              contractType: "DropERC20",
-              error: errorMessage,
-            });
+            if (props.pageType === "asset") {
+              reportAssetBuyFailed({
+                assetType: "coin",
+                chainId: props.chain.id,
+                contractType: "DropERC20",
+                error: errorMessage,
+              });
+            }
           }}
           onSuccess={() => {
-            reportAssetBuySuccessful({
-              assetType: "coin",
-              chainId: props.chain.id,
-              contractType: "DropERC20",
-            });
+            if (props.pageType === "asset") {
+              reportAssetBuySuccessful({
+                assetType: "coin",
+                chainId: props.chain.id,
+                contractType: "DropERC20",
+              });
+            }
           }}
           theme={themeObj}
           tokenAddress={props.tokenAddress as `0x${string}`}
@@ -92,6 +98,7 @@ export function BuyTokenEmbed(props: {
               buyTokenAddress: quote.intent.destinationTokenAddress,
               sellTokenChainId: quote.intent.originChainId,
               sellTokenAddress: quote.intent.originTokenAddress,
+              pageType: props.pageType,
             });
           }}
           onSuccess={(quote) => {
@@ -100,6 +107,7 @@ export function BuyTokenEmbed(props: {
               buyTokenAddress: quote.intent.destinationTokenAddress,
               sellTokenChainId: quote.intent.originChainId,
               sellTokenAddress: quote.intent.originTokenAddress,
+              pageType: props.pageType,
             });
           }}
           onCancel={(quote) => {
@@ -108,6 +116,7 @@ export function BuyTokenEmbed(props: {
               buyTokenAddress: quote.intent.destinationTokenAddress,
               sellTokenChainId: quote.intent.originChainId,
               sellTokenAddress: quote.intent.originTokenAddress,
+              pageType: props.pageType,
             });
           }}
         />
