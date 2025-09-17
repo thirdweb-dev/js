@@ -1000,6 +1000,7 @@ export function DetailsModal(props: {
       <WalletUIStatesProvider isOpen={false} theme={props.theme}>
         <ScreenSetupContext.Provider value={screenSetup}>
           <Modal
+            title="Manage Wallet"
             open={isOpen}
             setOpen={(_open) => {
               if (!_open) {

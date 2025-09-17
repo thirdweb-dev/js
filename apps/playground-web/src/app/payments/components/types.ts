@@ -28,7 +28,7 @@ const CURRENCIES = [
   "ISK",
 ] as const;
 
-type SupportedFiatCurrency = (typeof CURRENCIES)[number] | (string & {});
+type SupportedFiatCurrency = (typeof CURRENCIES)[number];
 
 export type BridgeComponentsPlaygroundOptions = {
   theme: {

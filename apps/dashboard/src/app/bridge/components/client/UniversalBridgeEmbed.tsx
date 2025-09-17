@@ -1,10 +1,8 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import type { Address } from "thirdweb";
-import { BuyWidget, type TokenInfo } from "thirdweb/react";
+import type { TokenInfo } from "thirdweb/react";
+import { BuyAndSwapEmbed } from "@/components/blocks/BuyAndSwapEmbed";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
-import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { bridgeAppThirdwebClient } from "../../constants";
 
 export function UniversalBridgeEmbed({
@@ -16,16 +14,17 @@ export function UniversalBridgeEmbed({
   token: TokenInfo | undefined;
   amount?: string;
 }) {
-  const { theme } = useTheme();
   const chain = useV5DashboardChain(chainId || 1);
 
   return (
-    <BuyWidget
-      client={bridgeAppThirdwebClient}
-      amount={amount || "0"}
-      chain={chain}
-      tokenAddress={token?.address as Address | undefined}
-      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
-    />
+    <div className="lg:w-[400px]">
+      <BuyAndSwapEmbed
+        client={bridgeAppThirdwebClient}
+        chain={chain}
+        buyAmount={amount}
+        tokenAddress={token?.address}
+        pageType="bridge"
+      />
+    </div>
   );
 }

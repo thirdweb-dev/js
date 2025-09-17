@@ -6,7 +6,7 @@ import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import { iconSize } from "../../../../core/design-system/index.js";
+import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
 import { Container, ModalHeader } from "../../components/basic.js";
@@ -91,10 +91,10 @@ export function SuccessScreen({
   }
 
   return (
-    <Container flex="column" fullHeight p="lg">
+    <Container flex="column" fullHeight px="md" pb="md" pt="md+">
       <ModalHeader title="Payment Complete" />
 
-      <Spacer y="xl" />
+      <Spacer y="xxl" />
 
       <Container center="x" flex="column" gap="md">
         {/* Success Icon with Animation */}
@@ -103,7 +103,6 @@ export function SuccessScreen({
           flex="row"
           style={{
             animation: "successBounce 0.6s ease-out",
-            backgroundColor: theme.colors.tertiaryBg,
             border: `2px solid ${theme.colors.success}`,
             borderRadius: "50%",
             height: "64px",
@@ -121,19 +120,31 @@ export function SuccessScreen({
           />
         </Container>
 
-        <Text center color="primaryText" size="xl">
-          Payment Successful!
-        </Text>
+        <div>
+          <Text
+            center
+            color="primaryText"
+            size="xl"
+            weight={600}
+            trackingTight
+            style={{
+              marginBottom: spacing.xxs,
+            }}
+          >
+            Payment Successful!
+          </Text>
 
-        <Text center color="secondaryText" size="sm">
-          {hasPaymentId
-            ? "You can now close this page and return to the application."
-            : uiOptions.mode === "transaction"
-              ? "Click continue to execute your transaction."
-              : "Your payment has been completed successfully."}
-        </Text>
+          <Text center color="secondaryText" size="sm">
+            {hasPaymentId
+              ? "You can now close this page and return to the application."
+              : uiOptions.mode === "transaction"
+                ? "Click continue to execute your transaction."
+                : "Your payment has been completed successfully."}
+          </Text>
+        </div>
       </Container>
-      <Spacer y="lg" />
+
+      <Spacer y="xxl" />
 
       {/* Action Buttons */}
       <Container flex="column" gap="sm" style={{ width: "100%" }}>

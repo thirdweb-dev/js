@@ -25,6 +25,7 @@ import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
 
 interface StepRunnerProps {
+  title?: string;
   request: BridgePrepareRequest;
 
   /**
@@ -64,6 +65,7 @@ interface StepRunnerProps {
 }
 
 export function StepRunner({
+  title,
   request,
   wallet,
   client,
@@ -247,8 +249,8 @@ export function StepRunner({
   };
 
   return (
-    <Container flex="column" fullHeight p="lg">
-      <ModalHeader onBack={onBack} title="Processing Payment" />
+    <Container flex="column" fullHeight px="md" pb="md" pt="md+">
+      <ModalHeader onBack={onBack} title={title || "Processing Payment"} />
 
       <Spacer y="xl" />
 
@@ -374,7 +376,7 @@ export function StepRunner({
         </Container>
 
         <Spacer y="md" />
-        <Text center color="secondaryText" size="xs">
+        <Text center color="secondaryText" size="xs" multiline>
           Keep this window open until all
           <br /> transactions are complete.
         </Text>

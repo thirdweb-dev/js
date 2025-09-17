@@ -51,7 +51,7 @@ export function ErrorBanner({
   });
 
   return (
-    <Container flex="column" fullHeight gap="md" p="lg">
+    <Container flex="column" fullHeight gap="md" p="md">
       {/* Error Icon and Message */}
       <Container flex="row" gap="md" style={{ alignItems: "flex-start" }}>
         <Container

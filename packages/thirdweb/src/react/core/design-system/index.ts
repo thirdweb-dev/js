@@ -136,7 +136,7 @@ function createThemeObj(type: "dark" | "light", colors: ThemeColors): Theme {
       selectedTextColor: colors.base1,
 
       separatorLine: colors.base4,
-      skeletonBg: colors.base3,
+      skeletonBg: colors.base4,
       success: colors.success,
       tertiaryBg: colors.base2,
 
@@ -177,6 +177,7 @@ export const spacing = {
   "4xs": "2px",
   lg: "24px",
   md: "16px",
+  "md+": "20px",
   sm: "12px",
   xl: "32px",
   xs: "8px",
@@ -191,6 +192,7 @@ export const radius = {
   xl: "20px",
   xs: "4px",
   xxl: "32px",
+  full: "9999px",
 };
 
 export const iconSize = {

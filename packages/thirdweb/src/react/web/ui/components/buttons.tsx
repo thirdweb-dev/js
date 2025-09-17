@@ -9,7 +9,14 @@ import {
 import { StyledButton } from "../design-system/elements.js";
 
 type ButtonProps = {
-  variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
+  variant:
+    | "primary"
+    | "secondary"
+    | "link"
+    | "accent"
+    | "outline"
+    | "ghost"
+    | "ghost-solid";
   unstyled?: boolean;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
@@ -65,6 +72,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         case "secondary":
           return theme.colors.secondaryButtonText;
         case "ghost":
+        case "ghost-solid":
         case "outline":
           return theme.colors.secondaryButtonText;
         case "link":
@@ -104,6 +112,15 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         return {
           "&:hover": {
             borderColor: theme.colors.accentText,
+          },
+          border: "1px solid transparent",
+        };
+      }
+
+      if (props.variant === "ghost-solid") {
+        return {
+          "&:hover": {
+            background: theme.colors.tertiaryBg,
           },
           border: "1px solid transparent",
         };

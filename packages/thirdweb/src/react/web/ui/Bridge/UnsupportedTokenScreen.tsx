@@ -64,7 +64,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
           size="sm"
           style={{ lineHeight: 1.5, maxWidth: "280px" }}
         >
-          The Universal Bridge does not support testnets at this time.
+          Bridge does not support testnets at this time.
         </Text>
       </Container>
     );
@@ -94,7 +94,7 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
         size="sm"
         style={{ lineHeight: 1.5, maxWidth: "280px" }}
       >
-        This token or chain is not supported by the Universal Bridge.
+        This token or chain is not supported by the Bridge
       </Text>
     </Container>
   );

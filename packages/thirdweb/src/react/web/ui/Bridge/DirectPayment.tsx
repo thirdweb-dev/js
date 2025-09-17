@@ -100,7 +100,7 @@ export function DirectPayment({
           size="xl"
           token={uiOptions.paymentInfo.token}
           tokenAmount={uiOptions.paymentInfo.amount}
-          weight={700}
+          weight={600}
         />
         <Container flex="row" gap="3xs">
           <Text
@@ -190,7 +190,7 @@ export function DirectPayment({
             <PoweredByThirdweb />
           </div>
         ) : null}
-        <Spacer y="lg" />
+        <Spacer y="md" />
       </Container>
     </WithHeader>
   );

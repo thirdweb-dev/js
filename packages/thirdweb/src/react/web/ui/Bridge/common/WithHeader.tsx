@@ -19,6 +19,8 @@ export function WithHeader({
   client: ThirdwebClient;
 }) {
   const theme = useCustomTheme();
+  const showTitle = uiOptions.metadata?.title !== "";
+
   return (
     <Container flex="column">
       {/* image */}
@@ -36,25 +38,33 @@ export function WithHeader({
           }}
         />
       )}
-      <Container flex="column" px="lg">
-        <Spacer y="lg" />
 
-        {/* title */}
-        <Text color="primaryText" size="lg" weight={700}>
-          {uiOptions.metadata?.title || defaultTitle}
-        </Text>
+      <Container flex="column" px="md">
+        <Spacer y="md+" />
 
-        {/* Description */}
-        {uiOptions.metadata?.description && (
+        {(showTitle || uiOptions.metadata?.description) && (
           <>
-            <Spacer y="xs" />
-            <Text color="secondaryText" size="sm">
-              {uiOptions.metadata?.description}
-            </Text>
+            {/* title */}
+            {showTitle && (
+              <Text color="primaryText" size="lg" weight={600}>
+                {uiOptions.metadata?.title || defaultTitle}
+              </Text>
+            )}
+
+            {/* Description */}
+            {uiOptions.metadata?.description && (
+              <>
+                <Spacer y="xxs" />
+                <Text color="secondaryText" size="sm" multiline>
+                  {uiOptions.metadata?.description}
+                </Text>
+              </>
+            )}
+
+            <Spacer y="md" />
           </>
         )}
 
-        <Spacer y="lg" />
         {children}
       </Container>
     </Container>

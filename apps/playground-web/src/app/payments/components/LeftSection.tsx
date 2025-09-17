@@ -27,6 +27,7 @@ import {
 import { TokenSelector } from "@/components/ui/TokenSelector";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { TokenMetadata } from "@/lib/types";
+import type { SupportedFiatCurrency } from "../../../../../../packages/thirdweb/dist/types/pay/convert/type";
 import { CollapsibleSection } from "../../wallets/sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../wallets/sign-in/components/ColorFormGroup";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
@@ -155,7 +156,7 @@ export function LeftSection(props: {
                   ...v,
                   payOptions: {
                     ...v.payOptions,
-                    currency: value,
+                    currency: value as SupportedFiatCurrency,
                   },
                 }));
               }}

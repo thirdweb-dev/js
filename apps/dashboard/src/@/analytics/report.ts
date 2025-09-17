@@ -250,6 +250,54 @@ export function reportAssetBuySuccessful(properties: {
   });
 }
 
+type TokenSwapParams = {
+  buyTokenChainId: number;
+  buyTokenAddress: string;
+  sellTokenChainId: number;
+  sellTokenAddress: string;
+  pageType: "asset" | "bridge" | "chain";
+};
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of successful token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapSuccessful(properties: TokenSwapParams) {
+  posthog.capture("token swap successful", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of failed token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapFailed(
+  properties: TokenSwapParams & {
+    errorMessage: string;
+  },
+) {
+  posthog.capture("token swap failed", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of cancelled token swaps from the token page
+ * - To track which tokens are being swapped the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenSwapCancelled(properties: TokenSwapParams) {
+  posthog.capture("token swap cancelled", properties);
+}
+
 /**
  * ### Why do we need to report this event?
  * - To track number of failed asset purchases from the token page
@@ -269,6 +317,26 @@ export function reportAssetBuyFailed(properties: {
     chainId: properties.chainId,
     contractType: properties.contractType,
     error: properties.error,
+  });
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of cancelled asset purchases from the token page
+ * - To track the errors that users encounter when trying to purchase an asset
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetBuyCancelled(properties: {
+  chainId: number;
+  contractType: AssetContractType;
+  assetType: "nft" | "coin";
+}) {
+  posthog.capture("asset buy cancelled", {
+    assetType: properties.assetType,
+    chainId: properties.chainId,
+    contractType: properties.contractType,
   });
 }
 

@@ -125,9 +125,16 @@ export function PaymentSelection({
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
 
-  const [currentStep, setCurrentStep] = useState<Step>({
-    type: "walletSelection",
-  });
+  const initialStep =
+    paymentMethods.length === 1 && paymentMethods[0] === "card"
+      ? {
+          type: "fiatProviderSelection" as const,
+        }
+      : {
+          type: "walletSelection" as const,
+        };
+
+  const [currentStep, setCurrentStep] = useState<Step>(initialStep);
 
   useQuery({
     queryFn: () => {
@@ -226,6 +233,9 @@ export function PaymentSelection({
   };
 
   const getBackHandler = () => {
+    if (paymentMethods.length === 1 && paymentMethods[0] === "card") {
+      return onBack;
+    }
     switch (currentStep.type) {
       case "walletSelection":
         return onBack;
@@ -270,12 +280,11 @@ export function PaymentSelection({
   }
 
   return (
-    <Container flex="column" p="lg">
+    <Container flex="column" px="md" pb="md" pt="md+">
       <ModalHeader onBack={getBackHandler()} title={getStepTitle()} />
+      <Spacer y="lg" />
 
-      <Spacer y="xl" />
-
-      <Container flex="column">
+      <Container flex="column" style={{ minHeight: "300px" }}>
         {currentStep.type === "walletSelection" && (
           <WalletFiatSelection
             client={client}

@@ -12,6 +12,7 @@ export type TextProps = {
   weight?: 400 | 500 | 600 | 700;
   multiline?: boolean;
   balance?: boolean;
+  trackingTight?: boolean;
 };
 
 export const Text = /* @__PURE__ */ StyledSpan<TextProps>((p) => {
@@ -20,7 +21,7 @@ export const Text = /* @__PURE__ */ StyledSpan<TextProps>((p) => {
     color: theme.colors[p.color || "secondaryText"],
     display: p.inline ? "inline" : "block",
     fontSize: fontSize[p.size || "md"],
-    fontWeight: p.weight || 500,
+    fontWeight: p.weight || 400,
     lineHeight: p.multiline ? 1.5 : "normal",
     margin: 0,
     maxWidth: "100%",
@@ -28,6 +29,7 @@ export const Text = /* @__PURE__ */ StyledSpan<TextProps>((p) => {
     textAlign: p.center ? "center" : "left",
     textOverflow: "ellipsis",
     textWrap: p.balance ? "balance" : "inherit",
+    letterSpacing: p.trackingTight ? "-0.025em" : undefined,
   };
 });
 

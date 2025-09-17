@@ -49,7 +49,7 @@ export default async function BridgePage({
   }
 
   return (
-    <div className="relative mx-auto flex h-screen w-full flex-col items-center justify-center overflow-hidden border py-10">
+    <div className="relative mx-auto flex h-dvh w-full flex-col items-center justify-center overflow-hidden border py-10">
       <main className="container z-10 flex justify-center">
         <UniversalBridgeEmbed
           amount={amount as string}
@@ -69,7 +69,7 @@ export default async function BridgePage({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         alt=""
-        className="-bottom-12 -right-12 pointer-events-none absolute lg:right-0 lg:bottom-0"
+        className="-bottom-12 -right-12 pointer-events-none absolute lg:right-0 lg:bottom-0 opacity-20"
         src="/assets/login/background.svg"
       />
 
@@ -79,17 +79,17 @@ export default async function BridgePage({
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent" />
             <div className="relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
-                <h3 className="font-medium text-lg">
-                  Get Started with thirdweb Payments
+                <h3 className="font-semibold text-base tracking-tight">
+                  Get Started with thirdweb Bridge
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Simple, instant, and secure payments across any token and
-                  chain.
+                  thirdweb Bridge allows developers to easily bridge and swap
+                  tokens between chains and wallets.
                 </p>
               </div>
               <a
                 className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 font-medium text-sm text-white transition-all hover:bg-green-600/90 hover:shadow-sm"
-                href="https://portal.thirdweb.com/payments"
+                href="https://portal.thirdweb.com/bridge"
                 rel="noopener noreferrer"
                 target="_blank"
               >

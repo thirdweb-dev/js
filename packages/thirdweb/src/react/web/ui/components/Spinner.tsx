@@ -10,6 +10,7 @@ import { StyledCircle, StyledSvg } from "../design-system/elements.js";
  */
 export const Spinner: React.FC<{
   size: keyof typeof iconSize;
+  style?: React.CSSProperties;
   color?: keyof Theme["colors"];
 }> = (props) => {
   const theme = useCustomTheme();
@@ -18,6 +19,7 @@ export const Spinner: React.FC<{
       style={{
         height: `${iconSize[props.size]}px`,
         width: `${iconSize[props.size]}px`,
+        ...props.style,
       }}
       viewBox="0 0 50 50"
     >

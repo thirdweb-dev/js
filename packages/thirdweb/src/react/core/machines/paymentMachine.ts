@@ -22,6 +22,7 @@ type PaymentMode = "fund_wallet" | "direct_payment" | "transaction";
 export type PaymentMethod =
   | {
       type: "wallet";
+      action: "buy" | "sell";
       payerWallet: Wallet;
       originToken: TokenWithPrices;
       balance: bigint;

@@ -163,7 +163,7 @@ export function QuoteLoader({
       <Spinner color="secondaryText" size="xl" />
       <Spacer y="md" />
       <Text center color="primaryText" size="lg" style={{ fontWeight: 600 }}>
-        Finding the best route...
+        Finding the best route
       </Text>
       <Spacer y="sm" />
       <Text center color="secondaryText" size="sm">
@@ -229,7 +229,10 @@ function getBridgeParams(args: {
       }
 
       return {
-        amount: toUnits(amount, destinationToken.decimals),
+        amount:
+          paymentMethod.action === "buy"
+            ? toUnits(amount, destinationToken.decimals)
+            : toUnits(amount, paymentMethod.originToken.decimals),
         client,
         destinationChainId: destinationToken.chainId,
         destinationTokenAddress: destinationToken.address,
@@ -241,7 +244,7 @@ function getBridgeParams(args: {
         receiver,
         sender:
           sender || paymentMethod.payerWallet.getAccount()?.address || receiver,
-        type: "buy",
+        type: paymentMethod.action,
       };
   }
 }

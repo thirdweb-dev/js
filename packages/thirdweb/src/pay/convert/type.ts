@@ -1,48 +1,31 @@
-const CURRENCIES = [
-  "USD",
-  "EUR",
-  "GBP",
-  "JPY",
-  "KRW",
-  "CNY",
-  "INR",
-  "NOK",
-  "SEK",
-  "CHF",
-  "AUD",
-  "CAD",
-  "NZD",
-  "MXN",
-  "BRL",
-  "CLP",
-  "CZK",
-  "DKK",
-  "HKD",
-  "HUF",
-  "IDR",
-  "ILS",
-  "ISK",
-] as const;
+const currencySymbol = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  JPY: "¥",
+  KRW: "₩",
+  CNY: "¥",
+  INR: "₹",
+  NOK: "kr",
+  SEK: "kr",
+  CHF: "CHF",
+  AUD: "$",
+  CAD: "$",
+  NZD: "$",
+  MXN: "$",
+  BRL: "R$",
+  CLP: "$",
+  CZK: "Kč",
+  DKK: "kr",
+  HKD: "$",
+  HUF: "Ft",
+  IDR: "Rp",
+  ILS: "₪",
+  ISK: "kr",
+} as const;
 
-export type SupportedFiatCurrency = (typeof CURRENCIES)[number] | (string & {});
+export type SupportedFiatCurrency = keyof typeof currencySymbol;
 
 export function getFiatSymbol(showBalanceInFiat: SupportedFiatCurrency) {
-  switch (showBalanceInFiat) {
-    case "USD":
-      return "$";
-    case "CAD":
-      return "$";
-    case "GBP":
-      return "£";
-    case "EUR":
-      return "€";
-    case "JPY":
-      return "¥";
-    case "AUD":
-      return "$";
-    case "NZD":
-      return "$";
-    default:
-      return "$";
-  }
+  return currencySymbol[showBalanceInFiat] || "$";
 }

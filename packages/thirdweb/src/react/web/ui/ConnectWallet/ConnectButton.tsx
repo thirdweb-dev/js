@@ -543,6 +543,7 @@ function ConnectButtonInner(
             )}
           </Button>
           <Modal
+            title="Sign in"
             open={showSignatureModal}
             setOpen={setShowSignatureModal}
             size="compact"

@@ -64,11 +64,10 @@ export function ModalHeader(props: {
   );
 }
 
-export const Line = /* @__PURE__ */ StyledDiv(() => {
+export const Line = /* @__PURE__ */ StyledDiv((props: { dashed?: boolean }) => {
   const theme = useCustomTheme();
   return {
-    background: theme.colors.separatorLine,
-    height: "1px",
+    borderTop: `1px ${props.dashed ? "dashed" : "solid"} ${theme.colors.separatorLine}`,
   };
 });
 
@@ -87,6 +86,8 @@ export function Container(props: {
   p?: keyof typeof spacing;
   px?: keyof typeof spacing;
   py?: keyof typeof spacing;
+  pb?: keyof typeof spacing;
+  pt?: keyof typeof spacing;
   relative?: boolean;
   scrollY?: boolean;
   color?: keyof Theme["colors"];
@@ -154,6 +155,14 @@ export function Container(props: {
   if (props.py) {
     styles.paddingTop = spacing[props.py];
     styles.paddingBottom = spacing[props.py];
+  }
+
+  if (props.pb) {
+    styles.paddingBottom = spacing[props.pb];
+  }
+
+  if (props.pt) {
+    styles.paddingTop = spacing[props.pt];
   }
 
   if (props.debug) {

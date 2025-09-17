@@ -38,3 +38,5 @@ export interface Chain {
     decimals: number;
   };
 }
+
+export type BridgeChain = Chain;
