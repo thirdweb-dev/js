@@ -203,12 +203,12 @@ export function ChainLiveStats(props: { rpc: string }) {
       >
         {eip7702Support.data ? (
           eip7702Support.data.isSupported ? (
-            "Enabled"
+            "Available"
           ) : (
-            "Disabled"
+            "Not Available"
           )
         ) : eip7702Support.isError ? (
-          "Disabled"
+          "Not Available"
         ) : (
           <div className="flex h-[28px] w-[80px] py-1">
             <Skeleton className="h-full w-full" />

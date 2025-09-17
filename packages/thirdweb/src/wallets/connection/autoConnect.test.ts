@@ -5,7 +5,6 @@ import { createWalletAdapter } from "../../adapters/wallet-adapter.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { webLocalStorage } from "../../utils/storage/webStorage.js";
 import { createWallet } from "../create-wallet.js";
-import { getInstalledWalletProviders } from "../injected/mipdStore.js";
 import { autoConnect } from "./autoConnect.js";
 import { autoConnectCore } from "./autoConnectCore.js";
 
@@ -25,7 +24,6 @@ describe("autoConnect", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(getInstalledWalletProviders).mockReturnValue([]);
     vi.mocked(createWallet).mockReturnValue(mockWallet);
     vi.mocked(autoConnectCore).mockResolvedValue(true);
   });
@@ -38,7 +36,6 @@ describe("autoConnect", () => {
 
     expect(autoConnectCore).toHaveBeenCalledWith({
       createWalletFn: createWallet,
-      getInstalledWallets: expect.any(Function),
       manager: expect.any(Object),
       props: {
         client: TEST_CLIENT,

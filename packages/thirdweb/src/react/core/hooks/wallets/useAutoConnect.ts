@@ -14,7 +14,6 @@ export function useAutoConnectCore(
   storage: AsyncStorage,
   props: AutoConnectProps & { wallets: Wallet[] },
   createWalletFn: (id: WalletId) => Wallet,
-  getInstalledWallets?: () => Wallet[],
 ) {
   const manager = useConnectionManagerCtx("useAutoConnect");
   const { connect } = useConnect({
@@ -28,7 +27,6 @@ export function useAutoConnectCore(
       autoConnectCore({
         connectOverride: connect,
         createWalletFn,
-        getInstalledWallets,
         manager,
         props,
         setLastAuthProvider,

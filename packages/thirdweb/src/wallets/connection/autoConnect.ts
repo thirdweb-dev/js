@@ -1,7 +1,6 @@
 import { webLocalStorage } from "../../utils/storage/webStorage.js";
 import { createWallet } from "../create-wallet.js";
 import { getDefaultWallets } from "../defaultWallets.js";
-import { getInstalledWalletProviders } from "../injected/mipdStore.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { createConnectionManager } from "../manager/index.js";
 import { autoConnectCore } from "./autoConnectCore.js";
@@ -44,16 +43,6 @@ export async function autoConnect(
   const manager = createConnectionManager(webLocalStorage);
   const result = await autoConnectCore({
     createWalletFn: createWallet,
-    getInstalledWallets: () => {
-      const specifiedWalletIds = new Set(wallets.map((x) => x.id));
-
-      // pass the wallets that are not already specified but are installed by the user
-      const installedWallets = getInstalledWalletProviders()
-        .filter((x) => !specifiedWalletIds.has(x.info.rdns))
-        .map((x) => createWallet(x.info.rdns));
-
-      return installedWallets;
-    },
     manager,
     props: {
       ...props,
