@@ -323,33 +323,30 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         chainId: props.prefill.buyToken.chainId,
       };
     }
-    const last = getLastUsedTokens()?.buyToken;
-    if (last) {
-      return {
-        tokenAddress: getAddress(last.tokenAddress),
-        chainId: last.chainId,
-      };
+    const lastUsedBuyToken = getLastUsedTokens()?.buyToken;
+
+    // the token that will be set as initial value of sell token
+    const sellToken = getInitialSellToken(
+      props.prefill,
+      getLastUsedTokens()?.sellToken,
+    );
+
+    // if both tokens are same, ignore "buyToken", keep "sellToken"
+    if (
+      lastUsedBuyToken &&
+      sellToken &&
+      lastUsedBuyToken.tokenAddress.toLowerCase() ===
+        sellToken.tokenAddress.toLowerCase() &&
+      lastUsedBuyToken.chainId === sellToken.chainId
+    ) {
+      return undefined;
     }
-    return undefined;
+
+    return lastUsedBuyToken;
   });
 
   const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
-    if (props.prefill?.sellToken) {
-      return {
-        tokenAddress:
-          props.prefill.sellToken.tokenAddress ||
-          getAddress(NATIVE_TOKEN_ADDRESS),
-        chainId: props.prefill.sellToken.chainId,
-      };
-    }
-    const last = getLastUsedTokens()?.sellToken;
-    if (last) {
-      return {
-        tokenAddress: getAddress(last.tokenAddress),
-        chainId: last.chainId,
-      };
-    }
-    return undefined;
+    return getInitialSellToken(props.prefill, getLastUsedTokens()?.sellToken);
   });
 
   // persist selections to localStorage whenever they change
@@ -514,4 +511,18 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   }
 
   return null;
+}
+
+function getInitialSellToken(
+  prefill: SwapWidgetProps["prefill"],
+  lastUsedSellToken: TokenSelection | undefined,
+) {
+  if (prefill?.sellToken) {
+    return {
+      tokenAddress:
+        prefill.sellToken.tokenAddress || getAddress(NATIVE_TOKEN_ADDRESS),
+      chainId: prefill.sellToken.chainId,
+    };
+  }
+  return lastUsedSellToken;
 }

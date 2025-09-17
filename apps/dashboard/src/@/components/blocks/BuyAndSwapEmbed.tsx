@@ -97,9 +97,12 @@ export function BuyAndSwapEmbed(props: {
               chainId: props.chain.id,
               tokenAddress: props.tokenAddress,
             },
-            buyToken: {
-              chainId: props.chain.id,
-            },
+            // only set `buyToken` as "Native token" if `sellToken` is not a "native token" already
+            buyToken: props.tokenAddress
+              ? {
+                  chainId: props.chain.id,
+                }
+              : undefined,
           }}
           onError={(error, quote) => {
             const errorMessage = parseError(error);
