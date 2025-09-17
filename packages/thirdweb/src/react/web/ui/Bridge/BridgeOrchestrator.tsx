@@ -180,14 +180,13 @@ export function BridgeOrchestrator({
   const [state, send] = usePaymentMachine(adapters, uiOptions.mode);
 
   // Handle buy completion
-  const handleBuyComplete = useCallback(() => {
+  const handleDoneOrContinueClick = useCallback(() => {
     if (uiOptions.mode === "transaction") {
       send({ type: "CONTINUE_TO_TRANSACTION" });
     } else {
-      onComplete?.();
       send({ type: "RESET" });
     }
-  }, [onComplete, send, uiOptions.mode]);
+  }, [send, uiOptions.mode]);
 
   // Handle post-buy transaction completion
   const handlePostBuyTransactionComplete = useCallback(() => {
@@ -230,8 +229,11 @@ export function BridgeOrchestrator({
   const handleExecutionComplete = useCallback(
     (completedStatuses: CompletedStatusResult[]) => {
       send({ completedStatuses, type: "EXECUTION_COMPLETE" });
+      if (uiOptions.mode !== "transaction") {
+        onComplete?.();
+      }
     },
-    [send],
+    [send, onComplete, uiOptions.mode],
   );
 
   // Handle retry
@@ -390,7 +392,7 @@ export function BridgeOrchestrator({
           <SuccessScreen
             client={client}
             completedStatuses={state.context.completedStatuses}
-            onDone={handleBuyComplete}
+            onDone={handleDoneOrContinueClick}
             preparedQuote={state.context.quote}
             uiOptions={uiOptions}
             windowAdapter={webWindowAdapter}
