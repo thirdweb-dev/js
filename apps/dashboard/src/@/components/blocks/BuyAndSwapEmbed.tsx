@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
 import {
+  reportAssetBuyCancelled,
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
   reportTokenSwapCancelled,
@@ -62,6 +63,15 @@ export function BuyAndSwapEmbed(props: {
               });
             }
           }}
+          onCancel={() => {
+            if (props.pageType === "asset") {
+              reportAssetBuyCancelled({
+                assetType: "coin",
+                chainId: props.chain.id,
+                contractType: "DropERC20",
+              });
+            }
+          }}
           onSuccess={() => {
             if (props.pageType === "asset") {
               reportAssetBuySuccessful({
@@ -92,8 +102,9 @@ export function BuyAndSwapEmbed(props: {
             },
           }}
           onError={(error, quote) => {
+            const errorMessage = parseError(error);
             reportTokenSwapFailed({
-              errorMessage: error.message,
+              errorMessage: errorMessage,
               buyTokenChainId: quote.intent.destinationChainId,
               buyTokenAddress: quote.intent.destinationTokenAddress,
               sellTokenChainId: quote.intent.originChainId,

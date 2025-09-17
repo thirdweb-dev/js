@@ -263,48 +263,30 @@ export function SwapWidgetContainer(props: {
   );
 }
 
+type SelectionInfo = {
+  preparedQuote: SwapPreparedQuote;
+  request: BridgePrepareRequest;
+  quote: Buy.quote.Result | Sell.quote.Result;
+  buyToken: TokenWithPrices;
+  sellToken: TokenWithPrices;
+  sellTokenBalance: bigint;
+  mode: "buy" | "sell";
+};
+
+type Join<T, U> = T & U;
+
 type SwapWidgetScreen =
   | { id: "1:swap-ui" }
-  | {
-      id: "2:loading-quote";
-      quote: Buy.quote.Result | Sell.quote.Result;
-      buyToken: TokenWithPrices;
-      sellToken: TokenWithPrices;
-      sellTokenBalance: bigint;
-      mode: "buy" | "sell";
-    }
-  | {
-      id: "2:preview";
-      preparedQuote: SwapPreparedQuote;
-      request: BridgePrepareRequest;
-      quote: Buy.quote.Result | Sell.quote.Result;
-      buyToken: TokenWithPrices;
-      sellToken: TokenWithPrices;
-      sellTokenBalance: bigint;
-      mode: "buy" | "sell";
-    }
-  | {
-      id: "3:execute";
-      request: BridgePrepareRequest;
-      quote: Buy.quote.Result | Sell.quote.Result;
-      preparedQuote: SwapPreparedQuote;
-      buyToken: TokenWithPrices;
-      sellToken: TokenWithPrices;
-      sellTokenBalance: bigint;
-      mode: "buy" | "sell";
-    }
-  | {
-      id: "4:success";
-      completedStatuses: CompletedStatusResult[];
-      preparedQuote: SwapPreparedQuote;
-      buyToken: TokenWithPrices;
-      sellToken: TokenWithPrices;
-    }
-  | {
-      id: "error";
-      preparedQuote: SwapPreparedQuote;
-      error: Error;
-    };
+  | Join<{ id: "2:preview" }, SelectionInfo>
+  | Join<{ id: "3:execute" }, SelectionInfo>
+  | Join<
+      {
+        id: "4:success";
+        completedStatuses: CompletedStatusResult[];
+      },
+      SelectionInfo
+    >
+  | { id: "error"; error: Error; preparedQuote: SwapPreparedQuote };
 
 function SwapWidgetContent(props: SwapWidgetProps) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });

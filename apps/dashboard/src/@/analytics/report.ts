@@ -320,6 +320,26 @@ export function reportAssetBuyFailed(properties: {
   });
 }
 
+/**
+ * ### Why do we need to report this event?
+ * - To track number of cancelled asset purchases from the token page
+ * - To track the errors that users encounter when trying to purchase an asset
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportAssetBuyCancelled(properties: {
+  chainId: number;
+  contractType: AssetContractType;
+  assetType: "nft" | "coin";
+}) {
+  posthog.capture("asset buy cancelled", {
+    assetType: properties.assetType,
+    chainId: properties.chainId,
+    contractType: properties.contractType,
+  });
+}
+
 // Assets Landing Page ----------------------------
 
 /**
