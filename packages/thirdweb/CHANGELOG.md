@@ -1,5 +1,27 @@
 # thirdweb
 
+## 5.106.0
+
+### Minor Changes
+
+- [#8044](https://github.com/thirdweb-dev/js/pull/8044) [`0e3f346`](https://github.com/thirdweb-dev/js/commit/0e3f3460ad30d5a1c52552ce9d786a9cc814dfee) Thanks [@MananTank](https://github.com/MananTank)! - Add `SwapWidget` component for swapping tokens using thirdweb Bridge
+
+  ```tsx
+  <SwapWidget client={thirdwebClient} />
+  ```
+
+### Patch Changes
+
+- [#8066](https://github.com/thirdweb-dev/js/pull/8066) [`e160deb`](https://github.com/thirdweb-dev/js/commit/e160deb8b73d0d7ba5f6bcf47c0675230efc4dfb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Always reconnect any previously connected wallet properly
+
+- [#8067](https://github.com/thirdweb-dev/js/pull/8067) [`e0738d6`](https://github.com/thirdweb-dev/js/commit/e0738d68d2aa6fcf0cfbdebc4b5603887e3233a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix SwapWidget setting same token for buy and sell in some cases when using last used token from storage
+
+- [#8065](https://github.com/thirdweb-dev/js/pull/8065) [`a6f846f`](https://github.com/thirdweb-dev/js/commit/a6f846fc1ead20734a52ff69263e6407f7ba3f9e) Thanks [@MananTank](https://github.com/MananTank)! - Add `tw-` class names in connect ui
+
+- [#8054](https://github.com/thirdweb-dev/js/pull/8054) [`15f0839`](https://github.com/thirdweb-dev/js/commit/15f083912c053f98eb30a28cddcf0114450129e6) Thanks [@MananTank](https://github.com/MananTank)! - Fix `onSuccess` callback was not called correctly on `CheckoutWidget`, `BuyWidget` components
+
+- [#8062](https://github.com/thirdweb-dev/js/pull/8062) [`f276dcf`](https://github.com/thirdweb-dev/js/commit/f276dcfd766c79149c5302b0207777bcc9f267a0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Filter out AGW from searchable wallets (needs explicit adding)
+
 ## 5.105.48
 
 ### Patch Changes
