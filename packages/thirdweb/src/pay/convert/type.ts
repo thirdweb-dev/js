@@ -1,39 +1,4 @@
-const CURRENCIES = [
-  "USD",
-  "EUR",
-  "GBP",
-  "JPY",
-  "KRW",
-  "CNY",
-  "INR",
-  "NOK",
-  "SEK",
-  "CHF",
-  "AUD",
-  "CAD",
-  "NZD",
-  "MXN",
-  "BRL",
-  "CLP",
-  "CZK",
-  "DKK",
-  "HKD",
-  "HUF",
-  "IDR",
-  "ILS",
-  "ISK",
-] as const;
-
-export type SupportedFiatCurrency = (typeof CURRENCIES)[number] | (string & {});
-
-export function getFiatSymbol(showBalanceInFiat: SupportedFiatCurrency) {
-  if (currencySymbol[showBalanceInFiat]) {
-    return currencySymbol[showBalanceInFiat];
-  }
-  return "$";
-}
-
-const currencySymbol: Record<SupportedFiatCurrency, string> = {
+const currencySymbol = {
   USD: "$",
   EUR: "€",
   GBP: "£",
@@ -57,4 +22,10 @@ const currencySymbol: Record<SupportedFiatCurrency, string> = {
   IDR: "Rp",
   ILS: "₪",
   ISK: "kr",
-};
+} as const;
+
+export type SupportedFiatCurrency = keyof typeof currencySymbol;
+
+export function getFiatSymbol(showBalanceInFiat: SupportedFiatCurrency) {
+  return currencySymbol[showBalanceInFiat] || "$";
+}

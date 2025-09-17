@@ -159,7 +159,7 @@ export function FiatProviderSelection({
                       style={{ fontWeight: 500 }}
                     >
                       {formatCurrencyAmount(
-                        currency || "US",
+                        currency || "USD",
                         quote.currencyAmount,
                       )}
                     </Text>

@@ -23,6 +23,9 @@ type SelectBuyTokenProps = {
   selectedChain: BridgeChain | undefined;
 };
 
+/**
+ * @internal
+ */
 export function SelectBridgeChain(props: SelectBuyTokenProps) {
   const chainQuery = useBridgeChains(props.client);
 
@@ -36,6 +39,9 @@ export function SelectBridgeChain(props: SelectBuyTokenProps) {
   );
 }
 
+/**
+ * @internal
+ */
 export function SelectBridgeChainUI(
   props: SelectBuyTokenProps & {
     isPending: boolean;

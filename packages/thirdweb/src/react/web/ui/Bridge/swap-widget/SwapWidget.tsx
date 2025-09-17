@@ -155,18 +155,6 @@ export type SwapWidgetProps = {
   };
 };
 
-export function SwapWidget(props: SwapWidgetProps) {
-  return (
-    <SwapWidgetContainer
-      theme={props.theme}
-      style={props.style}
-      className={props.className}
-    >
-      <SwapWidgetContent {...props} />
-    </SwapWidgetContainer>
-  );
-}
-
 /**
  * A widget for swapping tokens with cross-chain support
  *
@@ -237,7 +225,21 @@ export function SwapWidget(props: SwapWidgetProps) {
  * }} />
  * ```
  *
- * @returns
+ */
+export function SwapWidget(props: SwapWidgetProps) {
+  return (
+    <SwapWidgetContainer
+      theme={props.theme}
+      style={props.style}
+      className={props.className}
+    >
+      <SwapWidgetContent {...props} />
+    </SwapWidgetContainer>
+  );
+}
+
+/**
+ * @internal
  */
 export function SwapWidgetContainer(props: {
   theme: SwapWidgetProps["theme"];

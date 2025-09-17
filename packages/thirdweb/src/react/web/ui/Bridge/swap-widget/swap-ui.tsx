@@ -108,6 +108,9 @@ function useTokenPrice(options: {
   });
 }
 
+/**
+ * @internal
+ */
 export function SwapUI(props: SwapUIProps) {
   const [modalState, setModalState] = useState<
     "select-buy-token" | "select-sell-token" | undefined

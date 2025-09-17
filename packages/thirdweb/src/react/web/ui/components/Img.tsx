@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { radius, type Theme } from "../../../core/design-system/index.js";
@@ -25,6 +25,7 @@ export const Img: React.FC<{
   const [_status, setStatus] = useState<"pending" | "fallback" | "loaded">(
     "pending",
   );
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const propSrc = props.src;
 
@@ -51,6 +52,26 @@ export const Img: React.FC<{
     src === undefined ? "pending" : src === "" ? "fallback" : _status;
 
   const isLoaded = status === "loaded";
+
+  useEffect(() => {
+    const imgEl = imgRef.current;
+    if (!imgEl) {
+      return;
+    }
+    if (imgEl.complete) {
+      setStatus("loaded");
+    } else {
+      function handleLoad() {
+        setStatus("loaded");
+      }
+      imgEl.addEventListener("load", handleLoad);
+      return () => {
+        imgEl.removeEventListener("load", handleLoad);
+      };
+    }
+
+    return;
+  }, []);
 
   return (
     <div

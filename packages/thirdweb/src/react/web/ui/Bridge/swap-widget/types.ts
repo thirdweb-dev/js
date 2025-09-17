@@ -9,11 +9,11 @@ import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js
 import type { ConnectButton_connectModalOptions } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 
 /**
- * Connection options for the `BuyWidget` component
+ * Connection options for the `SwapWidget` component
  *
  * @example
  * ```tsx
- * <BuyWidget client={client} connectOptions={{
+ * <SwapWidget client={client} connectOptions={{
  *    connectModal: {
  *      size: 'compact',
  *      title: "Sign in",
@@ -61,7 +61,6 @@ export type SwapWidgetConnectOptions = {
    * If you want to disable autoConnect, set this prop to `false`.
    *
    * If you want to customize the timeout, you can assign an object with a `timeout` key to this prop.
-   * ```
    */
   autoConnect?:
     | {
@@ -134,12 +133,18 @@ export type SwapWidgetConnectOptions = {
   auth?: SiweAuthOptions;
 };
 
+/**
+ * @internal
+ */
 export type ActiveWalletInfo = {
   activeChain: Chain;
   activeWallet: Wallet;
   activeAccount: Account;
 };
 
+/**
+ * @internal
+ */
 export type TokenSelection = {
   tokenAddress: string;
   chainId: number;

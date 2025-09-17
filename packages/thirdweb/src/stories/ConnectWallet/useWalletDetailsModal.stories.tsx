@@ -96,7 +96,7 @@ export function ConnectedAccountName() {
 }
 
 export function ShowBalanceInFiat() {
-  return <Variant client={storyClient} showBalanceInFiat="usd" />;
+  return <Variant client={storyClient} showBalanceInFiat="USD" />;
 }
 
 export function AssetTabs() {

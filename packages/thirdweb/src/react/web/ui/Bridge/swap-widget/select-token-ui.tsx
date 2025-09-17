@@ -32,6 +32,9 @@ import {
   useTokens,
 } from "./use-tokens.js";
 
+/**
+ * @internal
+ */
 type SelectTokenUIProps = {
   onBack: () => void;
   client: ThirdwebClient;
@@ -47,6 +50,9 @@ function getDefaultSelectedChain(
   return chains.find((chain) => chain.chainId === (activeChainId || 1));
 }
 
+/**
+ * @internal
+ */
 export function SelectToken(props: SelectTokenUIProps) {
   const chainQuery = useBridgeChains(props.client);
   const [search, setSearch] = useState("");
@@ -267,8 +273,10 @@ function SelectTokenUI(
                       client={props.client}
                       onSelect={props.setSelectedToken}
                       isSelected={
-                        props.selectedToken?.tokenAddress.toLowerCase() ===
-                        token.token_address.toLowerCase()
+                        !!props.selectedToken &&
+                        props.selectedToken.tokenAddress.toLowerCase() ===
+                          token.token_address.toLowerCase() &&
+                        token.chain_id === props.selectedToken.chainId
                       }
                     />
                   ))}

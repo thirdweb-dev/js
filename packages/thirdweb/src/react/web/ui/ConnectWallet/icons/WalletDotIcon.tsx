@@ -1,5 +1,8 @@
 import type { IconFC } from "./types.js";
 
+/**
+ * @internal
+ */
 export const WalletDotIcon: IconFC = (props) => {
   return (
     <svg

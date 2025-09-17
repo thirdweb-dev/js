@@ -40,7 +40,7 @@ export function useTokens(options: {
 export type TokenBalance = {
   balance: string;
   chain_id: number;
-  decimals: 1;
+  decimals: number;
   name: string;
   icon_uri: string;
   price_data: {
