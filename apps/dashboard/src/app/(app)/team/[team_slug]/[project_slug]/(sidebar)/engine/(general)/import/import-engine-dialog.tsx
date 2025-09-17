@@ -8,6 +8,7 @@ import {
   ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -17,7 +18,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -70,6 +70,7 @@ export function ImportEngineButton(props: {
   teamSlug: string;
   projectSlug: string;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useDashboardRouter();
   const form = useForm<ImportEngineParams>({
     resolver: zodResolver(formSchema),
@@ -82,7 +83,7 @@ export function ImportEngineButton(props: {
   const importMutation = useMutation({
     mutationFn: async (importParams: ImportEngineParams) => {
       await importEngine({ ...importParams, teamIdOrSlug: props.teamSlug });
-      router.push(`/team/${props.teamSlug}/${props.projectSlug}/engine`);
+      router.refresh();
     },
   });
 
@@ -90,6 +91,7 @@ export function ImportEngineButton(props: {
     try {
       await importMutation.mutateAsync(data);
       toast.success("Engine imported successfully");
+      setIsOpen(false);
     } catch (e) {
       const message = e instanceof Error ? e.message : undefined;
       toast.error(
@@ -102,42 +104,40 @@ export function ImportEngineButton(props: {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              className="gap-2 rounded-full bg-card"
-              size="sm"
-              variant="outline"
-            >
-              <ArrowDownToLineIcon className="size-3.5" />
-              Import Engine
-            </Button>
-          </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          className="gap-2 rounded-full bg-card"
+          size="sm"
+          variant="outline"
+        >
+          <ArrowDownToLineIcon className="size-3.5" />
+          Import Engine
+        </Button>
+      </DialogTrigger>
 
-          <DialogContent>
-            <DialogHeader>
+      <DialogContent className="p-0 rounded-lg overflow-hidden">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader className="p-4 lg:p-6">
               <DialogTitle>Import Engine Instance</DialogTitle>
               <DialogDescription>
                 Import an Engine instance hosted on your infrastructure.
               </DialogDescription>
             </DialogHeader>
 
-            <div>
-              <div>
-                <Link
-                  className="flex items-center justify-between gap-2 rounded-lg border border-border bg-card p-3 text-sm hover:bg-accent"
-                  href="https://portal.thirdweb.com/infrastructure/engine/get-started"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Get help setting up Engine for free
-                  <ExternalLinkIcon className="size-4 text-muted-foreground" />
-                </Link>
-              </div>
+            <div className="px-4 lg:px-6 pb-6">
+              <Link
+                className="mb-4 flex items-center justify-between gap-2 rounded-full border border-border bg-card p-3 text-sm hover:bg-accent"
+                href="https://portal.thirdweb.com/engine/v2/get-started"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Get help setting up Engine for free
+                <ExternalLinkIcon className="size-4 text-muted-foreground" />
+              </Link>
 
-              <div className="mt-6 flex flex-col gap-4">
+              <div className="space-y-5">
                 <FormField
                   control={form.control}
                   name="name"
@@ -146,6 +146,7 @@ export function ImportEngineButton(props: {
                       <FormLabel>Name</FormLabel>
                       <FormControl>
                         <Input
+                          className="bg-card"
                           autoFocus
                           placeholder="Enter a descriptive label"
                           {...field}
@@ -164,6 +165,7 @@ export function ImportEngineButton(props: {
                       <FormLabel>URL</FormLabel>
                       <FormControl>
                         <Input
+                          className="bg-card"
                           placeholder="Enter your Engine URL"
                           type="url"
                           {...field}
@@ -182,8 +184,8 @@ export function ImportEngineButton(props: {
               </div>
             </div>
 
-            <DialogFooter>
-              <Button className="min-w-28 gap-1.5 rounded-full" type="submit">
+            <div className="border-t bg-card p-6 flex justify-end">
+              <Button className="gap-2 rounded-full" type="submit">
                 {importMutation.isPending ? (
                   <Spinner className="size-4" />
                 ) : (
@@ -191,10 +193,10 @@ export function ImportEngineButton(props: {
                 )}
                 Import
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </form>
-    </Form>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
