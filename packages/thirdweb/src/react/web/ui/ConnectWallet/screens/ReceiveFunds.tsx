@@ -35,7 +35,7 @@ export function ReceiveFunds(props: {
   const locale = connectLocale.receiveFundsScreen;
 
   return (
-    <Container p="lg">
+    <Container p="lg" className="tw-receive-funds-screen">
       <ModalHeader onBack={props.onBack} title={locale.title} />
 
       <Spacer y="xl" />
@@ -57,7 +57,10 @@ export function ReceiveFunds(props: {
       </Container>
       <Spacer y="xl" />
 
-      <WalletAddressContainer onClick={onCopy}>
+      <WalletAddressContainer
+        onClick={onCopy}
+        className="tw-copy-address-button"
+      >
         <Text color="primaryText" size="md">
           {shortenString(address || "")}
         </Text>

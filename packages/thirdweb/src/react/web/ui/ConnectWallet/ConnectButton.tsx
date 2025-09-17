@@ -161,6 +161,19 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  *
  * [View all available themes properties](https://portal.thirdweb.com/references/typescript/v5/Theme)
  *
+ * ### Overriding styles using class names
+ *
+ * Some elements in this component have classes with a `tw-` prefix.
+ * You can target these classes in your own CSS stylesheet to override their styles.
+ *
+ * In some cases, you may need to use the `!important` flag for the override to take effect. Do not use on auto-generated class names, as they may change between builds.
+ *
+ * ```css
+ * .tw-back-button {
+ *   background-color: red !important;
+ * }
+ * ```
+ *
  * ### Changing the display language
  *
  * ```tsx
@@ -543,6 +556,7 @@ function ConnectButtonInner(
             )}
           </Button>
           <Modal
+            className="tw-modal__sign-in"
             title="Sign in"
             open={showSignatureModal}
             setOpen={setShowSignatureModal}

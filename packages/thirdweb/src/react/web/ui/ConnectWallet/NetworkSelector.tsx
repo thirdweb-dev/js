@@ -146,6 +146,7 @@ type NetworkSelectorContentProps = {
   showTabs?: boolean;
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
+  className?: string;
 };
 
 /**
@@ -364,7 +365,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
   );
 
   return (
-    <Container>
+    <Container className={props.className}>
       <Container p="lg">
         {props.onBack ? (
           <ModalHeader onBack={props.onBack} title={locale.title} />
@@ -954,6 +955,7 @@ export function useNetworkSwitcherModal() {
       setRootEl(
         <CustomThemeProvider theme={props.theme}>
           <Modal
+            className="tw-modal__switch-network"
             title="Switch Network"
             open={true}
             setOpen={(value) => {

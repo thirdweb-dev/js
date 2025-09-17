@@ -69,7 +69,12 @@ function AllWalletsUI(props: {
   }, [searchResults, itemsToShow]);
 
   return (
-    <Container animate="fadein" flex="column" fullHeight>
+    <Container
+      animate="fadein"
+      flex="column"
+      fullHeight
+      className="tw-all-wallets-screen"
+    >
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title="Select Wallet" />
       </Container>
@@ -140,6 +145,7 @@ function AllWalletsUI(props: {
                     }}
                   >
                     <WalletEntryButton
+                      className="tw-select-wallet-button"
                       badge={undefined}
                       client={props.client}
                       connectLocale={props.connectLocale}

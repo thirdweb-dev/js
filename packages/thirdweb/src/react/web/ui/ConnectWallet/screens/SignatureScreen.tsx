@@ -169,14 +169,24 @@ export const SignatureScreen: React.FC<{
             </Container>
 
             <Container animate="fadein" flex="column" gap="md" key={status}>
-              <Text center color="primaryText" size="lg">
+              <Text
+                center
+                color="primaryText"
+                size="lg"
+                className="tw-screen-title"
+              >
                 {status === "failed"
                   ? error || locale.signingScreen.failedToSignIn
-                  : locale.signingScreen.inProgress}
+                  : locale.signingScreen.inProgress}{" "}
               </Text>
 
               {status === "signing" && (
-                <Text balance center multiline>
+                <Text
+                  balance
+                  center
+                  multiline
+                  className="tw-screen-description"
+                >
                   {connectLocale.signatureScreen.signingScreen.prompt}
                 </Text>
               )}

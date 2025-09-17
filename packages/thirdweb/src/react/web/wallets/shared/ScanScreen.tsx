@@ -40,7 +40,12 @@ export const ScanScreen: React.FC<{
   const [linkCopied, setLinkCopied] = useState(false);
 
   return (
-    <Container animate="fadein" flex="column" fullHeight>
+    <Container
+      animate="fadein"
+      flex="column"
+      fullHeight
+      className="tw-qr-scan-screen"
+    >
       <Container p="lg">
         <ModalHeader onBack={props.onBack} title={props.walletName} />
       </Container>
@@ -68,6 +73,7 @@ export const ScanScreen: React.FC<{
             <Spacer y="xs" />
 
             <Button
+              className="tw-copy-link-button"
               disabled={props.qrCodeUri === undefined}
               onClick={() => {
                 navigator.clipboard
@@ -101,6 +107,7 @@ export const ScanScreen: React.FC<{
               balance
               center
               multiline
+              className="tw-screen-description"
               style={{
                 paddingInline: spacing.lg,
               }}
@@ -122,12 +129,23 @@ export const ScanScreen: React.FC<{
               <AccentFailIcon size={iconSize["3xl"]} />
             </Container>
             <Spacer y="lg" />
-            <Text center color="primaryText" size="lg">
+            <Text
+              center
+              color="primaryText"
+              size="lg"
+              className="tw-screen-title"
+              data-status="failed"
+            >
               Connection Failed
             </Text>
             <Spacer y="3xl" />
 
-            <Button fullWidth onClick={props.onRetry} variant="accent">
+            <Button
+              fullWidth
+              onClick={props.onRetry}
+              variant="accent"
+              className="tw-retry-button"
+            >
               Try again
             </Button>
           </Container>
@@ -144,6 +162,7 @@ export const ScanScreen: React.FC<{
         >
           <Button
             onClick={props.onGetStarted}
+            className="tw-get-started-button"
             style={{
               fontSize: fontSize.sm,
               textAlign: "center",

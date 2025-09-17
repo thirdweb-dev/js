@@ -170,7 +170,11 @@ export function SendFundsForm(props: {
 
   if (sendTokenMutation.isError) {
     return (
-      <Container animate="fadein" p="lg">
+      <Container
+        animate="fadein"
+        p="lg"
+        className="tw-send-funds-screen tw-send-funds-screen__error"
+      >
         <ModalHeader
           onBack={() => {
             sendTokenMutation.reset();
@@ -199,7 +203,11 @@ export function SendFundsForm(props: {
 
   if (sendTokenMutation.isSuccess) {
     return (
-      <Container animate="fadein" p="lg">
+      <Container
+        animate="fadein"
+        p="lg"
+        className="tw-send-funds-screen tw-send-funds-screen__success"
+      >
         <ModalHeader
           onBack={() => {
             sendTokenMutation.reset();
@@ -232,7 +240,11 @@ export function SendFundsForm(props: {
     balanceQuery?.data?.symbol;
 
   return (
-    <Container animate="fadein" p="lg">
+    <Container
+      animate="fadein"
+      p="lg"
+      className="tw-send-funds-screen tw-send-funds-screen__form"
+    >
       <ModalHeader onBack={props.onBack} title={locale.title} />
       <Spacer y="xl" />
 
@@ -247,6 +259,7 @@ export function SendFundsForm(props: {
         </Label>
         <Spacer y="sm" />
         <Button
+          className="tw-select-token-button"
           fullWidth
           id={tokenId}
           onClick={props.onTokenSelect}
@@ -289,6 +302,7 @@ export function SendFundsForm(props: {
         </Label>
         <Spacer y="sm" />
         <Input
+          className="tw-address-input"
           id={receiverId}
           onChange={(e) => {
             setReceiverAddress(e.target.value);
@@ -308,6 +322,7 @@ export function SendFundsForm(props: {
         <Spacer y="sm" />
         <Container relative>
           <Input
+            className="tw-amount-input"
             id={amountId}
             onChange={(e) => {
               setAmount(e.target.value);
@@ -326,7 +341,7 @@ export function SendFundsForm(props: {
 
         {/* Submit */}
         <Button
-          className="tw-sendfunds-screen-send-button"
+          className="tw-send-funds-button"
           fullWidth
           onClick={async () => {
             if (!receiverAddress || !amount) {

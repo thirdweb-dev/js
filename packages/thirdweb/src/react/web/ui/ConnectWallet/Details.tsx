@@ -572,6 +572,7 @@ export function DetailsModal(props: {
           <Container px="lg">
             {/* Send, Receive, Swap */}
             <Container
+              className="tw-highlight-buttons"
               style={{
                 display: "flex",
                 gap: spacing.xs,
@@ -579,6 +580,7 @@ export function DetailsModal(props: {
             >
               {!hideSendFunds && (
                 <Button
+                  className="tw-highlight-button__send"
                   onClick={() => {
                     setScreen("send");
                   }}
@@ -608,6 +610,7 @@ export function DetailsModal(props: {
 
               {!hideReceiveFunds && (
                 <Button
+                  className="tw-highlight-button__receive"
                   onClick={() => {
                     setScreen("receive");
                   }}
@@ -632,6 +635,7 @@ export function DetailsModal(props: {
                 chainMetadataQuery.data &&
                 !chainMetadataQuery.data.testnet && (
                   <Button
+                    className="tw-highlight-button__buy"
                     onClick={() => {
                       trackPayEvent({
                         client: client,
@@ -682,6 +686,7 @@ export function DetailsModal(props: {
 
           {/* Transactions */}
           <MenuButton
+            className="tw-view-transactions-button"
             onClick={() => {
               setScreen("transactions");
             }}
@@ -699,6 +704,7 @@ export function DetailsModal(props: {
           {/* Hide the View Funds button if the assetTabs props is set to an empty array */}
           {(props.assetTabs === undefined || props.assetTabs.length > 0) && (
             <MenuButton
+              className="tw-view-assets-button"
               onClick={() => {
                 setScreen("view-assets");
               }}
@@ -713,6 +719,7 @@ export function DetailsModal(props: {
 
           {/* Manage Wallet */}
           <MenuButton
+            className="tw-manage-wallet-button"
             onClick={() => {
               setScreen("manage-wallet");
             }}
@@ -729,6 +736,7 @@ export function DetailsModal(props: {
             (chainFaucetsQuery.faucets.length > 0 ||
               walletChain?.id === LocalhostChainId) && (
               <MenuLink
+                className="tw-request-testnet-funds-button"
                 as="a"
                 href={
                   chainFaucetsQuery.faucets ? chainFaucetsQuery.faucets[0] : "#"
@@ -759,6 +767,7 @@ export function DetailsModal(props: {
           <Spacer y="sm" />
           <Container px="md">
             <MenuButton
+              className="tw-disconnect-wallet-button"
               data-variant="danger"
               onClick={() => {
                 if (activeWallet && activeAccount) {
@@ -1000,6 +1009,7 @@ export function DetailsModal(props: {
       <WalletUIStatesProvider isOpen={false} theme={props.theme}>
         <ScreenSetupContext.Provider value={screenSetup}>
           <Modal
+            className="tw-modal__wallet-details"
             title="Manage Wallet"
             open={isOpen}
             setOpen={(_open) => {
@@ -1043,7 +1053,7 @@ export function NetworkSwitcherButton(props: {
   }
   return (
     <MenuButton
-      className="tw-internal-network-switcher-button"
+      className="tw-internal-network-switcher-button tw-switch-network-button"
       data-variant="primary"
       disabled={disableSwitchChain}
       onClick={() => {

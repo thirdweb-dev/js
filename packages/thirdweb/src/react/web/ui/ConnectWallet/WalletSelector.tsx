@@ -1,6 +1,6 @@
 "use client";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
@@ -18,7 +18,7 @@ import {
 } from "../../../core/design-system/index.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
-import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
+import InAppWalletSelectionUI from "../../wallets/in-app/InAppWalletSelectionUI.js";
 import {
   Container,
   Line,
@@ -42,10 +42,6 @@ import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButtonEl, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
-
-const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
-  () => import("../../wallets/in-app/InAppWalletSelectionUI.js"),
-);
 
 // const localWalletId = "local";
 const inAppWalletId: WalletId = "inApp";
@@ -202,7 +198,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       title={props.modalHeader.title}
     />
   ) : (
-    <Container center="y" flex="row" gap="xxs">
+    <Container center="y" flex="row" gap="xs" className="tw-header">
       {!props.meta.titleIconUrl ? null : (
         <Img
           client={props.client}
@@ -222,6 +218,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
   const connectAWallet = (
     <WalletTypeRowButton
+      className="tw-select-connect-a-wallet-button"
       client={props.client}
       disabled={props.meta.requireApproval && !approvedTOS}
       icon={OutlineWalletIcon}
@@ -234,6 +231,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
   const newToWallets = (
     <Container
+      className="tw-get-started-container"
       flex="row"
       style={{
         justifyContent: "space-between",
@@ -489,6 +487,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   return (
     <Container
       animate="fadein"
+      className="tw-wallet-selection"
       flex="column"
       fullHeight
       scrollY
@@ -620,22 +619,21 @@ const WalletSelection: React.FC<{
             // data-full-width={!!walletConfig.selectUI}
           >
             {wallet.id === "inApp" && props.size === "compact" ? (
-              <Suspense fallback={<LoadingScreen height="195px" />}>
-                <InAppWalletSelectionUI
-                  chain={props.chain}
-                  client={props.client}
-                  connectLocale={props.connectLocale}
-                  disabled={props.disabled}
-                  done={() => props.done(wallet)}
-                  goBack={props.goBack}
-                  recommendedWallets={props.recommendedWallets}
-                  select={() => props.selectWallet(wallet)}
-                  size={props.size}
-                  wallet={wallet as Wallet<"inApp">}
-                />
-              </Suspense>
+              <InAppWalletSelectionUI
+                chain={props.chain}
+                client={props.client}
+                connectLocale={props.connectLocale}
+                disabled={props.disabled}
+                done={() => props.done(wallet)}
+                goBack={props.goBack}
+                recommendedWallets={props.recommendedWallets}
+                select={() => props.selectWallet(wallet)}
+                size={props.size}
+                wallet={wallet as Wallet<"inApp">}
+              />
             ) : (
               <WalletEntryButton
+                className="tw-wallet-select-wallet-button"
                 badge={undefined}
                 client={props.client}
                 connectLocale={props.connectLocale}
@@ -655,7 +653,7 @@ const WalletSelection: React.FC<{
       })}
 
       {props.onShowAll && props.showAllWallets !== false && (
-        <ButtonContainer>
+        <ButtonContainer className="tw-show-all-wallets-button">
           <WalletButtonEl onClick={props.onShowAll}>
             <ShowAllWalletsIcon>
               <div data-dot />

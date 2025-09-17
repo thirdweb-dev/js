@@ -68,6 +68,7 @@ export function TransactionModal(props: ModalProps) {
   return (
     <CustomThemeProvider theme={props.theme}>
       <Modal
+        className="tw-modal__view-transaction"
         title="View Transaction"
         open={true}
         setOpen={(_open) => {

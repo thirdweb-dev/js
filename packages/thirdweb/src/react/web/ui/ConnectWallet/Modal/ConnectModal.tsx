@@ -118,6 +118,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
 
   return (
     <Modal
+      className="tw-modal__connect-wallet"
       title="Connect Wallet"
       hide={hideModal}
       open={isWalletModalOpen}

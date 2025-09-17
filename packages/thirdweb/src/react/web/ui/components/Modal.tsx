@@ -12,6 +12,7 @@ import {
   shadow,
   spacing,
 } from "../../../core/design-system/index.js";
+import { cls } from "../../utils/cls.js";
 import {
   compactModalMaxHeight,
   modalCloseFadeOutDuration,
@@ -33,6 +34,7 @@ export const Modal: React.FC<{
   open?: boolean;
   setOpen?: (open: boolean) => void;
   children: React.ReactNode;
+  className: string;
   style?: React.CSSProperties;
   hideCloseIcon?: boolean;
   size: "wide" | "compact";
@@ -90,6 +92,7 @@ export const Modal: React.FC<{
         <FocusScope trapped={!props.hide}>
           <Dialog.Content aria-describedby={undefined} asChild>
             <DialogContent
+              className={cls("tw-modal", props.className)}
               ref={contentRef}
               style={
                 props.hide

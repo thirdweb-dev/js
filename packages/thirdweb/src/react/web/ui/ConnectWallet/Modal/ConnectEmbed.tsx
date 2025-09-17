@@ -22,6 +22,7 @@ import { useIsAutoConnecting } from "../../../../core/hooks/wallets/useIsAutoCon
 import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import { cls } from "../../../utils/cls.js";
 import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
@@ -161,6 +162,19 @@ import { useSetupScreen } from "./screen.js";
  *
  * [View all available themes properties](https://portal.thirdweb.com/references/typescript/v5/Theme)
  *
+ * ### Overriding styles using class names
+ *
+ * Some elements in this component have classes with a `tw-` prefix.
+ * You can target these classes in your own CSS stylesheet to override their styles.
+ *
+ * In some cases, you may need to use the `!important` flag for the override to take effect. Do not use on auto-generated class names, as they may change between builds.
+ *
+ * ```css
+ * .tw-back-button {
+ *   background-color: red !important;
+ * }
+ * ```
+ *
  * ### Changing the display language
  *
  * ```tsx
@@ -266,7 +280,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
         <>
           {autoConnectComp}
           <CustomThemeProvider theme={props.theme}>
-            <EmbedContainer modalSize={modalSize}>
+            <EmbedContainer
+              modalSize={modalSize}
+              className={cls("tw-widget-loading", props.className)}
+              style={props.style}
+            >
               <LoadingScreen />
             </EmbedContainer>
           </CustomThemeProvider>

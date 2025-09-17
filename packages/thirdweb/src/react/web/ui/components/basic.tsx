@@ -2,6 +2,7 @@
 import type { CSSObject } from "@emotion/react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { spacing, type Theme } from "../../../core/design-system/index.js";
+import { cls } from "../../utils/cls.js";
 import {
   fadeInAnimation,
   floatDownAnimation,
@@ -36,10 +37,12 @@ export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
   leftAligned?: boolean;
+  className?: string;
 }) {
   const { onBack, title } = props;
   return (
     <div
+      className={cls("tw-header", props.className)}
       style={{
         alignItems: "center",
         display: "flex",
@@ -94,6 +97,7 @@ export function Container(props: {
   debug?: boolean;
   bg?: keyof Theme["colors"];
   borderColor?: keyof Theme["colors"];
+  className?: string;
 }) {
   const styles: React.CSSProperties = {};
 
@@ -177,6 +181,7 @@ export function Container(props: {
       color={props.color}
       data-animate={props.animate}
       data-scrolly={props.scrollY}
+      className={props.className}
       style={{
         ...styles,
         ...props.style,

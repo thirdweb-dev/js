@@ -11,12 +11,14 @@ type WalletTypeRowProps = {
   title: string;
   icon: IconFC;
   disabled?: boolean;
+  className?: string;
 };
 
 export function WalletTypeRowButton(props: WalletTypeRowProps) {
   return (
     <Button
       disabled={props.disabled}
+      className={props.className}
       fullWidth
       onClick={() => {
         props.onClick();

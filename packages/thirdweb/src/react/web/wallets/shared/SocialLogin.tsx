@@ -154,7 +154,12 @@ export function SocialLogin(props: {
   }, [done, socialLogin]);
 
   return (
-    <Container animate="fadein" flex="column" fullHeight>
+    <Container
+      animate="fadein"
+      flex="column"
+      fullHeight
+      className="tw-social-login-screen"
+    >
       <Container
         expand
         flex="column"
