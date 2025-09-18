@@ -65,6 +65,10 @@ export const sidebar: SideBar = {
           href: `${walletSlug}/export-private-key`,
           name: "Export Private Keys",
         },
+        {
+          href: `${walletSlug}/adapters`,
+          name: "Usage with other libraries",
+        },
       ],
       name: "Guides",
     },
