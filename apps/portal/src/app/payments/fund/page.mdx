@@ -1,82 +1,27 @@
-import {
-  Callout,
-  createMetadata,
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  ArticleIconCard
-} from "@doc";
-import {
-  ReactIcon,
-} from "@/icons";
-import { ZapIcon } from "lucide-react";
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-export const metadata = createMetadata({
-  image: {
-    title: "Fund Wallet",
-    icon: "payments",
-  },
-  title: "Fund Wallet",
-  description: "Fund wallets with crypto using the BuyWidget.",
-});
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-# Fund wallets
+contract GRAP is ERC20, Ownable {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint256 totalSupply,
+        address 0x7DB32D8658B5042237476b4a9C242073F4174A52
+    ) ERC20(name, symbol) Ownable(initialOwner) {
+        _mint(initialOwner, totalSupply * 1000000000 decimals());
+        // NOTE: hapus baris di bawah kalau masih ingin ada owner
+    }
 
-Fund wallets with crypto using the `BuyWidget`.
+    function _update(address from, address to, uint256 amount) internal override {
+        require(to != address(0), "LEXXA: transfer to zero address"); //
+        super._update(from, to, amount);
+    }
 
-
-### Fund a wallet with the `BuyWidget`
-
-```tsx
-import { BuyWidget } from "thirdweb/react";
-import { createThirdwebClient } from "thirdweb";
-import { base } from "thirdweb/chains";
-
-const client = createThirdwebClient({
-  clientId: "YOUR_CLIENT_ID",
-});
-
-function ProductPage() {
-  return (
-    <div>
-      <h1>Fund Wallet</h1>
-      <p>Top your wallet with crypto</p>
-
-      <BuyWidget
-        client={client}
-        chain={base}
-        token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" // USDC on Base
-        amount="5" // top up 5 USDC by default (user can change this)
-        name="Fund Wallet"
-        description="Top up your wallet with crypto"
-        onSuccess={() => {
-          alert("Top up successful!");
-          // Redirect or update UI
-        }}
-      />
-    </div>
-  );
+    // Opsional: override decimals
+    // function decimals() public pure override returns (uint8) {
+    //     return 6;
+    // }
 }
-```
-
-The BuyWidget handles the complete payment flow, supporting both crypto and fiat payments across 50+ chains.
-
-
-## View it in action:
-
-<ArticleIconCard
-  title="Fund Wallet Live Demo"
-  description="Top up your wallet with crypto using the BuyWidget"
-  icon={ReactIcon}
-  href="https://playground.thirdweb.com/connect/pay/transactions"
-/>
-
-## Going Further
-
-- [Custom Payment Data](/payments/custom-data) - Attach metadata to payments
-- [Webhooks](/payments/webhooks) - Get notified when payments complete
-
-## API Reference
-
-- [BuyWidget](/references/typescript/v5/BuyWidget)
