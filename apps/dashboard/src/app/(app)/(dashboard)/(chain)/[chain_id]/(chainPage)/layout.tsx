@@ -24,6 +24,7 @@ import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
+import { ChainPageView } from "./components/client/chain-pageview";
 import { ChainHeader } from "./components/server/chain-header";
 
 // TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
@@ -71,6 +72,7 @@ export default async function ChainPageLayout(props: {
 
   return (
     <div className="flex grow flex-col">
+      <ChainPageView chainId={chain.chainId} />
       <div className="border-border border-b bg-card">
         <TeamHeader />
       </div>

@@ -257,6 +257,20 @@ export function reportTokenSwapSuccessful(properties: TokenSwapParams) {
 
 /**
  * ### Why do we need to report this event?
+ * - To track impressions of the swap widget
+ * - To create a funnel "swap widget shown" -> "swap widget successful" to understand the conversion rate
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportSwapWidgetShown(properties: {
+  pageType: "asset" | "bridge" | "chain";
+}) {
+  posthog.capture("swap widget shown", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
  * - To track number of failed token swaps from the token page
  * - To track which tokens are being swapped the most
  *
@@ -528,6 +542,17 @@ export function reportAssetPageview(properties: {
   chainId: number;
 }) {
   posthog.capture("asset pageview", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To understand which chains are being viewed the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportChainPageview(properties: { chainId: number }) {
+  posthog.capture("chain pageview", properties);
 }
 
 /**

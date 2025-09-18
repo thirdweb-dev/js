@@ -1,13 +1,14 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Chain, ThirdwebClient } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
 import {
   reportAssetBuyCancelled,
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
+  reportSwapWidgetShown,
   reportTokenSwapCancelled,
   reportTokenSwapFailed,
   reportTokenSwapSuccessful,
@@ -27,6 +28,19 @@ export function BuyAndSwapEmbed(props: {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
   const themeObj = getSDKTheme(theme === "light" ? "light" : "dark");
+  const isMounted = useRef(false);
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (isMounted.current) {
+      return;
+    }
+    isMounted.current = true;
+    reportSwapWidgetShown({
+      pageType: props.pageType,
+    });
+  }, [props.pageType]);
+
   return (
     <div className="bg-card rounded-2xl border overflow-hidden flex flex-col">
       <div className="flex gap-2.5 p-4 border-b border-dashed">
