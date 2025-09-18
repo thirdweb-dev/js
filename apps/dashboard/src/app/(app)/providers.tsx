@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useEffect, useMemo } from "react";
@@ -24,6 +25,9 @@ export function AppRouterProviders(props: {
   children: React.ReactNode;
   autoConnect: boolean;
 }) {
+  // get the current pathname
+  const pathname = usePathname();
+
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
@@ -36,6 +40,9 @@ export function AppRouterProviders(props: {
             defaultTheme="dark"
             disableTransitionOnChange
             enableSystem={false}
+            forcedTheme={
+              pathname.startsWith("/get-started") ? "dark" : undefined
+            }
           >
             <Toaster richColors />
             <SanctionedAddressesChecker>

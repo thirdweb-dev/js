@@ -3,6 +3,7 @@ import {
   BoxIcon,
   LogOutIcon,
   MailIcon,
+  PenIcon,
   RocketIcon,
   UserIcon,
   UsersIcon,
@@ -73,33 +74,39 @@ export function AccountOnboardingLayout(props: {
 const teamOnboardingSteps: OnboardingStep[] = [
   {
     description: "Provide team details",
-    icon: BoxIcon,
+    icon: PenIcon,
     number: 1,
     title: "Team Details",
   },
   {
-    description: "Choose a plan that fits your needs",
+    description: "Activate your 14 day free trial",
     icon: RocketIcon,
     number: 2,
-    title: "Plan Selection",
+    title: "Payment Details",
   },
   {
-    description: "Invite members to your team",
+    description: "Invite your team mates",
     icon: UsersIcon,
     number: 3,
     title: "Team Members",
+  },
+  {
+    description: "Create your first project",
+    icon: BoxIcon,
+    number: 4,
+    title: "Create Project",
   },
 ];
 
 export function TeamOnboardingLayout(props: {
   children: React.ReactNode;
-  currentStep: 1 | 2 | 3;
+  currentStep: 1 | 2 | 3 | 4;
 }) {
   return (
     <OnboardingLayout
       currentStep={props.currentStep}
       steps={teamOnboardingSteps}
-      title="Setup your team"
+      title="Get started with thirdweb"
     >
       {props.children}
     </OnboardingLayout>

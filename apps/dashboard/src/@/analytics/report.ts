@@ -83,33 +83,6 @@ export function reportOnboardingStarted() {
 
 /**
  * ### Why do we need to report this event?
- * - To track the number of teams that select a paid plan during onboarding
- * - To know **which** plan was selected
- *
- * ### Who is responsible for this event?
- * @jnsdls
- *
- */
-export function reportOnboardingPlanSelected(properties: {
-  plan: Team["billingPlan"];
-}) {
-  posthog.capture("onboarding plan selected", properties);
-}
-
-/**
- * ### Why do we need to report this event?
- * - To track the number of teams that skip the plan-selection step during onboarding
- *
- * ### Who is responsible for this event?
- * @jnsdls
- *
- */
-export function reportOnboardingPlanSelectionSkipped() {
-  posthog.capture("onboarding plan selection skipped");
-}
-
-/**
- * ### Why do we need to report this event?
  * - To track the number of teams that invite members during onboarding
  * - To track **how many** members were invited
  *
@@ -159,6 +132,18 @@ export function reportOnboardingMembersUpsellPlanSelected(properties: {
   plan: Team["billingPlan"];
 }) {
   posthog.capture("onboarding members upsell plan selected", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track the number of teams that completed the team member step during onboarding
+ *
+ * ### Who is responsible for this event?
+ * @jnsdls
+ *
+ */
+export function reportTeamMemberStepCompleted() {
+  posthog.capture("onboarding members completed");
 }
 
 /**
