@@ -124,6 +124,12 @@ importers:
       '@shazow/whatsabi':
         specifier: 0.22.2
         version: 0.22.2(@noble/hashes@1.8.0)(typescript@5.8.3)(zod@3.25.75)
+      '@stripe/react-stripe-js':
+        specifier: 4.0.2
+        version: 4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@stripe/stripe-js':
+        specifier: 7.9.0
+        version: 7.9.0
       '@tanstack/react-query':
         specifier: 5.81.5
         version: 5.81.5(react@19.1.0)
@@ -6554,6 +6560,17 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  '@stripe/react-stripe-js@4.0.2':
+    resolution: {integrity: sha512-l2wau+8/LOlHl+Sz8wQ1oDuLJvyw51nQCsu6/ljT6smqzTszcMHifjAJoXlnMfcou3+jK/kQyVe04u/ufyTXgg==}
+    peerDependencies:
+      '@stripe/stripe-js': '>=1.44.1 <8.0.0'
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
+
+  '@stripe/stripe-js@7.9.0':
+    resolution: {integrity: sha512-ggs5k+/0FUJcIgNY08aZTqpBTtbExkJMYMLSMwyucrhtWexVOEY1KJmhBsxf+E/Q15f5rbwBpj+t0t2AW2oCsQ==}
+    engines: {node: '>=12.16'}
 
   '@swagger-api/apidom-ast@1.0.0-beta.42':
     resolution: {integrity: sha512-Uu+qqX6tSIkwlX3u1YLn47whFkhTxuEfAUJLMCdC3c8P2usRMW5iji8eSy7UMU5I0Ou+twYtZgM55/51ohC6Gg==}
@@ -24359,6 +24376,15 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
+  '@stripe/react-stripe-js@4.0.2(@stripe/stripe-js@7.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@stripe/stripe-js': 7.9.0
+      prop-types: 15.8.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  '@stripe/stripe-js@7.9.0': {}
+
   '@swagger-api/apidom-ast@1.0.0-beta.42':
     dependencies:
       '@babel/runtime-corejs3': 7.27.6
@@ -25573,7 +25599,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.0.10)(@vitest/ui@3.2.4)(happy-dom@17.4.4)(jiti@2.4.2)(lightningcss@1.30.1)(msw@2.7.5(@types/node@24.0.10)(typescript@5.8.3))(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.14.1)(@vitest/ui@3.2.4)(happy-dom@18.0.1)(jiti@2.4.2)(lightningcss@1.30.1)(msw@2.10.2(@types/node@22.14.1)(typescript@5.8.3))(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
 
   '@vitest/utils@3.2.4':
     dependencies:

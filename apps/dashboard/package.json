@@ -21,6 +21,8 @@
     "@radix-ui/react-tooltip": "1.2.7",
     "@sentry/nextjs": "9.34.0",
     "@shazow/whatsabi": "0.22.2",
+    "@stripe/react-stripe-js": "4.0.2",
+    "@stripe/stripe-js": "7.9.0",
     "@tanstack/react-query": "5.81.5",
     "@tanstack/react-table": "^8.21.3",
     "@thirdweb-dev/api": "workspace:*",

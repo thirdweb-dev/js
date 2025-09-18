@@ -5,8 +5,8 @@ import { upload } from "thirdweb/storage";
 import { apiServerProxy } from "@/actions/proxies";
 import { sendTeamInvites } from "@/actions/team/sendTeamInvite";
 import {
-  reportOnboardingCompleted,
   reportOnboardingStarted,
+  reportTeamMemberStepCompleted,
 } from "@/analytics/report";
 import type { Team } from "@/api/team/get-team";
 import { useEffectOnce } from "@/hooks/useEffectOnce";
@@ -123,8 +123,8 @@ export function InviteTeamMembers(props: {
       }}
       onComplete={() => {
         // at this point the team onboarding is complete
-        reportOnboardingCompleted();
-        router.replace(`/team/${props.team.slug}`);
+        reportTeamMemberStepCompleted();
+        router.push(`/get-started/team/${props.team.slug}/create-project`);
       }}
       team={props.team}
     />
