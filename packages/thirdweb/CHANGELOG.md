@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.107.0
+
+### Minor Changes
+
+- [#8076](https://github.com/thirdweb-dev/js/pull/8076) [`5967fb8`](https://github.com/thirdweb-dev/js/commit/5967fb8afad3dbc28230c53423d304e8895f95bb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - x402 utilities
+
 ## 5.106.1
 
 ### Patch Changes
