@@ -25,7 +25,7 @@ export async function getCodeHtml(
     ? await format(code, {
         parser: "typescript",
         plugins: [estreePlugin, typescriptPlugin],
-        printWidth: 60,
+        printWidth: 80,
       }).catch((e) => {
         if (!options?.ignoreFormattingErrors) {
           console.error(e);

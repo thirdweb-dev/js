@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  CreditCardIcon,
-  ExternalLinkIcon,
-  FuelIcon,
-  PaletteIcon,
-  Settings2Icon,
-} from "lucide-react";
-import Link from "next/link";
+import { CreditCardIcon, PaletteIcon, Settings2Icon } from "lucide-react";
 import type React from "react";
 import { useId, useState } from "react";
 import type { Address } from "thirdweb";
@@ -30,11 +23,10 @@ export function LeftSection(props: {
   setOptions: React.Dispatch<
     React.SetStateAction<BridgeComponentsPlaygroundOptions>
   >;
-  lockedWidget: "buy" | "checkout" | "transaction";
+  widget: "buy" | "checkout" | "transaction";
 }) {
   const { options, setOptions } = props;
   const { theme, payOptions } = options;
-  const effectiveWidget = props.lockedWidget || payOptions.widget || "buy";
   const setThemeType = (themeType: "dark" | "light") => {
     setOptions((v) => ({
       ...v,
@@ -130,7 +122,7 @@ export function LeftSection(props: {
           </section>
 
           {/* Shared Chain and Token Selection - Always visible for Buy and Checkout modes */}
-          {(effectiveWidget === "buy" || effectiveWidget === "checkout") && (
+          {(props.widget === "buy" || props.widget === "checkout") && (
             <div className="space-y-4">
               {/* Chain selection */}
               <div className="flex flex-col gap-2">
@@ -164,7 +156,7 @@ export function LeftSection(props: {
           {/* Mode-specific form fields */}
           <div className="my-2">
             {/* Buy Mode - Amount and Payment Methods */}
-            {effectiveWidget === "buy" && (
+            {props.widget === "buy" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={buyTokenAmountId}>Amount</Label>
@@ -245,7 +237,7 @@ export function LeftSection(props: {
             )}
 
             {/* Checkout Mode - Seller Address, Price and Payment Methods */}
-            {effectiveWidget === "checkout" && (
+            {props.widget === "checkout" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={sellerAddressId}>Seller Address</Label>
@@ -347,7 +339,7 @@ export function LeftSection(props: {
             )}
 
             {/* Transaction Mode Options */}
-            {effectiveWidget === "transaction" && (
+            {props.widget === "transaction" && (
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <Label>Transaction</Label>
@@ -493,26 +485,6 @@ export function LeftSection(props: {
             }}
           />
           <Label htmlFor={"branding"}>Show Branding</Label>
-        </div>
-      </CollapsibleSection>
-
-      <CollapsibleSection icon={FuelIcon} title="Sponsor gas fees">
-        <div className="mt-4 flex items-start gap-6">
-          <div className="flex flex-col gap-2">
-            <p className="">
-              Abstract away gas fees for users of your app by enabling ERC-4337
-              Account Abstraction
-            </p>
-
-            <Link
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
-              href="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
-              target="_blank"
-            >
-              Learn more about Account Abstraction
-              <ExternalLinkIcon className="size-4" />
-            </Link>
-          </div>
         </div>
       </CollapsibleSection>
     </div>

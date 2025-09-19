@@ -18,7 +18,6 @@ const defaultOptions: BridgeComponentsPlaygroundOptions = {
     sellerAddress: "0x0000000000000000000000000000000000000000",
     title: "",
     transactionData: "",
-    widget: "transaction",
     currency: "USD",
     showThirdwebBranding: true,
   },
@@ -37,12 +36,12 @@ export function TransactionPlayground() {
     <div className="relative flex flex-col-reverse gap-6 xl:min-h-[900px] xl:flex-row xl:gap-6">
       <div className="grow border-b pb-10 xl:mb-0 xl:border-r xl:border-b-0 xl:pr-6">
         <LeftSection
-          lockedWidget="transaction"
+          widget="transaction"
           options={options}
           setOptions={setOptions}
         />
       </div>
-      <RightSection lockedWidget="transaction" options={options} />
+      <RightSection widget="transaction" options={options} />
     </div>
   );
 }

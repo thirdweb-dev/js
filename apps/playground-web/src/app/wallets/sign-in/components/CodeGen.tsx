@@ -1,4 +1,10 @@
 import { lazy, Suspense } from "react";
+import {
+  quotes,
+  stringifyIgnoreFalsy,
+  stringifyImports,
+  stringifyProps,
+} from "@/lib/code-gen";
 import { LoadingDots } from "../../../../components/ui/LoadingDots";
 import type { ConnectPlaygroundOptions } from "./types";
 
@@ -34,10 +40,10 @@ export function CodeGen(props: { connectOptions: ConnectPlaygroundOptions }) {
 function getCode(connectOptions: ConnectPlaygroundOptions) {
   const walletCodes: string[] = [];
   const imports = {
-    chains: [] as string[],
-    react: [] as string[],
-    thirdweb: [] as string[],
-    wallets: [] as string[],
+    "thirdweb/chains": [] as string[],
+    "thirdweb/react": ["ConnectButton"] as string[],
+    thirdweb: ["createThirdwebClient"] as string[],
+    "thirdweb/wallets": [] as string[],
   };
 
   if (
@@ -49,7 +55,7 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
         options: ${JSON.stringify(connectOptions.inAppWallet.methods)},
       },
     })`);
-    imports.wallets.push("inAppWallet");
+    imports["thirdweb/wallets"].push("inAppWallet");
   }
 
   for (const wallet of connectOptions.walletIds) {
@@ -57,7 +63,7 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
   }
 
   if (connectOptions.walletIds.length > 0) {
-    imports.wallets.push("createWallet");
+    imports["thirdweb/wallets"].push("createWallet");
   }
 
   let themeProp: string | undefined;
@@ -68,7 +74,7 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
     themeProp = `darkTheme({
       colors: ${JSON.stringify(connectOptions.theme.darkColorOverrides)},
     })`;
-    imports.react.push("darkTheme");
+    imports["thirdweb/react"].push("darkTheme");
   }
 
   if (connectOptions.theme.type === "light") {
@@ -78,14 +84,14 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
       themeProp = `lightTheme({
         colors: ${JSON.stringify(connectOptions.theme.lightColorOverrides)},
       })`;
-      imports.react.push("lightTheme");
+      imports["thirdweb/react"].push("lightTheme");
     } else {
       themeProp = quotes("light");
     }
   }
 
   if (connectOptions.enableAccountAbstraction) {
-    imports.chains.push("ethereum");
+    imports["thirdweb/chains"].push("ethereum");
   }
 
   const props: Record<string, string | undefined> = {
@@ -118,11 +124,7 @@ function getCode(connectOptions: ConnectPlaygroundOptions) {
   };
 
   return `\
-import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
-${imports.react.length > 0 ? `import { ${imports.react.join(", ")} } from "thirdweb/react";` : ""}
-${imports.wallets.length > 0 ? `import { ${imports.wallets.join(", ")} } from "thirdweb/wallets";` : ""}
-${imports.chains.length > 0 ? `import { ${imports.chains.join(", ")} } from "thirdweb/chains";` : ""}
+${stringifyImports(imports)}
 
 const client = createThirdwebClient({
   clientId: "....",
@@ -160,35 +162,3 @@ const accountAbstractCode = `\
   sponsorGas: true
 }
 `;
-
-function stringifyIgnoreFalsy(
-  value: Record<string, string | undefined | boolean>,
-) {
-  const _value: Record<string, string | boolean> = {};
-
-  for (const key in value) {
-    if (value[key] !== undefined && value[key] !== "") {
-      _value[key] = value[key];
-    }
-  }
-
-  return JSON.stringify(_value);
-}
-
-function stringifyProps(props: Record<string, string | undefined | boolean>) {
-  const _props: Record<string, string | undefined | boolean> = {};
-
-  for (const key in props) {
-    if (props[key] !== undefined && props[key] !== "") {
-      _props[key] = props[key];
-    }
-  }
-
-  return Object.entries(_props)
-    .map(([key, value]) => `${key}={${value}}`)
-    .join("\n");
-}
-
-function quotes(value: string) {
-  return `"${value}"`;
-}

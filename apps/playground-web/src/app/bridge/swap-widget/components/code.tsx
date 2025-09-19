@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { LoadingDots } from "@/components/ui/LoadingDots";
+import { quotes, stringifyImports, stringifyProps } from "@/lib/code-gen";
 import type { SwapWidgetPlaygroundOptions } from "./types";
 
 const CodeClient = lazy(() =>
@@ -28,7 +29,8 @@ export function CodeGen(props: { options: SwapWidgetPlaygroundOptions }) {
 
 function getCode(options: SwapWidgetPlaygroundOptions) {
   const imports = {
-    react: ["SwapWidget"] as string[],
+    thirdweb: ["createThirdwebClient"] as string[],
+    "thirdweb/react": ["SwapWidget"] as string[],
   };
 
   let themeProp: string | undefined;
@@ -39,7 +41,7 @@ function getCode(options: SwapWidgetPlaygroundOptions) {
     themeProp = `darkTheme({
       colors: ${JSON.stringify(options.theme.darkColorOverrides)},
     })`;
-    imports.react.push("darkTheme");
+    imports["thirdweb/react"].push("darkTheme");
   }
 
   if (options.theme.type === "light") {
@@ -47,7 +49,7 @@ function getCode(options: SwapWidgetPlaygroundOptions) {
       themeProp = `lightTheme({
         colors: ${JSON.stringify(options.theme.lightColorOverrides)},
       })`;
-      imports.react.push("lightTheme");
+      imports["thirdweb/react"].push("lightTheme");
     } else {
       themeProp = quotes("light");
     }
@@ -69,37 +71,15 @@ function getCode(options: SwapWidgetPlaygroundOptions) {
   };
 
   return `\
-import { createThirdwebClient } from "thirdweb";
-import { ${imports.react.join(", ")} } from "thirdweb/react";
+${stringifyImports(imports)}
 
 const client = createThirdwebClient({
   clientId: "....",
 });
 
-
 function Example() {
   return (
-    <SwapWidget
-      ${stringifyProps(props)}
-    />
+    <SwapWidget ${stringifyProps(props)} />
   );
 }`;
-}
-
-function quotes(value: string) {
-  return `"${value}"`;
-}
-
-function stringifyProps(props: Record<string, string | undefined | boolean>) {
-  const _props: Record<string, string | undefined | boolean> = {};
-
-  for (const key in props) {
-    if (props[key] !== undefined && props[key] !== "") {
-      _props[key] = props[key];
-    }
-  }
-
-  return Object.entries(_props)
-    .map(([key, value]) => `${key}={${value}}`)
-    .join("\n\t  ");
 }

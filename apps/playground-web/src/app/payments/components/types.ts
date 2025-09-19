@@ -37,7 +37,6 @@ export type BridgeComponentsPlaygroundOptions = {
     lightColorOverrides: ThemeOverrides["colors"];
   };
   payOptions: {
-    widget?: "buy" | "checkout" | "transaction";
     title: string | undefined;
     image: string | undefined;
     description: string | undefined;
