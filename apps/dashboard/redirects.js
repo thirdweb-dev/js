@@ -474,6 +474,11 @@ async function redirects() {
       destination: "/team/~/~/support",
       permanent: false,
     },
+    {
+      source: "/routes",
+      destination: "/tokens",
+      permanent: false,
+    },
   ];
 }
 

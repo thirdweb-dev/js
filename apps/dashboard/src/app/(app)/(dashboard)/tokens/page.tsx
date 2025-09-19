@@ -1,7 +1,20 @@
 import { BringToFrontIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "./components/header";
 import { TokenPage } from "./components/token-page";
+
+const title = "Tokens | thirdweb";
+const description = "Discover and swap any tokens on any chain, instantly";
+
+export const metadata: Metadata = {
+  description,
+  openGraph: {
+    description,
+    title,
+  },
+  title,
+};
 
 export default function Page() {
   return (
