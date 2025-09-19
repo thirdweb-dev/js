@@ -361,6 +361,10 @@ export async function executeWithSignature(args: {
     ],
   });
 
+  if (!res.queueId) {
+    throw new Error(`Error executing 7702 transaction: ${stringify(res)}`);
+  }
+
   return {
     transactionId: res.queueId,
   };
