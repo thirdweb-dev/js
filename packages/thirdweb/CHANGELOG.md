@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.106.1
+
+### Patch Changes
+
+- [#8069](https://github.com/thirdweb-dev/js/pull/8069) [`32980f8`](https://github.com/thirdweb-dev/js/commit/32980f854b9d53f0039d7bf913a2e5d8ba03704e) Thanks [@MananTank](https://github.com/MananTank)! - Add `persistTokenSelections` prop on `SwapWidget` to allow disabling token selection persistence to local storage
+
+- [#8077](https://github.com/thirdweb-dev/js/pull/8077) [`7b8ceeb`](https://github.com/thirdweb-dev/js/commit/7b8ceebb63ccc7b4b055e3b463bca0e1932d67b8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Show policy error for 7702 transactions
+
 ## 5.106.0
 
 ### Minor Changes
