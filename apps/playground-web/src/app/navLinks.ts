@@ -1,6 +1,11 @@
 "use client";
 
-import { ArrowLeftRightIcon, BotIcon, Code2Icon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  BotIcon,
+  BringToFrontIcon,
+  Code2Icon,
+} from "lucide-react";
 import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
 import { ContractIcon } from "../icons/ContractIcon";
 import { PayIcon } from "../icons/PayIcon";
@@ -204,6 +209,19 @@ const payments: ShadcnSidebarLink = {
   ],
 };
 
+const bridge: ShadcnSidebarLink = {
+  subMenu: {
+    label: "Bridge",
+    icon: BringToFrontIcon,
+  },
+  links: [
+    {
+      href: "/bridge/swap-widget",
+      label: "Swap Widget",
+    },
+  ],
+};
+
 const transactions: ShadcnSidebarLink = {
   subMenu: {
     label: "Transactions",
@@ -240,6 +258,7 @@ export const sidebarLinks: ShadcnSidebarLink[] = [
   transactions,
   contracts,
   payments,
+  bridge,
   tokens,
   accountAbstractions,
   {

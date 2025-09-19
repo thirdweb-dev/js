@@ -1,39 +1,43 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { ChainMetadata } from "thirdweb/chains";
+import { THIRDWEB_CLIENT } from "../lib/client";
+import { isProd } from "../lib/env";
 
-async function fetchChainsFromApi() {
-  const res = await fetch("https://api.thirdweb.com/v1/chains");
+type BridgeChain = {
+  chainId: number;
+  name: string;
+  icon: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+};
+
+async function fetchBridgeSupportedChainsFromApi() {
+  const res = await fetch(
+    `https://bridge.${isProd ? "thirdweb.com" : "thirdweb-dev.com"}/v1/chains`,
+    {
+      headers: {
+        "x-client-id": THIRDWEB_CLIENT.clientId,
+      },
+    },
+  );
   const json = await res.json();
 
   if (json.error) {
     throw new Error(json.error.message);
   }
 
-  return json.data as ChainMetadata[];
+  return json.data as BridgeChain[];
 }
 
-export function useAllChainsData() {
-  const query = useQuery({
+export function useBridgeSupportedChains() {
+  return useQuery({
     queryFn: async () => {
-      const idToChain = new Map<number, ChainMetadata>();
-      const chains = await fetchChainsFromApi();
-
-      for (const c of chains) {
-        idToChain.set(c.chainId, c);
-      }
-
-      return {
-        allChains: chains,
-        idToChain,
-      };
+      return fetchBridgeSupportedChainsFromApi();
     },
-    queryKey: ["all-chains"],
+    queryKey: ["bridge-supported-chains"],
   });
-
-  return {
-    data: query.data || { allChains: [], idToChain: new Map() },
-    isPending: query.isLoading,
-  };
 }

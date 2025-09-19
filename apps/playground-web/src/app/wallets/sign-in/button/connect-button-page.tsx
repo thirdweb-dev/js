@@ -59,13 +59,7 @@ export function ConnectButtonPage(props: {
 }) {
   const { theme } = useTheme();
   const [connectOptions, setConnectOptions] =
-    useState<ConnectPlaygroundOptions>(() => ({
-      ...defaultConnectOptions,
-      theme: {
-        ...defaultConnectOptions.theme,
-        type: theme === "dark" ? "dark" : "light",
-      },
-    }));
+    useState<ConnectPlaygroundOptions>(defaultConnectOptions);
 
   // change theme on global theme change
   useEffect(() => {

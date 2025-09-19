@@ -12,22 +12,15 @@ import type React from "react";
 import { useId, useState } from "react";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
-import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { BridgeNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { CustomRadioGroup } from "@/components/ui/CustomRadioGroup";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TokenSelector } from "@/components/ui/TokenSelector";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { TokenMetadata } from "@/lib/types";
-import type { SupportedFiatCurrency } from "../../../../../../packages/thirdweb/dist/types/pay/convert/type";
+import { CurrencySelector } from "../../../components/blocks/CurrencySelector";
 import { CollapsibleSection } from "../../wallets/sign-in/components/CollapsibleSection";
 import { ColorFormGroup } from "../../wallets/sign-in/components/ColorFormGroup";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
@@ -37,7 +30,7 @@ export function LeftSection(props: {
   setOptions: React.Dispatch<
     React.SetStateAction<BridgeComponentsPlaygroundOptions>
   >;
-  lockedWidget?: "buy" | "checkout" | "transaction";
+  lockedWidget: "buy" | "checkout" | "transaction";
 }) {
   const { options, setOptions } = props;
   const { theme, payOptions } = options;
@@ -69,7 +62,7 @@ export function LeftSection(props: {
     return undefined;
   });
 
-  const payModeId = useId();
+  const _payModeId = useId();
   const buyTokenAmountId = useId();
   const sellerAddressId = useId();
   const paymentAmountId = useId();
@@ -120,76 +113,20 @@ export function LeftSection(props: {
         title="Payment Options"
       >
         <div className="flex flex-col gap-6 pt-5">
-          {props.lockedWidget === undefined && (
-            <section className="flex flex-col gap-3">
-              <Label htmlFor={payModeId}>Widget</Label>
-              <CustomRadioGroup
-                id={payModeId}
-                onValueChange={(value) => {
-                  setOptions(
-                    (v) =>
-                      ({
-                        ...v,
-                        payOptions: {
-                          ...v.payOptions,
-                          widget: value as "buy" | "checkout" | "transaction",
-                        },
-                      }) satisfies BridgeComponentsPlaygroundOptions,
-                  );
-                }}
-                options={[
-                  { label: "Buy", value: "buy" },
-                  { label: "Checkout", value: "checkout" },
-                  { label: "Transaction", value: "transaction" },
-                ]}
-                value={payOptions.widget || "buy"}
-              />
-            </section>
-          )}
-
           <section className="flex flex-col gap-3">
             <Label htmlFor="currency">Display Currency</Label>
-            <Select
-              value={payOptions.currency || "USD"}
-              onValueChange={(value) => {
+            <CurrencySelector
+              value={payOptions.currency}
+              onChange={(currency) => {
                 setOptions((v) => ({
                   ...v,
                   payOptions: {
                     ...v.payOptions,
-                    currency: value as SupportedFiatCurrency,
+                    currency: currency,
                   },
                 }));
               }}
-            >
-              <SelectTrigger className="bg-card">
-                <SelectValue placeholder="Select currency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USD">USD - US Dollar</SelectItem>
-                <SelectItem value="EUR">EUR - Euro</SelectItem>
-                <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
-                <SelectItem value="KRW">KRW - Korean Won</SelectItem>
-                <SelectItem value="CNY">CNY - Chinese Yuan</SelectItem>
-                <SelectItem value="INR">INR - Indian Rupee</SelectItem>
-                <SelectItem value="NOK">NOK - Norwegian Krone</SelectItem>
-                <SelectItem value="SEK">SEK - Swedish Krona</SelectItem>
-                <SelectItem value="CHF">CHF - Swiss Franc</SelectItem>
-                <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
-                <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
-                <SelectItem value="NZD">NZD - New Zealand Dollar</SelectItem>
-                <SelectItem value="MXN">MXN - Mexican Peso</SelectItem>
-                <SelectItem value="BRL">BRL - Brazilian Real</SelectItem>
-                <SelectItem value="CLP">CLP - Chilean Peso</SelectItem>
-                <SelectItem value="CZK">CZK - Czech Koruna</SelectItem>
-                <SelectItem value="DKK">DKK - Danish Krone</SelectItem>
-                <SelectItem value="HKD">HKD - Hong Kong Dollar</SelectItem>
-                <SelectItem value="HUF">HUF - Hungarian Forint</SelectItem>
-                <SelectItem value="IDR">IDR - Indonesian Rupiah</SelectItem>
-                <SelectItem value="ILS">ILS - Israeli Shekel</SelectItem>
-                <SelectItem value="ISK">ISK - Icelandic Krona</SelectItem>
-              </SelectContent>
-            </Select>
+            />
           </section>
 
           {/* Shared Chain and Token Selection - Always visible for Buy and Checkout modes */}
@@ -198,9 +135,8 @@ export function LeftSection(props: {
               {/* Chain selection */}
               <div className="flex flex-col gap-2">
                 <Label>Chain</Label>
-                <SingleNetworkSelector
+                <BridgeNetworkSelector
                   chainId={selectedChain}
-                  disableTestnets={true}
                   onChange={handleChainChange}
                   placeholder="Select a chain"
                   className="bg-card"
@@ -212,7 +148,6 @@ export function LeftSection(props: {
                 <div className="flex flex-col gap-2">
                   <Label>Token</Label>
                   <TokenSelector
-                    addNativeTokenIfMissing={true}
                     chainId={selectedChain}
                     client={THIRDWEB_CLIENT}
                     enabled={true}

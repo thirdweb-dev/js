@@ -1,6 +1,6 @@
-// export const isProd =
-//   (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
-//   "production";
+export const isProd =
+  (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
+  "production";
 
 function getVercelEnv(): "production" | "preview" | "development" {
   const onVercel = process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_ENV;

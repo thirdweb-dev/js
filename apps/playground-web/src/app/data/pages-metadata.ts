@@ -3,6 +3,7 @@ import {
   BlocksIcon,
   BotIcon,
   BoxIcon,
+  BringToFrontIcon,
   CircleUserIcon,
   CreditCardIcon,
   DollarSignIcon,
@@ -245,5 +246,14 @@ export const aiFeatureCards: FeatureCardMetadata[] = [
     title: "AI SDK Integration",
     link: "/ai/ai-sdk",
     description: "Use the thirdweb blockchain models with the Vercel AI SDK",
+  },
+];
+
+export const bridgeFeatureCards: FeatureCardMetadata[] = [
+  {
+    icon: BringToFrontIcon,
+    title: "Swap Widget",
+    link: "/bridge/swap-widget",
+    description: "A widget for swapping tokens with cross-chain support",
   },
 ];

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { LoadingDots } from "../../../components/ui/LoadingDots";
+import { LoadingDots } from "@/components/ui/LoadingDots";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
 const CodeClient = lazy(() =>

@@ -3,6 +3,7 @@ import { ThirdwebIcon } from "../icons/ThirdwebMiniLogo";
 import {
   accountAbstractionsFeatureCards,
   aiFeatureCards,
+  bridgeFeatureCards,
   contractsFeatureCards,
   type FeatureCardMetadata,
   paymentsFeatureCards,
@@ -47,6 +48,7 @@ export default function Page() {
           title="Contracts"
         />
         <FeatureSection featureCards={paymentsFeatureCards} title="Payments" />
+        <FeatureSection featureCards={bridgeFeatureCards} title="Bridge" />
         <FeatureSection
           featureCards={accountAbstractionsFeatureCards}
           title="Account Abstraction"

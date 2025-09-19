@@ -154,6 +154,14 @@ export type SwapWidgetProps = {
   onCancel?: (quote: SwapPreparedQuote) => void;
   style?: React.CSSProperties;
   className?: string;
+
+  /**
+   * Whether to persist the token selections to localStorage so that if the user revisits the widget, the last used tokens are pre-selected.
+   * The last used tokens do not override the tokens specified in the `prefill` prop
+   *
+   * @default true
+   */
+  persistTokenSelections?: boolean;
 };
 
 /**
@@ -291,6 +299,7 @@ type SwapWidgetScreen =
 function SwapWidgetContent(props: SwapWidgetProps) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });
   const activeWalletInfo = useActiveWalletInfo();
+  const isPersistEnabled = props.persistTokenSelections !== false;
 
   const [amountSelection, setAmountSelection] = useState<{
     type: "buy" | "sell";
@@ -323,6 +332,11 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         chainId: props.prefill.buyToken.chainId,
       };
     }
+
+    if (!isPersistEnabled) {
+      return undefined;
+    }
+
     const lastUsedBuyToken = getLastUsedTokens()?.buyToken;
 
     // the token that will be set as initial value of sell token
@@ -346,13 +360,18 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   });
 
   const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
-    return getInitialSellToken(props.prefill, getLastUsedTokens()?.sellToken);
+    return getInitialSellToken(
+      props.prefill,
+      isPersistEnabled ? getLastUsedTokens()?.sellToken : undefined,
+    );
   });
 
   // persist selections to localStorage whenever they change
   useEffect(() => {
-    setLastUsedTokens({ buyToken, sellToken });
-  }, [buyToken, sellToken]);
+    if (isPersistEnabled) {
+      setLastUsedTokens({ buyToken, sellToken });
+    }
+  }, [buyToken, sellToken, isPersistEnabled]);
 
   // preload requests
   useBridgeChains(props.client);
@@ -524,5 +543,6 @@ function getInitialSellToken(
       chainId: prefill.sellToken.chainId,
     };
   }
+
   return lastUsedSellToken;
 }

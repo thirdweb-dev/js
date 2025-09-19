@@ -2,21 +2,14 @@
 
 import { CoinsIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import {
-  getAddress,
-  NATIVE_TOKEN_ADDRESS,
-  type ThirdwebClient,
-} from "thirdweb";
+import type { ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import { Badge } from "@/components/ui/badge";
 import { Img } from "@/components/ui/Img";
 import { SelectWithSearch } from "@/components/ui/select-with-search";
-import { useAllChainsData } from "@/hooks/chains";
 import { useTokensData } from "@/hooks/useTokensData";
 import type { TokenMetadata } from "@/lib/types";
 import { cn, fallbackChainIcon, replaceIpfsUrl } from "@/lib/utils";
-
-const checksummedNativeTokenAddress = getAddress(NATIVE_TOKEN_ADDRESS);
 
 export function TokenSelector(props: {
   selectedToken: { chainId: number; address: string } | undefined;
@@ -28,49 +21,13 @@ export function TokenSelector(props: {
   client: ThirdwebClient;
   disabled?: boolean;
   enabled?: boolean;
-  addNativeTokenIfMissing: boolean;
 }) {
   const tokensQuery = useTokensData({
     chainId: props.chainId,
     enabled: props.enabled,
   });
 
-  const { idToChain } = useAllChainsData().data;
-
-  const tokens = useMemo(() => {
-    if (!tokensQuery.data) {
-      return [];
-    }
-
-    if (props.addNativeTokenIfMissing) {
-      const hasNativeToken = tokensQuery.data.some(
-        (token) => token.address === checksummedNativeTokenAddress,
-      );
-
-      if (!hasNativeToken && props.chainId) {
-        return [
-          {
-            address: checksummedNativeTokenAddress,
-            chainId: props.chainId,
-            decimals: 18,
-            name:
-              idToChain.get(props.chainId)?.nativeCurrency.name ??
-              "Native Token",
-            symbol:
-              idToChain.get(props.chainId)?.nativeCurrency.symbol ?? "ETH",
-          } satisfies TokenMetadata,
-          ...tokensQuery.data,
-        ];
-      }
-    }
-    return tokensQuery.data;
-  }, [
-    tokensQuery.data,
-    props.chainId,
-    props.addNativeTokenIfMissing,
-    idToChain,
-  ]);
-
+  const tokens = tokensQuery.data || [];
   const addressChainToToken = useMemo(() => {
     const value = new Map<string, TokenMetadata>();
     for (const token of tokens) {
