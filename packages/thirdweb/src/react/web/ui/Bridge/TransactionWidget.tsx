@@ -326,7 +326,7 @@ type UIOptionsResult =
  *
  * Refer to the [`TransactionWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/TransactionWidgetConnectOptions) type for more details.
  *
- * @bridge Widgets
+ * @bridge
  */
 export function TransactionWidget(props: TransactionWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");

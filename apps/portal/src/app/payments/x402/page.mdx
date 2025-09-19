@@ -1,0 +1,80 @@
+import { ArticleIconCard } from "@doc";
+import { ReactIcon } from "@/icons";
+
+# x402 payments
+
+Implement paid API calls using the x402 protocol. Every request is paid for by the user with a micro payment onchain.
+
+<ArticleIconCard
+  title="x402 Playground"
+  description="Try out a x402 payment in our live playground"
+  icon={ReactIcon}
+  href="https://playground.thirdweb.com/payments/x402"
+/>
+
+## Client Side
+
+`wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses from any API call. It will:
+1. Make the initial request
+2. If a 402 response is received, parse the payment requirements
+3. Verify the payment amount is within the allowed maximum
+4. Sign a payment authorization 
+5. Create a payment header using the provided wallet signature
+6. Retry the request with the payment header
+
+Here's an example:
+
+```typescript
+import { wrapFetchWithPayment } from "thirdweb/x402";
+import { createThirdwebClient } from "thirdweb";
+import { createWallet } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId: "your-client-id" });
+const wallet = createWallet("io.metamask"); // or any other wallet
+await wallet.connect({ client })
+
+const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
+
+// Make a request that may require payment
+const response = await fetchWithPay('https://api.example.com/paid-endpoint');
+```
+
+## Server Side
+
+To make your API calls payable, you can use any x402 middleware library like x402-hono, x402-next, x402-express, etc.
+
+Then, use the `facilitator` configuratino function settle transactions with your thirdweb server wallet gaslessly and pass it to the middleware.
+
+Here's an example with Next.js:
+
+```typescript
+import { createThirdwebClient } from "thirdweb";
+import { facilitator } from "thirdweb/x402";
+import { paymentMiddleware } from "x402-next";
+
+const client = createThirdwebClient({
+  secretKey: process.env.THIRDWEB_SECRET_KEY as string,
+});
+
+export const middleware = paymentMiddleware(
+  "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+  {
+    "/api/paid-endpoint": {
+      price: "$0.01",
+      network: "base-sepolia",
+      config: {
+        description: "Access to paid content",
+      },
+    },
+  },
+  facilitator({
+    client,
+    serverWalletAddress: "0x1234567890123456789012345678901234567890",
+  }),
+);
+
+// Configure which paths the middleware should run on
+export const config = {
+  matcher: ["/api/paid-endpoint"],
+};
+```

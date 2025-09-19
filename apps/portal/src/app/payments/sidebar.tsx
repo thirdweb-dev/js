@@ -61,6 +61,10 @@ export const sidebar: SideBar = {
           href: `${paymentsSlug}/custom-data`,
           name: "Custom Data",
         },
+        {
+          href: `${paymentsSlug}/x402`,
+          name: "x402",
+        },
       ],
       name: "Guides",
     },

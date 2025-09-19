@@ -318,7 +318,7 @@ type UIOptionsResult =
  *
  * Refer to the [`CheckoutWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/CheckoutWidgetConnectOptions) type for more details.
  *
- * @bridge Widgets
+ * @bridge
  */
 export function CheckoutWidget(props: CheckoutWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");

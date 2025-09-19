@@ -40,6 +40,7 @@
     "toml": "3.0.0",
     "uqr": "0.1.2",
     "viem": "2.33.2",
+    "x402": "0.6.1",
     "zod": "3.25.75"
   },
   "devDependencies": {
@@ -226,6 +227,11 @@
       "react-native": "./dist/esm/exports/wallets/in-app.native.js",
       "import": "./dist/esm/exports/wallets/in-app.js",
       "default": "./dist/cjs/exports/wallets/in-app.js"
+    },
+    "./x402": {
+      "types": "./dist/types/exports/x402.d.ts",
+      "import": "./dist/esm/exports/x402.js",
+      "default": "./dist/cjs/exports/x402.js"
     }
   },
   "files": [
@@ -414,6 +420,9 @@
       ],
       "insight": [
         "./dist/types/exports/insight.d.ts"
+      ],
+      "x402": [
+        "./dist/types/exports/x402.d.ts"
       ]
     }
   },
