@@ -18,7 +18,7 @@ export default function BridgeLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "h-screen w-screen bg-background font-sans antialiased",
+          "min-h-dvh bg-background font-sans antialiased flex flex-col",
           fontSans.variable,
         )}
       >

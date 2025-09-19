@@ -17,7 +17,7 @@ export function UniversalBridgeEmbed({
   const chain = useV5DashboardChain(chainId || 1);
 
   return (
-    <div className="lg:w-[400px]">
+    <div className="w-full lg:w-[400px]">
       <BuyAndSwapEmbed
         client={bridgeAppThirdwebClient}
         chain={chain}

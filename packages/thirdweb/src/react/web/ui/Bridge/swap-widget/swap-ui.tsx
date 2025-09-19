@@ -684,6 +684,7 @@ function DecimalInput(props: {
         paddingInline: 0,
         paddingBlock: 0,
         letterSpacing: "-0.025em",
+        height: "30px",
       }}
       type="text"
       value={props.value}
@@ -825,7 +826,7 @@ function TokenSection(props: {
               {props.amount.isFetching ? (
                 <div style={{ flexGrow: 1 }}>
                   <Skeleton
-                    height={fontSize.xxl}
+                    height="30px"
                     width="140px"
                     style={{
                       borderRadius: radius.lg,
@@ -890,7 +891,7 @@ function TokenSection(props: {
                 <div>
                   {props.balance.data === undefined ||
                   props.selectedToken.data === undefined ? (
-                    <Skeleton height={fontSize.xs} width="50px" />
+                    <Skeleton height={fontSize.xs} width="100px" />
                   ) : (
                     <div
                       style={{
