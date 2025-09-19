@@ -28,6 +28,9 @@ export function PublicPageConnectButton(props: {
       connectButton={{
         className: props.connectButtonClassName,
       }}
+      detailsButton={{
+        className: props.connectButtonClassName,
+      }}
       connectModal={{
         privacyPolicyUrl: "/privacy-policy",
         showThirdwebBranding: false,

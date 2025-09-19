@@ -7,6 +7,8 @@ export type Token = {
   symbol: string;
   name: string;
   iconUri?: string;
+  marketCapUsd?: number;
+  volume24hUsd?: number;
 };
 
 export type TokenWithPrices = Token & {
