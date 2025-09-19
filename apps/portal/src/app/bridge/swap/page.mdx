@@ -6,11 +6,13 @@ import {
   TabsTrigger,
   TabsContent,
   ArticleIconCard,
+  DocImage
 } from "@doc";
 import {
   ReactIcon,
   TypeScriptIcon,
 } from "@/icons";
+import SwapWidgetImage from "./swap-dark.png";
 
 export const metadata = createMetadata({
   image: {
@@ -23,7 +25,6 @@ export const metadata = createMetadata({
 
 # Swap Tokens
 
-Build a custom token swap interface that allows users to exchange tokens across chains using thirdweb Payments.
 
 <Tabs defaultValue="react">
   <TabsList>
@@ -39,308 +40,96 @@ Build a custom token swap interface that allows users to exchange tokens across 
 
 <TabsContent value="react">
 
-### Simple Swap Component
+You can use the [`SwapWidget`](/references/typescript/v5/SwapWidget) component to easily integrate a token swap interface into your app
 
-Create a basic swap interface with token selection and amount input:
 
 ```tsx
-import React, { useState, useEffect } from "react";
-import { Bridge } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
-import { createThirdwebClient } from "thirdweb";
-import { ethereum, polygon } from "thirdweb/chains";
+import { SwapWidget } from "thirdweb/react";
 
 const client = createThirdwebClient({
   clientId: "YOUR_CLIENT_ID",
 });
 
-function SwapInterface() {
-  const account = useActiveAccount();
-  const [fromToken, setFromToken] = useState("ETH");
-  const [toToken, setToToken] = useState("MATIC");
-  const [amount, setAmount] = useState("");
-  const [quote, setQuote] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getQuote = async () => {
-    if (!amount || !account) return;
-
-    setIsLoading(true);
-    try {
-      const preparedQuote = await Bridge.Buy.prepare({
-        originChainId: ethereum.id,
-        originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", // ETH
-        destinationChainId: polygon.id,
-        destinationTokenAddress: "0x0000000000000000000000000000000000001010", // MATIC
-        amount: BigInt(amount * 1e18), // Convert to wei
-        sender: account.address,
-        receiver: account.address,
-        client,
-      });
-      setQuote(preparedQuote);
-    } catch (error) {
-      console.error("Failed to get quote:", error);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    if (amount && account) {
-      const timer = setTimeout(getQuote, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [amount, account]);
-
-  const executeSwap = async () => {
-    if (!quote || !account) return;
-
-    try {
-      for (const step of quote.steps) {
-        for (const transaction of step.transactions) {
-          const result = await sendAndConfirmTransaction({
-            transaction,
-            account,
-          });
-
-          // Wait for cross-chain completion if needed
-          if (["buy", "sell", "transfer"].includes(transaction.action)) {
-            let swapStatus;
-            do {
-              swapStatus = await Bridge.status({
-                transactionHash: result.transactionHash,
-                chainId: transaction.chainId,
-                client,
-              });
-              if (swapStatus.status === "PENDING") {
-                await new Promise(resolve => setTimeout(resolve, 3000));
-              }
-            } while (swapStatus.status === "PENDING");
-          }
-        }
-      }
-
-      alert("Swap completed successfully!");
-      setQuote(null);
-      setAmount("");
-    } catch (error) {
-      console.error("Swap failed:", error);
-      alert("Swap failed. Please try again.");
-    }
-  };
-
-  return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Token Swap</h2>
-
-      {/* From Token */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">From</label>
-        <div className="flex gap-2">
-          <input
-            type="number"
-            placeholder="0.0"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
-          <select
-            value={fromToken}
-            onChange={(e) => setFromToken(e.target.value)}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="ETH">ETH</option>
-            <option value="USDC">USDC</option>
-            <option value="WETH">WETH</option>
-          </select>
-        </div>
-        <p className="text-sm text-gray-500 mt-1">Ethereum</p>
-      </div>
-
-      {/* Swap Arrow */}
-      <div className="flex justify-center mb-4">
-        <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
-          ↓
-        </button>
-      </div>
-
-      {/* To Token */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">To</label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="0.0"
-            value={quote ? (Number(quote.destinationAmount) / 1e18).toFixed(6) : ""}
-            readOnly
-            className="flex-1 p-3 border rounded-lg bg-gray-50"
-          />
-          <select
-            value={toToken}
-            onChange={(e) => setToToken(e.target.value)}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="MATIC">MATIC</option>
-            <option value="USDC">USDC</option>
-            <option value="WETH">WETH</option>
-          </select>
-        </div>
-        <p className="text-sm text-gray-500 mt-1">Polygon</p>
-      </div>
-
-      {/* Quote Info */}
-      {quote && (
-        <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-sm">
-            <span className="font-medium">Rate:</span> 1 {fromToken} = {(Number(quote.destinationAmount) / Number(quote.originAmount)).toFixed(6)} {toToken}
-          </p>
-          <p className="text-sm">
-            <span className="font-medium">Fee:</span> {((Number(quote.originAmount) - Number(amount) * 1e18) / 1e18).toFixed(6)} {fromToken}
-          </p>
-          <p className="text-sm">
-            <span className="font-medium">Estimated time:</span> {Math.round(quote.estimatedExecutionTimeMs / 1000)}s
-          </p>
-        </div>
-      )}
-
-      {/* Swap Button */}
-      <button
-        onClick={executeSwap}
-        disabled={!quote || isLoading || !account}
-        className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-      >
-        {!account ? "Connect Wallet" : isLoading ? "Getting Quote..." : "Swap"}
-      </button>
-
-      {!account && (
-        <p className="text-center text-sm text-gray-500 mt-3">
-          Connect your wallet to start swapping
-        </p>
-      )}
-    </div>
-  );
+function Example() {
+  return <SwapWidget client={client} />;
 }
 ```
 
-### Advanced Swap with Route Selection
+<DocImage src={SwapWidgetImage} />
 
-Build a more sophisticated swap interface with multiple route options:
+## Live Playground
+
+<ArticleIconCard
+  title="Swap Widget Playground"
+  description="Try out the Swap Widget in our live playground"
+  icon={ReactIcon}
+  href="https://playground.thirdweb.com/bridge/swap-widget"
+/>
+
+
+### Configuring default token selection
+
+By default, no tokens are selected in the widget UI. You can configure the default token selection for the swap widget by passing in the `prefill` prop.
+it only sets the default token selection, User can change these selections in the widget UI
+
+
+#### Set an ERC20 token to Buy by default
 
 ```tsx
-import React, { useState, useEffect } from "react";
-import { Bridge } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
-
-function AdvancedSwapInterface() {
-  const account = useActiveAccount();
-  const [routes, setRoutes] = useState([]);
-  const [selectedRoute, setSelectedRoute] = useState(null);
-  const [quotes, setQuotes] = useState([]);
-
-  // Get available routes
-  const getRoutes = async () => {
-    try {
-      const availableRoutes = await Bridge.routes({
-        originChainId: 1, // Ethereum
-        originTokenAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-        client,
-      });
-      setRoutes(availableRoutes.slice(0, 5)); // Show top 5 routes
-    } catch (error) {
-      console.error("Failed to get routes:", error);
-    }
-  };
-
-  // Get quotes for multiple routes
-  const getQuotes = async (amount) => {
-    if (!amount || !account) return;
-
-    const quotePromises = routes.map(async (route) => {
-      try {
-        const quote = await Bridge.Buy.prepare({
-          originChainId: route.originToken.chainId,
-          originTokenAddress: route.originToken.address,
-          destinationChainId: route.destinationToken.chainId,
-          destinationTokenAddress: route.destinationToken.address,
-          amount: BigInt(amount * 1e18),
-          sender: account.address,
-          receiver: account.address,
-          client,
-        });
-        return { route, quote };
-      } catch (error) {
-        return { route, error };
-      }
-    });
-
-    const results = await Promise.all(quotePromises);
-    setQuotes(results.filter(result => result.quote));
-  };
-
-  useEffect(() => {
-    getRoutes();
-  }, []);
-
-  return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Advanced Token Swap</h2>
-
-      {/* Amount Input */}
-      <div className="mb-6">
-        <input
-          type="number"
-          placeholder="Enter amount to swap"
-          onChange={(e) => getQuotes(e.target.value)}
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      {/* Route Options */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-medium">Available Routes</h3>
-        {quotes.map(({ route, quote }, index) => (
-          <div
-            key={index}
-            className="border rounded-lg p-4 hover:bg-gray-50 cursor-pointer"
-            onClick={() => setSelectedRoute({ route, quote })}
-          >
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium">
-                  {route.originToken.symbol} → {route.destinationToken.symbol}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {route.originToken.name} to {route.destinationToken.name}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-medium">
-                  {(Number(quote.destinationAmount) / Math.pow(10, route.destinationToken.decimals)).toFixed(6)}
-                </p>
-                <p className="text-sm text-gray-500">
-                  ~{Math.round(quote.estimatedExecutionTimeMs / 1000)}s
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {selectedRoute && (
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <h4 className="font-medium mb-2">Selected Route</h4>
-          <p>{selectedRoute.route.originToken.symbol} → {selectedRoute.route.destinationToken.symbol}</p>
-          <button
-            onClick={() => executeSwap(selectedRoute.quote)}
-            className="mt-3 w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Execute Swap
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+<SwapWidget client={client} prefill={{
+  buyToken: {
+    // Base USDC
+    chainId: 8453,
+    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  },
+}} />
 ```
+
+#### Set a native token to Sell by default
+
+To configure a native token to sell by default, you can omit the `tokenAddress` property.
+
+```tsx
+<SwapWidget client={client} prefill={{
+  // Base native token (ETH)
+  sellToken: {
+    chainId: 8453,
+  },
+}} />
+```
+
+#### Set amount and token to Buy by default
+
+```tsx
+<SwapWidget client={client} prefill={{
+  buyToken: {
+    chainId: 8453,
+    amount: "0.1",
+    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  },
+}} />
+```
+
+#### Set both buy and sell tokens by default
+
+```tsx
+<SwapWidget client={client} prefill={{
+  // Base USDC
+  buyToken: {
+    chainId: 8453,
+    tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  },
+  // Polygon native token (MATIC)
+  sellToken: {
+    chainId: 137,
+  },
+}} />
+```
+
+
+
+
+
 
 </TabsContent>
 
@@ -607,17 +396,13 @@ export class PriceComparator {
 }
 ```
 
+<Callout variant="info">
+**Gas Optimization Tip:** For frequently traded pairs, consider caching route data to reduce API calls and improve UI responsiveness.
+</Callout>
+
 </TabsContent>
 </Tabs>
 
-## View it in action:
-
-<ArticleIconCard
-  title="Token Swap Playground"
-  description="Try building and testing swap interfaces with live data"
-  icon={ReactIcon}
-  href="https://playground.thirdweb.com/connect/pay"
-/>
 
 ## Key Features
 
@@ -627,9 +412,7 @@ export class PriceComparator {
 - **Price comparison** - Compare multiple routes to maximize output
 - **Status tracking** - Monitor cross-chain transaction progress
 
-<Callout variant="info">
-**Gas Optimization Tip:** For frequently traded pairs, consider caching route data to reduce API calls and improve UI responsiveness.
-</Callout>
+
 
 ## Going Further
 
