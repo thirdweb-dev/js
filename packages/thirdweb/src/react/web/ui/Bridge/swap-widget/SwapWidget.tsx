@@ -234,6 +234,7 @@ export type SwapWidgetProps = {
  * }} />
  * ```
  *
+ * @bridge
  */
 export function SwapWidget(props: SwapWidgetProps) {
   return (

@@ -206,6 +206,10 @@ const payments: ShadcnSidebarLink = {
       href: "/payments/transactions",
       label: "Onchain Transaction",
     },
+    {
+      href: "/payments/x402",
+      label: "x402",
+    },
   ],
 };
 

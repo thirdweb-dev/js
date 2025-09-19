@@ -48,6 +48,7 @@
     "thirdweb": "workspace:*",
     "use-debounce": "^10.0.5",
     "use-stick-to-bottom": "^1.1.1",
+    "x402-next": "^0.6.1",
     "zod": "3.25.75"
   },
   "devDependencies": {

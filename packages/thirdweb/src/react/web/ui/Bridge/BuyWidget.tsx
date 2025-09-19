@@ -322,7 +322,7 @@ type UIOptionsResult =
  *
  * Refer to the [`BuyWidgetConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/BuyWidgetConnectOptions) type for more details.
  *
- * @bridge Widgets
+ * @bridge
  */
 export function BuyWidget(props: BuyWidgetProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
