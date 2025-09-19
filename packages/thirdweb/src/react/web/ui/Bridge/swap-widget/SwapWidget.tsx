@@ -162,6 +162,10 @@ export type SwapWidgetProps = {
    * @default true
    */
   persistTokenSelections?: boolean;
+  /**
+   * Called when the user disconnects the active wallet
+   */
+  onDisconnect?: () => void;
 };
 
 /**
@@ -325,46 +329,11 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   });
 
   const [buyToken, setBuyToken] = useState<TokenSelection | undefined>(() => {
-    if (props.prefill?.buyToken) {
-      return {
-        tokenAddress:
-          props.prefill.buyToken.tokenAddress ||
-          getAddress(NATIVE_TOKEN_ADDRESS),
-        chainId: props.prefill.buyToken.chainId,
-      };
-    }
-
-    if (!isPersistEnabled) {
-      return undefined;
-    }
-
-    const lastUsedBuyToken = getLastUsedTokens()?.buyToken;
-
-    // the token that will be set as initial value of sell token
-    const sellToken = getInitialSellToken(
-      props.prefill,
-      getLastUsedTokens()?.sellToken,
-    );
-
-    // if both tokens are same, ignore "buyToken", keep "sellToken"
-    if (
-      lastUsedBuyToken &&
-      sellToken &&
-      lastUsedBuyToken.tokenAddress.toLowerCase() ===
-        sellToken.tokenAddress.toLowerCase() &&
-      lastUsedBuyToken.chainId === sellToken.chainId
-    ) {
-      return undefined;
-    }
-
-    return lastUsedBuyToken;
+    return getInitialTokens(props.prefill, isPersistEnabled).buyToken;
   });
 
   const [sellToken, setSellToken] = useState<TokenSelection | undefined>(() => {
-    return getInitialSellToken(
-      props.prefill,
-      isPersistEnabled ? getLastUsedTokens()?.sellToken : undefined,
-    );
+    return getInitialTokens(props.prefill, isPersistEnabled).sellToken;
   });
 
   // persist selections to localStorage whenever they change
@@ -394,6 +363,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   if (screen.id === "1:swap-ui" || !activeWalletInfo) {
     return (
       <SwapUI
+        onDisconnect={props.onDisconnect}
         showThirdwebBranding={
           props.showThirdwebBranding === undefined
             ? true
@@ -533,17 +503,63 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   return null;
 }
 
-function getInitialSellToken(
+function getInitialTokens(
   prefill: SwapWidgetProps["prefill"],
-  lastUsedSellToken: TokenSelection | undefined,
-) {
-  if (prefill?.sellToken) {
+  isPersistEnabled: boolean,
+): {
+  buyToken: TokenSelection | undefined;
+  sellToken: TokenSelection | undefined;
+} {
+  const lastUsedTokens = isPersistEnabled ? getLastUsedTokens() : undefined;
+  const buyToken = prefill?.buyToken
+    ? {
+        tokenAddress:
+          prefill.buyToken.tokenAddress || getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: prefill.buyToken.chainId,
+      }
+    : lastUsedTokens?.buyToken;
+
+  const sellToken = prefill?.sellToken
+    ? {
+        tokenAddress:
+          prefill.sellToken.tokenAddress || getAddress(NATIVE_TOKEN_ADDRESS),
+        chainId: prefill.sellToken.chainId,
+      }
+    : lastUsedTokens?.sellToken;
+
+  // if both tokens are same
+  if (
+    buyToken &&
+    sellToken &&
+    buyToken.tokenAddress?.toLowerCase() ===
+      sellToken.tokenAddress?.toLowerCase() &&
+    buyToken.chainId === sellToken.chainId
+  ) {
+    // if sell token prefill is specified, ignore buy token
+    if (prefill?.sellToken) {
+      return {
+        buyToken: undefined,
+        sellToken: sellToken,
+      };
+    }
+
+    // if buy token prefill is specified, ignore sell token
+    if (prefill?.buyToken) {
+      return {
+        buyToken: buyToken,
+        sellToken: undefined,
+      };
+    }
+
+    // if none of the two are specified via prefill, keep buy token
     return {
-      tokenAddress:
-        prefill.sellToken.tokenAddress || getAddress(NATIVE_TOKEN_ADDRESS),
-      chainId: prefill.sellToken.chainId,
+      buyToken: buyToken,
+      sellToken: undefined,
     };
   }
 
-  return lastUsedSellToken;
+  return {
+    buyToken: buyToken,
+    sellToken: sellToken,
+  };
 }

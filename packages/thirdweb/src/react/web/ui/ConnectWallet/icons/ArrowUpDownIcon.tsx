@@ -3,21 +3,21 @@ import type { IconFC } from "./types.js";
 export const ArrowUpDownIcon: IconFC = (props) => {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
+      viewBox="0 0 16 16"
       fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
       role="presentation"
       width={props.size}
       height={props.size}
     >
-      <path d="m21 16-4 4-4-4" />
-      <path d="M17 20V4" />
-      <path d="m3 8 4-4 4 4" />
-      <path d="M7 4v16" />
+      <g
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9.599 2.4v11.2l3.2-3.476M6.4 13.6V2.4L3.2 5.875"></path>
+      </g>
     </svg>
   );
 };

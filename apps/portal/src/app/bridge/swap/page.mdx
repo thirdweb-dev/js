@@ -13,6 +13,7 @@ import {
   TypeScriptIcon,
 } from "@/icons";
 import SwapWidgetImage from "./swap-dark.png";
+import SwapWidgetImageLight from "./swap-light.png";
 
 export const metadata = createMetadata({
   image: {
@@ -55,7 +56,12 @@ function Example() {
 }
 ```
 
+<div className='dark-only'>
 <DocImage src={SwapWidgetImage} />
+</div>
+<div className='light-only'>
+<DocImage src={SwapWidgetImageLight} />
+</div>
 
 ## Live Playground
 

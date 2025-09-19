@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   fontSize,
   iconSize,
+  radius,
   spacing,
 } from "../../../../core/design-system/index.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
@@ -21,6 +22,7 @@ type SelectBuyTokenProps = {
   client: ThirdwebClient;
   onSelectChain: (chain: BridgeChain) => void;
   selectedChain: BridgeChain | undefined;
+  isMobile: boolean;
 };
 
 /**
@@ -56,11 +58,15 @@ export function SelectBridgeChainUI(
   });
 
   return (
-    <div>
-      <Container px="md" py="md+">
-        <ModalHeader onBack={props.onBack} title="Select Chain" />
-      </Container>
-      <Line />
+    <Container fullHeight flex="column">
+      {props.isMobile && (
+        <>
+          <Container px="md" py="md+">
+            <ModalHeader onBack={props.onBack} title="Select Chain" />
+          </Container>
+          <Line />
+        </>
+      )}
 
       <Spacer y="md" />
 
@@ -79,10 +85,12 @@ export function SelectBridgeChainUI(
       <Spacer y="sm" />
 
       <Container
+        expand
         px="md"
+        gap={props.isMobile ? undefined : "xxs"}
         flex="column"
         style={{
-          height: "400px",
+          maxHeight: props.isMobile ? "400px" : "none",
           overflowY: "auto",
           scrollbarWidth: "none",
           paddingBottom: spacing.md,
@@ -95,6 +103,7 @@ export function SelectBridgeChainUI(
             client={props.client}
             onClick={() => props.onSelectChain(chain)}
             isSelected={chain.chainId === props.selectedChain?.chainId}
+            isMobile={props.isMobile}
           />
         ))}
 
@@ -119,7 +128,7 @@ export function SelectBridgeChainUI(
           </div>
         )}
       </Container>
-    </div>
+    </Container>
   );
 }
 
@@ -144,6 +153,7 @@ function ChainButton(props: {
   client: ThirdwebClient;
   onClick: () => void;
   isSelected: boolean;
+  isMobile: boolean;
 }) {
   return (
     <Button
@@ -152,18 +162,21 @@ function ChainButton(props: {
       style={{
         justifyContent: "flex-start",
         fontWeight: 500,
-        fontSize: fontSize.md,
+        fontSize: props.isMobile ? fontSize.md : fontSize.sm,
         border: "1px solid transparent",
-        padding: `${spacing.sm} ${spacing.sm}`,
+        padding: !props.isMobile ? `${spacing.xs} ${spacing.xs}` : undefined,
       }}
-      gap="sm"
       onClick={props.onClick}
+      gap="sm"
     >
       <Img
         src={props.chain.icon}
         client={props.client}
-        width={iconSize.lg}
-        height={iconSize.lg}
+        width={props.isMobile ? iconSize.lg : iconSize.md}
+        height={props.isMobile ? iconSize.lg : iconSize.md}
+        style={{
+          borderRadius: radius.full,
+        }}
       />
       {cleanedChainName(props.chain.name)}
     </Button>

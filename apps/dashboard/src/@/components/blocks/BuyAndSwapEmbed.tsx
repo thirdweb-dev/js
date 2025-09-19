@@ -107,12 +107,13 @@ export function BuyAndSwapEmbed(props: {
           theme={themeObj}
           className="!rounded-2xl !border-none !w-full"
           prefill={{
-            sellToken: {
+            // buy this token by default
+            buyToken: {
               chainId: props.chain.id,
               tokenAddress: props.tokenAddress,
             },
-            // only set `buyToken` as "Native token" if `sellToken` is not a "native token" already
-            buyToken: props.tokenAddress
+            // sell the native token by default (but if buytoken is a native token, don't set)
+            sellToken: props.tokenAddress
               ? {
                   chainId: props.chain.id,
                 }

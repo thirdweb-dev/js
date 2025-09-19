@@ -21,6 +21,7 @@ type ButtonProps = {
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
   bg?: keyof Theme["colors"];
+  hoverBg?: keyof Theme["colors"];
 };
 
 export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
@@ -95,6 +96,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     transition: "border 200ms ease",
     WebkitTapHighlightColor: "transparent",
     width: props.fullWidth ? "100%" : undefined,
+    "&:hover": {
+      background: props.hoverBg ? theme.colors[props.hoverBg] : undefined,
+    },
     ...(() => {
       if (props.variant === "outline") {
         return {
@@ -120,7 +124,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       if (props.variant === "ghost-solid") {
         return {
           "&:hover": {
-            background: theme.colors.tertiaryBg,
+            background: theme.colors[props.hoverBg || "tertiaryBg"],
           },
           border: "1px solid transparent",
         };
@@ -137,7 +141,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
       if (props.variant === "secondary") {
         return {
           "&:hover": {
-            background: theme.colors.secondaryButtonHoverBg,
+            background: theme.colors[props.hoverBg || "secondaryButtonHoverBg"],
           },
         };
       }

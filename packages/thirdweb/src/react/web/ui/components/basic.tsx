@@ -84,7 +84,7 @@ export function Container(props: {
   expand?: boolean;
   center?: "x" | "y" | "both";
   gap?: keyof typeof spacing;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   style?: React.CSSProperties;
   p?: keyof typeof spacing;
   px?: keyof typeof spacing;

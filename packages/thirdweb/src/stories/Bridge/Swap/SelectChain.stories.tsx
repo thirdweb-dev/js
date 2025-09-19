@@ -16,13 +16,14 @@ const meta = {
 } satisfies Meta<typeof SelectBridgeChain>;
 export default meta;
 
-export function WithData() {
+export function WithDataDesktop() {
   const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
     undefined,
   );
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChain
+        isMobile={false}
         client={storyClient}
         onSelectChain={setSelectedChain}
         onBack={() => {}}
@@ -32,13 +33,50 @@ export function WithData() {
   );
 }
 
-export function Loading() {
+export function LoadingDesktop() {
   const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
     undefined,
   );
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChainUI
+        isMobile={false}
+        client={storyClient}
+        onSelectChain={setSelectedChain}
+        onBack={() => {}}
+        isPending={true}
+        chains={[]}
+        selectedChain={selectedChain}
+      />
+    </SwapWidgetContainer>
+  );
+}
+
+export function WithDataMobile() {
+  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
+    undefined,
+  );
+  return (
+    <SwapWidgetContainer theme="dark" className="w-full">
+      <SelectBridgeChain
+        isMobile={true}
+        client={storyClient}
+        onSelectChain={setSelectedChain}
+        onBack={() => {}}
+        selectedChain={selectedChain}
+      />
+    </SwapWidgetContainer>
+  );
+}
+
+export function LoadingMobile() {
+  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
+    undefined,
+  );
+  return (
+    <SwapWidgetContainer theme="dark" className="w-full">
+      <SelectBridgeChainUI
+        isMobile={true}
         client={storyClient}
         onSelectChain={setSelectedChain}
         onBack={() => {}}

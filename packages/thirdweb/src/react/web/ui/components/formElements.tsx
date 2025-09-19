@@ -2,6 +2,7 @@
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
+  media,
   radius,
   spacing,
   type Theme,
@@ -97,11 +98,14 @@ export const Input = /* @__PURE__ */ StyledInput<InputProps>((props) => {
     color: theme.colors.primaryText,
     display: "block",
     fontFamily: "inherit",
-    fontSize: fontSize.md,
+    fontSize: fontSize.sm,
     outline: "none",
     padding: props.sm ? spacing.sm : fontSize.sm,
     WebkitAppearance: "none",
     width: "100%",
+    [media.mobile]: {
+      fontSize: fontSize.md,
+    },
   };
 });
 

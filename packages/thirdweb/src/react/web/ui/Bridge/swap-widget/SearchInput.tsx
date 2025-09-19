@@ -36,6 +36,7 @@ export function SearchInput(props: {
         variant="outline"
         placeholder={props.placeholder}
         value={props.value}
+        sm
         style={{
           paddingLeft: "44px",
         }}

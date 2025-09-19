@@ -200,6 +200,7 @@ export const iconSize = {
   "4xl": "128",
   lg: "32",
   md: "24",
+  "sm+": "20",
   sm: "16",
   xl: "48",
   xs: "12",

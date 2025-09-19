@@ -1,7 +1,6 @@
 import type { Meta } from "@storybook/react";
 import { lightTheme } from "../../../react/core/design-system/index.js";
 import { SwapWidget } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
-import { ConnectButton } from "../../../react/web/ui/ConnectWallet/ConnectButton.js";
 import { storyClient } from "../../utils.js";
 
 const meta: Meta<typeof SwapWidget> = {
@@ -14,15 +13,6 @@ const meta: Meta<typeof SwapWidget> = {
       return (
         <div>
           <Story />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              right: "20px",
-            }}
-          >
-            <ConnectButton client={storyClient} />
-          </div>
         </div>
       );
     },
@@ -31,15 +21,28 @@ const meta: Meta<typeof SwapWidget> = {
 export default meta;
 
 export function BasicUsage() {
-  return <SwapWidget client={storyClient} />;
+  return <SwapWidget client={storyClient} persistTokenSelections={false} />;
 }
 
 export function CurrencySet() {
-  return <SwapWidget client={storyClient} currency="JPY" />;
+  return (
+    <SwapWidget
+      client={storyClient}
+      currency="JPY"
+      persistTokenSelections={false}
+    />
+  );
 }
 
 export function LightMode() {
-  return <SwapWidget client={storyClient} currency="JPY" theme="light" />;
+  return (
+    <SwapWidget
+      client={storyClient}
+      currency="JPY"
+      theme="light"
+      persistTokenSelections={false}
+    />
+  );
 }
 
 export function NoThirdwebBranding() {
@@ -48,6 +51,7 @@ export function NoThirdwebBranding() {
       client={storyClient}
       currency="JPY"
       showThirdwebBranding={false}
+      persistTokenSelections={false}
     />
   );
 }
@@ -57,6 +61,7 @@ export function CustomTheme() {
     <SwapWidget
       client={storyClient}
       currency="JPY"
+      persistTokenSelections={false}
       theme={lightTheme({
         colors: {
           modalBg: "#FFFFF0",

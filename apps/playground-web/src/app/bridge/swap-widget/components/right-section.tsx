@@ -59,7 +59,9 @@ export function RightSection(props: { options: SwapWidgetPlaygroundOptions }) {
             prefill={props.options.prefill}
             currency={props.options.currency}
             showThirdwebBranding={props.options.showThirdwebBranding}
-            key={JSON.stringify(props.options)}
+            key={JSON.stringify({
+              prefill: props.options.prefill,
+            })}
             persistTokenSelections={false}
           />
         )}

@@ -1,9 +1,9 @@
-import { DiscIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import type { Token } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { toTokens } from "../../../../../utils/units.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
@@ -12,15 +12,15 @@ import {
 } from "../../../../core/design-system/index.js";
 import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
 import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
-import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { Container, noScrollBar } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
-import { DecimalRenderer } from "./common.js";
+import { StyledDiv } from "../../design-system/elements.js";
+import { useIsMobile } from "../../hooks/useisMobile.js";
 import { SearchInput } from "./SearchInput.js";
 import { SelectChainButton } from "./SelectChainButton.js";
 import { SelectBridgeChain } from "./select-chain.js";
@@ -31,6 +31,7 @@ import {
   useTokenBalances,
   useTokens,
 } from "./use-tokens.js";
+import { tokenAmountFormatter } from "./utils.js";
 
 /**
  * @internal
@@ -138,6 +139,7 @@ function SelectTokenUI(
     showMore: (() => void) | undefined;
   },
 ) {
+  const isMobile = useIsMobile();
   const [screen, setScreen] = useState<"select-chain" | "select-token">(
     "select-token",
   );
@@ -180,184 +182,70 @@ function SelectTokenUI(
     });
   }, [otherTokens]);
 
-  const noTokensFound =
-    !props.isFetching &&
-    sortedOtherTokens.length === 0 &&
-    props.ownedTokens.length === 0;
+  if (!isMobile) {
+    return (
+      <Container
+        style={{
+          display: "grid",
+          gridTemplateColumns: "300px 1fr",
+          height: "100%",
+        }}
+      >
+        <LeftContainer>
+          <SelectBridgeChain
+            onBack={() => setScreen("select-token")}
+            client={props.client}
+            isMobile={false}
+            onSelectChain={(chain) => {
+              props.setSelectedChain(chain);
+              setScreen("select-token");
+            }}
+            selectedChain={props.selectedChain}
+          />
+        </LeftContainer>
+        <Container flex="column" relative scrollY>
+          <TokenSelectionScreen
+            onSelectToken={props.setSelectedToken}
+            isMobile={false}
+            selectedToken={props.selectedToken}
+            isFetching={props.isFetching}
+            ownedTokens={props.ownedTokens}
+            otherTokens={sortedOtherTokens}
+            showMore={props.showMore}
+            selectedChain={props.selectedChain}
+            onSelectChain={() => setScreen("select-chain")}
+            client={props.client}
+            search={props.search}
+            setSearch={props.setSearch}
+          />
+        </Container>
+      </Container>
+    );
+  }
 
   if (screen === "select-token") {
     return (
-      <Container>
-        <Container px="md" py="md+">
-          <ModalHeader onBack={props.onBack} title="Select Token" />
-        </Container>
-        <Line />
-
-        {!props.selectedChain && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "400px",
-            }}
-          >
-            <Spinner color="secondaryText" size="xl" />
-          </div>
-        )}
-
-        {props.selectedChain && (
-          <>
-            <Container p="md">
-              <SelectChainButton
-                onClick={() => setScreen("select-chain")}
-                selectedChain={props.selectedChain}
-                client={props.client}
-              />
-            </Container>
-
-            {/* search */}
-            <Container px="md">
-              <SearchInput
-                value={props.search}
-                onChange={props.setSearch}
-                placeholder="Search by Token or Address"
-              />
-            </Container>
-
-            <Spacer y="sm" />
-            <Container px="md">
-              <Container
-                flex="column"
-                style={{
-                  height: "400px",
-                  overflowY: "auto",
-                  scrollbarWidth: "none",
-                  paddingBottom: spacing.md,
-                }}
-              >
-                {props.isFetching &&
-                  new Array(20).fill(0).map((_, i) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                    <TokenButtonSkeleton key={i} />
-                  ))}
-
-                {!props.isFetching && sortedOwnedTokens.length > 0 && (
-                  <Container
-                    px="xs"
-                    py="xs"
-                    flex="row"
-                    gap="xs"
-                    center="y"
-                    color="secondaryText"
-                  >
-                    <WalletDotIcon size={iconSize.sm} />
-                    <Text
-                      size="sm"
-                      color="secondaryText"
-                      weight={500}
-                      style={{
-                        overflow: "unset",
-                      }}
-                    >
-                      Your Tokens
-                    </Text>
-                  </Container>
-                )}
-
-                {!props.isFetching &&
-                  sortedOwnedTokens.map((token) => (
-                    <TokenButton
-                      key={token.token_address}
-                      token={token}
-                      client={props.client}
-                      onSelect={props.setSelectedToken}
-                      isSelected={
-                        !!props.selectedToken &&
-                        props.selectedToken.tokenAddress.toLowerCase() ===
-                          token.token_address.toLowerCase() &&
-                        token.chain_id === props.selectedToken.chainId
-                      }
-                    />
-                  ))}
-
-                {!props.isFetching && sortedOwnedTokens.length > 0 && (
-                  <Container
-                    px="xs"
-                    py="xs"
-                    flex="row"
-                    gap="xs"
-                    center="y"
-                    color="secondaryText"
-                    style={{
-                      marginTop: spacing.sm,
-                    }}
-                  >
-                    <CoinsIcon size={iconSize.sm} />
-                    <Text
-                      size="sm"
-                      color="secondaryText"
-                      weight={500}
-                      style={{
-                        overflow: "unset",
-                      }}
-                    >
-                      Other Tokens
-                    </Text>
-                  </Container>
-                )}
-
-                {!props.isFetching &&
-                  sortedOtherTokens.map((token) => (
-                    <TokenButton
-                      key={token.address}
-                      token={token}
-                      client={props.client}
-                      onSelect={props.setSelectedToken}
-                      isSelected={
-                        props.selectedToken?.tokenAddress.toLowerCase() ===
-                        token.address.toLowerCase()
-                      }
-                    />
-                  ))}
-
-                {props.showMore && (
-                  <Button
-                    variant="secondary"
-                    fullWidth
-                    onClick={() => {
-                      props.showMore?.();
-                    }}
-                  >
-                    Load More
-                  </Button>
-                )}
-
-                {noTokensFound && (
-                  <div
-                    style={{
-                      flex: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text size="md" color="secondaryText">
-                      No Tokens Found
-                    </Text>
-                  </div>
-                )}
-              </Container>
-            </Container>
-          </>
-        )}
-      </Container>
+      <TokenSelectionScreen
+        onSelectToken={props.setSelectedToken}
+        selectedToken={props.selectedToken}
+        isFetching={props.isFetching}
+        ownedTokens={props.ownedTokens}
+        otherTokens={sortedOtherTokens}
+        showMore={props.showMore}
+        selectedChain={props.selectedChain}
+        isMobile={true}
+        onSelectChain={() => setScreen("select-chain")}
+        client={props.client}
+        search={props.search}
+        setSearch={props.setSearch}
+      />
     );
   }
 
   if (screen === "select-chain") {
     return (
       <SelectBridgeChain
+        isMobile={true}
         onBack={() => setScreen("select-token")}
         client={props.client}
         onSelectChain={(chain) => {
@@ -379,7 +267,7 @@ function TokenButtonSkeleton() {
         display: "flex",
         alignItems: "center",
         gap: spacing.sm,
-        padding: `${spacing.sm} ${spacing.sm}`,
+        padding: `${spacing.xs} ${spacing.xs}`,
         height: "70px",
       }}
     >
@@ -398,6 +286,7 @@ function TokenButton(props: {
   onSelect: (tokenWithPrices: TokenSelection) => void;
   isSelected: boolean;
 }) {
+  const theme = useCustomTheme();
   const tokenBalanceInUnits =
     "balance" in props.token
       ? toTokens(BigInt(props.token.balance), props.token.decimals)
@@ -416,7 +305,7 @@ function TokenButton(props: {
         fontWeight: 500,
         fontSize: fontSize.md,
         border: "1px solid transparent",
-        padding: `${spacing.sm} ${spacing.xs}`,
+        padding: `${spacing.xs} ${spacing.xs}`,
         textAlign: "left",
         lineHeight: "1.5",
         borderRadius: radius.lg,
@@ -451,7 +340,14 @@ function TokenButton(props: {
         }}
         fallback={
           <Container color="secondaryText">
-            <DiscIcon width={iconSize.lg} height={iconSize.lg} />
+            <Container
+              style={{
+                background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                borderRadius: radius.full,
+                width: `${iconSize.lg}px`,
+                height: `${iconSize.lg}px`,
+              }}
+            />
           </Container>
         }
       />
@@ -473,18 +369,15 @@ function TokenButton(props: {
           <Text size="md" color="primaryText" weight={500}>
             {props.token.symbol}
           </Text>
+
           {"balance" in props.token && (
-            <DecimalRenderer
-              integerSize="md"
-              fractionSize="sm"
-              value={formatTokenAmount(
-                BigInt(props.token.balance),
-                props.token.decimals,
-                3,
+            <Text size="md" color="primaryText">
+              {tokenAmountFormatter.format(
+                Number(
+                  toTokens(BigInt(props.token.balance), props.token.decimals),
+                ),
               )}
-              color="primaryText"
-              weight={500}
-            />
+            </Text>
           )}
         </Container>
         <Container
@@ -495,9 +388,8 @@ function TokenButton(props: {
           }}
         >
           <Text
-            size="sm"
+            size="xs"
             color="secondaryText"
-            weight={400}
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -509,16 +401,9 @@ function TokenButton(props: {
           </Text>
           {usdValue && (
             <Container flex="row">
-              <Text size="sm" color="secondaryText" weight={400}>
-                $
+              <Text size="xs" color="secondaryText" weight={400}>
+                ${usdValue.toFixed(2)}
               </Text>
-              <DecimalRenderer
-                value={usdValue.toFixed(2)}
-                color="secondaryText"
-                weight={500}
-                integerSize="sm"
-                fractionSize="xs"
-              />
             </Container>
           )}
         </Container>
@@ -526,3 +411,223 @@ function TokenButton(props: {
     </Button>
   );
 }
+
+function TokenSelectionScreen(props: {
+  selectedChain: BridgeChain | undefined;
+  isMobile: boolean;
+  onSelectChain: () => void;
+  client: ThirdwebClient;
+  search: string;
+  setSearch: (search: string) => void;
+  isFetching: boolean;
+  ownedTokens: TokenBalance[];
+  otherTokens: Token[];
+  showMore: (() => void) | undefined;
+  selectedToken: TokenSelection | undefined;
+  onSelectToken: (token: TokenSelection) => void;
+}) {
+  const noTokensFound =
+    !props.isFetching &&
+    props.otherTokens.length === 0 &&
+    props.ownedTokens.length === 0;
+
+  return (
+    <Container fullHeight flex="column">
+      <Container px="md" pt="md+">
+        <Text size="lg" weight={600} color="primaryText" trackingTight>
+          Select Token
+        </Text>
+        <Spacer y="3xs" />
+        <Text
+          size="xs"
+          color="secondaryText"
+          multiline
+          style={{
+            textWrap: "pretty",
+            maxWidth: "70%",
+          }}
+        >
+          Select a token from the list or search for a token by symbol or
+          address
+        </Text>
+      </Container>
+
+      {!props.selectedChain && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "400px",
+          }}
+        >
+          <Spinner color="secondaryText" size="xl" />
+        </div>
+      )}
+
+      {props.selectedChain && (
+        <>
+          {props.isMobile ? (
+            <Container p="md">
+              <SelectChainButton
+                onClick={props.onSelectChain}
+                selectedChain={props.selectedChain}
+                client={props.client}
+              />
+            </Container>
+          ) : (
+            <Spacer y="md" />
+          )}
+
+          {/* search */}
+          <Container px="md">
+            <SearchInput
+              value={props.search}
+              onChange={props.setSearch}
+              placeholder="Search by token or address"
+            />
+          </Container>
+
+          <Spacer y="xs" />
+
+          <Container
+            pb="md"
+            px="md"
+            expand
+            gap="xxs"
+            flex="column"
+            style={{
+              minHeight: "400px",
+              maxHeight: props.isMobile ? "450px" : "none",
+              overflowY: "auto",
+              scrollbarWidth: "none",
+              paddingBottom: spacing.md,
+            }}
+          >
+            {props.isFetching &&
+              new Array(20).fill(0).map((_, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                <TokenButtonSkeleton key={i} />
+              ))}
+
+            {!props.isFetching && props.ownedTokens.length > 0 && (
+              <Container
+                px="xs"
+                py="xs"
+                flex="row"
+                gap="xs"
+                center="y"
+                color="secondaryText"
+              >
+                <WalletDotIcon size={iconSize.xs} />
+                <Text
+                  size="sm"
+                  color="secondaryText"
+                  style={{
+                    overflow: "unset",
+                  }}
+                >
+                  Your Tokens
+                </Text>
+              </Container>
+            )}
+
+            {!props.isFetching &&
+              props.ownedTokens.map((token) => (
+                <TokenButton
+                  key={token.token_address}
+                  token={token}
+                  client={props.client}
+                  onSelect={props.onSelectToken}
+                  isSelected={
+                    !!props.selectedToken &&
+                    props.selectedToken.tokenAddress.toLowerCase() ===
+                      token.token_address.toLowerCase() &&
+                    token.chain_id === props.selectedToken.chainId
+                  }
+                />
+              ))}
+
+            {!props.isFetching && props.ownedTokens.length > 0 && (
+              <Container
+                px="xs"
+                py="xs"
+                flex="row"
+                gap="xs"
+                center="y"
+                color="secondaryText"
+                style={{
+                  marginTop: spacing.sm,
+                }}
+              >
+                <CoinsIcon size={iconSize.xs} />
+                <Text
+                  size="sm"
+                  color="secondaryText"
+                  style={{
+                    overflow: "unset",
+                  }}
+                >
+                  Other Tokens
+                </Text>
+              </Container>
+            )}
+
+            {!props.isFetching &&
+              props.otherTokens.map((token) => (
+                <TokenButton
+                  key={token.address}
+                  token={token}
+                  client={props.client}
+                  onSelect={props.onSelectToken}
+                  isSelected={
+                    props.selectedToken?.tokenAddress.toLowerCase() ===
+                    token.address.toLowerCase()
+                  }
+                />
+              ))}
+
+            {props.showMore && (
+              <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => {
+                  props.showMore?.();
+                }}
+              >
+                Load More
+              </Button>
+            )}
+
+            {noTokensFound && (
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text size="md" color="secondaryText">
+                  No Tokens Found
+                </Text>
+              </div>
+            )}
+          </Container>
+        </>
+      )}
+    </Container>
+  );
+}
+
+const LeftContainer = /* @__PURE__ */ StyledDiv((_) => {
+  const theme = useCustomTheme();
+  return {
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto",
+    ...noScrollBar,
+    borderRight: `1px solid ${theme.colors.separatorLine}`,
+    position: "relative",
+  };
+});

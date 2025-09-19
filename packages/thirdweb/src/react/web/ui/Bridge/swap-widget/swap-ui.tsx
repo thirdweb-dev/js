@@ -1,9 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  DiscIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { prepare as BuyPrepare } from "../../../../../bridge/Buy.js";
@@ -15,12 +11,10 @@ import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getToken } from "../../../../../pay/convert/get-token.js";
-import {
-  getFiatSymbol,
-  type SupportedFiatCurrency,
-} from "../../../../../pay/convert/type.js";
-import { getAddress } from "../../../../../utils/address.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import { getAddress, shortenAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
+import { AccountProvider } from "../../../../core/account/provider.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -31,11 +25,16 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
+import { WalletProvider } from "../../../../core/wallet/provider.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
+import { DetailsModal } from "../../ConnectWallet/Details.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
-import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
+import connectLocaleEn from "../../ConnectWallet/locale/en.js";
 import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW.js";
-import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
+import {
+  formatCurrencyAmount,
+  formatTokenAmount,
+} from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
@@ -43,8 +42,13 @@ import { Img } from "../../components/Img.js";
 import { Modal } from "../../components/Modal.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
+import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
-import { DecimalRenderer } from "./common.js";
+import { useIsMobile } from "../../hooks/useisMobile.js";
+import { AccountAvatar } from "../../prebuilt/Account/avatar.js";
+import { AccountBlobbie } from "../../prebuilt/Account/blobbie.js";
+import { AccountName } from "../../prebuilt/Account/name.js";
+import { WalletIcon } from "../../prebuilt/Wallet/icon.js";
 import { SelectToken } from "./select-token-ui.js";
 import type {
   ActiveWalletInfo,
@@ -82,6 +86,7 @@ type SwapUIProps = {
     type: "buy" | "sell";
     amount: string;
   }) => void;
+  onDisconnect: (() => void) | undefined;
 };
 
 function useTokenPrice(options: {
@@ -110,9 +115,16 @@ function useTokenPrice(options: {
  * @internal
  */
 export function SwapUI(props: SwapUIProps) {
-  const [modalState, setModalState] = useState<
-    "select-buy-token" | "select-sell-token" | undefined
-  >(undefined);
+  const [modalState, setModalState] = useState<{
+    screen: "select-buy-token" | "select-sell-token";
+    isOpen: boolean;
+  }>({
+    screen: "select-buy-token",
+    isOpen: false,
+  });
+
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Token Prices ----------------------------------------------------------------------------
   const buyTokenQuery = useTokenPrice({
@@ -193,14 +205,19 @@ export function SwapUI(props: SwapUIProps) {
   );
 
   // ----------------------------------------------------------------------------
+  const disableContinue =
+    !preparedResultQuery.data ||
+    preparedResultQuery.isFetching ||
+    notEnoughBalance;
 
   return (
     <Container p="md">
       <Modal
+        hide={false}
         className="tw-modal__swap-widget"
-        size="compact"
+        size={isMobile ? "compact" : "wide"}
         title="Select Token"
-        open={!!modalState}
+        open={modalState.isOpen}
         crossContainerStyles={{
           right: spacing.md,
           top: spacing["md+"],
@@ -208,19 +225,30 @@ export function SwapUI(props: SwapUIProps) {
         }}
         setOpen={(v) => {
           if (!v) {
-            setModalState(undefined);
+            setModalState((v) => ({
+              ...v,
+              isOpen: false,
+            }));
           }
         }}
       >
-        {modalState === "select-buy-token" && (
+        {modalState.screen === "select-buy-token" && (
           <SelectToken
             activeWalletInfo={props.activeWalletInfo}
-            onBack={() => setModalState(undefined)}
+            onBack={() =>
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }))
+            }
             client={props.client}
             selectedToken={props.buyToken}
             setSelectedToken={(token) => {
               props.setBuyToken(token);
-              setModalState(undefined);
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }));
               // if buy token is same as sell token, unset sell token
               if (
                 props.sellToken &&
@@ -234,14 +262,22 @@ export function SwapUI(props: SwapUIProps) {
           />
         )}
 
-        {modalState === "select-sell-token" && (
+        {modalState.screen === "select-sell-token" && (
           <SelectToken
-            onBack={() => setModalState(undefined)}
+            onBack={() =>
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }))
+            }
             client={props.client}
             selectedToken={props.sellToken}
             setSelectedToken={(token) => {
               props.setSellToken(token);
-              setModalState(undefined);
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }));
               // if sell token is same as buy token, unset buy token
               if (
                 props.buyToken &&
@@ -257,10 +293,35 @@ export function SwapUI(props: SwapUIProps) {
         )}
       </Modal>
 
+      {detailsModalOpen && (
+        <DetailsModal
+          client={props.client}
+          locale={connectLocaleEn}
+          detailsModal={undefined}
+          theme={props.theme}
+          closeModal={() => {
+            setDetailsModalOpen(false);
+          }}
+          onDisconnect={() => {
+            props.onDisconnect?.();
+          }}
+          chains={[]}
+          connectOptions={props.connectOptions}
+        />
+      )}
+
       {/* Sell  */}
       <TokenSection
+        onMaxClick={() => {
+          if (sellTokenBalanceQuery.data) {
+            props.setAmountSelection({
+              type: "sell",
+              amount: sellTokenBalanceQuery.data.displayValue,
+            });
+          }
+        }}
+        activeWalletInfo={props.activeWalletInfo}
         isConnected={!!props.activeWalletInfo}
-        notEnoughBalance={notEnoughBalance}
         balance={{
           data: sellTokenBalanceQuery.data?.value,
           isFetching: sellTokenBalanceQuery.isFetching,
@@ -269,7 +330,7 @@ export function SwapUI(props: SwapUIProps) {
           data: sellTokenAmount,
           isFetching: isSellAmountFetching,
         }}
-        label="Sell"
+        type="sell"
         setAmount={(value) => {
           props.setAmountSelection({ type: "sell", amount: value });
         }}
@@ -283,7 +344,15 @@ export function SwapUI(props: SwapUIProps) {
         }
         client={props.client}
         currency={props.currency}
-        onSelectToken={() => setModalState("select-sell-token")}
+        onSelectToken={() =>
+          setModalState({
+            screen: "select-sell-token",
+            isOpen: true,
+          })
+        }
+        onWalletClick={() => {
+          setDetailsModalOpen(true);
+        }}
       />
 
       {/* Switch */}
@@ -302,8 +371,12 @@ export function SwapUI(props: SwapUIProps) {
 
       {/* Buy */}
       <TokenSection
+        onMaxClick={undefined}
+        onWalletClick={() => {
+          setDetailsModalOpen(true);
+        }}
+        activeWalletInfo={props.activeWalletInfo}
         isConnected={!!props.activeWalletInfo}
-        notEnoughBalance={false}
         balance={{
           data: buyTokenBalanceQuery.data?.value,
           isFetching: buyTokenBalanceQuery.isFetching,
@@ -312,7 +385,7 @@ export function SwapUI(props: SwapUIProps) {
           data: buyTokenAmount,
           isFetching: isBuyAmountFetching,
         }}
-        label="Buy"
+        type="buy"
         selectedToken={
           props.buyToken
             ? {
@@ -326,7 +399,12 @@ export function SwapUI(props: SwapUIProps) {
         }}
         client={props.client}
         currency={props.currency}
-        onSelectToken={() => setModalState("select-buy-token")}
+        onSelectToken={() =>
+          setModalState({
+            screen: "select-buy-token",
+            isOpen: true,
+          })
+        }
       />
 
       {/* error message */}
@@ -342,7 +420,7 @@ export function SwapUI(props: SwapUIProps) {
           Failed to get a quote
         </Text>
       ) : (
-        <Spacer y="lg" />
+        <Spacer y="md" />
       )}
 
       {/* Button */}
@@ -361,11 +439,7 @@ export function SwapUI(props: SwapUIProps) {
         />
       ) : (
         <Button
-          disabled={
-            !preparedResultQuery.data ||
-            preparedResultQuery.isFetching ||
-            notEnoughBalance
-          }
+          disabled={disableContinue}
           fullWidth
           onClick={() => {
             if (
@@ -385,14 +459,20 @@ export function SwapUI(props: SwapUIProps) {
               });
             }
           }}
+          gap="xs"
           style={{
             fontSize: fontSize.md,
-            padding: `${spacing.sm} ${spacing.md}`,
-            borderRadius: radius.lg,
+            borderRadius: radius.full,
+            opacity: disableContinue ? 0.5 : 1,
           }}
           variant="primary"
         >
-          Swap
+          {preparedResultQuery.isFetching && <Spinner size="sm" />}
+          {preparedResultQuery.isFetching
+            ? "Fetching Quote"
+            : notEnoughBalance
+              ? "Insufficient Balance"
+              : "Swap"}
         </Button>
       )}
 
@@ -599,10 +679,11 @@ function DecimalInput(props: {
       style={{
         border: "none",
         boxShadow: "none",
-        fontSize: fontSize.xxl,
+        fontSize: fontSize.xl,
         fontWeight: 500,
         paddingInline: 0,
         paddingBlock: 0,
+        letterSpacing: "-0.025em",
       }}
       type="text"
       value={props.value}
@@ -612,13 +693,13 @@ function DecimalInput(props: {
 }
 
 function TokenSection(props: {
-  label: string;
-  notEnoughBalance: boolean;
+  type: "buy" | "sell";
   amount: {
     data: string;
     isFetching: boolean;
   };
   setAmount: (amount: string) => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
   selectedToken:
     | {
         data: TokenWithPrices | undefined;
@@ -633,7 +714,10 @@ function TokenSection(props: {
     data: bigint | undefined;
     isFetching: boolean;
   };
+  onWalletClick: () => void;
+  onMaxClick: (() => void) | undefined;
 }) {
+  const theme = useCustomTheme();
   const chainQuery = useBridgeChains(props.client);
   const chain = chainQuery.data?.find(
     (chain) => chain.chainId === props.selectedToken?.data?.chainId,
@@ -648,140 +732,191 @@ function TokenSection(props: {
 
   return (
     <Container
-      p="sm"
+      style={{
+        borderRadius: radius.xl,
+        borderWidth: 1,
+        borderStyle: "solid",
+        position: "relative",
+        overflow: "hidden",
+      }}
       borderColor="borderColor"
-      bg="tertiaryBg"
-      style={{ borderRadius: radius.lg, borderWidth: 1, borderStyle: "solid" }}
     >
-      {/* row1 : label */}
-      <Text size="md" color="primaryText" weight={500}>
-        {props.label}
-      </Text>
-
-      {/* row2 : amount and select token */}
-      <div
+      {/* make the background semi-transparent */}
+      <Container
+        bg="tertiaryBg"
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: spacing.sm,
-          paddingBottom: spacing.sm,
-          paddingTop: spacing.sm,
+          position: "absolute",
+          inset: 0,
+          opacity: 0.5,
+          zIndex: 0,
+        }}
+      />
+
+      <Container
+        style={{
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        {props.amount.isFetching ? (
-          <Skeleton
-            height={fontSize.xxl}
-            width="140px"
-            style={{
-              borderRadius: radius.lg,
-            }}
-          />
-        ) : (
-          <DecimalInput value={props.amount.data} setValue={props.setAmount} />
-        )}
+        {/* row1 : label */}
+        <Container
+          px="md"
+          py="sm"
+          relative
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Container flex="row" center="y" gap="3xs" color="secondaryText">
+            <Text
+              size="xs"
+              color="primaryText"
+              style={{
+                letterSpacing: "0.07em",
+              }}
+            >
+              {props.type === "buy" ? "BUY" : "SELL"}
+            </Text>
+          </Container>
+          {props.activeWalletInfo && (
+            <WalletButton
+              variant="ghost-solid"
+              style={{
+                paddingInline: spacing.xxs,
+                paddingBlock: "2px",
+              }}
+              onClick={props.onWalletClick}
+            >
+              <ActiveWalletDetails
+                activeWalletInfo={props.activeWalletInfo}
+                client={props.client}
+              />
+            </WalletButton>
+          )}
+        </Container>
 
-        {!props.selectedToken ? (
-          <Button
-            variant="accent"
-            style={{
-              borderRadius: radius.full,
-              gap: spacing.xxs,
-              paddingBlock: spacing.sm,
-              paddingInline: spacing.sm,
-            }}
-            onClick={props.onSelectToken}
-          >
-            {" "}
-            Select Token
-            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-          </Button>
-        ) : (
+        <Container
+          bg="tertiaryBg"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: radius.xl,
+            borderTop: `1px solid ${theme.colors.borderColor}`,
+          }}
+        >
           <SelectedTokenButton
             selectedToken={props.selectedToken}
             client={props.client}
             onSelectToken={props.onSelectToken}
             chain={chain}
           />
-        )}
-      </div>
 
-      {/* row3 : fiat value/error and balance */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "4px",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Exceeds Balance / Fiat Value */}
-        {props.notEnoughBalance ? (
-          <Text size="md" color="danger" weight={500}>
-            {" "}
-            Exceeds Balance{" "}
-          </Text>
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <Text size="md" color="secondaryText" weight={500}>
-              {getFiatSymbol(props.currency)}
-            </Text>
-            {props.amount.isFetching ? (
-              <Skeleton height={fontSize.md} width="50px" />
-            ) : (
-              <div>
-                <DecimalRenderer
-                  integerSize="md"
-                  fractionSize="sm"
-                  value={totalFiatValue?.toFixed(5) || "0.00"}
-                  color="secondaryText"
-                  weight={500}
+          <Container px="md" py="md">
+            <Container
+              flex="row"
+              gap="xs"
+              center="y"
+              style={{
+                flexWrap: "nowrap",
+              }}
+            >
+              {props.amount.isFetching ? (
+                <div style={{ flexGrow: 1 }}>
+                  <Skeleton
+                    height={fontSize.xxl}
+                    width="140px"
+                    style={{
+                      borderRadius: radius.lg,
+                    }}
+                  />
+                </div>
+              ) : (
+                <DecimalInput
+                  value={props.amount.data}
+                  setValue={props.setAmount}
                 />
-              </div>
-            )}
-          </div>
-        )}
+              )}
 
-        {/* Balance */}
-        {props.isConnected && props.selectedToken && (
-          <div>
-            {props.balance.data === undefined ||
-            props.selectedToken.data === undefined ? (
-              <Skeleton height={fontSize.md} width="50px" />
-            ) : (
-              <Text
-                size="md"
-                color="secondaryText"
-                weight={500}
+              {props.activeWalletInfo &&
+                props.onMaxClick &&
+                props.selectedToken && (
+                  <Button
+                    variant="outline"
+                    style={{
+                      paddingInline: spacing.xs,
+                      paddingBlock: spacing.xxs,
+                      borderRadius: radius.full,
+                      fontSize: fontSize.xs,
+                      fontWeight: 400,
+                    }}
+                    onClick={props.onMaxClick}
+                  >
+                    Max
+                  </Button>
+                )}
+            </Container>
+
+            <Spacer y="sm" />
+
+            {/* row3 : fiat value and balance */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: spacing.xxs,
+                  gap: "3px",
                 }}
               >
-                <WalletDotIcon size={fontSize.xs} />
-                <DecimalRenderer
-                  integerSize="md"
-                  fractionSize="sm"
-                  color="secondaryText"
-                  weight={500}
-                  value={formatTokenAmount(
-                    props.balance.data,
-                    props.selectedToken.data.decimals,
-                    5,
+                {props.amount.isFetching ? (
+                  <Skeleton height={fontSize.xs} width="50px" />
+                ) : (
+                  <Text size="xs" color="secondaryText">
+                    {formatCurrencyAmount(props.currency, totalFiatValue || 0)}
+                  </Text>
+                )}
+              </div>
+
+              {/* Balance */}
+              {props.isConnected && props.selectedToken && (
+                <div>
+                  {props.balance.data === undefined ||
+                  props.selectedToken.data === undefined ? (
+                    <Skeleton height={fontSize.xs} width="50px" />
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "3px",
+                      }}
+                    >
+                      <Text size="xs" color="secondaryText">
+                        Balance:
+                      </Text>
+                      <Text size="xs" color="primaryText">
+                        {formatTokenAmount(
+                          props.balance.data,
+                          props.selectedToken.data.decimals,
+                          5,
+                        )}
+                      </Text>
+                    </div>
                   )}
-                />
-              </Text>
-            )}
-          </div>
-        )}
-      </div>
+                </div>
+              )}
+            </div>
+          </Container>
+        </Container>
+      </Container>
     </Container>
   );
 }
@@ -797,92 +932,141 @@ function SelectedTokenButton(props: {
   onSelectToken: () => void;
   chain: BridgeChain | undefined;
 }) {
+  const theme = useCustomTheme();
   return (
     <Button
-      variant="outline"
-      bg="secondaryButtonBg"
+      variant="ghost-solid"
+      hoverBg="secondaryButtonBg"
+      fullWidth
       onClick={props.onSelectToken}
-      gap="xs"
+      gap="sm"
       style={{
-        borderRadius: radius.full,
-        paddingBlock: spacing.xxs,
-        paddingInline: spacing.xs,
+        borderBottom: `1px dashed ${theme.colors.borderColor}`,
+        justifyContent: "space-between",
+        paddingInline: spacing.md,
+        paddingBlock: spacing.md,
+        borderRadius: 0,
       }}
     >
-      {/* icons */}
-      <Container relative color="secondaryText">
-        {/* token icon */}
-        <Img
-          key={props.selectedToken?.data?.iconUri}
-          src={
-            props.selectedToken?.data === undefined
-              ? undefined
-              : props.selectedToken.data.iconUri || ""
-          }
-          client={props.client}
-          width={iconSize.lg}
-          height={iconSize.lg}
-          skeletonColor="modalBg"
-          fallback={<DiscIcon width={iconSize.lg} height={iconSize.lg} />}
-          style={{
-            borderRadius: radius.full,
-          }}
-        />
+      <Container gap="sm" flex="row" center="y">
+        {/* icons */}
+        <Container relative color="secondaryText">
+          {/* token icon */}
+          {props.selectedToken ? (
+            <Img
+              key={props.selectedToken?.data?.iconUri}
+              src={
+                props.selectedToken?.data === undefined
+                  ? undefined
+                  : props.selectedToken.data.iconUri || ""
+              }
+              client={props.client}
+              width="40"
+              height="40"
+              fallback={
+                <Container
+                  style={{
+                    background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                    borderRadius: radius.full,
+                    width: "40px",
+                    height: "40px",
+                  }}
+                />
+              }
+              style={{
+                objectFit: "cover",
+                borderRadius: radius.full,
+              }}
+            />
+          ) : (
+            <Container
+              style={{
+                border: `1px solid ${theme.colors.borderColor}`,
+                background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                borderRadius: radius.full,
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          )}
 
-        {/* chain icon */}
-        <Container
-          bg="modalBg"
-          style={{
-            padding: "2px",
-            position: "absolute",
-            bottom: -2,
-            right: -2,
-            display: "flex",
-            borderRadius: radius.full,
-          }}
-        >
-          <Img
-            src={props.chain?.icon}
-            client={props.client}
-            width={iconSize.sm}
-            height={iconSize.sm}
-            style={{
-              borderRadius: radius.full,
-            }}
-          />
+          {/* chain icon */}
+          {props.chain && (
+            <Container
+              bg="modalBg"
+              style={{
+                padding: "2px",
+                position: "absolute",
+                bottom: -2,
+                right: -2,
+                display: "flex",
+                borderRadius: radius.full,
+              }}
+            >
+              <Img
+                src={props.chain?.icon}
+                client={props.client}
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  borderRadius: radius.full,
+                }}
+              />
+            </Container>
+          )}
         </Container>
-      </Container>
 
-      {/* token symbol and chain name */}
-      <Container flex="column" style={{ gap: "2px" }}>
-        {props.selectedToken?.isFetching ? (
-          <Skeleton width="40px" height={fontSize.sm} color="modalBg" />
-        ) : (
-          <Text size="sm" color="primaryText" weight={500}>
-            {props.selectedToken?.data?.symbol}
-          </Text>
-        )}
+        {/* token symbol and chain name */}
+        {props.selectedToken ? (
+          <Container flex="column" style={{ gap: "3px" }}>
+            {props.selectedToken?.isFetching ? (
+              <Skeleton width="60px" height={fontSize.md} />
+            ) : (
+              <Text size="md" color="primaryText" weight={500}>
+                {props.selectedToken?.data?.symbol}
+              </Text>
+            )}
 
-        {props.chain ? (
-          <Text
-            size="xs"
-            color="secondaryText"
-            weight={500}
-            style={{
-              maxWidth: "100px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {cleanedChainName(props.chain.name)}
-          </Text>
+            {props.chain ? (
+              <Text
+                size="xs"
+                color="secondaryText"
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {cleanedChainName(props.chain.name)}
+              </Text>
+            ) : (
+              <Skeleton width="140px" height={fontSize.sm} />
+            )}
+          </Container>
         ) : (
-          <Skeleton width="70px" height={fontSize.xs} color="modalBg" />
+          <Container flex="column" style={{ gap: "3px" }}>
+            <Text size="md" color="primaryText" weight={500}>
+              Select Token
+            </Text>
+            <Text size="xs" color="secondaryText">
+              Required
+            </Text>
+          </Container>
         )}
       </Container>
-      <Container color="secondaryText">
-        <ChevronRightIcon width={iconSize.xs} height={iconSize.xs} />
+      <Container
+        color="secondaryText"
+        flex="row"
+        center="both"
+        borderColor="borderColor"
+        style={{
+          borderRadius: radius.full,
+          borderWidth: 1,
+          borderStyle: "solid",
+          padding: spacing.xs,
+        }}
+      >
+        <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
       </Container>
     </Button>
   );
@@ -894,11 +1078,13 @@ function SwitchButton(props: { onClick: () => void }) {
       style={{
         display: "flex",
         justifyContent: "center",
-        marginBlock: `-14px`,
+        marginBlock: `-13px`,
+        zIndex: 2,
+        position: "relative",
       }}
     >
       <SwitchButtonInner
-        variant="outline"
+        variant="ghost-solid"
         onClick={(e) => {
           props.onClick();
           const node = e.currentTarget.querySelector("svg");
@@ -912,7 +1098,7 @@ function SwitchButton(props: { onClick: () => void }) {
           }
         }}
       >
-        <ArrowUpDownIcon size={iconSize.md} />
+        <ArrowUpDownIcon size={iconSize["sm+"]} />
       </SwitchButtonInner>
     </div>
   );
@@ -922,10 +1108,11 @@ const SwitchButtonInner = /* @__PURE__ */ styled(Button)(() => {
   const theme = useCustomTheme();
   return {
     "&:hover": {
-      background: theme.colors.modalBg,
+      background: theme.colors.secondaryButtonBg,
     },
-    borderRadius: radius.lg,
+    borderRadius: radius.full,
     padding: spacing.xs,
+    color: theme.colors.primaryText,
     background: theme.colors.modalBg,
     border: `1px solid ${theme.colors.borderColor}`,
   };
@@ -948,3 +1135,78 @@ function useTokenBalance(props: {
       : undefined,
   });
 }
+
+function ActiveWalletDetails(props: {
+  activeWalletInfo: ActiveWalletInfo;
+  client: ThirdwebClient;
+}) {
+  const wallet = props.activeWalletInfo.activeWallet;
+  const account = props.activeWalletInfo.activeAccount;
+
+  const accountBlobbie = (
+    <AccountBlobbie
+      style={{
+        width: `${iconSize.xs}px`,
+        height: `${iconSize.xs}px`,
+        borderRadius: radius.full,
+      }}
+    />
+  );
+  const accountAvatarFallback = (
+    <WalletIcon
+      style={{
+        width: `${iconSize.xs}px`,
+        height: `${iconSize.xs}px`,
+      }}
+      fallbackComponent={accountBlobbie}
+      loadingComponent={accountBlobbie}
+    />
+  );
+
+  return (
+    <WalletProvider id={props.activeWalletInfo.activeWallet.id}>
+      <AccountProvider address={account.address} client={props.client}>
+        <WalletProvider id={wallet.id}>
+          <Container flex="row" gap="xxs" center="y">
+            <AccountAvatar
+              style={{
+                width: `${iconSize.xs}px`,
+                height: `${iconSize.xs}px`,
+                borderRadius: radius.full,
+              }}
+              fallbackComponent={accountAvatarFallback}
+              loadingComponent={accountAvatarFallback}
+            />
+
+            <span
+              style={{
+                fontSize: fontSize.xs,
+                letterSpacing: "0.025em",
+              }}
+            >
+              <AccountName
+                fallbackComponent={
+                  <span>{shortenAddress(account.address)}</span>
+                }
+                loadingComponent={
+                  <span>{shortenAddress(account.address)}</span>
+                }
+              />
+            </span>
+          </Container>
+        </WalletProvider>
+      </AccountProvider>
+    </WalletProvider>
+  );
+}
+
+const WalletButton = /* @__PURE__ */ styled(Button)(() => {
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.secondaryText,
+    transition: "color 200ms ease",
+    "&:hover": {
+      color: theme.colors.primaryText,
+    },
+  };
+});
