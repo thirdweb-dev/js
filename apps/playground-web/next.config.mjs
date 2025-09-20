@@ -148,12 +148,12 @@ const nextConfig = {
         permanent: false,
       },
       {
-        source: "/insight",
+        source: "/insight/:path*",
         destination: "https://insight.thirdweb.com/reference",
         permanent: false,
       },
       {
-        source: "/payments/backend",
+        source: "/payments/backend/:path*",
         destination: "/reference#tag/payments",
         permanent: false,
       },
