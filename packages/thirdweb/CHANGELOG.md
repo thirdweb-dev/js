@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.107.1
+
+### Patch Changes
+
+- [#8080](https://github.com/thirdweb-dev/js/pull/8080) [`93f913c`](https://github.com/thirdweb-dev/js/commit/93f913c614ebbe3db350872bdcff264c07155ce2) Thanks [@MananTank](https://github.com/MananTank)! - SwapWidget UI improvements
+
 ## 5.107.0
 
 ### Minor Changes
