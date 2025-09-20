@@ -92,23 +92,7 @@ if (REDIS_URL) {
   );
 }
 
+// DO NOT TAINT THESE VALUES (for now)
 export const GROWTH_PLAN_SKU = process.env.GROWTH_PLAN_SKU || "";
-
-if (GROWTH_PLAN_SKU) {
-  experimental_taintUniqueValue(
-    "Do not pass GROWTH_PLAN_SKU to the client",
-    process,
-    GROWTH_PLAN_SKU,
-  );
-}
-
 export const PAYMENT_METHOD_CONFIGURATION =
   process.env.PAYMENT_METHOD_CONFIGURATION || "";
-
-if (PAYMENT_METHOD_CONFIGURATION) {
-  experimental_taintUniqueValue(
-    "Do not pass PAYMENT_METHOD_CONFIGURATION to the client",
-    process,
-    PAYMENT_METHOD_CONFIGURATION,
-  );
-}
