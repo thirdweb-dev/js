@@ -142,6 +142,7 @@ export async function tokens<
     offset,
     includePrices,
     sortBy,
+    query,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -170,6 +171,10 @@ export async function tokens<
   }
   if (sortBy !== undefined) {
     url.searchParams.set("sortBy", sortBy);
+  }
+
+  if (query !== undefined) {
+    url.searchParams.set("query", query);
   }
 
   const response = await clientFetch(url.toString());
@@ -210,6 +215,8 @@ export declare namespace tokens {
     includePrices?: IncludePrices;
     /** Sort by a specific field. */
     sortBy?: "newest" | "oldest" | "volume" | "market_cap";
+    /** search for tokens by token name or symbol */
+    query?: string;
   };
 
   /**

@@ -1,6 +1,9 @@
 import { BringToFrontIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
+import { Bridge } from "thirdweb";
+import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { PageHeader } from "./components/header";
 import { TokenPage } from "./components/token-page";
 
@@ -16,7 +19,9 @@ export const metadata: Metadata = {
   title,
 };
 
-export default function Page() {
+export default async function Page() {
+  const chains = await getBridgeSupportedChains();
+
   return (
     <div>
       <PageHeader />
@@ -39,7 +44,18 @@ export default function Page() {
           </Link>
         </div>
       </div>
-      <TokenPage />
+      <TokenPage chains={chains} />
     </div>
   );
 }
+
+const getBridgeSupportedChains = unstable_cache(
+  async () => {
+    const chains = await Bridge.chains({ client: serverThirdwebClient });
+    return chains;
+  },
+  ["bridge-supported-chains"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);

@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import { Bridge, type ThirdwebClient } from "thirdweb";
+import type { Bridge, ThirdwebClient } from "thirdweb";
 import { MultiSelect } from "@/components/blocks/multi-select";
 import { SelectWithSearch } from "@/components/blocks/select-with-search";
 import { Badge } from "@/components/ui/badge";
@@ -298,7 +297,7 @@ export function SingleNetworkSelector(props: {
   );
 }
 
-export function BridgeNetworkSelector(props: {
+type BridgeNetworkSelectorProps = {
   chainId: number | undefined;
   onChange: (chainId: number) => void;
   className?: string;
@@ -307,28 +306,22 @@ export function BridgeNetworkSelector(props: {
   align?: "center" | "start" | "end";
   placeholder?: string;
   client: ThirdwebClient;
-}) {
-  const chainsQuery = useQuery({
-    queryKey: ["bridge-chains"],
-    queryFn: () => {
-      return Bridge.chains({ client: props.client });
-    },
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+  chains: Bridge.chains.Result;
+};
 
+export function BridgeNetworkSelector(props: BridgeNetworkSelectorProps) {
   const options = useMemo(() => {
-    return (chainsQuery.data || [])?.map((chain) => {
+    return props.chains.map((chain) => {
       return {
         label: cleanChainName(chain.name),
         value: String(chain.chainId),
       };
     });
-  }, [chainsQuery.data]);
+  }, [props.chains]);
 
   const searchFn = useCallback(
     (option: Option, searchValue: string) => {
-      const chain = chainsQuery.data?.find(
+      const chain = props.chains.find(
         (chain) => chain.chainId === Number(option.value),
       );
       if (!chain) {
@@ -340,12 +333,12 @@ export function BridgeNetworkSelector(props: {
       }
       return chain.name.toLowerCase().includes(searchValue.toLowerCase());
     },
-    [chainsQuery.data],
+    [props.chains],
   );
 
   const renderOption = useCallback(
     (option: Option) => {
-      const chain = chainsQuery.data?.find(
+      const chain = props.chains.find(
         (chain) => chain.chainId === Number(option.value),
       );
       if (!chain) {
@@ -366,27 +359,20 @@ export function BridgeNetworkSelector(props: {
         </div>
       );
     },
-    [chainsQuery.data, props.client],
+    [props.chains, props.client],
   );
-
-  const isLoadingChains = chainsQuery.isPending;
 
   return (
     <SelectWithSearch
       align={props.align}
       className={props.className}
       closeOnSelect={true}
-      disabled={isLoadingChains}
       onValueChange={(chainId) => {
         props.onChange(Number(chainId));
       }}
       options={options}
       overrideSearchFn={searchFn}
-      placeholder={
-        isLoadingChains
-          ? "Loading Chains..."
-          : props.placeholder || "Select Chain"
-      }
+      placeholder={props.placeholder || "Select Chain"}
       popoverContentClassName={props.popoverContentClassName}
       renderOption={renderOption}
       searchPlaceholder="Search by Name or Chain ID"
