@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircleIcon, XIcon } from "lucide-react";
+import { CircleQuestionMarkIcon, XIcon } from "lucide-react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { createThirdwebClient } from "thirdweb";
@@ -16,7 +16,6 @@ const client = createThirdwebClient({
 });
 
 export function CustomChatButton(props: {
-  label: string;
   examplePrompts: string[];
   authToken: string;
   team: Team;
@@ -39,21 +38,25 @@ export function CustomChatButton(props: {
     <>
       {/* Inline Button (not floating) */}
       <Button
-        className="gap-2 rounded-full shadow-lg"
+        className={cn(
+          "gap-2 rounded-full shadow-lg fixed right-6 bottom-6 z-50 bg-card",
+          isOpen && "opacity-0",
+        )}
+        size="sm"
         onClick={() => {
           setIsOpen(true);
           setHasBeenOpened(true);
         }}
-        variant="default"
+        variant="outline"
       >
-        <MessageCircleIcon className="size-4" />
-        {props.label}
+        <CircleQuestionMarkIcon className="size-3.5 text-muted-foreground" />
+        Need help?
       </Button>
 
       {/* Popup/Modal */}
       <div
         className={cn(
-          "slide-in-from-bottom-20 zoom-in-95 fade-in-0 fixed bottom-0 left-0 z-50 flex h-[80vh] w-[100vw] animate-in flex-col overflow-hidden rounded-t-2xl border bg-background shadow-2xl duration-200 lg:right-6 lg:bottom-6 lg:left-auto lg:h-[80vh] lg:max-w-xl lg:rounded-xl",
+          "slide-in-from-bottom-20 zoom-in-95 fade-in-0 fixed bottom-0 left-0 z-50 flex h-[80vh] w-[100vw] animate-in flex-col overflow-hidden rounded-t-2xl border bg-background shadow-2xl duration-200 lg:right-6 lg:bottom-6 lg:left-auto lg:h-[80vh] lg:max-w-xl lg:rounded-2xl",
           !isOpen && "hidden",
         )}
         ref={ref}
@@ -61,8 +64,7 @@ export function CustomChatButton(props: {
         {/* Header with close button */}
         <div className="flex items-center justify-between border-b px-4 py-4">
           <div className="flex items-center gap-2 font-semibold text-lg">
-            <MessageCircleIcon className="size-5 text-muted-foreground" />
-            {props.label}
+            Need help?
           </div>
           <Button
             aria-label="Close chat"

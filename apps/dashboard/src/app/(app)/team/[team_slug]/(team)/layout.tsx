@@ -103,15 +103,12 @@ export default async function TeamLayout(props: {
         >
           {props.children}
         </TeamSidebarLayout>
-        <div className="fixed right-4 bottom-4 z-50">
-          <CustomChatButton
-            authToken={authToken}
-            clientId={undefined}
-            examplePrompts={siwaExamplePrompts}
-            label="Get Help"
-            team={team}
-          />
-        </div>
+        <CustomChatButton
+          authToken={authToken}
+          clientId={undefined}
+          examplePrompts={siwaExamplePrompts}
+          team={team}
+        />
       </div>
     </SidebarProvider>
   );

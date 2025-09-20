@@ -77,15 +77,12 @@ export default async function ProjectLayout(props: {
           {props.children}
         </ProjectSidebarLayout>
       </div>
-      <div className="fixed right-4 bottom-4 z-50">
-        <CustomChatButton
-          authToken={authToken}
-          clientId={project.publishableKey}
-          examplePrompts={siwaExamplePrompts}
-          label="Ask AI Assistant"
-          team={team}
-        />
-      </div>
+      <CustomChatButton
+        authToken={authToken}
+        clientId={project.publishableKey}
+        examplePrompts={siwaExamplePrompts}
+        team={team}
+      />
       <SaveLastUsedProject projectId={project.id} teamId={team.id} />
     </SidebarProvider>
   );
