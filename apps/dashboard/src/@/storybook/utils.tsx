@@ -34,11 +34,11 @@ export function mobileViewport(
   };
 }
 
-export function storybookLog(...mesages: unknown[]) {
+export function storybookLog(...messages: unknown[]) {
   console.debug(
     "%cStorybook",
     "color: white; background-color: black; padding: 2px 4px; border-radius: 4px;",
-    ...mesages,
+    ...messages,
   );
 }
 
