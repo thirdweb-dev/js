@@ -47,6 +47,7 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   2020, // Ronin Mainnet
   2021, // Ronin Testnet (Saigon)
   98866, // Plume mainnet
+  1417429182, // Wilderworld Zephyr Testnet
 ];
 
 /**
