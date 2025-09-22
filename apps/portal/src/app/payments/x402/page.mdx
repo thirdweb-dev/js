@@ -1,20 +1,20 @@
 import { ArticleIconCard } from "@doc";
 import { ReactIcon } from "@/icons";
 
-# x402 payments
+# 402 Gated Payments
 
-Implement paid API calls using the x402 protocol. Every request is paid for by the user with a micro payment onchain.
+Implement gated API access with pay-per-request pricing. Users pay small amounts for each API call using cryptocurrency through the HTTP 402 Payment Required protocol.
 
 <ArticleIconCard
-  title="x402 Playground"
-  description="Try out a x402 payment in our live playground"
+  title="402 Payments Playground"
+  description="Try out a 402 gated payment in our live playground"
   icon={ReactIcon}
   href="https://playground.thirdweb.com/payments/x402"
 />
 
 ## Introduction & Core Concepts
 
-The **x402 payment protocol** enables micropayments for API access, allowing developers to monetize their APIs with per-request pricing. Instead of traditional subscription models or API keys, users pay small amounts (typically $0.01-$0.10) for each API call using cryptocurrency.
+**402 gated payments** enable micropayments for API access using the HTTP 402 Payment Required status code, allowing developers to monetize their APIs with per-request pricing. Instead of traditional subscription models or API keys, users pay small amounts (typically $0.01-$0.10) for each API call using cryptocurrency.
 
 ### How it works
 When a user makes a request to a paid API:
@@ -30,10 +30,10 @@ When a user makes a request to a paid API:
 - **Instant monetization**: Start earning from your APIs immediately
 - **Micropayment friendly**: Perfect for small, frequent transactions
 
-## X402 Protocol Fundamentals
+## 402 Payment Protocol Fundamentals
 
 ### Payment Flow
-The x402 protocol follows a simple request-retry pattern:
+The 402 payment protocol follows a simple request-retry pattern:
 
 1. **Initial request**: Client makes normal API call
 2. **402 response**: Server responds with payment requirements if payment needed
@@ -41,16 +41,16 @@ The x402 protocol follows a simple request-retry pattern:
 4. **Retry with payment**: Request is retried with payment header
 5. **Content delivery**: Server validates payment and returns content
 
-### Facilitators
-A **facilitator** is a service that handles payment verification and settlement for x402 payments. Think of it as the payment processor that:
+### Payment Processors
+A **payment processor** is a service that handles payment verification and settlement for 402 payments. Think of it as the backend service that:
 - Validates payment signatures from users
 - Executes on-chain transfers to collect payments
 - Provides payment infrastructure to API providers
 
 ### Payment Schemes
-Currently, x402 supports:
-- **"exact"**: Fixed price payments (e.g., exactly $0.01 USDC)
-- Additional schemes (percentage-based, auction-style) are planned for future versions
+thirdweb's 402 payment implementation currently supports:
+- **"exact"**: Fixed price payments (e.g., exactly $0.01 USDC) - our first supported scheme
+- Additional schemes (percentage-based, auction-style, variable pricing) are planned for future versions
 
 ### Security Model
 - **Signature-based**: Users sign payment authorizations, no direct token transfers from client
@@ -60,7 +60,7 @@ Currently, x402 supports:
 ## Supported Payment Networks & Tokens
 
 ### Supported Networks
-thirdweb's x402 facilitator currently supports payments on:
+thirdweb's 402 payment processor currently supports payments on:
 - **Base** (mainnet)
 - **Base Sepolia** (testnet)
 - **Avalanche** (C-Chain)
@@ -80,9 +80,9 @@ If your wallet is connected to a different network than required for payment, th
 2. Prompt you to switch to the correct network
 3. Proceed with payment once switched
 
-## thirdweb as X402 Facilitator
+## thirdweb as 402 Payment Processor
 
-thirdweb provides a complete x402 facilitator service that handles all the payment infrastructure for your APIs.
+thirdweb provides a complete 402 payment processing service that handles all the payment infrastructure for your APIs.
 
 ### What thirdweb Provides
 - **Payment verification**: Validates user payment signatures and wallet balances
@@ -108,7 +108,7 @@ Your **server wallet** is the blockchain address where all API payments are coll
 
 ### Basic Usage
 
-`wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses from any API call. It will:
+`wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses, implementing thirdweb's "exact" payment scheme. It will:
 1. Make the initial request
 2. If a 402 response is received, parse the payment requirements
 3. Verify the payment amount is within the allowed maximum
@@ -206,9 +206,9 @@ function PayableAPICall() {
 
 ### Basic Middleware Setup
 
-To make your API calls payable, you can use any x402 middleware library like `x402-hono`, `x402-next`, `x402-express`, etc.
+To make your API calls payable, you can use any 402 payment middleware library. thirdweb provides payment processor integration for popular frameworks like `x402-next`, `x402-hono`, `x402-express`, etc.
 
-Then, use the `facilitator` configuration function to settle transactions with your thirdweb server wallet gaslessly and pass it to the middleware.
+Then, use the thirdweb payment processor configuration to settle transactions with your server wallet gaslessly and pass it to the middleware.
 
 Here's an example with Next.js:
 
@@ -235,7 +235,7 @@ export const middleware = paymentMiddleware(
   facilitator({
     client,
     serverWalletAddress: process.env.SERVER_WALLET_ADDRESS,
-  }),
+  }), // thirdweb payment processor configuration
 );
 
 // Configure which paths the middleware should run on
@@ -244,9 +244,9 @@ export const config = {
 };
 ```
 
-### Facilitator Configuration Deep-Dive
+### Payment Processor Configuration Deep-Dive
 
-The `facilitator` function accepts several configuration options:
+The `facilitator` function configures thirdweb's payment processor and accepts several options:
 
 ```typescript
 facilitator({
@@ -279,7 +279,7 @@ export const middleware = paymentMiddleware(
       config: { description: "AI-powered data processing" },
     },
   },
-  facilitator({ client, serverWalletAddress }),
+  facilitator({ client, serverWalletAddress }), // thirdweb payment processor
 );
 
 export const config = {
