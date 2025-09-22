@@ -289,15 +289,9 @@ const DEFAULT_TOKENS = {
       symbol: "USDC",
     },
   ],
-  "421613": [
+  "421614": [
     {
-      address: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
-      icon: wrappedEthIcon,
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-    {
-      address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
+      address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
       icon: usdcIcon,
       name: "USD Coin",
       symbol: "USDC",
