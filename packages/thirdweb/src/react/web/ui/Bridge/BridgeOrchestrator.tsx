@@ -82,17 +82,17 @@ export interface BridgeOrchestratorProps {
   /**
    * Called when the flow is completed successfully
    */
-  onComplete: () => void;
+  onComplete: (quote: BridgePrepareResult) => void;
 
   /**
    * Called when the flow encounters an error
    */
-  onError: (error: Error) => void;
+  onError: (error: Error, quote: BridgePrepareResult | undefined) => void;
 
   /**
    * Called when the user cancels the flow
    */
-  onCancel: () => void;
+  onCancel: (quote: BridgePrepareResult | undefined) => void;
 
   /**
    * Connect options for wallet connection
@@ -189,19 +189,22 @@ export function BridgeOrchestrator({
   }, [send, uiOptions.mode]);
 
   // Handle post-buy transaction completion
-  const handlePostBuyTransactionComplete = useCallback(() => {
-    onComplete?.();
-    send({ type: "RESET" });
-  }, [onComplete, send]);
+  const handlePostBuyTransactionComplete = useCallback(
+    (quote: BridgePrepareResult) => {
+      onComplete?.(quote);
+      send({ type: "RESET" });
+    },
+    [onComplete, send],
+  );
 
   // Handle errors
   const handleError = useCallback(
     (error: Error) => {
       console.error(error);
-      onError?.(error);
+      onError?.(error, state.context.quote);
       send({ error, type: "ERROR_OCCURRED" });
     },
-    [onError, send],
+    [onError, send, state.context.quote],
   );
 
   // Handle payment method selection
@@ -227,10 +230,13 @@ export function BridgeOrchestrator({
 
   // Handle execution complete
   const handleExecutionComplete = useCallback(
-    (completedStatuses: CompletedStatusResult[]) => {
+    (
+      completedStatuses: CompletedStatusResult[],
+      quote: BridgePrepareResult,
+    ) => {
       send({ completedStatuses, type: "EXECUTION_COMPLETE" });
       if (uiOptions.mode !== "transaction") {
-        onComplete?.();
+        onComplete?.(quote);
       }
     },
     [send, onComplete, uiOptions.mode],
@@ -240,6 +246,8 @@ export function BridgeOrchestrator({
   const handleRetry = useCallback(() => {
     send({ type: "RETRY" });
   }, [send]);
+
+  const quote = state.context.quote;
 
   // Handle requirements resolved from FundWallet and DirectPayment
   const handleRequirementsResolved = useCallback(
@@ -263,7 +271,7 @@ export function BridgeOrchestrator({
           error={state.context.currentError}
           onCancel={() => {
             send({ type: "RESET" });
-            onCancel?.();
+            onCancel?.(quote);
           }}
           onRetry={handleRetry}
         />
@@ -369,31 +377,33 @@ export function BridgeOrchestrator({
           />
         )}
 
-      {state.value === "execute" &&
-        state.context.quote &&
-        state.context.request && (
-          <StepRunner
-            autoStart={true}
-            client={client}
-            onBack={() => {
-              send({ type: "BACK" });
-            }}
-            onCancel={onCancel}
-            onComplete={handleExecutionComplete}
-            request={state.context.request}
-            wallet={state.context.selectedPaymentMethod?.payerWallet}
-            windowAdapter={webWindowAdapter}
-          />
-        )}
+      {state.value === "execute" && quote && state.context.request && (
+        <StepRunner
+          autoStart={true}
+          client={client}
+          onBack={() => {
+            send({ type: "BACK" });
+          }}
+          onCancel={() => {
+            onCancel(quote);
+          }}
+          onComplete={(completedStatuses) => {
+            handleExecutionComplete(completedStatuses, quote);
+          }}
+          request={state.context.request}
+          wallet={state.context.selectedPaymentMethod?.payerWallet}
+          windowAdapter={webWindowAdapter}
+        />
+      )}
 
       {state.value === "success" &&
-        state.context.quote &&
+        quote &&
         state.context.completedStatuses && (
           <SuccessScreen
             client={client}
             completedStatuses={state.context.completedStatuses}
             onDone={handleDoneOrContinueClick}
-            preparedQuote={state.context.quote}
+            preparedQuote={quote}
             uiOptions={uiOptions}
             windowAdapter={webWindowAdapter}
             hasPaymentId={!!paymentLinkId}
@@ -402,9 +412,10 @@ export function BridgeOrchestrator({
 
       {state.value === "post-buy-transaction" &&
         uiOptions.mode === "transaction" &&
+        quote &&
         uiOptions.transaction && (
           <ExecutingTxScreen
-            closeModal={handlePostBuyTransactionComplete}
+            closeModal={() => handlePostBuyTransactionComplete(quote)}
             onTxSent={() => {
               // Do nothing
             }}

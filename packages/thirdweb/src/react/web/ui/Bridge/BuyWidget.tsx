@@ -23,6 +23,7 @@ import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProv
 import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
@@ -31,6 +32,11 @@ import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
+
+type BuyOrOnrampPrepareResult = Extract<
+  BridgePrepareResult,
+  { type: "buy" | "onramp" }
+>;
 
 export type BuyWidgetProps = {
   /**
@@ -155,17 +161,17 @@ export type BuyWidgetProps = {
   /**
    * Callback triggered when the purchase is successful.
    */
-  onSuccess?: () => void;
+  onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
 
   /**
    * Callback triggered when the purchase encounters an error.
    */
-  onError?: (error: Error) => void;
+  onError?: (error: Error, quote: BuyOrOnrampPrepareResult | undefined) => void;
 
   /**
    * Callback triggered when the user cancels the purchase.
    */
-  onCancel?: () => void;
+  onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;
 
   /**
    * @hidden
@@ -447,14 +453,23 @@ export function BuyWidget(props: BuyWidgetProps) {
         client={props.client}
         connectLocale={localeQuery.data}
         connectOptions={props.connectOptions}
-        onCancel={() => {
-          props.onCancel?.();
+        onCancel={(quote) => {
+          // type guard
+          if (quote?.type === "buy" || quote?.type === "onramp") {
+            props.onCancel?.(quote);
+          }
         }}
-        onComplete={() => {
-          props.onSuccess?.();
+        onComplete={(quote) => {
+          // type guard
+          if (quote?.type === "buy" || quote?.type === "onramp") {
+            props.onSuccess?.(quote);
+          }
         }}
-        onError={(err: Error) => {
-          props.onError?.(err);
+        onError={(err: Error, quote) => {
+          // type guard
+          if (quote?.type === "buy" || quote?.type === "onramp") {
+            props.onError?.(err, quote);
+          }
         }}
         paymentLinkId={props.paymentLinkId}
         paymentMethods={props.paymentMethods}

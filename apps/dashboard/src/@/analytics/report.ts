@@ -225,7 +225,7 @@ type AssetContractType =
  */
 export function reportAssetBuySuccessful(properties: {
   chainId: number;
-  contractType: AssetContractType;
+  contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
 }) {
   posthog.capture("asset buy successful", {
@@ -243,9 +243,51 @@ type TokenSwapParams = {
   pageType: "asset" | "bridge" | "chain";
 };
 
+type TokenBuyParams = {
+  buyTokenChainId: number | undefined;
+  buyTokenAddress: string | undefined;
+  pageType: "asset" | "bridge" | "chain";
+};
+
 /**
  * ### Why do we need to report this event?
- * - To track number of successful token swaps from the token page
+ * - To track number of successful token buys
+ * - To track which tokens are being bought the most
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenBuySuccessful(properties: TokenBuyParams) {
+  posthog.capture("token buy successful", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of failed token buys
+ * - To track which token buys are failing
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenBuyFailed(properties: TokenBuyParams) {
+  posthog.capture("token buy failed", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of cancelled token buys
+ * - To track which token buys are being cancelled
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ */
+export function reportTokenBuyCancelled(properties: TokenBuyParams) {
+  posthog.capture("token buy cancelled", properties);
+}
+
+/**
+ * ### Why do we need to report this event?
+ * - To track number of successful token swaps
  * - To track which tokens are being swapped the most
  *
  * ### Who is responsible for this event?
@@ -271,7 +313,7 @@ export function reportSwapWidgetShown(properties: {
 
 /**
  * ### Why do we need to report this event?
- * - To track number of failed token swaps from the token page
+ * - To track number of failed token swaps
  * - To track which tokens are being swapped the most
  *
  * ### Who is responsible for this event?
@@ -287,7 +329,7 @@ export function reportTokenSwapFailed(
 
 /**
  * ### Why do we need to report this event?
- * - To track number of cancelled token swaps from the token page
+ * - To track number of cancelled token swaps
  * - To track which tokens are being swapped the most
  *
  * ### Who is responsible for this event?
@@ -299,7 +341,7 @@ export function reportTokenSwapCancelled(properties: TokenSwapParams) {
 
 /**
  * ### Why do we need to report this event?
- * - To track number of failed asset purchases from the token page
+ * - To track number of failed asset purchases
  * - To track the errors that users encounter when trying to purchase an asset
  *
  * ### Who is responsible for this event?
@@ -307,7 +349,7 @@ export function reportTokenSwapCancelled(properties: TokenSwapParams) {
  */
 export function reportAssetBuyFailed(properties: {
   chainId: number;
-  contractType: AssetContractType;
+  contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
   error: string;
 }) {
@@ -329,7 +371,7 @@ export function reportAssetBuyFailed(properties: {
  */
 export function reportAssetBuyCancelled(properties: {
   chainId: number;
-  contractType: AssetContractType;
+  contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
 }) {
   posthog.capture("asset buy cancelled", {

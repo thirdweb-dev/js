@@ -9,6 +9,9 @@ import {
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
   reportSwapWidgetShown,
+  reportTokenBuyCancelled,
+  reportTokenBuyFailed,
+  reportTokenBuySuccessful,
   reportTokenSwapCancelled,
   reportTokenSwapFailed,
   reportTokenSwapSuccessful,
@@ -66,32 +69,81 @@ export function BuyAndSwapEmbed(props: {
           connectOptions={{
             autoConnect: false,
           }}
-          onError={(e) => {
+          onError={(e, quote) => {
             const errorMessage = parseError(e);
+
+            reportTokenBuyFailed({
+              buyTokenChainId:
+                quote?.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote?.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote?.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote?.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuyFailed({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
                 error: errorMessage,
+                contractType: undefined,
               });
             }
           }}
-          onCancel={() => {
+          onCancel={(quote) => {
+            reportTokenBuyCancelled({
+              buyTokenChainId:
+                quote?.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote?.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote?.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote?.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuyCancelled({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
+                contractType: undefined,
               });
             }
           }}
-          onSuccess={() => {
+          onSuccess={(quote) => {
+            reportTokenBuySuccessful({
+              buyTokenChainId:
+                quote.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuySuccessful({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
+                contractType: undefined,
               });
             }
           }}
