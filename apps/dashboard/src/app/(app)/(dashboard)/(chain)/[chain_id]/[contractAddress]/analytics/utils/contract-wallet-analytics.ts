@@ -67,7 +67,6 @@ export async function getContractUniqueWalletAnalytics(params: {
   }
 
   const json = (await res.json()) as InsightResponse;
-  console.log("wallet analytics json", json);
   const aggregations = Object.values(json.aggregations[0]);
 
   const returnValue: TransactionAnalyticsEntry[] = [];
