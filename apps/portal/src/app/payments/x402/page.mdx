@@ -32,15 +32,6 @@ When a user makes a request to a paid API:
 
 ## 402 Payment Protocol Fundamentals
 
-### Payment Flow
-The 402 payment protocol follows a simple request-retry pattern:
-
-1. **Initial request**: Client makes normal API call
-2. **402 response**: Server responds with payment requirements if payment needed
-3. **Payment authorization**: User signs payment message in their wallet
-4. **Retry with payment**: Request is retried with payment header
-5. **Content delivery**: Server validates payment and returns content
-
 ### Payment Processors
 A **payment processor** is a service that handles payment verification and settlement for 402 payments. Think of it as the backend service that:
 - Validates payment signatures from users
@@ -51,11 +42,6 @@ A **payment processor** is a service that handles payment verification and settl
 thirdweb's 402 payment implementation currently supports:
 - **"exact"**: Fixed price payments (e.g., exactly $0.01 USDC) - our first supported scheme
 - Additional schemes (percentage-based, auction-style, variable pricing) are planned for future versions
-
-### Security Model
-- **Signature-based**: Users sign payment authorizations, no direct token transfers from client
-- **Replay protection**: Each payment includes unique identifiers to prevent reuse
-- **Amount validation**: Clients can set maximum payment limits for protection
 
 ## Supported Payment Networks & Tokens
 
@@ -68,41 +54,41 @@ thirdweb's 402 payment processor currently supports payments on:
 - **IoTeX** (mainnet)
 - **Sei** (mainnet)
 - **Sei Testnet**
+- **Solana (coming soon)**
+- **Solana Devnet (coming soon)**
 
 ### Payment Tokens
 - **Primary**: USDC on all supported networks
 - **Stablecoins**: Other USD-pegged tokens as available per network
 - **Network selection**: Client and server automatically negotiate the best payment network
 
-### Chain Switching
-If your wallet is connected to a different network than required for payment, the client will automatically:
-1. Detect the payment network requirement
-2. Prompt you to switch to the correct network
-3. Proceed with payment once switched
+## thirdweb 402 Payment Components
 
-## thirdweb as 402 Payment Processor
+thirdweb provides a complete 402 payment system with components for both client and server sides, plus backend payment processing infrastructure.
 
-thirdweb provides a complete 402 payment processing service that handles all the payment infrastructure for your APIs.
+### Client-Side Components
+**For app developers integrating payment functionality:**
+- **`wrapFetchWithPayment`**: Automatically handles 402 responses and payment flows
+- **Wallet integration**: Works with any thirdweb-supported wallet (inapp, MetaMask, WalletConnect, etc.)
+- **Payment authorization**: Prompts users to sign payment messages when needed
+- **Chain switching**: Automatically switches to the required payment network
+- **Error handling**: Manages payment failures, insufficient funds, and user rejections
 
-### What thirdweb Provides
+### Server-Side Components
+**For API providers implementing gated endpoints:**
+- **Middleware libraries**: Integration with popular frameworks (`x402-next`, `x402-hono`, `x402-express`)
 - **Payment verification**: Validates user payment signatures and wallet balances
-- **Multi-chain settlement**: Supports payments across multiple blockchain networks
-- **Server wallet integration**: Uses your configured server wallet to receive payments
-- **Gasless transactions**: Handles all gas costs for payment settlement
-- **Automatic execution**: Payments are settled without manual intervention
+- **Multi-chain support**: Accepts payments across multiple blockchain networks
+- **Automatic settlement**: Executes token transfers to your server wallet
+- **Gasless transactions**: thirdweb covers all gas costs for payment processing
 
-### Server Wallet Concept
-Your **server wallet** is the blockchain address where all API payments are collected. When users pay for API access:
-1. They sign a payment authorization to your server wallet address
-2. thirdweb validates the payment signature and user's token balance
-3. thirdweb executes the token transfer to your server wallet
-4. You receive the payment automatically without gas costs
-
-### Integration Benefits
-- **Simple setup**: Just provide your server wallet address and thirdweb secret key
-- **No blockchain complexity**: thirdweb handles all on-chain interactions
-- **Reliable settlement**: Payments are automatically executed when valid
-- **Multi-chain support**: Accept payments on multiple networks simultaneously
+### Server Wallet
+Your **Server Wallet** is the blockchain address where all API payments are collected:
+- **Payment destination**: Users authorize payments to this specific wallet address
+- **Multi-network**: Same wallet can receive payments across different supported chains
+- **Automatic collection**: thirdweb handles the transfer execution without manual intervention
+- **Gasless payments**: Payment transfers are performed in gasless fashion to reduce friction
+- **Real-time settlement**: Payments arrive in your wallet immediately after validation
 
 ## Client-Side Implementation
 
@@ -286,20 +272,3 @@ export const config = {
   matcher: ["/api/basic-data", "/api/premium-analytics", "/api/ai-processing"],
 };
 ```
-
-### Environment Variables
-
-Set up the required environment variables:
-
-```bash
-# .env.local
-THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
-SERVER_WALLET_ADDRESS=0x1234567890123456789012345678901234567890
-```
-
-### Security Considerations
-
-- **Never expose your secret key**: Keep `THIRDWEB_SECRET_KEY` in server environment only
-- **Server wallet security**: Use a dedicated wallet for collecting payments, separate from development wallets
-- **Network selection**: Use testnets for development, mainnets for production
-- **Price validation**: Set appropriate prices to prevent abuse while maintaining accessibility
