@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.107.1
+
+### Patch Changes
+
+- [#8080](https://github.com/thirdweb-dev/js/pull/8080) [`93f913c`](https://github.com/thirdweb-dev/js/commit/93f913c614ebbe3db350872bdcff264c07155ce2) Thanks [@MananTank](https://github.com/MananTank)! - SwapWidget UI improvements
+
+- [#8092](https://github.com/thirdweb-dev/js/pull/8092) [`a85ef0b`](https://github.com/thirdweb-dev/js/commit/a85ef0b222797d38ccd31e72fafda82ceb1faefa) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add zephyr testnet to pre-1559 chains
+
 ## 5.107.0
 
 ### Minor Changes
