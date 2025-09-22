@@ -12,17 +12,109 @@ Implement paid API calls using the x402 protocol. Every request is paid for by t
   href="https://playground.thirdweb.com/payments/x402"
 />
 
-## Client Side
+## Introduction & Core Concepts
+
+The **x402 payment protocol** enables micropayments for API access, allowing developers to monetize their APIs with per-request pricing. Instead of traditional subscription models or API keys, users pay small amounts (typically $0.01-$0.10) for each API call using cryptocurrency.
+
+### How it works
+When a user makes a request to a paid API:
+1. The API returns a `402 Payment Required` response with payment details
+2. The user's wallet signs a payment authorization
+3. The request is retried with a payment header
+4. The API validates the payment and returns the requested data
+5. The payment is settled on-chain to the API provider
+
+### Benefits
+- **No subscriptions**: Users only pay for what they use
+- **Global access**: Works with any web3 wallet worldwide
+- **Instant monetization**: Start earning from your APIs immediately
+- **Micropayment friendly**: Perfect for small, frequent transactions
+
+## X402 Protocol Fundamentals
+
+### Payment Flow
+The x402 protocol follows a simple request-retry pattern:
+
+1. **Initial request**: Client makes normal API call
+2. **402 response**: Server responds with payment requirements if payment needed
+3. **Payment authorization**: User signs payment message in their wallet
+4. **Retry with payment**: Request is retried with payment header
+5. **Content delivery**: Server validates payment and returns content
+
+### Facilitators
+A **facilitator** is a service that handles payment verification and settlement for x402 payments. Think of it as the payment processor that:
+- Validates payment signatures from users
+- Executes on-chain transfers to collect payments
+- Provides payment infrastructure to API providers
+
+### Payment Schemes
+Currently, x402 supports:
+- **"exact"**: Fixed price payments (e.g., exactly $0.01 USDC)
+- Additional schemes (percentage-based, auction-style) are planned for future versions
+
+### Security Model
+- **Signature-based**: Users sign payment authorizations, no direct token transfers from client
+- **Replay protection**: Each payment includes unique identifiers to prevent reuse
+- **Amount validation**: Clients can set maximum payment limits for protection
+
+## Supported Payment Networks & Tokens
+
+### Supported Networks
+thirdweb's x402 facilitator currently supports payments on:
+- **Base** (mainnet)
+- **Base Sepolia** (testnet)
+- **Avalanche** (C-Chain)
+- **Avalanche Fuji** (testnet)
+- **IoTeX** (mainnet)
+- **Sei** (mainnet)
+- **Sei Testnet**
+
+### Payment Tokens
+- **Primary**: USDC on all supported networks
+- **Stablecoins**: Other USD-pegged tokens as available per network
+- **Network selection**: Client and server automatically negotiate the best payment network
+
+### Chain Switching
+If your wallet is connected to a different network than required for payment, the client will automatically:
+1. Detect the payment network requirement
+2. Prompt you to switch to the correct network
+3. Proceed with payment once switched
+
+## thirdweb as X402 Facilitator
+
+thirdweb provides a complete x402 facilitator service that handles all the payment infrastructure for your APIs.
+
+### What thirdweb Provides
+- **Payment verification**: Validates user payment signatures and wallet balances
+- **Multi-chain settlement**: Supports payments across multiple blockchain networks
+- **Server wallet integration**: Uses your configured server wallet to receive payments
+- **Gasless transactions**: Handles all gas costs for payment settlement
+- **Automatic execution**: Payments are settled without manual intervention
+
+### Server Wallet Concept
+Your **server wallet** is the blockchain address where all API payments are collected. When users pay for API access:
+1. They sign a payment authorization to your server wallet address
+2. thirdweb validates the payment signature and user's token balance
+3. thirdweb executes the token transfer to your server wallet
+4. You receive the payment automatically without gas costs
+
+### Integration Benefits
+- **Simple setup**: Just provide your server wallet address and thirdweb secret key
+- **No blockchain complexity**: thirdweb handles all on-chain interactions
+- **Reliable settlement**: Payments are automatically executed when valid
+- **Multi-chain support**: Accept payments on multiple networks simultaneously
+
+## Client-Side Implementation
+
+### Basic Usage
 
 `wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses from any API call. It will:
 1. Make the initial request
 2. If a 402 response is received, parse the payment requirements
 3. Verify the payment amount is within the allowed maximum
-4. Sign a payment authorization 
+4. Sign a payment authorization
 5. Create a payment header using the provided wallet signature
 6. Retry the request with the payment header
-
-Here's an example:
 
 ```typescript
 import { wrapFetchWithPayment } from "thirdweb/x402";
@@ -39,9 +131,82 @@ const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
 const response = await fetchWithPay('https://api.example.com/paid-endpoint');
 ```
 
-## Server Side
+### Advanced Configuration
 
-To make your API calls payable, you can use any x402 middleware library like x402-hono, x402-next, x402-express, etc.
+You can configure payment limits and behavior:
+
+```typescript
+// Set maximum payment amount (default: 1 USDC)
+const fetchWithPay = wrapFetchWithPayment(
+  fetch,
+  client,
+  wallet,
+  BigInt(5 * 10 ** 6) // Maximum 5 USDC
+);
+```
+
+### Error Handling
+
+Handle different payment scenarios:
+
+```typescript
+try {
+  const response = await fetchWithPay('/api/paid-endpoint');
+  const data = await response.json();
+} catch (error) {
+  if (error.message.includes("Payment amount exceeds maximum")) {
+    // Handle payment too expensive
+    console.error("Payment required exceeds your limit");
+  } else if (error.message.includes("Wallet not connected")) {
+    // Handle wallet connection issues
+    console.error("Please connect your wallet");
+  } else if (error.message.includes("Payment already attempted")) {
+    // Handle retry scenarios
+    console.error("Payment was already processed");
+  } else {
+    // Handle other errors (user rejected, insufficient funds, etc.)
+    console.error("Payment failed:", error.message);
+  }
+}
+```
+
+### React Integration
+
+Use with React hooks for better UX:
+
+```typescript
+import { useActiveWallet } from "thirdweb/react";
+import { useMutation } from "@tanstack/react-query";
+
+function PayableAPICall() {
+  const wallet = useActiveWallet();
+
+  const paidApiCall = useMutation({
+    mutationFn: async () => {
+      if (!wallet) throw new Error("Wallet not connected");
+
+      const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
+      const response = await fetchWithPay('/api/paid-endpoint');
+      return response.json();
+    },
+  });
+
+  return (
+    <button
+      onClick={() => paidApiCall.mutate()}
+      disabled={!wallet || paidApiCall.isPending}
+    >
+      {paidApiCall.isPending ? "Processing Payment..." : "Call Paid API"}
+    </button>
+  );
+}
+```
+
+## Server-Side Implementation
+
+### Basic Middleware Setup
+
+To make your API calls payable, you can use any x402 middleware library like `x402-hono`, `x402-next`, `x402-express`, etc.
 
 Then, use the `facilitator` configuration function to settle transactions with your thirdweb server wallet gaslessly and pass it to the middleware.
 
@@ -57,7 +222,7 @@ const client = createThirdwebClient({
 });
 
 export const middleware = paymentMiddleware(
-  "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+  "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024", // Your server wallet address
   {
     "/api/paid-endpoint": {
       price: "$0.01",
@@ -69,7 +234,7 @@ export const middleware = paymentMiddleware(
   },
   facilitator({
     client,
-    serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    serverWalletAddress: process.env.SERVER_WALLET_ADDRESS,
   }),
 );
 
@@ -78,3 +243,63 @@ export const config = {
   matcher: ["/api/paid-endpoint"],
 };
 ```
+
+### Facilitator Configuration Deep-Dive
+
+The `facilitator` function accepts several configuration options:
+
+```typescript
+facilitator({
+  client: thirdwebClient,                    // Your thirdweb client with secret key
+  serverWalletAddress: "0x..."              // Where payments are collected
+})
+```
+
+### Multiple Endpoint Configuration
+
+Configure different pricing for multiple API endpoints:
+
+```typescript
+export const middleware = paymentMiddleware(
+  serverWalletAddress,
+  {
+    "/api/basic-data": {
+      price: "$0.01",
+      network: "base-sepolia",
+      config: { description: "Basic data access" },
+    },
+    "/api/premium-analytics": {
+      price: "$0.05",
+      network: "base", // Use mainnet for higher-value endpoints
+      config: { description: "Premium analytics data" },
+    },
+    "/api/ai-processing": {
+      price: "$0.10",
+      network: "base",
+      config: { description: "AI-powered data processing" },
+    },
+  },
+  facilitator({ client, serverWalletAddress }),
+);
+
+export const config = {
+  matcher: ["/api/basic-data", "/api/premium-analytics", "/api/ai-processing"],
+};
+```
+
+### Environment Variables
+
+Set up the required environment variables:
+
+```bash
+# .env.local
+THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
+SERVER_WALLET_ADDRESS=0x1234567890123456789012345678901234567890
+```
+
+### Security Considerations
+
+- **Never expose your secret key**: Keep `THIRDWEB_SECRET_KEY` in server environment only
+- **Server wallet security**: Use a dedicated wallet for collecting payments, separate from development wallets
+- **Network selection**: Use testnets for development, mainnets for production
+- **Price validation**: Set appropriate prices to prevent abuse while maintaining accessibility
