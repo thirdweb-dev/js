@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { CodeIcon, LockIcon } from "lucide-react";
-import { baseSepolia } from "thirdweb/chains";
+import { arbitrumSepolia } from "thirdweb/chains";
 import {
   ConnectButton,
   getDefaultToken,
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
 
-const chain = baseSepolia;
+const chain = arbitrumSepolia;
 const token = getDefaultToken(chain, "USDC");
 
 export function X402ClientPreview() {
