@@ -156,38 +156,6 @@ try {
 }
 ```
 
-### React Integration
-
-Use with React hooks for better UX:
-
-```typescript
-import { useActiveWallet } from "thirdweb/react";
-import { useMutation } from "@tanstack/react-query";
-
-function PayableAPICall() {
-  const wallet = useActiveWallet();
-
-  const paidApiCall = useMutation({
-    mutationFn: async () => {
-      if (!wallet) throw new Error("Wallet not connected");
-
-      const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
-      const response = await fetchWithPay('/api/paid-endpoint');
-      return response.json();
-    },
-  });
-
-  return (
-    <button
-      onClick={() => paidApiCall.mutate()}
-      disabled={!wallet || paidApiCall.isPending}
-    >
-      {paidApiCall.isPending ? "Processing Payment..." : "Call Paid API"}
-    </button>
-  );
-}
-```
-
 ## Server-Side Implementation
 
 ### Basic Middleware Setup
