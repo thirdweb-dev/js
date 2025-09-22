@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { useId } from "react";
 import { download } from "thirdweb/storage";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
@@ -19,8 +18,8 @@ export const size = {
 export const contentType = "image/png";
 
 const TWLogo: React.FC = () => {
-  const cipId = useId();
-  const linearGradientId = useId();
+  const cipId = "og-tw-logo-clip-path";
+  const linearGradientId = "og-tw-logo-linear-gradient";
 
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
