@@ -1,8 +1,8 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
-import type { Chain, ThirdwebClient } from "thirdweb";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Chain } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
 import {
   reportAssetBuyCancelled,
@@ -17,16 +17,23 @@ import {
   reportTokenSwapSuccessful,
 } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
+import {
+  NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID,
+} from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
+import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
+
+type PageType = "asset" | "bridge" | "chain";
 
 export function BuyAndSwapEmbed(props: {
-  client: ThirdwebClient;
   chain: Chain;
   tokenAddress: string | undefined;
   buyAmount: string | undefined;
-  pageType: "asset" | "bridge" | "chain";
+  pageType: PageType;
 }) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
@@ -41,6 +48,21 @@ export function BuyAndSwapEmbed(props: {
     isMounted.current = true;
     reportSwapWidgetShown({
       pageType: props.pageType,
+    });
+  }, [props.pageType]);
+
+  const client = useMemo(() => {
+    return getConfiguredThirdwebClient({
+      clientId:
+        props.pageType === "asset"
+          ? NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID
+          : props.pageType === "bridge"
+            ? NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID
+            : props.pageType === "chain"
+              ? NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID
+              : undefined,
+      secretKey: undefined,
+      teamId: undefined,
     });
   }, [props.pageType]);
 
@@ -65,7 +87,7 @@ export function BuyAndSwapEmbed(props: {
           chain={props.chain}
           className="!rounded-2xl !w-full !border-none"
           title=""
-          client={props.client}
+          client={client}
           connectOptions={{
             autoConnect: false,
           }}
@@ -155,7 +177,7 @@ export function BuyAndSwapEmbed(props: {
 
       {tab === "swap" && (
         <SwapWidget
-          client={props.client}
+          client={client}
           theme={themeObj}
           className="!rounded-2xl !border-none !w-full"
           prefill={{

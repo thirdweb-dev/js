@@ -173,7 +173,6 @@ function BuyEmbed(props: {
     return (
       <BuyAndSwapEmbed
         chain={props.clientContract.chain}
-        client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
         buyAmount={undefined}
         pageType="asset"

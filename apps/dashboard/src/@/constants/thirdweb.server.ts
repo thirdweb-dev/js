@@ -25,6 +25,7 @@ import { getVercelEnv } from "@/utils/vercel";
 export function getConfiguredThirdwebClient(options: {
   secretKey: string | undefined;
   teamId: string | undefined;
+  clientId?: string;
 }): ThirdwebClient {
   if (getVercelEnv() !== "production") {
     // if not on production: run this when creating a client to set the domains
@@ -77,7 +78,8 @@ export function getConfiguredThirdwebClient(options: {
   }
 
   // During build time, provide fallbacks if credentials are missing
-  const clientId = NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "dummy-build-client";
+  const clientId =
+    options.clientId || NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "dummy-build-client";
   const secretKey = options.secretKey || undefined;
 
   return createThirdwebClient({

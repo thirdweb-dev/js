@@ -32,3 +32,12 @@ export const NEXT_PUBLIC_DEMO_ENGINE_URL =
 
 export const NEXT_PUBLIC_THIRDWEB_AI_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_AI_HOST || "https://nebula-api.thirdweb.com";
+
+export const NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID;
+
+export const NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID;
+
+export const NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID;

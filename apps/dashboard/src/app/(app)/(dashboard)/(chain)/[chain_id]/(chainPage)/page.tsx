@@ -44,7 +44,7 @@ export default async function Page(props: {
       {chain.testnet ? (
         <FaucetSection chain={chain} client={client} isLoggedIn={!!account} />
       ) : chain.services.find((c) => c.service === "pay" && c.enabled) ? (
-        <BuyFundsSection chain={chain} client={client} />
+        <BuyFundsSection chain={chain} />
       ) : null}
 
       {/* Chain Overview */}
