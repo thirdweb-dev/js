@@ -1,6 +1,7 @@
 "use client";
 import { formatDistanceToNow } from "date-fns";
 import {
+  ArrowLeftRightIcon,
   ArrowRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -73,8 +74,13 @@ function RecentTransfersUI(props: {
 
   return (
     <div>
-      <div className="p-4 lg:p-6 bg-card border rounded-b-none border-b-0 rounded-lg">
-        <h2 className="font-semibold text-2xl tracking-tight mb-0.5">
+      <div className="p-4 lg:p-6 bg-card border rounded-b-none border-b-0 rounded-xl">
+        <div className="flex mb-3">
+          <div className="rounded-full border p-2 bg-background">
+            <ArrowLeftRightIcon className="size-4 text-muted-foreground" />
+          </div>
+        </div>
+        <h2 className="font-semibold text-2xl tracking-tight mb-1">
           Recent Transfers
         </h2>
         <p className="text-muted-foreground text-sm">
@@ -194,7 +200,7 @@ function RecentTransfersUI(props: {
         )}
       </TableContainer>
 
-      <div className="flex items-center justify-end gap-3 rounded-b-lg border-x border-b bg-card px-6 py-5">
+      <div className="flex items-center justify-end gap-3 rounded-b-xl border-x border-b bg-card px-6 py-5">
         <Button
           className="gap-1.5 bg-background rounded-full"
           disabled={props.page === 0 || props.isPending}

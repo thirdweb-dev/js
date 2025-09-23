@@ -76,7 +76,7 @@ export function ContractHeaderUI(props: {
   return (
     <div
       className={cn(
-        "flex flex-col lg:flex-row lg:items-center gap-5 py-6 relative",
+        "flex flex-col lg:flex-row lg:items-center gap-5 py-8 relative",
         props.className,
       )}
     >

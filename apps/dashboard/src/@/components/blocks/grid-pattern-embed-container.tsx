@@ -4,7 +4,7 @@ export function GridPatternEmbedContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className=" sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-lg overflow-hidden relative">
+    <div className="sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-xl overflow-hidden relative">
       <GridPattern
         width={30}
         height={30}
