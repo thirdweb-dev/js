@@ -59,7 +59,6 @@ function ServerCodeExample() {
 
 import { facilitator, verifyPayment } from "thirdweb/x402";
 import { createThirdwebClient } from "thirdweb";
-import { paymentMiddleware } from "x402-next";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
 const thirdwebX402Facilitator = facilitator({
