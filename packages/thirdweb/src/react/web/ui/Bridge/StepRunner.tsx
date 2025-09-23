@@ -376,9 +376,20 @@ export function StepRunner({
         </Container>
 
         <Spacer y="md" />
-        <Text center color="secondaryText" size="xs" multiline>
-          Keep this window open until all
-          <br /> transactions are complete.
+        <Text
+          center
+          color={error ? "danger" : "secondaryText"}
+          size="xs"
+          multiline
+        >
+          {error ? (
+            error.message || "An error occurred. Please try again."
+          ) : (
+            <>
+              Keep this window open until all
+              <br /> transactions are complete.
+            </>
+          )}
         </Text>
 
         <Spacer y="lg" />
