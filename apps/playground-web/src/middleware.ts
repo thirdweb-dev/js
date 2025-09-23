@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createThirdwebClient } from "thirdweb";
 import { arbitrumSepolia } from "thirdweb/chains";
-import { facilitator, verifyPayment } from "thirdweb/x402";
+import { facilitator, settlePayment } from "thirdweb/x402";
 
 const client = createThirdwebClient({
   secretKey: process.env.THIRDWEB_SECRET_KEY as string,
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const resourceUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}${pathname}`;
   const paymentData = request.headers.get("X-PAYMENT");
 
-  const result = await verifyPayment({
+  const result = await settlePayment({
     resourceUrl,
     method,
     paymentData,

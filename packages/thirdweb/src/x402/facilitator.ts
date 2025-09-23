@@ -19,7 +19,7 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
 
 /**
  * Creates a facilitator for the x402 payment protocol.
- * You can use this with `verifyPayment` or with any x402 middleware to enable settling transactions with your thirdweb server wallet.
+ * You can use this with `settlePayment` or with any x402 middleware to enable settling transactions with your thirdweb server wallet.
  *
  * @param config - The configuration for the facilitator
  * @returns a x402 compatible FacilitatorConfig

@@ -1,0 +1,90 @@
+import type {
+  ERC20TokenAmount,
+  Money,
+  PaymentMiddlewareConfig,
+} from "x402/types";
+import type { Address } from "../utils/address.js";
+import type { Prettify } from "../utils/type-utils.js";
+import type { facilitator as facilitatorType } from "./facilitator.js";
+import type {
+  FacilitatorNetwork,
+  FacilitatorSettleResponse,
+  RequestedPaymentPayload,
+  RequestedPaymentRequirements,
+} from "./schemas.js";
+
+export const x402Version = 1;
+
+/**
+ * Configuration object for verifying or processing X402 payments.
+ *
+ * @public
+ */
+export type PaymentArgs = {
+  /** The URL of the resource being protected by the payment */
+  resourceUrl: string;
+  /** The HTTP method used to access the resource */
+  method: "GET" | "POST" | ({} & string);
+  /** The payment data/proof provided by the client, typically from the X-PAYMENT header */
+  paymentData?: string | null;
+  /** The wallet address that should receive the payment */
+  payTo: Address;
+  /** The blockchain network where the payment should be processed */
+  network: FacilitatorNetwork;
+  /** The price for accessing the resource - either a USD amount (e.g., "$0.10") or a specific token amount */
+  price: Money | ERC20TokenAmount;
+  /** The payment facilitator instance used to verify and settle payments */
+  facilitator: ReturnType<typeof facilitatorType>;
+  /** Optional configuration for the payment middleware route */
+  routeConfig?: PaymentMiddlewareConfig;
+};
+
+export type PaymentRequiredResult = {
+  /** HTTP 402 - Payment Required, verification or processing failed or payment missing */
+  status: 402;
+  /** The error response body containing payment requirements */
+  responseBody: {
+    /** The X402 protocol version */
+    x402Version: number;
+    /** Human-readable error message */
+    error: string;
+    /** Array of acceptable payment methods and requirements */
+    accepts: RequestedPaymentRequirements[];
+    /** Optional payer address if verification partially succeeded */
+    payer?: string;
+  };
+  /** Response headers for the error response */
+  responseHeaders: Record<string, string>;
+};
+
+/**
+ * The result of a payment settlement operation.
+ *
+ * @public
+ */
+export type SettlePaymentResult = Prettify<
+  | {
+      /** HTTP 200 - Payment was successfully processed */
+      status: 200;
+      /** Response headers including payment receipt information */
+      responseHeaders: Record<string, string>;
+      /** The payment receipt from the payment facilitator */
+      paymentReceipt: FacilitatorSettleResponse;
+    }
+  | PaymentRequiredResult
+>;
+
+/**
+ * The result of a payment verification operation.
+ *
+ * @public
+ */
+export type VerifyPaymentResult = Prettify<
+  | {
+      /** HTTP 200 - Payment was successfully verified */
+      status: 200;
+      decodedPayment: RequestedPaymentPayload;
+      selectedPaymentRequirements: RequestedPaymentRequirements;
+    }
+  | PaymentRequiredResult
+>;
