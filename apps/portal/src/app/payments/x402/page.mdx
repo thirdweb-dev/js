@@ -50,7 +50,6 @@ Here's an example with a Next.js middleware:
 ```typescript
 import { createThirdwebClient } from "thirdweb";
 import { facilitator, verifyPayment } from "thirdweb/x402";
-import { paymentMiddleware } from "x402-next";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
 const thirdwebX402Facilitator = facilitator({

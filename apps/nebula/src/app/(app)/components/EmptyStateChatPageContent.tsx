@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRightIcon, InfoIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { nebulaAppThirdwebClient } from "@/constants/nebula-client";
 import { NebulaIcon } from "@/icons/NebulaIcon";
@@ -24,7 +24,6 @@ export function EmptyStateChatPageContent(props: {
 }) {
   return (
     <div className="relative overflow-hidden py-10 lg:py-16">
-      <AIUsageBanner />
       {props.showAurora && (
         <Aurora className="top-0 left-1/2 h-[800px] w-[1000px] text-[hsl(var(--nebula-pink-foreground)/8%)] lg:w-[150%] dark:text-[hsl(var(--nebula-pink-foreground)/10%)]" />
       )}
@@ -166,37 +165,3 @@ const Aurora: React.FC<AuroraProps> = ({ className }) => {
     />
   );
 };
-
-function AIUsageBanner() {
-  return (
-    <div className="absolute top-0 left-0 right-0 z-10 flex justify-center px-4 pt-4">
-      <div className="w-full max-w-4xl">
-        <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-blue-50/50 p-3 shadow-sm dark:border-blue-800 dark:from-blue-950/50 dark:to-blue-950/20">
-          {/* Decorative blur */}
-          <div className="absolute -right-6 -top-6 size-20 rounded-full bg-blue-600 opacity-10 blur-xl" />
-          
-          <div className="relative flex items-start gap-3">
-            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-              <InfoIcon className="size-3.5 text-blue-600 dark:text-blue-400" />
-            </div>
-            
-            <div className="flex-1 text-sm">
-              <p className="text-blue-800 dark:text-blue-200">
-                thirdweb AI usage is billable based on number of tokens used. For more details, see the{" "}
-                <a
-                  href="https://thirdweb.com/pricing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-700 underline decoration-blue-300 underline-offset-2 transition-colors hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-300 dark:decoration-blue-600 dark:hover:text-blue-200 dark:hover:decoration-blue-400"
-                >
-                  pricing page
-                </a>
-                .
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}

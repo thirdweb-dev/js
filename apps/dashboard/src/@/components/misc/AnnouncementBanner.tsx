@@ -44,11 +44,12 @@ function AnnouncementBannerUI(props: {
 }
 
 export function AnnouncementBanner() {
-  return (
-    <AnnouncementBannerUI
-      href="https://blog.thirdweb.com/the-fastest-way-to-build-web3-applications/"
-      label="We have re-branded our Engine, Payments, and Connect products. Please read the full blog post for details on changes"
-      trackingLabel="product-rebrand"
-    />
-  );
+  // return (
+  //   <AnnouncementBannerUI
+  //     href="https://blog.thirdweb.com/the-fastest-way-to-build-web3-applications/"
+  //     label="We have re-branded our Engine, Payments, and Connect products. Please read the full blog post for details on changes"
+  //     trackingLabel="product-rebrand"
+  //   />
+  // );
+  return null;
 }
