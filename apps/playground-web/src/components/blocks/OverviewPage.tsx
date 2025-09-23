@@ -19,7 +19,7 @@ export function OverviewPage(props: {
           <h1 className="mb-2 font-bold text-5xl tracking-tight">
             {props.title}
           </h1>
-          <p className="text-base text-muted-foreground leading-normal text-pretty">
+          <p className="text-base text-muted-foreground leading-normal text-pretty max-w-[80%]">
             {props.description}
           </p>
         </div>
