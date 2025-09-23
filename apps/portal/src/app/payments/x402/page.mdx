@@ -41,15 +41,15 @@ const response = await fetchWithPay('https://api.example.com/paid-endpoint');
 
 ## Server Side
 
-To make your API calls payable, you can use the `verifyPayment` function in a simple middleware or in your endpoint directly.
+To make your API calls payable, you can use the `settlePayment` function in a middleware or in your endpoint directly.
 
-Use the `facilitator` configuration function settle transactions with your thirdweb server wallet gaslessly and pass it to the `verifyPayment` function.
+Use the `facilitator` configuration function settle transactions with your thirdweb server wallet gaslessly and pass it to the `settlePayment` function.
 
 Here's an example with a Next.js middleware:
 
 ```typescript
 import { createThirdwebClient } from "thirdweb";
-import { facilitator, verifyPayment } from "thirdweb/x402";
+import { facilitator, settlePayment } from "thirdweb/x402";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
 const thirdwebX402Facilitator = facilitator({
@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
   const resourceUrl = request.nextUrl.toString();
   const paymentData = request.headers.get("X-PAYMENT");
 
-  const result = await verifyPayment({
+  const result = await settlePayment({
     resourceUrl,
     method,
     paymentData,
@@ -97,3 +97,5 @@ export const config = {
   matcher: ["/api/paid-endpoint"],
 };
 ```
+
+You can also use the `verifyPayment` function to verify the payment before settling it. This lets you do the work that requires payment first and then settle the payment.

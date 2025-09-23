@@ -57,7 +57,7 @@ function ServerCodeExample() {
             className="h-full rounded-none border-none"
             code={`// src/middleware.ts
 
-import { facilitator, verifyPayment } from "thirdweb/x402";
+import { facilitator, settlePayment } from "thirdweb/x402";
 import { createThirdwebClient } from "thirdweb";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
@@ -71,16 +71,13 @@ export async function middleware(request: NextRequest) {
   const resourceUrl = request.nextUrl.toString();
   const paymentData = request.headers.get("X-PAYMENT");
 
-  const result = await verifyPayment({
+  const result = await settlePayment({
     resourceUrl,
     method,
     paymentData,
     payTo: "0xYourWalletAddress",
     network: "eip155:11155111", // or any other chain id
     price: "$0.01", // can also be a ERC20 token amount
-    routeConfig: {
-      description: "Access to paid content",
-    },
     facilitator: thirdwebX402Facilitator,
   });
 

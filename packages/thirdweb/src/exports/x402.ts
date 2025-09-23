@@ -4,8 +4,10 @@ export {
   type ThirdwebX402FacilitatorConfig,
 } from "../x402/facilitator.js";
 export { wrapFetchWithPayment } from "../x402/fetchWithPayment.js";
-export {
-  type VerifyPaymentArgs,
-  type VerifyPaymentResult,
-  verifyPayment,
-} from "../x402/verify-payment.js";
+export { settlePayment } from "../x402/settle-payment.js";
+export type {
+  PaymentArgs,
+  SettlePaymentResult,
+  VerifyPaymentResult,
+} from "../x402/types.js";
+export { verifyPayment } from "../x402/verify-payment.js";
