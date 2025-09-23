@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.108.0
+
+### Minor Changes
+
+- [#8091](https://github.com/thirdweb-dev/js/pull/8091) [`5249cb7`](https://github.com/thirdweb-dev/js/commit/5249cb7409a8486346fe428f824c81dd90845555) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept arbitrary chain ids for x402 payments with new settlePayment() and verifyPayment() backend utility functions
+
+### Patch Changes
+
+- [#8100](https://github.com/thirdweb-dev/js/pull/8100) [`a94f229`](https://github.com/thirdweb-dev/js/commit/a94f22928a662a5aff7a203fc2d383d9fa0907ec) Thanks [@MananTank](https://github.com/MananTank)! - Update the `onSuccess`, `onError`, and `onCancel` callback props of the `BuyWidget` to be called with the `quote` object
+
+  ```tsx
+  <BuyWidget
+    onSuccess={(quote) => console.log("Swap completed:", quote)}
+    onError={(error, quote) => console.error("Swap failed:", error, quote)}
+    onCancel={(quote) => console.log("Swap cancelled:", quote)}
+  />
+  ```
+
 ## 5.107.1
 
 ### Patch Changes
