@@ -45,7 +45,7 @@ interface UseTransactionDetailsOptions {
   transaction: PreparedTransaction;
   client: ThirdwebClient;
   wallet: Wallet | undefined;
-  currency?: SupportedFiatCurrency;
+  currency: SupportedFiatCurrency | undefined;
 }
 
 /**
