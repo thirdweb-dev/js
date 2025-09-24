@@ -448,6 +448,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
       <StepRunner
         title="Processing Swap"
         autoStart={true}
+        preparedQuote={screen.preparedQuote}
         client={props.client}
         onBack={() => {
           setScreen({

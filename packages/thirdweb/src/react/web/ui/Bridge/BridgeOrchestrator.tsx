@@ -379,6 +379,7 @@ export function BridgeOrchestrator({
 
       {state.value === "execute" && quote && state.context.request && (
         <StepRunner
+          preparedQuote={quote}
           autoStart={true}
           client={client}
           onBack={() => {

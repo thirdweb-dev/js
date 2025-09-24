@@ -12,7 +12,10 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import type { BridgePrepareRequest } from "../../../core/hooks/useBridgePrepare.js";
+import type {
+  BridgePrepareRequest,
+  BridgePrepareResult,
+} from "../../../core/hooks/useBridgePrepare.js";
 import {
   type CompletedStatusResult,
   useStepExecutor,
@@ -62,6 +65,11 @@ interface StepRunnerProps {
    * Called when user clicks the back button
    */
   onBack?: () => void;
+
+  /**
+   * Prepared quote to use
+   */
+  preparedQuote: BridgePrepareResult;
 }
 
 export function StepRunner({
@@ -74,6 +82,7 @@ export function StepRunner({
   onCancel,
   onBack,
   autoStart,
+  preparedQuote,
 }: StepRunnerProps) {
   const theme = useCustomTheme();
 
@@ -94,8 +103,8 @@ export function StepRunner({
     onComplete: (completedStatuses: CompletedStatusResult[]) => {
       onComplete(completedStatuses);
     },
-    request,
     wallet,
+    preparedQuote,
     windowAdapter,
   });
 
