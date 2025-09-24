@@ -73,6 +73,10 @@ export function toEther(wei: bigint) {
  * @utils
  */
 export function toUnits(tokens: string, decimals: number): bigint {
+  if (tokens.includes("e")) {
+    tokens = Number(tokens).toFixed(decimals);
+  }
+
   let [integerPart, fractionPart = ""] = tokens.split(".") as [string, string];
   const prefix = integerPart.startsWith("-") ? "-" : "";
   if (prefix) {
