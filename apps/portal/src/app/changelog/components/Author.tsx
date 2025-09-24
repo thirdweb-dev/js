@@ -6,13 +6,11 @@ export function Author(props: { name: string; profileImage?: string | null }) {
       {props.profileImage && (
         <img
           alt=""
-          className="size-8 rounded-[50%] border"
+          className="size-6 rounded-[50%] border"
           src={props.profileImage}
         />
       )}
-      <span className="font-medium text-muted-foreground text-sm">
-        {props.name}
-      </span>
+      <span className="text-muted-foreground text-sm">{props.name}</span>
     </div>
   );
 }

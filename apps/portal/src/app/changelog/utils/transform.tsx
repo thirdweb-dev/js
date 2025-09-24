@@ -64,7 +64,7 @@ export const transform: Transform = (node, index: number) => {
       node.attribs.class = "text-center text-sm text-muted-foreground";
       return;
     }
-    return <Paragraph>{getChildren()}</Paragraph>;
+    return <Paragraph className="leading-7">{getChildren()}</Paragraph>;
   }
 
   if (node.name === "ul") {
@@ -77,7 +77,7 @@ export const transform: Transform = (node, index: number) => {
     }
     node.attribs.class = "rounded-lg";
     return (
-      <div className="my-5 flex justify-center rounded-lg border p-4">
+      <div className="my-6 flex justify-center rounded-lg border border-dashed p-2 bg-card/50">
         {convertNodeToElement(node, index, transform)}
       </div>
     );
@@ -109,7 +109,13 @@ export const transform: Transform = (node, index: number) => {
       // }
     }
     if (code) {
-      return <CodeBlock code={code} lang={lang} />;
+      return (
+        <CodeBlock
+          code={code}
+          lang={lang}
+          className="bg-card/50 border-dashed"
+        />
+      );
     }
   }
 
