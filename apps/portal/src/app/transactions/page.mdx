@@ -70,9 +70,9 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
     - For user wallets in React applications that use the SDK, you can obtain the user wallet auth token (JWT) with the [`useAuthToken()`](/references/typescript/v5/useAuthToken) hook.
     - For user wallets in TypeScript applications, you can get it by calling `wallet.getAuthToken()` on a connected [`inAppWallet()`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet()`](/references/typescript/v5/ecosystemWallet).
 
-      <OpenApiEndpoint path="/v1/transactions" method="POST" />
+<OpenApiEndpoint path="/v1/transactions" method="POST" />
 
-    </TabsContent>
+</TabsContent>
 
   <TabsContent value="typescript">
     ### Installation
@@ -425,47 +425,47 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
     2. Enter your Client ID from the thirdweb dashboard
     3. Allowlist your game's Bundle ID on the thirdweb dashboard for security
 
-    ### Send a Transaction
+  ### Send a Transaction
 
-    Create a new script to manage transactions:
+  Create a new script to manage transactions:
 
-    ```csharp
-    using Thirdweb;
-    using UnityEngine;
-    using UnityEngine.UI;
+  ```csharp
+  using Thirdweb;
+  using UnityEngine;
+  using UnityEngine.UI;
 
-    public class TransactionManager : MonoBehaviour
-    {
-        private ThirdwebSDK sdk;
-        public Text walletAddressText;
-        public Button sendButton;
+  public class TransactionManager : MonoBehaviour
+  {
+      private ThirdwebSDK sdk;
+      public Text walletAddressText;
+      public Button sendButton;
 
-        void Start()
-        {
-            // Client ID is set in Project Settings > Thirdweb
-            sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
-            sendButton.onClick.AddListener(SendTransaction);
-        }
+      void Start()
+      {
+          // Client ID is set in Project Settings > Thirdweb
+          sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
+          sendButton.onClick.AddListener(SendTransaction);
+      }
 
-        public async void SendTransaction()
-        {
-            try {
-                var contract = await ThirdwebManager.Instance.GetContract(
-                    address: "contract-address",
-                    chainId: 1,
-                    abi: "optional-abi"
-                );
+      public async void SendTransaction()
+      {
+          try {
+              var contract = await ThirdwebManager.Instance.GetContract(
+                  address: "contract-address",
+                  chainId: 1,
+                  abi: "optional-abi"
+              );
 
-                // Send a transaction
-                var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
-                Debug.Log($"Transaction receipt: {receipt}");
-            }
-            catch (System.Exception e) {
-                Debug.LogError("Error sending transaction: " + e.Message);
-            }
-        }
-    }
-    ```
+              // Send a transaction
+              var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+              Debug.Log($"Transaction receipt: {receipt}");
+          }
+          catch (System.Exception e) {
+              Debug.LogError("Error sending transaction: " + e.Message);
+          }
+      }
+  }
+  ```
 
   </TabsContent>
 

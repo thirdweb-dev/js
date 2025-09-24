@@ -213,7 +213,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b bg-background p-4 xl:pb-0 lg:px-8 overflow-hidden">
+    <header className="flex w-full flex-col gap-2 border-b p-4 xl:pb-0 lg:px-8 lg:pt-5 overflow-hidden bg-card">
       {/* Top row */}
       <div className="container flex items-center justify-between gap-6">
         <div className="flex items-center gap-2">
@@ -230,7 +230,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="hidden xl:block">
             <Link
               className="text-foreground"
@@ -269,13 +269,13 @@ export function Header() {
       </div>
 
       {/* Bottom row - hidden on mobile */}
-      <div className="container hidden items-center justify-between gap-6 xl:flex mt-1">
+      <div className="container hidden items-start justify-between gap-6 xl:flex mt-1">
         <nav className="flex grow gap-5">
-          <ul className="flex flex-row items-center gap-0 mb-1">
+          <ul className="flex flex-row items-center gap-0 mb-1.5">
             {links.map((link) => {
               return (
                 <li
-                  className="flex items-center py-2 relative px-2.5 hover:text-foreground"
+                  className="flex items-center relative"
                   key={link.href}
                   onClick={() => {
                     setShowBurgerMenu(false);
@@ -284,9 +284,13 @@ export function Header() {
                     setShowBurgerMenu(false);
                   }}
                 >
-                  <NavLink href={link.href} name={link.name} />
+                  <NavLink
+                    href={link.href}
+                    name={link.name}
+                    className="py-2.5 px-3 hover:bg-accent rounded-lg hover:text-foreground font-normal"
+                  />
                   {pathname?.startsWith(link.href) && (
-                    <div className="bg-violet-700 h-[2px] inset-x-0 rounded-full absolute -bottom-1" />
+                    <div className="bg-foreground h-[2px] inset-x-0 rounded-full absolute -bottom-1.5" />
                   )}
                 </li>
               );
@@ -294,47 +298,37 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="px-1">
-            <DropdownLinks
-              category="AI"
-              links={aiLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-          </div>
-          <div className="px-1">
-            <DropdownLinks
-              category="SDKs"
-              links={sdkLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-          </div>
-          <div className="px-1">
-            <DropdownLinks
-              category="APIs"
-              links={apisLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-          </div>
+        <div className="flex items-center">
+          <DropdownLinks
+            category="AI"
+            links={aiLinks}
+            onLinkClick={() => setShowBurgerMenu(false)}
+          />
+          <DropdownLinks
+            category="SDKs"
+            links={sdkLinks}
+            onLinkClick={() => setShowBurgerMenu(false)}
+          />
+          <DropdownLinks
+            category="APIs"
+            links={apisLinks}
+            onLinkClick={() => setShowBurgerMenu(false)}
+          />
 
-          <div className="px-1">
-            <DropdownLinks
-              category="Tools"
-              links={toolLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-          </div>
-
-          <div className="px-1">
-            <DropdownLinks
-              category="Support"
-              links={supportLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-          </div>
+          <DropdownLinks
+            category="Tools"
+            links={toolLinks}
+            onLinkClick={() => setShowBurgerMenu(false)}
+          />
+          <DropdownLinks
+            category="Support"
+            links={supportLinks}
+            onLinkClick={() => setShowBurgerMenu(false)}
+          />
 
           <NavLink
             href="/changelog"
+            className="px-3 py-2.5 hover:bg-accent hover:text-foreground rounded-lg"
             name="Changelog"
             onClick={() => {
               setShowBurgerMenu(false);
@@ -448,31 +442,29 @@ function DropdownLinks(props: {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              className="inline-flex items-center gap-1 p-0 font-medium text-muted-foreground text-sm hover:bg-transparent hover:text-foreground"
+              className="inline-flex items-center gap-1.5 font-normal text-muted-foreground text-sm hover:bg-accent hover:text-foreground rounded-lg px-3 py-2.5"
               variant="ghost"
             >
               {props.category}
-              <ChevronDownIcon className="size-4 text-muted-foreground opacity-70" />
+              <ChevronDownIcon className="size-3.5 text-muted-foreground opacity-70" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="flex flex-col gap-1 bg-card p-3"
-            style={{
-              minWidth: "150px",
-            }}
+            className="flex flex-col gap-1 bg-card p-1 rounded-xl min-w-[200px]"
+            sideOffset={14}
           >
             {props.links.map((info) => {
               return (
                 <DropdownMenuItem asChild key={info.name}>
                   <div
                     className={clsx(
-                      "relative flex cursor-pointer gap-2 font-medium text-foreground",
+                      "relative flex cursor-pointer gap-3 font-medium text-foreground !rounded-lg px-3 py-2",
                       "hover:bg-accent",
                     )}
                   >
                     {info.icon && (
-                      <info.icon className="size-5 text-foreground" />
+                      <info.icon className="size-5 text-muted-foreground" />
                     )}
                     <Link
                       className="before:absolute before:inset-0"
@@ -524,6 +516,7 @@ function NavLink(props: {
   name: string;
   onClick?: () => void;
   icon?: React.FC<{ className?: string }>;
+  className?: string;
 }) {
   const pathname = usePathname();
   return (
@@ -534,6 +527,7 @@ function NavLink(props: {
           ? "text-foreground"
           : "text-muted-foreground",
         props.icon ? "flex flex-row gap-3" : "",
+        props.className,
       )}
       href={props.href}
       onClick={props.onClick}

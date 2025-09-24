@@ -4,7 +4,7 @@ export function InlineCode(props: { code: string; className?: string }) {
   return (
     <code
       className={cn(
-        "max-h-20 rounded-md border bg-muted px-1.5 py-0.5 text-[0.875em]",
+        "max-h-20 rounded-lg bg-muted border px-1.5 py-[3px] text-[0.875em]",
         props.className,
       )}
       style={{

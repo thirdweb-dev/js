@@ -16,6 +16,7 @@ import {
 } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CodeClient } from "../code/code.client";
+import { Button } from "../ui/button";
 
 type AuthMethod =
   | "email"
@@ -849,16 +850,15 @@ function AuthMethodsTabsContent() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {authMethods.map((method) => (
-            <button
+            <Button
               type="button"
+              variant="outline"
               key={method.id}
               onClick={() => setSelectedAuth(method.id)}
               className={cn(
-                "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground text-sm rounded-lg hover:bg-violet-800/15",
-                selectedAuth === method.id
-                  ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
-                  : "",
-                "flex flex-row justify-start items-start gap-3",
+                "overflow-hidden text-ellipsis text-sm rounded-lg hover:bg-accent justify-start gap-3 h-auto py-3 rounded-xl",
+                selectedAuth === method.id &&
+                  "font-medium text-foreground bg-accent",
               )}
             >
               <img
@@ -866,8 +866,8 @@ function AuthMethodsTabsContent() {
                 className="size-5 shrink-0"
                 src={getSocialIcon(method.id)}
               />
-              <div className="font-medium">{method.label}</div>
-            </button>
+              <div>{method.label}</div>
+            </Button>
           ))}
         </div>
       </div>

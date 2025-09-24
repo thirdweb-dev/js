@@ -4,7 +4,7 @@ export function Grid(props: { children: React.ReactNode; className?: string }) {
   return (
     <div
       className={cn(
-        "my-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3",
+        "my-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3",
         props.className,
       )}
     >

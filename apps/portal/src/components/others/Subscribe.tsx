@@ -35,12 +35,12 @@ export function Subscribe() {
         }
       }}
     >
-      <p className="mb-3 font-semibold text-base text-foreground">
+      <p className="mb-2 text-sm text-foreground font-medium text-right">
         Subscribe for the latest dev updates
       </p>
       <div className="flex">
         <Input
-          className="h-12 border bg-background font-semibold duration-200 placeholder:font-semibold focus-visible:outline-none focus-visible:ring-offset-0 group-focus-within:border-foreground md:w-[230px]"
+          className="rounded-r-none border-r-0 w-64"
           onChange={(e) => {
             setEmail(e.target.value);
           }}
@@ -53,14 +53,7 @@ export function Subscribe() {
           value={email}
         />
 
-        <Button
-          className="h-12 bg-muted font-semibold text-foreground duration-200 group-focus-within:bg-foreground group-focus-within:text-background"
-          style={{
-            borderBottomLeftRadius: 0,
-            borderTopLeftRadius: 0,
-          }}
-          type="submit"
-        >
+        <Button type="submit" variant="secondary" className="rounded-l-none">
           Subscribe
         </Button>
       </div>

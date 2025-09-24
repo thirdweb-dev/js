@@ -58,7 +58,7 @@ export function DocSidebar(props: ReferenceSideBarProps) {
     <div className="flex h-full flex-col pb-10 pt-6 text-muted-foreground text-sm">
       {/* Side bar Name */}
       {props.header}
-      <ul className="styled-scrollbar transform-gpu">
+      <ul className="styled-scrollbar transform-gpu space-y-1">
         {props.links.map((link, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
           <li key={i}>
@@ -74,7 +74,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
   const pathname = usePathname();
 
   if ("separator" in props.link) {
-    return <hr className="my-2 border-t" />;
+    return <hr className="my-2 border-t border-dashed" />;
   }
 
   const isActive = props.link.href
@@ -105,10 +105,8 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
     return (
       <Link
         className={clsx(
-          "overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-violet-800/15 border border-transparent hover:border-violet-800/50 text-sm rounded-lg",
-          isActive
-            ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
-            : "",
+          "overflow-hidden text-ellipsis px-3 py-1.5 transition-colors duration-300 hover:text-foreground hover:bg-accent text-sm rounded-lg",
+          isActive ? "text-foreground !bg-accent" : "",
           "flex flex-row items-center gap-2",
         )}
         href={link.href}
@@ -126,10 +124,8 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
   return (
     <Link
       className={clsx(
-        "block overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-violet-800/15 border border-transparent hover:border-violet-800/50 text-sm rounded-lg",
-        isActive
-          ? "font-medium text-foreground bg-violet-800/25 border border-violet-800"
-          : "",
+        "block overflow-hidden text-ellipsis px-3 py-1.5  transition-colors duration-300 hover:text-foreground hover:bg-accent text-sm rounded-lg",
+        isActive ? "text-foreground !bg-accent" : "",
       )}
       href={link.href}
       onClick={props.onLinkClick}
@@ -155,8 +151,8 @@ function DocSidebarNonCollapsible(props: {
         {href ? (
           <Link
             className={cn(
-              "block px-3 py-1.5 hover:bg-violet-800/20 w-full rounded-lg hover:border-violet-800/50 border border-transparent",
-              isCategoryActive && "text-foreground",
+              "block px-3 py-1.5 hover:bg-accent w-full rounded-lg",
+              isCategoryActive && "text-foreground !bg-accent",
             )}
             href={href}
           >
@@ -166,7 +162,7 @@ function DocSidebarNonCollapsible(props: {
           <div className="px-3">{name}</div>
         )}
       </div>
-      <ul className="flex flex-col">
+      <ul className="space-y-1">
         {links.map((link, i) => {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
@@ -207,7 +203,7 @@ function DocSidebarCategory(props: {
         "text-muted-foreground hover:text-foreground",
       )}
     >
-      <div className="flex gap-2 py-1.5 px-3 font-medium" ref={triggerRef}>
+      <div className="flex gap-2 py-1.5 px-3" ref={triggerRef}>
         {icon && <SidebarIcon icon={icon} />}
         {name}
       </div>
@@ -215,10 +211,7 @@ function DocSidebarCategory(props: {
   );
 
   const triggerEl = href ? (
-    <Link
-      className={cn("w-full py-1.5 px-3 text-left font-medium")}
-      href={href}
-    >
+    <Link className={cn("w-full py-1.5 px-3 text-left")} href={href}>
       {triggerElContent}
     </Link>
   ) : (

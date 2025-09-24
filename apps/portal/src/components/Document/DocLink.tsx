@@ -10,7 +10,7 @@ export function DocLink(props: {
   return (
     <Link
       className={cn(
-        "underline decoration-violet-800 decoration-dotted underline-offset-[5px] transition-colors hover:decoration-violet-800 hover:decoration-solid hover:text-foreground",
+        "text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 decoration-dotted transition-colors ",
         props.className,
       )}
       href={props.href}
