@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -241,6 +243,17 @@ export type SwapWidgetProps = {
  * @bridge
  */
 export function SwapWidget(props: SwapWidgetProps) {
+  useQuery({
+    queryFn: () => {
+      trackPayEvent({
+        client: props.client,
+        event: "ub:ui:swap_widget:render",
+      });
+      return true;
+    },
+    queryKey: ["swap_widget:render"],
+  });
+
   return (
     <SwapWidgetContainer
       theme={props.theme}
