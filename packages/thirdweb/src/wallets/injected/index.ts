@@ -201,16 +201,17 @@ function createAccount({
           };
       const params = [
         {
-          ...tx,
-          authorizationList: tx.authorizationList
-            ? ox__Authorization.toRpcList(tx.authorizationList)
-            : undefined,
           ...gasFees,
           from: this.address,
           gas: tx.gas ? numberToHex(tx.gas) : undefined,
           nonce: tx.nonce ? numberToHex(tx.nonce) : undefined,
           to: tx.to ? getAddress(tx.to) : undefined,
+          data: tx.data,
           value: tx.value ? numberToHex(tx.value) : undefined,
+          authorizationList: tx.authorizationList
+            ? ox__Authorization.toRpcList(tx.authorizationList)
+            : undefined,
+          accessList: tx.accessList,
           ...tx.eip712,
         },
       ];
