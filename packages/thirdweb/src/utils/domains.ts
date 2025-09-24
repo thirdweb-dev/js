@@ -45,7 +45,7 @@ type DomainOverrides = {
    */
   engineCloud?: string;
   /**
-   * The base URL for the universal bridge service.
+   * The base URL for the bridge service.
    * @default "bridge.thirdweb.com"
    */
   bridge?: string;

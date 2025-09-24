@@ -9,7 +9,7 @@ import { ApiError } from "./types/Errors.js";
 import type { PreparedQuote } from "./types/Quote.js";
 
 /**
- * Prepares a **finalized** Universal Bridge quote for the provided transfer request with transaction data.
+ * Prepares a **finalized** Bridge quote for the provided transfer request with transaction data.
  *
  * @example
  * ```typescript

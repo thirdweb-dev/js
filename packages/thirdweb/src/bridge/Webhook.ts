@@ -90,7 +90,7 @@ export type WebhookPayload = Exclude<
 >;
 
 /**
- * Parses an incoming Universal Bridge webhook payload.
+ * Parses an incoming Bridge webhook payload.
  *
  * @param payload - The raw text body received from thirdweb.
  * @param headers - The webhook headers received from thirdweb.

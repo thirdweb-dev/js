@@ -1,5 +1,5 @@
 /**
- * Represents a blockchain chain in the Universal Bridge.
+ * Represents a blockchain chain in the Bridge.
  * @public
  */
 export interface Chain {

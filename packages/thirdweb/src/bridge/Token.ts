@@ -5,7 +5,7 @@ import { ApiError } from "./types/Errors.js";
 import type { Token, TokenWithPrices } from "./types/Token.js";
 
 /**
- * Retrieves supported Universal Bridge tokens based on the provided filters.
+ * Retrieves supported Bridge tokens based on the provided filters.
  *
  * When multiple filters are specified, a token must satisfy all filters to be included (it acts as an AND operator).
  *
@@ -226,9 +226,9 @@ export declare namespace tokens {
 }
 
 /**
- * Adds a token to the Universal Bridge for indexing.
+ * Adds a token to the Bridge for indexing.
  *
- * This function requests the Universal Bridge to index a specific token on a given chain.
+ * This function requests the Bridge to index a specific token on a given chain.
  * Once indexed, the token will be available for cross-chain operations.
  *
  * @example

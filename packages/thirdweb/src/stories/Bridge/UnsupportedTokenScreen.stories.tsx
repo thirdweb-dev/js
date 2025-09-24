@@ -68,7 +68,7 @@ export const TokenNotSupported: Story = {
     docs: {
       description: {
         story:
-          "Shows the loading state when a token is being indexed by the Universal Bridge on a mainnet chain.",
+          "Shows the loading state when a token is being indexed by the Bridge on a mainnet chain.",
       },
     },
   },
@@ -85,7 +85,7 @@ export const TokenNotSupportedLight: Story = {
     docs: {
       description: {
         story:
-          "Shows the loading state when a token is being indexed by the Universal Bridge on a mainnet chain (light theme).",
+          "Shows the loading state when a token is being indexed by the Bridge on a mainnet chain (light theme).",
       },
     },
   },
@@ -102,7 +102,7 @@ export const TestnetNotSupported: Story = {
     docs: {
       description: {
         story:
-          "Shows the error state when trying to use the Universal Bridge on a testnet chain (Sepolia in this example).",
+          "Shows the error state when trying to use the Bridge on a testnet chain (Sepolia in this example).",
       },
     },
   },
@@ -119,7 +119,7 @@ export const TestnetNotSupportedLight: Story = {
     docs: {
       description: {
         story:
-          "Shows the error state when trying to use the Universal Bridge on a testnet chain (Sepolia in this example, light theme).",
+          "Shows the error state when trying to use the Bridge on a testnet chain (Sepolia in this example, light theme).",
       },
     },
   },

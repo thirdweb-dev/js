@@ -6,7 +6,7 @@ declare module "abitype" {
 }
 
 /**
- * UNIVERSAL BRIDGE
+ * BRIDGE
  */
 export * as Bridge from "../bridge/index.js";
 /**

@@ -9,7 +9,7 @@ import { ApiError } from "./types/Errors.js";
 import type { PreparedQuote, Quote } from "./types/Quote.js";
 
 /**
- * Retrieves a Universal Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
+ * Retrieves a Bridge quote for the provided buy intent. The quote will specify the necessary `originAmount` to receive the desired `destinationAmount`, which is specified with the `buyAmountWei` option.
  *
  * @example
  * ```typescript
@@ -209,7 +209,7 @@ export declare namespace quote {
 }
 
 /**
- * Prepares a **finalized** Universal Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
+ * Prepares a **finalized** Bridge quote for the provided buy request with transaction data. This function will return everything `quote` does, with the addition of a series of prepared transactions and the associated expiration timestamp.
  *
  * @example
  * ```typescript

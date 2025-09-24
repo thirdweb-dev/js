@@ -6,7 +6,7 @@ import { ApiError } from "./types/Errors.js";
 import type { Route } from "./types/Route.js";
 
 /**
- * Retrieves supported Universal Bridge routes based on the provided filters.
+ * Retrieves supported Bridge routes based on the provided filters.
  *
  * When multiple filters are specified, a route must satisfy all filters to be included (it acts as an AND operator).
  *
