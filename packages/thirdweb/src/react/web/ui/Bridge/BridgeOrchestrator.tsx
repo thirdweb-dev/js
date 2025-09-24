@@ -189,13 +189,9 @@ export function BridgeOrchestrator({
   }, [send, uiOptions.mode]);
 
   // Handle post-buy transaction completion
-  const handlePostBuyTransactionComplete = useCallback(
-    (quote: BridgePrepareResult) => {
-      onComplete?.(quote);
-      send({ type: "RESET" });
-    },
-    [onComplete, send],
-  );
+  const handlePostBuyTransactionComplete = useCallback(() => {
+    send({ type: "RESET" });
+  }, [send]);
 
   // Handle errors
   const handleError = useCallback(
@@ -416,9 +412,9 @@ export function BridgeOrchestrator({
         quote &&
         uiOptions.transaction && (
           <ExecutingTxScreen
-            closeModal={() => handlePostBuyTransactionComplete(quote)}
+            closeModal={handlePostBuyTransactionComplete}
             onTxSent={() => {
-              // Do nothing
+              onComplete?.(quote);
             }}
             tx={uiOptions.transaction}
             windowAdapter={webWindowAdapter}
