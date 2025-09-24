@@ -33,7 +33,7 @@ import type { LocaleId } from "../types.js";
 import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
-type BuyOrOnrampPrepareResult = Extract<
+export type BuyOrOnrampPrepareResult = Extract<
   BridgePrepareResult,
   { type: "buy" | "onramp" }
 >;

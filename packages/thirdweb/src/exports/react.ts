@@ -138,6 +138,10 @@ export {
   type BuyWidgetProps,
 } from "../react/web/ui/Bridge/BuyWidget.js";
 export {
+  BridgeWidget,
+  type BridgeWidgetProps,
+} from "../react/web/ui/Bridge/bridge-widget/bridge-widget.js";
+export {
   CheckoutWidget,
   type CheckoutWidgetProps,
 } from "../react/web/ui/Bridge/CheckoutWidget.js";

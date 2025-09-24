@@ -113,7 +113,7 @@ export type SendCallsResult = Prettify<{
  * });
  * ```
  * We recommend proxying any paymaster calls via an API route you setup and control.
- * 
+ *
  * @extension EIP5792
  */
 export async function sendCalls<const ID extends WalletId>(
