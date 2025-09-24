@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.108.1
+
+### Patch Changes
+
+- [#8108](https://github.com/thirdweb-dev/js/pull/8108) [`e1cccd7`](https://github.com/thirdweb-dev/js/commit/e1cccd7a10447943c4b31f34e09a94d2ff5ee826) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Displays the failure error messages on the BuyWidget
+
 ## 5.108.0
 
 ### Minor Changes
