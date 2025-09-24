@@ -37,7 +37,7 @@ import { tokenAmountFormatter } from "./utils.js";
  * @internal
  */
 type SelectTokenUIProps = {
-  onBack: () => void;
+  onClose: () => void;
   client: ThirdwebClient;
   selectedToken: TokenSelection | undefined;
   setSelectedToken: (token: TokenSelection) => void;
@@ -182,6 +182,7 @@ function SelectTokenUI(
     });
   }, [otherTokens]);
 
+  // desktop
   if (!isMobile) {
     return (
       <Container
@@ -205,7 +206,10 @@ function SelectTokenUI(
         </LeftContainer>
         <Container flex="column" relative scrollY>
           <TokenSelectionScreen
-            onSelectToken={props.setSelectedToken}
+            onSelectToken={(token) => {
+              props.setSelectedToken(token);
+              props.onClose();
+            }}
             isMobile={false}
             selectedToken={props.selectedToken}
             isFetching={props.isFetching}
@@ -226,7 +230,10 @@ function SelectTokenUI(
   if (screen === "select-token") {
     return (
       <TokenSelectionScreen
-        onSelectToken={props.setSelectedToken}
+        onSelectToken={(token) => {
+          props.setSelectedToken(token);
+          props.onClose();
+        }}
         selectedToken={props.selectedToken}
         isFetching={props.isFetching}
         ownedTokens={props.ownedTokens}
@@ -581,8 +588,10 @@ function TokenSelectionScreen(props: {
                   client={props.client}
                   onSelect={props.onSelectToken}
                   isSelected={
-                    props.selectedToken?.tokenAddress.toLowerCase() ===
-                    token.address.toLowerCase()
+                    !!props.selectedToken &&
+                    props.selectedToken.tokenAddress.toLowerCase() ===
+                      token.address.toLowerCase() &&
+                    token.chainId === props.selectedToken.chainId
                   }
                 />
               ))}
