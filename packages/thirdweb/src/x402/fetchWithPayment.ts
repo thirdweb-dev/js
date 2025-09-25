@@ -84,7 +84,9 @@ export function wrapFetchWithPayment(
     );
 
     if (BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue) {
-      throw new Error("Payment amount exceeds maximum allowed");
+      throw new Error(
+        `Payment amount exceeds maximum allowed (currently set to ${maxValue} in base units)`,
+      );
     }
 
     const paymentChainId = networkToChainId(

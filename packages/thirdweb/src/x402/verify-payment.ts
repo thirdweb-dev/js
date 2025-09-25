@@ -17,6 +17,7 @@ import {
  * // Usage in a Next.js API route
  * import { verifyPayment, facilitator } from "thirdweb/x402";
  * import { createThirdwebClient } from "thirdweb";
+ * import { arbitrumSepolia } from "thirdweb/chains";
  *
  * const client = createThirdwebClient({
  *   secretKey: process.env.THIRDWEB_SECRET_KEY,
@@ -35,7 +36,7 @@ import {
  *     method: "GET",
  *     paymentData,
  *     payTo: "0x1234567890123456789012345678901234567890",
- *     network: "eip155:84532", // CAIP2 format: "eip155:<chain_id>"
+ *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.10", // or { amount: "100000", asset: { address: "0x...", decimals: 6 } }
  *     facilitator: thirdwebFacilitator,
  *     routeConfig: {

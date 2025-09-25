@@ -28,6 +28,7 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  * ```ts
  * import { facilitator } from "thirdweb/x402";
  * import { createThirdwebClient } from "thirdweb";
+ * import { paymentMiddleware } from 'x402-hono'
  *
  * const client = createThirdwebClient({
  *   secretKey: "your-secret-key",

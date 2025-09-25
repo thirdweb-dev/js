@@ -25,6 +25,7 @@ import {
  * // Usage in a Next.js API route
  * import { settlePayment, facilitator } from "thirdweb/x402";
  * import { createThirdwebClient } from "thirdweb";
+ * import { arbitrumSepolia } from "thirdweb/chains";
  *
  * const client = createThirdwebClient({
  *   secretKey: process.env.THIRDWEB_SECRET_KEY,
@@ -44,7 +45,7 @@ import {
  *     method: "GET",
  *     paymentData,
  *     payTo: "0x1234567890123456789012345678901234567890",
- *     network: "eip155:84532", // CAIP2 format: "eip155:<chain_id>"
+ *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.10", // or { amount: "100000", asset: { address: "0x...", decimals: 6 } }
  *     facilitator: thirdwebFacilitator,
  *     routeConfig: {
@@ -74,6 +75,7 @@ import {
  * import express from "express";
  * import { settlePayment, facilitator } from "thirdweb/x402";
  * import { createThirdwebClient } from "thirdweb";
+ * import { arbitrumSepolia } from "thirdweb/chains";
  *
  * const client = createThirdwebClient({
  *   secretKey: process.env.THIRDWEB_SECRET_KEY,
@@ -93,7 +95,7 @@ import {
  *     method: req.method,
  *     paymentData: req.headers["x-payment"],
  *     payTo: "0x1234567890123456789012345678901234567890",
- *     network: "eip155:8453", // CAIP2 format: "eip155:<chain_id>"
+ *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.05",
  *     facilitator: thirdwebFacilitator,
  *   });
@@ -136,7 +138,6 @@ export async function settlePayment(
   const { selectedPaymentRequirements, decodedPayment, paymentRequirements } =
     decodePaymentResult;
 
-  // Settle payment
   try {
     const settlement = await facilitator.settle(
       decodedPayment,

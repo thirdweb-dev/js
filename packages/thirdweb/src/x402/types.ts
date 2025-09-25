@@ -3,6 +3,7 @@ import type {
   Money,
   PaymentMiddlewareConfig,
 } from "x402/types";
+import type { Chain } from "../chains/types.js";
 import type { Address } from "../utils/address.js";
 import type { Prettify } from "../utils/type-utils.js";
 import type { facilitator as facilitatorType } from "./facilitator.js";
@@ -30,7 +31,7 @@ export type PaymentArgs = {
   /** The wallet address that should receive the payment */
   payTo: Address;
   /** The blockchain network where the payment should be processed */
-  network: FacilitatorNetwork;
+  network: FacilitatorNetwork | Chain;
   /** The price for accessing the resource - either a USD amount (e.g., "$0.10") or a specific token amount */
   price: Money | ERC20TokenAmount;
   /** The payment facilitator instance used to verify and settle payments */

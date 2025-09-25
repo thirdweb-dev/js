@@ -59,6 +59,7 @@ function ServerCodeExample() {
 
 import { facilitator, settlePayment } from "thirdweb/x402";
 import { createThirdwebClient } from "thirdweb";
+import { arbitrumSepolia } from "thirdweb/chains";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
 const thirdwebX402Facilitator = facilitator({
@@ -76,7 +77,7 @@ export async function middleware(request: NextRequest) {
     method,
     paymentData,
     payTo: "0xYourWalletAddress",
-    network: "eip155:11155111", // or any other chain id
+    network: arbitrumSepolia, // or any other chain
     price: "$0.01", // can also be a ERC20 token amount
     facilitator: thirdwebX402Facilitator,
   });
