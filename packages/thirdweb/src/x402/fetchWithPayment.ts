@@ -50,7 +50,7 @@ import { createPaymentHeader } from "./sign.js";
  */
 export function wrapFetchWithPayment(
   fetch: typeof globalThis.fetch,
-  _client: ThirdwebClient,
+  client: ThirdwebClient,
   wallet: Wallet,
   maxValue: bigint = BigInt(1 * 10 ** 6), // Default to 1 USDC
 ) {
@@ -103,8 +103,8 @@ export function wrapFetchWithPayment(
     }
 
     const paymentHeader = await createPaymentHeader(
+      client,
       account,
-      x402Version,
       selectedPaymentRequirements,
     );
 

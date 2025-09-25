@@ -69,6 +69,7 @@ export function facilitator(config: ThirdwebX402FacilitatorConfig) {
   }
   const facilitator = {
     url: (config.baseUrl ?? DEFAULT_BASE_URL) as `${string}://${string}`,
+    address: serverWalletAddress,
     createAuthHeaders: async () => {
       return {
         verify: {

@@ -12,6 +12,14 @@ import {
   type PaymentRequiredResult,
   x402Version,
 } from "./types.js";
+import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
+import { getContract } from "../contract/contract.js";
+import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
+import type { Abi } from "abitype";
+import { getCachedChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { toFunctionSelector } from "viem/utils";
+import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
 
 type GetPaymentRequirementsResult = {
   status: 200;
@@ -106,7 +114,10 @@ export async function decodePaymentRequest(
       },
       output: outputSchema,
     },
-    extra: (asset as ERC20TokenAmount["asset"]).eip712,
+    extra: {
+      facilitatorAddress: facilitator.address,
+      ...(asset as ERC20TokenAmount["asset"]).eip712,
+    },
   });
 
   // Check for payment header
@@ -233,4 +244,37 @@ async function getDefaultAsset(
   const assetConfig = matchingAsset?.extra
     ?.defaultAsset as ERC20TokenAmount["asset"];
   return assetConfig;
+}
+
+export type SupportedAuthorizationMethods = {
+    hasPermit: boolean,
+    hasTransferWithAuthorization: boolean,
+}
+
+export async function detectSupportedAuthorizationMethods(args: {
+    client: ThirdwebClient,
+    asset: string,
+    chainId: number,
+}): Promise<SupportedAuthorizationMethods>   {
+    const abi = await resolveContractAbi<Abi>(
+        getContract({
+          client: args.client,
+          address: args.asset,
+          chain: getCachedChain(args.chainId),
+        }),
+      ).catch((error) => {
+        console.error("Error resolving contract ABI", error);
+        return [] as Abi;
+      });
+      const selectors = abi
+        .filter((f) => f.type === "function")
+        .map((f) => toFunctionSelector(f));
+      const hasPermit = isPermitSupported(selectors);
+      const hasTransferWithAuthorization =
+        isTransferWithAuthorizationSupported(selectors);
+
+      return {
+        hasPermit,
+        hasTransferWithAuthorization,
+      };
 }
