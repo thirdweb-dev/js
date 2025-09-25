@@ -31,7 +31,7 @@ export function CodeBlockContainer(props: {
           props.scrollableContainerClassName,
         )}
         scrollableClassName={cn("p-4", props.scrollableClassName)}
-        shadowColor={props.shadowColor || "hsl(var(--muted))"}
+        shadowColor={props.shadowColor || "hsl(var(--card))"}
       >
         {props.children}
       </ScrollShadow>

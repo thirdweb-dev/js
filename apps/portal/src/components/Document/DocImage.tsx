@@ -15,7 +15,7 @@ export function DocImage(props: {
   return (
     <div
       className={cn(
-        "my-4 flex justify-center rounded-lg border p-4",
+        "my-4 flex justify-center rounded-lg border border-dashed p-4",
         props.containerClassName,
       )}
     >

@@ -20,14 +20,14 @@ export function ChatButton() {
     <>
       {/* Inline Button (not floating) */}
       <Button
-        className="gap-2 rounded-full shadow-lg"
+        className="gap-2 rounded-full bg-background"
         onClick={() => {
           setIsOpen(true);
           setHasBeenOpened(true);
         }}
-        variant="default"
+        variant="outline"
       >
-        <MessageCircleIcon className="size-4" />
+        <MessageCircleIcon className="size-4 text-muted-foreground" />
         Ask AI
       </Button>
 

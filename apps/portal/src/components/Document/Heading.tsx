@@ -33,7 +33,7 @@ export function Heading(props: {
         >
           <h2
             className={cn(
-              "break-words font-medium text-xl text-foreground tracking-tight",
+              "break-words font-semibold text-xl text-foreground tracking-tight",
               props.className,
             )}
           >
@@ -52,7 +52,7 @@ export function Heading(props: {
         >
           <h3
             className={cn(
-              "break-words font-medium text-foreground text-xl",
+              "break-words font-semibold text-foreground text-xl tracking-tight",
               props.className,
             )}
           >
@@ -71,7 +71,7 @@ export function Heading(props: {
         >
           <h4
             className={cn(
-              "break-words font-medium text-foreground text-lg",
+              "break-words font-semibold text-foreground text-lg tracking-tight",
               props.className,
             )}
           >
