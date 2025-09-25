@@ -48,7 +48,7 @@ export type SwapWidgetProps = {
    */
   client: ThirdwebClient;
   /**
-   * The prefill Buy and/or Sell tokens for the swap widget. If `tokenAddress` is not provided, the native token will be used
+   * Prefill Buy and/or Sell tokens for the swap widget. If `tokenAddress` is not provided, the native token will be used
    *
    * @example
    *

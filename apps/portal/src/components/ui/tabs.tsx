@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
       "border-transparent border-b text-muted-foreground ring-offset-700 transition-all",
       "hover:text-foreground hover:bg-accent data-[state=active]:text-foreground",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      "data-[state=active]:before:opacity-100 before:absolute before:opacity-0 before:border-b before:left-0 before:right-0 before:bottom-[-5px] before:transition-opacity before:duration-300",
+      "data-[state=active]:before:opacity-100 before:absolute before:opacity-0 before:border-b-2 before:border-foreground before:left-0 before:right-0 before:bottom-[-5px] before:transition-opacity before:duration-300",
       className,
     )}
     ref={ref}

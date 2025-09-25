@@ -32,6 +32,10 @@ export const sidebar: SideBar = {
           href: `${bridgeSlug}/routes`,
           name: "Get Routes",
         },
+        {
+          href: `${bridgeSlug}/bridge-widget-script`,
+          name: "BridgeWidget Script",
+        },
       ],
       name: "Guides",
     },

@@ -46,7 +46,7 @@ export function Heading(props: {
     case 3: {
       return (
         <Anchor
-          className={cn("mt-10 mb-3", props.anchorClassName)}
+          className={cn("mt-10 mb-2", props.anchorClassName)}
           data-noindex={props.noIndex}
           id={props.anchorId}
         >

@@ -30,7 +30,7 @@ export function Details(props: {
         <div className="flex gap-3">
           <span
             className={cn(
-              "break-all font-bold text-foreground text-sm tracking-tight",
+              "break-all text-foreground text-lg",
               "flex w-full gap-3 text-left font-semibold text-foreground group-hover:underline",
               props.headingClassName,
             )}
@@ -58,7 +58,9 @@ export function Details(props: {
         props.accordionTriggerClassName,
       )}
     >
-      <div className="pl-4 [&>:first-child]:mt-0">{props.children}</div>
+      <div className="pl-4 [&>:first-child]:mt-0 [&>*:last-child]:mb-0">
+        {props.children}
+      </div>
     </CustomAccordion>
   );
 }

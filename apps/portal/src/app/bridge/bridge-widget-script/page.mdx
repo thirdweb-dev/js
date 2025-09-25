@@ -1,0 +1,467 @@
+import {
+  Details,
+  createMetadata,
+  DocImage
+} from "@doc";
+import bridgeWidgetDark from "./bridge-widget-dark.png";
+import bridgeWidgetLight from "./bridge-widget-light.png";
+
+
+export const metadata = createMetadata({
+  image: {
+    title: "BridgeWidget Script",
+    icon: "payments",
+  },
+  title: "Bridge Widget",
+  description: "Add a widget to add cross swaps and fiat onramp to your app",
+});
+
+# BridgeWidget Script
+
+The BridgeWidget Script makes it easy to embed cross-chain swaps and fiat onramp UI into your app. Just add a script tag to your HTML and get a fully customizable widget — no build setup required.
+
+## Key Features
+- Cross-chain token swaps across 80+ blockchains
+- Fiat onramp support to buy tokens with credit/debit cards
+- Customizable UI - use prebuilt themes or override with your brand colors
+- Prefill token selections for a smoother user experience
+- Display fiat values in multiple currencies
+- Event callbacks to track user actions (success, error, cancel, disconnect)
+
+
+<div className='dark-only'>
+<DocImage src={bridgeWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={bridgeWidgetLight} />
+</div>
+
+
+## Script Integration
+
+```html
+<!-- Add this script in <head> -->
+<script src="https://unpkg.com/thirdweb/dist/scripts/bridge-widget.js"></script>
+
+<!-- Add a container element where you want to render the UI -->
+<div id="bridge-widget-container"></div>
+
+<!-- Initialize the widget at the end of <body> -->
+<script>
+  const container = document.querySelector('#bridge-widget-container');
+
+  BridgeWidget.render(container, {
+    clientId: "your-thirdweb-client-id",
+    theme: "dark",
+    buy: {
+      chainId: 8453,
+      amount: "0.1",
+    },
+  });
+</script>
+```
+
+
+## Options
+
+You can customize theme, currencies, token selections, and more. See the full list of options below
+
+<Details summary="View full type">
+
+```ts
+type Options = {
+  clientId: string;
+  theme?: "dark" | "light" | {
+      type: "dark" | "light";
+      accentButtonBg?: string;
+      accentButtonText?: string;
+      accentText?: string;
+      borderColor?: string;
+      connectedButtonBg?: string;
+      connectedButtonBgHover?: string;
+      danger?: string;
+      inputAutofillBg?: string;
+      modalBg?: string;
+      modalOverlayBg?: string;
+      primaryButtonBg?: string;
+      primaryButtonText?: string;
+      primaryText?: string;
+      scrollbarBg?: string;
+      secondaryButtonBg?: string;
+      secondaryButtonHoverBg?: string;
+      secondaryButtonText?: string;
+      secondaryIconColor?: string;
+      secondaryIconHoverBg?: string;
+      secondaryIconHoverColor?: string;
+      secondaryText?: string;
+      selectedTextBg?: string;
+      selectedTextColor: string;
+      separatorLine?: string;
+      skeletonBg: string;
+      success?: string;
+      tertiaryBg?: string;
+      tooltipBg?: string;
+      tooltipText?: string;
+  };
+  showThirdwebBranding?: boolean;
+  currency?: SupportedFiatCurrency;
+  swap?: {
+    className?: string;
+    style?: React.CSSProperties;
+    onSuccess?: (quote: SwapPreparedQuote) => void;
+    onError?: (error: Error, quote: SwapPreparedQuote) => void;
+    onCancel?: (quote: SwapPreparedQuote) => void;
+    onDisconnect?: () => void;
+    persistTokenSelections?: boolean;
+    prefill?: {
+      buyToken?: {
+        tokenAddress?: string;
+        chainId: number;
+        amount?: string;
+      };
+      sellToken?: {
+        tokenAddress?: string;
+        chainId: number;
+        amount?: string;
+      };
+    };
+  };
+  buy: {
+    amount: string;
+    chainId: number;
+    tokenAddress?: string;
+    buttonLabel?: string;
+    onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;
+    onError?: (
+      error: Error,
+      quote: BuyOrOnrampPrepareResult | undefined,
+    ) => void;
+    onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
+    className?: string;
+    country?: string;
+    presetOptions?: [number, number, number];
+    purchaseData?: PurchaseData;
+  };
+}
+```
+
+
+</Details>
+
+
+
+### clientId
+Set your Project's client ID to identify your project. You create a project for free on [thirdweb dashboard](https://thirdweb.com/team)
+
+
+### swap
+The options to configure the "Swap" tab
+
+```ts
+type Swap = {
+    className?: string;
+    style?: React.CSSProperties;
+    onSuccess?: (quote: SwapPreparedQuote) => void;
+    onError?: (error: Error, quote: SwapPreparedQuote) => void;
+    onCancel?: (quote: SwapPreparedQuote) => void;
+    onDisconnect?: () => void;
+    persistTokenSelections?: boolean;
+    prefill?: {
+      buyToken?: {
+        tokenAddress?: string;
+        chainId: number;
+        amount?: string;
+      };
+      sellToken?: {
+        tokenAddress?: string;
+        chainId: number;
+        amount?: string;
+      };
+    };
+  }
+```
+
+
+<Details summary="prefill">
+
+You can prefill Buy and/or Sell tokens for the swap tab. If `tokenAddress` is not provided, the native token will be used. Here are some examples:
+
+
+#### Set an ERC20 token as the buy token
+
+```js
+BridgeWidget.render(container, {
+  clientId: "your-thirdweb-client-id",
+  swap: {
+    prefill: {
+      // Base USDC
+      buyToken: {
+        chainId: 8453,
+        tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      },
+    },
+  },
+});
+```
+
+#### Set a native token as the sell token
+
+```js
+BridgeWidget.render(container, {
+  clientId: "your-thirdweb-client-id",
+  swap: {
+    prefill: {
+      // Base native token (ETH)
+      sellToken: {
+        chainId: 8453,
+      },
+    },
+  },
+});
+```
+
+#### Set amount and token to Buy by default
+
+```js
+BridgeWidget.render(container, {
+  clientId: "your-thirdweb-client-id",
+  swap: {
+    prefill: {
+      buyToken: {
+        chainId: 8453,
+        amount: "0.1",
+        tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      },
+    },
+  },
+});
+```
+
+#### Set both buy and sell tokens by default
+
+```ts
+BridgeWidget.render(container, {
+  clientId: "your-thirdweb-client-id",
+  swap: {
+    prefill: {
+      // Base USDC
+      buyToken: {
+        chainId: 8453,
+        tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      },
+      // Polygon native token (POL)
+      sellToken: {
+        chainId: 137,
+      },
+    },
+  },
+});
+```
+
+</Details>
+
+
+<Details summary="persistTokenSelections">
+
+Whether to persist the token selections to localStorage so that if the user revisits the widget, the last used tokens are pre-selected.
+
+The last used tokens do not override the tokens specified in the `prefill` option. By default, it is set to `true`.
+
+</Details>
+
+
+<Details summary="onCancel">
+
+Pass a callback to be called when the user cancels the purchase.
+
+</Details>
+
+<Details summary="onError">
+
+Pass a callback to be called when the user encounters an error during the purchase.
+
+</Details>
+
+<Details summary="onSuccess">
+
+Pass a callback to be called when the user successfully completes the purchase.
+
+</Details>
+
+<Details summary="className">
+
+Apply a custom class name to the "Buy" tab content container.
+
+</Details>
+
+<Details summary="onDisconnect">
+
+Pass a callback to be called when the user disconnects the active wallet.
+
+</Details>
+
+
+
+
+### buy
+
+The options to configure the "Buy" tab UI.
+
+
+```ts
+type Buy = {
+    amount: string; // Required
+    chainId: number; // Required
+    tokenAddress?: string;
+    buttonLabel?: string;
+    onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;
+    onError?: (
+      error: Error,
+      quote: BuyOrOnrampPrepareResult | undefined,
+    ) => void;
+    onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
+    className?: string;
+    country?: string;
+    presetOptions?: [number, number, number];
+  }
+```
+
+
+<Details summary="amount" tags={["Required"]}>
+
+Set the default token amount shown in the "Buy" tab.
+
+</Details>
+
+<Details summary="chainId" tags={["Required"]}>
+
+Specify which chain should be selected in the "Buy" tab.
+
+</Details>
+
+<Details summary="tokenAddress">
+
+Specify which token should be selected in the "Buy" tab. If not specified, the native token of the selected chain will be selected.
+
+</Details>
+
+<Details summary="buttonLabel">
+
+Override the label for main action button
+
+</Details>
+
+<Details summary="onCancel">
+
+Pass a callback to be called when the user cancels the purchase.
+
+</Details>
+
+<Details summary="onError">
+
+Pass a callback to be called when the user encounters an error during the purchase.
+
+</Details>
+
+<Details summary="onSuccess">
+
+Pass a callback to be called when the user successfully completes the purchase.
+
+</Details>
+
+<Details summary="className">
+
+Apply a custom class name to the "Buy" tab content container.
+
+</Details>
+
+<Details summary="country">
+
+The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
+
+</Details>
+
+<Details summary="presetOptions">
+
+Preset fiat amounts to display in the UI. Defaults to [5, 10, 20].
+
+</Details>
+
+
+
+
+
+
+
+
+### theme
+
+Set the theme for the widget. You can either set it to `"dark"`, `"light"` or overrides some or all the colors by passing an object. By default it set to `"dark"`.
+
+When overriding the colors, you must set the `type` to either `"dark"` or `"light"` so that the widget knows which theme to apply the overrides to.
+
+
+```ts
+type Theme = "dark" | "light" | {
+  type: "dark" | "light"; // required
+  accentButtonBg?: string;
+  accentButtonText?: string;
+  accentText?: string;
+  borderColor?: string;
+  connectedButtonBg?: string;
+  connectedButtonBgHover?: string;
+  danger?: string;
+  inputAutofillBg?: string;
+  modalBg?: string;
+  modalOverlayBg?: string;
+  primaryButtonBg?: string;
+  primaryButtonText?: string;
+  primaryText?: string;
+  scrollbarBg?: string;
+  secondaryButtonBg?: string;
+  secondaryButtonHoverBg?: string;
+  secondaryButtonText?: string;
+  secondaryIconColor?: string;
+  secondaryIconHoverBg?: string;
+  secondaryIconHoverColor?: string;
+  secondaryText?: string;
+  selectedTextBg?: string;
+  selectedTextColor: string;
+  separatorLine?: string;
+  skeletonBg: string;
+  success?  : string;
+  tertiaryBg?: string;
+  tooltipBg?: string;
+  tooltipText?: string;
+}
+```
+
+#### Example
+
+```js
+BridgeWidget.render(container, {
+  clientId: "your-thirdweb-client-id",
+  theme: {
+    type: "dark",
+    colors: {
+      modalBg: "black",
+      primaryText: "white",
+    },
+  }
+});
+```
+
+
+### currency
+
+The token amounts fiat values will be displayed in this currency. By default, it is set to `"USD"`.
+
+
+```ts
+type Currency = "USD" | "EUR" | "GBP" | "JPY" | "KRW" | "CNY" | "INR" | "NOK" | "SEK" | "CHF" | "AUD" | "CAD" | "NZD" | "MXN" | "BRL" | "CLP" | "CZK" | "DKK" | "HKD" | "HUF" | "IDR" | "ILS" | "ISK";
+```
+
+
+### showThirdwebBranding
+
+Whether to show thirdweb branding at the bottom of the widget. By default, it is set to `true`.
