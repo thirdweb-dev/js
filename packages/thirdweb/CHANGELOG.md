@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.108.2
+
+### Patch Changes
+
+- [#8106](https://github.com/thirdweb-dev/js/pull/8106) [`1f7cda6`](https://github.com/thirdweb-dev/js/commit/1f7cda66988e88628ca9b8fe608af071aa0026a1) Thanks [@MananTank](https://github.com/MananTank)! - Add `BridgeWidget` component.
+
+  Generate a browser script in `dist/scripts/bridge-widget.js` that can be used to render the `BridgeWidget` component in a browser with a script
+
+- [#8126](https://github.com/thirdweb-dev/js/pull/8126) [`9069351`](https://github.com/thirdweb-dev/js/commit/9069351e1abd231cf9051b05b7d92f95f891060b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept chain objects for x402 APIs
+
 ## 5.108.1
 
 ### Patch Changes
