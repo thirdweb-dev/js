@@ -35,7 +35,7 @@ export function Subscribe() {
         }
       }}
     >
-      <p className="mb-2 text-sm text-foreground font-medium text-right">
+      <p className="mb-2 text-sm text-muted-foreground text-right">
         Subscribe for the latest dev updates
       </p>
       <div className="flex">

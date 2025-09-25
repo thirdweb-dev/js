@@ -49,7 +49,7 @@ export function DocLayout(props: DocLayoutProps) {
           <DocSidebar {...props.sideBar} header={props.sidebarHeader} />
         </aside>
       )}
-      <div className="sticky top-sticky-top-height z-stickyMobileSidebar border-b bg-background py-4 xl:hidden">
+      <div className="sticky top-sticky-top-height z-stickyMobileSidebar border-b bg-card/50 backdrop-blur-xl p-4 xl:hidden -mx-4">
         <DocSidebarMobile {...props.sideBar} header={props.sidebarHeader} />
       </div>
       <main

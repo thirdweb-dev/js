@@ -1,3 +1,7 @@
+html {
+  font-feature-settings: "liga" 1;
+}
+
 code span {
   color: var(--code-light-color);
 }

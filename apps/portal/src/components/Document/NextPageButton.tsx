@@ -1,16 +1,14 @@
-import { ArrowRightIcon } from "lucide-react";
+import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 
 export function NextPageButton(props: { href: string; name: string }) {
   return (
     <Link
-      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
       href={props.href}
+      className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
     >
-      <div className="border-r-2 p-2.5 font-semibold">Next: {props.name}</div>
-      <div className="p-2.5">
-        <ArrowRightIcon className="size-5" />
-      </div>
+      <span> {props.name}</span>
+      <ChevronRightIcon className="size-5" />
     </Link>
   );
 }

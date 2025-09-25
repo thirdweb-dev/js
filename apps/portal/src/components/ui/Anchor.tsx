@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkIcon } from "lucide-react";
+import { HashIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Anchor(props: {
@@ -25,7 +25,7 @@ export function Anchor(props: {
             e.stopPropagation();
           }}
         >
-          <LinkIcon className="size-4" />
+          <HashIcon className="size-4" />
         </a>
       )}
     </div>

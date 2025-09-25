@@ -16,13 +16,13 @@ export function PageFooter(props: {
   sidebarLinks?: SidebarLink[];
 }) {
   return (
-    <footer className="flex flex-col border-t border-dashed" data-noindex>
-      <div className="flex gap-4 justify-end items-center py-6">
-        {props.sidebarLinks && (
+    <footer className="flex flex-col" data-noindex>
+      {props.sidebarLinks && (
+        <div className="flex gap-4 justify-end items-center py-6">
           <AutoNextPageButton sidebarLinks={props.sidebarLinks} />
-        )}
-      </div>
-      <div className="border-t py-2 border-dashed flex justify-between items-center">
+        </div>
+      )}
+      <div className="border-t py-6 border-dashed flex flex-col items-start gap-4 md:flex-row md:justify-between md:items-center">
         {props.editPageButton && <AutoEditPageButton />}
         <Feedback />
       </div>

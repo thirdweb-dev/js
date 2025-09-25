@@ -40,7 +40,7 @@ export function ArticleIconCard(props: {
   return (
     <Link
       className={cn(
-        "flex items-center gap-4 rounded-lg border bg-card p-4 transition-colors hover:border-active-border",
+        "flex items-center gap-4 rounded-xl border bg-card px-4 py-6 transition-colors hover:border-active-border",
         props.className,
       )}
       data-noindex
@@ -48,17 +48,21 @@ export function ArticleIconCard(props: {
       target={isExternal ? "_blank" : undefined}
     >
       {props.icon && (
-        <props.icon className="size-6 shrink-0 text-muted-foreground" />
+        <div className="shrink-0">
+          <div className="rounded-full p-2.5 bg-background border">
+            <props.icon className="size-3.5 text-muted-foreground" />
+          </div>
+        </div>
       )}
       {props.image && (
         <Image alt="" className="size-6 shrink-0" src={props.image} />
       )}
-      <div className="flex flex-col gap-0.5">
-        <h3 className="font-semibold text-base text-foreground">
+      <div className="flex flex-col gap-1.5">
+        <h3 className="font-semibold text-base text-foreground leading-none">
           {props.title}
         </h3>
         {props.description && (
-          <p className="text-muted-foreground">{props.description}</p>
+          <p className="text-muted-foreground text-sm">{props.description}</p>
         )}
       </div>
     </Link>

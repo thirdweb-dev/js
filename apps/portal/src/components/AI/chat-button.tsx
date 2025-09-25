@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircleIcon, RefreshCcwIcon, XIcon } from "lucide-react";
+import { BrainIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import { lazy, Suspense, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
@@ -27,7 +27,7 @@ export function ChatButton() {
         }}
         variant="outline"
       >
-        <MessageCircleIcon className="size-4 text-muted-foreground" />
+        <BrainIcon className="size-4 text-muted-foreground" />
         Ask AI
       </Button>
 

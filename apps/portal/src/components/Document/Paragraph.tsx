@@ -5,6 +5,6 @@ export function Paragraph(props: {
   className?: string;
 }) {
   return (
-    <p className={cn("mb-3 leading-7", props.className)}>{props.children}</p>
+    <p className={cn("mb-5 leading-7", props.className)}>{props.children}</p>
   );
 }

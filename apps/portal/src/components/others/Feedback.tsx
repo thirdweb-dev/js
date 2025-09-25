@@ -20,7 +20,7 @@ export function Feedback() {
 
   if (!isSubmitted) {
     return (
-      <div className="flex flex-col gap-2 md:h-16 md:flex-row md:items-center md:gap-4">
+      <div className="md:h-16 flex items-center gap-4">
         <p className="text-sm text-foreground">Was this page helpful?</p>
         <div className="flex gap-2">
           <Button

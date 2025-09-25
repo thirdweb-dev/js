@@ -1,6 +1,7 @@
 import "@workspace/ui/global.css";
 import "./globals.css";
-import { Fira_Code, Inter } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { createMetadata } from "@/components/Document";
@@ -8,18 +9,6 @@ import { StickyTopContainer } from "../components/Document/StickyTopContainer";
 import { EnableSmoothScroll } from "../components/others/SmoothScroll";
 import { cn } from "../lib/utils";
 import { Header } from "./Header";
-
-const sansFont = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: "variable",
-});
-
-const monoFont = Fira_Code({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: "variable",
-});
 
 export const metadata = createMetadata({
   description: "thirdweb developer portal",
@@ -34,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(sansFont.variable, monoFont.variable, "font-sans")}
+        className={cn(GeistMono.variable, GeistSans.variable, "font-sans")}
         suppressHydrationWarning
       >
         <ThemeProvider

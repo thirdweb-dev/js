@@ -213,127 +213,129 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="flex w-full flex-col gap-2 border-b p-4 xl:pb-0 lg:px-8 lg:pt-5 overflow-hidden bg-card">
-      {/* Top row */}
-      <div className="container flex items-center justify-between gap-6">
-        <div className="flex items-center gap-2">
-          <Link
-            aria-label="thirdweb Docs"
-            className="flex items-center gap-2"
-            href="/"
-            title="thirdweb Docs"
-          >
-            <ThirdwebIcon className="size-8" />
-            <span className="font-bold text-[23px] text-foreground leading-none tracking-tight">
-              Docs
-            </span>
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden xl:block">
+    <header className="flex w-full border-b overflow-hidden relative">
+      <div className="container flex-col">
+        {/* Top row */}
+        <div className="flex items-center justify-between gap-6 relative z-10 py-4 lg:pt-5">
+          <div className="flex items-center gap-2">
             <Link
-              className="text-foreground"
-              href="https://github.com/thirdweb-dev"
-              target="_blank"
+              aria-label="thirdweb Docs"
+              className="flex items-center gap-2"
+              href="/"
+              title="thirdweb Docs"
             >
-              <GithubIcon className="size-6 lg:size-5" />
+              <ThirdwebIcon className="size-8" />
+              <span className="font-bold text-[23px] text-foreground leading-none tracking-tight">
+                Docs
+              </span>
             </Link>
           </div>
 
-          <div className="hidden xl:block">
-            <ThemeSwitcher className="border-none bg-transparent" />
-          </div>
+          <div className="flex items-center gap-4">
+            <div className="hidden xl:block">
+              <Link
+                className="text-foreground"
+                href="https://github.com/thirdweb-dev"
+                target="_blank"
+              >
+                <GithubIcon className="size-6 lg:size-5" />
+              </Link>
+            </div>
 
-          <div className="hidden xl:block">
-            <DocSearch variant="search" />
-          </div>
+            <div className="hidden xl:block">
+              <ThemeSwitcher className="border-none bg-transparent" />
+            </div>
 
-          <div className="hidden xl:block">
-            <ChatButton />
-          </div>
+            <div className="hidden xl:block">
+              <DocSearch variant="search" />
+            </div>
 
-          <div className="flex items-center gap-1 xl:hidden">
-            <ThemeSwitcher className="border-none bg-transparent" />
-            <DocSearch variant="icon" />
-            <ChatButton />
-            <Button
-              className="p-2"
-              onClick={() => setShowBurgerMenu(!showBurgerMenu)}
-              variant="ghost"
-            >
-              <MenuIcon className="size-7" />
-            </Button>
+            <div className="hidden xl:block">
+              <ChatButton />
+            </div>
+
+            <div className="flex items-center gap-1 xl:hidden">
+              <ThemeSwitcher className="border-none bg-transparent" />
+              <DocSearch variant="icon" />
+              <ChatButton />
+              <Button
+                className="p-2"
+                onClick={() => setShowBurgerMenu(!showBurgerMenu)}
+                variant="ghost"
+              >
+                <MenuIcon className="size-7" />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom row - hidden on mobile */}
-      <div className="container hidden items-start justify-between gap-6 xl:flex mt-1">
-        <nav className="flex grow gap-5">
-          <ul className="flex flex-row items-center gap-0 mb-1.5">
-            {links.map((link) => {
-              return (
-                <li
-                  className="flex items-center relative"
-                  key={link.href}
-                  onClick={() => {
-                    setShowBurgerMenu(false);
-                  }}
-                  onKeyDown={() => {
-                    setShowBurgerMenu(false);
-                  }}
-                >
-                  <NavLink
-                    href={link.href}
-                    name={link.name}
-                    className="py-2.5 px-3 hover:bg-accent rounded-lg hover:text-foreground font-normal"
-                  />
-                  {pathname?.startsWith(link.href) && (
-                    <div className="bg-foreground h-[2px] inset-x-0 rounded-full absolute -bottom-1.5" />
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        {/* Bottom row - hidden on mobile */}
+        <div className="hidden items-start justify-between gap-6 xl:flex relative z-10">
+          <nav className="flex grow gap-5">
+            <ul className="flex flex-row items-center gap-0 mb-1.5">
+              {links.map((link) => {
+                return (
+                  <li
+                    className="flex items-center relative"
+                    key={link.href}
+                    onClick={() => {
+                      setShowBurgerMenu(false);
+                    }}
+                    onKeyDown={() => {
+                      setShowBurgerMenu(false);
+                    }}
+                  >
+                    <NavLink
+                      href={link.href}
+                      name={link.name}
+                      className="py-2.5 px-3 hover:bg-accent rounded-lg hover:text-foreground font-normal"
+                    />
+                    {pathname?.startsWith(link.href) && (
+                      <div className="bg-foreground h-[2px] inset-x-0 rounded-full absolute -bottom-1.5" />
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-        <div className="flex items-center">
-          <DropdownLinks
-            category="AI"
-            links={aiLinks}
-            onLinkClick={() => setShowBurgerMenu(false)}
-          />
-          <DropdownLinks
-            category="SDKs"
-            links={sdkLinks}
-            onLinkClick={() => setShowBurgerMenu(false)}
-          />
-          <DropdownLinks
-            category="APIs"
-            links={apisLinks}
-            onLinkClick={() => setShowBurgerMenu(false)}
-          />
+          <div className="flex items-center">
+            <DropdownLinks
+              category="AI"
+              links={aiLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
+            <DropdownLinks
+              category="SDKs"
+              links={sdkLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
+            <DropdownLinks
+              category="APIs"
+              links={apisLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
 
-          <DropdownLinks
-            category="Tools"
-            links={toolLinks}
-            onLinkClick={() => setShowBurgerMenu(false)}
-          />
-          <DropdownLinks
-            category="Support"
-            links={supportLinks}
-            onLinkClick={() => setShowBurgerMenu(false)}
-          />
+            <DropdownLinks
+              category="Tools"
+              links={toolLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
+            <DropdownLinks
+              category="Support"
+              links={supportLinks}
+              onLinkClick={() => setShowBurgerMenu(false)}
+            />
 
-          <NavLink
-            href="/changelog"
-            className="px-3 py-2.5 hover:bg-accent hover:text-foreground rounded-lg"
-            name="Changelog"
-            onClick={() => {
-              setShowBurgerMenu(false);
-            }}
-          />
+            <NavLink
+              href="/changelog"
+              className="px-3 py-2.5 hover:bg-accent hover:text-foreground rounded-lg"
+              name="Changelog"
+              onClick={() => {
+                setShowBurgerMenu(false);
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -422,6 +424,8 @@ export function Header() {
           </div>
         </div>
       )}
+
+      <div className="absolute inset-0 bg-card/70 backdrop-blur-xl z-0" />
     </header>
   );
 }

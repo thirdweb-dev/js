@@ -226,16 +226,18 @@ function DocSidebarCategory(props: {
       trigger={triggerEl}
       triggerContainerClassName=""
     >
-      <ul className="flex flex-col border-l-2 pl-4">
-        {links.map((link, i) => {
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
-            <li key={i}>
-              <SidebarItem link={link} onLinkClick={props.onLinkClick} />
-            </li>
-          );
-        })}
-      </ul>
+      <div className="pl-4 py-1">
+        <ul className="flex flex-col border-l pl-2 gap-1">
+          {links.map((link, i) => {
+            return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
+              <li key={i}>
+                <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </CustomAccordion>
   );
 }
@@ -246,7 +248,7 @@ export function DocSidebarMobile(props: ReferenceSideBarProps) {
   return (
     <DropdownMenu onOpenChange={setOpen} open={open}>
       <DropdownMenuTrigger asChild>
-        <Button className="w-full justify-between border bg-card py-3 text-left text-foreground hover:bg-card xl:hidden">
+        <Button className="w-full justify-between border bg-card py-3 h-auto rounded-xl text-left text-foreground hover:bg-card xl:hidden">
           {props.name}
           <ChevronDownIcon
             className={clsx(
@@ -258,7 +260,7 @@ export function DocSidebarMobile(props: ReferenceSideBarProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="center" asChild side="bottom" sideOffset={10}>
-        <div className="max-h-[70vh] w-[calc(100vw-32px)] overflow-y-auto rounded-lg border bg-card px-4">
+        <div className="max-h-[70vh] w-[calc(100vw-32px)] overflow-y-auto rounded-xl border bg-card px-2">
           <DocSidebar
             {...props}
             header={props.header}

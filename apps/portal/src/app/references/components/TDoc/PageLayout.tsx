@@ -1,20 +1,17 @@
 import GithubSlugger from "github-slugger";
 import { FileTextIcon, FolderOpenIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import invariant from "tiny-invariant";
 import type { TransformedDoc } from "typedoc-better-json";
-import {
-  ArticleIconCard,
-  createMetadata,
-  Details,
-  Heading,
-} from "@/components/Document";
+import { createMetadata, Details, Heading } from "@/components/Document";
 import { Breadcrumb } from "@/components/Document/Breadcrumb";
 import { DocLayout } from "@/components/Layouts/DocLayout";
 import type { LinkGroup, LinkMeta } from "@/components/others/Sidebar";
 import { sluggerContext } from "@/contexts/slugger";
 import type { MetadataImageIcon } from "../../../../components/Document/metadata";
+import { cn } from "../../../../lib/utils";
 import { RootTDoc } from "./Root";
 import { getSidebarLinkGroups } from "./utils/getSidebarLinkgroups";
 import { fetchAllSlugs, getSlugToDocMap } from "./utils/slugs";
@@ -330,10 +327,44 @@ function GroupOfLinks(props: { linkGroup: LinkGroup; level: number }) {
       accordionItemClassName="m-0"
       accordionTriggerClassName="rounded-lg"
       anchorId={slugger.slug(props.linkGroup.name)}
-      headingClassName="py-0.5 text-lg"
+      headingClassName="py-0.5 text-lg font-medium"
       summary={props.linkGroup.name}
     >
       <RenderLinkGroup level={props.level + 1} linkGroup={props.linkGroup} />
     </Details>
+  );
+}
+
+function ArticleIconCard(props: {
+  title: string;
+  href: string;
+  icon?: React.FC<{ className?: string }>;
+  className?: string;
+}) {
+  const isExternal = props.href.startsWith("http");
+  return (
+    <Link
+      className={cn(
+        "flex items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:border-active-border",
+        props.className,
+      )}
+      data-noindex
+      href={props.href}
+      target={isExternal ? "_blank" : undefined}
+    >
+      {props.icon && (
+        <div className="shrink-0">
+          <div className="rounded-full p-2.5 bg-background border">
+            <props.icon className="size-3.5 text-muted-foreground" />
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-1.5">
+        <h3 className="font-semibold text-base text-foreground leading-none">
+          {props.title}
+        </h3>
+      </div>
+    </Link>
   );
 }
