@@ -1,15 +1,8 @@
-import {
-  type ERC20TokenAmount,
-  type Money,
-  moneySchema,
-  type Network,
-  SupportedEVMNetworks,
-} from "x402/types";
+import { type ERC20TokenAmount, type Money, moneySchema } from "x402/types";
 import { getAddress } from "../utils/address.js";
 import { decodePayment } from "./encode.js";
 import type { facilitator as facilitatorType } from "./facilitator.js";
 import {
-  type FacilitatorNetwork,
   networkToChainId,
   type RequestedPaymentPayload,
   type RequestedPaymentRequirements,
@@ -54,9 +47,28 @@ export async function decodePaymentRequest(
     errorMessages,
     discoverable,
   } = routeConfig;
+
+  let chainId: number;
+  try {
+    chainId = networkToChainId(network);
+  } catch (error) {
+    return {
+      status: 402,
+      responseHeaders: { "Content-Type": "application/json" },
+      responseBody: {
+        x402Version,
+        error:
+          error instanceof Error
+            ? error.message
+            : `Invalid network: ${network}`,
+        accepts: [],
+      },
+    };
+  }
+
   const atomicAmountForAsset = await processPriceToAtomicAmount(
     price,
-    network,
+    chainId,
     facilitator,
   );
   if ("error" in atomicAmountForAsset) {
@@ -74,45 +86,28 @@ export async function decodePaymentRequest(
 
   const paymentRequirements: RequestedPaymentRequirements[] = [];
 
-  if (
-    SupportedEVMNetworks.includes(network as Network) ||
-    network.startsWith("eip155:")
-  ) {
-    paymentRequirements.push({
-      scheme: "exact",
-      network,
-      maxAmountRequired,
-      resource: resourceUrl,
-      description: description ?? "",
-      mimeType: mimeType ?? "application/json",
-      payTo: getAddress(payTo),
-      maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
-      asset: getAddress(asset.address),
-      // TODO: Rename outputSchema to requestStructure
-      outputSchema: {
-        input: {
-          type: "http",
-          method,
-          discoverable: discoverable ?? true,
-          ...inputSchema,
-        },
-        output: outputSchema,
+  paymentRequirements.push({
+    scheme: "exact",
+    network: `eip155:${chainId}`,
+    maxAmountRequired,
+    resource: resourceUrl,
+    description: description ?? "",
+    mimeType: mimeType ?? "application/json",
+    payTo: getAddress(payTo),
+    maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
+    asset: getAddress(asset.address),
+    // TODO: Rename outputSchema to requestStructure
+    outputSchema: {
+      input: {
+        type: "http",
+        method,
+        discoverable: discoverable ?? true,
+        ...inputSchema,
       },
-      extra: (asset as ERC20TokenAmount["asset"]).eip712,
-    });
-  } else {
-    return {
-      status: 402,
-      responseHeaders: {
-        "Content-Type": "application/json",
-      },
-      responseBody: {
-        x402Version,
-        error: `Unsupported network: ${network}`,
-        accepts: paymentRequirements,
-      },
-    };
-  }
+      output: outputSchema,
+    },
+    extra: (asset as ERC20TokenAmount["asset"]).eip712,
+  });
 
   // Check for payment header
   if (!paymentData) {
@@ -188,7 +183,7 @@ export async function decodePaymentRequest(
  */
 async function processPriceToAtomicAmount(
   price: Money | ERC20TokenAmount,
-  network: FacilitatorNetwork,
+  chainId: number,
   facilitator: ReturnType<typeof facilitatorType>,
 ): Promise<
   | { maxAmountRequired: string; asset: ERC20TokenAmount["asset"] }
@@ -207,10 +202,10 @@ async function processPriceToAtomicAmount(
       };
     }
     const parsedUsdAmount = parsedAmount.data;
-    const defaultAsset = await getDefaultAsset(network, facilitator);
+    const defaultAsset = await getDefaultAsset(chainId, facilitator);
     if (!defaultAsset) {
       return {
-        error: `Unable to get default asset on ${network}. Please specify an asset in the payment requirements.`,
+        error: `Unable to get default asset on chain ${chainId}. Please specify an asset in the payment requirements.`,
       };
     }
     asset = defaultAsset;
@@ -228,11 +223,10 @@ async function processPriceToAtomicAmount(
 }
 
 async function getDefaultAsset(
-  network: FacilitatorNetwork,
+  chainId: number,
   facilitator: ReturnType<typeof facilitatorType>,
 ): Promise<ERC20TokenAmount["asset"] | undefined> {
   const supportedAssets = await facilitator.supported();
-  const chainId = networkToChainId(network);
   const matchingAsset = supportedAssets.kinds.find(
     (supported) => supported.network === `eip155:${chainId}`,
   );

@@ -7,6 +7,7 @@ import {
   SettleResponseSchema,
 } from "x402/types";
 import { z } from "zod";
+import type { Chain } from "../chains/types.js";
 
 const FacilitatorNetworkSchema = z.union([
   z.literal("base-sepolia"),
@@ -55,7 +56,10 @@ export type FacilitatorSettleResponse = z.infer<
   typeof FacilitatorSettleResponseSchema
 >;
 
-export function networkToChainId(network: string): number {
+export function networkToChainId(network: string | Chain): number {
+  if (typeof network === "object") {
+    return network.id;
+  }
   if (network.startsWith("eip155:")) {
     const chainId = parseInt(network.split(":")[1] ?? "0");
     if (!Number.isNaN(chainId) && chainId > 0) {
