@@ -3,9 +3,11 @@ import type { ExactEvmPayloadAuthorization } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
+import { nonces } from "../extensions/erc20/__generated__/IERC20Permit/read/nonces.js";
 import { type Address, getAddress } from "../utils/address.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
+import { detectSupportedAuthorizationMethods } from "./common.js";
 import { encodePayment } from "./encode.js";
 import {
   networkToChainId,
@@ -13,10 +15,6 @@ import {
   type RequestedPaymentRequirements,
   type UnsignedPaymentPayload,
 } from "./schemas.js";
-import {
-  detectSupportedAuthorizationMethods,
-} from "./common.js";
-import { nonces } from "../extensions/erc20/__generated__/IERC20Permit/read/nonces.js";
 import { x402Version } from "./types.js";
 
 /**
@@ -31,13 +29,13 @@ function preparePaymentHeader(
   from: Address,
   x402Version: number,
   paymentRequirements: RequestedPaymentRequirements,
-  nonce: Hex
+  nonce: Hex,
 ): UnsignedPaymentPayload {
   const validAfter = BigInt(
-    Math.floor(Date.now() / 1000) - 600 // 10 minutes before
+    Math.floor(Date.now() / 1000) - 600, // 10 minutes before
   ).toString();
   const validBefore = BigInt(
-    Math.floor(Date.now() / 1000 + paymentRequirements.maxTimeoutSeconds)
+    Math.floor(Date.now() / 1000 + paymentRequirements.maxTimeoutSeconds),
   ).toString();
 
   return {
@@ -69,7 +67,7 @@ function preparePaymentHeader(
 async function signPaymentHeader(
   client: ThirdwebClient,
   account: Account,
-  paymentRequirements: RequestedPaymentRequirements
+  paymentRequirements: RequestedPaymentRequirements,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
   const chainId = networkToChainId(paymentRequirements.network);
@@ -94,12 +92,12 @@ async function signPaymentHeader(
       from,
       x402Version,
       paymentRequirements,
-      toHex(nonce, { size: 32 }) // permit nonce
+      toHex(nonce, { size: 32 }), // permit nonce
     );
     const { signature } = await signERC2612Permit(
       account,
       unsignedPaymentHeader.payload.authorization,
-      paymentRequirements
+      paymentRequirements,
     );
     return {
       ...unsignedPaymentHeader,
@@ -115,12 +113,12 @@ async function signPaymentHeader(
       from,
       x402Version,
       paymentRequirements,
-      nonce // random nonce
+      nonce, // random nonce
     );
     const { signature } = await signERC3009Authorization(
       account,
       unsignedPaymentHeader.payload.authorization,
-      paymentRequirements
+      paymentRequirements,
     );
     return {
       ...unsignedPaymentHeader,
@@ -143,7 +141,7 @@ async function signPaymentHeader(
 export async function createPaymentHeader(
   client: ThirdwebClient,
   account: Account,
-  paymentRequirements: RequestedPaymentRequirements
+  paymentRequirements: RequestedPaymentRequirements,
 ): Promise<string> {
   const payment = await signPaymentHeader(client, account, paymentRequirements);
   return encodePayment(payment);
@@ -176,7 +174,7 @@ async function signERC3009Authorization(
     validBefore,
     nonce,
   }: ExactEvmPayloadAuthorization,
-  { asset, network, extra }: RequestedPaymentRequirements
+  { asset, network, extra }: RequestedPaymentRequirements,
 ): Promise<{ signature: Hex }> {
   const chainId = networkToChainId(network);
   const name = extra?.name;
@@ -218,7 +216,7 @@ async function signERC3009Authorization(
 async function signERC2612Permit(
   account: Account,
   { from, value, validBefore, nonce }: ExactEvmPayloadAuthorization,
-  { asset, network, extra }: RequestedPaymentRequirements
+  { asset, network, extra }: RequestedPaymentRequirements,
 ): Promise<{ signature: Hex }> {
   const chainId = networkToChainId(network);
   const name = extra?.name;
@@ -227,7 +225,7 @@ async function signERC2612Permit(
   const facilitatorAddress = extra?.facilitatorAddress;
   if (!facilitatorAddress) {
     throw new Error(
-      "facilitatorAddress is required in PaymentRequirements extra to pay with permit-based assets"
+      "facilitatorAddress is required in PaymentRequirements extra to pay with permit-based assets",
     );
   }
 

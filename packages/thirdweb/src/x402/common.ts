@@ -1,4 +1,12 @@
+import type { Abi } from "abitype";
+import { toFunctionSelector } from "viem/utils";
 import { type ERC20TokenAmount, type Money, moneySchema } from "x402/types";
+import { getCachedChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
+import { getContract } from "../contract/contract.js";
+import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
+import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 import { getAddress } from "../utils/address.js";
 import { decodePayment } from "./encode.js";
 import type { facilitator as facilitatorType } from "./facilitator.js";
@@ -12,14 +20,6 @@ import {
   type PaymentRequiredResult,
   x402Version,
 } from "./types.js";
-import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
-import { getContract } from "../contract/contract.js";
-import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
-import type { Abi } from "abitype";
-import { getCachedChain } from "../chains/utils.js";
-import type { ThirdwebClient } from "../client/client.js";
-import { toFunctionSelector } from "viem/utils";
-import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
 
 type GetPaymentRequirementsResult = {
   status: 200;
@@ -247,34 +247,34 @@ async function getDefaultAsset(
 }
 
 export type SupportedAuthorizationMethods = {
-    hasPermit: boolean,
-    hasTransferWithAuthorization: boolean,
-}
+  hasPermit: boolean;
+  hasTransferWithAuthorization: boolean;
+};
 
 export async function detectSupportedAuthorizationMethods(args: {
-    client: ThirdwebClient,
-    asset: string,
-    chainId: number,
-}): Promise<SupportedAuthorizationMethods>   {
-    const abi = await resolveContractAbi<Abi>(
-        getContract({
-          client: args.client,
-          address: args.asset,
-          chain: getCachedChain(args.chainId),
-        }),
-      ).catch((error) => {
-        console.error("Error resolving contract ABI", error);
-        return [] as Abi;
-      });
-      const selectors = abi
-        .filter((f) => f.type === "function")
-        .map((f) => toFunctionSelector(f));
-      const hasPermit = isPermitSupported(selectors);
-      const hasTransferWithAuthorization =
-        isTransferWithAuthorizationSupported(selectors);
+  client: ThirdwebClient;
+  asset: string;
+  chainId: number;
+}): Promise<SupportedAuthorizationMethods> {
+  const abi = await resolveContractAbi<Abi>(
+    getContract({
+      client: args.client,
+      address: args.asset,
+      chain: getCachedChain(args.chainId),
+    }),
+  ).catch((error) => {
+    console.error("Error resolving contract ABI", error);
+    return [] as Abi;
+  });
+  const selectors = abi
+    .filter((f) => f.type === "function")
+    .map((f) => toFunctionSelector(f));
+  const hasPermit = isPermitSupported(selectors);
+  const hasTransferWithAuthorization =
+    isTransferWithAuthorizationSupported(selectors);
 
-      return {
-        hasPermit,
-        hasTransferWithAuthorization,
-      };
+  return {
+    hasPermit,
+    hasTransferWithAuthorization,
+  };
 }
