@@ -54,7 +54,7 @@ export default async function BridgePage({
     <div className="grow flex flex-col relative overflow-hidden">
       <PageHeader />
 
-      <div className="flex grow flex-col items-center justify-center py-36 px-4 min-h-dvh relative overflow-hidden">
+      <div className="flex grow items-center justify-center py-36 px-4 min-h-dvh relative overflow-hidden">
         <DotsBackgroundPattern />
         <UniversalBridgeEmbed
           amount={amount as string}

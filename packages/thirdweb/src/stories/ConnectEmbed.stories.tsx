@@ -7,9 +7,6 @@ import { storyClient } from "./utils.js";
 
 const meta: Meta<typeof ConnectEmbed> = {
   title: "Connect/ConnectEmbed",
-  parameters: {
-    layout: "centered",
-  },
   decorators: [
     (Story) => {
       return (

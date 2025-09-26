@@ -16,13 +16,11 @@ export function UniversalBridgeEmbed({
   const chain = useV5DashboardChain(chainId || 1);
 
   return (
-    <div className="w-full lg:w-[400px]">
-      <BuyAndSwapEmbed
-        chain={chain}
-        buyAmount={amount}
-        tokenAddress={token?.address}
-        pageType="bridge"
-      />
-    </div>
+    <BuyAndSwapEmbed
+      chain={chain}
+      buyAmount={amount}
+      tokenAddress={token?.address}
+      pageType="bridge"
+    />
   );
 }

@@ -67,7 +67,7 @@ export function BuyAndSwapEmbed(props: {
   }, [props.pageType]);
 
   return (
-    <div className="bg-card rounded-2xl border overflow-hidden flex flex-col relative z-10 shadow-xl">
+    <div className="bg-card rounded-2xl border overflow-hidden flex flex-col relative z-10 shadow-xl min-w-0">
       <div className="flex gap-2.5 p-4 border-b border-dashed">
         <TabButton
           label="Swap"

@@ -4,7 +4,7 @@ export function GridPatternEmbedContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="sm:flex sm:justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 rounded-xl overflow-hidden relative">
+    <div className="flex justify-center w-full sm:border sm:border-dashed sm:bg-accent/20 sm:py-12 sm:rounded-xl sm:overflow-hidden relative">
       <GridPattern
         width={30}
         height={30}
@@ -17,7 +17,7 @@ export function GridPatternEmbedContainer(props: {
             "linear-gradient(to bottom right,white,transparent,transparent)",
         }}
       />
-      <div className="z-10">{props.children}</div>
+      <div className="z-10 min-w-0">{props.children}</div>
     </div>
   );
 }
