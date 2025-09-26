@@ -1,15 +1,25 @@
-import { type ERC20TokenAmount, type Money, moneySchema } from "x402/types";
+import type { Abi } from "abitype";
+import { toFunctionSelector } from "viem/utils";
+import { type Money, moneySchema } from "x402/types";
+import { getCachedChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
+import { getContract } from "../contract/contract.js";
+import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
+import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 import { getAddress } from "../utils/address.js";
 import { decodePayment } from "./encode.js";
-import type { facilitator as facilitatorType } from "./facilitator.js";
+import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import {
   networkToChainId,
   type RequestedPaymentPayload,
   type RequestedPaymentRequirements,
 } from "./schemas.js";
 import {
+  type ERC20TokenAmount,
   type PaymentArgs,
   type PaymentRequiredResult,
+  type SupportedSignatureType,
   x402Version,
 } from "./types.js";
 
@@ -106,7 +116,10 @@ export async function decodePaymentRequest(
       },
       output: outputSchema,
     },
-    extra: (asset as ERC20TokenAmount["asset"]).eip712,
+    extra: {
+      facilitatorAddress: facilitator.address,
+      ...((asset as ERC20TokenAmount["asset"]).eip712 ?? {}),
+    },
   });
 
   // Check for payment header
@@ -184,7 +197,7 @@ export async function decodePaymentRequest(
 async function processPriceToAtomicAmount(
   price: Money | ERC20TokenAmount,
   chainId: number,
-  facilitator: ReturnType<typeof facilitatorType>,
+  facilitator: ThirdwebX402Facilitator,
 ): Promise<
   | { maxAmountRequired: string; asset: ERC20TokenAmount["asset"] }
   | { error: string }
@@ -224,7 +237,7 @@ async function processPriceToAtomicAmount(
 
 async function getDefaultAsset(
   chainId: number,
-  facilitator: ReturnType<typeof facilitatorType>,
+  facilitator: ThirdwebX402Facilitator,
 ): Promise<ERC20TokenAmount["asset"] | undefined> {
   const supportedAssets = await facilitator.supported();
   const matchingAsset = supportedAssets.kinds.find(
@@ -233,4 +246,44 @@ async function getDefaultAsset(
   const assetConfig = matchingAsset?.extra
     ?.defaultAsset as ERC20TokenAmount["asset"];
   return assetConfig;
+}
+
+export async function getSupportedSignatureType(args: {
+  client: ThirdwebClient;
+  asset: string;
+  chainId: number;
+  eip712Extras: ERC20TokenAmount["asset"]["eip712"] | undefined;
+}): Promise<SupportedSignatureType | undefined> {
+  const primaryType = args.eip712Extras?.primaryType;
+
+  if (primaryType === "Permit" || primaryType === "TransferWithAuthorization") {
+    return primaryType;
+  }
+
+  // not specified, so we need to detect it
+  const abi = await resolveContractAbi<Abi>(
+    getContract({
+      client: args.client,
+      address: args.asset,
+      chain: getCachedChain(args.chainId),
+    }),
+  ).catch((error) => {
+    console.error("Error resolving contract ABI", error);
+    return [] as Abi;
+  });
+  const selectors = abi
+    .filter((f) => f.type === "function")
+    .map((f) => toFunctionSelector(f));
+  const hasPermit = isPermitSupported(selectors);
+  const hasTransferWithAuthorization =
+    isTransferWithAuthorizationSupported(selectors);
+
+  // prefer transferWithAuthorization over permit
+  if (hasTransferWithAuthorization) {
+    return "TransferWithAuthorization";
+  }
+  if (hasPermit) {
+    return "Permit";
+  }
+  return undefined;
 }

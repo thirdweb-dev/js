@@ -5,6 +5,6 @@ export const maxDuration = 300;
 export async function GET(_req: Request) {
   return NextResponse.json({
     success: true,
-    message: "Congratulations! You have accessed the protected route.",
+    message: "Payment successful. You have accessed the protected route.",
   });
 }

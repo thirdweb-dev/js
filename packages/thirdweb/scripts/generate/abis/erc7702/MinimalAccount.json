@@ -24,9 +24,4 @@
   "function getSessionStateForSigner(address signer) view returns (((uint256 remaining, address target, bytes4 selector, uint256 index)[] transferValue, (uint256 remaining, address target, bytes4 selector, uint256 index)[] callValue, (uint256 remaining, address target, bytes4 selector, uint256 index)[] callParams))",
   "function getTransferPoliciesForSigner(address signer) view returns ((address target, uint256 maxValuePerUse, (uint8 limitType, uint256 limit, uint256 period) valueLimit)[])",
   "function isWildcardSigner(address signer) view returns (bool)",
-  "function onERC1155BatchReceived(address, address, uint256[], uint256[], bytes) returns (bytes4)",
-  "function onERC1155Received(address, address, uint256, uint256, bytes) returns (bytes4)",
-  "function onERC721Received(address, address, uint256, bytes) returns (bytes4)",
-  "function supportsInterface(bytes4 interfaceId) view returns (bool)",
-  "receive() external payable"
 ]

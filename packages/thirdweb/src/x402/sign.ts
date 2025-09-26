@@ -1,7 +1,13 @@
+import { hexToBigInt } from "viem";
 import type { ExactEvmPayloadAuthorization } from "x402/types";
+import { getCachedChain } from "../chains/utils.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { getContract } from "../contract/contract.js";
+import { nonces } from "../extensions/erc20/__generated__/IERC20Permit/read/nonces.js";
 import { type Address, getAddress } from "../utils/address.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
+import { getSupportedSignatureType } from "./common.js";
 import { encodePayment } from "./encode.js";
 import {
   networkToChainId,
@@ -9,6 +15,7 @@ import {
   type RequestedPaymentRequirements,
   type UnsignedPaymentPayload,
 } from "./schemas.js";
+import type { ERC20TokenAmount } from "./types.js";
 
 /**
  * Prepares an unsigned payment header with the given sender address and payment requirements.
@@ -22,9 +29,8 @@ function preparePaymentHeader(
   from: Address,
   x402Version: number,
   paymentRequirements: RequestedPaymentRequirements,
+  nonce: Hex,
 ): UnsignedPaymentPayload {
-  const nonce = createNonce();
-
   const validAfter = BigInt(
     Math.floor(Date.now() / 1000) - 600, // 10 minutes before
   ).toString();
@@ -44,7 +50,7 @@ function preparePaymentHeader(
         value: paymentRequirements.maxAmountRequired,
         validAfter: validAfter.toString(),
         validBefore: validBefore.toString(),
-        nonce,
+        nonce: nonce,
       },
     },
   };
@@ -59,45 +65,78 @@ function preparePaymentHeader(
  * @returns A promise that resolves to the signed payment payload
  */
 async function signPaymentHeader(
+  client: ThirdwebClient,
   account: Account,
   paymentRequirements: RequestedPaymentRequirements,
-  unsignedPaymentHeader: UnsignedPaymentPayload,
-): Promise<RequestedPaymentPayload> {
-  const { signature } = await signAuthorization(
-    account,
-    unsignedPaymentHeader.payload.authorization,
-    paymentRequirements,
-  );
-
-  return {
-    ...unsignedPaymentHeader,
-    payload: {
-      ...unsignedPaymentHeader.payload,
-      signature,
-    },
-  };
-}
-
-/**
- * Creates a complete payment payload by preparing and signing a payment header.
- *
- * @param client - The signer wallet instance used to create and sign the payment
- * @param x402Version - The version of the X402 protocol to use
- * @param paymentRequirements - The payment requirements containing scheme and network information
- * @returns A promise that resolves to the complete signed payment payload
- */
-async function createPayment(
-  account: Account,
   x402Version: number,
-  paymentRequirements: RequestedPaymentRequirements,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
-  const unsignedPaymentHeader = preparePaymentHeader(
-    from,
-    x402Version,
-    paymentRequirements,
-  );
-  return signPaymentHeader(account, paymentRequirements, unsignedPaymentHeader);
+  const chainId = networkToChainId(paymentRequirements.network);
+  const supportedSignatureType = await getSupportedSignatureType({
+    client,
+    asset: paymentRequirements.asset,
+    chainId: chainId,
+    eip712Extras: paymentRequirements.extra as
+      | ERC20TokenAmount["asset"]["eip712"]
+      | undefined,
+  });
+
+  switch (supportedSignatureType) {
+    case "Permit": {
+      const nonce = await nonces({
+        contract: getContract({
+          address: paymentRequirements.asset,
+          chain: getCachedChain(chainId),
+          client: client,
+        }),
+        owner: from,
+      });
+      const unsignedPaymentHeader = preparePaymentHeader(
+        from,
+        x402Version,
+        paymentRequirements,
+        toHex(nonce, { size: 32 }), // permit nonce
+      );
+      const { signature } = await signERC2612Permit(
+        account,
+        unsignedPaymentHeader.payload.authorization,
+        paymentRequirements,
+      );
+      return {
+        ...unsignedPaymentHeader,
+        payload: {
+          ...unsignedPaymentHeader.payload,
+          signature,
+        },
+      };
+    }
+    case "TransferWithAuthorization": {
+      // default to transfer with authorization
+      const nonce = await createNonce();
+      const unsignedPaymentHeader = preparePaymentHeader(
+        from,
+        x402Version,
+        paymentRequirements,
+        nonce, // random nonce
+      );
+      const { signature } = await signERC3009Authorization(
+        account,
+        unsignedPaymentHeader.payload.authorization,
+        paymentRequirements,
+      );
+      return {
+        ...unsignedPaymentHeader,
+        payload: {
+          ...unsignedPaymentHeader.payload,
+          signature,
+        },
+      };
+    }
+    default:
+      throw new Error(
+        `No supported payment authorization methods found on ${paymentRequirements.asset} on chain ${paymentRequirements.network}`,
+      );
+  }
 }
 
 /**
@@ -109,14 +148,16 @@ async function createPayment(
  * @returns A promise that resolves to the encoded payment header string
  */
 export async function createPaymentHeader(
+  client: ThirdwebClient,
   account: Account,
-  x402Version: number,
   paymentRequirements: RequestedPaymentRequirements,
+  x402Version: number,
 ): Promise<string> {
-  const payment = await createPayment(
+  const payment = await signPaymentHeader(
+    client,
     account,
-    x402Version,
     paymentRequirements,
+    x402Version,
   );
   return encodePayment(payment);
 }
@@ -138,7 +179,7 @@ export async function createPaymentHeader(
  * @param paymentRequirements.extra - The extra information containing the name and version of the ERC20 contract
  * @returns The signature for the authorization
  */
-async function signAuthorization(
+async function signERC3009Authorization(
   account: Account,
   {
     from,
@@ -154,8 +195,7 @@ async function signAuthorization(
   const name = extra?.name;
   const version = extra?.version;
 
-  // TODO (402): detect permit vs transfer on asset contract
-  const data = {
+  const signature = await account.signTypedData({
     types: {
       TransferWithAuthorization: [
         { name: "from", type: "address" },
@@ -176,14 +216,65 @@ async function signAuthorization(
     message: {
       from: getAddress(from),
       to: getAddress(to),
-      value,
-      validAfter,
-      validBefore,
-      nonce: nonce,
+      value: BigInt(value),
+      validAfter: BigInt(validAfter),
+      validBefore: BigInt(validBefore),
+      nonce: nonce as Hex,
     },
-  };
+  });
 
-  const signature = await account.signTypedData(data);
+  return {
+    signature,
+  };
+}
+
+async function signERC2612Permit(
+  account: Account,
+  { from, value, validBefore, nonce }: ExactEvmPayloadAuthorization,
+  { asset, network, extra }: RequestedPaymentRequirements,
+): Promise<{ signature: Hex }> {
+  const chainId = networkToChainId(network);
+  const name = extra?.name;
+  const version = extra?.version;
+  const facilitatorAddress = extra?.facilitatorAddress;
+  if (!facilitatorAddress) {
+    throw new Error(
+      "facilitatorAddress is required in PaymentRequirements extra to pay with permit-based assets",
+    );
+  }
+  if (!name || !version) {
+    throw new Error(
+      "name and version are required in PaymentRequirements extra to pay with permit-based assets",
+    );
+  }
+
+  //Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline
+  const signature = await account.signTypedData({
+    types: {
+      Permit: [
+        { name: "owner", type: "address" },
+        { name: "spender", type: "address" },
+        { name: "value", type: "uint256" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    },
+    domain: {
+      name,
+      version,
+      chainId,
+      verifyingContract: getAddress(asset),
+    },
+    primaryType: "Permit" as const,
+    message: {
+      owner: getAddress(from),
+      spender: getAddress(facilitatorAddress), // approve the facilitator
+      value: BigInt(value),
+      nonce: hexToBigInt(nonce as Hex),
+      deadline: BigInt(validBefore),
+    },
+  });
+
   return {
     signature,
   };
@@ -194,7 +285,7 @@ async function signAuthorization(
  *
  * @returns A random 32-byte nonce as a hex string
  */
-function createNonce(): Hex {
+async function createNonce(): Promise<Hex> {
   const cryptoObj =
     typeof globalThis.crypto !== "undefined" &&
     typeof globalThis.crypto.getRandomValues === "function"
