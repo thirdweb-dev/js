@@ -49,7 +49,6 @@ export function StyledConnectEmbed(
         abstract,
       ]}
       client={THIRDWEB_CLIENT}
-      className="!max-w-full"
       theme={theme === "light" ? "light" : "dark"}
       wallets={WALLETS}
       {...props}
