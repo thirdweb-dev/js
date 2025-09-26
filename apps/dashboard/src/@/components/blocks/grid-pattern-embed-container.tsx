@@ -17,7 +17,7 @@ export function GridPatternEmbedContainer(props: {
             "linear-gradient(to bottom right,white,transparent,transparent)",
         }}
       />
-      <div className="sm:w-[420px] z-10">{props.children}</div>
+      <div className="z-10">{props.children}</div>
     </div>
   );
 }

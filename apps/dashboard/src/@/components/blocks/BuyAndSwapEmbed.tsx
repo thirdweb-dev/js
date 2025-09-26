@@ -85,7 +85,7 @@ export function BuyAndSwapEmbed(props: {
         <BuyWidget
           amount={props.buyAmount || "1"}
           chain={props.chain}
-          className="!rounded-2xl !w-full !border-none"
+          className="!rounded-2xl !border-none"
           title=""
           client={client}
           connectOptions={{
@@ -179,7 +179,7 @@ export function BuyAndSwapEmbed(props: {
         <SwapWidget
           client={client}
           theme={themeObj}
-          className="!rounded-2xl !border-none !w-full"
+          className="!rounded-2xl !border-none"
           prefill={{
             // buy this token by default
             buyToken: {
