@@ -15,6 +15,10 @@ export type ThirdwebX402FacilitatorConfig = {
   baseUrl?: string;
 };
 
+/**
+ * facilitator for the x402 payment protocol.
+ * @public
+ */
 export type ThirdwebX402Facilitator = {
   url: `${string}://${string}`;
   address: string;

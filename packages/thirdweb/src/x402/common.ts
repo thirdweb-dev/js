@@ -9,7 +9,7 @@ import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permi
 import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 import { getAddress } from "../utils/address.js";
 import { decodePayment } from "./encode.js";
-import type { facilitator as facilitatorType } from "./facilitator.js";
+import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import {
   networkToChainId,
   type RequestedPaymentPayload,
@@ -197,7 +197,7 @@ export async function decodePaymentRequest(
 async function processPriceToAtomicAmount(
   price: Money | ERC20TokenAmount,
   chainId: number,
-  facilitator: ReturnType<typeof facilitatorType>,
+  facilitator: ThirdwebX402Facilitator,
 ): Promise<
   | { maxAmountRequired: string; asset: ERC20TokenAmount["asset"] }
   | { error: string }
@@ -237,7 +237,7 @@ async function processPriceToAtomicAmount(
 
 async function getDefaultAsset(
   chainId: number,
-  facilitator: ReturnType<typeof facilitatorType>,
+  facilitator: ThirdwebX402Facilitator,
 ): Promise<ERC20TokenAmount["asset"] | undefined> {
   const supportedAssets = await facilitator.supported();
   const matchingAsset = supportedAssets.kinds.find(
