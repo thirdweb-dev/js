@@ -7,7 +7,7 @@ import { nonces } from "../extensions/erc20/__generated__/IERC20Permit/read/nonc
 import { type Address, getAddress } from "../utils/address.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
-import { detectSupportedAuthorizationMethods } from "./common.js";
+import { getSupportedSignatureType } from "./common.js";
 import { encodePayment } from "./encode.js";
 import {
   networkToChainId,
@@ -72,68 +72,71 @@ async function signPaymentHeader(
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
   const chainId = networkToChainId(paymentRequirements.network);
-  const { usePermit, useTransferWithAuthorization } =
-    await detectSupportedAuthorizationMethods({
-      client,
-      asset: paymentRequirements.asset,
-      chainId: chainId,
-      eip712Extras: paymentRequirements.extra as
-        | ERC20TokenAmount["asset"]["eip712"]
-        | undefined,
-    });
+  const supportedSignatureType = await getSupportedSignatureType({
+    client,
+    asset: paymentRequirements.asset,
+    chainId: chainId,
+    eip712Extras: paymentRequirements.extra as
+      | ERC20TokenAmount["asset"]["eip712"]
+      | undefined,
+  });
 
-  if (usePermit) {
-    const nonce = await nonces({
-      contract: getContract({
-        address: paymentRequirements.asset,
-        chain: getCachedChain(chainId),
-        client: client,
-      }),
-      owner: from,
-    });
-    const unsignedPaymentHeader = preparePaymentHeader(
-      from,
-      x402Version,
-      paymentRequirements,
-      toHex(nonce, { size: 32 }), // permit nonce
-    );
-    const { signature } = await signERC2612Permit(
-      account,
-      unsignedPaymentHeader.payload.authorization,
-      paymentRequirements,
-    );
-    return {
-      ...unsignedPaymentHeader,
-      payload: {
-        ...unsignedPaymentHeader.payload,
-        signature,
-      },
-    };
-  } else if (useTransferWithAuthorization) {
-    // default to transfer with authorization
-    const nonce = await createNonce();
-    const unsignedPaymentHeader = preparePaymentHeader(
-      from,
-      x402Version,
-      paymentRequirements,
-      nonce, // random nonce
-    );
-    const { signature } = await signERC3009Authorization(
-      account,
-      unsignedPaymentHeader.payload.authorization,
-      paymentRequirements,
-    );
-    return {
-      ...unsignedPaymentHeader,
-      payload: {
-        ...unsignedPaymentHeader.payload,
-        signature,
-      },
-    };
+  switch (supportedSignatureType) {
+    case "Permit": {
+      const nonce = await nonces({
+        contract: getContract({
+          address: paymentRequirements.asset,
+          chain: getCachedChain(chainId),
+          client: client,
+        }),
+        owner: from,
+      });
+      const unsignedPaymentHeader = preparePaymentHeader(
+        from,
+        x402Version,
+        paymentRequirements,
+        toHex(nonce, { size: 32 }), // permit nonce
+      );
+      const { signature } = await signERC2612Permit(
+        account,
+        unsignedPaymentHeader.payload.authorization,
+        paymentRequirements,
+      );
+      return {
+        ...unsignedPaymentHeader,
+        payload: {
+          ...unsignedPaymentHeader.payload,
+          signature,
+        },
+      };
+    }
+    case "TransferWithAuthorization": {
+      // default to transfer with authorization
+      const nonce = await createNonce();
+      const unsignedPaymentHeader = preparePaymentHeader(
+        from,
+        x402Version,
+        paymentRequirements,
+        nonce, // random nonce
+      );
+      const { signature } = await signERC3009Authorization(
+        account,
+        unsignedPaymentHeader.payload.authorization,
+        paymentRequirements,
+      );
+      return {
+        ...unsignedPaymentHeader,
+        payload: {
+          ...unsignedPaymentHeader.payload,
+          signature,
+        },
+      };
+    }
+    default:
+      throw new Error(
+        `No supported payment authorization methods found on ${paymentRequirements.asset} on chain ${paymentRequirements.network}`,
+      );
   }
-  throw new Error(
-    `No supported payment authorization methods found on ${paymentRequirements.asset} on chain ${paymentRequirements.network}`,
-  );
 }
 
 /**

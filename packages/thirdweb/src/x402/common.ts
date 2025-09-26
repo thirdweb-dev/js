@@ -19,6 +19,7 @@ import {
   type ERC20TokenAmount,
   type PaymentArgs,
   type PaymentRequiredResult,
+  type SupportedSignatureType,
   x402Version,
 } from "./types.js";
 
@@ -247,31 +248,16 @@ async function getDefaultAsset(
   return assetConfig;
 }
 
-export type SupportedAuthorizationMethods = {
-  usePermit: boolean;
-  useTransferWithAuthorization: boolean;
-};
-
-export async function detectSupportedAuthorizationMethods(args: {
+export async function getSupportedSignatureType(args: {
   client: ThirdwebClient;
   asset: string;
   chainId: number;
   eip712Extras: ERC20TokenAmount["asset"]["eip712"] | undefined;
-}): Promise<SupportedAuthorizationMethods> {
+}): Promise<SupportedSignatureType | undefined> {
   const primaryType = args.eip712Extras?.primaryType;
 
-  if (primaryType === "Permit") {
-    return {
-      usePermit: true,
-      useTransferWithAuthorization: false,
-    };
-  }
-
-  if (primaryType === "TransferWithAuthorization") {
-    return {
-      usePermit: false,
-      useTransferWithAuthorization: true,
-    };
+  if (primaryType === "Permit" || primaryType === "TransferWithAuthorization") {
+    return primaryType;
   }
 
   // not specified, so we need to detect it
@@ -292,8 +278,12 @@ export async function detectSupportedAuthorizationMethods(args: {
   const hasTransferWithAuthorization =
     isTransferWithAuthorizationSupported(selectors);
 
-  return {
-    usePermit: hasPermit && !hasTransferWithAuthorization, // only use permit if transfer with authorization is unsupported
-    useTransferWithAuthorization: hasTransferWithAuthorization,
-  };
+  // prefer transferWithAuthorization over permit
+  if (hasTransferWithAuthorization) {
+    return "TransferWithAuthorization";
+  }
+  if (hasPermit) {
+    return "Permit";
+  }
+  return undefined;
 }

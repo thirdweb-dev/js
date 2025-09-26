@@ -86,6 +86,8 @@ export type VerifyPaymentResult = Prettify<
   | PaymentRequiredResult
 >;
 
+export type SupportedSignatureType = "TransferWithAuthorization" | "Permit";
+
 export type ERC20TokenAmount = {
   amount: string;
   asset: {
@@ -94,7 +96,7 @@ export type ERC20TokenAmount = {
     eip712: {
       name: string;
       version: string;
-      primaryType: "TransferWithAuthorization" | "Permit";
+      primaryType: SupportedSignatureType;
     };
   };
 };
