@@ -215,7 +215,7 @@ export function ServerWalletsTableUI({
               <PaginationContent>
                 <PaginationItem>
                   <Link
-                    href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${
+                    href={`/team/${teamSlug}/${project.slug}/transactions?page=${
                       currentPage > 1 ? currentPage - 1 : 1
                     }`}
                     legacyBehavior
@@ -232,7 +232,7 @@ export function ServerWalletsTableUI({
                   (pageNumber) => (
                     <PaginationItem key={`page-${pageNumber}`}>
                       <Link
-                        href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${pageNumber}`}
+                        href={`/team/${teamSlug}/${project.slug}/transactions?page=${pageNumber}`}
                         passHref
                       >
                         <PaginationLink isActive={currentPage === pageNumber}>
@@ -244,7 +244,7 @@ export function ServerWalletsTableUI({
                 )}
                 <PaginationItem>
                   <Link
-                    href={`/team/${teamSlug}/${project.slug}/transactions/server-wallets?page=${
+                    href={`/team/${teamSlug}/${project.slug}/transactions?page=${
                       currentPage < totalPages ? currentPage + 1 : totalPages
                     }`}
                     passHref

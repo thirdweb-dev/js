@@ -1,6 +1,6 @@
 import type { Abi } from "abitype";
 import { toFunctionSelector } from "viem/utils";
-import { type ERC20TokenAmount, type Money, moneySchema } from "x402/types";
+import { type Money, moneySchema } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
@@ -16,6 +16,7 @@ import {
   type RequestedPaymentRequirements,
 } from "./schemas.js";
 import {
+  type ERC20TokenAmount,
   type PaymentArgs,
   type PaymentRequiredResult,
   x402Version,
@@ -116,7 +117,7 @@ export async function decodePaymentRequest(
     },
     extra: {
       facilitatorAddress: facilitator.address,
-      ...(asset as ERC20TokenAmount["asset"]).eip712,
+      ...((asset as ERC20TokenAmount["asset"]).eip712 ?? {}),
     },
   });
 
@@ -247,15 +248,33 @@ async function getDefaultAsset(
 }
 
 export type SupportedAuthorizationMethods = {
-  hasPermit: boolean;
-  hasTransferWithAuthorization: boolean;
+  usePermit: boolean;
+  useTransferWithAuthorization: boolean;
 };
 
 export async function detectSupportedAuthorizationMethods(args: {
   client: ThirdwebClient;
   asset: string;
   chainId: number;
+  eip712Extras: ERC20TokenAmount["asset"]["eip712"] | undefined;
 }): Promise<SupportedAuthorizationMethods> {
+  const primaryType = args.eip712Extras?.primaryType;
+
+  if (primaryType === "Permit") {
+    return {
+      usePermit: true,
+      useTransferWithAuthorization: false,
+    };
+  }
+
+  if (primaryType === "TransferWithAuthorization") {
+    return {
+      usePermit: false,
+      useTransferWithAuthorization: true,
+    };
+  }
+
+  // not specified, so we need to detect it
   const abi = await resolveContractAbi<Abi>(
     getContract({
       client: args.client,
@@ -274,7 +293,7 @@ export async function detectSupportedAuthorizationMethods(args: {
     isTransferWithAuthorizationSupported(selectors);
 
   return {
-    hasPermit,
-    hasTransferWithAuthorization,
+    usePermit: hasPermit && !hasTransferWithAuthorization, // only use permit if transfer with authorization is unsupported
+    useTransferWithAuthorization: hasTransferWithAuthorization,
   };
 }

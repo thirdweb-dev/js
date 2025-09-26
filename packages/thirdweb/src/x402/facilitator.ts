@@ -15,6 +15,26 @@ export type ThirdwebX402FacilitatorConfig = {
   baseUrl?: string;
 };
 
+export type ThirdwebX402Facilitator = {
+  url: `${string}://${string}`;
+  address: string;
+  createAuthHeaders: () => Promise<{
+    verify: Record<string, string>;
+    settle: Record<string, string>;
+    supported: Record<string, string>;
+    list: Record<string, string>;
+  }>;
+  verify: (
+    payload: RequestedPaymentPayload,
+    paymentRequirements: RequestedPaymentRequirements,
+  ) => Promise<VerifyResponse>;
+  settle: (
+    payload: RequestedPaymentPayload,
+    paymentRequirements: RequestedPaymentRequirements,
+  ) => Promise<FacilitatorSettleResponse>;
+  supported: () => Promise<SupportedPaymentKindsResponse>;
+};
+
 const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
 
 /**
@@ -56,7 +76,9 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  *
  * @bridge x402
  */
-export function facilitator(config: ThirdwebX402FacilitatorConfig) {
+export function facilitator(
+  config: ThirdwebX402FacilitatorConfig,
+): ThirdwebX402Facilitator {
   const secretKey = config.client.secretKey;
   if (!secretKey) {
     throw new Error("Client secret key is required for the x402 facilitator");

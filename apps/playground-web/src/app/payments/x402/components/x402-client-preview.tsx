@@ -1,12 +1,11 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { Badge } from "@workspace/ui/components/badge";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { CodeIcon, LockIcon } from "lucide-react";
-import { arbitrumSepolia } from "thirdweb/chains";
 import {
   ConnectButton,
-  getDefaultToken,
   useActiveAccount,
   useActiveWallet,
 } from "thirdweb/react";
@@ -14,9 +13,7 @@ import { wrapFetchWithPayment } from "thirdweb/x402";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { THIRDWEB_CLIENT } from "../../../../lib/client";
-
-const chain = arbitrumSepolia;
-const token = getDefaultToken(chain, "USDC");
+import { chain, token } from "./constants";
 
 export function X402ClientPreview() {
   const activeWallet = useActiveWallet();
@@ -30,8 +27,21 @@ export function X402ClientPreview() {
         fetch,
         THIRDWEB_CLIENT,
         activeWallet,
+        BigInt(1 * 10 ** 18),
       );
-      const response = await fetchWithPay("/api/paywall");
+      const searchParams = new URLSearchParams();
+      searchParams.set("chainId", chain.id.toString());
+      searchParams.set("payTo", activeWallet.getAccount()?.address || "");
+      // TODO (402): dynamic from playground config
+      // if (token) {
+      //   searchParams.set("amount", "0.01");
+      //   searchParams.set("tokenAddress", token.address);
+      //   searchParams.set("decimals", token.decimals.toString());
+      // }
+      const url =
+        "/api/paywall" +
+        (searchParams.size > 0 ? "?" + searchParams.toString() : "");
+      const response = await fetchWithPay(url.toString());
       return response.json();
     },
   });
@@ -47,18 +57,20 @@ export function X402ClientPreview() {
         chain={chain}
         detailsButton={{
           displayBalanceToken: {
-            [chain.id]: token!.address,
+            [chain.id]: token.address,
           },
         }}
         supportedTokens={{
-          [chain.id]: [token!],
+          [chain.id]: [token],
         }}
       />
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-4">
           <LockIcon className="w-5 h-5 text-muted-foreground" />
           <span className="text-lg font-medium">Paid API Call</span>
-          <span className="text-xl font-bold text-red-600">$0.01</span>
+          <Badge variant="success">
+            <span className="text-xl font-bold">0.1 {token.symbol}</span>
+          </Badge>
         </div>
 
         <Button
@@ -67,19 +79,25 @@ export function X402ClientPreview() {
           size="lg"
           disabled={paidApiCall.isPending || !activeAccount}
         >
-          Pay Now
+          Access Premium Content
         </Button>
         <p className="text-sm text-muted-foreground">
-          {" "}
-          <a
-            className="underline"
-            href={"https://faucet.circle.com/"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Click here to get USDC on {chain.name}
-          </a>
+          Pay for access with {token.symbol} on{" "}
+          {chain.name || `chain ${chain.id}`}
         </p>
+        {chain.testnet && token.symbol.toLowerCase() === "usdc" && (
+          <p className="text-sm text-muted-foreground">
+            {" "}
+            <a
+              className="underline"
+              href={"https://faucet.circle.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Click here to get testnet {token.symbol} on {chain.name}
+            </a>
+          </p>
+        )}
       </Card>
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-2">

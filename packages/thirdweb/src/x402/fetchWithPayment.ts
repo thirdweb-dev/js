@@ -106,6 +106,7 @@ export function wrapFetchWithPayment(
       client,
       account,
       selectedPaymentRequirements,
+      x402Version,
     );
 
     const initParams = init || {};

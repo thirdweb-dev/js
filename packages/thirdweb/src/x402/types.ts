@@ -1,8 +1,4 @@
-import type {
-  ERC20TokenAmount,
-  Money,
-  PaymentMiddlewareConfig,
-} from "x402/types";
+import type { Money, PaymentMiddlewareConfig } from "x402/types";
 import type { Chain } from "../chains/types.js";
 import type { Address } from "../utils/address.js";
 import type { Prettify } from "../utils/type-utils.js";
@@ -89,3 +85,16 @@ export type VerifyPaymentResult = Prettify<
     }
   | PaymentRequiredResult
 >;
+
+export type ERC20TokenAmount = {
+  amount: string;
+  asset: {
+    address: `0x${string}`;
+    decimals: number;
+    eip712: {
+      name: string;
+      version: string;
+      primaryType: "TransferWithAuthorization" | "Permit";
+    };
+  };
+};

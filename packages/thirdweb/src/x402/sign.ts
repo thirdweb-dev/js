@@ -15,7 +15,7 @@ import {
   type RequestedPaymentRequirements,
   type UnsignedPaymentPayload,
 } from "./schemas.js";
-import { x402Version } from "./types.js";
+import type { ERC20TokenAmount } from "./types.js";
 
 /**
  * Prepares an unsigned payment header with the given sender address and payment requirements.
@@ -68,18 +68,21 @@ async function signPaymentHeader(
   client: ThirdwebClient,
   account: Account,
   paymentRequirements: RequestedPaymentRequirements,
+  x402Version: number,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
   const chainId = networkToChainId(paymentRequirements.network);
-  const { hasPermit, hasTransferWithAuthorization } =
+  const { usePermit, useTransferWithAuthorization } =
     await detectSupportedAuthorizationMethods({
       client,
       asset: paymentRequirements.asset,
       chainId: chainId,
+      eip712Extras: paymentRequirements.extra as
+        | ERC20TokenAmount["asset"]["eip712"]
+        | undefined,
     });
 
-  // only use permit if no transfer with authorization is supported
-  if (hasPermit && !hasTransferWithAuthorization) {
+  if (usePermit) {
     const nonce = await nonces({
       contract: getContract({
         address: paymentRequirements.asset,
@@ -106,7 +109,7 @@ async function signPaymentHeader(
         signature,
       },
     };
-  } else {
+  } else if (useTransferWithAuthorization) {
     // default to transfer with authorization
     const nonce = await createNonce();
     const unsignedPaymentHeader = preparePaymentHeader(
@@ -128,6 +131,9 @@ async function signPaymentHeader(
       },
     };
   }
+  throw new Error(
+    `No supported payment authorization methods found on ${paymentRequirements.asset} on chain ${paymentRequirements.network}`,
+  );
 }
 
 /**
@@ -142,8 +148,14 @@ export async function createPaymentHeader(
   client: ThirdwebClient,
   account: Account,
   paymentRequirements: RequestedPaymentRequirements,
+  x402Version: number,
 ): Promise<string> {
-  const payment = await signPaymentHeader(client, account, paymentRequirements);
+  const payment = await signPaymentHeader(
+    client,
+    account,
+    paymentRequirements,
+    x402Version,
+  );
   return encodePayment(payment);
 }
 
@@ -221,11 +233,15 @@ async function signERC2612Permit(
   const chainId = networkToChainId(network);
   const name = extra?.name;
   const version = extra?.version;
-
   const facilitatorAddress = extra?.facilitatorAddress;
   if (!facilitatorAddress) {
     throw new Error(
       "facilitatorAddress is required in PaymentRequirements extra to pay with permit-based assets",
+    );
+  }
+  if (!name || !version) {
+    throw new Error(
+      "name and version are required in PaymentRequirements extra to pay with permit-based assets",
     );
   }
 
