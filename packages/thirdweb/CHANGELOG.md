@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.108.3
+
+### Patch Changes
+
+- [#8128](https://github.com/thirdweb-dev/js/pull/8128) [`f152139`](https://github.com/thirdweb-dev/js/commit/f152139d739bbdfaefb07ee547c2655259c394b8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support ERC-2612 permit for x402 payments
+
 ## 5.108.2
 
 ### Patch Changes
