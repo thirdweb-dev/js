@@ -1,5 +1,6 @@
 import { CircleAlertIcon } from "lucide-react";
 import { getRawAccount } from "@/api/account/get-account";
+import { FaqSection } from "@/components/blocks/faq-section";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getChain, getCustomChainMetadata } from "../../utils";
 import { fetchChainSeo } from "./apis/chain-seo";
@@ -8,7 +9,6 @@ import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
 import { FaucetSection } from "./components/server/FaucetSection";
-import { FaqSection } from "./components/server/faq-section";
 import { SupportedProductsSection } from "./components/server/SupportedProductsSection";
 
 type Props = {

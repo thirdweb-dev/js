@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Input } from "@workspace/ui/components/input";
 import { cn } from "@workspace/ui/lib/utils";
 import { ActivityIcon, SearchIcon, TrendingUpIcon } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Bridge } from "thirdweb";
 import { BridgeNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,22 @@ const client = getClientThirdwebClient();
 
 const pageSize = 20;
 
+type Filter =
+  | { type: "filter"; value: "volume" | "market_cap" }
+  | { type: "search"; value: string };
+
 export function TokenPage(props: { chains: Bridge.chains.Result }) {
   const [page, setPage] = useState(1);
   const [chainId, setChainId] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"volume" | "market_cap">("volume");
+  const [filter, _setFilter] = useState<Filter>({
+    type: "filter",
+    value: "volume",
+  });
+
+  const setFilter = useCallback((filter: Filter) => {
+    _setFilter(filter);
+    setPage(1);
+  }, []);
 
   const tokensQuery = useQuery({
     queryKey: [
@@ -27,8 +38,7 @@ export function TokenPage(props: { chains: Bridge.chains.Result }) {
       {
         page,
         chainId,
-        sortBy,
-        search,
+        filter,
       },
     ],
     queryFn: () => {
@@ -37,8 +47,8 @@ export function TokenPage(props: { chains: Bridge.chains.Result }) {
         chainId: chainId,
         limit: pageSize,
         offset: (page - 1) * pageSize,
-        sortBy: search ? undefined : sortBy,
-        query: search ? search : undefined,
+        sortBy: filter.type === "filter" ? filter.value : undefined,
+        query: filter.type === "search" ? filter.value : undefined,
       });
     },
     refetchOnMount: false,
@@ -62,19 +72,19 @@ export function TokenPage(props: { chains: Bridge.chains.Result }) {
             <SortButton
               label="Popular"
               onClick={() => {
-                setSortBy("market_cap");
-                setSearch("");
+                setFilter({ type: "filter", value: "market_cap" });
               }}
-              isSelected={sortBy === "market_cap" && !search}
+              isSelected={
+                filter.type === "filter" && filter.value === "market_cap"
+              }
               icon={ActivityIcon}
             />
             <SortButton
               label="Trending"
               onClick={() => {
-                setSortBy("volume");
-                setSearch("");
+                setFilter({ type: "filter", value: "volume" });
               }}
-              isSelected={sortBy === "volume" && !search}
+              isSelected={filter.type === "filter" && filter.value === "volume"}
               icon={TrendingUpIcon}
             />
           </div>
@@ -83,9 +93,11 @@ export function TokenPage(props: { chains: Bridge.chains.Result }) {
             <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search Tokens"
-              value={search}
+              value={filter.type === "search" ? filter.value : ""}
               className="rounded-xl bg-card flex-1 pl-9"
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setFilter({ type: "search", value: e.target.value })
+              }
             />
           </div>
         </div>

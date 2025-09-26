@@ -4,9 +4,10 @@ import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
 
-export function ToggleThemeButton() {
+export function ToggleThemeButton(props: { className?: string }) {
   const { setTheme, theme } = useTheme();
 
   return (
@@ -15,7 +16,10 @@ export function ToggleThemeButton() {
     >
       <Button
         aria-label="Toggle theme"
-        className="h-auto w-auto rounded-full border border-border bg-background p-2"
+        className={cn(
+          "h-auto w-auto rounded-full border border-border bg-background p-2",
+          props.className,
+        )}
         onClick={() => {
           setTheme(theme === "dark" ? "light" : "dark");
         }}

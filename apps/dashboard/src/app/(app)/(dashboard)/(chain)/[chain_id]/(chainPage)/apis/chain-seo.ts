@@ -1,7 +1,7 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 
-export type ChainSeo = {
+type ChainSeo = {
   title: string;
   description: string;
   og: {

@@ -4,9 +4,10 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { cn } from "@/lib/utils";
-import type { ChainSeo } from "../../apis/chain-seo";
 
-export function FaqSection(props: { faqs: ChainSeo["faqs"] }) {
+export function FaqSection(props: {
+  faqs: Array<{ title: string; description: string }>;
+}) {
   return (
     <div className="py-10">
       <section className="">

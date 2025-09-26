@@ -1,17 +1,21 @@
 import { cn } from "@workspace/ui/lib/utils";
+import { ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { getContract } from "thirdweb/contract";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
+import { FaqSection } from "@/components/blocks/faq-section";
 import { AppFooter } from "@/components/footers/app-footer";
+import { BridgeVeil } from "./components/BridgeVeil";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 import { PageHeader } from "./components/header";
 import { bridgeAppThirdwebClient } from "./constants";
 
-const title = "thirdweb Payments: Swap, Bridge, and Onramp";
+const title = "thirdweb Bridge: Buy, Bridge & Swap Crypto on 85+ Chains";
 const description =
-  "Swap, bridge, and on-ramp to any EVM chain with thirdweb's Payments.";
+  "Bridge, swap, and on-ramp across 9M+ token routes on 85+ chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing and near-instant fast finality";
 
 export const metadata: Metadata = {
   description,
@@ -52,29 +56,86 @@ export default async function BridgePage({
 
   return (
     <div className="grow flex flex-col relative overflow-hidden">
-      <PageHeader />
-
-      <div className="flex grow items-center justify-center py-36 px-4 min-h-dvh relative overflow-hidden">
-        <DotsBackgroundPattern />
-        <UniversalBridgeEmbed
-          amount={amount as string}
-          chainId={chainId ? Number(chainId) : undefined}
-          token={
-            symbol && decimals && tokenName
-              ? {
-                  address: tokenAddress as Address,
-                  name: tokenName,
-                  symbol,
-                }
-              : undefined
-          }
-        />
+      <div className="absolute top-0 left-0 right-0 h-dvh  md:h-[1200px] fade-in-0 animate-in duration-1000">
+        <BridgeVeil />
       </div>
 
-      <div className="bg-background relative z-10">
-        <AppFooter />
+      <div className="relative z-10">
+        <PageHeader />
+
+        <div className="pt-28 pb-32 min-h-dvh relative z-10">
+          <div className="container mb-20">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tighter text-center leading-none text-pretty">
+              Bridge and Swap tokens <br className="max-sm:hidden" /> across any
+              chain, instantly
+            </h1>
+
+            <div className="flex-wrap flex gap-3 items-center justify-center">
+              <DataPill>85+ Chains Supported</DataPill>
+              <DataPill>3200+ Tokens Supported</DataPill>
+              <DataPill>9+ Million Routes Available</DataPill>
+            </div>
+          </div>
+
+          <div className="flex grow items-center justify-center px-4 relative">
+            <DotsBackgroundPattern />
+            <UniversalBridgeEmbed
+              amount={amount as string}
+              chainId={chainId ? Number(chainId) : undefined}
+              token={
+                symbol && decimals && tokenName
+                  ? {
+                      address: tokenAddress as Address,
+                      name: tokenName,
+                      symbol,
+                    }
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+
+        <div className="mb-24 container max-w-4xl">
+          <BridgeFaqSection />
+        </div>
+
+        <div className="flex flex-col gap-4 items-center mb-28 container">
+          <PillLink href="https://portal.thirdweb.com/bridge">
+            Integrate Bridge in your apps in minutes, and start generating
+            revenue
+          </PillLink>
+
+          <PillLink href="https://thirdweb.com/tokens">
+            Discover Trending Tokens
+          </PillLink>
+        </div>
+
+        <div className="relative">
+          <AppFooter />
+        </div>
       </div>
     </div>
+  );
+}
+
+function DataPill(props: { children: React.ReactNode }) {
+  return (
+    <p className="flex items-center gap-1.5 text-foreground/60 text-xs bg-accent/30 backdrop-blur-lg border border-border/70 rounded-full px-3 py-1.5 hover:text-foreground transition-colors duration-300">
+      {props.children}
+    </p>
+  );
+}
+
+function PillLink(props: { children: React.ReactNode; href: string }) {
+  return (
+    <Link
+      href={props.href}
+      target="_blank"
+      className="shadow-lg text-center justify-center inline-flex items-center gap-2 text-foreground text-sm bg-card/50 backdrop-blur-lg border border-border/70 hover:border-active-border rounded-full px-5 py-2.5 hover:text-foreground transition-colors duration-300 text-pretty leading-5"
+    >
+      {props.children}
+      <ChevronRightIcon className="size-3.5 shrink-0 text-muted-foreground" />
+    </Link>
   );
 }
 
@@ -82,7 +143,7 @@ function DotsBackgroundPattern(props: { className?: string }) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute inset-0 text-foreground/30 dark:text-foreground/10",
+        "pointer-events-none absolute -inset-20 text-foreground/30 dark:text-foreground/10",
         props.className,
       )}
       style={{
@@ -93,4 +154,36 @@ function DotsBackgroundPattern(props: { className?: string }) {
       }}
     />
   );
+}
+
+const bridgeFaqs: Array<{ title: string; description: string }> = [
+  {
+    title: "What is bridging in crypto?",
+    description:
+      "Crypto bridging (cross-chain bridging) moves tokens between blockchains so you can use assets across networks. In thirdweb Bridge, connect your wallet, choose the source token/network and destination token/network, review the route and price, then confirm. Assets arrive after finality, often under ~10 seconds on fast routes, though timing depends on networks and congestion.",
+  },
+  {
+    title: "How does crypto bridging work?",
+    description:
+      "Bridge smart contracts lock or burn tokens on the source chain and mint or release equivalents on the destination via verified cross-chain providers. thirdweb Bridge automatically finds the fastest, lowest-cost route and may use different mechanisms based on networks and liquidity. Arrival can range from seconds to minutes depending on finality; many routes complete in ~10 seconds",
+  },
+  {
+    title: "What is a crypto asset swap?",
+    description:
+      "A crypto swap exchanges one token for another via a DEX or aggregator. thirdweb Bridge lets you bridge + swap in one step. For example, ETH on Ethereum to USDC on Base, by selecting your start and end tokens/networks and confirming.",
+  },
+  {
+    title: "How can I get stablecoins like USDC or USDT?",
+    description:
+      "Use thirdweb Bridge to convert assets you hold into USDC or USDT on your chosen network: select your current token/network, pick the stablecoin (USDC, USDT, etc) on the destination, and confirm. You can also buy stablecoins with fiat in the Buy flow and bridge if needed. Always verify official token contract addresses.",
+  },
+  {
+    title: "What is the cost of bridging and swapping?",
+    description:
+      "Costs include gas on each chain, bridge/liquidity provider fees, and any DEX swap fees or price impact. thirdweb Bridge compares routes and selects the best price route. Save by using lower-gas times or combining bridge + swap in one flow.",
+  },
+];
+
+function BridgeFaqSection() {
+  return <FaqSection faqs={bridgeFaqs} />;
 }
