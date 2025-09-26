@@ -17,7 +17,7 @@ export function ExplorersSection(props: {
               key={explorer.url}
             >
               <ExternalLinkIcon className="absolute top-4 right-4 size-4 text-muted-foreground" />
-              <h3 className="mb-1 font-semibold text-base capitalize">
+              <h3 className="mb-1 font-medium text-base capitalize">
                 {explorer.name}
               </h3>
               <Link

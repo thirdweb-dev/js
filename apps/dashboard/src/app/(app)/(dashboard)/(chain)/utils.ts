@@ -914,9 +914,9 @@ const chainMetaRecord = {
 } satisfies Record<number, ExtraChainMetadata>;
 // END TEMPORARY
 
-export async function getChainMetadata(
+export function getCustomChainMetadata(
   chainId: number,
-): Promise<(ExtraChainMetadata & { gasSponsored?: true }) | null> {
+): (ExtraChainMetadata & { gasSponsored?: true }) | null {
   // TODO: fetch this from the API
   if (chainId in chainMetaRecord) {
     return {

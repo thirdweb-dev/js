@@ -5,7 +5,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
-import { getChainMetadata } from "../../../utils";
+import { getCustomChainMetadata } from "../../../utils";
 
 type ChainListCardProps = {
   favoriteButton: JSX.Element | undefined;
@@ -18,7 +18,7 @@ type ChainListCardProps = {
   iconUrl?: string;
 };
 
-export async function ChainListCard({
+export function ChainListCard({
   isDeprecated,
   chainId,
   chainName,
@@ -28,7 +28,7 @@ export async function ChainListCard({
   favoriteButton,
   iconUrl,
 }: ChainListCardProps) {
-  const chainMetadata = await getChainMetadata(chainId);
+  const customChainMetadata = getCustomChainMetadata(chainId);
 
   return (
     <div className="relative h-full">
@@ -90,9 +90,9 @@ export async function ChainListCard({
             </tbody>
           </table>
 
-          {(isDeprecated || chainMetadata?.gasSponsored) && (
+          {(isDeprecated || customChainMetadata?.gasSponsored) && (
             <div className="mt-5 flex gap-5 border-t pt-4">
-              {!isDeprecated && chainMetadata?.gasSponsored && (
+              {!isDeprecated && customChainMetadata?.gasSponsored && (
                 <div className="flex items-center gap-1.5">
                   <TicketCheckIcon className="size-5 text-foreground" />
                   <p className="text-sm">Gas Sponsored</p>
