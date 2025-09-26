@@ -9,12 +9,14 @@ import {
   type MultiStepAuthArgsType,
   type SingleStepAuthArgsType,
   inAppWallet as thirdwebInAppWallet,
+  type Wallet,
 } from "thirdweb/wallets";
 
 export type InAppWalletParameters = Prettify<
   InAppWalletCreationOptions & {
     client: ThirdwebClient;
     ecosystemId?: `ecosystem.${string}`;
+    onConnect?: (wallet: Wallet) => void;
   }
 >;
 export type InAppWalletConnector = ReturnType<typeof inAppWalletConnector>;
@@ -106,6 +108,7 @@ export function inAppWalletConnector(
           chain: defineChain(chainId),
           client,
           wallets: [wallet],
+          onConnect: args.onConnect,
         });
 
         const account = wallet.getAccount();
@@ -140,6 +143,7 @@ export function inAppWalletConnector(
       rawStorage?.setItem(connectedWalletIdsKey, JSON.stringify([wallet.id]));
       rawStorage?.setItem(activeWalletIdKey, wallet.id);
       await config.storage?.setItem("thirdweb:lastChainId", chain.id);
+      args.onConnect?.(wallet);
       return { accounts: [getAddress(account.address)], chainId: chain.id };
     },
     disconnect: async () => {
@@ -166,6 +170,7 @@ export function inAppWalletConnector(
           chain,
           client,
           wallets: [wallet],
+          onConnect: args.onConnect,
         });
       }
       return EIP1193.toProvider({
