@@ -188,5 +188,5 @@ export function DarkVeil({
     backgroundOpacity,
     patternLightness,
   ]);
-  return <canvas ref={ref} className="w-full h-full block" />;
+  return <canvas ref={ref} className="w-full h-full block bg-background" />;
 }

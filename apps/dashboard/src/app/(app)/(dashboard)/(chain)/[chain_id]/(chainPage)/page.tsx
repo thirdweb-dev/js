@@ -67,7 +67,9 @@ export default async function Page(props: Props) {
       )}
 
       {chainSeo?.faqs && chainSeo.faqs.length > 0 && (
-        <FaqSection faqs={chainSeo.faqs} />
+        <div className="py-10">
+          <FaqSection faqs={chainSeo.faqs} />
+        </div>
       )}
     </div>
   );

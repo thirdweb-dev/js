@@ -1,7 +1,5 @@
 import { cn } from "@workspace/ui/lib/utils";
-import { ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { getContract } from "thirdweb/contract";
@@ -9,6 +7,7 @@ import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { FaqSection } from "@/components/blocks/faq-section";
 import { AppFooter } from "@/components/footers/app-footer";
 import { BridgeVeil } from "./components/BridgeVeil";
+import { PillLink } from "./components/client/pill-link";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 import { PageHeader } from "./components/header";
 import { bridgeAppThirdwebClient } from "./constants";
@@ -56,15 +55,17 @@ export default async function BridgePage({
 
   return (
     <div className="grow flex flex-col relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-dvh  md:h-[1200px] fade-in-0 animate-in duration-1000">
+      <div className="absolute top-0 left-0 right-0 h-dvh  md:h-[1200px] fade-in-0 animate-in duration-700">
         <BridgeVeil />
       </div>
 
       <div className="relative z-10">
         <PageHeader />
 
-        <div className="pt-28 pb-32 min-h-dvh relative z-10">
-          <div className="container mb-20">
+        <div className="h-20" />
+
+        <div className="relative z-10">
+          <div className="container">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tighter text-center leading-none text-pretty">
               Bridge and Swap tokens <br className="max-sm:hidden" /> across any
               chain, instantly
@@ -76,6 +77,8 @@ export default async function BridgePage({
               <DataPill>9+ Million Routes Available</DataPill>
             </div>
           </div>
+
+          <div className="h-16" />
 
           <div className="flex grow items-center justify-center px-4 relative">
             <DotsBackgroundPattern />
@@ -95,20 +98,32 @@ export default async function BridgePage({
           </div>
         </div>
 
-        <div className="mb-24 container max-w-4xl">
-          <BridgeFaqSection />
-        </div>
+        <div className="h-32" />
 
-        <div className="flex flex-col gap-4 items-center mb-28 container">
-          <PillLink href="https://portal.thirdweb.com/bridge">
+        <div className="flex flex-col gap-4 items-center container">
+          <PillLink
+            href="https://portal.thirdweb.com/bridge"
+            linkType="integrate-bridge"
+          >
             Integrate Bridge in your apps in minutes, and start generating
             revenue
           </PillLink>
 
-          <PillLink href="https://thirdweb.com/tokens">
+          <PillLink
+            href="https://thirdweb.com/tokens"
+            linkType="trending-tokens"
+          >
             Discover Trending Tokens
           </PillLink>
         </div>
+
+        <div className="h-32" />
+
+        <div className="container max-w-2xl">
+          <BridgeFaqSection />
+        </div>
+
+        <div className="h-32" />
 
         <div className="relative">
           <AppFooter />
@@ -120,22 +135,9 @@ export default async function BridgePage({
 
 function DataPill(props: { children: React.ReactNode }) {
   return (
-    <p className="flex items-center gap-1.5 text-foreground/60 text-xs bg-accent/30 backdrop-blur-lg border border-border/70 rounded-full px-3 py-1.5 hover:text-foreground transition-colors duration-300">
+    <p className="flex items-center gap-1.5 text-foreground/50 text-xs bg-accent/30 backdrop-blur-lg border border-border/70 rounded-full px-3 py-1.5 hover:text-foreground transition-colors duration-300">
       {props.children}
     </p>
-  );
-}
-
-function PillLink(props: { children: React.ReactNode; href: string }) {
-  return (
-    <Link
-      href={props.href}
-      target="_blank"
-      className="shadow-lg text-center justify-center inline-flex items-center gap-2 text-foreground text-sm bg-card/50 backdrop-blur-lg border border-border/70 hover:border-active-border rounded-full px-5 py-2.5 hover:text-foreground transition-colors duration-300 text-pretty leading-5"
-    >
-      {props.children}
-      <ChevronRightIcon className="size-3.5 shrink-0 text-muted-foreground" />
-    </Link>
   );
 }
 
@@ -143,7 +145,7 @@ function DotsBackgroundPattern(props: { className?: string }) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute -inset-20 text-foreground/30 dark:text-foreground/10",
+        "pointer-events-none absolute -inset-x-36 -inset-y-24 text-pink-700/30 dark:text-pink-500/20",
         props.className,
       )}
       style={{

@@ -691,3 +691,17 @@ export function reportProductFeedback(properties: {
     source: properties.source,
   });
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track conversions for the bridge page links
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ *
+ */
+export function reportBridgePageLinkClick(params: {
+  linkType: "integrate-bridge" | "trending-tokens";
+}) {
+  posthog.capture("bridge page link clicked", params);
+}
