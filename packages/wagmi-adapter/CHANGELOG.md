@@ -1,5 +1,11 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.153
+
+### Patch Changes
+
+- [#8131](https://github.com/thirdweb-dev/js/pull/8131) [`cf02cbf`](https://github.com/thirdweb-dev/js/commit/cf02cbf3af205ebe6196087e23f6a9b71e10e30e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add onConnect callback
+
 ## 0.2.152
 
 ## 0.2.151
