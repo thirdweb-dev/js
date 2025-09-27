@@ -1,0 +1,83 @@
+import { Details, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract.Prepare | Thirdweb .NET SDK",
+	description:
+		"Generate a ThirdwebTransaction from a contract call before customizing or sending it.",
+});
+
+# ThirdwebContract.Prepare
+
+`ThirdwebContract.Prepare` bridges contract interactions and the transaction tooling within the Thirdweb .NET SDK. Use it when you want to start from a contract method, but need fine-grained control over the resulting `ThirdwebTransaction` before dispatching it.
+
+<Callout type="info">
+Looking for the contract APIs themselves? Check out the [Contracts guides](/dotnet/contracts/create) for creating, reading, and writing before you promote a call into a transaction.
+</Callout>
+
+## Why prepare first?
+
+- **Simulation & inspection** – Prepare the transaction and run [`ThirdwebTransaction.Simulate`](/dotnet/transactions/static) before sending.
+- **Customization** – Chain the [`ThirdwebTransaction` instance methods](/dotnet/transactions/instance) to adjust calldata, value, gas, or paymaster options.
+- **Wallet-agnostic** – Works with any `IThirdwebWallet`, letting you bridge user wallets, smart wallets, or server wallets into the same flow.
+
+## Usage
+
+```csharp
+ThirdwebTransaction transaction = await contract.Prepare(
+    wallet,
+    contract,
+    "methodName",
+    weiValue,
+    parameters
+);
+```
+
+Once prepared, you can tweak or send the transaction:
+
+```csharp
+// Optional: override calldata, value, or other fields
+transaction = transaction
+    .SetValue(BigInteger.Zero)
+    .SetGasLimit(250000);
+
+// Optional: simulate or estimate costs
+await ThirdwebTransaction.Simulate(transaction);
+var totalCosts = await ThirdwebTransaction.EstimateTotalCosts(transaction);
+
+// Finally: send the transaction and wait for the receipt
+TransactionReceipt receipt = await ThirdwebTransaction.SendAndWaitForTransactionReceipt(transaction);
+```
+
+## Parameters
+
+<Details summary="Prepare parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This signer provides the context for populating sender-specific defaults and will ultimately authorize the transaction.
+
+### contract (required)
+
+An instance of `ThirdwebContract`. Represents the smart contract whose method you're calling.
+
+### methodName (required)
+
+The name of the contract method to invoke. Must be a `string`.
+
+### weiValue (required)
+
+The amount of Wei to send with the transaction, as a `BigInteger`. Use `BigInteger.Zero` when no value transfer is needed.
+
+### parameters (optional)
+
+The arguments to forward to the contract method. Provide them in the same order as the ABI definition.
+
+</Details>
+
+## Return value
+
+<Details summary="ThirdwebTransaction">
+
+Returns a fully populated `ThirdwebTransaction` that mirrors the contract invocation. You can send it immediately or pipe it through additional configuration helpers before execution.
+
+</Details>

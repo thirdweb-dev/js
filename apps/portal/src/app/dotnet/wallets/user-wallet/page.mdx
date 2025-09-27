@@ -1,0 +1,211 @@
+import { Details, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "User Wallets | Thirdweb .NET SDK",
+	description:
+		"Learn how to work with InAppWallet and EcosystemWallet using the unified user wallet APIs.",
+});
+
+# User Wallets
+
+`InAppWallet` and `EcosystemWallet` provide the same runtime capabilities for user authentication and signing in the Thirdweb .NET SDK. The only material differences are in how you create each wallet. Use this guide anytime you need an OTP-backed wallet experience for end users, regardless of whether you are building on the default thirdweb ecosystem or operating your own partner ecosystem.
+
+## Choosing a wallet type
+
+- **InAppWallet** — best for applications that rely on the default thirdweb infrastructure. Creation does not require an `ecosystemId`.
+- **EcosystemWallet** — required when you run your own ecosystem. Creation requires the `ecosystemId` that was issued in the dashboard (and optionally an `ecosystemPartnerId`).
+
+Once created, both wallets expose identical methods for login, session management, and blockchain interactions.
+
+## Creating wallets
+
+### InAppWallet
+
+```csharp
+// Email
+var wallet = await InAppWallet.Create(client: client, email: "userEmail");
+// Phone
+var wallet = await InAppWallet.Create(client: client, phoneNumber: "+1234567890");
+// Social login
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Google);
+// Custom auth (JWT)
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.JWT);
+// Guest login
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Guest);
+// Backend (server wallet)
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Backend, walletSecret: "very-secret");
+// SIWE
+var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+```
+
+### EcosystemWallet
+
+```csharp
+// NOTE: Add ecosystemPartnerId if you are an approved partner within the ecosystem
+
+// Email
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", email: "userEmail");
+// Phone
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", phoneNumber: "+1234567890");
+// Social login
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Google);
+// Custom auth (JWT)
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.JWT);
+// Custom auth (auth endpoint)
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.AuthEndpoint);
+// Guest login
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Guest);
+// Backend (server wallet)
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Backend, walletSecret: "very-secret");
+// SIWE
+var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+```
+
+Once a wallet is created, you can always resume the session:
+
+```csharp
+var isConnected = await wallet.IsConnected();
+```
+
+If the wallet is not connected, initiate the login flow that corresponds to the auth provider you selected.
+
+## Supported login methods
+
+Both wallet types support the same login surfaces:
+
+- Email or phone (OTP-based)
+- Social providers (Google, Apple, Facebook, Telegram, Farcaster, Line, GitHub, Twitch, Steam, TikTok, and more)
+- Custom auth (JWT or generic auth endpoint)
+- Guest onboarding
+- Backend/server wallets
+- Sign-In With Ethereum (SIWE)
+- SIWE External (web-only wallets via a browser prompt)
+
+## OTP authentication flow
+
+```csharp
+await wallet.SendOTP();
+var address = await wallet.LoginWithOtp("userEnteredOTP"); // retry on failure if needed
+```
+
+Catch exceptions to allow retries when the user enters an incorrect code.
+
+## OAuth flow
+
+```csharp
+var address = await wallet.LoginWithOauth(
+    isMobile: false,
+    browserOpenAction: (url) =>
+    {
+        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+        _ = Process.Start(psi);
+    },
+    mobileRedirectScheme: "myBundleId://"
+);
+```
+
+Adjust `isMobile`, `browserOpenAction`, and `mobileRedirectScheme` based on your target runtime. For Godot or other engines, reuse the existing platform-specific handlers you already have in place.
+
+## Custom auth examples
+
+```csharp
+// Custom Auth (JWT)
+var address = await wallet.LoginWithCustomAuth(jwt: "myjwt");
+
+// Custom Auth (AuthEndpoint)
+var address = await wallet.LoginWithAuthEndpoint(payload: "mypayload");
+```
+
+## Guest and backend flows
+
+```csharp
+// Guest
+var guestAddress = await wallet.LoginWithGuest();
+
+// Backend (server wallet)
+var backendAddress = await wallet.LoginWithBackend();
+```
+
+## External wallet authentication
+
+```csharp
+// SIWE
+var address = await wallet.LoginWithSiwe(chainId: 1);
+```
+
+Limiting `forceWalletIds` to a single value skips the wallet picker and deep-links into that specific wallet provider.
+
+## Unified identity and account linking
+
+Link multiple login methods to the same user identity regardless of the wallet type that initiated the session.
+
+```csharp
+var primaryWallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Google);
+if (!await primaryWallet.IsConnected())
+{
+    _ = await primaryWallet.LoginWithOauth(
+        isMobile: false,
+        (url) =>
+        {
+            var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
+            _ = Process.Start(psi);
+        },
+        "thirdweb://"
+    );
+}
+
+var telegramWallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Telegram);
+_ = await primaryWallet.LinkAccount(walletToLink: telegramWallet);
+
+var phoneWallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", phoneNumber: "+1234567890");
+_ = await phoneWallet.SendOTP();
+var otp = Console.ReadLine();
+_ = await primaryWallet.LinkAccount(walletToLink: phoneWallet, otp: otp);
+
+List<LinkedAccount> linkedAccounts = await primaryWallet.GetLinkedAccounts();
+List<LinkedAccount> linkedAccountsAfterUnlinking = await primaryWallet.UnlinkAccount(linkedAccounts[0]);
+```
+
+## Parameter reference
+
+<Details summary="InAppWallet.Create">
+
+### Required
+
+- `client`: `ThirdwebClient`
+
+### Optional
+
+- `email`: string — required if `phoneNumber` is not provided.
+- `phoneNumber`: string — required if `email` is not provided.
+- `authProvider`: `AuthProvider`
+- `storageDirectoryPath`: string
+- `siweSigner`: external wallet instance for SIWE.
+- `walletSecret`: string — required for backend/server wallet creation.
+
+</Details>
+
+<Details summary="EcosystemWallet.Create">
+
+### Required
+
+- `client`: `ThirdwebClient`
+- `ecosystemId`: string — your ecosystem identifier from the dashboard.
+
+### Optional
+
+- `ecosystemPartnerId`: string — partner identifier if supplied by the ecosystem owner.
+- `email`: string — required if `phoneNumber` is not provided.
+- `phoneNumber`: string — required if `email` is not provided.
+- `authProvider`: `AuthProvider`
+- `storageDirectoryPath`: string
+- `siweSigner`: external wallet instance for SIWE.
+- `walletSecret`: string — required for backend/server wallet creation.
+
+</Details>
+
+<Details summary="Return value">
+
+Both `Create` methods return an initialized instance of either `InAppWallet` or `EcosystemWallet`. These instances are ready for OTP verification, OAuth, or any other supported login flow and expose the same wallet interaction APIs thereafter.
+
+</Details>

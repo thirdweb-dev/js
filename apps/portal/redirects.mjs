@@ -414,7 +414,7 @@ const reactNativeRedirects = {
 
 const unityRedirects = {
   // top level
-  "/unity": "/unity/v5",
+  "/unity": "/unity/v6",
   // blocks
   "/unity/blocks/getblock": "/unity/v4/blocks/getblock",
   "/unity/blocks/getblockwithtransactions":

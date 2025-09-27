@@ -1,0 +1,55 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebApi | Thirdweb .NET SDK",
+	description:
+		"Low-level interaction with the Thirdweb API for enhanced SDK functionality and extensions.",
+});
+
+# [ThirdwebApi](/reference) .NET Integration
+`ThirdwebApi` is the low-level HTTP client that powers the higher-level Thirdweb .NET SDK. Reach for it when you need to call https://api.thirdweb.com directly, build custom extensions, or inspect raw API payloads. The client works everywhere .NET runs, including Unity and MAUI.
+
+## What you unlock with ThirdwebApi
+
+| Capability | Why teams use it |
+| --- | --- |
+| **Authentication** | Orchestrate SMS/email codes, SIWE, OAuth redirects, and passkeys from your own backend before handing off JWTs to wallets. |
+| **Wallet services** | Look up user/server wallets, enumerate tokens/NFTs, stream transaction history, sign messages, or send value programmatically. |
+| **Smart contracts** | Batch read/write invocations, fetch metadata & signatures, deploy bytecode, and capture emitted events with pagination. |
+| **Transactions pipeline** | Queue, monitor, and introspect Engine-backed transactions with execution metadata and status tracking. |
+| **Tokens & bridge** | Launch ERC20s, list circulating assets, price fiat ↔ crypto, or bridge/swap liquidity across chains. |
+| **Payments & x402** | Spin up hosted purchases, reconcile payment history, and prepare X402 machine-payable requests. |
+| **AI assistant** | Embed natural-language orchestration that can read state, prepare contract calls, swap assets, or route transactions for end-users.
+
+> **Backend first** — All of the above accept your project secret via `x-secret-key`. Client-side use cases can opt into `x-client-id` + user JWT flows where supported.
+
+## When to reach for ThirdwebApi
+- You need endpoints that aren't yet wrapped by the higher-level SDK helpers.
+- You're building backend services that must authenticate with a Thirdweb secret key.
+- You want full visibility into contract metadata, ABI definitions, and compilation artifacts.
+- You plan to orchestrate auth, payments, or cross-chain flows without managing disparate providers.
+
+## Quickstart workflow
+
+### Instantiate an authenticated client
+Create a reusable `ThirdwebClient` instance with your backend secret key. This unlocks every raw API surface exposed by Thirdweb.
+
+```csharp
+// Program.cs / dependency container registration
+var client = ThirdwebClient.Create(secretKey: Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY"));
+```
+
+### Example operation
+Contract metadata is the canonical example for low-level reads. The same pattern applies to other namespaces like `/v1/wallets/*`, `/v1/payments/*`, or `/ai/chat`—swap the method call but keep your authenticated client.
+
+```csharp
+// using Newtonsoft.Json;
+
+var metadata = await client.Api.GetContractMetadataAsync(
+	chainId: 1,
+	address: "0xBd3531dA5CF5857e7CfAA92426877b022e612cf8"
+);
+
+Console.WriteLine($"ABI: {JsonConvert.SerializeObject(metadata.Result.Output.Abi, Formatting.Indented)}");
+Console.WriteLine($"Compiler version: {metadata.Result.Compiler.Version}");
+```

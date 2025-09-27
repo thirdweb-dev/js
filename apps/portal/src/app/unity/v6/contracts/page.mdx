@@ -1,0 +1,34 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract | Thirdweb Unity SDK",
+	description:
+		"Interact with any EVM smart contract through the ThirdwebContract wrapper in the Unity SDK.",
+});
+
+# ThirdwebContract
+
+`ThirdwebContract` is a wrapper around any EVM-compatible smart contract. It allows you to interact with the contract's functions easily, as well as prepare transactions.
+
+### Instantiating a ThirdwebContract
+
+```csharp
+var contract = await ThirdwebManager.Instance.GetContract(
+	address: "contract-address", 
+	chainId: 1, 
+	abi: "optional-abi"
+);
+```
+
+That's it! You can now interact with the contract using the `ThirdwebContract`.
+
+It contains `Read`, `Write` and `Prepare` methods to respectively read contract state, write to the contract and prepare transactions.
+
+Furthermore, it contains shorthands such as `ThirdwebContract.ERC20_BalanceOf` to easily interact with common contract interfaces.
+
+<ArticleIconCard
+	href="/dotnet/contracts/read"
+	icon={GraduationCap}
+	title="Interact with Smart Contracts"
+/>
