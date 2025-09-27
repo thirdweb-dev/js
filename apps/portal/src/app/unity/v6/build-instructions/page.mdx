@@ -1,0 +1,65 @@
+import { Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Unity SDK v6 Build Instructions | thirdweb Unity SDK",
+	description:
+		"Learn how to build your Unity project with the thirdweb Unity SDK.",
+});
+
+# Build Instructions
+
+## All Target Platforms
+
+- **Player Settings:** Use IL2CPP over Mono when available.
+- **Build Settings:** Use `Smaller (faster) Builds` / `Shorter Build Time` for IL2CPP Code Generation.
+- **Stripping Level:** Set `Managed Stripping Level` to `Minimal` (`Player Settings` > `Other Settings` > `Optimization`). (Generally not a hard requirement unless using external wallets.)
+- **Strip Engine Code:** We recommend turning this off.
+
+## WebGL
+
+- **WebGL Template:** None enforced, feel free to customize!
+- **Compression Format:** Set to `Disabled` (`Player Settings` > `Publishing Settings`) for final builds.
+- **Testing WebGL Social Login Locally:** Host the build or run it locally with `Cross-Origin-Opener-Policy` set to `same-origin-allow-popups`.
+
+Example setup for testing In-App or Ecosystem Wallet Social Login locally:
+
+```javascript
+// YourWebGLOutputFolder/server.js
+const express = require("express");
+const app = express();
+const port = 8000;
+
+app.use((req, res, next) => {
+	res.header("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+	next();
+});
+
+app.use(express.static("."));
+app.listen(port, () =>
+	console.log(`Server running on http://localhost:${port}`),
+);
+
+// run it with `node server.js`
+```
+
+No action needed for hosted builds.
+
+## Mobile
+
+- **EDM4U:** Comes with the package, resolves dependencies at runtime. Use `Force Resolve` from `Assets` > `External Dependency Manager` > `Android Resolver`.
+- **Redirect Schemes:** Set custom schemes matching your bundle ID in `Plugins/Android/AndroidManifest.xml` or equivalent to ensure OAuth redirects if using social login.
+```xml
+<!-- Set your bundle id here -->
+<!-- Replace 'com.thirdweb.unitysdk' with your desired scheme -->
+<data android:scheme="com.thirdweb.unitysdk" />
+```
+
+## Troubleshooting OAuth Redirects
+
+If you notice issues with redirects on mobile, for instance hanging after selecting an account when logging in with Google, you did not setup OAuth properly.
+Best practice is to use a lowercase bundle id that is the same as your Unity project's application identifier, it must be present in the following places:
+- Your `ThirdwebManager` prefab `Bundle ID` field.
+- Your `Plugins/AndroidManifest.xml` scheme field as mentioned above (it doesn't have to be our default `AndroidManifest.xml`, it can be in your custom one, just add the scheme).
+- Your thirdweb dashboard project settings as one of:
+  - `Bundle ID Allowlist` field (those automatically added to allowed redirect URIs).
+  - In-App Wallet Configuration `Allowed redirect URIs` field.

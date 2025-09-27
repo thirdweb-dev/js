@@ -2,35 +2,6 @@ import { CodeIcon, ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import type { SidebarLink } from "@/components/others/Sidebar";
 
-const walletProviders: SidebarLink = (() => {
-  const parentSlug = "/dotnet/wallets/providers";
-  return {
-    links: [
-      {
-        href: `${parentSlug}/in-app-wallet`,
-        name: "In App Wallet",
-      },
-      {
-        href: `${parentSlug}/ecosystem-wallet`,
-        name: "Ecosystem Wallet",
-      },
-      {
-        href: `${parentSlug}/account-abstraction`,
-        name: "Account Abstraction",
-      },
-      {
-        href: `${parentSlug}/private-key`,
-        name: "Private Key Wallet",
-      },
-      {
-        href: `${parentSlug}/engine-wallet`,
-        name: "Engine Wallet",
-      },
-    ],
-    name: "Wallet Providers",
-  };
-})();
-
 const walletActions: SidebarLink = (() => {
   const parentSlug = "/dotnet/wallets/actions";
   return {
@@ -179,14 +150,11 @@ const walletActions: SidebarLink = (() => {
 })();
 
 const contracts: SidebarLink = {
+  isCollapsible: false,
   links: [
     {
       href: "/dotnet/contracts/create",
       name: "Create Contract",
-    },
-    {
-      href: "/dotnet/contracts/extensions",
-      name: "Contract Extensions",
     },
     {
       href: "/dotnet/contracts/read",
@@ -197,15 +165,20 @@ const contracts: SidebarLink = {
       name: "Write Contract",
     },
     {
-      href: "/dotnet/contracts/prepare",
-      name: "Prepare Transaction",
+      href: "/dotnet/contracts/extensions",
+      name: "Contract Extensions",
     },
   ],
-  name: "Contract Interactions",
+  name: "Contracts",
 };
 
 const transactions: SidebarLink = {
+  isCollapsible: false,
   links: [
+    {
+      href: "/dotnet/transactions/prepare",
+      name: "Prepare Contract Transaction",
+    },
     {
       href: "/dotnet/transactions/create",
       name: "Create Transaction",
@@ -219,7 +192,7 @@ const transactions: SidebarLink = {
       name: "Static Methods",
     },
   ],
-  name: "Transaction Builder",
+  name: "Transactions",
 };
 
 export const sidebar: SideBar = {
@@ -245,7 +218,7 @@ export const sidebar: SideBar = {
       isCollapsible: true,
       links: [
         {
-          href: "/unity/v5",
+          href: "/unity",
           name: "Unity",
         },
         {
@@ -285,67 +258,41 @@ export const sidebar: SideBar = {
     },
     {
       isCollapsible: false,
-      links: [walletProviders, walletActions],
+      links: [
+        {
+          href: `/dotnet/wallets/user-wallet`,
+          name: "User Wallet",
+        },
+        {
+          href: `/dotnet/wallets/server-wallet`,
+          name: "Server Wallet",
+        },
+        {
+          href: `/dotnet/wallets/account-abstraction`,
+          name: "Account Abstraction",
+        },
+        walletActions,
+      ],
       name: "Wallets",
     },
     {
       separator: true,
     },
-    {
-      isCollapsible: false,
-      links: [contracts, transactions],
-      name: "Transactions",
-    },
-    {
-      separator: true,
-    },
+    contracts,
+    transactions,
     {
       isCollapsible: false,
       links: [
         {
-          href: "/dotnet/universal-bridge/quickstart",
+          href: "/dotnet/api/quickstart",
           name: "Quickstart",
         },
         {
-          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.Bridge.ThirdwebBridge.html",
-          name: "Full Reference",
+          href: "/reference",
+          name: "API Full Reference",
         },
       ],
-      name: "Payments",
-    },
-    {
-      separator: true,
-    },
-    {
-      isCollapsible: false,
-      links: [
-        {
-          href: "/dotnet/insight/quickstart",
-          name: "Quickstart",
-        },
-        {
-          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.Indexer.ThirdwebInsight.html",
-          name: "Insight Full Reference",
-        },
-      ],
-      name: "Indexer",
-    },
-    {
-      separator: true,
-    },
-    {
-      isCollapsible: false,
-      links: [
-        {
-          href: "/dotnet/nebula/quickstart",
-          name: "Quickstart",
-        },
-        {
-          href: "https://thirdweb-dev.github.io/dotnet/docs/Thirdweb.AI.ThirdwebNebula.html",
-          name: "Nebula Full Reference",
-        },
-      ],
-      name: "AI",
+      name: "API",
     },
     {
       separator: true,

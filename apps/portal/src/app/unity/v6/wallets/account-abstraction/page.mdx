@@ -1,0 +1,65 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "SmartWallet | Thirdweb Unity SDK",
+	description:
+		"Instantiate a SmartWallet to sign transactions and messages.",
+});
+
+# Native Account Abstraction (via EIP-7702 Smart EOAs)
+Native Account Abstraction is a system that allows you to set code to an EOA, unlocking a world of possibilities to enhance their functionality. It is available since the Pectra upgrade on various chains.
+
+Enabling it is as simple as creating an `InAppWallet` and passing the `ExecutionMode.EIP7702Sponsored` flag during creation.
+
+```csharp
+// Turn your boring EOAs into Smart EOAs!
+var smartIaw = await ConnectWallet(
+    new WalletOptions(
+        provider: WalletProvider.InAppWallet,
+        chainId: 11155111, // Sepolia supports EIP-7702
+        inAppWalletOptions: new InAppWalletOptions(
+            authprovider: AuthProvider.Google,
+            executionMode: ExecutionMode.EIP7702Sponsored // new!
+        )
+    )
+);
+ThirdwebDebug.Log("Connected to InAppWallet: " + await smartIaw.GetAddress());
+
+// Execute a transaction as usual, execution is managed by thirdweb seamlessly!
+var receipt = await smartIaw.Transfer(11155111, await smartIaw.GetAddress(), 0);
+ThirdwebDebug.Log($"Transfer receipt: https://sepolia.etherscan.io/tx/{receipt.TransactionHash}");
+```
+
+# SmartWallet (via EIP-4337 Bundlers)
+
+Instantiate or upgrade any other wallet to a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through Account Abstraction (ERC4337 as well as ZkSync Native AA).
+
+Account Abstraction is a system that turns any personal wallet into a smart wallet, allowing you to sponsor gas for your users and unlocking advanced permissioning features that allow for seamless user onboarding, gasless transactions, automation and more.
+
+We recommend using Smart Wallets as the primary wallet type for your users.
+
+### Connecting to a Smart Wallet directly
+
+```csharp
+var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)
+var options = new WalletOptions(..., smartWalletOptions: smartWalletOptions);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+### Upgrading an existing wallet to a Smart Wallet
+
+```csharp
+var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)
+var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(
+    personalWallet: myExistingIThirdwebWallet, 
+    chainId: 1, 
+    smartWalletOptions: smartWalletOptions
+);
+```
+
+<ArticleIconCard
+	href="/dotnet/wallets/providers/account-abstraction"
+	icon={GraduationCap}
+	title="Learn more about SmartWallet"
+/>

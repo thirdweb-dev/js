@@ -1,0 +1,162 @@
+
+import {
+    Callout,
+    Details,
+    createMetadata,
+} from "@doc";
+
+export const metadata = createMetadata({
+    title: "Unity SDK v5 to v6 Migration Guide | thirdweb Unity SDK",
+    description:
+        "Upgrade notes that map the thirdweb Unity SDK v5 API surface to v6, highlighting the exact code changes in ThirdwebManagerBase and wallet providers.",
+});
+
+# Unity SDK v5 → v6 Migration Guide
+
+Unity SDK v6 modernises wallet flows, trims unused integrations, and keeps the .NET interoperability you relied on in v5. This document compares the two `ThirdwebManagerBase` implementations and lists the code edits required to upgrade an existing project.
+
+## Quick reference: what changed?
+
+- **Wallet providers** – The `WalletProvider` enum now only exposes `InAppWallet`, `EcosystemWallet`, and `ReownWallet`. `PrivateKeyWallet`, `WalletConnectWallet`, and `MetaMaskWallet` handlers were removed from the manager.
+- **Reown integration** – External wallets are unified under the optional `ReownWallet` provider. Support is wrapped in `#if THIRDWEB_REOWN` guards and requires Reown AppKit in your project.
+- **Option models** – `EcosystemWalletOptions` and `InAppWalletOptions` no longer accept `legacyEncryptionKey`. `WalletOptions` gained a `ReownOptions` payload that is filled with sensible defaults when omitted.
+- **Manager internals** – `SupportedChains`, `IncludedWalletIds`, and the `_walletMapping` accessors were deleted. `ConnectWallet` now sets `ActiveWallet` directly and only persists the most recent wallet for auto-connect.
+- **Version + diagnostics** – `THIRDWEB_UNITY_SDK_VERSION` jumped to `6.0.0`, and the boot sequence logs an explicit error if `THIRDWEB_REOWN` is defined but the AppKit prefab is missing from the scene.
+
+<Callout variant="info" title="Create a migration branch">
+Before updating, branch or clone your project. The v6 package deletes v5 scripts and prefabs; keeping a clean comparison helps when you reapply custom UI.
+</Callout>
+
+## 1. Install v6 and remove v5 assets
+
+1. Delete the v5 Thirdweb folder.
+2. Import the v6 Unity package.
+3. Remove any outdated assembly definition references.
+
+<Callout variant="warning" title="Unity cache tip">
+After deleting old assemblies, run a domain reload (enter/exit Play mode) so Unity forgets the stale DLLs before you open scenes.
+</Callout>
+
+## 2. Replace `ThirdwebManager` prefabs or components
+
+The serialized shape of `ThirdwebManagerBase` changed between branches. Drop the new prefab into your scenes (or update custom subclasses) and clear orphaned fields.
+
+```csharp
+// v5
+public enum WalletProvider {
+    PrivateKeyWallet,
+    InAppWallet,
+    WalletConnectWallet,
+    MetaMaskWallet,
+    EcosystemWallet,
+}
+
+// v6
+public enum WalletProvider {
+    InAppWallet,
+    EcosystemWallet,
+    ReownWallet,
+}
+```
+
+Key property changes in the component:
+
+| Removed (v5) | Replacement in v6 |
+| --- | --- |
+| `ulong[] SupportedChains` | Provide supported chain IDs when you call `WalletConnectWallet` (now Reown) or manage them in code. |
+| `string[] IncludedWalletIds` | Use `ReownOptions.IncludedWalletIds` when invoking `ReownWallet`. |
+| `Dictionary<string,IThirdwebWallet> _walletMapping` and helpers (`GetWallet`, `AddWallet`, `RemoveWallet`) | Maintain your own cache if you relied on these lookups. `ConnectWallet` assigns `ActiveWallet` without tracking every address. |
+| `legacyEncryptionKey` on wallet option classes | Remove the property from any serialized scriptable objects or constructor calls. |
+
+<Details summary="Auto-connect behaviour">
+`SetAutoConnectOptions` used to ignore `WalletConnectWallet`. In v6 the guard is gone, so every provider you connect (including Reown) will save its options into `PlayerPrefs`. If you prefer to opt out, disable `AutoConnectLastWallet` or clear `PlayerPrefs` after connecting.
+</Details>
+
+## 3. Add (or skip) Reown support
+
+Reown replaces both MetaMask and WalletConnect. The v6 manager checks for the AppKit prefab whenever the `THIRDWEB_REOWN` scripting define symbol is set.
+
+```csharp
+#if THIRDWEB_REOWN
+var reownModalExists = FindObjectOfType<Reown.AppKit.Unity.AppKitCore>();
+if (!reownModalExists) {
+    ThirdwebDebug.LogError("Reown AppKit not found in scene …");
+}
+#endif
+```
+
+To enable Reown:
+
+1. Install the [Reown AppKit Unity package](https://docs.reown.com/appkit/unity/core/installation).
+2. Add `THIRDWEB_REOWN` to **Player Settings → Other Settings → Scripting Define Symbols** for every build target that uses external wallets.
+3. Drop the `Reown AppKit` prefab into the scenes that should surface the modal.
+
+If you’re shipping only in-app or ecosystem wallets, **do not** set the scripting define and remove any references to `WalletProvider.ReownWallet`.
+
+## 4. Update wallet connection code
+
+Search the project for the removed enum values and update the call sites.
+
+```csharp
+// v5 WalletConnect
+await ThirdwebManager.Instance.ConnectWallet(new WalletOptions(
+    provider: WalletProvider.WalletConnectWallet,
+    chainId: new BigInteger(421614)
+));
+
+// v6 Reown
+await ThirdwebManager.Instance.ConnectWallet(new WalletOptions(
+    provider: WalletProvider.ReownWallet,
+    chainId: new BigInteger(421614),
+    reownOptions: new ReownOptions(projectId: "YOUR_REOWN_PROJECT_ID")
+));
+```
+
+Other call-site adjustments:
+
+- Remove any arguments named `legacyEncryptionKey` when instantiating `InAppWalletOptions` or `EcosystemWalletOptions`.
+- Replace checks for `WalletProvider.PrivateKeyWallet` with direct usage of the .NET `PrivateKeyWallet` helpers, e.g. `await PrivateKeyWallet.Generate(client)`.
+- When you need to filter wallets in Reown, set `IncludedWalletIds`/`ExcludedWalletIds` inside the `ReownOptions` object instead of relying on the removed `IncludedWalletIds` array.
+
+## 5. Refresh smart wallet upgrades and linking logic
+
+`SmartWalletOptions` retained the same fields, so your upgrade code should compile unchanged. What does change is the surrounding manager state:
+
+- `UpgradeToSmartWallet` no longer adds the smart wallet to a shared dictionary; it simply returns the new wallet and sets `ActiveWallet`.
+- `LinkAccount` still exists but now reads the redirect settings from `ThirdwebManagerBase`’s remaining fields. Confirm any login UI that referenced `RedirectPageHtmlOverride` still points to a valid asset.
+
+```csharp
+var personalWallet = await PrivateKeyWallet.Generate(client);
+var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(
+    personalWallet,
+    chainId: new BigInteger(421614),
+    smartWalletOptions: new SmartWalletOptions(sponsorGas: true)
+);
+```
+
+## 6. Clean up project assets
+
+- Delete deprecated prefabs (`WalletConnectModal`, old MetaMask UI, etc.).
+- Remove scripts that referenced the dropped enum values so Unity stops warning about missing behaviours.
+- Clear serialized ScriptableObjects that kept `legacyEncryptionKey`, `SupportedChains`, or `IncludedWalletIds`.
+- Update internal docs to mention Reown and the new optional dependency model.
+
+<Callout variant="warning" title="Missing script warnings">
+If Unity reports missing MonoBehaviours after the upgrade, open the affected prefab or scene, remove the broken component, and rewire it using the v6 APIs.
+</Callout>
+
+## 7. Validate the migration
+
+1. Open Play mode and confirm each wallet flow works (In-App, Ecosystem, and optionally Reown).
+2. Test the auto-connect flow to verify that `PlayerPrefs` stores the new `WalletOptions` payload.
+3. Build for every platform you support; Reown builds will fail if the AppKit prefab or define is missing.
+4. Run any automated gameplay/contract tests to ensure async interactions behave identically.
+
+## Troubleshooting
+
+| Issue | Explanation | Resolution |
+| --- | --- | --- |
+| `NotSupportedException: Wallet provider WalletConnectWallet is not supported.` | A v5 enum value remained in code. | Replace it with `WalletProvider.ReownWallet` or remove the branch. |
+| `Reown AppKit not found in scene …` | `THIRDWEB_REOWN` is defined but the prefab is absent. | Install AppKit and add the prefab, or remove the scripting define. |
+| `legacyEncryptionKey` compiler errors | Constructors in v6 dropped the argument. | Delete the parameter from your calls or ScriptableObject assets. |
+| Missing script warnings on UI prefabs | Old WalletConnect/MetaMask components were removed. | Delete the component and rebuild the UI against Reown or in-app wallet scripts. |
