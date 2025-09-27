@@ -36,8 +36,6 @@ var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Backend, walletSecret: "very-secret");
 // SIWE
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
-// SIWE External
-var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.SiweExternal);
 ```
 
 ### EcosystemWallet
@@ -61,8 +59,6 @@ var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosyste
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Backend, walletSecret: "very-secret");
 // SIWE
 var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
-// SIWE External
-var wallet = await EcosystemWallet.Create(client: client, ecosystemId: "ecosystem.my-ecosystem", authProvider: AuthProvider.SiweExternal);
 ```
 
 Once a wallet is created, you can always resume the session:
@@ -135,17 +131,6 @@ var backendAddress = await wallet.LoginWithBackend();
 ```csharp
 // SIWE
 var address = await wallet.LoginWithSiwe(chainId: 1);
-
-// SIWE External
-var address = await wallet.LoginWithSiweExternal(
-    isMobile: false,
-    browserOpenAction: (url) =>
-    {
-        var psi = new ProcessStartInfo { FileName = url, UseShellExecute = true };
-        _ = Process.Start(psi);
-    },
-    forceWalletIds: new List<string> { "io.metamask", "com.coinbase.wallet", "xyz.abs" }
-);
 ```
 
 Limiting `forceWalletIds` to a single value skips the wallet picker and deep-links into that specific wallet provider.

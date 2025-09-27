@@ -24,7 +24,6 @@ In-App Wallets support a variety of login methods:
 - Guest (Onboard easily, link other accounts later)
 - Backend (Server Wallets)
 - Siwe (Login with a separate wallet supported by the SDK)
-- SiweExternal (Login with an external wallet that only supports web using a browser loading a static thirdweb React page temporarily)
 
 ### Login with Email
 
@@ -81,28 +80,6 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
 Will use a separate wallet to sign a message and login to the InAppWallet.
-
-### Login with SiweExternal
-
-```csharp
-var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.SiweExternal)
-var options = new WalletOptions(
-    provider: WalletProvider.InAppWallet,
-    chainId: 421614,
-    inAppWalletOptions: inAppWalletOptions
-);
-var wallet = await ConnectWallet(inAppWalletOptions);
-```
-
-Will open a browser and load a static thirdweb React page to authenticate the user and redirect back to the game.
-You can pass `forceSiweExternalWalletIds` to force the page to use one or more wallets.
-
-Example:
-```csharp
-var inAppWalletOptions = new InAppWalletOptions(
-    authprovider: AuthProvider.SiweExternal,
-    forceSiweExternalWalletIds: new List<string> { "xyz.abs" });
-```
 
 ### Login with Custom Auth - OIDC Compatible
 
