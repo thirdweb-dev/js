@@ -10,7 +10,7 @@ export function useLocalStorage<TType>(
 ) {
   const [value, _setValue] = useState<TType>(serverSideFallback);
 
-  // FIXME: ideally we do not need localstorage like this, alernatively we move this into use-query and use-mutation to invalidate etc
+  // FIXME: ideally we do not need localstorage like this, alternatively we move this into use-query and use-mutation to invalidate etc
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     try {

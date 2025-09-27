@@ -14,7 +14,7 @@ export function NotificationList(props: ReturnType<typeof useNotifications>) {
       : // if we have archived notifications, default to archive
         props.archivedNotifications.length > 0
         ? "archive"
-        : // otherwise defualt to inbox (if there are no archived notifications either)
+        : // otherwise default to inbox (if there are no archived notifications either)
           "inbox",
   );
 
