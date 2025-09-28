@@ -1,5 +1,7 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.154
+
 ## 0.2.153
 
 ### Patch Changes
