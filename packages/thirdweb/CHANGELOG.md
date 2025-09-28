@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.108.4
+
+### Patch Changes
+
+- [#8141](https://github.com/thirdweb-dev/js/pull/8141) [`85bde21`](https://github.com/thirdweb-dev/js/commit/85bde21dc97d2ad06547832e9470532069d0cbf5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle 7702 accounts in verifyTypedData
+
+- [#8136](https://github.com/thirdweb-dev/js/pull/8136) [`aa0d23e`](https://github.com/thirdweb-dev/js/commit/aa0d23e966d4fd34ebadc38793f0f006aa70004f) Thanks [@MananTank](https://github.com/MananTank)! - Fix Embed container size
+
 ## 5.108.3
 
 ### Patch Changes
