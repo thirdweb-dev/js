@@ -1,8 +1,9 @@
-import type * as ox__Signature from "ox/Signature";
+import * as ox__Secp256k1 from "ox/Secp256k1";
+import * as ox__Signature from "ox/Signature";
 import * as ox__TypedData from "ox/TypedData";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import type { Hex } from "../utils/encoding/hex.js";
+import { type Hex, isHex } from "../utils/encoding/hex.js";
 import type { HashTypedDataParams } from "../utils/hashing/hashTypedData.js";
 import { type VerifyHashParams, verifyHash } from "./verify-hash.js";
 
@@ -101,6 +102,23 @@ export async function verifyTypedData<
     primaryType,
     types,
   } as HashTypedDataParams);
+
+  if (!isHex(signature)) {
+    return false;
+  }
+
+  try {
+    const recoveredAddress = ox__Secp256k1.recoverAddress({
+      payload: messageHash,
+      signature: ox__Signature.fromHex(signature),
+    });
+
+    if (recoveredAddress.toLowerCase() === address.toLowerCase()) {
+      return true;
+    }
+  } catch {
+    // no-op, we skip to contract signature check
+  }
   return verifyHash({
     accountFactory,
     address,
