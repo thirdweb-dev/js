@@ -1,0 +1,113 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
+import { TypeScriptIcon, EngineIcon } from "@/icons";
+
+# Client Side
+
+Make requests to any x402-compatible backend by automatically handling payment flows when APIs return a `402 Payment Required` response.
+
+The client library wraps the native `fetch` API and handles:
+1. Initial request to the API
+2. Detection of `402 Payment Required` responses
+3. Parsing payment requirements from the response
+4. Creating and signing payment authorization
+5. Retrying the request with payment credentials
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center [&>p]:mb-0">
+      <TypeScriptIcon className="size-4 mr-1.5" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="http" className="flex items-center [&>p]:mb-0">
+      <EngineIcon className="size-4 mr-1.5" />
+      HTTP API
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="typescript">
+    ## Using `wrapFetchWithPayment`
+
+    The `wrapFetchWithPayment` function wraps the native fetch API to automatically handle 402 Payment Required responses.
+
+    ```typescript
+    import { wrapFetchWithPayment } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { createWallet } from "thirdweb/wallets";
+
+    const client = createThirdwebClient({ clientId: "your-client-id" });
+    const wallet = createWallet("io.metamask"); // or any other wallet
+    await wallet.connect({ client })
+
+    // Wrap fetch with payment handling
+    // maxValue is the maximum payment amount in base units (defaults to 1 USDC = 1_000_000)
+    const fetchWithPay = wrapFetchWithPayment(
+      fetch, 
+      client, 
+      wallet, 
+      BigInt(1 * 10 ** 6) // max 1 USDC
+    );
+
+    // Make a request that may require payment
+    const response = await fetchWithPay('https://api.example.com/paid-endpoint');
+    const data = await response.json();
+    ```
+
+    ### Parameters
+
+    - `fetch` - The fetch function to wrap (typically `globalThis.fetch`)
+    - `client` - The thirdweb client used to access RPC infrastructure
+    - `wallet` - The wallet used to sign payment messages
+    - `maxValue` - (Optional) The maximum allowed payment amount in base units (defaults to 1 USDC = 1,000,000)
+
+    ### Reference
+
+    For full API documentation, see the [TypeScript Reference](/references/typescript/v5/x402/wrapFetchWithPayment).
+
+  </TabsContent>
+
+  <TabsContent value="http">
+    ## Prepare Payment
+
+    Create a signed payment header from the authenticated user to include in your API request:
+
+    ### Making the Paid Request
+
+    After preparing the payment, include it in your API request:
+
+    ```bash
+    # First, make the initial request to get payment requirements
+    curl -X GET https://api.example.com/paid-endpoint
+
+    # Response will be 402 Payment Required with payment details
+    # {
+    #   "x402Version": 1,
+    #   "accepts": [...payment requirements...],
+    #   "error": "Payment required"
+    # }
+
+    # Select one of the payment methods, and sign the payment authorization using the API
+    curl -X POST https://api.thirdweb.com/v1/payments/x402/prepare \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer <user-access-token>" \
+      -d '{
+        "from": "0x1234...",
+        "paymentRequirements": { ... }
+      }'
+
+    # Response will contain the signed payment header
+    # {
+    #   "paymentPayload": { ... },
+    #   "paymentHeader": "..." // base64 encoded payment header
+    # }
+
+    # Finally, make the request with the payment header
+    curl -X GET https://api.example.com/paid-endpoint \
+      -H "X-PAYMENT: <base64-encoded-payment>"
+    ```
+
+    ## API Reference
+
+    <OpenApiEndpoint path="/v1/payments/x402/prepare" method="POST" />
+
+  </TabsContent>
+</Tabs>
