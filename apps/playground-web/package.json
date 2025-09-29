@@ -45,7 +45,7 @@
     "shiki": "3.12.0",
     "sonner": "2.0.6",
     "streamdown": "^1.1.4",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^3.3.1",
     "thirdweb": "workspace:*",
     "use-debounce": "^10.0.5",
     "use-stick-to-bottom": "^1.1.1",
