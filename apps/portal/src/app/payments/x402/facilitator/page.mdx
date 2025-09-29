@@ -1,0 +1,344 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, Callout } from "@doc";
+import { TypeScriptIcon, EngineIcon } from "@/icons";
+
+# Facilitator API
+
+The facilitator is a service that handles verifying and submitting x402 payments. It uses your own [server wallet](/wallets/server) and leverages EIP-7702 to submit transactions gaslessly.
+
+The thirdweb facilitator is compatible with any x402 backend and middleware libraries like `x402-hono`, `x402-next`, and more.
+
+## How It Works
+
+1. **Verification** - Validates payment signatures and requirements
+2. **Settlement** - Submits the payment transaction on-chain
+3. **Gasless** - Uses [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) for gasless transactions
+4. **Your Wallet** - Uses your own server wallet for receiving payments
+
+You can view all transactions processed by your facilitator in your project dashboard.
+
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center [&>p]:mb-0">
+      <TypeScriptIcon className="size-4 mr-1.5" />
+      TypeScript API
+    </TabsTrigger>
+    <TabsTrigger value="http" className="flex items-center [&>p]:mb-0">
+      <EngineIcon className="size-4 mr-1.5" />
+      HTTP API
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="typescript">
+    ## Creating a Facilitator
+
+    Create a facilitator instance to use with `settlePayment()` or external middleware:
+
+    ```typescript
+    import { facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+
+    const client = createThirdwebClient({
+      secretKey: "your-secret-key",
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client: client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+    ```
+
+    ### Configuration Options
+
+    ```typescript
+    const thirdwebFacilitator = facilitator({
+      // Required: Your thirdweb client with secret key
+      client: client,
+      
+      // Required: Your server wallet address that will execute transactions
+      // get it from your project dashboard
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+      
+      // Optional: Wait behavior for settlements
+      // - "simulated": Only simulate the transaction (fastest)
+      // - "submitted": Wait until transaction is submitted
+      // - "confirmed": Wait for full on-chain confirmation (slowest, default)
+      waitUntil: "confirmed",
+    });
+    ```
+
+    ## Usage with settlePayment()
+
+    Use the facilitator with the `settlePayment()` function:
+
+    ```typescript
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    export async function GET(request: Request) {
+      const paymentData = request.headers.get("x-payment");
+
+      const result = await settlePayment({
+        resourceUrl: "https://api.example.com/premium-content",
+        method: "GET",
+        paymentData,
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.10",
+        facilitator: thirdwebFacilitator, // Pass the facilitator here
+      });
+
+      if (result.status === 200) {
+        return Response.json({ data: "premium content" });
+      } else {
+        return Response.json(result.responseBody, {
+          status: result.status,
+          headers: result.responseHeaders,
+        });
+      }
+    }
+    ```
+
+    ## Usage with other x402 middleware libraries
+
+    Use the facilitator with third-party x402 middleware libraries:
+
+    <Tabs defaultValue="hono">
+      <TabsList>
+        <TabsTrigger value="hono">x402-hono</TabsTrigger>
+        <TabsTrigger value="next">x402-next</TabsTrigger>
+        <TabsTrigger value="express">x402-express</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="hono">
+        ```typescript
+        import { Hono } from "hono";
+        import { paymentMiddleware } from "x402-hono";
+        import { facilitator } from "thirdweb/x402";
+        import { createThirdwebClient } from "thirdweb";
+
+        const client = createThirdwebClient({
+          secretKey: "your-secret-key",
+        });
+
+        const thirdwebFacilitator = facilitator({
+          client: client,
+          serverWalletAddress: "0x1234567890123456789012345678901234567890",
+        });
+
+        const app = new Hono();
+
+        // Add the facilitator to the x402 middleware
+        app.use(paymentMiddleware(
+            "0xYourWalletAddress",
+            {
+              "/api/paywall": {
+                price: "$0.01",
+                network: "base-sepolia",
+                config: {
+                  description: "Access to paid content",
+                },
+              },
+            },
+            thirdwebFacilitator, // Pass the facilitator to the middleware
+          )
+        );
+
+        app.get("/api/paywall", (c) => {
+          return c.json({ message: "This is premium content!" });
+        });
+
+        export default app;
+        ```
+      </TabsContent>
+
+      <TabsContent value="next">
+        ```typescript
+        // middleware.ts
+        import { paymentMiddleware } from "x402-next";
+        import { facilitator } from "thirdweb/x402";
+        import { createThirdwebClient } from "thirdweb";
+
+        const client = createThirdwebClient({
+          secretKey: process.env.THIRDWEB_SECRET_KEY,
+        });
+
+        const thirdwebFacilitator = facilitator({
+          client,
+          serverWalletAddress: process.env.SERVER_WALLET_ADDRESS,
+        });
+
+        export const middleware = paymentMiddleware(
+          '0xYourWalletAddress',
+          {
+            "/api/premium": {
+              price: "$0.05",
+              network: "base-sepolia",
+            },
+          },
+          thirdwebFacilitator // Pass the facilitator to the middleware
+        );
+
+        export const config = {
+          matcher: ["/api/premium/:path*"],
+        };
+        ```
+      </TabsContent>
+
+        <TabsContent value="express">
+        ```typescript
+        import express from "express";
+        import { paymentMiddleware } from "x402-express";
+        import { facilitator } from "thirdweb/x402";
+        import { createThirdwebClient } from "thirdweb";
+
+        const client = createThirdwebClient({
+          secretKey: "your-secret-key",
+        });
+
+        const thirdwebFacilitator = facilitator({
+          client: client,
+          serverWalletAddress: "0x1234567890123456789012345678901234567890",
+        });
+
+        const app = express();
+
+        // Add the facilitator to the x402 middleware
+        app.use(
+          paymentMiddleware(
+            "0xYourWalletAddress",
+            {
+              "/api/paywall": {
+                price: "$0.01",
+                network: "base-sepolia",
+                config: {
+                  description: "Access to paid content",
+                },
+              },
+            },
+            thirdwebFacilitator, // Pass the facilitator to the middleware
+          )
+        );
+
+        app.get("/api/paywall", (req, res) => {
+            res.json({ message: "This content is behind a paywall!" });
+        });
+
+        app.listen(3000);
+        ```
+      </TabsContent>
+    </Tabs>
+
+    ## Getting Supported Payment Methods
+
+    Query which payment methods are supported by the facilitator:
+
+    ```typescript
+    // Get all supported payment methods
+    const allSupported = await thirdwebFacilitator.supported();
+
+    // Filter by chain
+    const baseSupported = await thirdwebFacilitator.supported({
+      chainId: 8453, // Base
+    });
+
+    // Filter by chain and token
+    const usdcOnBase = await thirdwebFacilitator.supported({
+      chainId: 8453,
+      tokenAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    });
+    ```
+
+  </TabsContent>
+
+  <TabsContent value="http">
+    ## HTTP API Reference
+
+    Use the HTTP API directly if you're not using the TypeScript SDK.
+
+     ### Example Flow
+
+    ```bash
+    # 1. First request returns 402 Payment Required
+    curl -X GET https://api.example.com/premium \
+      -H "Content-Type: application/json"
+
+    # Response (402):
+    # {
+    #   "x402Version": 1,
+    #   "accepts": [{
+    #     "scheme": "exact",
+    #     "network": "eip155:421614",
+    #     "maxAmountRequired": "100000",
+    #     "resource": "https://api.example.com/premium",
+    #     "description": "Premium content access",
+    #     "mimeType": "application/json",
+    #     "payTo": "0x1234...",
+    #     "maxTimeoutSeconds": 300,
+    #     "asset": "0x..."
+    #   }],
+    #   "error": "Payment required"
+    # }
+
+    # 2. Prepare payment (see Client Side docs)
+    # This selects the payment method and creates a signed payment payload
+
+    # 3. Verify the payment (optional)
+    curl -X POST https://api.thirdweb.com/v1/payments/x402/verify \
+      -H "Content-Type: application/json" \
+      -H "x-secret-key: YOUR_SECRET_KEY" \
+      -d '{
+        "x402Version": 1,
+        "paymentPayload": { ... },
+        "paymentRequirements": { ... }
+      }'
+
+    # 4. Settle the payment
+    curl -X POST https://api.thirdweb.com/v1/payments/x402/settle \
+      -H "Content-Type: application/json" \
+      -H "x-secret-key: YOUR_SECRET_KEY" \
+      -d '{
+        "x402Version": 1,
+        "paymentPayload": { ... },
+        "paymentRequirements": { ...},
+        "waitUntil": "confirmed"
+      }'
+    ```
+
+    <Callout variant="info">
+      All facilitator HTTP API endpoints require authentication using the `x-secret-key` header with your project secret key.
+    </Callout>
+
+    ### Verify Payment
+
+    Verify a payment signature and requirements without settling:
+
+    <OpenApiEndpoint path="/v1/payments/x402/verify" method="POST" />
+
+    ---
+
+    ### Settle Payment
+
+    Verify and submit a payment transaction on-chain:
+
+    <OpenApiEndpoint path="/v1/payments/x402/settle" method="POST" />
+
+    ---
+
+    ### List Supported Payment Methods
+
+    Get a list of payment methods supported by the facilitator:
+
+    <OpenApiEndpoint path="/v1/payments/x402/supported" method="GET" />
+
+  </TabsContent>
+</Tabs>

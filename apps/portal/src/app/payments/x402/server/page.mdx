@@ -1,0 +1,438 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent, DocImage } from "@doc";
+import { Steps, Step } from "@doc";
+import PaymentFlow from "./x402-protocol-flow.png";
+
+# Server Side
+
+Accept x402 payments in your APIs using any x402-compatible client. Your server can verify and settle payments using thirdweb's facilitator service or any custom facilitator.
+
+## Payment Flow
+
+The x402 protocol follows this flow:
+
+<DocImage src={PaymentFlow} alt="x402 Protocol Flow" />
+
+1. **Client Request** - Client makes a request to your API
+2. **Payment Required** - Server responds with 402 and payment requirements
+3. **Client Signs** - Client signs payment authorization
+4. **Paid Request** - Client retries with payment header
+5. **Verify & Settle** - Server verifies and settles the payment
+6. **Success** - Server returns the protected content
+
+## Verify vs Settle
+
+You have two options for handling payments:
+
+### Option 1: Settle Payment Directly
+
+Use `settlePayment()` to verify and settle the payment in one step. This is the simplest approach:
+
+```typescript
+const result = await settlePayment(paymentArgs);
+
+if (result.status === 200) {
+  // Payment settled, do the paid work
+  return Response.json({ data: "premium content" });
+}
+```
+
+### Option 2: Verify First, Then Settle
+
+Use `verifyPayment()` first, do the work, then `settlePayment()`. This is useful when:
+- The final price might be dynamic based on the work performed
+- You want to ensure the payment is valid before doing expensive work
+- You need to calculate resource usage before charging
+
+```typescript
+// First verify the payment is valid
+const verifyResult = await verifyPayment(paymentArgs);
+
+if (verifyResult.status !== 200) {
+  return Response.json(verifyResult.responseBody, {
+    status: verifyResult.status,
+    headers: verifyResult.responseHeaders,
+  });
+}
+
+// Do the expensive work that requires payment
+const result = await doExpensiveWork();
+
+// Now settle the payment based on actual usage
+const settleResult = await settlePayment({
+  ...paymentArgs,
+  price: calculateDynamicPrice(result), // adjust price based on usage
+});
+
+return Response.json(result);
+```
+
+## Dedicated Endpoint Examples
+
+Protect individual API endpoints with x402 payments:
+
+<Tabs defaultValue="nextjs">
+  <TabsList>
+    <TabsTrigger value="nextjs">Next.js</TabsTrigger>
+    <TabsTrigger value="express">Express</TabsTrigger>
+    <TabsTrigger value="hono">Hono</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="nextjs">
+    ```typescript
+    // app/api/premium-content/route.ts
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    export async function GET(request: Request) {
+      const paymentData = request.headers.get("x-payment");
+
+      // Verify and process the payment
+      const result = await settlePayment({
+        resourceUrl: "https://api.example.com/premium-content",
+        method: "GET",
+        paymentData,
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.10", // or { amount: "100000", asset: { address: "0x...", decimals: 6 } }
+        facilitator: thirdwebFacilitator,
+        routeConfig: {
+          description: "Access to premium API content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+      });
+
+      if (result.status === 200) {
+        // Payment verified and settled successfully
+        return Response.json({ data: "premium content" });
+      } else {
+        // Payment required
+        return Response.json(result.responseBody, {
+          status: result.status,
+          headers: result.responseHeaders,
+        });
+      }
+    }
+    ```
+  </TabsContent>
+
+  <TabsContent value="express">
+    ```typescript
+    // server.ts
+    import express from "express";
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    const app = express();
+
+    app.get("/api/premium", async (req, res) => {
+      const result = await settlePayment({
+        resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+        method: req.method,
+        paymentData: req.headers["x-payment"],
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.05",
+        facilitator: thirdwebFacilitator,
+        routeConfig: {
+          description: "Access to premium content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+      });
+
+      if (result.status === 200) {
+        // Set payment receipt headers
+        Object.entries(result.responseHeaders).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+        res.json({ message: "This is premium content!" });
+      } else {
+        res.status(result.status)
+           .set(result.responseHeaders)
+           .json(result.responseBody);
+      }
+    });
+
+    app.listen(3000);
+    ```
+  </TabsContent>
+
+  <TabsContent value="hono">
+    ```typescript
+    // server.ts
+    import { Hono } from "hono";
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    const app = new Hono();
+
+    app.get("/api/premium", async (c) => {
+      const result = await settlePayment({
+        resourceUrl: new URL(c.req.url).toString(),
+        method: c.req.method,
+        paymentData: c.req.header("x-payment"),
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.05",
+        facilitator: thirdwebFacilitator,
+        routeConfig: {
+          description: "Access to premium content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+      });
+
+      if (result.status === 200) {
+        return c.json(
+          { message: "This is premium content!" },
+          { headers: result.responseHeaders }
+        );
+      } else {
+        return c.json(result.responseBody, {
+          status: result.status,
+          headers: result.responseHeaders,
+        });
+      }
+    });
+
+    export default app;
+    ```
+  </TabsContent>
+</Tabs>
+
+## Middleware Examples
+
+Protect multiple endpoints with a shared middleware:
+
+<Tabs defaultValue="nextjs">
+  <TabsList>
+    <TabsTrigger value="nextjs">Next.js</TabsTrigger>
+    <TabsTrigger value="express">Express</TabsTrigger>
+    <TabsTrigger value="hono">Hono</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="nextjs">
+    ```typescript
+    // middleware.ts
+    import { NextResponse } from "next/server";
+    import type { NextRequest } from "next/server";
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    export async function middleware(request: NextRequest) {
+      const method = request.method.toUpperCase();
+      const resourceUrl = request.nextUrl.toString();
+      const paymentData = request.headers.get("x-payment");
+
+      const result = await settlePayment({
+        resourceUrl,
+        method,
+        paymentData,
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.01",
+        routeConfig: {
+          description: "Access to paid content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+        facilitator: thirdwebFacilitator,
+      });
+
+      if (result.status === 200) {
+        // Payment successful, continue to the route
+        const response = NextResponse.next();
+        // Set payment receipt headers
+        for (const [key, value] of Object.entries(result.responseHeaders)) {
+          response.headers.set(key, value);
+        }
+        return response;
+      }
+
+      // Payment required
+      return NextResponse.json(result.responseBody, {
+        status: result.status,
+        headers: result.responseHeaders,
+      });
+    }
+
+    // Configure which paths the middleware should run on
+    export const config = {
+      matcher: ["/api/paid/:path*"],
+    };
+    ```
+  </TabsContent>
+
+  <TabsContent value="express">
+    ```typescript
+    // middleware.ts
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    export async function paymentMiddleware(req, res, next) {
+      const result = await settlePayment({
+        resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+        method: req.method,
+        paymentData: req.headers["x-payment"],
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.05",
+        facilitator: thirdwebFacilitator,
+        routeConfig: {
+          description: "Access to paid content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+      });
+
+      if (result.status === 200) {
+        // Set payment receipt headers and continue
+        Object.entries(result.responseHeaders).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+        next();
+      } else {
+        // Return payment required response
+        res.status(result.status)
+           .set(result.responseHeaders)
+           .json(result.responseBody);
+      }
+    }
+
+    // Usage
+    app.get("/api/premium", paymentMiddleware, (req, res) => {
+      res.json({ message: "This is premium content!" });
+    });
+    ```
+  </TabsContent>
+
+  <TabsContent value="hono">
+    ```typescript
+    // middleware.ts
+    import type { Context, Next } from "hono";
+    import { settlePayment, facilitator } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { arbitrumSepolia } from "thirdweb/chains";
+
+    const client = createThirdwebClient({
+      secretKey: process.env.THIRDWEB_SECRET_KEY,
+    });
+
+    const thirdwebFacilitator = facilitator({
+      client,
+      serverWalletAddress: "0x1234567890123456789012345678901234567890",
+    });
+
+    export async function paymentMiddleware(c: Context, next: Next) {
+      const result = await settlePayment({
+        resourceUrl: new URL(c.req.url).toString(),
+        method: c.req.method,
+        paymentData: c.req.header("x-payment"),
+        payTo: "0x1234567890123456789012345678901234567890",
+        network: arbitrumSepolia,
+        price: "$0.05",
+        facilitator: thirdwebFacilitator,
+        routeConfig: {
+          description: "Access to paid content",
+          mimeType: "application/json",
+          maxTimeoutSeconds: 300,
+        },
+      });
+
+      if (result.status === 200) {
+        // Set payment receipt headers and continue
+        Object.entries(result.responseHeaders).forEach(([key, value]) => {
+          c.header(key, value);
+        });
+        await next();
+      } else {
+        return c.json(result.responseBody, {
+          status: result.status,
+          headers: result.responseHeaders,
+        });
+      }
+    }
+
+    // Usage
+    app.get("/api/premium", paymentMiddleware, (c) => {
+      return c.json({ message: "This is premium content!" });
+    });
+    ```
+  </TabsContent>
+</Tabs>
+
+## Price Configuration
+
+You can specify prices in multiple ways:
+
+### USD String
+
+```typescript
+price: "$0.10" // 10 cents in USD
+```
+
+### ERC20 Token
+
+```typescript
+price: {
+  amount: "100000", // Amount in base units (100000 = 0.1 USDC with 6 decimals)
+  asset: {
+    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // Token address
+  }
+}
+```
+
+### Native Token
+
+Payments in native tokens are not currently supported. 
