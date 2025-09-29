@@ -31,8 +31,9 @@ export function useTokens(options: {
         offset: options.offset,
         limit: options.limit,
         includePrices: false,
-        name: !options.search || isSearchAddress ? undefined : options.search,
-        tokenAddress: isSearchAddress ? options.search : undefined,
+        query: options.search && !isSearchAddress ? options.search : undefined,
+        tokenAddress:
+          options.search && isSearchAddress ? options.search : undefined,
       });
     },
   });

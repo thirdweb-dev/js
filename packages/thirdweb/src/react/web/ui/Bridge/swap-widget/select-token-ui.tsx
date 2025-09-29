@@ -20,6 +20,7 @@ import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
+import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
 import { useIsMobile } from "../../hooks/useisMobile.js";
 import { SearchInput } from "./SearchInput.js";
 import { SelectChainButton } from "./SelectChainButton.js";
@@ -57,6 +58,7 @@ function getDefaultSelectedChain(
 export function SelectToken(props: SelectTokenUIProps) {
   const chainQuery = useBridgeChains(props.client);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 500);
   const [limit, setLimit] = useState(1000);
 
   const [_selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
@@ -76,7 +78,7 @@ export function SelectToken(props: SelectTokenUIProps) {
   const tokensQuery = useTokens({
     client: props.client,
     chainId: selectedChain?.chainId,
-    search,
+    search: debouncedSearch,
     limit,
     offset: 0,
   });
@@ -93,12 +95,14 @@ export function SelectToken(props: SelectTokenUIProps) {
   const filteredOwnedTokens = useMemo(() => {
     return ownedTokensQuery.data?.tokens?.filter((token) => {
       return (
-        token.symbol.toLowerCase().includes(search.toLowerCase()) ||
-        token.name.toLowerCase().includes(search.toLowerCase()) ||
-        token.token_address.toLowerCase().includes(search.toLowerCase())
+        token.symbol.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        token.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        token.token_address
+          .toLowerCase()
+          .includes(debouncedSearch.toLowerCase())
       );
     });
-  }, [ownedTokensQuery.data?.tokens, search]);
+  }, [ownedTokensQuery.data?.tokens, debouncedSearch]);
 
   const isFetching = tokensQuery.isFetching || ownedTokensQuery.isFetching;
 
