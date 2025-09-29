@@ -30,6 +30,7 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
     description?: string;
     titleClassName?: string;
     headerClassName?: string;
+    icon?: React.ReactNode;
   };
   customHeader?: React.ReactNode;
   // chart config
@@ -70,6 +71,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
     <Card className={props.className}>
       {props.header && (
         <CardHeader className={props.header.headerClassName}>
+          {props.header.icon}
           <CardTitle className={cn("mb-2", props.header.titleClassName)}>
             {props.header.title}
           </CardTitle>

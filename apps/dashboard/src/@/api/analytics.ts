@@ -592,7 +592,7 @@ const cached_getUniversalBridgeUsage = unstable_cache(
     if (res?.status !== 200) {
       const reason = await res?.text();
       console.error(
-        `Failed to fetch universal bridge stats: ${res?.status} - ${res.statusText} - ${reason}`,
+        `Failed to fetch bridge stats: ${res?.status} - ${res.statusText} - ${reason}`,
       );
       return [];
     }
@@ -636,7 +636,7 @@ const cached_getUniversalBridgeWalletUsage = unstable_cache(
     if (res?.status !== 200) {
       const reason = await res?.text();
       console.error(
-        `Failed to fetch universal bridge wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
+        `Failed to fetch bridge wallet stats: ${res?.status} - ${res.statusText} - ${reason}`,
       );
       return [];
     }

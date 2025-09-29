@@ -8,9 +8,10 @@ export const metadata = createMetadata({
 
 # ThirdwebTransaction.Create
 
-<Callout variant="warning" title="Advanced Use Case">
-	If you are interacting with a contract, it is best to use
-	[ThirdwebContract.Prepare](/dotnet/contracts/prepare) to create a transaction.
+<Callout variant="warning" title="Preferred Workflow">
+	When you're starting from a contract method, use
+	[ThirdwebContract.Prepare](/dotnet/transactions/prepare) to build the transaction
+	before customizing it here.
 </Callout>
 
 The `ThirdwebTransaction.Create` method allows advanced users to manually create transactions using specific wallet credentials and transaction inputs. This method is ideal for users who need precise control over the transaction details.

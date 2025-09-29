@@ -1,7 +1,9 @@
 import { CircleAlertIcon } from "lucide-react";
 import { getRawAccount } from "@/api/account/get-account";
+import { FaqSection } from "@/components/blocks/faq-section";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { getChain, getChainMetadata } from "../../utils";
+import { getChain, getCustomChainMetadata } from "../../utils";
+import { fetchChainSeo } from "./apis/chain-seo";
 import { BuyFundsSection } from "./components/client/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
 import { ChainCTA } from "./components/server/cta-card";
@@ -9,22 +11,27 @@ import { ExplorersSection } from "./components/server/explorer-section";
 import { FaucetSection } from "./components/server/FaucetSection";
 import { SupportedProductsSection } from "./components/server/SupportedProductsSection";
 
-export default async function Page(props: {
+type Props = {
   params: Promise<{ chain_id: string }>;
-}) {
+};
+
+export default async function Page(props: Props) {
   const params = await props.params;
   const chain = await getChain(params.chain_id);
-  const chainMetadata = await getChainMetadata(chain.chainId);
+  const customChainMetadata = getCustomChainMetadata(Number(params.chain_id));
+  const chainSeo = await fetchChainSeo(Number(chain.chainId)).catch(
+    () => undefined,
+  );
   const client = getClientThirdwebClient();
   const isDeprecated = chain.status === "deprecated";
-
   const account = await getRawAccount();
 
   return (
     <div className="flex flex-col gap-10">
       {/* Custom CTA */}
-      {(chainMetadata?.cta?.title || chainMetadata?.cta?.description) && (
-        <ChainCTA {...chainMetadata.cta} />
+      {(customChainMetadata?.cta?.title ||
+        customChainMetadata?.cta?.description) && (
+        <ChainCTA {...customChainMetadata.cta} />
       )}
 
       {/* Deprecated Alert */}
@@ -44,7 +51,7 @@ export default async function Page(props: {
       {chain.testnet ? (
         <FaucetSection chain={chain} client={client} isLoggedIn={!!account} />
       ) : chain.services.find((c) => c.service === "pay" && c.enabled) ? (
-        <BuyFundsSection chain={chain} client={client} />
+        <BuyFundsSection chain={chain} />
       ) : null}
 
       {/* Chain Overview */}
@@ -57,6 +64,12 @@ export default async function Page(props: {
 
       {chain.services.filter((s) => s.enabled).length > 0 && (
         <SupportedProductsSection services={chain.services} />
+      )}
+
+      {chainSeo?.faqs && chainSeo.faqs.length > 0 && (
+        <div className="py-10">
+          <FaqSection faqs={chainSeo.faqs} />
+        </div>
       )}
     </div>
   );

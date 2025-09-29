@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Chain as BridgeChain } from "../../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
@@ -53,7 +53,22 @@ export function SelectBridgeChainUI(
   },
 ) {
   const [search, setSearch] = useState("");
-  const filteredChains = props.chains.filter((chain) => {
+  const [initiallySelectedChain] = useState(props.selectedChain);
+
+  // put the initially selected chain first
+  const sortedChains = useMemo(() => {
+    if (initiallySelectedChain) {
+      return [
+        initiallySelectedChain,
+        ...props.chains.filter(
+          (chain) => chain.chainId !== initiallySelectedChain.chainId,
+        ),
+      ];
+    }
+    return props.chains;
+  }, [props.chains, initiallySelectedChain]);
+
+  const filteredChains = sortedChains.filter((chain) => {
     return chain.name.toLowerCase().includes(search.toLowerCase());
   });
 

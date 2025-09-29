@@ -67,14 +67,14 @@ export async function CodeBlock(props: {
     <div className={cn("group/code relative mb-5", props.containerClassName)}>
       <code
         className={cn(
-          "relative block whitespace-pre rounded-lg border bg-card font-mono text-sm leading-relaxed",
+          "relative block whitespace-pre rounded-lg border bg-card dark:bg-background font-mono text-sm leading-relaxed",
           props.className,
         )}
         lang={lang}
       >
         <ScrollShadow
-          className=""
           scrollableClassName={cn("p-4", props.scrollContainerClassName)}
+          shadowColor="hsl(var(--card))"
         >
           <RenderCode code={code} lang={lang} tokenLinks={tokenLinks} />
         </ScrollShadow>

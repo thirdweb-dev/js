@@ -89,6 +89,7 @@ export function TransactionPayment({
     client,
     transaction: uiOptions.transaction,
     wallet,
+    currency: uiOptions.currency,
   });
 
   // We can't use useWalletBalance here because erc20Value is a possibly async value

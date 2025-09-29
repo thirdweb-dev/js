@@ -102,17 +102,17 @@ const preparedQuote = await Bridge.Buy.prepare({
   </TabsContent>
 
   <TabsContent value="react">
-    The quickest way to setup Bridge in your React app is with the [`BuyWidget`](/references/typescript/v5/widgets/BuyWidget) component.
-    
+    The quickest way to setup Bridge in your React app is with the [`SwapWidget`](/references/typescript/v5/widgets/SwapWidget) component.
+
     ### Live Playground
 
 <ArticleIconCard
-  title="Payment Widgets Playground"
-  description="Try out the Payment Widgets in our live playground"
+  title="Swap Widget Playground"
+  description="Try out the Swap Widget in our live playground"
   icon={ReactIcon}
-  href="https://playground.thirdweb.com/connect/pay/transactions"
+  href="https://playground.thirdweb.com/bridge/swap-widget"
 />
-    
+
     ### Installation
 
     Install the thirdweb SDK in your React project:
@@ -127,7 +127,7 @@ const preparedQuote = await Bridge.Buy.prepare({
 
     ### Create a Client
 
-    First, create a client file (e.g., `thirdwebClient.ts`) for reuse throughout your app:
+    First, create a client file for reuse throughout your app:
 
     ```typescript
     // thirdwebClient.ts
@@ -140,7 +140,7 @@ const preparedQuote = await Bridge.Buy.prepare({
 
     ### Setup the Provider
 
-    Wrap your application with the ThirdwebProvider:
+    Wrap your application with the `ThirdwebProvider`
 
     ```tsx
     // app.tsx / _app.tsx
@@ -155,21 +155,17 @@ const preparedQuote = await Bridge.Buy.prepare({
     }
     ```
 
-    ### Buy Widget
+    ### Add Swap Widget
 
-    Use the BuyWidget to let users purchase tokens:
+    Use the SwapWidget to let users swap tokens
 
     ```tsx
-    import { BuyWidget } from "thirdweb/react";
-    import { base } from "thirdweb/chains";
+    import { SwapWidget } from "thirdweb/react";
 
-    function PaymentComponent() {
+    function Example() {
       return (
-        <BuyWidget
+        <SwapWidget
           client={client}
-          chain={base}
-          amount="10" // 10 USDC
-          tokenAddress="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
         />
       );
     }

@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { status as OnrampStatus } from "../../../bridge/OnrampStatus.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
@@ -10,14 +9,9 @@ import type { Status } from "../../../bridge/types/Status.js";
 import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
-import { stringify } from "../../../utils/json.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
-import {
-  type BridgePrepareRequest,
-  type BridgePrepareResult,
-  useBridgePrepare,
-} from "./useBridgePrepare.js";
+import type { BridgePrepareResult } from "./useBridgePrepare.js";
 
 /**
  * Type for completed status results from Bridge.status and Onramp.status
@@ -35,8 +29,7 @@ export type CompletedStatusResult =
  * Options for the step executor hook
  */
 interface StepExecutorOptions {
-  /** Prepared quote returned by Bridge.prepare */
-  request: BridgePrepareRequest;
+  preparedQuote: BridgePrepareResult;
   /** Wallet instance providing getAccount() & sendTransaction */
   wallet?: Wallet;
   /** Window adapter for opening on-ramp URLs (web / RN) */
@@ -67,7 +60,7 @@ interface StepExecutorResult {
   currentTxIndex?: number;
   progress: number; // 0–100
   onrampStatus?: "pending" | "executing" | "completed" | "failed";
-  executionState: "fetching" | "idle" | "executing" | "auto-starting";
+  executionState: "idle" | "executing" | "auto-starting";
   steps?: RouteStep[];
   error?: ApiError;
   start: () => void;
@@ -100,15 +93,13 @@ export function useStepExecutor(
   options: StepExecutorOptions,
 ): StepExecutorResult {
   const {
-    request,
     wallet,
     windowAdapter,
     client,
     autoStart = false,
     onComplete,
+    preparedQuote,
   } = options;
-
-  const { data: preparedQuote, isLoading } = useBridgePrepare(request);
 
   // Flatten all transactions upfront
   const flatTxs = useMemo(
@@ -121,29 +112,13 @@ export function useStepExecutor(
     undefined,
   );
   const [executionState, setExecutionState] = useState<
-    "fetching" | "idle" | "executing" | "auto-starting"
+    "idle" | "executing" | "auto-starting"
   >("idle");
   const [error, setError] = useState<ApiError | undefined>(undefined);
   const [completedTxs, setCompletedTxs] = useState<Set<number>>(new Set());
   const [onrampStatus, setOnrampStatus] = useState<
     "pending" | "executing" | "completed" | "failed" | undefined
   >(preparedQuote?.type === "onramp" ? "pending" : undefined);
-
-  useQuery({
-    queryFn: async () => {
-      if (!isLoading) {
-        setExecutionState("idle");
-      } else {
-        setExecutionState("fetching");
-      }
-      return executionState;
-    },
-    queryKey: [
-      "bridge-quote-execution-state",
-      stringify(preparedQuote?.steps),
-      isLoading,
-    ],
-  });
 
   // Cancellation tracking
   const abortControllerRef = useRef<AbortController | null>(null);

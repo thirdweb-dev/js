@@ -46,8 +46,8 @@ function ServerCodeExample() {
           Next.js Server Code Example
         </h2>
         <p className="max-w-4xl text-muted-foreground text-balance text-sm md:text-base">
-          Use any x402 middleware + the thirdweb facilitator to settle
-          transactions with our server wallet.
+          Create middleware with the thirdweb facilitator to settle transactions
+          with your server wallet.
         </p>
       </div>
       <div className="overflow-hidden rounded-lg border bg-card">
@@ -57,28 +57,42 @@ function ServerCodeExample() {
             className="h-full rounded-none border-none"
             code={`// src/middleware.ts
 
-import { facilitator } from "thirdweb/x402";
+import { facilitator, settlePayment } from "thirdweb/x402";
 import { createThirdwebClient } from "thirdweb";
-import { paymentMiddleware } from "x402-next";
+import { arbitrumSepolia } from "thirdweb/chains";
 
 const client = createThirdwebClient({ secretKey: "your-secret-key" });
+const thirdwebX402Facilitator = facilitator({
+  client,
+  serverWalletAddress: "0xYourWalletAddress",
+});
 
-export const middleware = paymentMiddleware(
-  "0xYourWalletAddress",
-  {
-    "/api/paid-endpoint": {
-      price: "$0.01",
-      network: "base-sepolia",
-      config: {
-        description: "Access to paid content",
-      },
-    },
-  },
-  facilitator({
-    client,
-    serverWalletAddress: "0xYourServerWalletAddress",
-  }),
-);
+export async function middleware(request: NextRequest) {
+  const method = request.method.toUpperCase();
+  const resourceUrl = request.nextUrl.toString();
+  const paymentData = request.headers.get("X-PAYMENT");
+
+  const result = await settlePayment({
+    resourceUrl,
+    method,
+    paymentData,
+    payTo: "0xYourWalletAddress",
+    network: arbitrumSepolia, // or any other chain
+    price: "$0.01", // can also be a ERC20 token amount
+    facilitator: thirdwebX402Facilitator,
+  });
+
+  if (result.status === 200) {
+    // payment successful, execute the request
+    return NextResponse.next();
+  }
+
+  // otherwise, request payment
+  return NextResponse.json(result.responseBody, {
+    status: result.status,
+    headers: result.responseHeaders,
+  });
+}
 
 // Configure which paths the middleware should run on
 export const config = {

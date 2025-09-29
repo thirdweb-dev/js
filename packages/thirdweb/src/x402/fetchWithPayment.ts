@@ -1,15 +1,13 @@
-import { createPaymentHeader } from "x402/client";
-import {
-  ChainIdToNetwork,
-  EvmNetworkToChainId,
-  type PaymentRequirements,
-  PaymentRequirementsSchema,
-  type Signer,
-} from "x402/types";
-import { viemAdapter } from "../adapters/viem.js";
+import { ChainIdToNetwork } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
+import {
+  networkToChainId,
+  type RequestedPaymentRequirements,
+  RequestedPaymentRequirementsSchema,
+} from "./schemas.js";
+import { createPaymentHeader } from "./sign.js";
 
 /**
  * Enables the payment of APIs using the x402 payment protocol.
@@ -68,7 +66,7 @@ export function wrapFetchWithPayment(
       accepts: unknown[];
     };
     const parsedPaymentRequirements = accepts
-      .map((x) => PaymentRequirementsSchema.parse(x))
+      .map((x) => RequestedPaymentRequirementsSchema.parse(x))
       .filter((x) => x.scheme === "exact"); // TODO (402): accept other schemes
 
     const account = wallet.getAccount();
@@ -86,18 +84,14 @@ export function wrapFetchWithPayment(
     );
 
     if (BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue) {
-      throw new Error("Payment amount exceeds maximum allowed");
-    }
-
-    const paymentChainId = EvmNetworkToChainId.get(
-      selectedPaymentRequirements.network,
-    );
-
-    if (!paymentChainId) {
       throw new Error(
-        `No chain found for the selected payment requirement: ${selectedPaymentRequirements.network}`,
+        `Payment amount exceeds maximum allowed (currently set to ${maxValue} in base units)`,
       );
     }
+
+    const paymentChainId = networkToChainId(
+      selectedPaymentRequirements.network,
+    );
 
     // switch to the payment chain if it's not the current chain
     if (paymentChainId !== chain.id) {
@@ -108,16 +102,11 @@ export function wrapFetchWithPayment(
       }
     }
 
-    const walletClient = viemAdapter.wallet.toViem({
-      wallet: wallet,
-      chain,
-      client,
-    }) as Signer;
-
     const paymentHeader = await createPaymentHeader(
-      walletClient,
-      x402Version,
+      client,
+      account,
       selectedPaymentRequirements,
+      x402Version,
     );
 
     const initParams = init || {};
@@ -142,7 +131,7 @@ export function wrapFetchWithPayment(
 }
 
 function defaultPaymentRequirementsSelector(
-  paymentRequirements: PaymentRequirements[],
+  paymentRequirements: RequestedPaymentRequirements[],
   chainId: number,
   scheme: "exact",
 ) {
@@ -151,7 +140,7 @@ function defaultPaymentRequirementsSelector(
       "No valid payment requirements found in server 402 response",
     );
   }
-  const currentWalletNetwork = ChainIdToNetwork[chainId];
+  const currentWalletNetwork = ChainIdToNetwork[chainId] || `eip155:${chainId}`;
   // find the payment requirements matching the connected wallet chain
   const matchingPaymentRequirements = paymentRequirements.find(
     (x) => x.network === currentWalletNetwork && x.scheme === scheme,

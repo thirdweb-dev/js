@@ -4,7 +4,15 @@ import { BadgeCheckIcon, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
 import { useState } from "react";
 import { reportFeedback } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "../ui/textarea";
 
 export function Feedback() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -12,12 +20,11 @@ export function Feedback() {
 
   if (!isSubmitted) {
     return (
-      <div className="flex flex-col gap-3 md:h-16 md:flex-row md:items-center md:gap-6">
-        <p>Was this page helpful?</p>
-
-        <div className="flex gap-3">
+      <div className="md:h-16 flex items-center gap-4">
+        <p className="text-sm text-foreground">Was this page helpful?</p>
+        <div className="flex gap-2">
           <Button
-            className="gap-2 bg-card"
+            className="gap-2 bg-card rounded-lg"
             onClick={() => {
               setIsSubmitted(true);
               reportFeedback({ helpful: true });
@@ -30,22 +37,23 @@ export function Feedback() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="gap-2 bg-card" variant="outline">
+              <Button className="gap-2 bg-card rounded-lg" variant="outline">
                 No
                 <ThumbsDownIcon className="size-4 text-muted-foreground" />
               </Button>
             </DialogTrigger>
 
             <DialogContent className="p-5">
-              <h3 className="mb-3 font-semibold text-foreground text-lg">
-                Apologies for any confusion.
-              </h3>
-              <p className="mb-5 font-medium text-muted-foreground">
-                Please provide details about the issue you encountered to help
-                us improve our documentation.
-              </p>
-              <textarea
-                className="mb-2 h-32 w-full rounded-sm border bg-card p-2 font-medium text-foreground outline-none placeholder:font-semibold"
+              <DialogHeader className="mb-5">
+                <DialogTitle>Apologies for any confusion.</DialogTitle>
+                <DialogDescription>
+                  Please provide details about the issue you encountered to help
+                  us improve our documentation.
+                </DialogDescription>
+              </DialogHeader>
+
+              <Textarea
+                className="mb-2 h-32 w-full bg-card"
                 onChange={(e) => {
                   setFeedback(e.target.value);
                 }}
@@ -71,8 +79,8 @@ export function Feedback() {
   return (
     <div className="fade-in-0 animate-in duration-500">
       <div className="flex items-center gap-2 text-foreground md:h-16">
-        <BadgeCheckIcon />
-        <p className="font-semibold text-foreground">
+        <BadgeCheckIcon className="size-4" />
+        <p className="font-semibold text-foreground text-sm">
           Thank you for your feedback!
         </p>
       </div>

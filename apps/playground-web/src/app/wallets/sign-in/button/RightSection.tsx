@@ -197,7 +197,7 @@ export function RightSection(props: {
                 }
                 auth={connectOptions.enableAuth ? playgroundAuth : undefined}
                 autoConnect={false}
-                className="shadow-xl !max-w-full"
+                className="shadow-xl"
                 client={THIRDWEB_CLIENT}
                 header={{
                   title: connectOptions.modalTitle,

@@ -6,7 +6,7 @@ import type { Chain } from "./types/Chain.js";
 import { ApiError } from "./types/Errors.js";
 
 /**
- * Retrieves supported Universal Bridge chains.
+ * Retrieves supported Bridge chains.
  *
  * @example
  * ```typescript

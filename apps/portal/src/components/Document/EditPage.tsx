@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "../ui/button";
 import { GithubIcon } from "./GithubButtonLink";
 
 const prefix =
@@ -6,15 +7,11 @@ const prefix =
 
 export function EditPage(props: { path: string }) {
   return (
-    <Link
-      className="inline-flex items-center rounded-lg border text-sm duration-200 hover:border-active-border"
-      href={prefix + props.path}
-      target="_blank"
-    >
-      <div className="p-2.5">
-        <GithubIcon className="size-5" />
-      </div>
-      <div className="border-l-2 p-2.5 font-semibold">Edit this page</div>
-    </Link>
+    <Button variant="outline" className="gap-2 rounded-xl bg-card" asChild>
+      <Link href={prefix + props.path} target="_blank">
+        <GithubIcon className="size-4 text-muted-foreground" />
+        Edit this page
+      </Link>
+    </Button>
   );
 }

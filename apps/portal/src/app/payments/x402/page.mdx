@@ -41,40 +41,62 @@ const response = await fetchWithPay('https://api.example.com/paid-endpoint');
 
 ## Server Side
 
-To make your API calls payable, you can use any x402 middleware library like x402-hono, x402-next, x402-express, etc.
+To make your API calls payable, you can use the `settlePayment` function in a middleware or in your endpoint directly.
 
-Then, use the `facilitator` configuratino function settle transactions with your thirdweb server wallet gaslessly and pass it to the middleware.
+Use the `facilitator` configuration function settle transactions with your thirdweb server wallet gaslessly and pass it to the `settlePayment` function.
 
-Here's an example with Next.js:
+Here's an example with a Next.js middleware:
 
 ```typescript
 import { createThirdwebClient } from "thirdweb";
-import { facilitator } from "thirdweb/x402";
-import { paymentMiddleware } from "x402-next";
+import { facilitator, settlePayment } from "thirdweb/x402";
+import { arbitrumSepolia } from "thirdweb/chains";
 
-const client = createThirdwebClient({
-  secretKey: process.env.THIRDWEB_SECRET_KEY as string,
+const client = createThirdwebClient({ secretKey: "your-secret-key" });
+const thirdwebX402Facilitator = facilitator({
+  client,
+  serverWalletAddress: "0xYourWalletAddress",
 });
 
-export const middleware = paymentMiddleware(
-  "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
-  {
-    "/api/paid-endpoint": {
-      price: "$0.01",
-      network: "base-sepolia",
-      config: {
-        description: "Access to paid content",
-      },
+export async function middleware(request: NextRequest) {
+  const method = request.method.toUpperCase();
+  const resourceUrl = request.nextUrl.toString();
+  const paymentData = request.headers.get("X-PAYMENT");
+
+  const result = await settlePayment({
+    resourceUrl,
+    method,
+    paymentData,
+    payTo: "0xYourWalletAddress",
+    network: arbitrumSepolia, // or any other chain
+    price: "$0.01", // can also be a ERC20 token amount
+    routeConfig: {
+      description: "Access to paid content",
     },
-  },
-  facilitator({
-    client,
-    serverWalletAddress: "0x1234567890123456789012345678901234567890",
-  }),
-);
+    facilitator: thirdwebX402Facilitator,
+  });
+
+  if (result.status === 200) {
+    // payment successful, execute the request
+    const response = NextResponse.next();
+    // optionally set the response headers back to the client
+    for (const [key, value] of Object.entries(result.responseHeaders)) {
+      response.headers.set(key, value);
+    }
+    return response;
+  }
+
+  // otherwise, request payment
+  return NextResponse.json(result.responseBody, {
+    status: result.status,
+    headers: result.responseHeaders,
+  });
+}
 
 // Configure which paths the middleware should run on
 export const config = {
   matcher: ["/api/paid-endpoint"],
 };
 ```
+
+You can also use the `verifyPayment` function to verify the payment before settling it. This lets you do the work that requires payment first and then settle the payment.

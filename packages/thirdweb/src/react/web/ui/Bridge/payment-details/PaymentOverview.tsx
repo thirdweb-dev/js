@@ -210,6 +210,7 @@ const TransactionOverViewCompact = (props: {
     client: props.client,
     transaction: props.uiOptions.transaction,
     wallet: props.paymentMethod.payerWallet,
+    currency: props.uiOptions.currency,
   });
 
   if (!txInfo.data) {

@@ -112,7 +112,6 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
       <div>
         <Heading
           anchorId={`request#${props.metadata.method.toLowerCase()}${props.metadata.path}`}
-          className="text-lg lg:text-lg"
           level={3}
         >
           Request

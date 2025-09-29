@@ -1,5 +1,61 @@
 # thirdweb
 
+## 5.108.4
+
+### Patch Changes
+
+- [#8141](https://github.com/thirdweb-dev/js/pull/8141) [`85bde21`](https://github.com/thirdweb-dev/js/commit/85bde21dc97d2ad06547832e9470532069d0cbf5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle 7702 accounts in verifyTypedData
+
+- [#8136](https://github.com/thirdweb-dev/js/pull/8136) [`aa0d23e`](https://github.com/thirdweb-dev/js/commit/aa0d23e966d4fd34ebadc38793f0f006aa70004f) Thanks [@MananTank](https://github.com/MananTank)! - Fix Embed container size
+
+## 5.108.3
+
+### Patch Changes
+
+- [#8128](https://github.com/thirdweb-dev/js/pull/8128) [`f152139`](https://github.com/thirdweb-dev/js/commit/f152139d739bbdfaefb07ee547c2655259c394b8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support ERC-2612 permit for x402 payments
+
+## 5.108.2
+
+### Patch Changes
+
+- [#8106](https://github.com/thirdweb-dev/js/pull/8106) [`1f7cda6`](https://github.com/thirdweb-dev/js/commit/1f7cda66988e88628ca9b8fe608af071aa0026a1) Thanks [@MananTank](https://github.com/MananTank)! - Add `BridgeWidget` component.
+
+  Generate a browser script in `dist/scripts/bridge-widget.js` that can be used to render the `BridgeWidget` component in a browser with a script
+
+- [#8126](https://github.com/thirdweb-dev/js/pull/8126) [`9069351`](https://github.com/thirdweb-dev/js/commit/9069351e1abd231cf9051b05b7d92f95f891060b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept chain objects for x402 APIs
+
+## 5.108.1
+
+### Patch Changes
+
+- [#8108](https://github.com/thirdweb-dev/js/pull/8108) [`e1cccd7`](https://github.com/thirdweb-dev/js/commit/e1cccd7a10447943c4b31f34e09a94d2ff5ee826) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Displays the failure error messages on the BuyWidget
+
+## 5.108.0
+
+### Minor Changes
+
+- [#8091](https://github.com/thirdweb-dev/js/pull/8091) [`5249cb7`](https://github.com/thirdweb-dev/js/commit/5249cb7409a8486346fe428f824c81dd90845555) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Accept arbitrary chain ids for x402 payments with new settlePayment() and verifyPayment() backend utility functions
+
+### Patch Changes
+
+- [#8100](https://github.com/thirdweb-dev/js/pull/8100) [`a94f229`](https://github.com/thirdweb-dev/js/commit/a94f22928a662a5aff7a203fc2d383d9fa0907ec) Thanks [@MananTank](https://github.com/MananTank)! - Update the `onSuccess`, `onError`, and `onCancel` callback props of the `BuyWidget` to be called with the `quote` object
+
+  ```tsx
+  <BuyWidget
+    onSuccess={(quote) => console.log("Swap completed:", quote)}
+    onError={(error, quote) => console.error("Swap failed:", error, quote)}
+    onCancel={(quote) => console.log("Swap cancelled:", quote)}
+  />
+  ```
+
+## 5.107.1
+
+### Patch Changes
+
+- [#8080](https://github.com/thirdweb-dev/js/pull/8080) [`93f913c`](https://github.com/thirdweb-dev/js/commit/93f913c614ebbe3db350872bdcff264c07155ce2) Thanks [@MananTank](https://github.com/MananTank)! - SwapWidget UI improvements
+
+- [#8092](https://github.com/thirdweb-dev/js/pull/8092) [`a85ef0b`](https://github.com/thirdweb-dev/js/commit/a85ef0b222797d38ccd31e72fafda82ceb1faefa) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - add zephyr testnet to pre-1559 chains
+
 ## 5.107.0
 
 ### Minor Changes

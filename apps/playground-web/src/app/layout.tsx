@@ -1,25 +1,14 @@
 import type { Metadata } from "next";
-import { Fira_Code, Inter } from "next/font/google";
 import { metadataBase } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { AppSidebarLayout } from "./AppSidebar";
 import { Providers } from "./providers";
 import "@workspace/ui/global.css";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
-
-const sansFont = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: "variable",
-});
-
-const monoFont = Fira_Code({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: "variable",
-});
 
 export const metadata: Metadata = {
   description: "thirdweb playground",
@@ -37,8 +26,8 @@ export default async function RootLayout({
       <body
         className={cn(
           "bg-background font-sans antialiased ",
-          sansFont.variable,
-          monoFont.variable,
+          GeistSans.variable,
+          GeistMono.variable,
         )}
       >
         <ThemeProvider

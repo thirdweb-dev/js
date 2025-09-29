@@ -235,20 +235,16 @@ export function SwapUI(props: SwapUIProps) {
         {modalState.screen === "select-buy-token" && (
           <SelectToken
             activeWalletInfo={props.activeWalletInfo}
-            onBack={() =>
-              setModalState((v) => ({
-                ...v,
-                isOpen: false,
-              }))
-            }
-            client={props.client}
-            selectedToken={props.buyToken}
-            setSelectedToken={(token) => {
-              props.setBuyToken(token);
+            onClose={() => {
               setModalState((v) => ({
                 ...v,
                 isOpen: false,
               }));
+            }}
+            client={props.client}
+            selectedToken={props.buyToken}
+            setSelectedToken={(token) => {
+              props.setBuyToken(token);
               // if buy token is same as sell token, unset sell token
               if (
                 props.sellToken &&
@@ -264,20 +260,16 @@ export function SwapUI(props: SwapUIProps) {
 
         {modalState.screen === "select-sell-token" && (
           <SelectToken
-            onBack={() =>
-              setModalState((v) => ({
-                ...v,
-                isOpen: false,
-              }))
-            }
-            client={props.client}
-            selectedToken={props.sellToken}
-            setSelectedToken={(token) => {
-              props.setSellToken(token);
+            onClose={() => {
               setModalState((v) => ({
                 ...v,
                 isOpen: false,
               }));
+            }}
+            client={props.client}
+            selectedToken={props.sellToken}
+            setSelectedToken={(token) => {
+              props.setSellToken(token);
               // if sell token is same as buy token, unset buy token
               if (
                 props.buyToken &&

@@ -1,29 +1,39 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
-import type { Chain, ThirdwebClient } from "thirdweb";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Chain } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
 import {
   reportAssetBuyCancelled,
   reportAssetBuyFailed,
   reportAssetBuySuccessful,
   reportSwapWidgetShown,
+  reportTokenBuyCancelled,
+  reportTokenBuyFailed,
+  reportTokenBuySuccessful,
   reportTokenSwapCancelled,
   reportTokenSwapFailed,
   reportTokenSwapSuccessful,
 } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
+import {
+  NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID,
+} from "@/constants/public-envs";
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
+import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
+
+type PageType = "asset" | "bridge" | "chain";
 
 export function BuyAndSwapEmbed(props: {
-  client: ThirdwebClient;
   chain: Chain;
   tokenAddress: string | undefined;
   buyAmount: string | undefined;
-  pageType: "asset" | "bridge" | "chain";
+  pageType: PageType;
 }) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
@@ -41,8 +51,23 @@ export function BuyAndSwapEmbed(props: {
     });
   }, [props.pageType]);
 
+  const client = useMemo(() => {
+    return getConfiguredThirdwebClient({
+      clientId:
+        props.pageType === "asset"
+          ? NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID
+          : props.pageType === "bridge"
+            ? NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID
+            : props.pageType === "chain"
+              ? NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID
+              : undefined,
+      secretKey: undefined,
+      teamId: undefined,
+    });
+  }, [props.pageType]);
+
   return (
-    <div className="bg-card rounded-2xl border overflow-hidden flex flex-col relative z-10">
+    <div className="bg-card rounded-2xl border overflow-hidden flex flex-col relative z-10 shadow-xl min-w-0">
       <div className="flex gap-2.5 p-4 border-b border-dashed">
         <TabButton
           label="Swap"
@@ -60,38 +85,87 @@ export function BuyAndSwapEmbed(props: {
         <BuyWidget
           amount={props.buyAmount || "1"}
           chain={props.chain}
-          className="!rounded-2xl !w-full !border-none"
+          className="!rounded-2xl !border-none"
           title=""
-          client={props.client}
+          client={client}
           connectOptions={{
             autoConnect: false,
           }}
-          onError={(e) => {
+          onError={(e, quote) => {
             const errorMessage = parseError(e);
+
+            reportTokenBuyFailed({
+              buyTokenChainId:
+                quote?.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote?.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote?.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote?.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuyFailed({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
                 error: errorMessage,
+                contractType: undefined,
               });
             }
           }}
-          onCancel={() => {
+          onCancel={(quote) => {
+            reportTokenBuyCancelled({
+              buyTokenChainId:
+                quote?.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote?.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote?.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote?.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuyCancelled({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
+                contractType: undefined,
               });
             }
           }}
-          onSuccess={() => {
+          onSuccess={(quote) => {
+            reportTokenBuySuccessful({
+              buyTokenChainId:
+                quote.type === "buy"
+                  ? quote.intent.destinationChainId
+                  : quote.type === "onramp"
+                    ? quote.intent.chainId
+                    : undefined,
+              buyTokenAddress:
+                quote.type === "buy"
+                  ? quote.intent.destinationTokenAddress
+                  : quote.type === "onramp"
+                    ? quote.intent.tokenAddress
+                    : undefined,
+              pageType: props.pageType,
+            });
+
             if (props.pageType === "asset") {
               reportAssetBuySuccessful({
                 assetType: "coin",
                 chainId: props.chain.id,
-                contractType: "DropERC20",
+                contractType: undefined,
               });
             }
           }}
@@ -103,9 +177,9 @@ export function BuyAndSwapEmbed(props: {
 
       {tab === "swap" && (
         <SwapWidget
-          client={props.client}
+          client={client}
           theme={themeObj}
-          className="!rounded-2xl !border-none !w-full"
+          className="!rounded-2xl !border-none"
           prefill={{
             // buy this token by default
             buyToken: {

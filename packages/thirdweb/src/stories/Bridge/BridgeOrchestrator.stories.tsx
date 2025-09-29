@@ -241,6 +241,37 @@ export const TransactionLight: Story = {
   },
 };
 
+/**
+ * Transaction mode in light theme showing an ERC20 token transfer.
+ */
+export const TransactionJPYCurrency: Story = {
+  args: {
+    connectLocale: undefined,
+    connectOptions: undefined,
+    onCancel: undefined,
+    onComplete: undefined,
+    onError: undefined,
+    paymentLinkId: undefined,
+    presetOptions: undefined,
+    purchaseData: undefined,
+    receiverAddress: undefined,
+    theme: "light",
+    uiOptions: {
+      ...TRANSACTION_UI_OPTIONS.erc20Transfer,
+      currency: "JPY",
+    },
+  },
+  parameters: {
+    backgrounds: { default: "light" },
+    docs: {
+      description: {
+        story:
+          "Light theme version of transaction mode showing an ERC20 token transfer with proper token amount formatting and USD conversion.",
+      },
+    },
+  },
+};
+
 export const CustompresetOptions: Story = {
   args: {
     connectLocale: undefined,

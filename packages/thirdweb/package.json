@@ -65,6 +65,7 @@
     "@types/prompts": "2.4.9",
     "@types/qrcode": "1.5.5",
     "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
     "@viem/anvil": "0.0.10",
     "@vitejs/plugin-react": "^4.6.0",
     "@vitest/coverage-v8": "3.2.4",
@@ -89,6 +90,7 @@
     "sharp": "^0.34.2",
     "size-limit": "11.2.0",
     "storybook": "9.0.15",
+    "tsup": "^8.5.0",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
@@ -323,7 +325,8 @@
   "scripts": {
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "bench:compare": "bun run ./benchmarks/run.ts",
-    "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
+    "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm && pnpm build:tsup",
+    "build:tsup": "tsup",
     "build-storybook": "storybook build",
     "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
@@ -427,5 +430,5 @@
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.107.0"
+  "version": "5.108.4"
 }

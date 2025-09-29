@@ -7,7 +7,11 @@ import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecut
 import { StepRunner } from "../../react/web/ui/Bridge/StepRunner.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import { STORY_MOCK_WALLET, simpleBuyRequest } from "./fixtures.js";
+import {
+  STORY_MOCK_WALLET,
+  simpleBuyQuote,
+  simpleBuyRequest,
+} from "./fixtures.js";
 
 // Mock window adapter
 const mockWindowAdapter: WindowAdapter = {
@@ -32,7 +36,7 @@ const StepRunnerWithTheme = (props: StepRunnerWithThemeProps) => {
   const { theme, ...componentProps } = props;
   return (
     <ModalThemeWrapper theme={theme}>
-      <StepRunner {...componentProps} />
+      <StepRunner {...componentProps} preparedQuote={simpleBuyQuote} />
     </ModalThemeWrapper>
   );
 };
@@ -59,29 +63,8 @@ const meta = {
   },
   component: StepRunnerWithTheme,
   parameters: {
-    docs: {
-      description: {
-        component:
-          "**StepRunner** executes prepared route steps sequentially, showing real-time progress and transaction status.\n\n" +
-          "## Features\n" +
-          "- **Real Execution**: Uses useStepExecutor hook for actual transaction processing\n" +
-          "- **Progress Tracking**: Visual progress bar and step-by-step status updates\n" +
-          "- **Error Handling**: Retry functionality for failed transactions\n" +
-          "- **Transaction Batching**: Optimizes multiple transactions when possible\n" +
-          "- **Onramp Support**: Handles fiat-to-crypto onramp flows\n\n" +
-          "## Props\n" +
-          "- `steps`: Array of RouteStep objects from Bridge.prepare()\n" +
-          "- `wallet`: Connected wallet for transaction signing\n" +
-          "- `client`: ThirdwebClient instance\n" +
-          "- `windowAdapter`: Platform-specific window/URL handler\n" +
-          "- `onramp`: Optional onramp configuration\n\n" +
-          "## Integration\n" +
-          "This component is typically used within the BridgeOrchestrator after route preparation.",
-      },
-    },
     layout: "centered",
   },
-  tags: ["autodocs"],
   title: "Bridge/StepRunner",
 } satisfies Meta<typeof StepRunnerWithTheme>;
 

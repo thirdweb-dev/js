@@ -58,6 +58,7 @@ export function NFTGetAllTable({
       includeOwners: true,
       start: currentPage * pageSize,
       tokenByIndex,
+      useIndexer: false, // TEMPORARY, TODO: Remove when this is fixed in insight
     },
   );
 

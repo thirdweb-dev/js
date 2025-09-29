@@ -22,39 +22,51 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { mapV4ChainToV5Chain } from "@/utils/map-chains";
 import { TeamHeader } from "../../../../team/components/TeamHeader/team-header";
 import { StarButton } from "../../components/client/star-button";
-import { getChain, getChainMetadata } from "../../utils";
+import { getChain, getCustomChainMetadata } from "../../utils";
+import { fetchChainSeo } from "./apis/chain-seo";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainPageView } from "./components/client/chain-pageview";
 import { ChainHeader } from "./components/server/chain-header";
 
-// TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
+type Params = Promise<{ chain_id: string }>;
 
 export async function generateMetadata(props: {
-  params: Promise<{ chain_id: string }>;
-}): Promise<Metadata> {
+  params: Params;
+}): Promise<Metadata | undefined> {
   const params = await props.params;
   const chain = await getChain(params.chain_id);
-  const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
-  const title = `${sanitizedChainName}: RPC and Chain Settings`;
+  const chainSeo = await fetchChainSeo(Number(chain.chainId)).catch(
+    () => undefined,
+  );
 
-  const description = `Use the best ${sanitizedChainName} RPC and add to your wallet. Discover the chain ID, native token, explorers, and ${
-    chain.testnet && chain.faucets?.length ? "faucet options" : "more"
-  }.`;
+  if (!chainSeo) {
+    return undefined;
+  }
 
   return {
-    description,
+    title: chainSeo.title,
+    description: chainSeo.description,
+    metadataBase: new URL("https://thirdweb.com"),
     openGraph: {
-      description,
-      title,
+      title: chainSeo.og.title,
+      description: chainSeo.og.description,
+      siteName: "thirdweb",
+      type: "website",
+      url: "https://thirdweb.com",
     },
-    title,
+    twitter: {
+      title: chainSeo.og.title,
+      description: chainSeo.og.description,
+      card: "summary_large_image",
+      creator: "@thirdweb",
+      site: "@thirdweb",
+    },
   };
 }
 
-// this is the dashboard layout file
 export default async function ChainPageLayout(props: {
   children: React.ReactNode;
-  params: Promise<{ chain_id: string }>;
+  params: Params;
 }) {
   const params = await props.params;
   const { children } = props;
@@ -67,8 +79,10 @@ export default async function ChainPageLayout(props: {
     redirect(chain.slug);
   }
 
-  const chainMetadata = await getChainMetadata(chain.chainId);
+  const customChainMetadata = getCustomChainMetadata(chain.chainId);
+  const chainSeo = await fetchChainSeo(chain.chainId);
   const client = getClientThirdwebClient(undefined);
+  const description = customChainMetadata?.about || chainSeo?.description;
 
   return (
     <div className="flex grow flex-col">
@@ -123,7 +137,7 @@ export default async function ChainPageLayout(props: {
           <ChainHeader
             chain={chain}
             client={client}
-            headerImageUrl={chainMetadata?.headerImgUrl}
+            headerImageUrl={customChainMetadata?.headerImgUrl}
             logoUrl={chain.icon?.url}
           />
 
@@ -131,7 +145,7 @@ export default async function ChainPageLayout(props: {
 
           <div className="flex flex-col gap-3 md:gap-2">
             {/* Gas Sponsored badge - Mobile */}
-            {chainMetadata?.gasSponsored && (
+            {customChainMetadata?.gasSponsored && (
               <div className="flex md:hidden">
                 <GasSponsoredBadge />
               </div>
@@ -153,7 +167,7 @@ export default async function ChainPageLayout(props: {
               )}
 
               {/* Gas Sponsored badge - Desktop */}
-              {chainMetadata?.gasSponsored && (
+              {customChainMetadata?.gasSponsored && (
                 <div className="hidden md:block">
                   <GasSponsoredBadge />
                 </div>
@@ -161,9 +175,9 @@ export default async function ChainPageLayout(props: {
             </div>
 
             {/* description */}
-            {chainMetadata?.about && (
-              <p className="mb-2 whitespace-pre-line text-muted-foreground text-sm lg:text-base">
-                {chainMetadata.about}
+            {description && (
+              <p className="mb-2 whitespace-pre-line text-muted-foreground text-sm lg:text-base text-pretty max-w-3xl">
+                {description}
               </p>
             )}
 

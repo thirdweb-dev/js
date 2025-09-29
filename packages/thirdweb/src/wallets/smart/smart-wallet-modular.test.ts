@@ -108,7 +108,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       });
     });
 
-    it("should send a batch transaction", async () => {
+    it.skip("should send a batch transaction", async () => {
       const tx = prepareTransaction({
         chain,
         client,

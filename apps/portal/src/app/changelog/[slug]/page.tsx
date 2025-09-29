@@ -25,7 +25,7 @@ export default async function Page(props: {
 
   return (
     <div className="changelog-page">
-      <Button asChild>
+      <Button asChild variant="ghost">
         <Link
           className="-translate-x-1/4 !p-2 !text-muted-foreground hover:!text-foreground mb-4 bg-transparent"
           href="/changelog"
@@ -64,7 +64,7 @@ export default async function Page(props: {
         })}
       </div>
 
-      <div className="mb-8 border-t-2" />
+      <div className="mb-8 border-t border-dashed" />
 
       {ReactHtmlParser(data.html || "", {
         transform,

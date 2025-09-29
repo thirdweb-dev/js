@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+    "rootDir": "./src",
+    "sourceMap": false,
+    "noCheck": true
+  },
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.test-d.ts",
+    "src/**/*.bench.ts",
+    "src/**/*.macro.ts"
+  ],
+  "include": ["src"]
+}

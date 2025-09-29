@@ -23,7 +23,7 @@ export function EmptyStateChatPageContent(props: {
   onLoginClick: undefined | (() => void);
 }) {
   return (
-    <div className="overflow-hidden py-10 lg:py-16">
+    <div className="relative overflow-hidden py-10 lg:py-16">
       {props.showAurora && (
         <Aurora className="top-0 left-1/2 h-[800px] w-[1000px] text-[hsl(var(--nebula-pink-foreground)/8%)] lg:w-[150%] dark:text-[hsl(var(--nebula-pink-foreground)/10%)]" />
       )}

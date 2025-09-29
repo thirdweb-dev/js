@@ -1,3 +1,4 @@
+import { BarChart3Icon, DollarSignIcon, TrendingUpIcon } from "lucide-react";
 import { cookies } from "next/headers";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -13,8 +14,6 @@ import { PageHeader } from "../_components/PageHeader";
 import { ContractHeaderUI } from "./_components/ContractHeader";
 import { TokenDropClaim } from "./_components/claim-tokens/claim-tokens-ui";
 import { ContractAnalyticsOverview } from "./_components/contract-analytics/contract-analytics";
-import { DexScreener } from "./_components/dex-screener";
-import { mapChainIdToDexScreenerChainSlug } from "./_components/dex-screener-chains";
 import { RecentTransfers } from "./_components/RecentTransfers";
 import { fetchTokenInfoFromBridge } from "./_utils/fetch-coin-info";
 import { getCurrencyMeta } from "./_utils/getCurrencyMeta";
@@ -40,7 +39,7 @@ export async function ERC20PublicPage(props: {
     }),
     fetchTokenInfoFromBridge({
       chainId: props.serverContract.chain.id,
-      clientId: props.clientContract.client.clientId,
+      client: props.serverContract.client,
       tokenAddress: props.serverContract.address,
     }),
     resolveFunctionSelectors(props.serverContract),
@@ -80,7 +79,7 @@ export async function ERC20PublicPage(props: {
       <AssetPageView assetType="coin" chainId={props.chainMetadata.chainId} />
       <PageHeader containerClassName="max-w-7xl" />
 
-      <div className="border-b">
+      <div className="border-b border-dashed">
         <div className="container max-w-7xl">
           <ContractHeaderUI
             chainMetadata={props.chainMetadata}
@@ -102,6 +101,44 @@ export async function ERC20PublicPage(props: {
 
       <div className="h-8" />
 
+      {tokenInfoFromUB && (
+        <div className="container max-w-7xl mb-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 p-6 border rounded-xl bg-card relative">
+            <TokenInfoSection
+              icon={DollarSignIcon}
+              label="Price"
+              value={
+                tokenInfoFromUB.prices.USD
+                  ? formatPrice(tokenInfoFromUB.prices.USD)
+                  : "N/A"
+              }
+            />
+
+            <TokenInfoSection
+              className="border-t pt-6 lg:border-l lg:border-t-0 border-dashed lg:pl-8 lg:pt-0"
+              icon={TrendingUpIcon}
+              label="Market Cap"
+              value={
+                tokenInfoFromUB.marketCapUsd
+                  ? formatCompactUSD(tokenInfoFromUB.marketCapUsd)
+                  : "N/A"
+              }
+            />
+
+            <TokenInfoSection
+              className="border-t pt-6 lg:border-l lg:border-t-0 border-dashed lg:pl-8 lg:pt-0"
+              icon={BarChart3Icon}
+              label="Volume (24h)"
+              value={
+                tokenInfoFromUB.volume24hUsd
+                  ? formatCompactUSD(tokenInfoFromUB.volume24hUsd)
+                  : "N/A"
+              }
+            />
+          </div>
+        </div>
+      )}
+
       {showBuyEmbed && (
         <div className="container max-w-7xl pb-10">
           <GridPatternEmbedContainer>
@@ -115,20 +152,6 @@ export async function ERC20PublicPage(props: {
               tokenSymbol={contractMetadata.symbol}
             />
           </GridPatternEmbedContainer>
-        </div>
-      )}
-
-      {props.chainMetadata.chainId in mapChainIdToDexScreenerChainSlug && (
-        <div className="container max-w-7xl pb-10">
-          <DexScreener
-            chain={
-              mapChainIdToDexScreenerChainSlug[
-                props.chainMetadata
-                  .chainId as keyof typeof mapChainIdToDexScreenerChainSlug
-              ]
-            }
-            contractAddress={props.clientContract.address}
-          />
         </div>
       )}
 
@@ -173,7 +196,6 @@ function BuyEmbed(props: {
     return (
       <BuyAndSwapEmbed
         chain={props.clientContract.chain}
-        client={props.clientContract.client}
         tokenAddress={props.clientContract.address}
         buyAmount={undefined}
         pageType="asset"
@@ -206,3 +228,61 @@ async function getActiveClaimConditionWithErrorHandler(
 }
 
 type ActiveClaimCondition = Awaited<ReturnType<typeof getActiveClaimCondition>>;
+
+function TokenInfoSection(props: {
+  label: string;
+  value: string;
+  icon: React.FC<{ className?: string }>;
+  className?: string;
+}) {
+  return (
+    <div className={props.className}>
+      <div className="flex mb-5">
+        <div className="border rounded-full bg-background p-2">
+          <props.icon className="size-4 text-muted-foreground" />
+        </div>
+      </div>
+      <dl className="space-y-1.5">
+        <dt className="text-xs font-medium text-muted-foreground tracking-wider uppercase">
+          {props.label}
+        </dt>
+        <dd className="text-3xl font-bold text-foreground tracking-tight">
+          {props.value}
+        </dd>
+      </dl>
+    </div>
+  );
+}
+
+function formatPrice(value: number): string {
+  if (value < 100) {
+    return smallValueUSDFormatter.format(value);
+  }
+  return largeValueUSDFormatter.format(value);
+}
+
+const smallValueUSDFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 6,
+  roundingMode: "halfEven",
+});
+
+const largeValueUSDFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 2,
+  roundingMode: "halfEven",
+});
+
+const compactValueUSDFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  maximumFractionDigits: 2,
+  roundingMode: "halfEven",
+});
+
+function formatCompactUSD(value: number): string {
+  return compactValueUSDFormatter.format(value);
+}

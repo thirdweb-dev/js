@@ -113,10 +113,14 @@ export function TableOfContentsSideBar(props: {
     };
   }, [filterHeading, pathname]);
 
+  if (nodes.length === 0) {
+    return null;
+  }
+
   return (
     <nav
       className={cn(
-        "shrink-0 hidden pt-6 text-sm xl:block",
+        "shrink-0 hidden pt-6 text-sm xl:block animate-in fade-in-0",
         "styled-scrollbar sticky top-sticky-top-height h-sidebar-height flex-col overflow-y-auto",
       )}
       style={{
@@ -124,7 +128,7 @@ export function TableOfContentsSideBar(props: {
       }}
     >
       <div className="text-sm">
-        <div className="font-medium mb-4 text-foreground border-b pb-4 text-base">
+        <div className="font-medium mb-4 text-foreground text-base">
           On this page
         </div>
         <div

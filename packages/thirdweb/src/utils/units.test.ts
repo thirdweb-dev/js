@@ -199,6 +199,19 @@ describe("toUnits", () => {
     expect(toUnits("69.59000000059", 9)).toMatchInlineSnapshot("69590000001n");
     expect(toUnits("69.59000002359", 9)).toMatchInlineSnapshot("69590000024n");
   });
+
+  it("scientific notation", () => {
+    // negative exponents
+    expect(toUnits("1e-18", 18)).toMatchInlineSnapshot("1n");
+    expect(toUnits("1e-16", 18)).toMatchInlineSnapshot("100n");
+    expect(toUnits("1.23456789012345e-7", 18)).toMatchInlineSnapshot(
+      "123456789012n",
+    );
+    // positive exponents
+    expect(toUnits("1.234e3", 18)).toMatchInlineSnapshot(
+      "1234000000000000000000n",
+    );
+  });
 });
 
 describe("toWei", () => {

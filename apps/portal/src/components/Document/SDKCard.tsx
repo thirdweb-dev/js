@@ -10,14 +10,16 @@ export function SDKCard(props: {
 }) {
   return (
     <Link
-      className="flex items-center gap-2 rounded-lg border bg-card p-2 px-4 transition-colors hover:border-active-border text-foreground/80 hover:text-foreground shadow-sm"
+      className="flex items-center gap-3 rounded-xl border bg-card px-4 py-3.5 transition-colors hover:border-active-border text-foreground/80 hover:text-foreground shadow-sm"
       href={props.href}
       target={props.isExternal ? "_blank" : undefined}
     >
       {props.icon && (
-        <props.icon className={cn("size-4 shrink-0", props.iconClassName)} />
+        <div className="rounded-full p-1.5 bg-background shrink-0 border">
+          <props.icon className={cn("size-4", props.iconClassName)} />
+        </div>
       )}
-      <h3 className="font-semibold text-sm tracking-tight">{props.title}</h3>
+      <h3 className="text-foreground text-sm font-medium">{props.title}</h3>
     </Link>
   );
 }

@@ -14,6 +14,10 @@ const config: Config = {
     ...tailwindConfig.theme,
     extend: {
       ...tailwindConfig.theme?.extend,
+      fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
+      },
       spacing: {
         "offset-top": "calc(var(--sticky-top-height) + 18px)",
         "offset-top-mobile": "calc(var(--sticky-top-height) + 100px)",

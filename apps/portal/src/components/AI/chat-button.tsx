@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircleIcon, RefreshCcwIcon, XIcon } from "lucide-react";
+import { BrainIcon, RefreshCcwIcon, XIcon } from "lucide-react";
 import { lazy, Suspense, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
@@ -20,14 +20,14 @@ export function ChatButton() {
     <>
       {/* Inline Button (not floating) */}
       <Button
-        className="gap-2 rounded-full shadow-lg"
+        className="gap-2 rounded-full bg-background"
         onClick={() => {
           setIsOpen(true);
           setHasBeenOpened(true);
         }}
-        variant="default"
+        variant="outline"
       >
-        <MessageCircleIcon className="size-4" />
+        <BrainIcon className="size-4 text-muted-foreground" />
         Ask AI
       </Button>
 

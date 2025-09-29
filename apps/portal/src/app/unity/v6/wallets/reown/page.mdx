@@ -1,0 +1,102 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "ReownWallet | Thirdweb Unity SDK",
+	description:
+		"Connect external wallets in Unity using Reown AppKit and Thirdweb.",
+});
+
+# ReownWallet
+
+`ReownWallet` replaces the legacy WalletConnect integration. It wraps the official [Reown AppKit](https://docs.reown.com/appkit/unity) to surface 400+ wallets inside your Unity project.
+
+<Callout type="info" title="Prerequisites">
+	- Install the **Reown AppKit Unity** package (via UPM Git URL `https://github.com/reown-com/appkit-unity.git`).
+	- Add the **"Reown AppKit"** prefab to your scene.
+	- Define the scripting symbol **`THIRDWEB_REOWN`** (Project Settings → Player → Other Settings → Scripting Define Symbols).
+
+	Without the define symbol you'll hit a `NotSupportedException` with guidance to enable Reown support.
+</Callout>
+
+## Setup checklist
+
+1. **Add Reown prefab** – drag the `Reown AppKit` prefab from `Packages/Reown.AppKit.Unity/Prefabs` into your scene.
+2. **Plan your connect call** – you choose the chain and branding when you construct `WalletOptions` and `ReownOptions` before calling `ConnectWallet`.
+3. **Set the script define** – add `THIRDWEB_REOWN` to every build target that will use Reown.
+4. **Provide metadata** – Reown needs a WalletConnect **projectId** plus branding details (name, description, URL, icon) in the options you pass at runtime.
+
+If the prefab is missing, the SDK logs an error at runtime telling you to either remove the define or add the prefab.
+
+## Connecting with Reown
+
+```csharp
+var reownOptions = new ReownOptions(
+	projectId: "YOUR_REOWN_PROJECT_ID",
+	name: "My Game",
+	description: "thirdweb powered experience",
+	url: "https://mygame.example",
+	iconUrl: "https://mygame.example/icon.png",
+	includedWalletIds: new[] { "eip155:1:metamask" },
+	excludedWalletIds: null
+);
+
+var walletOptions = new WalletOptions(
+	provider: WalletProvider.ReownWallet,
+	chainId: 1,
+	reownOptions: reownOptions
+);
+
+var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
+```
+
+The connection flow will:
+
+1. Initialize Reown AppKit (once per session) with your metadata.
+2. Attempt to resume a previous session before showing the modal.
+3. Open the Reown modal for up to 120 seconds if no session is found.
+4. Ensure the connected chain matches `walletOptions.ChainId`.
+
+If the selected chain is not part of Reown's built-in list, the SDK automatically injects the chain metadata using Thirdweb's chain APIs and logs a warning so you know it was added on the fly.
+
+## API surface
+
+`ReownWallet.Create` accepts the following arguments:
+
+<Details summary="ReownWallet.Create parameters">
+
+### client (required)
+
+`ThirdwebClient` instance obtained from your `ThirdwebManager`.
+
+### activeChainId (required)
+
+`BigInteger` chain ID the wallet should target on connect.
+
+### projectId (required)
+
+Reown WalletConnect project ID.
+
+### name, description, url, iconUrl (optional)
+
+Branding metadata used inside the modal. Defaults mirror the `ReownOptions` constructor.
+
+### includedWalletIds / excludedWalletIds (optional)
+
+Filter the wallet list presented by Reown. Use WalletConnect wallet IDs (e.g. `eip155:1:metamask`).
+
+</Details>
+
+> **Limitations:** Reown currently doesn't support raw `eth_sign`, account linking, or EIP-7702 authorizations. The SDK throws descriptive exceptions if you call those APIs.
+
+## Troubleshooting
+
+- **"Reown AppKit not found"** – add the prefab or remove `THIRDWEB_REOWN` if you don't need Reown.
+- **NotSupportedException on connect** – ensure the define symbol is added for the active build target.
+- **Connection timed out** – the modal stays open for 120 seconds; confirm the wallet scanned the QR code or resumed the session.
+
+<ArticleIconCard
+	href="/dotnet/wallets/actions/getaddress"
+	icon={GraduationCap}
+	title="Explore the IThirdwebWallet API"
+/>

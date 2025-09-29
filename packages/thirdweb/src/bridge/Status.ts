@@ -7,7 +7,7 @@ import { ApiError } from "./types/Errors.js";
 import type { Status } from "./types/Status.js";
 
 /**
- * Retrieves a Universal Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
+ * Retrieves a Bridge quote for the provided sell intent. The quote will specify the expected `destinationAmount` that will be received in exchange for the specified `originAmount`, which is specified with the `sellAmountWei` option.
  *
  * The returned status will include both the origin and destination transactions and any finalized amounts for the route.
  *

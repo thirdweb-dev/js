@@ -4,6 +4,7 @@ import {
   BotIcon,
   BoxIcon,
   BringToFrontIcon,
+  CircleDollarSignIcon,
   CircleUserIcon,
   CreditCardIcon,
   DollarSignIcon,
@@ -185,6 +186,13 @@ export const paymentsFeatureCards: FeatureCardMetadata[] = [
     link: "/payments/transactions",
     description:
       "Enable users to pay for onchain transactions with fiat or crypto",
+  },
+  {
+    icon: CircleDollarSignIcon,
+    title: "x402",
+    link: "/payments/x402",
+    description:
+      "Use the x402 payment protocol to pay for API calls using any web3 wallet",
   },
 ];
 

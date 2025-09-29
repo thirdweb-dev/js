@@ -9,7 +9,7 @@ type FeatureCardItem = {
 export function FeatureCard(props: FeatureCardItem) {
   const { title, description, iconUrl } = props;
   return (
-    <div className="bg-card rounded-lg p-4 border">
+    <div className="bg-card rounded-xl p-4 border">
       <div className="flex mb-3">
         <div className="p-2 rounded-full border bg-background [&_svg]:size-4 [&_svg]:text-muted-foreground">
           {typeof iconUrl === "string" ? (

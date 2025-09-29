@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
-import { useId } from "react";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isProd } from "@/constants/env-utils";
 import { API_ROUTES_CLIENT_ID } from "@/constants/server-envs";
@@ -62,8 +61,9 @@ function shortenString(str: string) {
   return `${str.substring(0, 7)}...${str.substring(str.length - 5)}`;
 }
 
+const gradientId = "og-brand-icon-gradient";
+
 const OgBrandIcon: React.FC = () => {
-  const gradientId = useId();
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
     <svg

@@ -6,10 +6,10 @@ import { ThirdwebMiniLogo } from "../../(app)/components/ThirdwebMiniLogo";
 
 export function PageHeader(props: { containerClassName?: string }) {
   return (
-    <div className="border-b border-dashed">
+    <div className="border-b border-border/50 border-dashed">
       <header
         className={cn(
-          "container flex max-w-7xl justify-between py-3",
+          "container flex max-w-7xl justify-between py-4",
           props.containerClassName,
         )}
       >
@@ -30,7 +30,7 @@ export function PageHeader(props: { containerClassName?: string }) {
           >
             Docs
           </Link>
-          <ToggleThemeButton />
+          <ToggleThemeButton className="bg-transparent" />
           <PublicPageConnectButton connectButtonClassName="!rounded-full" />
         </div>
       </header>

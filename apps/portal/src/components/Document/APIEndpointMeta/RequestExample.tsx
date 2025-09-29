@@ -73,7 +73,7 @@ export function RequestExample(props: {
 
   return (
     <div>
-      <div className="flex-col lg:flex-row flex items-start lg:items-center justify-between border-b px-4 py-2 gap-3 lg:gap-0">
+      <div className="flex-col lg:flex-row flex items-start lg:items-center justify-between border-b px-4 py-3 gap-3 lg:gap-0">
         <div className="flex min-w-0 items-center gap-3">
           <Badge className="bg-inverted text-inverted-foreground">
             {props.method}
@@ -109,10 +109,10 @@ export function RequestExample(props: {
               }}
               value={selectedFormat}
             >
-              <SelectTrigger className="w-[130px]">
+              <SelectTrigger className="w-[130px] rounded-full bg-card">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-background">
+              <SelectContent className="bg-background rounded-xl">
                 <SelectItem value="fetch">Fetch</SelectItem>
                 <SelectItem value="curl">Curl</SelectItem>
               </SelectContent>
@@ -144,10 +144,10 @@ export function RequestExample(props: {
                   }}
                   value={selectedExampleType}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="w-[130px] rounded-full bg-card">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-background">
+                  <SelectContent className="bg-background rounded-xl">
                     {exampleTypes.map((exampleType) => (
                       <SelectItem key={exampleType} value={exampleType!}>
                         {exampleType}
@@ -169,10 +169,10 @@ export function RequestExample(props: {
             }}
             value={selectedExample?.label}
           >
-            <SelectTrigger className="w-[130px]">
+            <SelectTrigger className="w-[130px] rounded-full bg-card">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-background">
+            <SelectContent className="bg-background rounded-xl">
               {props.codeExamples.map((example) => (
                 <SelectItem key={example.label} value={example.label}>
                   {example.label}

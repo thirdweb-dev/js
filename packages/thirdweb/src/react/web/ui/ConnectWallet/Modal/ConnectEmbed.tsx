@@ -479,6 +479,7 @@ export const EmbedContainer = /* @__PURE__ */ StyledDiv<{
     lineHeight: "normal",
     overflow: "hidden",
     position: "relative",
+    maxWidth: "100%",
     width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
   };
 });

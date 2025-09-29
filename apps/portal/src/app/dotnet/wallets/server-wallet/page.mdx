@@ -1,0 +1,123 @@
+import { Callout, Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ServerWallet.Create | Thirdweb .NET SDK",
+	description: "Provision a vault-backed server wallet from your Thirdweb dashboard label.",
+});
+
+# ServerWallet.Create
+
+`ServerWallet` lets you operate a vault-secured signer that lives inside your Thirdweb project. Use it whenever you need backend signing with the same controls and monitoring offered in the dashboard.
+
+<Callout type="info">
+Before you instantiate a server wallet from code, create it inside the dashboard (Transactions → Server wallets) and note the label you assign. The SDK searches for that label when you call `Create`.
+</Callout>
+
+## Quick start
+
+```csharp
+var client = ThirdwebClient.Create(secretKey: Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY"));
+
+var wallet = await ServerWallet.Create(
+    client: client,
+    label: "production-deployer"
+);
+
+Console.WriteLine($"Server wallet ready at {await wallet.GetAddress()}.");
+```
+
+This call:
+
+1. Reuses your client credentials to talk to the Thirdweb Engine API.
+2. Finds the server wallet whose label matches `production-deployer`.
+3. Auto-configures execution options that track the signer address and idempotency key.
+
+## Execution options
+
+The optional `executionOptions` argument lets you control how the wallet submits transactions. Pass one of the SDK-provided option types to enable advanced flows:
+
+```csharp
+// Auto (default) – SDK picks the right strategy per chain
+var autoOptions = new AutoExecutionOptions
+{
+    IdempotencyKey = Guid.NewGuid().ToString(),
+};
+
+// EOA – force a direct signer submission
+var eoaOptions = new EOAExecutionOptions();
+
+// ERC-4337 – sign and send as a smart account
+var erc4337Options = new ERC4337ExecutionOptions(
+    chainId: new BigInteger(8453),
+    signerAddress: "0xYourSigner"
+)
+{
+    EntrypointAddress = "0xEntryPoint",
+};
+
+// EIP-7702 – delegate to an authorized contract
+var eip7702Options = new EIP7702ExecutionOptions();
+
+var advancedWallet = await ServerWallet.Create(
+    client: client,
+    label: "production-deployer",
+    executionOptions: erc4337Options
+);
+```
+
+`ServerWallet.Create` will populate any missing `From`, `SignerAddress`, or smart-account data at runtime. If you pass an unsupported execution option, the call throws an `InvalidOperationException` with guidance on the allowed types.
+
+## Self-managed vault access
+
+If you configured the wallet as self-managed, include the Vault Access Token issued by Thirdweb so your backend can sign requests on behalf of the vault.
+
+```csharp
+var wallet = await ServerWallet.Create(
+    client: client,
+    label: "self-managed",
+    vaultAccessToken: Environment.GetEnvironmentVariable("THIRDWEB_VAULT_ACCESS_TOKEN")
+);
+```
+
+The method injects the token as an `X-Vault-Access-Token` header for all Engine API calls.
+
+## Handling lookup failures
+
+Creation will throw descriptive exceptions when it cannot find the target wallet:
+
+- `ArgumentNullException` if you omit the `client` or `label`.
+- `InvalidOperationException` when no server wallets exist or the label does not match (the error lists available labels).
+
+Wrap your call in a retry or surface the labels to operators to resolve quickly.
+
+## Next steps
+
+A server wallet implements `IThirdwebWallet`, so you can reuse it anywhere you expect a wallet, including:
+
+- Contract writes via `await contract.Write(wallet, ...)`
+- Prepared transactions with `await contract.Prepare(wallet, ...)`
+- Direct Engine interactions through `wallet.SendTransaction`
+
+For end-user wallets, see the [User Wallets](/dotnet/user-wallets) guide.
+
+## API reference
+
+<Details summary="ServerWallet.Create">
+
+### Required
+
+- `client`: `ThirdwebClient` — Initialized with your project secret key.
+- `label`: `string` — Matches the label from the dashboard.
+
+### Optional
+
+- `executionOptions`: `ExecutionOptions` — One of `AutoExecutionOptions`, `EOAExecutionOptions`, `EIP7702ExecutionOptions`, or `ERC4337ExecutionOptions`.
+- `vaultAccessToken`: `string` — Required when the vault is self-managed.
+
+</Details>
+
+<Details summary="Return value">
+
+Returns an initialized `ServerWallet` instance tracked by the SDK connection manager. Use its methods to read the address, sign messages, or send transactions from your backend.
+
+</Details>

@@ -146,11 +146,11 @@ function SearchModalContent(props: { closeModal: () => void }) {
         <div className="min-h-[200px]">
           {/* tags */}
           {enabledTags && enabledTags.length > 0 && (
-            <div className="flex flex-wrap gap-2 border-b p-4">
+            <div className="flex flex-wrap gap-2 border-b p-4 bg-card/50">
               {enabledTags.map((tag) => (
                 <Button
                   className={cn(
-                    "rounded-lg border px-3 py-1 text-sm ",
+                    "rounded-lg border px-2.5 py-1.5 text-xs h-auto",
                     selectedTags[tag]
                       ? "!bg-muted !text-foreground border-foreground"
                       : "!bg-card !text-muted-foreground",
@@ -199,7 +199,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
           {/* links */}
           {data && data.length > 0 && (
             <div
-              className="styled-scrollbar flex max-h-[50vh] min-h-[200px] flex-col gap-2 overflow-y-auto p-4"
+              className="styled-scrollbar flex max-h-[50vh] min-h-[200px] flex-col gap-1 overflow-y-auto p-2"
               ref={scrollableElement}
             >
               {data.map((result) => {
@@ -221,7 +221,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
                   .slice(0, 2);
 
                 return (
-                  <div className="flex flex-col gap-2" key={result.pageHref}>
+                  <div className="flex flex-col gap-1" key={result.pageHref}>
                     <SearchResultItem
                       href={result.pageHref}
                       onClick={handleLinkClick}
@@ -231,23 +231,25 @@ function SearchModalContent(props: { closeModal: () => void }) {
                     />
 
                     {sections && sections.length > 0 && (
-                      <div className="flex flex-col gap-2 border-l pl-3">
-                        {sections.map((sectionData) => {
-                          return (
-                            <SearchResultItem
-                              content={
-                                sectionData.content.length < 100
-                                  ? sectionData.content
-                                  : `${sectionData.content.slice(0, 100)} ...`
-                              }
-                              href={result.pageHref + sectionData.href}
-                              key={sectionData.href}
-                              onClick={handleLinkClick}
-                              title={sectionData.title}
-                              type="section"
-                            />
-                          );
-                        })}
+                      <div className="pl-4">
+                        <div className="flex flex-col gap-1 border-l pl-3 border-dashed">
+                          {sections.map((sectionData) => {
+                            return (
+                              <SearchResultItem
+                                content={
+                                  sectionData.content.length < 100
+                                    ? sectionData.content
+                                    : `${sectionData.content.slice(0, 100)} ...`
+                                }
+                                href={result.pageHref + sectionData.href}
+                                key={sectionData.href}
+                                onClick={handleLinkClick}
+                                title={sectionData.title}
+                                type="section"
+                              />
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -274,7 +276,7 @@ function SearchModalContent(props: { closeModal: () => void }) {
 
 function NoSearchLinks(props: { onClick?: () => void }) {
   return (
-    <div className="flex flex-col gap-2 p-4">
+    <div className="flex flex-col gap-1 p-2">
       {suggestedLinks.map((link) => {
         return (
           <SearchResultItem
@@ -355,10 +357,10 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
         {forDesktop && (
           <DialogTrigger asChild>
             <Button
-              className="flex w-64 justify-between gap-6 px-3 text-muted-foreground bg-card"
+              className="flex w-64 justify-between gap-6 px-4 text-muted-foreground bg-background rounded-xl"
               variant="outline"
             >
-              <span className="text-xs">Search Docs</span>
+              <span className="text-sm font-normal">Search Docs</span>
               <div className="flex items-center gap-1 rounded-sm p-1 text-muted-foreground text-xs">
                 <CommandIcon className="size-3" />K
               </div>
@@ -374,7 +376,7 @@ export function DocSearch(props: { variant: "icon" | "search" }) {
           </DialogTrigger>
         )}
 
-        <DialogContent className="bg-background sm:max-w-[550px]">
+        <DialogContent className="bg-background sm:max-w-[550px] rounded-xl">
           <SearchModalContent
             closeModal={() => {
               setOpen(false);
@@ -449,13 +451,13 @@ function SearchResultItem(props: {
 }) {
   return (
     <Link
-      className="flex gap-3 rounded-sm bg-muted/50 px-4 py-3 text-muted-foreground transition-colors hover:bg-accent"
+      className="flex gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-colors hover:bg-accent/50"
       href={props.href}
       onClick={props.onClick}
     >
       <div className="flex w-full flex-col gap-1">
         {props.title && (
-          <div className="flex flex-wrap items-center justify-between gap-2 break-all text-base text-foreground">
+          <div className="flex flex-wrap items-center justify-between gap-2 break-all text-sm text-foreground">
             <div
               className={cn(
                 "flex items-center gap-2",
@@ -465,7 +467,7 @@ function SearchResultItem(props: {
               )}
             >
               {props.type === "page" && (
-                <FileTextIcon className="size-5 text-muted-foreground" />
+                <FileTextIcon className="size-4 text-muted-foreground/70" />
               )}
 
               {props.title}
@@ -477,7 +479,7 @@ function SearchResultItem(props: {
                   return (
                     <span
                       className={cn(
-                        "shrink-0 rounded-lg border bg-muted px-1.5 py-1 text-muted-foreground text-xs",
+                        "shrink-0 rounded-lg border border-border/50 bg-muted/50 px-1.5 py-1 text-muted-foreground text-xs",
                       )}
                       key={tag}
                     >
@@ -489,7 +491,7 @@ function SearchResultItem(props: {
             )}
           </div>
         )}
-        {props.content && <div className="text-sm">{props.content}</div>}
+        {props.content && <div className="text-xs">{props.content}</div>}
       </div>
     </Link>
   );

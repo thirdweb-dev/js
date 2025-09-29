@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
-import { getChainMetadata } from "../../../utils";
+import { getCustomChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {
   favoriteButton: JSX.Element | undefined;
@@ -26,7 +26,7 @@ type ChainListRowProps = {
   iconUrl?: string;
 };
 
-export async function ChainListRow({
+export function ChainListRow({
   isDeprecated,
   chainId,
   chainName,
@@ -36,7 +36,7 @@ export async function ChainListRow({
   favoriteButton,
   iconUrl,
 }: ChainListRowProps) {
-  const chainMetadata = await getChainMetadata(chainId);
+  const chainMetadata = getCustomChainMetadata(chainId);
   return (
     <TableRow className="hover:bg-accent/50" linkBox>
       {/* Name */}

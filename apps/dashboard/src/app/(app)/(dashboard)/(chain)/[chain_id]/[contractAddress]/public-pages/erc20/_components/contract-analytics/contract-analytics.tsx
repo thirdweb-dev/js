@@ -1,5 +1,6 @@
 "use client";
 
+import { BarChart3Icon } from "lucide-react";
 import { useState } from "react";
 import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
 import {
@@ -35,10 +36,18 @@ export function ContractAnalyticsOverview(props: {
       margin={{
         bottom: 20,
       }}
+      className="rounded-xl"
       header={{
         headerClassName: "p-4 lg:p-6",
         title: "Analytics",
         titleClassName: "font-semibold text-2xl mb-0.5 tracking-tight",
+        icon: (
+          <div className="flex mb-3">
+            <div className="rounded-full border p-2 bg-background">
+              <BarChart3Icon className="size-4 text-muted-foreground" />
+            </div>
+          </div>
+        ),
         description:
           "View trends of transactions, events and unique wallets interacting with this contract over time",
       }}

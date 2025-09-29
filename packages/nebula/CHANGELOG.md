@@ -1,5 +1,47 @@
 # @thirdweb-dev/nebula
 
+## 0.2.57
+
+### Patch Changes
+
+- Updated dependencies [[`85bde21`](https://github.com/thirdweb-dev/js/commit/85bde21dc97d2ad06547832e9470532069d0cbf5), [`aa0d23e`](https://github.com/thirdweb-dev/js/commit/aa0d23e966d4fd34ebadc38793f0f006aa70004f)]:
+  - thirdweb@5.108.4
+
+## 0.2.56
+
+### Patch Changes
+
+- Updated dependencies [[`f152139`](https://github.com/thirdweb-dev/js/commit/f152139d739bbdfaefb07ee547c2655259c394b8)]:
+  - thirdweb@5.108.3
+
+## 0.2.55
+
+### Patch Changes
+
+- Updated dependencies [[`1f7cda6`](https://github.com/thirdweb-dev/js/commit/1f7cda66988e88628ca9b8fe608af071aa0026a1), [`9069351`](https://github.com/thirdweb-dev/js/commit/9069351e1abd231cf9051b05b7d92f95f891060b)]:
+  - thirdweb@5.108.2
+
+## 0.2.54
+
+### Patch Changes
+
+- Updated dependencies [[`e1cccd7`](https://github.com/thirdweb-dev/js/commit/e1cccd7a10447943c4b31f34e09a94d2ff5ee826)]:
+  - thirdweb@5.108.1
+
+## 0.2.53
+
+### Patch Changes
+
+- Updated dependencies [[`a94f229`](https://github.com/thirdweb-dev/js/commit/a94f22928a662a5aff7a203fc2d383d9fa0907ec), [`5249cb7`](https://github.com/thirdweb-dev/js/commit/5249cb7409a8486346fe428f824c81dd90845555)]:
+  - thirdweb@5.108.0
+
+## 0.2.52
+
+### Patch Changes
+
+- Updated dependencies [[`93f913c`](https://github.com/thirdweb-dev/js/commit/93f913c614ebbe3db350872bdcff264c07155ce2), [`a85ef0b`](https://github.com/thirdweb-dev/js/commit/a85ef0b222797d38ccd31e72fafda82ceb1faefa)]:
+  - thirdweb@5.107.1
+
 ## 0.2.51
 
 ### Patch Changes
