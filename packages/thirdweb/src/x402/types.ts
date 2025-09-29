@@ -1,4 +1,5 @@
 import type { Money, PaymentMiddlewareConfig } from "x402/types";
+import type z from "zod";
 import type { Chain } from "../chains/types.js";
 import type { Address } from "../utils/address.js";
 import type { Prettify } from "../utils/type-utils.js";
@@ -6,8 +7,10 @@ import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import type {
   FacilitatorNetwork,
   FacilitatorSettleResponse,
+  FacilitatorSupportedAssetSchema,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
+  SupportedSignatureTypeSchema,
 } from "./schemas.js";
 
 export const x402Version = 1;
@@ -86,17 +89,21 @@ export type VerifyPaymentResult = Prettify<
   | PaymentRequiredResult
 >;
 
-export type SupportedSignatureType = "TransferWithAuthorization" | "Permit";
+export type SupportedSignatureType = z.infer<
+  typeof SupportedSignatureTypeSchema
+>;
 
 export type ERC20TokenAmount = {
   amount: string;
   asset: {
     address: `0x${string}`;
-    decimals: number;
-    eip712: {
+    decimals?: number;
+    eip712?: {
       name: string;
       version: string;
       primaryType: SupportedSignatureType;
     };
   };
 };
+
+export type DefaultAsset = z.infer<typeof FacilitatorSupportedAssetSchema>;

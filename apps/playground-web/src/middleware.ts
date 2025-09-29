@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createThirdwebClient, defineChain } from "thirdweb";
+import { toUnits } from "thirdweb/utils";
 import { facilitator, settlePayment } from "thirdweb/x402";
+import { token } from "./app/payments/x402/components/constants";
 
 const client = createThirdwebClient({
   secretKey: process.env.THIRDWEB_SECRET_KEY as string,
@@ -11,12 +13,17 @@ const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
 const ENGINE_VAULT_ACCESS_TOKEN = process.env
   .ENGINE_VAULT_ACCESS_TOKEN as string;
 const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-const twFacilitator = facilitator({
-  baseUrl: `${API_URL}/v1/payments/x402`,
-  client,
-  serverWalletAddress: BACKEND_WALLET_ADDRESS,
-  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
-});
+function createFacilitator(
+  waitUntil: "simulated" | "submitted" | "confirmed" = "simulated",
+) {
+  return facilitator({
+    baseUrl: `${API_URL}/v1/payments/x402`,
+    client,
+    serverWalletAddress: BACKEND_WALLET_ADDRESS,
+    vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
+    waitUtil: waitUntil,
+  });
+}
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -35,10 +42,12 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // TODO (402): dynamic from playground config
-  // const amount = queryParams.get("amount");
-  // const tokenAddress = queryParams.get("tokenAddress");
-  // const decimals = queryParams.get("decimals");
+  const amount = queryParams.get("amount") || "0.01";
+  const tokenAddress = queryParams.get("tokenAddress") || token.address;
+  const decimals = queryParams.get("decimals") || token.decimals.toString();
+  const waitUntil =
+    (queryParams.get("waitUntil") as "simulated" | "submitted" | "confirmed") ||
+    "simulated";
 
   const result = await settlePayment({
     resourceUrl,
@@ -46,22 +55,17 @@ export async function middleware(request: NextRequest) {
     paymentData,
     payTo: payTo as `0x${string}`,
     network: defineChain(Number(chainId)),
-    price: "$0.01",
-    // price: {
-    //   amount: toUnits(amount as string, parseInt(decimals as string)).toString(),
-    //   asset: {
-    //     address: tokenAddress as `0x${string}`,
-    //     decimals: decimals ? parseInt(decimals) : token.decimals,
-    //     eip712: {
-    //       name: token.name,
-    //       version: token.version,
-    //     },
-    //   },
-    // },
+    price: {
+      amount: toUnits(amount, parseInt(decimals)).toString(),
+      asset: {
+        address: tokenAddress as `0x${string}`,
+        decimals: decimals ? parseInt(decimals) : token.decimals,
+      },
+    },
     routeConfig: {
       description: "Access to paid content",
     },
-    facilitator: twFacilitator,
+    facilitator: createFacilitator(waitUntil),
   });
 
   if (result.status === 200) {
