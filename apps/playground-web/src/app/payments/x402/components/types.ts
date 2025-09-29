@@ -8,4 +8,5 @@ export type X402PlaygroundOptions = {
   tokenDecimals: number;
   amount: string;
   payTo: Address;
+  waitUntil: "simulated" | "submitted" | "confirmed";
 };

@@ -1,5 +1,3 @@
-// const chain = arbitrumSepolia;
-
 import { base } from "thirdweb/chains";
 
 export const chain = base;

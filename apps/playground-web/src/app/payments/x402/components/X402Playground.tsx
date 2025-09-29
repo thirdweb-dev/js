@@ -14,6 +14,7 @@ const defaultOptions: X402PlaygroundOptions = {
   tokenDecimals: token.decimals,
   amount: "0.01",
   payTo: "0x0000000000000000000000000000000000000000",
+  waitUntil: "simulated",
 };
 
 export function X402Playground() {

@@ -6,6 +6,13 @@ import { defineChain } from "thirdweb/chains";
 import { BridgeNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TokenSelector } from "@/components/ui/TokenSelector";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { TokenMetadata } from "@/lib/types";
@@ -38,6 +45,7 @@ export function X402LeftSection(props: {
   const tokenId = useId();
   const amountId = useId();
   const payToId = useId();
+  const waitUntilId = useId();
 
   const handleChainChange = (chainId: number) => {
     setSelectedChain(chainId);
@@ -78,6 +86,15 @@ export function X402LeftSection(props: {
     setOptions((v) => ({
       ...v,
       payTo: e.target.value as `0x${string}`,
+    }));
+  };
+
+  const handleWaitUntilChange = (
+    value: "simulated" | "submitted" | "confirmed",
+  ) => {
+    setOptions((v) => ({
+      ...v,
+      waitUntil: value,
     }));
   };
 
@@ -144,6 +161,28 @@ export function X402LeftSection(props: {
             />
             <p className="text-sm text-muted-foreground">
               The wallet address that will receive the payment
+            </p>
+          </div>
+
+          {/* Wait Until selection */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={waitUntilId}>Wait Until</Label>
+            <Select
+              value={options.waitUntil}
+              onValueChange={handleWaitUntilChange}
+            >
+              <SelectTrigger className="bg-card">
+                <SelectValue placeholder="Select wait condition" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="simulated">Simulated</SelectItem>
+                <SelectItem value="submitted">Submitted</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              When to consider the payment settled: simulated (fastest),
+              submitted (medium), or confirmed (most secure)
             </p>
           </div>
         </div>

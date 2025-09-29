@@ -13,13 +13,17 @@ const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
 const ENGINE_VAULT_ACCESS_TOKEN = process.env
   .ENGINE_VAULT_ACCESS_TOKEN as string;
 const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-const twFacilitator = facilitator({
-  baseUrl: `${API_URL}/v1/payments/x402`,
-  client,
-  serverWalletAddress: BACKEND_WALLET_ADDRESS,
-  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
-  waitUtil: "simulated",
-});
+function createFacilitator(
+  waitUntil: "simulated" | "submitted" | "confirmed" = "simulated",
+) {
+  return facilitator({
+    baseUrl: `${API_URL}/v1/payments/x402`,
+    client,
+    serverWalletAddress: BACKEND_WALLET_ADDRESS,
+    vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
+    waitUtil: waitUntil,
+  });
+}
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -41,6 +45,9 @@ export async function middleware(request: NextRequest) {
   const amount = queryParams.get("amount") || "0.01";
   const tokenAddress = queryParams.get("tokenAddress") || token.address;
   const decimals = queryParams.get("decimals") || token.decimals.toString();
+  const waitUntil =
+    (queryParams.get("waitUntil") as "simulated" | "submitted" | "confirmed") ||
+    "simulated";
 
   const result = await settlePayment({
     resourceUrl,
@@ -58,7 +65,7 @@ export async function middleware(request: NextRequest) {
     routeConfig: {
       description: "Access to paid content",
     },
-    facilitator: twFacilitator,
+    facilitator: createFacilitator(waitUntil),
   });
 
   if (result.status === 200) {

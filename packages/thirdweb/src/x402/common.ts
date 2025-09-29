@@ -8,6 +8,7 @@ import { getContract } from "../contract/contract.js";
 import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
 import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 import { getAddress } from "../utils/address.js";
+import { toUnits } from "../utils/units.js";
 import { decodePayment } from "./encode.js";
 import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import {
@@ -23,7 +24,6 @@ import {
   type SupportedSignatureType,
   x402Version,
 } from "./types.js";
-import { toUnits } from "../utils/units.js";
 
 type GetPaymentRequirementsResult = {
   status: 200;
@@ -223,7 +223,10 @@ async function processPriceToAtomicAmount(
       };
     }
     asset = defaultAsset;
-    maxAmountRequired = toUnits(parsedUsdAmount.toString(), defaultAsset.decimals).toString();
+    maxAmountRequired = toUnits(
+      parsedUsdAmount.toString(),
+      defaultAsset.decimals,
+    ).toString();
   } else {
     // Token amount in atomic units
     maxAmountRequired = price.amount;

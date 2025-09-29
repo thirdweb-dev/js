@@ -51,6 +51,7 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
       searchParams.set("amount", props.options.amount);
       searchParams.set("tokenAddress", props.options.tokenAddress);
       searchParams.set("decimals", props.options.tokenDecimals.toString());
+      searchParams.set("waitUntil", props.options.waitUntil);
 
       const url =
         "/api/paywall" +
@@ -95,6 +96,7 @@ const client = createThirdwebClient({
 const thirdwebFacilitator = facilitator({
   client,
   serverWalletAddress: "0xYourServerWalletAddress",
+  waitUtil: "${props.options.waitUntil}",
 });
 
 export async function POST(request: Request) {
@@ -250,7 +252,7 @@ export async function POST(request: Request) {
             <CodeClient
               className="h-full rounded-none border-none"
               code={serverCode}
-              lang="tsx"
+              lang="typescript"
             />
           </div>
         )}
