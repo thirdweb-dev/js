@@ -15,6 +15,7 @@ export function useTokens(options: {
   return useQuery<Token[]>({
     queryKey: ["tokens", options],
     enabled: !!options.chainId,
+    retry: false,
     queryFn: () => {
       if (!options.chainId) {
         throw new Error("Chain ID is required");
@@ -115,6 +116,7 @@ export function useTokenBalances(options: {
       return json.result;
     },
     refetchOnMount: false,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 }
