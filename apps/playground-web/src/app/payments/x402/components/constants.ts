@@ -1,10 +1,14 @@
 // const chain = arbitrumSepolia;
 
-import { arbitrumSepolia } from "thirdweb/chains";
-import { getDefaultToken } from "thirdweb/react";
+import { base } from "thirdweb/chains";
 
-export const chain = arbitrumSepolia;
-export const token = getDefaultToken(chain, "USDC")!;
+export const chain = base;
+export const token = {
+  address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  name: "USD Coin",
+  symbol: "USDC",
+  decimals: 6,
+};
 // export const chain = base;
 // export const token = {
 //   address: "0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe",

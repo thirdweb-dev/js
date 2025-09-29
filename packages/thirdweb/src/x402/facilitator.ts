@@ -1,9 +1,10 @@
-import type { SupportedPaymentKindsResponse, VerifyResponse } from "x402/types";
+import type { VerifyResponse } from "x402/types";
 import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 import { withCache } from "../utils/promise/withCache.js";
 import type {
   FacilitatorSettleResponse,
+  FacilitatorSupportedResponse,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
 } from "./schemas.js";
@@ -11,6 +12,7 @@ import type {
 export type ThirdwebX402FacilitatorConfig = {
   client: ThirdwebClient;
   serverWalletAddress: string;
+  waitUtil?: "simulated" | "submitted" | "confirmed";
   vaultAccessToken?: string;
   baseUrl?: string;
 };
@@ -36,7 +38,10 @@ export type ThirdwebX402Facilitator = {
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
   ) => Promise<FacilitatorSettleResponse>;
-  supported: () => Promise<SupportedPaymentKindsResponse>;
+  supported: (filters?: {
+    chainId: number;
+    tokenAddress?: string;
+  }) => Promise<FacilitatorSupportedResponse>;
 };
 
 const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
@@ -176,6 +181,7 @@ export function facilitator(
           x402Version: payload.x402Version,
           paymentPayload: payload,
           paymentRequirements: paymentRequirements,
+          ...(config.waitUtil ? { waitUtil: config.waitUtil } : {}),
         }),
       });
 
@@ -193,14 +199,27 @@ export function facilitator(
      *
      * @returns A promise that resolves to the supported payment kinds
      */
-    async supported(): Promise<SupportedPaymentKindsResponse> {
+    async supported(filters?: {
+      chainId: number;
+      tokenAddress?: string;
+    }): Promise<FacilitatorSupportedResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
       return withCache(
         async () => {
           let headers = { "Content-Type": "application/json" };
           const authHeaders = await facilitator.createAuthHeaders();
           headers = { ...headers, ...authHeaders.supported };
-          const res = await fetch(`${url}/supported`, { headers });
+          const supportedUrl = new URL(`${url}/supported`);
+          if (filters?.chainId) {
+            supportedUrl.searchParams.set(
+              "chainId",
+              filters.chainId.toString(),
+            );
+          }
+          if (filters?.tokenAddress) {
+            supportedUrl.searchParams.set("tokenAddress", filters.tokenAddress);
+          }
+          const res = await fetch(supportedUrl.toString(), { headers });
 
           if (res.status !== 200) {
             throw new Error(
@@ -209,11 +228,11 @@ export function facilitator(
           }
 
           const data = await res.json();
-          return data as SupportedPaymentKindsResponse;
+          return data as FacilitatorSupportedResponse;
         },
         {
-          cacheKey: `supported-payment-kinds-${url}`,
-          cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+          cacheKey: `supported-payment-kinds-${url}-${filters?.chainId}-${filters?.tokenAddress}2`,
+          cacheTime: 1000 * 60 * 60 * 1, // 1 hour
         },
       );
     },

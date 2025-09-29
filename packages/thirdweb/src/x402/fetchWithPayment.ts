@@ -61,9 +61,10 @@ export function wrapFetchWithPayment(
       return response;
     }
 
-    const { x402Version, accepts } = (await response.json()) as {
+    const { x402Version, accepts, error } = (await response.json()) as {
       x402Version: number;
       accepts: unknown[];
+      error?: string;
     };
     const parsedPaymentRequirements = accepts
       .map((x) => RequestedPaymentRequirementsSchema.parse(x))
@@ -82,6 +83,12 @@ export function wrapFetchWithPayment(
       chain.id,
       "exact",
     );
+
+    if (!selectedPaymentRequirements) {
+      throw new Error(
+        `No suitable payment requirements found for chain ${chain.id}. ${error}`,
+      );
+    }
 
     if (BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue) {
       throw new Error(
@@ -154,9 +161,6 @@ function defaultPaymentRequirementsSelector(
     const firstPaymentRequirement = paymentRequirements.find(
       (x) => x.scheme === scheme,
     );
-    if (!firstPaymentRequirement) {
-      throw new Error("No suitable payment requirements found");
-    }
     return firstPaymentRequirement;
   }
 }
