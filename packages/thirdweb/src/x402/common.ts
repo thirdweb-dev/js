@@ -23,6 +23,7 @@ import {
   type SupportedSignatureType,
   x402Version,
 } from "./types.js";
+import { toUnits } from "../utils/units.js";
 
 type GetPaymentRequirementsResult = {
   status: 200;
@@ -222,10 +223,7 @@ async function processPriceToAtomicAmount(
       };
     }
     asset = defaultAsset;
-    maxAmountRequired = (
-      parsedUsdAmount *
-      10 ** defaultAsset.decimals
-    ).toString();
+    maxAmountRequired = toUnits(parsedUsdAmount.toString(), defaultAsset.decimals).toString();
   } else {
     // Token amount in atomic units
     maxAmountRequired = price.amount;
@@ -325,7 +323,7 @@ async function getOrDetectTokenExtras(args: {
   if (
     partialAsset.eip712?.name &&
     partialAsset.eip712?.version &&
-    partialAsset.decimals
+    partialAsset.decimals !== undefined
   ) {
     return {
       name: partialAsset.eip712.name,
