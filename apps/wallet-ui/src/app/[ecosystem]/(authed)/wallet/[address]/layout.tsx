@@ -4,6 +4,7 @@ import { shortenAddress } from "thirdweb/utils";
 import { ChainCombobox } from "@/components/ChainCombobox";
 import { getChains } from "@/lib/chains";
 import { client } from "@/lib/client";
+import { getEcosystemChainIds } from "@/lib/ecosystemConfig";
 import { getEcosystemInfo } from "@/lib/ecosystems";
 import { SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS } from "@/util/simplehash";
 
@@ -45,8 +46,11 @@ export default async function Layout(props: {
     thirdwebChainsPromise,
   ]);
 
+  const specialChainIds = getEcosystemChainIds(params.ecosystem);
+  const allowedChainIds = specialChainIds ?? SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS;
+
   const simpleHashChains = thirdwebChains.filter((chain) =>
-    SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS.includes(chain.chainId),
+    allowedChainIds.includes(chain.chainId),
   );
 
   return (
