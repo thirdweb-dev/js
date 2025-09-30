@@ -1,3 +1,4 @@
+import { Input } from "@workspace/ui/components/input";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import {
   ArrowLeftIcon,
@@ -110,6 +111,7 @@ export function TransactionsTable(props: {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<EngineStatus | undefined>(undefined);
+  const [filterId, setFilterId] = useState<string | undefined>(undefined);
   const autoUpdateId = useId();
   const pageSize = 10;
   const transactionsQuery = useEngineTransactions({
@@ -121,6 +123,7 @@ export function TransactionsTable(props: {
       page: page,
       status,
     },
+    id: filterId,
   });
 
   const transactions = transactionsQuery.data?.transactions ?? [];
@@ -160,6 +163,16 @@ export function TransactionsTable(props: {
               onCheckedChange={(v) => setAutoUpdate(!!v)}
             />
           </div>
+          <Input
+            className="max-w-[250px]"
+            onChange={(e) => {
+              const value = e.target.value.trim();
+              setFilterId(value || undefined);
+              setPage(1);
+            }}
+            placeholder="Filter by Queue ID"
+            value={filterId || ""}
+          />
           <StatusSelector
             setStatus={(v) => {
               setStatus(v);
