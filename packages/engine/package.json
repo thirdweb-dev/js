@@ -16,7 +16,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "0.10.0"
+    "@hey-api/client-fetch": "0.13.1"
   },
   "engines": {
     "node": ">=18"
