@@ -10,6 +10,7 @@ module.exports = [
   "/wallets",
   "/account-abstraction",
   "/payments",
+  "/payments/x402",
   "/auth",
   "/in-app-wallets",
   "/transactions",
