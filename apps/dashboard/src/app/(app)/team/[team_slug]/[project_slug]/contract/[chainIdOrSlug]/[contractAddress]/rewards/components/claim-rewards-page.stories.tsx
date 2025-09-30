@@ -30,11 +30,13 @@ function unclaimedFeesStub(token0Amount: bigint, token1Amount: bigint) {
       address: "0x1234567890123456789012345678901234567890",
       amount: token0Amount,
       symbol: "FOO",
+      decimals: 18,
     },
     token1: {
       address: "0x0987654321098765432109876543210987654321",
       amount: token1Amount,
       symbol: "BAR",
+      decimals: 18,
     },
   };
 }
