@@ -329,6 +329,8 @@ export function CreateNFTPage(props: {
       }
 
       await sendAndConfirmTxNoPayModal.mutateAsync(tx);
+    } else if (totalBatches > 1) {
+      await sendAndConfirmTxNoPayModal.mutateAsync(tx);
     } else {
       await sendAndConfirmTx.mutateAsync(tx);
     }
