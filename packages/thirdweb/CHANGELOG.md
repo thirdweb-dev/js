@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.108.5
+
+### Patch Changes
+
+- [#8145](https://github.com/thirdweb-dev/js/pull/8145) [`7495f46`](https://github.com/thirdweb-dev/js/commit/7495f462221e9e4319d2dd08942693d7888cabe6) Thanks [@MananTank](https://github.com/MananTank)! - Token Search improvements in SwapWidget
+
+- [#8142](https://github.com/thirdweb-dev/js/pull/8142) [`496615f`](https://github.com/thirdweb-dev/js/commit/496615feaea0e8dfaaf0612e1cc94b60fcae9f4f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve token info discovery for x402 payments
+
+- [#8144](https://github.com/thirdweb-dev/js/pull/8144) [`b8afa98`](https://github.com/thirdweb-dev/js/commit/b8afa98de6bd38376e190f3c54ee9fdadccfebe7) Thanks [@MananTank](https://github.com/MananTank)! - Remove retries when fetching list of tokens fails in SwapWidget to reduce time loading skeletons are shown in the UI
+
+- [#8153](https://github.com/thirdweb-dev/js/pull/8153) [`94aae90`](https://github.com/thirdweb-dev/js/commit/94aae902a1d036e1f706fc37f1167a47820a6e4e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Also expose waitUntil param in settlePayment()
+
 ## 5.108.4
 
 ### Patch Changes
