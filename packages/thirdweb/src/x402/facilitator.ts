@@ -9,10 +9,12 @@ import type {
   RequestedPaymentRequirements,
 } from "./schemas.js";
 
+export type WaitUntil = "simulated" | "submitted" | "confirmed";
+
 export type ThirdwebX402FacilitatorConfig = {
   client: ThirdwebClient;
   serverWalletAddress: string;
-  waitUtil?: "simulated" | "submitted" | "confirmed";
+  waitUtil?: WaitUntil;
   vaultAccessToken?: string;
   baseUrl?: string;
 };
@@ -37,6 +39,7 @@ export type ThirdwebX402Facilitator = {
   settle: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
+    waitUtil?: WaitUntil,
   ) => Promise<FacilitatorSettleResponse>;
   supported: (filters?: {
     chainId: number;
@@ -81,6 +84,21 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  *   },
  *   thirdwebX402Facilitator,
  * );
+ * ```
+ * 
+ * #### Configuration Options
+ * 
+ * ```ts
+ * const thirdwebX402Facilitator = facilitator({
+ *   client: client,
+ *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ *   // Optional: Wait behavior for settlements
+ *   // - "simulated": Only simulate the transaction (fastest)
+ *   // - "submitted": Wait until transaction is submitted
+ *   // - "confirmed": Wait for full on-chain confirmation (slowest, default)
+ *   waitUntil: "confirmed",
+ * });
+
  * ```
  *
  * @bridge x402
@@ -167,12 +185,14 @@ export function facilitator(
     async settle(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
+      waitUtil?: WaitUntil,
     ): Promise<FacilitatorSettleResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
 
       let headers = { "Content-Type": "application/json" };
       const authHeaders = await facilitator.createAuthHeaders();
       headers = { ...headers, ...authHeaders.settle };
+      const waitUtilParam = waitUtil || config.waitUtil;
 
       const res = await fetch(`${url}/settle`, {
         method: "POST",
@@ -181,7 +201,7 @@ export function facilitator(
           x402Version: payload.x402Version,
           paymentPayload: payload,
           paymentRequirements: paymentRequirements,
-          ...(config.waitUtil ? { waitUtil: config.waitUtil } : {}),
+          ...(waitUtilParam ? { waitUtil: waitUtilParam } : {}),
         }),
       });
 
