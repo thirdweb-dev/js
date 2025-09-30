@@ -3,7 +3,7 @@ import type z from "zod";
 import type { Chain } from "../chains/types.js";
 import type { Address } from "../utils/address.js";
 import type { Prettify } from "../utils/type-utils.js";
-import type { ThirdwebX402Facilitator } from "./facilitator.js";
+import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
 import type {
   FacilitatorNetwork,
   FacilitatorSettleResponse,
@@ -37,6 +37,10 @@ export type PaymentArgs = {
   facilitator: ThirdwebX402Facilitator;
   /** Optional configuration for the payment middleware route */
   routeConfig?: PaymentMiddlewareConfig;
+};
+
+export type SettlePaymentArgs = PaymentArgs & {
+  waitUntil?: WaitUntil;
 };
 
 export type PaymentRequiredResult = {
