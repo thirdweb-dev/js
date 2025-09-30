@@ -1,6 +1,14 @@
 "use client";
 import { useRef } from "react";
-import { encode, getContract, type ThirdwebClient } from "thirdweb";
+import {
+  encode,
+  estimateGasCost,
+  getContract,
+  getGasPrice,
+  type PreparedTransaction,
+  type ThirdwebClient,
+  toEther,
+} from "thirdweb";
 import { deployERC721Contract, deployERC1155Contract } from "thirdweb/deploys";
 import { multicall } from "thirdweb/extensions/common";
 import {
@@ -14,7 +22,8 @@ import {
 } from "thirdweb/extensions/erc1155";
 import { grantRole } from "thirdweb/extensions/permissions";
 import { useActiveAccount } from "thirdweb/react";
-import { maxUint256 } from "thirdweb/utils";
+import { maxUint256, resolvePromisedValue } from "thirdweb/utils";
+import { getWalletBalance } from "thirdweb/wallets";
 import { create7702MinimalAccount } from "thirdweb/wallets/smart";
 import { revalidatePathAction } from "@/actions/revalidate";
 import { reportContractDeployed } from "@/analytics/report";
@@ -39,6 +48,10 @@ export function CreateNFTPage(props: {
   const contractAddressRef = useRef<string | undefined>(undefined);
   const getChain = useGetV5DashboardChain();
   const sendAndConfirmTx = useSendAndConfirmTx();
+  const sendAndConfirmTxNoPayModal = useSendAndConfirmTx({
+    payModal: false,
+  });
+
   function getAccount(params: { gasless: boolean }) {
     if (!activeAccount) {
       throw new Error("Wallet is not connected");
@@ -218,6 +231,10 @@ export function CreateNFTPage(props: {
       count: number;
     };
     gasless: boolean;
+    onNotEnoughFunds: (data: {
+      requiredAmount: string;
+      balance: string;
+    }) => void;
   }) {
     const { values, batch } = params;
     const contract = getDeployedContract({
@@ -277,7 +294,44 @@ export function CreateNFTPage(props: {
       data: encodedTransactions,
     });
 
-    await sendAndConfirmTx.mutateAsync(tx);
+    // if there are more than one batches, on the first batch, we check if the user has enough funds to cover the cost of all the batches ->
+    // calculate the cost of one batch, multiply by the number of batches to get the total cost
+    // if the user does not have enough funds, call the onNotEnoughFunds callback
+
+    const totalBatches = Math.ceil(values.nfts.length / batch.count);
+
+    if (batch.startIndex === 0 && totalBatches > 1 && !params.gasless) {
+      if (!activeAccount) {
+        throw new Error("Wallet is not connected");
+      }
+
+      const costPerBatch = await getTotalTransactionCost({
+        tx: tx,
+        from: activeAccount.address,
+      });
+
+      const totalCost = costPerBatch * BigInt(totalBatches);
+
+      const walletBalance = await getWalletBalance({
+        address: activeAccount.address,
+        chain: contract.chain,
+        client: contract.client,
+      });
+
+      if (walletBalance.value < totalCost) {
+        params.onNotEnoughFunds({
+          balance: toEther(walletBalance.value),
+          requiredAmount: toEther(totalCost),
+        });
+        throw new Error(
+          `Not enough funds: Required ${toEther(totalCost)}, Balance ${toEther(walletBalance.value)}`,
+        );
+      }
+
+      await sendAndConfirmTxNoPayModal.mutateAsync(tx);
+    } else {
+      await sendAndConfirmTx.mutateAsync(tx);
+    }
   }
 
   async function handleSetAdmins(params: {
@@ -389,4 +443,42 @@ function transformSocialUrls(
     },
     {} as Record<string, string>,
   );
+}
+
+async function getTransactionGasCost(tx: PreparedTransaction, from?: string) {
+  try {
+    const gasCost = await estimateGasCost({
+      from,
+      transaction: tx,
+    });
+
+    const bufferCost = gasCost.wei / 10n;
+
+    // Note: get tx.value AFTER estimateGasCost
+    // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
+    return gasCost.wei + bufferCost;
+  } catch {
+    if (from) {
+      // try again without passing from
+      return await getTransactionGasCost(tx);
+    }
+    // fallback if both fail, use the tx value + 1M * gas price
+    const gasPrice = await getGasPrice({
+      chain: tx.chain,
+      client: tx.client,
+    });
+
+    return 1_000_000n * gasPrice;
+  }
+}
+
+async function getTotalTransactionCost(params: {
+  tx: PreparedTransaction;
+  from?: string;
+}) {
+  const [txValue, txGasCost] = await Promise.all([
+    resolvePromisedValue(params.tx.value),
+    getTransactionGasCost(params.tx, params.from),
+  ]);
+  return (txValue || 0n) + txGasCost;
 }
