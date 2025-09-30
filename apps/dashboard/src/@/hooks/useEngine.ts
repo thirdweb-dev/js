@@ -387,7 +387,7 @@ export function useEngineTransactions(params: {
     placeholderData: keepPreviousData,
     queryFn: async () => {
       if (id) {
-        const res = await fetch(`${instanceUrl}transaction/${id}`, {
+        const res = await fetch(`${instanceUrl}transaction/status/${id}`, {
           headers: getEngineRequestHeaders(authToken),
           method: "GET",
         });
@@ -417,7 +417,6 @@ export function useEngineTransactions(params: {
       });
 
       const json = await res.json();
-
       return (json.result as TransactionResponse) || {};
     },
     queryKey: engineKeys.transactions(instanceUrl, params),
