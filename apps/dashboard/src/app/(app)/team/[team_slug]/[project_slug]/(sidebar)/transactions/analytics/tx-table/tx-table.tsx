@@ -16,11 +16,13 @@ export function TransactionsTable(props: {
   return (
     <TransactionsTableUI
       client={props.client}
-      getData={async ({ page, status }) => {
+      getData={async ({ page, status, id, from }) => {
         return await getTransactions({
           page,
           project: props.project,
           status,
+          id,
+          from,
         });
       }}
       project={props.project}
@@ -34,10 +36,14 @@ async function getTransactions({
   project,
   page,
   status,
+  id,
+  from,
 }: {
   project: Project;
   page: number;
   status: TransactionStatus | undefined;
+  id: string | undefined;
+  from: string | undefined;
 }) {
   const transactions = await engineCloudProxy<{ result: TransactionsResponse }>(
     {
@@ -52,6 +58,8 @@ async function getTransactions({
         limit: "20",
         page: page.toString(),
         status: status ?? undefined,
+        id: id ?? undefined,
+        from: from ?? undefined,
       },
     },
   );
