@@ -432,7 +432,8 @@ type WalletToViemOptions = {
 function walletToViem(options: WalletToViemOptions): WalletClient {
   const { wallet, chain, client } = options;
 
-  if (!wallet.getAccount()) {
+  const account = wallet.getAccount();
+  if (!account) {
     throw new Error("Wallet is not connected.");
   }
 
@@ -456,7 +457,7 @@ function walletToViem(options: WalletToViemOptions): WalletClient {
     wallet,
   });
   return createWalletClient({
-    account: wallet.getAccount()?.address,
+    account: getAddress(account.address),
     chain: viemChain,
     key: "thirdweb-wallet",
     transport: custom({
