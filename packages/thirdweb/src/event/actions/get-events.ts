@@ -276,7 +276,7 @@ async function getLogsFromInsight(options: {
 
 function toLog(r: ContractEvent[]) {
   const cleanedEventData = r.map((tx) => ({
-    address: tx.address,
+    address: tx.address as Hex,
     blockHash: tx.block_hash as Hex,
     blockNumber: numberToHex(Number(tx.block_number)),
     blockTimestamp: tx.block_timestamp,

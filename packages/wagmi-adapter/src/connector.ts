@@ -20,17 +20,30 @@ export type InAppWalletParameters = Prettify<
   }
 >;
 export type InAppWalletConnector = ReturnType<typeof inAppWalletConnector>;
-export type ConnectionOptions = Prettify<
-  (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
-    chainId?: number | undefined;
-    isReconnecting?: boolean | undefined;
-  }
->;
+type BaseConnectionOptions<withCapabilities extends boolean = false> = {
+  chainId?: number | undefined;
+  isReconnecting?: boolean | undefined;
+  withCapabilities?: withCapabilities | boolean | undefined;
+};
+export type ConnectionOptions<withCapabilities extends boolean = false> =
+  | (MultiStepAuthArgsType & BaseConnectionOptions<withCapabilities>)
+  | (SingleStepAuthArgsType & BaseConnectionOptions<withCapabilities>)
+  | ({
+      strategy?: undefined;
+      wallet: Wallet;
+    } & BaseConnectionOptions<withCapabilities>);
 
 type Provider = EIP1193.EIP1193Provider | undefined;
 type Properties = {
-  connect(parameters?: ConnectionOptions): Promise<{
-    accounts: readonly `0x${string}`[];
+  connect<withCapabilities extends boolean = false>(
+    parameters?: ConnectionOptions<withCapabilities> | undefined,
+  ): Promise<{
+    accounts: withCapabilities extends true
+      ? readonly {
+          address: `0x${string}`;
+          capabilities: Record<string, unknown>;
+        }[]
+      : readonly `0x${string}`[];
     chainId: number;
   }>;
 };
@@ -90,17 +103,22 @@ const connectedWalletIdsKey = "thirdweb:connected-wallet-ids";
 export function inAppWalletConnector(
   args: InAppWalletParameters,
 ): CreateConnectorFn<Provider, Properties, StorageItem> {
-  const wallet = args.ecosystemId
+  let wallet: Wallet = args.ecosystemId
     ? ecosystemWallet(args.ecosystemId, { partnerId: args.partnerId })
     : thirdwebInAppWallet(args);
   const client = args.client;
-  return createConnector<Provider, Properties, StorageItem>((config) => ({
-    connect: async (params) => {
-      const rawStorage =
-        typeof window !== "undefined" && window.localStorage
-          ? window.localStorage
-          : undefined;
-      const lastChainId = await config.storage?.getItem("thirdweb:lastChainId");
+  const rawStorage =
+    typeof window !== "undefined" && window.localStorage
+      ? window.localStorage
+      : undefined;
+  return createConnector((config) => ({
+    connect: async (params?: ConnectionOptions<false>) => {
+      wallet =
+        params && "wallet" in params ? (params.wallet as Wallet) : wallet;
+      const lastChainIdStr = await config.storage?.getItem(
+        "thirdweb:lastChainId",
+      );
+      const lastChainId = lastChainIdStr ? Number(lastChainIdStr) : undefined;
       if (params?.isReconnecting) {
         const { autoConnect } = await import("thirdweb/wallets");
         const chainId = lastChainId || args.smartAccount?.chain?.id || 1;
@@ -117,10 +135,21 @@ export function inAppWalletConnector(
         }
 
         return {
-          accounts: [getAddress(account.address)],
+          accounts: [getAddress(account.address)] as any,
           chainId: chainId,
         };
       }
+
+      // if the wallet is already connected, return the account
+      const alreadyConnectedAccount = wallet.getAccount();
+      if (alreadyConnectedAccount) {
+        return {
+          accounts: [getAddress(alreadyConnectedAccount.address)],
+          chainId: wallet.getChain()?.id || 1,
+        };
+      }
+
+      // otherwise, connect the wallet
       const inAppOptions = params && "strategy" in params ? params : undefined;
       if (!inAppOptions) {
         throw new Error(
@@ -138,10 +167,30 @@ export function inAppWalletConnector(
         chain,
         client,
       } as InAppWalletConnectionOptions;
+
       const account = await wallet.connect(decoratedOptions);
       // setting up raw local storage value for autoConnect
-      rawStorage?.setItem(connectedWalletIdsKey, JSON.stringify([wallet.id]));
-      rawStorage?.setItem(activeWalletIdKey, wallet.id);
+      if (rawStorage) {
+        const connectedWalletIds = rawStorage?.getItem(connectedWalletIdsKey);
+        if (connectedWalletIds) {
+          const connectedWalletIdsArray = JSON.parse(connectedWalletIds);
+          if (Array.isArray(connectedWalletIdsArray)) {
+            if (!connectedWalletIdsArray.includes(wallet.id)) {
+              connectedWalletIdsArray.push(wallet.id);
+              rawStorage.setItem(
+                connectedWalletIdsKey,
+                JSON.stringify(connectedWalletIdsArray),
+              );
+            }
+          }
+        } else {
+          rawStorage.setItem(
+            connectedWalletIdsKey,
+            JSON.stringify([wallet.id]),
+          );
+        }
+        rawStorage.setItem(activeWalletIdKey, wallet.id);
+      }
       await config.storage?.setItem("thirdweb:lastChainId", chain.id);
       args.onConnect?.(wallet);
       return { accounts: [getAddress(account.address)], chainId: chain.id };
@@ -160,7 +209,10 @@ export function inAppWalletConnector(
       return wallet.getChain()?.id || 1;
     },
     getProvider: async (params) => {
-      const lastChainId = await config.storage?.getItem("thirdweb:lastChainId");
+      const lastChainIdStr = await config.storage?.getItem(
+        "thirdweb:lastChainId",
+      );
+      const lastChainId = lastChainIdStr ? Number(lastChainIdStr) : undefined;
       const chain = defineChain(
         params?.chainId || args.smartAccount?.chain?.id || lastChainId || 1,
       );
@@ -181,7 +233,16 @@ export function inAppWalletConnector(
     },
     icon: args.metadata?.icon,
     id: "in-app-wallet",
-    isAuthorized: async () => true,
+    isAuthorized: async () => {
+      const connectedWalletIds = rawStorage?.getItem(connectedWalletIdsKey);
+      if (connectedWalletIds) {
+        const connectedWalletIdsArray = JSON.parse(connectedWalletIds);
+        if (connectedWalletIdsArray.includes(wallet.id)) {
+          return true;
+        }
+      }
+      return false;
+    },
     name: args.metadata?.name || "In-App wallet",
     onAccountsChanged: () => {
       // no-op

@@ -82,6 +82,7 @@ export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.j
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
 export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
 export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
+export { useAddConnectedWallet } from "../react/core/hooks/wallets/useAddConnectedWallet.js";
 export { useAdminWallet } from "../react/core/hooks/wallets/useAdminWallet.js";
 export { useAuthToken } from "../react/core/hooks/wallets/useAuthToken.js";
 // eip5792

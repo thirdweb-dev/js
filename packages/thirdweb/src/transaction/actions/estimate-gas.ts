@@ -119,7 +119,7 @@ export async function estimateGas(
       const formattedTx = formatTransactionRequest({
         authorizationList: authorizationList?.map((auth) => ({
           ...auth,
-          contractAddress: getAddress(auth.address),
+          address: getAddress(auth.address),
           nonce: Number(auth.nonce),
           r: ox__Hex.fromNumber(auth.r),
           s: ox__Hex.fromNumber(auth.s),
