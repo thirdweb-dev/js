@@ -552,7 +552,7 @@ export function AccountAbstractionSettingsPage(
                         you build your own rules.{" "}
                         <UnderlineLink
                           className="text-primary-500"
-                          href="https://portal.thirdweb.com/wallets/smart-wallet/sponsorship-rules#setting-up-a-server-verifier"
+                          href="https://portal.thirdweb.com/transactions/policies#server-verifier"
                           rel="noopener noreferrer"
                           target="_blank"
                         >

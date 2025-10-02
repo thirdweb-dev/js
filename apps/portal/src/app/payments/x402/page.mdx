@@ -33,6 +33,8 @@ const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
 const response = await fetchWithPay('https://api.example.com/paid-endpoint');
 ```
 
+You can also use the thirdweb API to fetch any x402 compatible endpoint and pay for it with the authenticated wallet. See the [client side docs](/payments/x402/client) for more details.
+
 ## Server Side
 
 To make your API calls payable, use the `settlePayment` function in a middleware or endpoint:
@@ -76,6 +78,8 @@ export async function GET(request: Request) {
   }
 }
 ```
+
+You can also create middlewares to handle payment for multiple endpoints, see the [server side docs](/payments/x402/server) for more details. The [facilitator](/payments/x402/facilitator) handles settling the payment onchain using your own server wallet.
 
 ## Going Further
 

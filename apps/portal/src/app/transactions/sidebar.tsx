@@ -42,6 +42,10 @@ export const sidebar: SideBar = {
           href: `${transactionsSlug}/session-keys`,
           name: "Session Keys",
         },
+        {
+          href: `${transactionsSlug}/policies`,
+          name: "Sponsorship Policies",
+        },
       ],
     },
     { separator: true },
