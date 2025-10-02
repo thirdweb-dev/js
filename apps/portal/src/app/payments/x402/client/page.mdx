@@ -68,46 +68,18 @@ The client library wraps the native `fetch` API and handles:
   <TabsContent value="http">
     ## Prepare Payment
 
-    Create a signed payment header from the authenticated user to include in your API request:
+    Fetch any x402-compatible API and automatically handle payment flows when APIs return a `402 Payment Required` response using the authenticated wallet.
 
-    ### Making the Paid Request
-
-    After preparing the payment, include it in your API request:
+    Only requires passing a 'url' and 'from' query parameters with the authenticated wallet address (server or user wallet) to complete the payment.
 
     ```bash
-    # First, make the initial request to get payment requirements
-    curl -X GET https://api.example.com/paid-endpoint
-
-    # Response will be 402 Payment Required with payment details
-    # {
-    #   "x402Version": 1,
-    #   "accepts": [...payment requirements...],
-    #   "error": "Payment required"
-    # }
-
-    # Select one of the payment methods, and sign the payment authorization using the API
-    curl -X POST https://api.thirdweb.com/v1/payments/x402/prepare \
+    curl -X POST https://api.thirdweb.com/v1/payments/x402/fetch?url=https://api.example.com/premium&from=0x1234... \
       -H "Content-Type: application/json" \
-      -H "Authorization: Bearer <user-access-token>" \
-      -d '{
-        "from": "0x1234...",
-        "paymentRequirements": { ... }
-      }'
-
-    # Response will contain the signed payment header
-    # {
-    #   "paymentPayload": { ... },
-    #   "paymentHeader": "..." // base64 encoded payment header
-    # }
-
-    # Finally, make the request with the payment header
-    curl -X GET https://api.example.com/paid-endpoint \
-      -H "X-PAYMENT: <base64-encoded-payment>"
+      -H "Authorization: Bearer <user-wallet-token>" \
+      -d '{ ... }' # request body passed through to the url called.
     ```
 
-    ## API Reference
-
-    <OpenApiEndpoint path="/v1/payments/x402/prepare" method="POST" />
+    <OpenApiEndpoint path="/v1/payments/x402/fetch" method="POST" />
 
   </TabsContent>
 </Tabs>

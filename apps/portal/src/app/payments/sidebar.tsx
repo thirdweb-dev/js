@@ -82,7 +82,7 @@ export const sidebar: SideBar = {
         },
         {
           href: `${paymentsSlug}/x402/facilitator`,
-          name: "Facilitator API",
+          name: "Facilitator",
         },
       ],
       name: "x402",

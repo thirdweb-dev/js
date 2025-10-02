@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, Callout } from "@doc";
 import { TypeScriptIcon, EngineIcon } from "@/icons";
 
-# Facilitator API
+# Facilitator
 
 The facilitator is a service that handles verifying and submitting x402 payments. It uses your own [server wallet](/wallets/server) and leverages EIP-7702 to submit transactions gaslessly.
 
@@ -15,6 +15,13 @@ The thirdweb facilitator is compatible with any x402 backend and middleware libr
 4. **Your Wallet** - Uses your own server wallet for receiving payments
 
 You can view all transactions processed by your facilitator in your project dashboard.
+
+## Chain and token support
+
+Our facilitator supports payments on any EVM chain, as long as the payment token supports either:
+
+- ERC-2612 permit (most ERC20 tokens)
+- ERC-3009 sign with authorization (USDC on all chains)
 
 <Tabs defaultValue="typescript">
   <TabsList>
