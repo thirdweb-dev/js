@@ -1,4 +1,4 @@
-name: TypeDoc
+name:
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 # Allow only one concurrent deployment
 concurrency:
   group: "typedoc"
-  cancel-in-progress: true
+
 
 jobs:
   build:
