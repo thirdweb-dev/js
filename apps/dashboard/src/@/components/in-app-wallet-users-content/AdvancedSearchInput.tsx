@@ -46,7 +46,7 @@ export function AdvancedSearchInput(props: {
         value={searchType}
         onValueChange={(value) => setSearchType(value as SearchType)}
       >
-        <SelectTrigger className="w-[140px] bg-card">
+        <SelectTrigger className="w-[140px] bg-background rounded-full">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -61,7 +61,7 @@ export function AdvancedSearchInput(props: {
       <div className="flex flex-1">
         <div className="relative flex-1">
           <Input
-            className="bg-card pl-9 border-r-0 rounded-r-none"
+            className="bg-background pl-9 border-r-0 rounded-r-none rounded-l-full"
             placeholder={`Search by ${searchType}...`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -86,7 +86,7 @@ export function AdvancedSearchInput(props: {
           onClick={handleSearch}
           variant="outline"
           disabled={!query.trim() || props.isLoading}
-          className="rounded-l-none gap-2 bg-card disabled:opacity-100"
+          className="rounded-l-none rounded-r-full gap-2 bg-background disabled:opacity-100"
         >
           {props.isLoading && <Spinner className="size-4" />}
           Search
