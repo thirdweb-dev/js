@@ -1,11 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import type { ThirdwebClient } from "../../client/client.js";
-import type { WindowAdapter } from "../../react/core/adapters/WindowAdapter.js";
-import type { Theme } from "../../react/core/design-system/index.js";
-import type { BridgePrepareRequest } from "../../react/core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
+import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
 import { StepRunner } from "../../react/web/ui/Bridge/StepRunner.js";
-import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   STORY_MOCK_WALLET,
@@ -13,80 +9,37 @@ import {
   simpleBuyRequest,
 } from "./fixtures.js";
 
-// Mock window adapter
-const mockWindowAdapter: WindowAdapter = {
-  open: async (_url: string) => {},
-};
-
-// Props interface for the wrapper component
-interface StepRunnerWithThemeProps {
-  request: BridgePrepareRequest;
-  wallet: Wallet;
-  client: ThirdwebClient;
-  windowAdapter: WindowAdapter;
-  onComplete: (completedStatuses: CompletedStatusResult[]) => void;
-  onError: (error: Error) => void;
-  onCancel?: () => void;
-  onBack?: () => void;
-  theme: "light" | "dark" | Theme;
-}
-
-// Wrapper component to provide theme context
-const StepRunnerWithTheme = (props: StepRunnerWithThemeProps) => {
-  const { theme, ...componentProps } = props;
-  return (
-    <ModalThemeWrapper theme={theme}>
-      <StepRunner {...componentProps} preparedQuote={simpleBuyQuote} />
-    </ModalThemeWrapper>
-  );
-};
-
-const meta = {
+const meta: Meta<typeof StepRunner> = {
   args: {
     client: storyClient,
     onCancel: () => {},
     onComplete: (_completedStatuses: CompletedStatusResult[]) => {},
-    onError: (error: Error) => console.error("Error:", error),
-    theme: "dark",
     wallet: STORY_MOCK_WALLET,
-    windowAdapter: mockWindowAdapter,
+    windowAdapter: webWindowAdapter,
+    title: undefined,
+    autoStart: true,
+    onBack: undefined,
+    preparedQuote: simpleBuyQuote,
   },
-  argTypes: {
-    onCancel: { action: "execution cancelled" },
-    onComplete: { action: "execution completed" },
-    onError: { action: "error occurred" },
-    theme: {
-      control: "select",
-      description: "Theme for the component",
-      options: ["light", "dark"],
-    },
-  },
-  component: StepRunnerWithTheme,
+  component: StepRunner,
+  decorators: [
+    (Story) => (
+      <ModalThemeWrapper>
+        <Story />
+      </ModalThemeWrapper>
+    ),
+  ],
   parameters: {
     layout: "centered",
   },
-  title: "Bridge/StepRunner",
-} satisfies Meta<typeof StepRunnerWithTheme>;
+  title: "Bridge/screens/StepRunner",
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Light: Story = {
+export const Basic: Story = {
   args: {
     request: simpleBuyRequest,
-    theme: "light",
-  },
-  parameters: {
-    backgrounds: { default: "light" },
-  },
-};
-
-export const Dark: Story = {
-  args: {
-    request: simpleBuyRequest,
-    theme: "dark",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
   },
 };

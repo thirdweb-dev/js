@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import { type Address, getAddress } from "../../../../utils/address.js";
 import { numberToPlainString } from "../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -24,20 +25,14 @@ import { Input } from "../components/formElements.js";
 import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
-import type { UIOptions } from "./BridgeOrchestrator.js";
 import { TokenAndChain } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
 
-export interface FundWalletProps {
-  /**
-   * UI configuration and mode
-   */
-  uiOptions: Extract<UIOptions, { mode: "fund_wallet" }>;
-
+type FundWalletProps = {
   /**
    * The receiver address, defaults to the connected wallet address
    */
-  receiverAddress?: Address;
+  receiverAddress: Address | undefined;
   /**
    * ThirdwebClient for price fetching
    */
@@ -55,33 +50,66 @@ export interface FundWalletProps {
   /**
    * Quick buy amounts
    */
-  presetOptions?: [number, number, number];
+  presetOptions: [number, number, number];
 
   /**
    * Connect options for wallet connection
    */
-  connectOptions?: PayEmbedConnectOptions;
+  connectOptions: PayEmbedConnectOptions | undefined;
 
   /**
    * Whether to show thirdweb branding in the widget.
-   * @default true
    */
-  showThirdwebBranding?: boolean;
-}
+  showThirdwebBranding: boolean;
+
+  /**
+   * The initial amount to prefill the input with
+   */
+  initialAmount: string | undefined;
+
+  /**
+   * The destination token to buy
+   */
+  destinationToken: TokenWithPrices;
+
+  /**
+   * The currency to use for the payment.
+   */
+  currency: SupportedFiatCurrency;
+
+  /**
+   * Override label to display on the button
+   */
+  buttonLabel: string | undefined;
+
+  /**
+   * The metadata to display in the widget.
+   */
+  metadata: {
+    title: string | undefined;
+    description: string | undefined;
+    image: string | undefined;
+  };
+};
 
 export function FundWallet({
   client,
   receiverAddress,
-  uiOptions,
   onContinue,
-  presetOptions = [5, 10, 20],
+  presetOptions,
   connectOptions,
-  showThirdwebBranding = true,
+  showThirdwebBranding,
+  initialAmount,
+  destinationToken,
+  currency,
+  buttonLabel,
+  metadata,
 }: FundWalletProps) {
-  const [amount, setAmount] = useState(uiOptions.initialAmount ?? "");
+  const [amount, setAmount] = useState(initialAmount ?? "");
   const theme = useCustomTheme();
   const account = useActiveAccount();
   const receiver = receiverAddress ?? account?.address;
+
   const handleAmountChange = (inputValue: string) => {
     let processedValue = inputValue;
 
@@ -120,8 +148,7 @@ export function FundWallet({
   };
 
   const handleQuickAmount = (usdAmount: number) => {
-    const price =
-      uiOptions.destinationToken.prices[uiOptions.currency || "USD"] || 0;
+    const price = destinationToken.prices[currency || "USD"] || 0;
     if (price === 0) {
       return;
     }
@@ -137,8 +164,13 @@ export function FundWallet({
   return (
     <WithHeader
       client={client}
-      defaultTitle={`Buy ${uiOptions.destinationToken.symbol}`}
-      uiOptions={uiOptions}
+      title={
+        metadata.title === undefined
+          ? `Buy ${destinationToken.symbol}`
+          : metadata.title
+      }
+      description={metadata.description}
+      image={metadata.image}
     >
       <Container flex="column">
         {/* Token Info */}
@@ -154,11 +186,7 @@ export function FundWallet({
             flexWrap: "nowrap",
           }}
         >
-          <TokenAndChain
-            client={client}
-            size="xl"
-            token={uiOptions.destinationToken}
-          />
+          <TokenAndChain client={client} size="xl" token={destinationToken} />
           {/* Amount Input */}
           <Container
             center="x"
@@ -237,11 +265,9 @@ export function FundWallet({
               >
                 ≈{" "}
                 {formatCurrencyAmount(
-                  uiOptions.currency || "USD",
+                  currency || "USD",
                   Number(amount) *
-                    (uiOptions.destinationToken.prices[
-                      uiOptions.currency || "USD"
-                    ] || 0),
+                    (destinationToken.prices[currency || "USD"] || 0),
                 )}
               </Text>
             </Container>
@@ -328,11 +354,7 @@ export function FundWallet({
           fullWidth
           onClick={() => {
             if (isValidAmount) {
-              onContinue(
-                amount,
-                uiOptions.destinationToken,
-                getAddress(receiver),
-              );
+              onContinue(amount, destinationToken, getAddress(receiver));
             }
           }}
           style={{
@@ -341,16 +363,13 @@ export function FundWallet({
           }}
           variant="primary"
         >
-          {uiOptions.buttonLabel ||
-            `Buy ${amount} ${uiOptions.destinationToken.symbol}`}
+          {buttonLabel || `Buy ${amount} ${destinationToken.symbol}`}
         </Button>
       ) : (
         <ConnectButton
           client={client}
           connectButton={{
-            label:
-              uiOptions.buttonLabel ||
-              `Buy ${amount} ${uiOptions.destinationToken.symbol}`,
+            label: buttonLabel || `Buy ${amount} ${destinationToken.symbol}`,
           }}
           theme={theme}
           {...connectOptions}

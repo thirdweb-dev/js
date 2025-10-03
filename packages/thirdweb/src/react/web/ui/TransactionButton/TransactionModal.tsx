@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
@@ -13,7 +14,7 @@ import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js"
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
-import { BridgeOrchestrator } from "../Bridge/BridgeOrchestrator.js";
+import { TransactionWidgetContentWrapper } from "../Bridge/TransactionWidget.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
 import { Modal } from "../components/Modal.js";
 import type { LocaleId } from "../types.js";
@@ -33,7 +34,8 @@ type ModalProps = {
   payOptions: PayUIOptions;
   onTxSent: (data: WaitForReceiptOptions) => void;
   modalMode: "buy" | "deposit";
-  country?: string;
+  country: string | undefined;
+  currency: SupportedFiatCurrency | undefined;
 };
 
 export function TransactionModal(props: ModalProps) {
@@ -84,9 +86,45 @@ export function TransactionModal(props: ModalProps) {
   );
 }
 
-function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
+function TransactionModalContent(props: ModalProps) {
+  if (props.modalMode === "deposit") {
+    return <DepositAndExecuteTx {...props} />;
+  }
+
+  return (
+    <TransactionWidgetContentWrapper
+      client={props.client}
+      country={props.country}
+      currency={props.currency}
+      transaction={props.tx}
+      onCancel={props.onClose}
+      locale={props.localeId}
+      onSuccess={(data) => {
+        props.onTxSent(data);
+      }}
+      title={props.payOptions.metadata?.name}
+      description={props.payOptions.metadata?.description}
+      image={props.payOptions.metadata?.image}
+      paymentMethods={
+        props.payOptions.buyWithCrypto === false
+          ? ["card"]
+          : props.payOptions.buyWithFiat === false
+            ? ["crypto"]
+            : ["crypto", "card"]
+      }
+      showThirdwebBranding={props.payOptions.showThirdwebBranding}
+      supportedTokens={props.supportedTokens}
+      onError={undefined}
+      paymentLinkId={undefined}
+      buttonLabel={undefined}
+      purchaseData={undefined}
+    />
+  );
+}
+
+function DepositAndExecuteTx(props: ModalProps) {
   const localeQuery = useConnectLocale(props.localeId);
-  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
+  const [screen, setScreen] = useState<"deposit" | "execute-tx">("deposit");
 
   if (!localeQuery.data) {
     return <LoadingScreen />;
@@ -103,12 +141,11 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
     );
   }
 
-  if (props.modalMode === "deposit") {
+  if (screen === "deposit") {
     return (
       <DepositScreen
         client={props.client}
         connectLocale={localeQuery.data}
-        onBack={props.onBack}
         onDone={() => {
           setScreen("execute-tx");
         }}
@@ -117,25 +154,5 @@ function TransactionModalContent(props: ModalProps & { onBack?: () => void }) {
     );
   }
 
-  return (
-    <BridgeOrchestrator
-      country={props.country}
-      client={props.client}
-      connectLocale={localeQuery.data}
-      connectOptions={undefined}
-      onCancel={props.onClose}
-      onComplete={() => {
-        setScreen("execute-tx");
-      }}
-      onError={(_error) => {}}
-      paymentLinkId={undefined}
-      presetOptions={undefined}
-      purchaseData={undefined}
-      receiverAddress={undefined}
-      uiOptions={{
-        mode: "transaction",
-        transaction: props.tx,
-      }}
-    />
-  );
+  return null;
 }

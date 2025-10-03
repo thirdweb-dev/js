@@ -1,19 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { stringify } from "viem";
-import type { Theme } from "../../react/core/design-system/index.js";
 import type { CompletedStatusResult } from "../../react/core/hooks/useStepExecutor.js";
 import { webWindowAdapter } from "../../react/web/adapters/WindowAdapter.js";
-import {
-  SuccessScreen,
-  type SuccessScreenProps,
-} from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
+import { SuccessScreen } from "../../react/web/ui/Bridge/payment-success/SuccessScreen.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
-import {
-  FUND_WALLET_UI_OPTIONS,
-  simpleBuyQuote,
-  simpleOnrampQuote,
-  TRANSACTION_UI_OPTIONS,
-} from "./fixtures.js";
+import { simpleBuyQuote, simpleOnrampQuote } from "./fixtures.js";
 
 const mockBuyCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   stringify([
@@ -75,164 +66,64 @@ const mockOnrampCompletedStatuses: CompletedStatusResult[] = JSON.parse(
   ]),
 );
 
-// Props interface for the wrapper component
-interface SuccessScreenWithThemeProps extends SuccessScreenProps {
-  theme: "light" | "dark" | Theme;
-}
-
-// Wrapper component to provide theme context
-const SuccessScreenWithTheme = (props: SuccessScreenWithThemeProps) => {
-  const { theme, ...componentProps } = props;
-  return (
-    <ModalThemeWrapper theme={theme}>
-      <SuccessScreen {...componentProps} />
-    </ModalThemeWrapper>
-  );
-};
-
-const meta = {
+const meta: Meta<typeof SuccessScreen> = {
   args: {
     completedStatuses: mockBuyCompletedStatuses,
     onDone: () => {},
     preparedQuote: simpleBuyQuote,
-    theme: "dark",
-    uiOptions: FUND_WALLET_UI_OPTIONS.ethDefault,
+    showContinueWithTx: false,
     windowAdapter: webWindowAdapter,
+    client: storyClient,
+    hasPaymentId: false,
   },
-  argTypes: {
-    onDone: { action: "success screen closed" },
-    theme: {
-      control: "select",
-      description: "Theme for the component",
-      options: ["light", "dark"],
-    },
-  },
-  component: SuccessScreenWithTheme,
-  parameters: {
-    docs: {
-      description: {
-        component:
-          "Success screen that displays completion confirmation with transaction summary, payment details, and action buttons for next steps. Includes animated success icon and detailed transaction view.",
-      },
-    },
-    layout: "centered",
-  },
-  tags: ["autodocs"],
-  title: "Bridge/SuccessScreen",
-} satisfies Meta<typeof SuccessScreenWithTheme>;
+  component: SuccessScreen,
+  decorators: [
+    (Story) => (
+      <ModalThemeWrapper>
+        <Story />
+      </ModalThemeWrapper>
+    ),
+  ],
+  title: "Bridge/screens/SuccessScreen",
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    client: storyClient,
-    theme: "dark",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-  },
-};
-
-export const DefaultLight: Story = {
-  args: {
-    client: storyClient,
-    theme: "light",
-  },
-  parameters: {
-    backgrounds: { default: "light" },
-  },
+export const Basic: Story = {
+  args: {},
 };
 
 export const OnrampPayment: Story = {
   args: {
-    client: storyClient,
     completedStatuses: mockOnrampCompletedStatuses,
     preparedQuote: simpleOnrampQuote,
-    theme: "dark",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-    docs: {
-      description: {
-        story:
-          "Success screen for onramp payments showing payment ID that can be copied to clipboard.",
-      },
-    },
-  },
-};
-
-export const OnrampPaymentLight: Story = {
-  args: {
-    client: storyClient,
-    completedStatuses: mockOnrampCompletedStatuses,
-    preparedQuote: simpleOnrampQuote,
-    theme: "light",
-  },
-  parameters: {
-    backgrounds: { default: "light" },
   },
 };
 
 export const ComplexPayment: Story = {
   args: {
-    client: storyClient,
     completedStatuses: [
       ...mockOnrampCompletedStatuses,
       ...mockBuyCompletedStatuses,
     ],
     preparedQuote: simpleOnrampQuote,
-    theme: "dark",
-  },
-  parameters: {
-    backgrounds: { default: "dark" },
-    docs: {
-      description: {
-        story:
-          "Success screen for onramp payments showing payment ID that can be copied to clipboard.",
-      },
-    },
-  },
-};
-
-export const ComplexPaymentLight: Story = {
-  args: {
-    client: storyClient,
-    completedStatuses: [
-      ...mockOnrampCompletedStatuses,
-      ...mockBuyCompletedStatuses,
-    ],
-    preparedQuote: simpleOnrampQuote,
-    theme: "light",
-  },
-  parameters: {
-    backgrounds: { default: "light" },
   },
 };
 
 export const TransactionPayment: Story = {
   args: {
-    client: storyClient,
     completedStatuses: mockBuyCompletedStatuses,
     preparedQuote: simpleBuyQuote,
-    theme: "light",
-    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
-  },
-  parameters: {
-    backgrounds: { default: "light" },
+    showContinueWithTx: true,
   },
 };
 
 export const PaymentId: Story = {
   args: {
-    client: storyClient,
     completedStatuses: mockBuyCompletedStatuses,
     hasPaymentId: true,
     preparedQuote: simpleBuyQuote,
-    theme: "light",
-    uiOptions: TRANSACTION_UI_OPTIONS.contractInteraction,
-  },
-  parameters: {
-    backgrounds: { default: "light" },
+    showContinueWithTx: true,
   },
 };

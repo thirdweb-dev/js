@@ -1,20 +1,15 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
-import type { Token } from "../../../../bridge/index.js";
+import type { TokenWithPrices } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
-import { getToken } from "../../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
-import {
-  type Address,
-  checksumAddress,
-  isAddress,
-} from "../../../../utils/address.js";
-import { stringify } from "../../../../utils/json.js";
+import type { Address } from "../../../../utils/address.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -23,14 +18,28 @@ import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProv
 import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButton_connectModalOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import type { BridgePrepareResult } from "../../../core/hooks/useBridgePrepare.js";
+import type {
+  BridgePrepareRequest,
+  BridgePrepareResult,
+} from "../../../core/hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
 import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
+import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { Spinner } from "../components/Spinner.js";
 import type { LocaleId } from "../types.js";
-import { BridgeOrchestrator, type UIOptions } from "./BridgeOrchestrator.js";
+import { useTokenQuery } from "./common/token-query.js";
+import { ErrorBanner } from "./ErrorBanner.js";
+import { FundWallet } from "./FundWallet.js";
+import { PaymentDetails } from "./payment-details/PaymentDetails.js";
+import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
+import { SuccessScreen } from "./payment-success/SuccessScreen.js";
+import { QuoteLoader } from "./QuoteLoader.js";
+import { StepRunner } from "./StepRunner.js";
+import type { PaymentMethod, RequiredParams } from "./types.js";
 import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type BuyOrOnrampPrepareResult = Extract<
@@ -206,20 +215,6 @@ export type BuyWidgetProps = {
   receiverAddress?: Address;
 };
 
-// Enhanced UIOptions to handle unsupported token state
-type UIOptionsResult =
-  | { type: "success"; data: UIOptions }
-  | {
-      type: "indexing_token";
-      token: Token;
-      chain: Chain;
-    }
-  | {
-      type: "unsupported_token";
-      tokenAddress: Address;
-      chain: Chain;
-    };
-
 /**
  * Widget is a prebuilt UI for purchasing a specific token.
  *
@@ -331,8 +326,24 @@ type UIOptionsResult =
  * @bridge
  */
 export function BuyWidget(props: BuyWidgetProps) {
-  const localeQuery = useConnectLocale(props.locale || "en_US");
-  const theme = props.theme || "dark";
+  return (
+    <BridgeWidgetContainer
+      theme={props.theme}
+      className={props.className}
+      style={props.style}
+    >
+      <BridgeWidgetContentWrapper {...props} />
+    </BridgeWidgetContainer>
+  );
+}
+
+function BridgeWidgetContentWrapper(props: BuyWidgetProps) {
+  const localQuery = useConnectLocale(props.locale || "en_US");
+  const tokenQuery = useTokenQuery({
+    tokenAddress: props.tokenAddress,
+    chainId: props.chain.id,
+    client: props.client,
+  });
 
   useQuery({
     queryFn: () => {
@@ -347,83 +358,22 @@ export function BuyWidget(props: BuyWidgetProps) {
     queryKey: ["buy_widget:render"],
   });
 
-  const bridgeDataQuery = useQuery({
-    queryFn: async (): Promise<UIOptionsResult> => {
-      if (
-        !props.tokenAddress ||
-        (isAddress(props.tokenAddress) &&
-          checksumAddress(props.tokenAddress) ===
-            checksumAddress(NATIVE_TOKEN_ADDRESS))
-      ) {
-        const ETH = await getToken(
-          props.client,
-          NATIVE_TOKEN_ADDRESS,
-          props.chain.id,
-        ).catch((err) => {
-          err.message.includes("not supported")
-            ? undefined
-            : Promise.reject(err);
-        });
-        if (!ETH) {
-          return {
-            chain: props.chain,
-            tokenAddress: props.tokenAddress || NATIVE_TOKEN_ADDRESS,
-            type: "unsupported_token",
-          };
-        }
-        return {
-          data: {
-            destinationToken: ETH,
-            initialAmount: props.amount,
-            metadata: {
-              description: props.description,
-              image: props.image,
-              title: props.title,
-            },
-            mode: "fund_wallet",
-            currency: props.currency || "USD",
-            buttonLabel: props.buttonLabel,
-          },
-          type: "success",
-        };
-      }
-
-      const token = await getToken(
-        props.client,
-        props.tokenAddress,
-        props.chain.id,
-      ).catch((err) => {
-        err.message.includes("not supported") ? undefined : Promise.reject(err);
-      });
-      if (!token) {
-        return {
-          chain: props.chain,
-          tokenAddress: props.tokenAddress,
-          type: "unsupported_token",
-        };
-      }
+  // if branding is disabled for widget, disable it for connect options too
+  const connectOptions = useMemo(() => {
+    if (props.showThirdwebBranding === false) {
       return {
-        data: {
-          destinationToken: token,
-          initialAmount: props.amount,
-          metadata: {
-            description: props.description,
-            image: props.image,
-            title: props.title,
-          },
-          mode: "fund_wallet",
-          currency: props.currency || "USD",
-          buttonLabel: props.buttonLabel,
+        ...props.connectOptions,
+        connectModal: {
+          ...props.connectOptions?.connectModal,
+          showThirdwebBranding: false,
         },
-        type: "success",
       };
-    },
-    queryKey: ["bridgeData", stringify(props)],
-  });
+    }
+    return props.connectOptions;
+  }, [props.connectOptions, props.showThirdwebBranding]);
 
-  let content = null;
-  if (!localeQuery.data || bridgeDataQuery.isLoading) {
-    content = (
+  if (tokenQuery.isPending || !localQuery.data) {
+    return (
       <div
         style={{
           alignItems: "center",
@@ -435,61 +385,358 @@ export function BuyWidget(props: BuyWidgetProps) {
         <Spinner color="secondaryText" size="xl" />
       </div>
     );
-  } else if (bridgeDataQuery.data?.type === "unsupported_token") {
-    // Show unsupported token screen
-    content = (
+  } else if (tokenQuery.data?.type === "unsupported_token") {
+    return (
       <UnsupportedTokenScreen
-        chain={bridgeDataQuery.data.chain}
+        chain={props.chain}
         client={props.client}
-        tokenAddress={props.tokenAddress}
+        tokenAddress={props.tokenAddress || NATIVE_TOKEN_ADDRESS}
       />
     );
-  } else if (bridgeDataQuery.data?.type === "success") {
-    // Show normal bridge orchestrator
-    content = (
-      <BridgeOrchestrator
-        country={props.country}
-        supportedTokens={props.supportedTokens}
+  } else if (tokenQuery.data?.type === "success") {
+    return (
+      <BridgeWidgetContent
+        {...props}
+        connectLocale={localQuery.data}
+        destinationToken={tokenQuery.data.token}
+        currency={props.currency || "USD"}
+        paymentMethods={props.paymentMethods || ["crypto", "card"]}
+        presetOptions={props.presetOptions || [5, 10, 20]}
+        connectOptions={connectOptions}
+        showThirdwebBranding={
+          props.showThirdwebBranding === undefined
+            ? true
+            : props.showThirdwebBranding
+        }
+      />
+    );
+  } else if (tokenQuery.error) {
+    return (
+      <ErrorBanner
         client={props.client}
-        connectLocale={localeQuery.data}
-        connectOptions={props.connectOptions}
-        onCancel={(quote) => {
-          // type guard
-          if (quote?.type === "buy" || quote?.type === "onramp") {
-            props.onCancel?.(quote);
-          }
+        error={tokenQuery.error}
+        onRetry={() => {
+          tokenQuery.refetch();
         }}
-        onComplete={(quote) => {
-          // type guard
-          if (quote?.type === "buy" || quote?.type === "onramp") {
-            props.onSuccess?.(quote);
-          }
+        onCancel={() => {
+          props.onCancel?.(undefined);
         }}
-        onError={(err: Error, quote) => {
-          // type guard
-          if (quote?.type === "buy" || quote?.type === "onramp") {
-            props.onError?.(err, quote);
-          }
-        }}
-        paymentLinkId={props.paymentLinkId}
-        paymentMethods={props.paymentMethods}
-        presetOptions={props.presetOptions}
-        purchaseData={props.purchaseData}
-        receiverAddress={props.receiverAddress}
-        uiOptions={bridgeDataQuery.data.data}
-        showThirdwebBranding={props.showThirdwebBranding}
       />
     );
   }
 
+  return null;
+}
+
+type BuyWidgetScreen =
+  | { id: "1:buy-ui" }
+  | {
+      id: "2:methodSelection";
+      destinationAmount: string;
+      destinationToken: TokenWithPrices;
+      receiverAddress: Address;
+    }
+  | {
+      id: "3:load-quote";
+      destinationAmount: string;
+      destinationToken: TokenWithPrices;
+      receiverAddress: Address;
+      paymentMethod: PaymentMethod;
+    }
+  | {
+      id: "4:preview";
+      preparedQuote: BridgePrepareResult;
+      request: BridgePrepareRequest;
+      destinationAmount: string;
+      destinationToken: TokenWithPrices;
+      paymentMethod: PaymentMethod;
+      receiverAddress: Address;
+    }
+  | {
+      id: "5:execute";
+      preparedQuote: BridgePrepareResult;
+      request: BridgePrepareRequest;
+      destinationAmount: string;
+      destinationToken: TokenWithPrices;
+      paymentMethod: PaymentMethod;
+      receiverAddress: Address;
+    }
+  | {
+      id: "6:success";
+      completedStatuses: CompletedStatusResult[];
+      preparedQuote: BridgePrepareResult;
+    }
+  | {
+      id: "error";
+      error: Error;
+      preparedQuote: BridgePrepareResult | undefined;
+    };
+
+function BridgeWidgetContent(
+  props: RequiredParams<
+    BuyWidgetProps,
+    "currency" | "presetOptions" | "showThirdwebBranding" | "paymentMethods"
+  > & {
+    connectLocale: ConnectLocale;
+    destinationToken: TokenWithPrices;
+  },
+) {
+  const [screen, setScreen] = useState<BuyWidgetScreen>({ id: "1:buy-ui" });
+
+  const handleError = useCallback(
+    (error: Error, quote: BridgePrepareResult | undefined) => {
+      console.error(error);
+      if (quote?.type === "buy" || quote?.type === "onramp") {
+        props.onError?.(error, quote);
+      } else {
+        props.onError?.(error, undefined);
+      }
+      setScreen({
+        id: "error",
+        preparedQuote: quote,
+        error,
+      });
+    },
+    [props.onError],
+  );
+
+  const handleCancel = useCallback(
+    (preparedQuote: BridgePrepareResult | undefined) => {
+      if (preparedQuote?.type === "buy" || preparedQuote?.type === "onramp") {
+        props.onCancel?.(preparedQuote);
+      } else {
+        props.onCancel?.(undefined);
+      }
+    },
+    [props.onCancel],
+  );
+
+  if (screen.id === "1:buy-ui") {
+    return (
+      <FundWallet
+        client={props.client}
+        connectOptions={props.connectOptions}
+        onContinue={(destinationAmount, destinationToken, receiverAddress) => {
+          setScreen({
+            id: "2:methodSelection",
+            destinationAmount,
+            destinationToken,
+            receiverAddress,
+          });
+        }}
+        presetOptions={props.presetOptions}
+        receiverAddress={props.receiverAddress}
+        showThirdwebBranding={props.showThirdwebBranding}
+        metadata={{
+          title: props.title,
+          description: props.description,
+          image: props.image,
+        }}
+        buttonLabel={props.buttonLabel}
+        currency={props.currency}
+        initialAmount={props.amount}
+        destinationToken={props.destinationToken}
+      />
+    );
+  }
+
+  if (screen.id === "2:methodSelection") {
+    return (
+      <PaymentSelection
+        // from props
+        client={props.client}
+        connectLocale={props.connectLocale}
+        connectOptions={props.connectOptions}
+        paymentMethods={props.paymentMethods}
+        currency={props.currency}
+        supportedTokens={props.supportedTokens}
+        country={props.country}
+        // others
+        destinationToken={screen.destinationToken}
+        destinationAmount={screen.destinationAmount}
+        receiverAddress={screen.receiverAddress}
+        feePayer={undefined}
+        onBack={() => {
+          setScreen({ id: "1:buy-ui" });
+        }}
+        onError={(error) => {
+          handleError(error, undefined);
+        }}
+        onPaymentMethodSelected={(paymentMethod) => {
+          setScreen({
+            ...screen,
+            id: "3:load-quote",
+            paymentMethod,
+          });
+        }}
+      />
+    );
+  }
+
+  if (screen.id === "3:load-quote") {
+    return (
+      <QuoteLoader
+        // from props
+        paymentLinkId={props.paymentLinkId}
+        purchaseData={props.purchaseData}
+        client={props.client}
+        // others
+        sender={undefined}
+        mode="fund_wallet"
+        feePayer={undefined}
+        amount={screen.destinationAmount}
+        destinationToken={screen.destinationToken}
+        onBack={() => {
+          setScreen({
+            ...screen,
+            id: "2:methodSelection",
+          });
+        }}
+        onError={(error) => {
+          handleError(error, undefined);
+        }}
+        onQuoteReceived={(preparedQuote, request) => {
+          setScreen({
+            ...screen,
+            id: "4:preview",
+            preparedQuote,
+            request,
+          });
+        }}
+        paymentMethod={screen.paymentMethod}
+        receiver={screen.receiverAddress}
+      />
+    );
+  }
+
+  if (screen.id === "4:preview") {
+    return (
+      <PaymentDetails
+        // from props
+        client={props.client}
+        currency={props.currency}
+        metadata={{
+          title: props.title,
+          description: props.description,
+        }}
+        // others
+        confirmButtonLabel={undefined}
+        onBack={() => {
+          setScreen({
+            ...screen,
+            id: "2:methodSelection",
+          });
+        }}
+        onConfirm={() => {
+          setScreen({
+            ...screen,
+            id: "5:execute",
+          });
+        }}
+        onError={(error) => {
+          handleError(error, screen.preparedQuote);
+        }}
+        paymentMethod={screen.paymentMethod}
+        preparedQuote={screen.preparedQuote}
+        modeInfo={{
+          mode: "fund_wallet",
+        }}
+      />
+    );
+  }
+
+  if (screen.id === "5:execute") {
+    return (
+      <StepRunner
+        // from props
+        client={props.client}
+        // others
+        title={undefined}
+        preparedQuote={screen.preparedQuote}
+        autoStart={true}
+        onBack={() => {
+          setScreen({
+            ...screen,
+            id: "4:preview",
+          });
+        }}
+        onCancel={() => {
+          handleCancel(screen.preparedQuote);
+        }}
+        onComplete={(completedStatuses) => {
+          if (
+            screen.preparedQuote.type === "buy" ||
+            screen.preparedQuote.type === "onramp"
+          ) {
+            props.onSuccess?.(screen.preparedQuote);
+          }
+          setScreen({
+            id: "6:success",
+            preparedQuote: screen.preparedQuote,
+            completedStatuses,
+          });
+        }}
+        request={screen.request}
+        wallet={screen.paymentMethod.payerWallet}
+        windowAdapter={webWindowAdapter}
+      />
+    );
+  }
+
+  if (screen.id === "6:success") {
+    return (
+      <SuccessScreen
+        // from props
+        client={props.client}
+        hasPaymentId={!!props.paymentLinkId}
+        completedStatuses={screen.completedStatuses}
+        // others
+        onDone={() => {
+          setScreen({ id: "1:buy-ui" });
+        }}
+        preparedQuote={screen.preparedQuote}
+        showContinueWithTx={false}
+        windowAdapter={webWindowAdapter}
+      />
+    );
+  }
+
+  if (screen.id === "error") {
+    return (
+      <ErrorBanner
+        client={props.client}
+        error={screen.error}
+        onCancel={() => {
+          setScreen({ id: "1:buy-ui" });
+          handleCancel(screen.preparedQuote);
+        }}
+        onRetry={() => {
+          setScreen({ id: "1:buy-ui" });
+        }}
+      />
+    );
+  }
+
+  return null;
+}
+
+/**
+ * @internal
+ */
+function BridgeWidgetContainer(props: {
+  theme: BuyWidgetProps["theme"];
+  className: string | undefined;
+  style?: React.CSSProperties | undefined;
+  children: React.ReactNode;
+}) {
   return (
-    <CustomThemeProvider theme={theme}>
+    <CustomThemeProvider theme={props.theme || "dark"}>
       <EmbedContainer
         className={props.className}
         modalSize="compact"
         style={props.style}
       >
-        <DynamicHeight>{content}</DynamicHeight>
+        <DynamicHeight>{props.children}</DynamicHeight>
       </EmbedContainer>
     </CustomThemeProvider>
   );

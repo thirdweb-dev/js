@@ -4,7 +4,6 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
-import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
@@ -15,6 +14,7 @@ import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { TokenAndChain } from "../common/TokenAndChain.js";
+import type { PaymentMethod } from "../types.js";
 
 interface TokenSelectionProps {
   paymentMethods: PaymentMethod[];

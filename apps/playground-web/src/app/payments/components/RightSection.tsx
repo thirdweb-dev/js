@@ -89,7 +89,6 @@ export function RightSection(props: {
         }
         name={props.options.payOptions.title || "Your Product Name"}
         paymentMethods={props.options.payOptions.paymentMethods}
-        presetOptions={[1, 2, 3]}
         seller={props.options.payOptions.sellerAddress}
         theme={themeObj}
         tokenAddress={props.options.payOptions.buyTokenAddress}

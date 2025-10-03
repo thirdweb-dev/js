@@ -7,7 +7,7 @@ import { getThirdwebBaseUrl } from "../../../utils/domains.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import { toTokens, toUnits } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
-import type { PaymentMethod } from "../machines/paymentMachine.js";
+import type { PaymentMethod } from "../../web/ui/Bridge/types.js";
 import type { SupportedTokens } from "../utils/defaultTokens.js";
 import { useActiveWallet } from "./wallets/useActiveWallet.js";
 
@@ -33,7 +33,6 @@ export function usePaymentMethods(options: {
   destinationAmount: string;
   client: ThirdwebClient;
   payerWallet?: Wallet;
-  includeDestinationToken?: boolean;
   supportedTokens?: SupportedTokens;
 }) {
   const {
@@ -41,7 +40,6 @@ export function usePaymentMethods(options: {
     destinationAmount,
     client,
     payerWallet,
-    includeDestinationToken,
     supportedTokens,
   } = options;
   const localWallet = useActiveWallet(); // TODO (bridge): get all connected wallets
@@ -135,7 +133,6 @@ export function usePaymentMethods(options: {
       destinationToken.address,
       destinationAmount,
       payerWallet?.getAccount()?.address,
-      includeDestinationToken,
       supportedTokens,
     ], // 5 minutes
     refetchOnWindowFocus: false,

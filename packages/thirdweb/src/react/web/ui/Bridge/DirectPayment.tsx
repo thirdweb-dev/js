@@ -2,6 +2,7 @@
 import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { Address } from "../../../../utils/address.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { FiatValue } from "../ConnectWallet/screens/Buy/swap/FiatValue.js";
@@ -10,15 +11,19 @@ import { Button } from "../components/buttons.js";
 import { ChainName } from "../components/ChainName.js";
 import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
-import type { UIOptions } from "./BridgeOrchestrator.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
 import { WithHeader } from "./common/WithHeader.js";
+import type { DirectPaymentInfo } from "./types.js";
 
-export interface DirectPaymentProps {
-  /**
-   * Payment information for the direct payment
-   */
-  uiOptions: Extract<UIOptions, { mode: "direct_payment" }>;
+type DirectPaymentProps = {
+  paymentInfo: DirectPaymentInfo;
+  currency: SupportedFiatCurrency;
+  metadata: {
+    title: string | undefined;
+    description: string | undefined;
+    image: string | undefined;
+  };
+  buttonLabel: string | undefined;
 
   /**
    * ThirdwebClient for blockchain interactions
@@ -36,29 +41,31 @@ export interface DirectPaymentProps {
 
   /**
    * Whether to show thirdweb branding in the widget.
-   * @default true
    */
-  showThirdwebBranding?: boolean;
-}
+  showThirdwebBranding: boolean;
+};
 
 export function DirectPayment({
-  uiOptions,
+  paymentInfo,
+  metadata,
   client,
   onContinue,
   showThirdwebBranding = true,
+  buttonLabel,
+  currency,
 }: DirectPaymentProps) {
-  const chain = defineChain(uiOptions.paymentInfo.token.chainId);
+  const chain = defineChain(paymentInfo.token.chainId);
   const handleContinue = () => {
     onContinue(
-      uiOptions.paymentInfo.amount,
-      uiOptions.paymentInfo.token,
-      uiOptions.paymentInfo.sellerAddress,
+      paymentInfo.amount,
+      paymentInfo.token,
+      paymentInfo.sellerAddress,
     );
   };
 
-  const buyNow = uiOptions.buttonLabel ? (
+  const buyNow = buttonLabel ? (
     <Text color="primaryButtonText" size="md">
-      {uiOptions.buttonLabel}
+      {buttonLabel}
     </Text>
   ) : (
     <Container flex="row" gap="3xs">
@@ -66,13 +73,13 @@ export function DirectPayment({
         Buy Now ·
       </Text>
       <FiatValue
-        currency={uiOptions.currency}
+        currency={currency}
         chain={chain}
         client={client}
         color="primaryButtonText"
         size="md"
-        token={uiOptions.paymentInfo.token}
-        tokenAmount={uiOptions.paymentInfo.amount}
+        token={paymentInfo.token}
+        tokenAmount={paymentInfo.amount}
       />
     </Container>
   );
@@ -80,8 +87,9 @@ export function DirectPayment({
   return (
     <WithHeader
       client={client}
-      defaultTitle="Direct Payment"
-      uiOptions={uiOptions}
+      title={metadata.title || "Direct Payment"}
+      description={metadata.description}
+      image={metadata.image}
     >
       {/* Price section */}
       <Container
@@ -93,13 +101,13 @@ export function DirectPayment({
         }}
       >
         <FiatValue
-          currency={uiOptions.currency}
+          currency={currency}
           chain={chain}
           client={client}
           color="primaryText"
           size="xl"
-          token={uiOptions.paymentInfo.token}
-          tokenAmount={uiOptions.paymentInfo.amount}
+          token={paymentInfo.token}
+          tokenAmount={paymentInfo.amount}
           weight={600}
         />
         <Container flex="row" gap="3xs">
@@ -140,7 +148,7 @@ export function DirectPayment({
             fontFamily: "monospace",
           }}
         >
-          {`${uiOptions.paymentInfo.amount} ${uiOptions.paymentInfo.token.symbol}`}
+          {`${paymentInfo.amount} ${paymentInfo.token.symbol}`}
         </Text>
       </Container>
 

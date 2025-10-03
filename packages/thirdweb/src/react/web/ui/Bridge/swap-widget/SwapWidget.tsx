@@ -260,7 +260,7 @@ export function SwapWidget(props: SwapWidgetProps) {
       style={props.style}
       className={props.className}
     >
-      <SwapWidgetContent {...props} />
+      <SwapWidgetContent {...props} currency={props.currency || "USD"} />
     </SwapWidgetContainer>
   );
 }
@@ -314,7 +314,11 @@ type SwapWidgetScreen =
     >
   | { id: "error"; error: Error; preparedQuote: SwapPreparedQuote };
 
-function SwapWidgetContent(props: SwapWidgetProps) {
+function SwapWidgetContent(
+  props: SwapWidgetProps & {
+    currency: SupportedFiatCurrency;
+  },
+) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });
   const activeWalletInfo = useActiveWalletInfo();
   const isPersistEnabled = props.persistTokenSelections !== false;
@@ -385,7 +389,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
         client={props.client}
         theme={props.theme || "dark"}
         connectOptions={props.connectOptions}
-        currency={props.currency || "USD"}
+        currency={props.currency}
         activeWalletInfo={activeWalletInfo}
         buyToken={buyToken}
         sellToken={sellToken}
@@ -412,7 +416,10 @@ function SwapWidgetContent(props: SwapWidgetProps) {
   if (screen.id === "2:preview") {
     return (
       <PaymentDetails
-        title="Review Swap"
+        metadata={{
+          title: "Review Swap",
+          description: undefined,
+        }}
         confirmButtonLabel="Swap"
         client={props.client}
         onBack={() => {
@@ -434,10 +441,9 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           action: screen.mode,
         }}
         preparedQuote={screen.preparedQuote}
-        uiOptions={{
-          destinationToken: screen.buyToken,
+        currency={props.currency}
+        modeInfo={{
           mode: "fund_wallet",
-          currency: props.currency,
         }}
       />
     );
@@ -487,11 +493,7 @@ function SwapWidgetContent(props: SwapWidgetProps) {
           });
         }}
         preparedQuote={screen.preparedQuote}
-        uiOptions={{
-          destinationToken: screen.buyToken,
-          mode: "fund_wallet",
-          currency: props.currency,
-        }}
+        showContinueWithTx={false}
         windowAdapter={webWindowAdapter}
         hasPaymentId={false} // TODO Question: Do we need to expose this as prop?
       />

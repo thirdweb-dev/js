@@ -4,11 +4,11 @@ import { useMemo } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
 import { useChainsQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
-import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import {
   formatCurrencyAmount,
   formatTokenAmount,
@@ -17,17 +17,20 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
-import type { UIOptions } from "../BridgeOrchestrator.js";
+import type { ModeInfo, PaymentMethod } from "../types.js";
+
 import { PaymentOverview } from "./PaymentOverview.js";
 
-export interface PaymentDetailsProps {
-  title?: string;
-  confirmButtonLabel?: string;
+type PaymentDetailsProps = {
+  metadata: {
+    title: string | undefined;
+    description: string | undefined;
+  };
 
-  /**
-   * The UI mode to use
-   */
-  uiOptions: UIOptions;
+  currency: SupportedFiatCurrency;
+  modeInfo: ModeInfo;
+
+  confirmButtonLabel: string | undefined;
   /**
    * The client to use
    */
@@ -55,18 +58,19 @@ export interface PaymentDetailsProps {
    * Called when an error occurs
    */
   onError: (error: Error) => void;
-}
+};
 
 export function PaymentDetails({
-  title,
+  metadata,
   confirmButtonLabel,
-  uiOptions,
   client,
   paymentMethod,
   preparedQuote,
   onConfirm,
   onBack,
   onError,
+  currency,
+  modeInfo,
 }: PaymentDetailsProps) {
   const theme = useCustomTheme();
 
@@ -267,7 +271,10 @@ export function PaymentDetails({
 
   return (
     <Container flex="column" fullHeight px="md" pb="md" pt="md+">
-      <ModalHeader onBack={onBack} title={title || "Payment Details"} />
+      <ModalHeader
+        onBack={onBack}
+        title={metadata.title || "Payment Details"}
+      />
 
       <Spacer y="lg" />
 
@@ -276,6 +283,9 @@ export function PaymentDetails({
         <Container flex="column">
           {displayData.destinationToken && (
             <PaymentOverview
+              currency={currency}
+              metadata={metadata}
+              modeInfo={modeInfo}
               client={client}
               fromAmount={displayData.originAmount}
               paymentMethod={paymentMethod}
@@ -286,7 +296,6 @@ export function PaymentDetails({
               }
               toAmount={displayData.destinationAmount}
               toToken={displayData.destinationToken}
-              uiOptions={uiOptions}
             />
           )}
 

@@ -27,14 +27,14 @@ import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
 
-interface StepRunnerProps {
-  title?: string;
+type StepRunnerProps = {
+  title: string | undefined;
   request: BridgePrepareRequest;
 
   /**
    * Wallet instance for executing transactions
    */
-  wallet?: Wallet;
+  wallet: Wallet | undefined;
 
   /**
    * Thirdweb client for API calls
@@ -49,7 +49,7 @@ interface StepRunnerProps {
   /**
    * Whether to automatically start the transaction process
    */
-  autoStart?: boolean;
+  autoStart: boolean;
 
   /**
    * Called when all steps are completed - receives array of completed status results
@@ -59,18 +59,18 @@ interface StepRunnerProps {
   /**
    * Called when user cancels the flow
    */
-  onCancel?: () => void;
+  onCancel: (() => void) | undefined;
 
   /**
    * Called when user clicks the back button
    */
-  onBack?: () => void;
+  onBack: () => void;
 
   /**
    * Prepared quote to use
    */
   preparedQuote: BridgePrepareResult;
-}
+};
 
 export function StepRunner({
   title,

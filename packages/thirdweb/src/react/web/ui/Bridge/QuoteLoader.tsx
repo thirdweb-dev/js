@@ -12,12 +12,11 @@ import {
   type UseBridgePrepareParams,
   useBridgePrepare,
 } from "../../../core/hooks/useBridgePrepare.js";
-import type { PaymentMethod } from "../../../core/machines/paymentMachine.js";
 import { Container } from "../components/basic.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
-import type { UIOptions } from "./BridgeOrchestrator.js";
+import type { PaymentMethod } from "./types.js";
 
 interface QuoteLoaderProps {
   /**
@@ -38,10 +37,10 @@ interface QuoteLoaderProps {
   /**
    * The sender address
    */
-  sender?: string;
+  sender: string | undefined;
 
   /**
-   * The receiver address (defaults to sender for fund_wallet mode)
+   * The receiver address
    */
   receiver: string;
 
@@ -62,30 +61,26 @@ interface QuoteLoaderProps {
    * Called when an error occurs
    */
   onError: (error: Error) => void;
-
   /**
    * Called when user wants to go back
    */
-  onBack?: () => void;
+  onBack: (() => void) | undefined;
 
   /**
    * Optional purchase data for the payment
    */
-  purchaseData?: PurchaseData;
+  purchaseData: PurchaseData | undefined;
 
   /**
    * Optional payment link ID for the payment
    */
-  paymentLinkId?: string;
+  paymentLinkId: string | undefined;
 
-  /**
-   * UI options
-   */
-  uiOptions: UIOptions;
+  feePayer: "sender" | "receiver" | undefined;
+  mode: "direct_payment" | "fund_wallet" | "transaction";
 }
 
 export function QuoteLoader({
-  uiOptions,
   destinationToken,
   paymentMethod,
   amount,
@@ -96,14 +91,9 @@ export function QuoteLoader({
   onError,
   purchaseData,
   paymentLinkId,
+  feePayer,
+  mode,
 }: QuoteLoaderProps) {
-  // For now, we'll use a simple buy operation
-  // This will be expanded to handle different bridge types based on the payment method
-  const feePayer =
-    uiOptions.mode === "direct_payment"
-      ? uiOptions.paymentInfo.feePayer
-      : undefined;
-  const mode = uiOptions.mode;
   const request: BridgePrepareRequest = getBridgeParams({
     amount,
     client,
