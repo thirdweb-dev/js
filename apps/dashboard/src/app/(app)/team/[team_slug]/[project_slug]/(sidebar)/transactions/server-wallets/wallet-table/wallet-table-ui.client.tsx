@@ -96,15 +96,22 @@ export function ServerWalletsTableUI({
           </div>
 
           <div className="flex flex-col items-start lg:items-end gap-5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">
-            <SingleNetworkSelector
-              chainId={selectedChainId}
-              onChange={setSelectedChainId}
-              client={client}
-              disableChainId
-              className="w-fit min-w-[180px] rounded-full bg-background hover:bg-accent/50"
-              placeholder="Select network"
-              popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
-            />
+            <div className="flex flex-row gap-2.5">
+              <CreateServerWallet
+                managementAccessToken={managementAccessToken}
+                project={project}
+                teamSlug={teamSlug}
+              />
+              <SingleNetworkSelector
+                chainId={selectedChainId}
+                onChange={setSelectedChainId}
+                client={client}
+                disableChainId
+                className="w-fit min-w-[180px] rounded-full bg-background hover:bg-accent/50"
+                placeholder="Select network"
+                popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
+              />
+            </div>
 
             <div className="flex items-center gap-2.5">
               <Label
@@ -187,24 +194,9 @@ export function ServerWalletsTableUI({
                 <XIcon className="size-5 text-muted-foreground" />
               </div>
               <p className="text-muted-foreground">No server wallets found</p>
-              <CreateServerWallet
-                managementAccessToken={managementAccessToken}
-                project={project}
-                teamSlug={teamSlug}
-              />
             </div>
           )}
         </TableContainer>
-
-        {wallets.length > 0 && (
-          <div className="flex justify-end items-center p-4 py-5 lg:px-6 border-t">
-            <CreateServerWallet
-              managementAccessToken={managementAccessToken}
-              project={project}
-              teamSlug={teamSlug}
-            />
-          </div>
-        )}
 
         {totalPages > 1 && (
           <div className="flex flex-col items-center border-t p-6">

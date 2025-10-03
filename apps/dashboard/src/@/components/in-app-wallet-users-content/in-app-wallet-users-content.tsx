@@ -2,7 +2,7 @@
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, UserIcon } from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
@@ -264,11 +264,24 @@ export function InAppWalletUsersPageContent(
 
   return (
     <div>
-      <div className="flex flex-col gap-4">
-        {/* Top section */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col md:flex-row lg:items-center justify-end gap-3">
-            <div className="w-full max-w-lg">
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="flex flex-col lg:flex-row lg:justify-between p-4 lg:px-6 py-5 lg:items-center gap-5">
+          <div>
+            <div className="flex mb-3">
+              <div className="p-2 rounded-full bg-background border border-border">
+                <UserIcon className="size-5 text-muted-foreground" />
+              </div>
+            </div>
+            <h2 className="font-semibold text-2xl tracking-tight">
+              User Wallets
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              View and manage your project's users
+            </p>
+          </div>
+
+          <div className="flex flex-col items-start lg:items-end gap-2.5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">
+            <div className="w-full lg:w-auto lg:min-w-[320px]">
               <AdvancedSearchInput
                 onSearch={handleSearch}
                 onClear={handleClearSearch}
@@ -277,7 +290,7 @@ export function InAppWalletUsersPageContent(
               />
             </div>
             <Button
-              className="gap-2 bg-card"
+              className="gap-2 bg-background rounded-full"
               disabled={wallets.length === 0 || isPending}
               onClick={downloadCSV}
               variant="outline"
@@ -298,11 +311,11 @@ export function InAppWalletUsersPageContent(
                 data={wallets}
                 isFetched={walletsQuery.isFetched}
                 isPending={walletsQuery.isPending}
-                tableContainerClassName="rounded-b-none"
+                tableContainerClassName="rounded-none border-x-0 border-b-0"
                 title="in-app wallets"
               />
 
-              <div className="flex justify-center gap-3 rounded-b-lg border border-t-0 bg-card p-6">
+              <div className="flex justify-center gap-3 border-t bg-card p-6">
                 <Button
                   className="gap-2 bg-background"
                   disabled={activePage === 1 || walletsQuery.isPending}
