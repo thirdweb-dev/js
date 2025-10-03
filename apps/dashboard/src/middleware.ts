@@ -7,6 +7,20 @@ import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { isLoginRequired } from "@/utils/auth";
 import { LAST_VISITED_TEAM_PAGE_PATH } from "./app/(app)/team/components/last-visited-page/consts";
 
+type CookiesToSet = Record<
+  string,
+  | [string]
+  | [
+      string,
+      {
+        httpOnly: boolean;
+        sameSite?: "lax" | "strict" | "none";
+        secure: boolean;
+        maxAge: number;
+      },
+    ]
+>;
+
 // ignore assets, api - only intercept page routes
 export const config = {
   matcher: [
@@ -24,12 +38,12 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
 
   // nebula subdomain handling
   const paths = pathname.slice(1).split("/");
 
-  let cookiesToSet: Record<string, string> | undefined;
+  let cookiesToSet: CookiesToSet = {};
 
   const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authCookie = activeAccount
@@ -56,10 +70,25 @@ export async function middleware(request: NextRequest) {
             cookiesToSet = {};
           }
 
-          cookiesToSet[key] = value;
+          cookiesToSet[key] = [value];
         }
       }
     }
+  }
+
+  // handle gclid (if it exists in search params)
+  const gclid = searchParams.get("gclid");
+  if (gclid) {
+    cookiesToSet.gclid = [
+      gclid,
+      {
+        // TODO: define conversion window, for now 7d should do fine
+        maxAge: 7 * 24 * 60 * 60,
+        httpOnly: false,
+        sameSite: "lax",
+        secure: true,
+      },
+    ];
   }
 
   // logged in paths
@@ -146,7 +175,7 @@ export async function middleware(request: NextRequest) {
   if (cookiesToSet) {
     const defaultResponse = NextResponse.next();
     for (const entry of Object.entries(cookiesToSet)) {
-      defaultResponse.cookies.set(entry[0], entry[1]);
+      defaultResponse.cookies.set(entry[0], entry[1][0], entry[1][1]);
     }
 
     return defaultResponse;
@@ -162,7 +191,7 @@ function isPossibleAddressOrENSName(address: string) {
 function rewrite(
   request: NextRequest,
   relativePath: string,
-  cookiesToSet: Record<string, string> | undefined,
+  cookiesToSet: CookiesToSet,
 ) {
   const url = request.nextUrl.clone();
   url.pathname = relativePath;
@@ -170,7 +199,7 @@ function rewrite(
 
   if (cookiesToSet) {
     for (const entry of Object.entries(cookiesToSet)) {
-      res.cookies.set(entry[0], entry[1]);
+      res.cookies.set(entry[0], entry[1][0], entry[1][1]);
     }
   }
 
@@ -184,7 +213,7 @@ function redirect(
     | {
         searchParams?: string;
         permanent?: boolean;
-        cookiesToSet?: Record<string, string> | undefined;
+        cookiesToSet?: CookiesToSet;
       }
     | undefined,
 ) {
@@ -196,7 +225,7 @@ function redirect(
 
   if (options?.cookiesToSet) {
     for (const entry of Object.entries(options.cookiesToSet)) {
-      res.cookies.set(entry[0], entry[1]);
+      res.cookies.set(entry[0], entry[1][0], entry[1][1]);
     }
   }
 
