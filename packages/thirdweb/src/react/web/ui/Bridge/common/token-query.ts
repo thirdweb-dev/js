@@ -12,11 +12,15 @@ type TokenQueryResult =
 
 export function useTokenQuery(params: {
   tokenAddress: string | undefined;
-  chainId: number;
+  chainId: number | undefined;
   client: ThirdwebClient;
 }) {
   return useQuery({
+    enabled: !!params.chainId,
     queryFn: async (): Promise<TokenQueryResult> => {
+      if (!params.chainId) {
+        throw new Error("Chain ID is required");
+      }
       const tokenAddress = params.tokenAddress || NATIVE_TOKEN_ADDRESS;
       const token = await getToken(
         params.client,

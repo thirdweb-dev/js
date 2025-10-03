@@ -13,6 +13,7 @@ export const CopyIcon: React.FC<{
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
   hasCopied?: boolean;
+  iconSize?: number;
 }> = (props) => {
   const { hasCopied, onCopy } = useClipboard(props.text);
   const showCheckIcon = props.hasCopied || hasCopied;
@@ -40,9 +41,17 @@ export const CopyIcon: React.FC<{
             flex="row"
           >
             {showCheckIcon ? (
-              <CheckIcon className="tw-check-icon" />
+              <CheckIcon
+                className="tw-check-icon"
+                width={props.iconSize || 16}
+                height={props.iconSize || 16}
+              />
             ) : (
-              <CopyIconSVG className="tw-copy-icon" />
+              <CopyIconSVG
+                className="tw-copy-icon"
+                width={props.iconSize || 16}
+                height={props.iconSize || 16}
+              />
             )}
           </Container>
         </div>

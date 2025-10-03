@@ -21,10 +21,6 @@ Add the script in document head and the element where you want to render the bri
   BridgeWidget.render(node, {
     clientId: "your-client-id",
     theme: "dark",
-    buy: {
-      chainId: 8453,
-      amount: "0.1",
-    },
   });
 </script>
 ```
@@ -40,10 +36,6 @@ Add the script in document head and the element where you want to render the bri
       colors: {
         modalBg: "red",
       },
-    },
-    buy: {
-      chainId: 8453,
-      amount: "0.1",
     },
   });
 </script>
@@ -66,6 +58,7 @@ Add the script in document head and the element where you want to render the bri
     buy: {
       chainId: 8453,
       amount: "0.1",
+      tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
     },
   });
 </script>

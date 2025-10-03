@@ -140,6 +140,7 @@ export function LeftSection(props: {
                 <div className="flex flex-col gap-2">
                   <Label>Token</Label>
                   <TokenSelector
+                    disableAddress
                     chainId={selectedChain}
                     client={THIRDWEB_CLIENT}
                     enabled={true}
@@ -154,10 +155,10 @@ export function LeftSection(props: {
           )}
 
           {/* Mode-specific form fields */}
-          <div className="my-2">
+          <div className="">
             {/* Buy Mode - Amount and Payment Methods */}
             {props.widget === "buy" && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={buyTokenAmountId}>Amount</Label>
                   <Input
@@ -176,6 +177,30 @@ export function LeftSection(props: {
                     value={payOptions.buyTokenAmount || ""}
                   />
                 </div>
+
+                {props.widget === "buy" && (
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="receiver-address">Receiver Address</Label>
+                    <p className="text-muted-foreground text-sm">
+                      Receive the tokens in a different wallet address
+                    </p>
+                    <Input
+                      className="bg-card"
+                      id="receiver-address"
+                      onChange={(e) => {
+                        setOptions((v) => ({
+                          ...v,
+                          payOptions: {
+                            ...v.payOptions,
+                            receiverAddress: e.target.value as Address,
+                          },
+                        }));
+                      }}
+                      placeholder="0x..."
+                      value={payOptions.receiverAddress || ""}
+                    />
+                  </div>
+                )}
 
                 {/* Payment Methods */}
                 <div className="flex flex-col gap-3">
@@ -206,6 +231,7 @@ export function LeftSection(props: {
                       />
                       <Label htmlFor={cryptoPaymentId}>Crypto</Label>
                     </div>
+
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         checked={payOptions.paymentMethods.includes("card")}
@@ -257,7 +283,6 @@ export function LeftSection(props: {
                     value={payOptions.sellerAddress || ""}
                   />
                 </div>
-
                 <div className="flex flex-col gap-2">
                   <Label htmlFor={paymentAmountId}>Price</Label>
                   <Input

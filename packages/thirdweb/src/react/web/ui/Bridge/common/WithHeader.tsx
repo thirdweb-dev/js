@@ -8,7 +8,7 @@ import { Text } from "../../components/text.js";
 
 export function WithHeader(props: {
   children: React.ReactNode;
-  title: string;
+  title: string | undefined;
   description: string | undefined;
   image: string | undefined;
   client: ThirdwebClient;
@@ -34,7 +34,7 @@ export function WithHeader(props: {
       )}
 
       <Container flex="column" px="md">
-        <Spacer y="md+" />
+        <Spacer y="md" />
 
         {(props.title || props.description) && (
           <>

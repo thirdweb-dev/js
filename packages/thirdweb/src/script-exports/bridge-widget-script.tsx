@@ -41,9 +41,9 @@ export type BridgeWidgetScriptProps = {
       };
     };
   };
-  buy: {
-    amount: string; // TODO - make it optional
-    chainId: number; // TODO - make it optional
+  buy?: {
+    amount?: string;
+    chainId?: number;
     tokenAddress?: string;
     buttonLabel?: string;
     onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;

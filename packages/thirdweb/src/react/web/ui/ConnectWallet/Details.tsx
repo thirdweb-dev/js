@@ -985,7 +985,6 @@ export function DetailsModal(props: {
         chain={getCachedChain(requestedChainId)}
         client={client}
         hiddenWallets={props.detailsModal?.hiddenWallets}
-        locale={locale.id}
         connectOptions={props.connectOptions}
         onCancel={() => setScreen("main")}
         onSuccess={() => setScreen("main")}
@@ -1012,6 +1011,9 @@ export function DetailsModal(props: {
             className="tw-modal__wallet-details"
             title="Manage Wallet"
             open={isOpen}
+            crossContainerStyles={{
+              display: screen === "buy" ? "none" : "block",
+            }}
             setOpen={(_open) => {
               if (!_open) {
                 closeModal();

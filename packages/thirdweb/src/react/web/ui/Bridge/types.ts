@@ -1,4 +1,5 @@
 import type { Quote, TokenWithPrices } from "../../../../bridge/index.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
@@ -41,6 +42,6 @@ export type PaymentMethod =
   | {
       type: "fiat";
       payerWallet?: Wallet;
-      currency: string;
+      currency: SupportedFiatCurrency;
       onramp: "stripe" | "coinbase" | "transak";
     };

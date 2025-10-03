@@ -6,7 +6,6 @@ import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { TokenWithPrices } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import type { Address } from "../../../../utils/address.js";
@@ -25,13 +24,9 @@ import type {
 import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
-import { useConnectLocale } from "../ConnectWallet/locale/getConnectLocale.js";
-import type { ConnectLocale } from "../ConnectWallet/locale/types.js";
+import connectLocaleEn from "../ConnectWallet/locale/en.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
-import { Spinner } from "../components/Spinner.js";
-import type { LocaleId } from "../types.js";
-import { useTokenQuery } from "./common/token-query.js";
 import { ErrorBanner } from "./ErrorBanner.js";
 import { FundWallet } from "./FundWallet.js";
 import { PaymentDetails } from "./payment-details/PaymentDetails.js";
@@ -39,8 +34,8 @@ import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
 import { QuoteLoader } from "./QuoteLoader.js";
 import { StepRunner } from "./StepRunner.js";
+import { useActiveWalletInfo } from "./swap-widget/hooks.js";
 import type { PaymentMethod, RequiredParams } from "./types.js";
-import { UnsupportedTokenScreen } from "./UnsupportedTokenScreen.js";
 
 export type BuyOrOnrampPrepareResult = Extract<
   BridgePrepareResult,
@@ -68,14 +63,7 @@ export type BuyWidgetProps = {
    * ```
    */
   client: ThirdwebClient;
-  /**
-   * By default - ConnectButton UI uses the `en-US` locale for english language users.
-   *
-   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
-   *
-   * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
-   */
-  locale?: LocaleId;
+
   /**
    * Set the theme for the `BuyWidget` component. By default it is set to `"dark"`
    *
@@ -130,7 +118,7 @@ export type BuyWidgetProps = {
   /**
    * The chain the accepted token is on.
    */
-  chain: Chain;
+  chain?: Chain;
 
   /**
    * Address of the token to buy. Leave undefined for the native token, or use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE.
@@ -140,7 +128,7 @@ export type BuyWidgetProps = {
   /**
    * The amount to buy **(as a decimal string)**, e.g. "1.5" for 1.5 tokens.
    */
-  amount: string;
+  amount?: string;
 
   /**
    * The title to display in the widget. If `title` is explicity set to an empty string, the title will not be displayed.
@@ -213,6 +201,11 @@ export type BuyWidgetProps = {
    * The receiver address for the purchased funds.
    */
   receiverAddress?: Address;
+
+  /**
+   * Callback to be called when the user disconnects the active wallet.
+   */
+  onDisconnect?: () => void;
 };
 
 /**
@@ -326,31 +319,12 @@ export type BuyWidgetProps = {
  * @bridge
  */
 export function BuyWidget(props: BuyWidgetProps) {
-  return (
-    <BridgeWidgetContainer
-      theme={props.theme}
-      className={props.className}
-      style={props.style}
-    >
-      <BridgeWidgetContentWrapper {...props} />
-    </BridgeWidgetContainer>
-  );
-}
-
-function BridgeWidgetContentWrapper(props: BuyWidgetProps) {
-  const localQuery = useConnectLocale(props.locale || "en_US");
-  const tokenQuery = useTokenQuery({
-    tokenAddress: props.tokenAddress,
-    chainId: props.chain.id,
-    client: props.client,
-  });
-
   useQuery({
     queryFn: () => {
       trackPayEvent({
         client: props.client,
         event: "ub:ui:buy_widget:render",
-        toChainId: props.chain.id,
+        toChainId: props.chain?.id,
         toToken: props.tokenAddress,
       });
       return true;
@@ -372,33 +346,15 @@ function BridgeWidgetContentWrapper(props: BuyWidgetProps) {
     return props.connectOptions;
   }, [props.connectOptions, props.showThirdwebBranding]);
 
-  if (tokenQuery.isPending || !localQuery.data) {
-    return (
-      <div
-        style={{
-          alignItems: "center",
-          display: "flex",
-          justifyContent: "center",
-          minHeight: "350px",
-        }}
-      >
-        <Spinner color="secondaryText" size="xl" />
-      </div>
-    );
-  } else if (tokenQuery.data?.type === "unsupported_token") {
-    return (
-      <UnsupportedTokenScreen
-        chain={props.chain}
-        client={props.client}
-        tokenAddress={props.tokenAddress || NATIVE_TOKEN_ADDRESS}
-      />
-    );
-  } else if (tokenQuery.data?.type === "success") {
-    return (
+  return (
+    <BridgeWidgetContainer
+      theme={props.theme}
+      className={props.className}
+      style={props.style}
+    >
       <BridgeWidgetContent
         {...props}
-        connectLocale={localQuery.data}
-        destinationToken={tokenQuery.data.token}
+        theme={props.theme || "dark"}
         currency={props.currency || "USD"}
         paymentMethods={props.paymentMethods || ["crypto", "card"]}
         presetOptions={props.presetOptions || [5, 10, 20]}
@@ -409,23 +365,8 @@ function BridgeWidgetContentWrapper(props: BuyWidgetProps) {
             : props.showThirdwebBranding
         }
       />
-    );
-  } else if (tokenQuery.error) {
-    return (
-      <ErrorBanner
-        client={props.client}
-        error={tokenQuery.error}
-        onRetry={() => {
-          tokenQuery.refetch();
-        }}
-        onCancel={() => {
-          props.onCancel?.(undefined);
-        }}
-      />
-    );
-  }
-
-  return null;
+    </BridgeWidgetContainer>
+  );
 }
 
 type BuyWidgetScreen =
@@ -475,13 +416,15 @@ type BuyWidgetScreen =
 function BridgeWidgetContent(
   props: RequiredParams<
     BuyWidgetProps,
-    "currency" | "presetOptions" | "showThirdwebBranding" | "paymentMethods"
-  > & {
-    connectLocale: ConnectLocale;
-    destinationToken: TokenWithPrices;
-  },
+    | "currency"
+    | "presetOptions"
+    | "showThirdwebBranding"
+    | "paymentMethods"
+    | "theme"
+  >,
 ) {
   const [screen, setScreen] = useState<BuyWidgetScreen>({ id: "1:buy-ui" });
+  const activeWalletInfo = useActiveWalletInfo();
 
   const handleError = useCallback(
     (error: Error, quote: BridgePrepareResult | undefined) => {
@@ -511,9 +454,11 @@ function BridgeWidgetContent(
     [props.onCancel],
   );
 
-  if (screen.id === "1:buy-ui") {
+  if (screen.id === "1:buy-ui" || !activeWalletInfo) {
     return (
       <FundWallet
+        theme={props.theme}
+        onDisconnect={props.onDisconnect}
         client={props.client}
         connectOptions={props.connectOptions}
         onContinue={(destinationAmount, destinationToken, receiverAddress) => {
@@ -534,8 +479,11 @@ function BridgeWidgetContent(
         }}
         buttonLabel={props.buttonLabel}
         currency={props.currency}
-        initialAmount={props.amount}
-        destinationToken={props.destinationToken}
+        initialSelection={{
+          tokenAddress: props.tokenAddress,
+          chainId: props.chain?.id,
+          amount: props.amount,
+        }}
       />
     );
   }
@@ -545,7 +493,7 @@ function BridgeWidgetContent(
       <PaymentSelection
         // from props
         client={props.client}
-        connectLocale={props.connectLocale}
+        connectLocale={connectLocaleEn}
         connectOptions={props.connectOptions}
         paymentMethods={props.paymentMethods}
         currency={props.currency}

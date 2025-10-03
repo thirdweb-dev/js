@@ -64,11 +64,7 @@ export function WalletRow(props: {
               {props.label}
             </Text>
           ) : null}
-          <Text
-            color="primaryText"
-            size={props.textSize || "xs"}
-            style={{ fontFamily: "monospace", fontWeight: 600 }}
-          >
+          <Text color="primaryText" size={props.textSize || "xs"}>
             {addressOrENS || shortenAddress(props.address)}
           </Text>
           {profile.isLoading ? (
