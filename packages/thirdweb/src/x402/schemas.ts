@@ -6,6 +6,7 @@ import {
   PaymentRequirementsSchema,
   SettleResponseSchema,
   SupportedPaymentKindsResponseSchema,
+  VerifyResponseSchema,
 } from "x402/types";
 import { z } from "zod";
 import type { Chain } from "../chains/types.js";
@@ -52,9 +53,18 @@ export type RequestedPaymentRequirements = z.infer<
 
 const FacilitatorSettleResponseSchema = SettleResponseSchema.extend({
   network: FacilitatorNetworkSchema,
+  errorMessage: z.string().optional(),
 });
 export type FacilitatorSettleResponse = z.infer<
   typeof FacilitatorSettleResponseSchema
+>;
+
+const FacilitatorVerifyResponseSchema = VerifyResponseSchema.extend({
+  errorMessage: z.string().optional(),
+});
+
+export type FacilitatorVerifyResponse = z.infer<
+  typeof FacilitatorVerifyResponseSchema
 >;
 
 export const SupportedSignatureTypeSchema = z.enum([

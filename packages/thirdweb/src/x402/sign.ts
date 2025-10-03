@@ -230,18 +230,13 @@ async function signERC3009Authorization(
 
 async function signERC2612Permit(
   account: Account,
-  { from, value, validBefore, nonce }: ExactEvmPayloadAuthorization,
+  { from, to, value, validBefore, nonce }: ExactEvmPayloadAuthorization,
   { asset, network, extra }: RequestedPaymentRequirements,
 ): Promise<{ signature: Hex }> {
   const chainId = networkToChainId(network);
   const name = extra?.name;
   const version = extra?.version;
-  const facilitatorAddress = extra?.facilitatorAddress;
-  if (!facilitatorAddress) {
-    throw new Error(
-      "facilitatorAddress is required in PaymentRequirements extra to pay with permit-based assets",
-    );
-  }
+
   if (!name || !version) {
     throw new Error(
       "name and version are required in PaymentRequirements extra to pay with permit-based assets",
@@ -268,7 +263,7 @@ async function signERC2612Permit(
     primaryType: "Permit" as const,
     message: {
       owner: getAddress(from),
-      spender: getAddress(facilitatorAddress), // approve the facilitator
+      spender: getAddress(to),
       value: BigInt(value),
       nonce: hexToBigInt(nonce as Hex),
       deadline: BigInt(validBefore),

@@ -5,6 +5,7 @@ import { withCache } from "../utils/promise/withCache.js";
 import type {
   FacilitatorSettleResponse,
   FacilitatorSupportedResponse,
+  FacilitatorVerifyResponse,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
 } from "./schemas.js";
@@ -35,7 +36,7 @@ export type ThirdwebX402Facilitator = {
   verify: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
-  ) => Promise<VerifyResponse>;
+  ) => Promise<FacilitatorVerifyResponse>;
   settle: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
@@ -126,7 +127,6 @@ export function facilitator(
         },
         settle: {
           "x-secret-key": secretKey,
-          "x-settlement-wallet-address": serverWalletAddress,
           ...(config.vaultAccessToken
             ? { "x-vault-access-token": config.vaultAccessToken }
             : {}),
@@ -149,7 +149,7 @@ export function facilitator(
     async verify(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
-    ): Promise<VerifyResponse> {
+    ): Promise<FacilitatorVerifyResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
 
       let headers = { "Content-Type": "application/json" };

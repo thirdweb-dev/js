@@ -46,7 +46,6 @@ export async function decodePaymentRequest(
     facilitator,
     resourceUrl,
     routeConfig = {},
-    payTo,
     method,
     paymentData,
   } = args;
@@ -105,10 +104,9 @@ export async function decodePaymentRequest(
     resource: resourceUrl,
     description: description ?? "",
     mimeType: mimeType ?? "application/json",
-    payTo: getAddress(payTo),
+    payTo: getAddress(facilitator.address),
     maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
     asset: getAddress(asset.address),
-    // TODO: Rename outputSchema to requestStructure
     outputSchema: {
       input: {
         type: "http",
@@ -119,7 +117,6 @@ export async function decodePaymentRequest(
       output: outputSchema,
     },
     extra: {
-      facilitatorAddress: facilitator.address,
       ...((asset as ERC20TokenAmount["asset"]).eip712 ?? {}),
     },
   });
@@ -139,7 +136,7 @@ export async function decodePaymentRequest(
     };
   }
 
-  // Verify payment
+  // decode b64 payment
   let decodedPayment: RequestedPaymentPayload;
   try {
     decodedPayment = decodePayment(paymentData);

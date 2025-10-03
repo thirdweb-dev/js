@@ -156,6 +156,7 @@ export async function settlePayment(
         },
       };
     } else {
+      const error = settlement.errorReason || "Settlement error";
       return {
         status: 402,
         responseHeaders: {
@@ -163,10 +164,9 @@ export async function settlePayment(
         },
         responseBody: {
           x402Version,
-          error:
-            errorMessages?.settlementFailed ||
-            settlement.errorReason ||
-            "Settlement failed",
+          error,
+          errorMessage:
+            errorMessages?.settlementFailed || settlement.errorMessage,
           accepts: paymentRequirements,
         },
       };
@@ -179,9 +179,10 @@ export async function settlePayment(
       },
       responseBody: {
         x402Version,
-        error:
+        error: "Settlement error",
+        errorMessage:
           errorMessages?.settlementFailed ||
-          (error instanceof Error ? error.message : "Settlement error"),
+          (error instanceof Error ? error.message : undefined),
         accepts: paymentRequirements,
       },
     };
