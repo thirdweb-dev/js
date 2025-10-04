@@ -15,7 +15,7 @@ export type WaitUntil = "simulated" | "submitted" | "confirmed";
 export type ThirdwebX402FacilitatorConfig = {
   client: ThirdwebClient;
   serverWalletAddress: string;
-  waitUtil?: WaitUntil;
+  waitUntil?: WaitUntil;
   vaultAccessToken?: string;
   baseUrl?: string;
 };
@@ -40,7 +40,7 @@ export type ThirdwebX402Facilitator = {
   settle: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
-    waitUtil?: WaitUntil,
+    waitUntil?: WaitUntil,
   ) => Promise<FacilitatorSettleResponse>;
   supported: (filters?: {
     chainId: number;
@@ -185,14 +185,14 @@ export function facilitator(
     async settle(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
-      waitUtil?: WaitUntil,
+      waitUntil?: WaitUntil,
     ): Promise<FacilitatorSettleResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
 
       let headers = { "Content-Type": "application/json" };
       const authHeaders = await facilitator.createAuthHeaders();
       headers = { ...headers, ...authHeaders.settle };
-      const waitUtilParam = waitUtil || config.waitUtil;
+      const waitUntilParam = waitUntil || config.waitUntil;
 
       const res = await fetch(`${url}/settle`, {
         method: "POST",
@@ -201,7 +201,7 @@ export function facilitator(
           x402Version: payload.x402Version,
           paymentPayload: payload,
           paymentRequirements: paymentRequirements,
-          ...(waitUtilParam ? { waitUtil: waitUtilParam } : {}),
+          ...(waitUntilParam ? { waitUntil: waitUntilParam } : {}),
         }),
       });
 
