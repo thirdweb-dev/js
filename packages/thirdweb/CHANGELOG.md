@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.108.8
+
+### Patch Changes
+
+- [#8184](https://github.com/thirdweb-dev/js/pull/8184) [`af9a73d`](https://github.com/thirdweb-dev/js/commit/af9a73d9302078a506b7d3cb8d55b611f15b6293) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix waitUntil facilitator param not being respected
+
 ## 5.108.7
 
 ### Patch Changes
