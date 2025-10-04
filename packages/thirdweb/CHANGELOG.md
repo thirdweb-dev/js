@@ -1,5 +1,16 @@
 # thirdweb
 
+## 5.108.7
+
+### Patch Changes
+
+- [#8181](https://github.com/thirdweb-dev/js/pull/8181) [`e612f16`](https://github.com/thirdweb-dev/js/commit/e612f16a85ffda024d7f74b41abb48b2999b9107) Thanks [@MananTank](https://github.com/MananTank)! - BuyWidget UI improvements and new features:
+  - `chain`, and `amount` props are now optional
+  - User can always change the token and chain selection in the widget
+  - Both fiat and token amounts are editable
+  - connected wallet can be disconnected from the widget
+  - current balance displayed in the widget
+
 ## 5.108.6
 
 ### Patch Changes
