@@ -1,5 +1,14 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, Callout } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, Callout, createMetadata } from "@doc";
 import { TypeScriptIcon, EngineIcon } from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "x402 Facilitator",
+    icon: "payments",
+  },
+  title: "x402 Facilitator",
+  description: "Verify and submit x402 payments using your own server wallet.",
+});
 
 # Facilitator
 
