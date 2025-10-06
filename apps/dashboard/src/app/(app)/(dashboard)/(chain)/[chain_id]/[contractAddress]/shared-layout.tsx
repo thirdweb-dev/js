@@ -190,25 +190,37 @@ export async function generateContractLayoutMetadata(params: {
       .replace("Testnet", "")
       .trim();
 
-    const title = `${contractDisplayName} | ${cleanedChainName} Smart Contract`;
+    let title = `${contractDisplayName} | ${cleanedChainName} Smart Contract`;
     let description = "";
 
     if (isERC721 || isERC1155) {
       description = `View tokens, source code, transactions, balances, and analytics for the ${contractDisplayName} smart contract on ${cleanedChainName}.`;
     } else if (isERC20) {
-      description = `View ERC20 tokens, transactions, balances, source code, and analytics for the ${contractDisplayName} smart contract on ${cleanedChainName}`;
+      title = `${contractMetadata.name} (${contractMetadata.symbol}) on ${cleanedChainName} | Buy, Swap, Bridge & Price`;
+      description = `Buy, swap & bridge ${contractMetadata.name} (${contractMetadata.symbol}) on ${cleanedChainName} with thirdweb Bridge. View contract address, holders, analytics, transactions and live price.`;
     } else {
-      description = `View tokens, transactions, balances, source code, and analytics for the ${contractDisplayName} smart contract  on ${cleanedChainName}`;
+      description = `View tokens, transactions, balances, source code, and analytics for the ${contractMetadata.name} smart contract  on ${cleanedChainName}`;
     }
 
     return {
       description: description,
       title: title,
+      openGraph: {
+        description: description,
+        title: title,
+      },
     };
   } catch {
+    const fallbackTitle = `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`;
+    const fallbackDescription = `View tokens, transactions, balances, source code, and analytics for the smart contract  on Chain ID ${params.chainIdOrSlug}`;
+
     return {
-      description: `View tokens, transactions, balances, source code, and analytics for the smart contract  on Chain ID ${params.chainIdOrSlug}`,
-      title: `${shortenIfAddress(params.contractAddress)} | ${params.chainIdOrSlug}`,
+      description: fallbackDescription,
+      title: fallbackTitle,
+      openGraph: {
+        description: fallbackDescription,
+        title: fallbackTitle,
+      },
     };
   }
 }
