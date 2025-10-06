@@ -50,6 +50,7 @@ import {
 } from "@/constants/addresses";
 import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { ZERO_FEE_CHAINS } from "@/constants/fee-config";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import {
   useCustomFactoryAbi,
   useFunctionParamsFromABI,
@@ -206,6 +207,8 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
+  const walletChainMetadata = useV5DashboardChain(walletChain?.id);
+
   const { onError } = useTxNotifications(
     "Successfully deployed contract",
     "Failed to deploy contract",
@@ -656,6 +659,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 chainId: walletChain.id,
                 contractName: metadata.name,
                 publisher: rewriteTwPublisher(metadata.publisher),
+                is_testnet: walletChainMetadata?.testnet,
               });
 
               deployStatusModal.nextStep();
@@ -694,6 +698,7 @@ export const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 contractName: metadata.name,
                 errorMessage: parsedError,
                 publisher: rewriteTwPublisher(metadata.publisher),
+                is_testnet: walletChain.testnet,
               });
 
               deployStatusModal.close();

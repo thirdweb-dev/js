@@ -18,7 +18,11 @@ export function NFTPublicPageLayout(props: {
 }) {
   return (
     <div className="flex grow flex-col">
-      <AssetPageView assetType="nft" chainId={props.chainMetadata.chainId} />
+      <AssetPageView
+        assetType="nft"
+        chainId={props.chainMetadata.chainId}
+        is_testnet={props.chainMetadata.testnet}
+      />
       <PageHeader containerClassName="max-w-8xl" />
       <div className="border-b">
         <div className="container max-w-8xl">

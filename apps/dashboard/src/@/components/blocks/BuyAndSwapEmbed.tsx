@@ -34,6 +34,7 @@ export function BuyAndSwapEmbed(props: {
   tokenAddress: string | undefined;
   buyAmount: string | undefined;
   pageType: PageType;
+  isTestnet: boolean | undefined;
 }) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
@@ -116,6 +117,7 @@ export function BuyAndSwapEmbed(props: {
                 chainId: props.chain.id,
                 error: errorMessage,
                 contractType: undefined,
+                is_testnet: props.isTestnet,
               });
             }
           }}
@@ -141,6 +143,7 @@ export function BuyAndSwapEmbed(props: {
                 assetType: "coin",
                 chainId: props.chain.id,
                 contractType: undefined,
+                is_testnet: props.isTestnet,
               });
             }
           }}
@@ -166,6 +169,7 @@ export function BuyAndSwapEmbed(props: {
                 assetType: "coin",
                 chainId: props.chain.id,
                 contractType: undefined,
+                is_testnet: props.isTestnet,
               });
             }
           }}

@@ -230,6 +230,8 @@ export function LaunchTokenStatus(props: {
               : "ERC20Asset",
           error: errorMessage,
           step: currentStep.id,
+          is_testnet: chainMetadata?.testnet,
+          chainId: Number(formValues.chain),
         });
 
         updateStatus(i, {
@@ -247,6 +249,8 @@ export function LaunchTokenStatus(props: {
         formValues.saleMode === "drop-erc20:token-drop"
           ? "DropERC20"
           : "ERC20Asset",
+      chainId: Number(formValues.chain),
+      is_testnet: chainMetadata?.testnet,
     });
 
     if (contractAddressRef.current) {

@@ -86,7 +86,7 @@ export default async function ChainPageLayout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <ChainPageView chainId={chain.chainId} />
+      <ChainPageView chainId={chain.chainId} is_testnet={chain.testnet} />
       <div className="border-border border-b bg-card">
         <TeamHeader />
       </div>

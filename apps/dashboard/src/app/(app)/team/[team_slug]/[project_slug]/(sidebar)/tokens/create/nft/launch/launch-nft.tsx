@@ -316,6 +316,8 @@ export function LaunchNFT(props: {
           contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
           error: errorMessage,
           step: currentStep.id,
+          is_testnet: chainMeta.testnet,
+          chainId: Number(formValues.collectionInfo.chain),
         });
 
         throw error;
@@ -325,6 +327,8 @@ export function LaunchNFT(props: {
     reportAssetCreationSuccessful({
       assetType: "nft",
       contractType: ercType === "erc721" ? "DropERC721" : "DropERC1155",
+      chainId: Number(formValues.collectionInfo.chain),
+      is_testnet: chainMeta?.testnet ?? false,
     });
 
     props.onLaunchSuccess();

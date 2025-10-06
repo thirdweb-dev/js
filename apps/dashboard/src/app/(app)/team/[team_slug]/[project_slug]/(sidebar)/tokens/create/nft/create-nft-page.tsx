@@ -143,6 +143,7 @@ export function CreateNFTPage(props: {
       contractName: contractType,
       deploymentType: "asset",
       publisher: "deployer.thirdweb.eth",
+      is_testnet: chain.testnet,
     });
 
     contractAddressRef.current = contractAddress;
