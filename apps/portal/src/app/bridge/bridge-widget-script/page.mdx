@@ -53,10 +53,6 @@ The BridgeWidget Script makes it easy to embed cross-chain swaps and fiat onramp
   BridgeWidget.render(container, {
     clientId: "your-thirdweb-client-id",
     theme: "dark",
-    buy: {
-      chainId: 8453,
-      amount: "0.1",
-    },
   });
 </script>
 ```
@@ -126,9 +122,9 @@ type Options = {
       };
     };
   };
-  buy: {
-    amount: string;
-    chainId: number;
+  buy?: {
+    amount?: string;
+    chainId?: number;
     tokenAddress?: string;
     buttonLabel?: string;
     onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;
@@ -310,8 +306,8 @@ The options to configure the "Buy" tab UI.
 
 ```ts
 type Buy = {
-    amount: string; // Required
-    chainId: number; // Required
+    amount?: string;
+    chainId?: number;
     tokenAddress?: string;
     buttonLabel?: string;
     onCancel?: (quote: BuyOrOnrampPrepareResult | undefined) => void;
@@ -327,21 +323,21 @@ type Buy = {
 ```
 
 
-<Details summary="amount" tags={["Required"]}>
+<Details summary="amount">
 
 Set the default token amount shown in the "Buy" tab.
 
 </Details>
 
-<Details summary="chainId" tags={["Required"]}>
+<Details summary="chainId">
 
-Specify which chain should be selected in the "Buy" tab.
+Specify the default chain to be selected in the "Buy" tab.
 
 </Details>
 
 <Details summary="tokenAddress">
 
-Specify which token should be selected in the "Buy" tab. If not specified, the native token of the selected chain will be selected.
+Specify the default token to be selected in the "Buy" tab. If not specified, the native token of the selected chain will be selected.
 
 </Details>
 
