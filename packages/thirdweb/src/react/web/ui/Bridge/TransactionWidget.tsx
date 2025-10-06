@@ -770,6 +770,9 @@ function TransactionWidgetContent(
   if (screen.id === "execute-tx") {
     return (
       <ExecutingTxScreen
+        onBack={() => {
+          setScreen({ id: "init-ui" });
+        }}
         closeModal={() => {
           setScreen({ id: "init-ui" });
         }}

@@ -133,6 +133,9 @@ function DepositAndExecuteTx(props: ModalProps) {
   if (screen === "execute-tx") {
     return (
       <ExecutingTxScreen
+        onBack={() => {
+          setScreen("deposit");
+        }}
         closeModal={props.onClose}
         onTxSent={props.onTxSent}
         tx={props.tx}
