@@ -28,11 +28,11 @@ export function QuickStartSection(props: {
           icon={ArrowRightLeftIcon}
           setupTime={5}
           id="swap_tokens"
-          features={["Swap any token", "Cross-chain swaps"]}
+          features={["Swap any token", "Cross-chain swap"]}
           description="Swap tokens cross-chain with dedicated swapping endpoints."
           link={{
-            href: `https://portal.thirdweb.com/payments/swap`,
-            label: "Setup Swaps",
+            href: `https://portal.thirdweb.com/bridge/swap`,
+            label: "Setup Swap",
           }}
         />
 
