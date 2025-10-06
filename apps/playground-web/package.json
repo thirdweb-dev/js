@@ -18,7 +18,7 @@
     "@radix-ui/react-tooltip": "1.2.7",
     "@radix-ui/react-use-controllable-state": "^1.2.2",
     "@scalar/api-reference-react": "^0.7.42",
-    "@tanstack/react-query": "5.81.5",
+    "@tanstack/react-query": "5.90.2",
     "@thirdweb-dev/ai-sdk-provider": "workspace:*",
     "@workspace/ui": "workspace:*",
     "ai": "^5.0.25",

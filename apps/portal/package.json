@@ -11,7 +11,7 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@radix-ui/react-tooltip": "1.2.7",
     "@scalar/api-reference-react": "^0.7.42",
-    "@tanstack/react-query": "5.81.5",
+    "@tanstack/react-query": "5.90.2",
     "@tryghost/content-api": "^1.11.28",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
