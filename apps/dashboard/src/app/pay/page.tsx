@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import { createThirdwebClient, defineChain, getContract } from "thirdweb";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { checksumAddress } from "thirdweb/utils";
@@ -33,7 +34,16 @@ export default async function PayPage({
     !params.tokenAddress &&
     !params.amount
   ) {
-    return <PaymentLinkForm />;
+    return (
+      <ThemeProvider
+        forcedTheme={params.theme === "light" ? "light" : "dark"}
+        attribute="class"
+        disableTransitionOnChange
+        enableSystem={false}
+      >
+        <PaymentLinkForm />
+      </ThemeProvider>
+    );
   }
 
   // Validate query parameters
@@ -84,17 +94,23 @@ export default async function PayPage({
   };
 
   return (
-    <PayPageWidget
-      amount={BigInt(params.amount)}
-      chainId={Number(params.chainId)}
-      clientId={client.clientId}
-      image={params.image}
-      name={params.name}
-      purchaseData={undefined}
-      recipientAddress={params.recipientAddress}
-      redirectUri={params.redirectUri}
-      theme={params.theme}
-      token={token}
-    />
+    <ThemeProvider
+      forcedTheme={params.theme === "light" ? "light" : "dark"}
+      attribute="class"
+      disableTransitionOnChange
+      enableSystem={false}
+    >
+      <PayPageWidget
+        amount={BigInt(params.amount)}
+        chainId={Number(params.chainId)}
+        clientId={client.clientId}
+        image={params.image}
+        name={params.name}
+        purchaseData={undefined}
+        recipientAddress={params.recipientAddress}
+        redirectUri={params.redirectUri}
+        token={token}
+      />
+    </ThemeProvider>
   );
 }
