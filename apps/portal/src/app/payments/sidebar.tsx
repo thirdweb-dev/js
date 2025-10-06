@@ -81,6 +81,10 @@ export const sidebar: SideBar = {
           name: "Server Side",
         },
         {
+          href: `${paymentsSlug}/x402/agents`,
+          name: "Agents",
+        },
+        {
           href: `${paymentsSlug}/x402/facilitator`,
           name: "Facilitator",
         },
