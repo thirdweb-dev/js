@@ -1,7 +1,16 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { OpenApiEndpoint } from "@doc";
+import { OpenApiEndpoint, createMetadata } from "@doc";
 
-# Agents
+export const metadata = createMetadata({
+  image: {
+    title: "x402 Agents",
+    icon: "payments",
+  },
+  title: "x402 Agents",
+  description: "Easily create AI agents that can pay for any x402-compatible API calls.",
+});
+
+# x402 Agents
 
 Easily create AI agents that can pay for any x402-compatible API calls.
 

@@ -1,6 +1,15 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent, DocImage } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent, DocImage, createMetadata } from "@doc";
 import { Steps, Step } from "@doc";
 import PaymentFlow from "./x402-protocol-flow.png";
+
+export const metadata = createMetadata({
+  image: {
+    title: "x402 Server",
+    icon: "payments",
+  },
+  title: "x402 Server",
+  description: "Accept x402 payments in your APIs from any x402-compatible client.",
+});
 
 # Server Side
 

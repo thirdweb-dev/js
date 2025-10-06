@@ -1,9 +1,18 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, createMetadata } from "@doc";
 import { TypeScriptIcon, EngineIcon } from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "x402 Client",
+    icon: "payments",
+  },
+  title: "x402 Client",
+  description: "Make requests to any x402-compatible backend and automatically handle payment flows when APIs return a `402 Payment Required` response.",
+});
 
 # Client Side
 
-Make requests to any x402-compatible backend by automatically handling payment flows when APIs return a `402 Payment Required` response.
+Make requests to any x402-compatible backend and automatically handle payment flows when APIs return a `402 Payment Required` response.
 
 The client library wraps the native `fetch` API and handles:
 1. Initial request to the API
