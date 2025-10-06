@@ -9,7 +9,6 @@ import { getCompilerMetadata } from "../../../contract/actions/get-compiler-meta
 import { getContract } from "../../../contract/contract.js";
 import { decimals } from "../../../extensions/erc20/read/decimals.js";
 import { getToken } from "../../../pay/convert/get-token.js";
-import type { SupportedFiatCurrency } from "../../../pay/convert/type.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { getTransactionGasCost } from "../../../transaction/utils.js";
@@ -18,10 +17,7 @@ import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-va
 import { toTokens } from "../../../utils/units.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import { hasSponsoredTransactionsEnabled } from "../../../wallets/smart/is-smart-wallet.js";
-import {
-  formatCurrencyAmount,
-  formatTokenAmount,
-} from "../../web/ui/ConnectWallet/screens/formatTokenBalance.js";
+import { formatTokenAmount } from "../../web/ui/ConnectWallet/screens/formatTokenBalance.js";
 import { useChainMetadata } from "./others/useChainQuery.js";
 
 interface TransactionDetails {
@@ -31,7 +27,6 @@ interface TransactionDetails {
     selector: string;
     description?: string;
   };
-  usdValueDisplay: string | null;
   txCostDisplay: string;
   gasCostDisplay: string | null;
   tokenInfo: TokenWithPrices | null;
@@ -45,7 +40,6 @@ interface UseTransactionDetailsOptions {
   transaction: PreparedTransaction;
   client: ThirdwebClient;
   wallet: Wallet | undefined;
-  currency: SupportedFiatCurrency | undefined;
 }
 
 /**
@@ -54,7 +48,6 @@ interface UseTransactionDetailsOptions {
  */
 export function useTransactionDetails({
   transaction,
-  currency,
   client,
   wallet,
 }: UseTransactionDetailsOptions) {
@@ -158,9 +151,6 @@ export function useTransactionDetails({
           : (value || 0n) + (gasCostWei || 0n);
       const totalCost = toTokens(totalCostWei, decimal);
 
-      const price = tokenInfo?.prices[currency || "USD"] || 0;
-      const usdValue = price ? Number(totalCost) * price : null;
-
       return {
         contractMetadata,
         costWei,
@@ -173,9 +163,6 @@ export function useTransactionDetails({
         totalCost,
         totalCostWei,
         txCostDisplay: `${formatTokenAmount(costWei, decimal)} ${tokenSymbol}`,
-        usdValueDisplay: usdValue
-          ? formatCurrencyAmount(currency || "USD", usdValue)
-          : null,
       };
     },
     queryKey: [

@@ -24,6 +24,7 @@ import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.j
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
+import { formatCurrencyAmount } from "../ConnectWallet/screens/formatTokenBalance.js";
 import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { ChainName } from "../components/ChainName.js";
@@ -100,7 +101,6 @@ export function TransactionPayment({
     client,
     transaction: transaction,
     wallet,
-    currency: currency,
   });
 
   // We can't use useWalletBalance here because erc20Value is a possibly async value
@@ -133,6 +133,19 @@ export function TransactionPayment({
   const isLoading = transactionDataQuery.isLoading || chainMetadata.isLoading;
 
   const buttonLabel = _buttonLabel || `Execute ${functionName}`;
+
+  const tokenFiatPricePerToken =
+    transactionDataQuery.data?.tokenInfo?.prices[currency] || undefined;
+
+  const totalFiatCost =
+    tokenFiatPricePerToken && transactionDataQuery.data
+      ? tokenFiatPricePerToken * Number(transactionDataQuery.data.totalCost)
+      : undefined;
+
+  const costToDisplay =
+    totalFiatCost !== undefined
+      ? formatCurrencyAmount(currency, totalFiatCost)
+      : transactionDataQuery.data?.txCostDisplay;
 
   if (isLoading) {
     return (
@@ -207,8 +220,7 @@ export function TransactionPayment({
       >
         {/* USD Value */}
         <Text color="primaryText" size="xl" weight={600}>
-          {transactionDataQuery.data?.usdValueDisplay ||
-            transactionDataQuery.data?.txCostDisplay}
+          {costToDisplay}
         </Text>
 
         {/* Function Name */}

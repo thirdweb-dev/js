@@ -199,7 +199,6 @@ export function PaymentOverview(props: {
           <TransactionOverViewCompact
             client={props.client}
             paymentMethod={props.paymentMethod}
-            currency={props.currency}
             transaction={props.modeInfo.transaction}
             metadata={props.metadata}
           />
@@ -211,7 +210,6 @@ export function PaymentOverview(props: {
 
 const TransactionOverViewCompact = (props: {
   transaction: PreparedTransaction;
-  currency: SupportedFiatCurrency;
   paymentMethod: PaymentMethod;
   client: ThirdwebClient;
   metadata: {
@@ -224,7 +222,6 @@ const TransactionOverViewCompact = (props: {
     client: props.client,
     transaction: props.transaction,
     wallet: props.paymentMethod.payerWallet,
-    currency: props.currency,
   });
 
   if (!txInfo.data) {
