@@ -17,10 +17,10 @@ https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>
 
 Make sure to keep your secret key safe and never share it with anyone.
 
-By default, all tools are available. You can filter the tools available by passing multiple `tool` query parameter.
+By default, all tools are available. You can filter the tools available by passing a comma-separated list of tools as a query parameter.
 
 ```http
-https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tool=fetchWithPayment&tool=getWalletBalance
+https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,getWalletBalance
 ```
 
 You can find all available tools at the bottom of this page.
