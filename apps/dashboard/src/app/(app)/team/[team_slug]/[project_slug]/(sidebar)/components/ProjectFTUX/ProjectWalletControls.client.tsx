@@ -293,10 +293,12 @@ function SendProjectWalletModal(props: {
 
   const selectedChain = useV5DashboardChain(form.watch("chainId"));
 
+  // eslint-disable-next-line no-restricted-syntax -- form submission chainId must track selector state
   useEffect(() => {
     form.setValue("chainId", chainId);
   }, [chainId, form]);
 
+  // eslint-disable-next-line no-restricted-syntax -- reset cached inputs when modal closes to avoid leaking state
   useEffect(() => {
     if (!open) {
       const currentValues = form.getValues();
@@ -310,6 +312,7 @@ function SendProjectWalletModal(props: {
     }
   }, [open, chainId, form]);
 
+  // eslint-disable-next-line no-restricted-syntax -- restoring credentials from localStorage requires side effects
   useEffect(() => {
     if (!open || typeof window === "undefined") {
       return;
@@ -344,6 +347,7 @@ function SendProjectWalletModal(props: {
     }
   }, [open, credentialStorageKey, form, isManagedVault]);
 
+  // eslint-disable-next-line no-restricted-syntax -- persist credential updates while modal is open
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
