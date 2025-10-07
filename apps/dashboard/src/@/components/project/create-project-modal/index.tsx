@@ -36,9 +36,13 @@ import { Spinner } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { createProjectClient } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { getProjectWalletLabel } from "@/lib/project-wallet";
 import { projectDomainsSchema, projectNameSchema } from "@/schema/validations";
 import { toArrFromList } from "@/utils/string";
-import { createVaultAccountAndAccessToken } from "../../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
+import {
+  createProjectServerWallet,
+  createVaultAccountAndAccessToken,
+} from "../../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
   (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
@@ -64,7 +68,7 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
     <CreateProjectDialogUI
       createProject={async (params) => {
         const res = await createProjectClient(props.teamId, params);
-        await createVaultAccountAndAccessToken({
+        const vaultTokens = await createVaultAccountAndAccessToken({
           project: res.project,
           projectSecretKey: res.secret,
         }).catch((error) => {
@@ -74,6 +78,22 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
           );
           throw error;
         });
+
+        const managementAccessToken = vaultTokens.managementToken?.accessToken;
+
+        if (!managementAccessToken) {
+          throw new Error("Missing management access token for project wallet");
+        }
+
+        await createProjectServerWallet({
+          label: getProjectWalletLabel(res.project.name),
+          managementAccessToken,
+          project: res.project,
+        }).catch((error) => {
+          console.error("Failed to create default project wallet", error);
+          throw error;
+        });
+
         return {
           project: res.project,
           secret: res.secret,

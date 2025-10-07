@@ -1,10 +1,8 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
-import { createEoa } from "@thirdweb-dev/vault-sdk";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/project/projects";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { initVaultClient } from "../../lib/vault.client";
+import { createProjectServerWallet } from "../../lib/vault.client";
 
 export default function CreateServerWallet(props: {
   project: Project;
@@ -36,49 +34,16 @@ export default function CreateServerWallet(props: {
       managementAccessToken: string;
       label: string;
     }) => {
-      const vaultClient = await initVaultClient();
-
-      const eoa = await createEoa({
-        client: vaultClient,
-        request: {
-          auth: {
-            accessToken: managementAccessToken,
-          },
-          options: {
-            metadata: {
-              label,
-              projectId: props.project.id,
-              teamId: props.project.teamId,
-              type: "server-wallet",
-            },
-          },
-        },
-      });
-
-      if (!eoa.success) {
-        throw new Error("Failed to create eoa");
-      }
-
-      // no need to await this, it's not blocking
-      engineCloudProxy({
-        body: JSON.stringify({
-          signerAddress: eoa.data.address,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "x-client-id": props.project.publishableKey,
-          "x-team-id": props.project.teamId,
-        },
-        method: "POST",
-        pathname: "/cache/smart-account",
-      }).catch((err) => {
-        console.warn("failed to cache server wallet", err);
+      const wallet = await createProjectServerWallet({
+        label,
+        managementAccessToken,
+        project: props.project,
       });
 
       router.refresh();
       setModalOpen(false);
-
-      return eoa;
+      setLabel("");
+      return wallet;
     },
     onError: (error) => {
       toast.error(error.message);

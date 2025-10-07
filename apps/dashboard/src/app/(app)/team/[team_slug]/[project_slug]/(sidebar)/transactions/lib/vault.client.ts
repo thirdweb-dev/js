@@ -3,14 +3,17 @@
 import { encrypt } from "@thirdweb-dev/service-utils";
 import {
   createAccessToken,
+  createEoa,
   createServiceAccount,
   createVaultClient,
   rotateServiceAccount,
   type VaultClient,
 } from "@thirdweb-dev/vault-sdk";
+import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/project/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { updateProjectClient } from "@/hooks/useApi";
+import { getProjectWalletLabel } from "@/lib/project-wallet";
 
 const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
   "Access Token for All Server Wallets";
@@ -124,6 +127,56 @@ export async function createVaultAccountAndAccessToken(props: {
       `Failed to create vault account and access token: ${error}`,
     );
   }
+}
+
+export async function createProjectServerWallet(props: {
+  project: Project;
+  managementAccessToken: string;
+  label?: string;
+}) {
+  const vaultClient = await initVaultClient();
+
+  const walletLabel = props.label?.trim()
+    ? props.label.trim()
+    : getProjectWalletLabel(props.project.name);
+
+  const eoa = await createEoa({
+    client: vaultClient,
+    request: {
+      auth: {
+        accessToken: props.managementAccessToken,
+      },
+      options: {
+        metadata: {
+          label: walletLabel,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+          type: "server-wallet",
+        },
+      },
+    },
+  });
+
+  if (!eoa.success) {
+    throw new Error(eoa.error?.message || "Failed to create server wallet");
+  }
+
+  engineCloudProxy({
+    body: JSON.stringify({
+      signerAddress: eoa.data.address,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      "x-client-id": props.project.publishableKey,
+      "x-team-id": props.project.teamId,
+    },
+    method: "POST",
+    pathname: "/cache/smart-account",
+  }).catch((err) => {
+    console.warn("failed to cache server wallet", err);
+  });
+
+  return eoa.data;
 }
 
 async function createAndEncryptVaultAccessTokens(props: {

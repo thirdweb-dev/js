@@ -1,3 +1,4 @@
+import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import {
   ArrowLeftRightIcon,
   ChevronRightIcon,
@@ -7,8 +8,10 @@ import {
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
+import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
 import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
 import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
@@ -18,13 +21,31 @@ import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
+import { WalletProductIcon } from "@/icons/WalletProductIcon";
+import { getProjectWalletLabel } from "@/lib/project-wallet";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";
 
-export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
+type ProjectWalletSummary = {
+  id: string;
+  address: string;
+  label?: string;
+};
+
+export async function ProjectFTUX(props: {
+  project: Project;
+  teamSlug: string;
+}) {
+  const projectWallet = await fetchProjectWallet(props.project);
+
   return (
     <div className="flex flex-col gap-10">
+      <ProjectWalletSection
+        project={props.project}
+        teamSlug={props.teamSlug}
+        wallet={projectWallet}
+      />
       <IntegrateAPIKeySection
         project={props.project}
         teamSlug={props.teamSlug}
@@ -37,6 +58,165 @@ export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
       <StarterKitsSection />
     </div>
   );
+}
+
+function ProjectWalletSection(props: {
+  project: Project;
+  teamSlug: string;
+  wallet: ProjectWalletSummary | undefined;
+}) {
+  const defaultLabel = getProjectWalletLabel(props.project.name);
+  const walletAddress = props.wallet?.address;
+  const label = props.wallet?.label ?? defaultLabel;
+  const shortenedAddress = walletAddress
+    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+    : undefined;
+
+  return (
+    <section>
+      <h2 className="mb-3 font-semibold text-xl tracking-tight">
+        Project Wallet
+      </h2>
+
+      <div className="rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border border-border bg-background p-2">
+              <WalletProductIcon className="size-5 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-semibold text-lg tracking-tight">{label}</p>
+              <p className="text-muted-foreground text-sm">
+                Default managed server wallet for this project. Use it for
+                deployments, payments, and other automated flows.
+              </p>
+            </div>
+          </div>
+
+          {walletAddress ? (
+            <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/60 bg-background p-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-muted-foreground text-xs uppercase">
+                  Wallet address
+                </p>
+                <p className="font-mono text-sm break-all">{walletAddress}</p>
+              </div>
+              <CopyTextButton
+                className="w-full md:w-auto"
+                copyIconPosition="right"
+                textToCopy={walletAddress}
+                textToShow={shortenedAddress ?? walletAddress}
+                tooltip="Copy wallet address"
+              />
+            </div>
+          ) : (
+            <Alert variant="info">
+              <CircleAlertIcon className="size-5" />
+              <AlertTitle>Project wallet unavailable</AlertTitle>
+              <AlertDescription>
+                We could not load the default wallet for this project. Visit the
+                Transactions page to create or refresh your server wallets.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-muted-foreground text-sm">
+              Manage balances, gas sponsorship, and smart account settings in
+              Transactions.
+            </p>
+            <Link
+              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+              href={`/team/${props.teamSlug}/${props.project.slug}/transactions`}
+            >
+              Open Transactions
+              <ChevronRightIcon className="size-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type VaultWalletListItem = {
+  id: string;
+  address: string;
+  metadata?: {
+    label?: string;
+    projectId?: string;
+    teamId?: string;
+    type?: string;
+  };
+};
+
+async function fetchProjectWallet(
+  project: Project,
+): Promise<ProjectWalletSummary | undefined> {
+  const engineCloudService = project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+
+  const managementAccessToken =
+    engineCloudService?.managementAccessToken || undefined;
+
+  if (!managementAccessToken || !NEXT_PUBLIC_THIRDWEB_VAULT_URL) {
+    return undefined;
+  }
+
+  try {
+    const vaultClient = await createVaultClient({
+      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
+    });
+
+    const response = await listEoas({
+      client: vaultClient,
+      request: {
+        auth: {
+          accessToken: managementAccessToken,
+        },
+        options: {
+          page: 0,
+          // @ts-expect-error - SDK expects snake_case for pagination arguments
+          page_size: 25,
+        },
+      },
+    });
+
+    if (!response.success || !response.data) {
+      return undefined;
+    }
+
+    const items = response.data.items as VaultWalletListItem[] | undefined;
+
+    if (!items?.length) {
+      return undefined;
+    }
+
+    const expectedLabel = getProjectWalletLabel(project.name);
+
+    const serverWallets = items.filter(
+      (item) => item.metadata?.projectId === project.id,
+    );
+
+    const defaultWallet =
+      serverWallets.find((item) => item.metadata?.label === expectedLabel) ||
+      serverWallets.find((item) => item.metadata?.type === "server-wallet") ||
+      serverWallets[0];
+
+    if (!defaultWallet) {
+      return undefined;
+    }
+
+    return {
+      id: defaultWallet.id,
+      address: defaultWallet.address,
+      label: defaultWallet.metadata?.label,
+    };
+  } catch (error) {
+    console.error("Failed to load project wallet", error);
+    return undefined;
+  }
 }
 
 // Integrate API key section ------------------------------------------------------------
