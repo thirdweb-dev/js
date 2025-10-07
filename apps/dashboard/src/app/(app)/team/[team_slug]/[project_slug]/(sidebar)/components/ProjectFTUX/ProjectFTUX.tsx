@@ -1,4 +1,3 @@
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import {
   ArrowLeftRightIcon,
   ChevronRightIcon,
@@ -11,7 +10,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
-import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
 import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
 import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
@@ -23,21 +21,19 @@ import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { getProjectWalletLabel } from "@/lib/project-wallet";
+import {
+  getProjectWallet,
+  type ProjectWalletSummary,
+} from "@/lib/server/project-wallet";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { SecretKeySection } from "./SecretKeySection";
-
-type ProjectWalletSummary = {
-  id: string;
-  address: string;
-  label?: string;
-};
 
 export async function ProjectFTUX(props: {
   project: Project;
   teamSlug: string;
 }) {
-  const projectWallet = await fetchProjectWallet(props.project);
+  const projectWallet = await getProjectWallet(props.project);
 
   return (
     <div className="flex flex-col gap-10">
@@ -137,86 +133,6 @@ function ProjectWalletSection(props: {
       </div>
     </section>
   );
-}
-
-type VaultWalletListItem = {
-  id: string;
-  address: string;
-  metadata?: {
-    label?: string;
-    projectId?: string;
-    teamId?: string;
-    type?: string;
-  };
-};
-
-async function fetchProjectWallet(
-  project: Project,
-): Promise<ProjectWalletSummary | undefined> {
-  const engineCloudService = project.services.find(
-    (service) => service.name === "engineCloud",
-  );
-
-  const managementAccessToken =
-    engineCloudService?.managementAccessToken || undefined;
-
-  if (!managementAccessToken || !NEXT_PUBLIC_THIRDWEB_VAULT_URL) {
-    return undefined;
-  }
-
-  try {
-    const vaultClient = await createVaultClient({
-      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
-    });
-
-    const response = await listEoas({
-      client: vaultClient,
-      request: {
-        auth: {
-          accessToken: managementAccessToken,
-        },
-        options: {
-          page: 0,
-          // @ts-expect-error - SDK expects snake_case for pagination arguments
-          page_size: 25,
-        },
-      },
-    });
-
-    if (!response.success || !response.data) {
-      return undefined;
-    }
-
-    const items = response.data.items as VaultWalletListItem[] | undefined;
-
-    if (!items?.length) {
-      return undefined;
-    }
-
-    const expectedLabel = getProjectWalletLabel(project.name);
-
-    const serverWallets = items.filter(
-      (item) => item.metadata?.projectId === project.id,
-    );
-
-    const defaultWallet =
-      serverWallets.find((item) => item.metadata?.label === expectedLabel) ||
-      serverWallets.find((item) => item.metadata?.type === "server-wallet") ||
-      serverWallets[0];
-
-    if (!defaultWallet) {
-      return undefined;
-    }
-
-    return {
-      id: defaultWallet.id,
-      address: defaultWallet.address,
-      label: defaultWallet.metadata?.label,
-    };
-  } catch (error) {
-    console.error("Failed to load project wallet", error);
-    return undefined;
-  }
 }
 
 // Integrate API key section ------------------------------------------------------------
