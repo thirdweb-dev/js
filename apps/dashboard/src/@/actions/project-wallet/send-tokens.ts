@@ -1,6 +1,13 @@
 "use server";
 
-import { apiServerProxy } from "@/actions/proxies";
+import { configure, sendTokens } from "@thirdweb-dev/api";
+import { THIRDWEB_API_HOST } from "@/constants/urls";
+
+configure({
+  override: {
+    baseUrl: THIRDWEB_API_HOST,
+  },
+});
 
 export async function sendProjectWalletTokens(options: {
   walletAddress: string;
@@ -32,11 +39,8 @@ export async function sendProjectWalletTokens(options: {
     } as const;
   }
 
-  const response = await apiServerProxy<{
-    result?: { transactionIds: string[] };
-    error?: { message?: string };
-  }>({
-    body: JSON.stringify({
+  const response = await sendTokens({
+    body: {
       chainId,
       from: walletAddress,
       recipients: [
@@ -46,19 +50,17 @@ export async function sendProjectWalletTokens(options: {
         },
       ],
       ...(tokenAddress ? { tokenAddress } : {}),
-    }),
+    },
     headers: {
       "Content-Type": "application/json",
       "x-client-id": publishableKey,
+      "x-secret-key": secretKey,
       "x-team-id": teamId,
-      ...(secretKey ? { "x-secret-key": secretKey } : {}),
       ...(vaultAccessToken ? { "x-vault-access-token": vaultAccessToken } : {}),
     },
-    method: "POST",
-    pathname: "/v1/wallets/send",
   });
 
-  if (!response.ok) {
+  if (response.error || !response.data) {
     return {
       error: response.error || "Failed to submit transfer request.",
       ok: false,
@@ -67,6 +69,6 @@ export async function sendProjectWalletTokens(options: {
 
   return {
     ok: true,
-    transactionIds: response.data?.result?.transactionIds ?? [],
+    transactionIds: response.data.result?.transactionIds ?? [],
   } as const;
 }

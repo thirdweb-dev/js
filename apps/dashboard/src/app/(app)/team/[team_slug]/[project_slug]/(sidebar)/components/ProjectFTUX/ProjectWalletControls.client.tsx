@@ -404,7 +404,11 @@ function SendProjectWalletModal(props: {
       });
 
       if (!result.ok) {
-        throw new Error(result.error ?? "Failed to send funds");
+        const errorMessage =
+          typeof result.error === "string"
+            ? result.error
+            : "Failed to send funds";
+        throw new Error(errorMessage);
       }
 
       return result.transactionIds;
@@ -416,7 +420,7 @@ function SendProjectWalletModal(props: {
       toast.success("Transfer submitted", {
         description:
           transactionIds && transactionIds.length > 0
-            ? `Reference ID: ${transactionIds[0]}`
+            ? `Transaction ID: ${transactionIds[0]}`
             : undefined,
       });
       onSuccess();
