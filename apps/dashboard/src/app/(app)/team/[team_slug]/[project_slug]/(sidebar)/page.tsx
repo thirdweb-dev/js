@@ -64,6 +64,9 @@ type PageProps = {
   searchParams: Promise<PageSearchParams>;
 };
 
+// Revalidate this page data every 30 seconds
+export const revalidate = 30;
+
 export default async function ProjectOverviewPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([
     props.params,

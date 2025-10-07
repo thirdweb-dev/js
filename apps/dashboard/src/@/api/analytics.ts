@@ -448,6 +448,7 @@ type ActiveStatus = {
   pay: boolean;
   inAppWallet: boolean;
   ecosystemWallet: boolean;
+  engineCloud: boolean;
 };
 
 export const isProjectActive = unstable_cache(
@@ -479,6 +480,7 @@ export const isProjectActive = unstable_cache(
         pay: false,
         rpc: false,
         sdk: false,
+        engineCloud: false,
         storage: false,
       } as ActiveStatus;
     }
@@ -488,7 +490,7 @@ export const isProjectActive = unstable_cache(
   },
   ["isProjectActive"],
   {
-    revalidate: 60 * 60, // 1 hour
+    revalidate: 30, // 30 seconds
   },
 );
 
