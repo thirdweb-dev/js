@@ -229,14 +229,7 @@ const createSendFormSchema = (secretKeyLabel: string) =>
       .refine((value) => Boolean(isAddress(value)), {
         message: "Enter a valid wallet address",
       }),
-    amount: z
-      .string()
-      .trim()
-      .min(1, "Amount is required")
-      .refine((value) => {
-        const parsed = Number(value);
-        return !Number.isNaN(parsed) && parsed > 0;
-      }, "Amount must be greater than 0"),
+    amount: z.string().trim().min(1, "Amount is required"),
     secretKey: z.string().trim().min(1, `${secretKeyLabel} is required`),
     vaultAccessToken: z.string().trim(),
   });
@@ -283,7 +276,7 @@ function SendProjectWalletModal(props: {
 
   const form = useForm<SendFormValues>({
     defaultValues: {
-      amount: "0.1",
+      amount: "0",
       chainId,
       secretKey: "",
       vaultAccessToken: "",
@@ -308,7 +301,7 @@ function SendProjectWalletModal(props: {
     if (!open) {
       const currentValues = form.getValues();
       form.reset({
-        amount: "0.1",
+        amount: "0",
         chainId,
         secretKey: currentValues.secretKey ?? "",
         vaultAccessToken: currentValues.vaultAccessToken ?? "",
