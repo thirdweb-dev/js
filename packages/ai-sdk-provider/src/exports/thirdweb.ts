@@ -1,4 +1,8 @@
-export { createThirdwebAI, type ThirdwebProvider } from "../provider.js";
+export {
+  createThirdwebAI,
+  type SessionStore,
+  type ThirdwebProvider,
+} from "../provider.js";
 export type {
   MonitorTransactionInput,
   MonitorTransactionOutput,
