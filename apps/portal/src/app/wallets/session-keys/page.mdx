@@ -4,10 +4,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
 
 Session keys enable secure transaction execution on behalf of accounts without requiring direct access to the main account's private key. This guide covers session keys for both ERC-4337 smart accounts and ERC-7702 smart EOAs (Externally Owned Accounts).
 
-<Tabs defaultValue="erc4337">
+<Tabs defaultValue="erc7702">
 <TabsList>
+<TabsTrigger value="erc7702">EIP-7702 Upgraded EOAs</TabsTrigger>
 <TabsTrigger value="erc4337">ERC-4337 Smart Accounts</TabsTrigger>
-<TabsTrigger value="erc7702">ERC-7702 Smart EOAs</TabsTrigger>
 </TabsList>
 
 <TabsContent value="erc4337">
@@ -17,7 +17,6 @@ Session keys enable secure transaction execution on behalf of accounts without r
 Before you begin, ensure you have:
 - A thirdweb client configured
 - Access to a session key account address
-- Vault access token for Engine operations
 
 ## Setup
 
@@ -42,7 +41,7 @@ const client = createThirdwebClient({
 });
 
 // Your session key account address
-const sessionKeyAccountAddress = "0x..."; // Replace with your session key address
+const sessionKeyAccountAddress = "0x..."; // Replace with your session key address (server wallet)
 
 // Target address for transactions
 const targetAddress = "0x..."; // Replace with your target address
@@ -156,7 +155,6 @@ const serverWallet = Engine.serverWallet({
     smartAccountAddress: smartAccount.address,
     type: "ERC4337",
   },
-  vaultAccessToken: process.env.VAULT_TOKEN as string, // Your vault access token
 });
 ```
 
@@ -169,7 +167,7 @@ const serverWallet = Engine.serverWallet({
 
 ## Step 5: Execute Transactions
 
-Now you can execute transactions using the session key:
+Now you can execute transactions using the session key, here we are sending 0 ETH to the target address for testing purposes:
 
 ```typescript
 const tx = await sendTransaction({
@@ -209,7 +207,7 @@ async function executeTransactionWithSessionKey() {
     secretKey: "your-secret-key"
   });
   
-  const sessionKeyAccountAddress = "0x..."; // Your session key address
+  const sessionKeyAccountAddress = "0x..."; // Your session key address (server wallet)
   const targetAddress = "0x..."; // Target address for the final transaction
   
   try {
@@ -262,7 +260,6 @@ async function executeTransactionWithSessionKey() {
         smartAccountAddress: smartAccount.address,
         type: "ERC4337",
       },
-      vaultAccessToken: process.env.VAULT_TOKEN as string,
     });
     
     // Step 6: Execute transaction
@@ -305,33 +302,7 @@ executeTransactionWithSessionKey()
 1. **Session key not active**: Ensure the session key is properly registered with the smart account
 2. **Permission denied**: Check that the target address is included in `approvedTargets`
 3. **Gas estimation failed**: Verify that gas sponsorship is properly configured
-4. **Vault token invalid**: Ensure your vault access token is valid and has proper permissions
 
-### Error Handling
-
-Always wrap your session key operations in try-catch blocks:
-
-```typescript
-try {
-  const tx = await sendTransaction({
-    account: serverWallet,
-    transaction: {
-      chain: sepolia,
-      client,
-      to: targetAddress,
-      value: 0n,
-    },
-  });
-} catch (error) {
-  if (error.message.includes("permission")) {
-    console.error("Session key lacks permission for this operation");
-  } else if (error.message.includes("gas")) {
-    console.error("Gas estimation or sponsorship failed");
-  } else {
-    console.error("Transaction failed:", error);
-  }
-}
-```
 
 </TabsContent>
 
@@ -365,7 +336,7 @@ const client = createThirdwebClient({
 });
 
 // Your session key account address
-const sessionKeyAccountAddress = "0x..."; // Replace with your session key address
+const sessionKeyAccountAddress = "0x..."; // Replace with your session key address (server wallet)
 ```
 
 ## Step 1: Create ERC-7702 Smart EOA
@@ -387,35 +358,17 @@ const account = await wallet.connect({
   strategy: "google", // or "email", "guest", etc.
 });
 
-console.log("Smart EOA address:", account.address);
+console.log("Upgraded EOA address:", account.address);
 ```
 
 ### Execution Modes
 
 The `executionMode` option allows you to configure the wallet behavior:
 
-- `mode`: Set to `"EIP7702"` for ERC-7702 smart EOA functionality
+- `mode`: Set to `"EIP7702"` for EIP-7702 upgraded EOA functionality
 - `sponsorGas`: Enable gas sponsorship for gasless transactions
 
-## Step 2: Deploy/Upgrade the Account
-
-Send a transaction to trigger the account deployment or upgrade to ERC-7702:
-
-```typescript
-await sendTransaction({
-  account: account,
-  transaction: prepareTransaction({
-    chain: sepolia,
-    client: client,
-    to: account.address,
-    value: 0n, // Self-transfer to trigger deployment
-  }),
-});
-
-console.log("Smart EOA deployed/upgraded successfully");
-```
-
-## Step 3: Get Account Contract
+## Step 2: Get Account Contract
 
 Create a contract instance for the deployed smart EOA:
 
@@ -424,11 +377,10 @@ const accountContract = getContract({
   address: account.address,
   chain: sepolia,
   client: client,
-  // ABI will be automatically resolved since the contract is deployed
 });
 ```
 
-## Step 4: Create Session Key with Full Permissions
+## Step 3: Create Session Key with Full Permissions
 
 Add a session key with full execution permissions:
 
@@ -455,7 +407,7 @@ console.log("Session key created:", tx.transactionHash);
 - `durationInSeconds`: How long the session key should be valid (in seconds)
 - `grantFullPermissions`: If `true`, grants unrestricted access. If `false`, you must specify policies.
 
-## Step 5 (Advanced): Create Session Key with Granular Permissions
+## Step 4 (Advanced): Create Session Key with Granular Permissions
 
 For more fine-grained control, you can specify call and transfer policies:
 
@@ -550,7 +502,7 @@ enum Condition {
 }
 ```
 
-## Step 6: Use the Session Key
+## Step 5: Use the Session Key
 
 Once created, the session key can be used with Engine or other server-side execution:
 
@@ -561,7 +513,6 @@ const serverWallet = Engine.serverWallet({
   address: sessionKeyAccountAddress,
   chain: sepolia,
   client: client,
-  vaultAccessToken: process.env.VAULT_TOKEN as string,
 });
 
 // Execute transactions with the session key
@@ -600,7 +551,7 @@ async function setupSessionKeyWith7702() {
     secretKey: "your-secret-key"
   });
   
-  const sessionKeyAccountAddress = "0x..."; // Your session key address
+  const sessionKeyAccountAddress = "0x..."; // Your session key address (server wallet)
   
   try {
     // Step 1: Create 7702 Smart EOA
@@ -617,27 +568,16 @@ async function setupSessionKeyWith7702() {
       strategy: "google",
     });
     
-    console.log("Smart EOA created:", account.address);
+    console.log("Upgraded EOA created:", account.address);
     
-    // Step 2: Deploy/upgrade the account
-    await sendTransaction({
-      account: account,
-      transaction: prepareTransaction({
-        chain: sepolia,
-        client: client,
-        to: account.address,
-        value: 0n,
-      }),
-    });
-    
-    // Step 3: Get account contract
+    // Step 2: Get account contract
     const accountContract = getContract({
       address: account.address,
       chain: sepolia,
       client: client,
     });
     
-    // Step 4: Create session key
+    // Step 3: Create session key
     const sessionTx = await sendTransaction({
       account: account,
       transaction: createSessionKey({
@@ -651,12 +591,11 @@ async function setupSessionKeyWith7702() {
     
     console.log("Session key created:", sessionTx.transactionHash);
     
-    // Step 5: Use the session key with Engine
+    // Step 4: Use the session key with Engine
     const serverWallet = Engine.serverWallet({
       address: sessionKeyAccountAddress,
       chain: sepolia,
       client: client,
-      vaultAccessToken: process.env.VAULT_TOKEN as string,
     });
     
     // Execute a transaction with the session key
@@ -703,39 +642,12 @@ setupSessionKeyWith7702()
 3. **Permission denied**: Verify the session key has the necessary policies for the operation
 4. **Expired session key**: Check that the current time is within the session key's validity period
 
-### Error Handling
-
-Always wrap your session key operations in try-catch blocks:
-
-```typescript
-try {
-  const tx = await sendTransaction({
-    account: account,
-    transaction: createSessionKey({
-      account: account,
-      contract: accountContract,
-      sessionKeyAddress: sessionKeyAccountAddress,
-      durationInSeconds: 86400,
-      grantFullPermissions: true,
-    }),
-  });
-} catch (error) {
-  if (error.message.includes("signature")) {
-    console.error("Failed to sign session key creation");
-  } else if (error.message.includes("duration")) {
-    console.error("Invalid duration specified");
-  } else {
-    console.error("Session key creation failed:", error);
-  }
-}
-```
 
 </TabsContent>
 </Tabs>
 
 ## Next Steps
 
-- Learn more about [In-App Wallets](/wallets/in-app-wallet/overview)
-- Explore [Engine API Reference](https://engine.thirdweb.com/reference)
+- Learn more about [In-App Wallets](/wallets/users)
+- Explore the [API Reference](/reference)
 - Check out the [TypeScript SDK](/references/typescript/v5) documentation
-- Read about [ERC-7702](https://eips.ethereum.org/EIPS/eip-7702) specification
