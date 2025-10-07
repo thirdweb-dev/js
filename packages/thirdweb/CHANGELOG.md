@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.108.9
+
+### Patch Changes
+
+- [#8192](https://github.com/thirdweb-dev/js/pull/8192) [`968913d`](https://github.com/thirdweb-dev/js/commit/968913d55b761c1e23062fdf6008904fa8c17050) Thanks [@MananTank](https://github.com/MananTank)! - Fix TransactionWidget not updating when `currency` prop is changed after initial render
+
 ## 5.108.8
 
 ### Patch Changes
