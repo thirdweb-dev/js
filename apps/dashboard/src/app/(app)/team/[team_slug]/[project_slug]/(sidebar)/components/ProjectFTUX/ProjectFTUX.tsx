@@ -7,7 +7,6 @@ import {
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
@@ -27,6 +26,7 @@ import {
 } from "@/lib/server/project-wallet";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
+import { ProjectWalletControls } from "./ProjectWalletControls.client";
 import { SecretKeySection } from "./SecretKeySection";
 
 export async function ProjectFTUX(props: {
@@ -64,9 +64,6 @@ function ProjectWalletSection(props: {
   const defaultLabel = getProjectWalletLabel(props.project.name);
   const walletAddress = props.wallet?.address;
   const label = props.wallet?.label ?? defaultLabel;
-  const shortenedAddress = walletAddress
-    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-    : undefined;
 
   return (
     <section>
@@ -90,21 +87,16 @@ function ProjectWalletSection(props: {
           </div>
 
           {walletAddress ? (
-            <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border/60 bg-background p-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-muted-foreground text-xs uppercase">
-                  Wallet address
-                </p>
-                <p className="font-mono text-sm break-all">{walletAddress}</p>
-              </div>
-              <CopyTextButton
-                className="w-full md:w-auto"
-                copyIconPosition="right"
-                textToCopy={walletAddress}
-                textToShow={shortenedAddress ?? walletAddress}
-                tooltip="Copy wallet address"
-              />
-            </div>
+            <ProjectWalletControls
+              label={label}
+              project={{
+                id: props.project.id,
+                publishableKey: props.project.publishableKey,
+                services: props.project.services,
+                teamId: props.project.teamId,
+              }}
+              walletAddress={walletAddress}
+            />
           ) : (
             <Alert variant="info">
               <CircleAlertIcon className="size-5" />
