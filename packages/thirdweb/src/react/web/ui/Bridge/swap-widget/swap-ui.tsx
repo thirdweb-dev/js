@@ -96,6 +96,7 @@ function useTokenPrice(options: {
       );
     },
     refetchOnMount: false,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 }
@@ -320,6 +321,7 @@ export function SwapUI(props: SwapUIProps) {
             ? {
                 data: sellTokenQuery.data,
                 isFetching: sellTokenQuery.isFetching,
+                isError: sellTokenQuery.isError,
               }
             : undefined
         }
@@ -372,6 +374,7 @@ export function SwapUI(props: SwapUIProps) {
             ? {
                 data: buyTokenQuery.data,
                 isFetching: buyTokenQuery.isFetching,
+                isError: buyTokenQuery.isError,
               }
             : undefined
         }
@@ -389,7 +392,9 @@ export function SwapUI(props: SwapUIProps) {
       />
 
       {/* error message */}
-      {preparedResultQuery.error ? (
+      {preparedResultQuery.error ||
+      buyTokenQuery.isError ||
+      sellTokenQuery.isError ? (
         <Text
           size="sm"
           color="danger"
@@ -398,7 +403,13 @@ export function SwapUI(props: SwapUIProps) {
             paddingBlock: spacing.md,
           }}
         >
-          Failed to get a quote
+          {preparedResultQuery.error
+            ? "Failed to get a quote"
+            : buyTokenQuery.isError
+              ? "Failed to fetch buy token details"
+              : sellTokenQuery.isError
+                ? "Failed to fetch sell token details"
+                : "Failed to get a quote"}
         </Text>
       ) : (
         <Spacer y="md" />
@@ -626,6 +637,7 @@ function TokenSection(props: {
     | {
         data: TokenWithPrices | undefined;
         isFetching: boolean;
+        isError: boolean;
       }
     | undefined;
   currency: SupportedFiatCurrency;

@@ -21,6 +21,7 @@ export function SelectedTokenButton(props: {
     | {
         data: TokenWithPrices | undefined;
         isFetching: boolean;
+        isError: boolean;
       }
     | undefined;
   client: ThirdwebClient;
@@ -47,7 +48,7 @@ export function SelectedTokenButton(props: {
         {/* icons */}
         <Container relative color="secondaryText">
           {/* token icon */}
-          {props.selectedToken ? (
+          {props.selectedToken && !props.selectedToken.isError ? (
             <Img
               key={props.selectedToken?.data?.iconUri}
               src={
@@ -112,7 +113,7 @@ export function SelectedTokenButton(props: {
         </Container>
 
         {/* token symbol and chain name */}
-        {props.selectedToken ? (
+        {props.selectedToken && !props.selectedToken.isError ? (
           <Container flex="column" style={{ gap: "3px" }}>
             {props.selectedToken?.isFetching ? (
               <Skeleton width="60px" height={fontSize.md} />

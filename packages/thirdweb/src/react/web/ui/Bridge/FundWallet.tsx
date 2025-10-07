@@ -251,11 +251,14 @@ export function FundWallet(props: FundWalletProps) {
                       ? tokenQuery.data.token
                       : undefined,
                   isFetching: tokenQuery.isFetching,
+                  isError:
+                    tokenQuery.isError ||
+                    tokenQuery.data?.type === "unsupported_token",
                 }
               : undefined
           }
           balance={{
-            data: tokenBalanceQuery.data?.value,
+            data: tokenBalanceQuery.data,
             isFetching: tokenBalanceQuery.isFetching,
           }}
           client={props.client}
@@ -278,6 +281,22 @@ export function FundWallet(props: FundWalletProps) {
       </Container>
 
       <Spacer y="md" />
+
+      {(tokenQuery.isError ||
+        tokenQuery.data?.type === "unsupported_token") && (
+        <div
+          style={{
+            border: `1px solid ${theme.colors.borderColor}`,
+            borderRadius: radius.full,
+            padding: spacing.xs,
+            marginBottom: spacing.md,
+          }}
+        >
+          <Text size="sm" color="danger" center>
+            Failed to fetch token details
+          </Text>
+        </div>
+      )}
 
       {/* Continue Button */}
       {activeWalletInfo ? (
@@ -373,6 +392,7 @@ function TokenSection(props: {
     | {
         data: TokenWithPrices | undefined;
         isFetching: boolean;
+        isError: boolean;
       }
     | undefined;
   currency: SupportedFiatCurrency;
@@ -381,7 +401,14 @@ function TokenSection(props: {
   title: string;
   isConnected: boolean;
   balance: {
-    data: bigint | undefined;
+    data:
+      | {
+          value: bigint;
+          decimals: number;
+          symbol: string;
+          name: string;
+        }
+      | undefined;
     isFetching: boolean;
   };
   onWalletClick: () => void;
@@ -565,17 +592,16 @@ function TokenSection(props: {
             <Text size="xs" color="secondaryText">
               Current Balance
             </Text>
-            {props.balance.data === undefined ||
-            props.selectedToken.data === undefined ? (
+            {props.balance.data === undefined ? (
               <Skeleton height={fontSize.xs} width="100px" />
             ) : (
               <Text size="xs" color="primaryText">
                 {formatTokenAmount(
-                  props.balance.data,
-                  props.selectedToken.data.decimals,
+                  props.balance.data.value,
+                  props.balance.data.decimals,
                   5,
                 )}{" "}
-                {props.selectedToken.data.symbol}
+                {props.balance.data.symbol}
               </Text>
             )}
           </div>
