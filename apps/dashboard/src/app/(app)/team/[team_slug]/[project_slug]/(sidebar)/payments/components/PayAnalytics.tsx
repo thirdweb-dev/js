@@ -156,6 +156,7 @@ export async function PayAnalytics(props: {
         client={props.client}
         projectClientId={props.projectClientId}
         teamId={props.teamId}
+        authToken={props.authToken}
       />
     </div>
   );

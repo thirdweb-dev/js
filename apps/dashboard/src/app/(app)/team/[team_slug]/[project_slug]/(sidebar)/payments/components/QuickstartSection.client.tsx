@@ -16,6 +16,7 @@ export function QuickStartSection(props: {
   clientId: string;
   teamId: string;
   projectWalletAddress?: string;
+  authToken: string;
 }) {
   return (
     <section>
@@ -46,6 +47,7 @@ export function QuickStartSection(props: {
               clientId={props.clientId}
               projectWalletAddress={props.projectWalletAddress}
               teamId={props.teamId}
+              authToken={props.authToken}
             >
               <Button
                 className="w-full gap-2 group text-foreground bg-background"
