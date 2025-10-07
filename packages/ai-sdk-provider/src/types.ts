@@ -1,4 +1,5 @@
 import type { UIDataTypes, UIMessage } from "ai";
+import type { SessionStore } from "./provider.js";
 import type {
   MonitorTransactionInput,
   MonitorTransactionOutput,
@@ -26,6 +27,11 @@ export interface ThirdwebConfig {
    * Optional: The user wallet auth token (JWT) for executing transactions
    */
   walletAuthToken?: string;
+  /**
+   * Optional: The session store to use for storing and retrieving thirdweb AI session IDs from ai SDK chat ids.
+   * If not provided, a default in-memory session store will be used.
+   */
+  sessionStore?: SessionStore;
 }
 
 export interface ThirdwebSettings {

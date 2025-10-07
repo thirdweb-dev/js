@@ -544,7 +544,7 @@ export class ThirdwebProvider implements ProviderV2 {
 
   constructor(config: ThirdwebConfig = {}) {
     this.config = config;
-    this.session = new SessionStore();
+    this.session = config.sessionStore || memorySessionStore;
   }
 
   chat(id?: string, settings: ThirdwebSettings = {}) {
@@ -581,21 +581,28 @@ export class ThirdwebProvider implements ProviderV2 {
   }
 }
 
-class SessionStore {
+export interface SessionStore {
+  getSessionId(chatId: string): string | null;
+  setSessionId(chatId: string, sessionId: string): void;
+  clearSessionId(chatId: string): void;
+}
+
+class InMemorySessionStore implements SessionStore {
   private sessionId: Map<string, string> = new Map();
 
-  getSessionId(chatId: string) {
+  getSessionId(chatId: string): string | null {
     return this.sessionId.get(chatId) || null;
   }
-
-  setSessionId(chatId: string, sessionId: string) {
+  setSessionId(chatId: string, sessionId: string): void {
     this.sessionId.set(chatId, sessionId);
   }
-
-  clearSessionId(chatId: string) {
+  clearSessionId(chatId: string): void {
     this.sessionId.delete(chatId);
   }
 }
+
+// singleton session store used as default if no session store is provided
+const memorySessionStore = new InMemorySessionStore();
 
 // Factory function for easier usage
 export function createThirdwebAI(config: ThirdwebConfig = {}) {

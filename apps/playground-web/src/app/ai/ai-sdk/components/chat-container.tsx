@@ -76,7 +76,7 @@ export function ChatContainer() {
                         return (
                           <Reasoning
                             key={`${message.id}-reasoning-${i}`}
-                            className="w-full"
+                            className="w-full max-w-md"
                             isStreaming={status === "streaming"}
                           >
                             <ReasoningTrigger />
