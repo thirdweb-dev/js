@@ -3,6 +3,7 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
 import { getFees } from "@/api/universal-bridge/developer";
+import { getProjectWallet } from "@/lib/server/project-wallet";
 import { loginRedirect } from "@/utils/redirects";
 import { ProjectSettingsBreadcrumb } from "../_components/project-settings-breadcrumb";
 import { PayConfig } from "./PayConfig";
@@ -30,6 +31,8 @@ export default async function Page(props: {
   if (!project) {
     redirect(`/team/${team_slug}`);
   }
+
+  const projectWallet = await getProjectWallet(project);
 
   let fees = await getFees({
     clientId: project.publishableKey,
@@ -64,6 +67,7 @@ export default async function Page(props: {
         fees={fees}
         project={project}
         teamId={team.id}
+        projectWalletAddress={projectWallet?.address}
         teamSlug={team_slug}
       />
     </div>

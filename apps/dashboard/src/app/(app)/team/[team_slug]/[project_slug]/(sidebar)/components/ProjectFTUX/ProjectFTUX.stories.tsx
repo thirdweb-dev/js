@@ -31,5 +31,6 @@ export const Default: Story = {
       ],
     },
     teamSlug: "bar",
+    managementAccessToken: undefined,
   },
 };

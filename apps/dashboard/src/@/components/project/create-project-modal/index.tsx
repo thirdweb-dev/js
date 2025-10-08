@@ -64,7 +64,7 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
     <CreateProjectDialogUI
       createProject={async (params) => {
         const res = await createProjectClient(props.teamId, params);
-        await createVaultAccountAndAccessToken({
+        const vaultTokens = await createVaultAccountAndAccessToken({
           project: res.project,
           projectSecretKey: res.secret,
         }).catch((error) => {
@@ -74,6 +74,13 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
           );
           throw error;
         });
+
+        const managementAccessToken = vaultTokens.managementToken?.accessToken;
+
+        if (!managementAccessToken) {
+          throw new Error("Missing management access token for project wallet");
+        }
+
         return {
           project: res.project,
           secret: res.secret,

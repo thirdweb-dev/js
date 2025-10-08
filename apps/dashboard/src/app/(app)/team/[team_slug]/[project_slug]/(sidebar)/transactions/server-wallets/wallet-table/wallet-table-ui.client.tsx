@@ -1,8 +1,9 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import {
+  CheckIcon,
   MoreVerticalIcon,
   RefreshCcwIcon,
   SendIcon,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useWalletBalance } from "thirdweb/react";
 import {
@@ -20,6 +22,7 @@ import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -50,7 +53,9 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import { updateDefaultProjectWallet } from "../../lib/vault.client";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
 
@@ -287,18 +292,34 @@ function ServerWalletTableRow(props: {
     queryKey: ["smart-account-address", wallet.address, chainId],
   });
 
+  // Get the default project wallet address
+  const engineCloudService = project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+  const defaultWalletAddress = engineCloudService?.projectWalletAddress;
+  const isDefaultWallet =
+    defaultWalletAddress &&
+    wallet.address.toLowerCase() === defaultWalletAddress.toLowerCase();
+
   return (
     <TableRow key={wallet.id}>
       {/* Label */}
       <TableCell>
-        <span
-          className={cn(
-            "text-sm text-foreground",
-            !wallet.metadata.label && "text-muted-foreground",
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "text-sm text-foreground",
+              !wallet.metadata.label && "text-muted-foreground",
+            )}
+          >
+            {wallet.metadata.label || "N/A"}
+          </span>
+          {isDefaultWallet && (
+            <Badge variant="success" className="text-xs">
+              default
+            </Badge>
           )}
-        >
-          {wallet.metadata.label || "N/A"}
-        </span>
+        </div>
       </TableCell>
 
       {/* Address */}
@@ -391,6 +412,25 @@ function WalletActionsDropdown(props: {
   chainId: number;
 }) {
   const [showFundModal, setShowFundModal] = useState(false);
+  const router = useDashboardRouter();
+
+  const setAsDefaultMutation = useMutation({
+    mutationFn: async () => {
+      await updateDefaultProjectWallet({
+        project: props.project,
+        projectWalletAddress: props.wallet.address,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Wallet set as default project wallet");
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to set default wallet",
+      );
+    },
+  });
 
   return (
     <>
@@ -420,6 +460,14 @@ function WalletActionsDropdown(props: {
               Fund wallet
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            onClick={() => setAsDefaultMutation.mutate()}
+            disabled={setAsDefaultMutation.isPending}
+            className="flex items-center gap-2 h-9 rounded-lg"
+          >
+            <CheckIcon className="size-4 text-muted-foreground" />
+            Set as default
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

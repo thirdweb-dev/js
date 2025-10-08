@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { Project } from "@/api/project/projects";
 import { type Fee, updateFee } from "@/api/universal-bridge/developer";
 import { SettingsCard } from "@/components/blocks/SettingsCard";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -25,6 +26,7 @@ interface PayConfigProps {
   teamId: string;
   teamSlug: string;
   fees: Fee;
+  projectWalletAddress?: string;
 }
 
 export const PayConfig: React.FC<PayConfigProps> = (props) => {
@@ -103,7 +105,37 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
                   <FormItem>
                     <FormLabel>Recipient address</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="0x..." />
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <Input
+                          {...field}
+                          className="sm:flex-1"
+                          placeholder="0x..."
+                        />
+                        {props.projectWalletAddress && (
+                          <Button
+                            onClick={() => {
+                              if (!props.projectWalletAddress) {
+                                return;
+                              }
+
+                              form.setValue(
+                                "payoutAddress",
+                                props.projectWalletAddress,
+                                {
+                                  shouldDirty: true,
+                                  shouldTouch: true,
+                                  shouldValidate: true,
+                                },
+                              );
+                            }}
+                            size="sm"
+                            type="button"
+                            variant="outline"
+                          >
+                            Use Project Wallet
+                          </Button>
+                        )}
+                      </div>
                     </FormControl>
                   </FormItem>
                 )}

@@ -45,7 +45,11 @@ const formSchema = z.object({
 });
 
 export function CreatePaymentLinkButton(
-  props: PropsWithChildren<{ clientId: string; teamId: string }>,
+  props: PropsWithChildren<{
+    clientId: string;
+    teamId: string;
+    projectWalletAddress?: string;
+  }>,
 ) {
   const [open, setOpen] = useState(false);
 
@@ -55,6 +59,7 @@ export function CreatePaymentLinkButton(
       <DialogContent className="p-0 !max-w-lg">
         <CreatePaymentLinkDialogContent
           clientId={props.clientId}
+          projectWalletAddress={props.projectWalletAddress}
           setOpen={setOpen}
           teamId={props.teamId}
         />
@@ -67,6 +72,7 @@ function CreatePaymentLinkDialogContent(props: {
   clientId: string;
   teamId: string;
   setOpen: (open: boolean) => void;
+  projectWalletAddress?: string;
 }) {
   const client = getClientThirdwebClient();
 
@@ -182,14 +188,41 @@ function CreatePaymentLinkDialogContent(props: {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Recipient Address</FormLabel>
-                  <Input
-                    className="w-full bg-card"
-                    {...field}
-                    onChange={field.onChange}
-                    value={field.value}
-                    placeholder="Address or ENS"
-                    required
-                  />
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      className="w-full bg-card sm:flex-1"
+                      {...field}
+                      onChange={field.onChange}
+                      value={field.value}
+                      placeholder="Address or ENS"
+                      required
+                    />
+                    {props.projectWalletAddress && (
+                      <Button
+                        className="sm:w-auto"
+                        onClick={() => {
+                          if (!props.projectWalletAddress) {
+                            return;
+                          }
+
+                          form.setValue(
+                            "recipient",
+                            props.projectWalletAddress,
+                            {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: true,
+                            },
+                          );
+                        }}
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                      >
+                        Use Project Wallet
+                      </Button>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}

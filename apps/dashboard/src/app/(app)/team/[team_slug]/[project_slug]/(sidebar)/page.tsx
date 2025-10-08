@@ -29,6 +29,7 @@ import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-fi
 import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { getProjectWallet } from "@/lib/server/project-wallet";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import type {
   InAppWalletStats,
@@ -38,7 +39,10 @@ import type {
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
-import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
+import {
+  ProjectFTUX,
+  ProjectWalletSection,
+} from "./components/ProjectFTUX/ProjectFTUX";
 import { RpcMethodBarChartCardAsync } from "./components/RpcMethodBarChartCard";
 import { TransactionsChartCardAsync } from "./components/Transactions";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
@@ -107,6 +111,11 @@ export default async function ProjectOverviewPage(props: PageProps) {
     teamId: project.teamId,
   });
 
+  const projectWallet = await getProjectWallet(project);
+  const managementAccessToken =
+    project.services?.find((service) => service.name === "engineCloud")
+      ?.managementAccessToken ?? undefined;
+
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <ProjectPage
@@ -128,6 +137,12 @@ export default async function ProjectOverviewPage(props: PageProps) {
       >
         {isActive ? (
           <div className="flex flex-col gap-4 md:gap-6">
+            <ProjectWalletSection
+              project={project}
+              teamSlug={params.team_slug}
+              wallet={projectWallet}
+              managementAccessToken={managementAccessToken}
+            />
             <ResponsiveTimeFilters defaultRange={defaultRange} />
             <ProjectAnalytics
               authToken={authToken}
@@ -140,7 +155,12 @@ export default async function ProjectOverviewPage(props: PageProps) {
             />
           </div>
         ) : (
-          <ProjectFTUX project={project} teamSlug={params.team_slug} />
+          <ProjectFTUX
+            project={project}
+            teamSlug={params.team_slug}
+            wallet={projectWallet}
+            managementAccessToken={managementAccessToken}
+          />
         )}
       </ProjectPage>
     </ResponsiveSearchParamsProvider>
