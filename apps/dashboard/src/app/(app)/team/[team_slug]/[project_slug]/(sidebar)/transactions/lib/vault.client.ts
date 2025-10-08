@@ -191,8 +191,10 @@ export async function updateDefaultProjectWallet(props: {
   project: Project;
   projectWalletAddress: string;
 }) {
-  const services = props.project.services;
-  const engineCloudService = services.find(
+  const services = props.project.services.filter(
+    (service) => service.name !== "engineCloud",
+  );
+  const engineCloudService = props.project.services.find(
     (service) => service.name === "engineCloud",
   );
   if (engineCloudService) {
@@ -276,7 +278,9 @@ async function createAndEncryptVaultAccessTokens(props: {
       },
       {
         services: [
-          ...props.project.services,
+          ...props.project.services.filter(
+            (service) => service.name !== "engineCloud",
+          ),
           {
             name: "engineCloud",
             actions: [],
@@ -299,7 +303,9 @@ async function createAndEncryptVaultAccessTokens(props: {
       },
       {
         services: [
-          ...props.project.services,
+          ...props.project.services.filter(
+            (service) => service.name !== "engineCloud",
+          ),
           {
             name: "engineCloud",
             actions: [],
