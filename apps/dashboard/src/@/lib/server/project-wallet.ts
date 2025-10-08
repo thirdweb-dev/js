@@ -31,7 +31,9 @@ export async function getProjectWallet(
 
   const managementAccessToken =
     engineCloudService?.managementAccessToken || undefined;
-  const projectWalletAddress = engineCloudService?.projectWalletAddress;
+  const projectWalletAddress = (
+    engineCloudService as { projectWalletAddress?: string } | undefined
+  )?.projectWalletAddress;
 
   if (
     !managementAccessToken ||
@@ -70,7 +72,7 @@ export async function getProjectWallet(
       return undefined;
     }
 
-    const expectedLabel = getProjectWalletLabel(project.name);
+    const defaultLabel = getProjectWalletLabel(project.name);
 
     const serverWallets = items.filter(
       (item) => item.metadata?.projectId === project.id,
@@ -88,7 +90,7 @@ export async function getProjectWallet(
     return {
       id: defaultWallet.id,
       address: defaultWallet.address,
-      label: defaultWallet.metadata?.label,
+      label: defaultWallet.metadata?.label ?? defaultLabel,
     };
   } catch (error) {
     console.error("Failed to load project wallet", error);

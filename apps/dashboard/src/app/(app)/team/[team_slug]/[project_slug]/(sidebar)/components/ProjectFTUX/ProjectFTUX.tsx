@@ -94,12 +94,7 @@ export function ProjectWalletSection(props: {
             <>
               <ProjectWalletControls
                 label={label}
-                project={{
-                  id: props.project.id,
-                  publishableKey: props.project.publishableKey,
-                  services: props.project.services,
-                  teamId: props.project.teamId,
-                }}
+                project={props.project}
                 walletAddress={walletAddress}
               />
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
