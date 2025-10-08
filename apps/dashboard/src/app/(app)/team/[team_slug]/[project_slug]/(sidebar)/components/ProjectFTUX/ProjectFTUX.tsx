@@ -7,6 +7,7 @@ import {
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
@@ -24,6 +25,7 @@ import {
   getProjectWallet,
   type ProjectWalletSummary,
 } from "@/lib/server/project-wallet";
+import CreateServerWallet from "../../transactions/server-wallets/components/create-server-wallet.client";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { ProjectWalletControls } from "./ProjectWalletControls.client";
@@ -33,6 +35,7 @@ export async function ProjectFTUX(props: {
   project: Project;
   teamSlug: string;
   wallet?: ProjectWalletSummary | undefined;
+  managementAccessToken: string | undefined;
 }) {
   const projectWallet = props.wallet ?? (await getProjectWallet(props.project));
 
@@ -42,6 +45,7 @@ export async function ProjectFTUX(props: {
         project={props.project}
         teamSlug={props.teamSlug}
         wallet={projectWallet}
+        managementAccessToken={props.managementAccessToken}
       />
       <IntegrateAPIKeySection
         project={props.project}
@@ -61,6 +65,7 @@ export function ProjectWalletSection(props: {
   project: Project;
   teamSlug: string;
   wallet: ProjectWalletSummary | undefined;
+  managementAccessToken: string | undefined;
 }) {
   const defaultLabel = getProjectWalletLabel(props.project.name);
   const walletAddress = props.wallet?.address;
@@ -68,10 +73,6 @@ export function ProjectWalletSection(props: {
 
   return (
     <section>
-      <h2 className="mb-3 font-semibold text-xl tracking-tight">
-        Project Wallet
-      </h2>
-
       <div className="rounded-lg border border-border bg-card p-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
@@ -79,49 +80,56 @@ export function ProjectWalletSection(props: {
               <WalletProductIcon className="size-5 text-muted-foreground" />
             </div>
             <div>
-              <p className="font-semibold text-lg tracking-tight">{label}</p>
+              <p className="font-semibold text-lg tracking-tight">
+                Project Wallet
+              </p>
               <p className="text-muted-foreground text-sm">
                 Default managed server wallet for this project. Use it for
-                deployments, payments, and other automated flows.
+                deployments, payments, and API integrations.
               </p>
             </div>
           </div>
 
           {walletAddress ? (
-            <ProjectWalletControls
-              label={label}
-              project={{
-                id: props.project.id,
-                publishableKey: props.project.publishableKey,
-                services: props.project.services,
-                teamId: props.project.teamId,
-              }}
-              walletAddress={walletAddress}
-            />
+            <>
+              <ProjectWalletControls
+                label={label}
+                project={{
+                  id: props.project.id,
+                  publishableKey: props.project.publishableKey,
+                  services: props.project.services,
+                  teamId: props.project.teamId,
+                }}
+                walletAddress={walletAddress}
+              />
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                <Link
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                  href={`/team/${props.teamSlug}/${props.project.slug}/transactions`}
+                >
+                  View Transactions
+                  <ChevronRightIcon className="size-4" />
+                </Link>
+              </div>
+            </>
           ) : (
             <Alert variant="info">
               <CircleAlertIcon className="size-5" />
-              <AlertTitle>Project wallet unavailable</AlertTitle>
+              <AlertTitle>No default project wallet set</AlertTitle>
               <AlertDescription>
-                We could not load the default wallet for this project. Visit the
-                Transactions page to create or refresh your server wallets.
+                Set a default project wallet to use for dashboard and API
+                integrations.
               </AlertDescription>
+              <AlertDialogFooter className="flex justify-start sm:justify-start pt-4">
+                <CreateServerWallet
+                  managementAccessToken={props.managementAccessToken}
+                  project={props.project}
+                  teamSlug={props.teamSlug}
+                  setAsProjectWallet={true}
+                />
+              </AlertDialogFooter>
             </Alert>
           )}
-
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-muted-foreground text-sm">
-              Manage balances, gas sponsorship, and smart account settings in
-              Transactions.
-            </p>
-            <Link
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-              href={`/team/${props.teamSlug}/${props.project.slug}/transactions`}
-            >
-              Open Transactions
-              <ChevronRightIcon className="size-4" />
-            </Link>
-          </div>
         </div>
       </div>
     </section>

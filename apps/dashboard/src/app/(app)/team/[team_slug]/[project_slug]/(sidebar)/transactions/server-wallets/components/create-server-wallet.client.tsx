@@ -21,6 +21,7 @@ export default function CreateServerWallet(props: {
   project: Project;
   teamSlug: string;
   managementAccessToken: string | undefined;
+  setAsProjectWallet?: boolean;
 }) {
   const router = useDashboardRouter();
   const [label, setLabel] = useState("");
@@ -38,6 +39,7 @@ export default function CreateServerWallet(props: {
         label,
         managementAccessToken,
         project: props.project,
+        setAsProjectWallet: props.setAsProjectWallet,
       });
 
       router.refresh();

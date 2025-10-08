@@ -31,8 +31,13 @@ export async function getProjectWallet(
 
   const managementAccessToken =
     engineCloudService?.managementAccessToken || undefined;
+  const projectWalletAddress = engineCloudService?.projectWalletAddress;
 
-  if (!managementAccessToken || !NEXT_PUBLIC_THIRDWEB_VAULT_URL) {
+  if (
+    !managementAccessToken ||
+    !NEXT_PUBLIC_THIRDWEB_VAULT_URL ||
+    !projectWalletAddress
+  ) {
     return undefined;
   }
 
@@ -50,7 +55,7 @@ export async function getProjectWallet(
         options: {
           page: 0,
           // @ts-expect-error - SDK expects snake_case for pagination arguments
-          page_size: 25,
+          page_size: 100,
         },
       },
     });
@@ -71,10 +76,10 @@ export async function getProjectWallet(
       (item) => item.metadata?.projectId === project.id,
     );
 
-    const defaultWallet =
-      serverWallets.find((item) => item.metadata?.label === expectedLabel) ??
-      serverWallets.find((item) => item.metadata?.type === "server-wallet") ??
-      serverWallets[0];
+    const defaultWallet = serverWallets.find(
+      (item) =>
+        item.address.toLowerCase() === projectWalletAddress.toLowerCase(),
+    );
 
     if (!defaultWallet) {
       return undefined;

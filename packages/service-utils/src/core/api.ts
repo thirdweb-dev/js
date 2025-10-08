@@ -241,6 +241,7 @@ export type ProjectService =
       rotationCode?: string | null;
       encryptedAdminKey?: string | null;
       encryptedWalletAccessToken?: string | null;
+      projectWalletAddress?: string | null;
     }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;

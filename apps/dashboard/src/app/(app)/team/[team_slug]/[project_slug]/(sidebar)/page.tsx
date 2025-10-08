@@ -109,6 +109,9 @@ export default async function ProjectOverviewPage(props: PageProps) {
   });
 
   const projectWallet = await getProjectWallet(project);
+  const managementAccessToken =
+    project.services?.find((service) => service.name === "engineCloud")
+      ?.managementAccessToken ?? undefined;
 
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
@@ -135,6 +138,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
               project={project}
               teamSlug={params.team_slug}
               wallet={projectWallet}
+              managementAccessToken={managementAccessToken}
             />
             <ResponsiveTimeFilters defaultRange={defaultRange} />
             <ProjectAnalytics
@@ -152,6 +156,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
             project={project}
             teamSlug={params.team_slug}
             wallet={projectWallet}
+            managementAccessToken={managementAccessToken}
           />
         )}
       </ProjectPage>

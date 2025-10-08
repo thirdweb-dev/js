@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import {
-  CopyIcon,
   EllipsisVerticalIcon,
   RefreshCcwIcon,
   SendIcon,
@@ -20,6 +19,7 @@ import { sendProjectWalletTokens } from "@/actions/project-wallet/send-tokens";
 import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +32,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -94,66 +93,28 @@ export function ProjectWalletControls(props: ProjectWalletControlsProps) {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-lg border border-dashed border-border/60 bg-background p-3">
+      <div className="rounded-lg border border-border bg-background p-3">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-muted-foreground text-xs uppercase">
-                Wallet address
-              </p>
-              <p className="font-mono text-sm break-all">{walletAddress}</p>
+          <div className="flex flex-col gap-3 lg:flex-row">
+            <div className="flex-1">
+              <p className="text-muted-foreground text-xs">Address</p>
+              <WalletAddress address={walletAddress} client={client} />
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  aria-label="Open wallet actions"
-                  className="h-9 w-9"
-                  size="icon"
-                  variant="outline"
-                >
-                  <EllipsisVerticalIcon className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 rounded-xl">
-                <DropdownMenuItem
-                  className="flex items-center gap-2"
-                  onSelect={() => {
-                    void handleCopyAddress();
-                  }}
-                >
-                  <CopyIcon className="size-4 text-muted-foreground" />
-                  Copy address
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="flex items-center gap-2"
-                  onSelect={() => setIsSendOpen(true)}
-                >
-                  <SendIcon className="size-4 text-muted-foreground" />
-                  Send funds
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="flex items-center gap-2"
-                  onSelect={() => setIsReceiveOpen(true)}
-                >
-                  <WalletIcon className="size-4 text-muted-foreground" />
-                  Receive funds
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex-1">
+              <p className="text-muted-foreground text-xs">Label</p>
+              <p className="font-mono text-sm break-all py-2">{label}</p>
+            </div>
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs font-medium uppercase text-muted-foreground">
-                Balance
-              </p>
-              <div className="mt-1 flex items-center gap-2">
+            <div className="flex-1 flex-col">
+              <p className="text-xs text-muted-foreground pb-2">Balance</p>
+              <div className="flex items-center gap-2">
                 <WalletIcon className="size-4 text-muted-foreground" />
                 {balanceQuery.isLoading ? (
                   <Spinner className="size-4" />
                 ) : balanceDisplay ? (
-                  <span className="font-semibold text-lg tracking-tight">
+                  <span className="text-md tracking-tight">
                     {balanceDisplay}
                   </span>
                 ) : (
@@ -174,17 +135,48 @@ export function ProjectWalletControls(props: ProjectWalletControlsProps) {
                     )}
                   />
                 </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      aria-label="Open wallet actions"
+                      className="h-9 w-9"
+                      size="icon"
+                      variant="outline"
+                    >
+                      <EllipsisVerticalIcon className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 rounded-xl">
+                    <DropdownMenuItem
+                      className="flex items-center gap-2"
+                      onSelect={() => setIsSendOpen(true)}
+                    >
+                      <SendIcon className="size-4 text-muted-foreground" />
+                      Send funds
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2"
+                      onSelect={() => setIsReceiveOpen(true)}
+                    >
+                      <WalletIcon className="size-4 text-muted-foreground" />
+                      Receive funds
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
-            <SingleNetworkSelector
-              chainId={selectedChainId}
-              className="w-full max-w-xs rounded-lg"
-              client={client}
-              disableDeprecated
-              disableChainId
-              onChange={setSelectedChainId}
-              placeholder="Select network"
-            />
+            <div className="flex-col flex-1">
+              <p className="text-xs text-muted-foreground pb-2">Network</p>
+              <SingleNetworkSelector
+                chainId={selectedChainId}
+                className="max-w-xs rounded-lg"
+                client={client}
+                disableDeprecated
+                disableChainId
+                onChange={setSelectedChainId}
+                placeholder="Select network"
+              />
+            </div>
           </div>
         </div>
       </div>

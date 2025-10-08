@@ -133,6 +133,7 @@ export async function createProjectServerWallet(props: {
   project: Project;
   managementAccessToken: string;
   label?: string;
+  setAsProjectWallet?: boolean;
 }) {
   const vaultClient = await initVaultClient();
 
@@ -176,7 +177,40 @@ export async function createProjectServerWallet(props: {
     console.warn("failed to cache server wallet", err);
   });
 
+  if (props.setAsProjectWallet) {
+    await updateDefaultProjectWallet({
+      project: props.project,
+      projectWalletAddress: eoa.data.address,
+    });
+  }
+
   return eoa.data;
+}
+
+export async function updateDefaultProjectWallet(props: {
+  project: Project;
+  projectWalletAddress: string;
+}) {
+  const services = props.project.services;
+  const engineCloudService = services.find(
+    (service) => service.name === "engineCloud",
+  );
+  if (engineCloudService) {
+    const engineCloudServiceWithProjectWallet = {
+      ...engineCloudService,
+      projectWalletAddress: props.projectWalletAddress,
+    };
+
+    await updateProjectClient(
+      {
+        projectId: props.project.id,
+        teamId: props.project.teamId,
+      },
+      {
+        services: [...services, engineCloudServiceWithProjectWallet],
+      },
+    );
+  }
 }
 
 async function createAndEncryptVaultAccessTokens(props: {
@@ -209,6 +243,13 @@ async function createAndEncryptVaultAccessTokens(props: {
 
   const managementToken = managementTokenResult.data;
   const walletToken = walletTokenResult.data;
+
+  // create a default project server wallet
+  const defaultProjectServerWallet = await createProjectServerWallet({
+    project,
+    managementAccessToken: managementToken.accessToken,
+    label: getProjectWalletLabel(project.name),
+  });
 
   if (projectSecretKey) {
     // verify that the project secret key is valid
@@ -244,6 +285,7 @@ async function createAndEncryptVaultAccessTokens(props: {
             encryptedAdminKey,
             encryptedWalletAccessToken,
             rotationCode: rotationCode,
+            projectWalletAddress: defaultProjectServerWallet.address,
           },
         ],
       },
@@ -266,6 +308,7 @@ async function createAndEncryptVaultAccessTokens(props: {
             encryptedAdminKey: null,
             encryptedWalletAccessToken: null,
             rotationCode: rotationCode,
+            projectWalletAddress: defaultProjectServerWallet.address,
           },
         ],
       },
