@@ -1,4 +1,5 @@
 import { cn } from "@workspace/ui/lib/utils";
+import { DotIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
@@ -6,7 +7,6 @@ import { getContract } from "thirdweb/contract";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
 import { FaqSection } from "@/components/blocks/faq-section";
 import { AppFooter } from "@/components/footers/app-footer";
-import { BridgeVeil } from "./components/BridgeVeil";
 import { PillLink } from "./components/client/pill-link";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
 import { PageHeader } from "./components/header";
@@ -55,30 +55,27 @@ export default async function BridgePage({
 
   return (
     <div className="grow flex flex-col relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-dvh  md:h-[1200px] fade-in-0 animate-in duration-700">
-        <BridgeVeil />
-      </div>
-
       <div className="relative z-10">
         <PageHeader />
 
-        <div className="h-20" />
+        <div className="h-12 lg:h-20" />
 
         <div className="relative z-10">
           <div className="container">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tighter text-center leading-none text-pretty">
+            <h1 className="text-3xl md:text-6xl font-bold mb-6 tracking-tighter text-center leading-8 lg:leading-none text-balance">
               Bridge and Swap tokens <br className="max-sm:hidden" /> across any
               chain, instantly
             </h1>
 
-            <div className="flex-wrap flex gap-3 items-center justify-center">
+            <div className="flex flex-wrap gap-2 items-center justify-center">
               <DataPill>85+ Chains Supported</DataPill>
+              <DotIcon className="size-3 text-muted-foreground lg:hidden" />
               <DataPill>4500+ Tokens Supported</DataPill>
               <DataPill>9+ Million Routes Available</DataPill>
             </div>
           </div>
 
-          <div className="h-16" />
+          <div className="h-12 lg:h-16" />
 
           <div className="flex grow items-center justify-center px-4 relative">
             <DotsBackgroundPattern />
@@ -134,7 +131,7 @@ export default async function BridgePage({
 
 function DataPill(props: { children: React.ReactNode }) {
   return (
-    <p className="flex items-center gap-1.5 text-foreground/50 text-xs bg-accent/30 backdrop-blur-lg border border-border/70 rounded-full px-3 py-1.5 hover:text-foreground transition-colors duration-300">
+    <p className="lg:bg-card flex items-center gap-1.5 text-muted-foreground text-xs lg:backdrop-blur-lg lg:border lg:border-border/70 rounded-full lg:px-3 lg:py-1.5 hover:text-foreground transition-colors duration-300">
       {props.children}
     </p>
   );
@@ -144,7 +141,7 @@ function DotsBackgroundPattern(props: { className?: string }) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute -inset-x-36 -inset-y-24 text-pink-700/30 dark:text-pink-500/20",
+        "pointer-events-none absolute -inset-x-36 -inset-y-24 text-foreground/20 dark:text-muted-foreground/20 hidden lg:block",
         props.className,
       )}
       style={{

@@ -240,9 +240,10 @@ function TabButton(props: {
   return (
     <Button
       onClick={props.onClick}
+      size="sm"
       className={cn(
-        "rounded-full text-muted-foreground px-5 text-base bg-accent",
-        props.isActive && "text-foreground border-foreground",
+        "rounded-full text-muted-foreground px-4 bg-accent",
+        props.isActive && "text-foreground border-foreground/50",
       )}
       variant="outline"
     >
