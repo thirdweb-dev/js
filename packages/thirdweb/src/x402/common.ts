@@ -44,6 +44,7 @@ export async function decodePaymentRequest(
     price,
     network,
     facilitator,
+    payTo,
     resourceUrl,
     routeConfig = {},
     method,
@@ -104,7 +105,7 @@ export async function decodePaymentRequest(
     resource: resourceUrl,
     description: description ?? "",
     mimeType: mimeType ?? "application/json",
-    payTo: getAddress(facilitator.address),
+    payTo: getAddress(facilitator.address), // always pay to the facilitator address first
     maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
     asset: getAddress(asset.address),
     outputSchema: {
@@ -117,6 +118,7 @@ export async function decodePaymentRequest(
       output: outputSchema,
     },
     extra: {
+      recipientAddress: payTo, // input payTo is the final recipient address
       ...((asset as ERC20TokenAmount["asset"]).eip712 ?? {}),
     },
   });
