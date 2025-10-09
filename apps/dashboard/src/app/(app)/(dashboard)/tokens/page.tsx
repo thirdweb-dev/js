@@ -36,7 +36,7 @@ export default async function Page() {
           </h1>
 
           <p className="text-muted-foreground">
-            85+ chains, 3200+ tokens and 9+ million routes supported
+            85+ chains, 4500+ tokens and 9+ million routes supported
           </p>
         </div>
       </div>
