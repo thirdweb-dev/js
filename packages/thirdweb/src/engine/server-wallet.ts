@@ -189,8 +189,8 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         };
       case "EIP7702":
         return {
+          ...executionOptions,
           chainId,
-          from: address,
           type: "EIP7702",
         };
     }

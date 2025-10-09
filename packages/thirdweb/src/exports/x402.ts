@@ -1,3 +1,4 @@
+export type { Money, PaymentMiddlewareConfig } from "x402/types";
 export { decodePayment, encodePayment } from "../x402/encode.js";
 export {
   facilitator,
