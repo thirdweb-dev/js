@@ -34,7 +34,7 @@ export type PaymentArgs = {
   facilitator: ThirdwebX402Facilitator;
   /** Optional configuration for the payment middleware route */
   routeConfig?: PaymentMiddlewareConfig;
-  /** @deprecated Use facilitator.address instead */
+  /** Optional recipient address to receive the payment if different from your facilitator address */
   payTo?: string;
 };
 
