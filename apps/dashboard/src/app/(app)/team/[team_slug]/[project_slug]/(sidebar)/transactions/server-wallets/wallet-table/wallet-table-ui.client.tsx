@@ -292,7 +292,7 @@ function ServerWalletTableRow(props: {
     queryKey: ["smart-account-address", wallet.address, chainId],
   });
 
-  // Get the default project wallet address
+  // Get the project wallet address
   const engineCloudService = project.services.find(
     (service) => service.name === "engineCloud",
   );
@@ -422,7 +422,7 @@ function WalletActionsDropdown(props: {
       });
     },
     onSuccess: () => {
-      toast.success("Wallet set as default project wallet");
+      toast.success("Wallet set as project wallet");
       router.refresh();
     },
     onError: (error) => {

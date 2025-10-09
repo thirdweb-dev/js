@@ -48,9 +48,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
@@ -163,7 +168,7 @@ export function ProjectWalletControls(props: ProjectWalletControlsProps) {
     },
     onSuccess: async (_, wallet) => {
       const descriptionLabel = wallet.label ?? wallet.address;
-      toast.success("Default project wallet updated", {
+      toast.success("Project wallet updated", {
         description: `Now pointing to ${descriptionLabel}`,
       });
       await queryClient.invalidateQueries({
@@ -347,49 +352,66 @@ export function ProjectWalletControls(props: ProjectWalletControlsProps) {
                 default.
               </p>
             ) : (
-              <RadioGroup
-                className="space-y-3"
-                onValueChange={(value) => setSelectedWalletId(value)}
-                value={selectedWalletId}
-              >
-                {serverWallets.map((wallet) => {
-                  const isCurrent =
-                    wallet.address.toLowerCase() === currentWalletAddressLower;
-                  const isSelected = wallet.id === selectedWalletId;
-
-                  return (
-                    <Label
-                      key={wallet.id}
-                      htmlFor={`project-wallet-${wallet.id}`}
-                      className={cn(
-                        "flex cursor-pointer items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 transition",
-                        isSelected && "border-primary ring-2 ring-primary/20",
-                      )}
-                    >
-                      <RadioGroupItem
-                        id={`project-wallet-${wallet.id}`}
-                        value={wallet.id}
-                        className="mt-0.5"
-                      />
-                      <div className="flex flex-1 flex-col overflow-hidden">
+              <div className="flex flex-col gap-3">
+                <Select
+                  onValueChange={(value) => setSelectedWalletId(value)}
+                  value={selectedWalletId ?? ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select server wallet">
+                      {selectedWallet ? (
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-foreground">
-                            {wallet.label ?? "Unnamed server wallet"}
-                          </span>
-                          {isCurrent && (
-                            <Badge variant="success" className="text-xs">
-                              current
-                            </Badge>
-                          )}
+                          <WalletAddress
+                            address={selectedWallet.address}
+                            client={client}
+                          />
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-foreground">
+                              {selectedWallet.label ?? "Unnamed server wallet"}
+                            </span>
+                            {selectedWallet.address.toLowerCase() ===
+                              currentWalletAddressLower && (
+                              <Badge variant="success" className="text-xs">
+                                current
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-xs text-muted-foreground break-all">
-                          {wallet.address}
-                        </span>
-                      </div>
-                    </Label>
-                  );
-                })}
-              </RadioGroup>
+                      ) : (
+                        "Select server wallet"
+                      )}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {serverWallets.map((wallet) => {
+                      const isCurrent =
+                        wallet.address.toLowerCase() ===
+                        currentWalletAddressLower;
+
+                      return (
+                        <SelectItem key={wallet.id} value={wallet.id}>
+                          <div className="flex items-center gap-2">
+                            <WalletAddress
+                              address={wallet.address}
+                              client={client}
+                            />
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-foreground">
+                                {wallet.label ?? "Unnamed server wallet"}
+                              </span>
+                              {isCurrent && (
+                                <Badge variant="success" className="text-xs">
+                                  current
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
             )}
           </div>
 
