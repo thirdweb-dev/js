@@ -7,7 +7,6 @@ import {
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { CodeServer } from "@/components/ui/code/code.server";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
@@ -25,10 +24,10 @@ import {
   getProjectWallet,
   type ProjectWalletSummary,
 } from "@/lib/server/project-wallet";
-import CreateServerWallet from "../../transactions/server-wallets/components/create-server-wallet.client";
 import { ClientIDSection } from "./ClientIDSection";
 import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
 import { ProjectWalletControls } from "./ProjectWalletControls.client";
+import { ProjectWalletSetup } from "./ProjectWalletSetup.client";
 import { SecretKeySection } from "./SecretKeySection";
 
 export async function ProjectFTUX(props: {
@@ -108,22 +107,11 @@ export function ProjectWalletSection(props: {
               </div>
             </>
           ) : (
-            <Alert variant="info">
-              <CircleAlertIcon className="size-5" />
-              <AlertTitle>No default project wallet set</AlertTitle>
-              <AlertDescription>
-                Set a default project wallet to use for dashboard and API
-                integrations.
-              </AlertDescription>
-              <AlertDialogFooter className="flex justify-start sm:justify-start pt-4">
-                <CreateServerWallet
-                  managementAccessToken={props.managementAccessToken}
-                  project={props.project}
-                  teamSlug={props.teamSlug}
-                  setAsProjectWallet={true}
-                />
-              </AlertDialogFooter>
-            </Alert>
+            <ProjectWalletSetup
+              managementAccessToken={props.managementAccessToken}
+              project={props.project}
+              teamSlug={props.teamSlug}
+            />
           )}
         </div>
       </div>
