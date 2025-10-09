@@ -513,6 +513,11 @@ const serverWallet = Engine.serverWallet({
   address: sessionKeyAccountAddress,
   chain: sepolia,
   client: client,
+  executionOptions: {
+    type: "EIP7702",
+    sessionKeyAddress: sessionKeyAccountAddress,
+    accountAddress: account.address,
+  },
 });
 
 // Execute transactions with the session key
@@ -596,6 +601,11 @@ async function setupSessionKeyWith7702() {
       address: sessionKeyAccountAddress,
       chain: sepolia,
       client: client,
+      executionOptions: {
+        type: "EIP7702",
+        sessionKeyAddress: sessionKeyAccountAddress,
+        accountAddress: account.address,
+      },
     });
     
     // Execute a transaction with the session key

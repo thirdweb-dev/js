@@ -148,6 +148,9 @@ export type BatchResultItemEncodeResultSuccessItemEngineError =
 						message: string;
 						type: "THIRDWEB_ERROR";
 				  }
+				| (SerialisableAwsSignerError & {
+						type: "AWS_KMS_SIGNER_ERROR";
+				  })
 				| {
 						message: string;
 						type: "INTERNAL_ERROR";
@@ -235,6 +238,9 @@ export type BatchResultItemReadResultSuccessItemEngineError =
 						message: string;
 						type: "THIRDWEB_ERROR";
 				  }
+				| (SerialisableAwsSignerError & {
+						type: "AWS_KMS_SIGNER_ERROR";
+				  })
 				| {
 						message: string;
 						type: "INTERNAL_ERROR";
@@ -331,6 +337,9 @@ export type BatchResultItemSignResultDataEngineError =
 						message: string;
 						type: "THIRDWEB_ERROR";
 				  }
+				| (SerialisableAwsSignerError & {
+						type: "AWS_KMS_SIGNER_ERROR";
+				  })
 				| {
 						message: string;
 						type: "INTERNAL_ERROR";
@@ -472,11 +481,32 @@ export type ContractWrite = ContractCall & {
 /**
  * EIP-7702 Execution Options
  */
-export type Eip7702ExecutionOptions = {
+export type Eip7702ExecutionOptions =
+	| Eip7702OwnerExecution
+	| Eip7702SessionKeyExecution;
+
+/**
+ * EIP-7702 Owner Execution
+ */
+export type Eip7702OwnerExecution = {
 	/**
-	 * The EOA address that will sign the EIP-7702 transaction
+	 * The delegated EOA address
 	 */
 	from: AddressDef;
+};
+
+/**
+ * EIP-7702 Session Key Execution
+ */
+export type Eip7702SessionKeyExecution = {
+	/**
+	 * The session key address is your server wallet, which has been granted a session key to the `account_address`
+	 */
+	sessionKeyAddress: AddressDef;
+	/**
+	 * The account address is the address of a delegated account you want to execute the transaction on. This account has granted a session key to the `session_key_address`
+	 */
+	accountAddress: AddressDef;
 };
 
 export type EmptyIdempotencySetResponse = {
@@ -888,6 +918,64 @@ export type SendTransactionRequest = {
 	params: Array<InnerTransaction>;
 	webhookOptions?: Array<WebhookOptions>;
 };
+
+export type SerialisableAwsSdkError =
+	| {
+			message: string;
+			type: "CONSTRUCTION_FAILURE";
+	  }
+	| {
+			message: string;
+			type: "TIMEOUT_ERROR";
+	  }
+	| {
+			message: string;
+			type: "DISPATCH_FAILURE";
+	  }
+	| {
+			message: string;
+			type: "RESPONSE_ERROR";
+	  }
+	| {
+			message: string;
+			type: "SERVICE_ERROR";
+	  }
+	| {
+			message: string;
+			type: "OTHER";
+	  };
+
+export type SerialisableAwsSignerError =
+	| {
+			aws_sdk_error: SerialisableAwsSdkError;
+			type: "SIGN";
+	  }
+	| {
+			aws_sdk_error: SerialisableAwsSdkError;
+			type: "GET_PUBLIC_KEY";
+	  }
+	| {
+			message: string;
+			type: "K256";
+	  }
+	| {
+			message: string;
+			type: "SPKI";
+	  }
+	| {
+			message: string;
+			type: "HEX";
+	  }
+	| {
+			type: "SIGNATURE_NOT_FOUND";
+	  }
+	| {
+			type: "PUBLIC_KEY_NOT_FOUND";
+	  }
+	| {
+			message: string;
+			type: "UNKNOWN";
+	  };
 
 export type SerializableReqwestError =
 	| {
@@ -1552,6 +1640,7 @@ export type GetTransactionsResponses = {
 					  }
 					| Array<unknown>;
 				transactionHash: string | null;
+				status: string | null;
 				confirmedAt: string | null;
 				confirmedAtBlockNumber: string | null;
 				enrichedData:
@@ -1712,6 +1801,7 @@ export type SearchTransactionsResponses = {
 					  }
 					| Array<unknown>;
 				transactionHash: string | null;
+				status: string | null;
 				confirmedAt: string | null;
 				confirmedAtBlockNumber: string | null;
 				enrichedData:
