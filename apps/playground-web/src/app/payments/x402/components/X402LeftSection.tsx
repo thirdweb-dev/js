@@ -45,6 +45,7 @@ export function X402LeftSection(props: {
   const tokenId = useId();
   const amountId = useId();
   const waitUntilId = useId();
+  const payToId = useId();
 
   const handleChainChange = (chainId: number) => {
     setSelectedChain(chainId);
@@ -78,6 +79,13 @@ export function X402LeftSection(props: {
     setOptions((v) => ({
       ...v,
       amount: e.target.value,
+    }));
+  };
+
+  const handlePayToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOptions((v) => ({
+      ...v,
+      payTo: e.target.value as `0x${string}`,
     }));
   };
 
@@ -138,6 +146,22 @@ export function X402LeftSection(props: {
                 Amount in {options.tokenSymbol}
               </p>
             )}
+          </div>
+
+          {/* Pay To input */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={payToId}>Pay To Address</Label>
+            <Input
+              id={payToId}
+              type="text"
+              placeholder="0x..."
+              value={options.payTo}
+              onChange={handlePayToChange}
+              className="bg-card"
+            />
+            <p className="text-sm text-muted-foreground">
+              The wallet address that will receive the payment
+            </p>
           </div>
 
           {/* Wait Until selection */}
