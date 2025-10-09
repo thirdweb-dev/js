@@ -1,5 +1,11 @@
 # @thirdweb-dev/engine
 
+## 3.2.2
+
+### Patch Changes
+
+- [#8218](https://github.com/thirdweb-dev/js/pull/8218) [`f630912`](https://github.com/thirdweb-dev/js/commit/f630912b9b0e1d8ebe22b0b52c650f5e40e12baf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to latest API spec
+
 ## 3.2.1
 
 ### Patch Changes

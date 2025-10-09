@@ -1,5 +1,16 @@
 # thirdweb
 
+## 5.108.10
+
+### Patch Changes
+
+- [#8218](https://github.com/thirdweb-dev/js/pull/8218) [`f630912`](https://github.com/thirdweb-dev/js/commit/f630912b9b0e1d8ebe22b0b52c650f5e40e12baf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export missing x402 types
+
+- [#8215](https://github.com/thirdweb-dev/js/pull/8215) [`62cfbb7`](https://github.com/thirdweb-dev/js/commit/62cfbb7441e66156c55c76d73f5b481f5ea576bc) Thanks [@MananTank](https://github.com/MananTank)! - Show error in BuyWidget and SwapWidget UI if fetching token details fails
+
+- Updated dependencies [[`f630912`](https://github.com/thirdweb-dev/js/commit/f630912b9b0e1d8ebe22b0b52c650f5e40e12baf)]:
+  - @thirdweb-dev/engine@3.2.2
+
 ## 5.108.9
 
 ### Patch Changes
