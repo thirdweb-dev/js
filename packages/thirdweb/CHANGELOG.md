@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.108.12
+
+### Patch Changes
+
+- [#8226](https://github.com/thirdweb-dev/js/pull/8226) [`0082e99`](https://github.com/thirdweb-dev/js/commit/0082e996cae47a326110e74457c72b3f3936743d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add optional recipientAddress to x402 settlePayment
+
+- [#8226](https://github.com/thirdweb-dev/js/pull/8226) [`0082e99`](https://github.com/thirdweb-dev/js/commit/0082e996cae47a326110e74457c72b3f3936743d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose 7702 utility functions
+
 ## 5.108.11
 
 ### Patch Changes
