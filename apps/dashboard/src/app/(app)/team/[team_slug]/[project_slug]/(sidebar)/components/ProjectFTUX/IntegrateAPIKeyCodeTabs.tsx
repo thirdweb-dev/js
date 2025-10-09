@@ -25,21 +25,33 @@ const tabNames: Record<TabKey, string> = {
 };
 
 export function IntegrateAPIKeyCodeTabs(props: {
-  tabs: Record<TabKey, React.ReactNode>;
+  tabs: Partial<Record<TabKey, React.ReactNode>>;
 }) {
-  const [tab, setTab] = useState<TabKey>("api");
+  const availableTabEntries = (
+    Object.entries(tabNames) as Array<[TabKey, string]>
+  ).filter(([key]) => props.tabs[key]);
+
+  const [tab, setTab] = useState<TabKey>(availableTabEntries[0]?.[0] ?? "api");
+
+  const activeTab = props.tabs[tab]
+    ? tab
+    : (availableTabEntries[0]?.[0] ?? "api");
+
+  if (availableTabEntries.length === 0) {
+    return null;
+  }
 
   return (
     <div>
       <TabButtons
-        tabs={Object.entries(tabNames).map(([key, name]) => ({
-          isActive: tab === key,
+        tabs={availableTabEntries.map(([key, name]) => ({
+          isActive: activeTab === key,
           name,
-          onClick: () => setTab(key as TabKey),
+          onClick: () => setTab(key),
         }))}
       />
       <div className="h-2" />
-      {props.tabs[tab]}
+      {props.tabs[activeTab]}
     </div>
   );
 }
