@@ -1,5 +1,53 @@
 // --- KEEEP IN SYNC with exports/wallets/in-app.native.ts ---
 
+export { executedEvent } from "../../extensions/erc7702/__generated__/MinimalAccount/events/Executed.js";
+export { sessionCreatedEvent } from "../../extensions/erc7702/__generated__/MinimalAccount/events/SessionCreated.js";
+export { valueReceivedEvent } from "../../extensions/erc7702/__generated__/MinimalAccount/events/ValueReceived.js";
+// ERC7702 generated helpers
+export {
+  eip712Domain,
+  isEip712DomainSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/eip712Domain.js";
+export {
+  type GetCallPoliciesForSignerParams,
+  getCallPoliciesForSigner,
+  isGetCallPoliciesForSignerSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/getCallPoliciesForSigner.js";
+export {
+  type GetSessionExpirationForSignerParams,
+  getSessionExpirationForSigner,
+  isGetSessionExpirationForSignerSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/getSessionExpirationForSigner.js";
+export {
+  type GetSessionStateForSignerParams,
+  getSessionStateForSigner,
+  isGetSessionStateForSignerSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/getSessionStateForSigner.js";
+export {
+  type GetTransferPoliciesForSignerParams,
+  getTransferPoliciesForSigner,
+  isGetTransferPoliciesForSignerSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/getTransferPoliciesForSigner.js";
+export {
+  type IsWildcardSignerParams,
+  isIsWildcardSignerSupported,
+  isWildcardSigner,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/read/isWildcardSigner.js";
+export {
+  type CreateSessionWithSigParams,
+  createSessionWithSig,
+  isCreateSessionWithSigSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/write/createSessionWithSig.js";
+export {
+  type ExecuteParams,
+  execute,
+  isExecuteSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/write/execute.js";
+export {
+  type ExecuteWithSigParams,
+  executeWithSig,
+  isExecuteWithSigSupported,
+} from "../../extensions/erc7702/__generated__/MinimalAccount/write/executeWithSig.js";
 //ACCOUNT
 export {
   type CreateSessionKeyOptions,
