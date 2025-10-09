@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.108.11
+
+### Patch Changes
+
+- [#8228](https://github.com/thirdweb-dev/js/pull/8228) [`05550d0`](https://github.com/thirdweb-dev/js/commit/05550d045f291b8e53afd0d7e73c438bee202fb7) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Export ERC7702 MinimalAccount helpers and events
+
 ## 5.108.10
 
 ### Patch Changes
