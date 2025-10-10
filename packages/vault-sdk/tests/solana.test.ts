@@ -21,6 +21,7 @@ import { getTransferSolInstruction } from "@solana-program/system";
 import bs58 from "bs58";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
+  createAccessToken,
   createServiceAccount,
   createSolanaAccount,
   createVaultClient,
@@ -231,6 +232,135 @@ describe("Solana Vault Integration Tests", () => {
 
     it("should have different pubkeys for sender and receiver", () => {
       expect(senderPubkey).not.toBe(receiverPubkey);
+    });
+  });
+
+  describe("Access Token - Solana Account Creation", () => {
+    it("should create a Solana account using an access token", async () => {
+      // Create an access token with solana:create permission
+      const expiresAt = new Date(Date.now() + 3600000).toISOString(); // 1 hour from now
+      const accessTokenResult = await createAccessToken({
+        client: vaultClient,
+        request: {
+          auth: { adminKey },
+          options: {
+            policies: [
+              {
+                type: "solana:create",
+                allowedMetadataPatterns: [
+                  {
+                    key: "purpose",
+                    rule: { pattern: ".*" }, // Allow any purpose
+                  },
+                  {
+                    key: "name",
+                    rule: { pattern: ".*" },
+                  },
+                ],
+              },
+              {
+                type: "solana:read",
+                metadataPatterns: [
+                  {
+                    key: "purpose",
+                    rule: { pattern: ".*" }, // Allow reading any
+                  },
+                ],
+              },
+            ],
+            expiresAt,
+            metadata: {
+              name: "Solana Access Token",
+              description: "Token for creating Solana accounts",
+            },
+          },
+        },
+      });
+
+      expect(accessTokenResult.success).toBe(true);
+      expect(accessTokenResult.data?.accessToken).toBeTruthy();
+
+      const accessToken = accessTokenResult.data?.accessToken || "";
+      console.log("\n=== Access Token Created ===");
+      console.log(`Access Token ID: ${accessTokenResult.data?.id}`);
+
+      // Use the access token to create a new Solana account
+      const accountResult = await createSolanaAccount({
+        client: vaultClient,
+        request: {
+          auth: { accessToken },
+          options: {
+            metadata: {
+              name: "Access Token Created Account",
+              purpose: "Testing access token creation",
+            },
+          },
+        },
+      });
+
+      expect(accountResult.success).toBe(true);
+      expect(accountResult.data?.pubkey).toBeTruthy();
+      expect(accountResult.data?.pubkey).toMatch(
+        /^[1-9A-HJ-NP-Za-km-z]{32,44}$/,
+      );
+
+      console.log("\n=== Account Created via Access Token ===");
+      console.log(`Account pubkey: ${accountResult.data?.pubkey}`);
+      console.log(
+        `View account: ${getExplorerUrl(accountResult.data?.pubkey || "", "address")}`,
+      );
+      console.log(`Created at: ${accountResult.data?.createdAt}`);
+    });
+
+    it("should fail to create account without proper permissions", async () => {
+      // Create an access token without solana:create permission (only read)
+      const expiresAt = new Date(Date.now() + 3600000).toISOString(); // 1 hour from now
+      const accessTokenResult = await createAccessToken({
+        client: vaultClient,
+        request: {
+          auth: { adminKey },
+          options: {
+            policies: [
+              {
+                type: "solana:read",
+                metadataPatterns: [
+                  {
+                    key: "purpose",
+                    rule: { pattern: ".*" },
+                  },
+                ],
+              },
+            ],
+            expiresAt,
+            metadata: {
+              name: "Read-Only Token",
+              description: "Token without create permission",
+            },
+          },
+        },
+      });
+
+      expect(accessTokenResult.success).toBe(true);
+      const accessToken = accessTokenResult.data?.accessToken || "";
+
+      // Attempt to create account should fail
+      const accountResult = await createSolanaAccount({
+        client: vaultClient,
+        request: {
+          auth: { accessToken },
+          options: {
+            metadata: {
+              name: "Should Fail",
+              purpose: "This should not work",
+            },
+          },
+        },
+      });
+
+      expect(accountResult.success).toBe(false);
+      expect(accountResult.error).toBeTruthy();
+      console.log("\n=== Expected Failure (No Create Permission) ===");
+      console.log(`Error: ${accountResult.error}`);
     });
   });
 
