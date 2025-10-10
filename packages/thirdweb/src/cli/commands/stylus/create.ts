@@ -58,6 +58,8 @@ export async function createStylusProject() {
       { title: "Airdrop ERC20", value: "airdrop20" },
       { title: "Airdrop ERC721", value: "airdrop721" },
       { title: "Airdrop ERC1155", value: "airdrop1155" },
+      { title: "ZK ERC721", value: "zk-erc721" },
+      { title: "ZK ERC20", value: "zk-erc20" },
     ],
     message: "Select a template:",
     name: "projectType",
@@ -116,6 +118,18 @@ export async function createStylusProject() {
     spinner.start(
       `Creating new Airdrop ERC1155 Stylus project: ${projectName}...`,
     );
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "zk-erc721") {
+    const repoUrl = "git@github.com:thirdweb-example/stylus-zk-erc721.git";
+    spinner.start(`Creating new ZK ERC721 Stylus project: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "zk-erc20") {
+    const repoUrl = "git@github.com:thirdweb-example/stylus-zk-erc20.git";
+    spinner.start(`Creating new ZK ERC20 Stylus project: ${projectName}...`);
     newProject = spawnSync("git", ["clone", repoUrl, projectName], {
       stdio: "inherit",
     });
