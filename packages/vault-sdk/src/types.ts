@@ -58,7 +58,7 @@ export type UnencryptedErrorResponse = {
 type EncryptedError = {
   code: string;
   message: string;
-  details?: string;
+  details?: string | { reason: string };
 };
 
 type GenericSuccessResponse<Data> = {
@@ -373,7 +373,7 @@ export type PolicyComponent =
       allowlist?: string[]; // Use string for Solana addresses
       metadataPatterns?: MetadataRule[];
       payloadPatterns?: Record<string, Rule[]>;
-      requiredCosigners?: string[]; // Use string for Solana addresses
+      transactionPatterns?: SolanaTransactionPatterns;
     }
   | {
       type: "solana:signMessage";
@@ -385,6 +385,35 @@ export type PolicyComponent =
       type: "accessToken:read";
       metadataPatterns?: MetadataRule[];
       revealSensitive: boolean;
+    };
+
+// Solana transaction patterns
+export type SolanaTransactionPatterns = {
+  programs?: ProgramAccessControl;
+  writableAccounts?: AccountAccessControl;
+  requiredCosigners?: string[];
+  maxInstructions?: number;
+  canPayFees?: boolean;
+};
+
+export type ProgramAccessControl =
+  | {
+      type: "allow";
+      programs: string[];
+    }
+  | {
+      type: "deny";
+      programs: string[];
+    };
+
+export type AccountAccessControl =
+  | {
+      type: "allow";
+      accounts: string[];
+    }
+  | {
+      type: "deny";
+      accounts: string[];
     };
 
 type OwnerType = string; // Define based on your eoa models

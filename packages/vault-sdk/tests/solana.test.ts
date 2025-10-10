@@ -46,56 +46,6 @@ function getExplorerUrl(path: string, type: "address" | "tx" = "tx"): string {
   return `https://explorer.solana.com/${type}/${path}?cluster=custom&customUrl=${encodedRpcUrl}`;
 }
 
-// /**
-//  * Reconstruct a signed transaction from the vault signature
-//  */
-// function reconstructSignedTransaction(
-//   base64Transaction: string,
-//   base58Signature: string,
-// ): Uint8Array {
-//   // Decode the base64 unsigned transaction
-//   const transactionBytes = new Uint8Array(
-//     Buffer.from(base64Transaction, "base64"),
-//   );
-
-//   // Decode the base58 signature
-//   const signatureBytes = bs58.decode(base58Signature);
-
-//   if (signatureBytes.length !== 64) {
-//     throw new Error(
-//       `Invalid signature length: ${signatureBytes.length}, expected 64`,
-//     );
-//   }
-
-//   // Wire format structure:
-//   // [1 byte: signature count][64 bytes per signature][message bytes]
-
-//   // Read the signature count
-//   const signatureCount = transactionBytes[0];
-
-//   // Calculate where the message starts (after all signature slots)
-//   const messageStart = 1 + signatureCount * 64;
-
-//   // Create the signed transaction buffer
-//   const signedTransaction = new Uint8Array(transactionBytes.length);
-
-//   // Copy signature count
-//   signedTransaction[0] = signatureCount;
-
-//   // Copy the signature into the first signature slot
-//   signedTransaction.set(signatureBytes, 1);
-
-//   // Copy any remaining signature slots (should be empty/zeros)
-//   if (signatureCount > 1) {
-//     signedTransaction.set(transactionBytes.slice(1 + 64, messageStart), 1 + 64);
-//   }
-
-//   // Copy the message bytes
-//   signedTransaction.set(transactionBytes.slice(messageStart), messageStart);
-
-//   return signedTransaction;
-// }
-
 /**
  * Send a signed transaction to the Solana network
  */
@@ -359,8 +309,6 @@ describe("Solana Vault Integration Tests", () => {
 
       expect(accountResult.success).toBe(false);
       expect(accountResult.error).toBeTruthy();
-      console.log("\n=== Expected Failure (No Create Permission) ===");
-      console.log(`Error: ${accountResult.error}`);
     });
   });
 
@@ -638,5 +586,1115 @@ describe("Solana Vault Integration Tests", () => {
         console.log(`Transfer ${i + 1}: ${getExplorerUrl(signatures[i])}`);
       }
     }, 60000); // 60 second timeout
+  });
+
+  describe("Access Token - Transaction Pattern Policies", () => {
+    // Helper to create a simple transfer transaction
+    const createTransferTransaction = async (
+      from: string,
+      to: string,
+      amount: bigint,
+    ) => {
+      const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
+      const signer = createNoopSigner(address(from));
+
+      const transferInstruction = getTransferSolInstruction({
+        source: signer,
+        destination: address(to),
+        amount: lamports(amount),
+      });
+
+      const transactionMessage = pipe(
+        createTransactionMessage({ version: 0 }),
+        (tx) => setTransactionMessageFeePayer(address(from), tx),
+        (tx) =>
+          setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+        (tx) => appendTransactionMessageInstruction(transferInstruction, tx),
+      );
+
+      const compiledTransaction = compileTransaction(transactionMessage);
+      return getBase64EncodedWireTransaction(compiledTransaction);
+    };
+
+    describe("Program Access Control", () => {
+      it("should allow transaction with allowed program", async () => {
+        // System program ID (used for transfers)
+        const systemProgramId = "11111111111111111111111111111111";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "allow",
+                      programs: [systemProgramId],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Allow System Program Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction with non-allowed program", async () => {
+        // Only allow a different program (not system program)
+        const fakeProgramId = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "allow",
+                      programs: [fakeProgramId],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Restricted Program Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+
+      it("should allow transaction when program is not in deny list", async () => {
+        // Deny a different program (not system program)
+        const fakeProgramId = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "deny",
+                      programs: [fakeProgramId],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Deny List Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction when program is in deny list", async () => {
+        // Deny system program
+        const systemProgramId = "11111111111111111111111111111111";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "deny",
+                      programs: [systemProgramId],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Deny System Program Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+    });
+
+    describe("Can Pay Fees", () => {
+      it("should allow fee payment when canPayFees is true", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    canPayFees: true,
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Allow Fees Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny fee payment when canPayFees is false", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    canPayFees: false,
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "No Fees Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+
+        expect(
+          typeof signatureResult.error?.details === "object"
+            ? signatureResult.error?.details.reason
+            : "",
+        ).toContain("not authorized to pay transaction fees");
+      });
+
+      it("should allow fee payment by default (no transactionPatterns)", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  // No transactionPatterns means default behavior (allow fees)
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Default Behavior Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+    });
+
+    describe("Max Instructions", () => {
+      it("should allow transaction within instruction limit", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    maxInstructions: 5, // Allow up to 5 instructions
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Max 5 Instructions Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        // Create transaction with 1 instruction
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction exceeding instruction limit", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    maxInstructions: 0, // No instructions allowed
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Zero Instructions Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        // Create transaction with 1 instruction (exceeds limit of 0)
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+    });
+
+    describe("Combined Transaction Patterns", () => {
+      it("should enforce multiple patterns together", async () => {
+        const systemProgramId = "11111111111111111111111111111111";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "allow",
+                      programs: [systemProgramId],
+                    },
+                    maxInstructions: 5,
+                    canPayFees: true,
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Combined Patterns Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should fail if any pattern is violated", async () => {
+        const systemProgramId = "11111111111111111111111111111111";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    programs: {
+                      type: "allow",
+                      programs: [systemProgramId],
+                    },
+                    maxInstructions: 5,
+                    canPayFees: false, // This will cause failure
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Combined Patterns (Violation) Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+    });
+
+    describe("Writable Accounts Access Control", () => {
+      it("should allow transaction with allowed writable account", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    writableAccounts: {
+                      type: "allow",
+                      accounts: [senderPubkey, receiverPubkey],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Allow Writable Accounts Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction with non-allowed writable account", async () => {
+        // Only allow sender to be writable, not receiver
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    writableAccounts: {
+                      type: "allow",
+                      accounts: [senderPubkey], // Only sender, not receiver
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Restricted Writable Accounts Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+
+      it("should allow transaction when writable account is not in deny list", async () => {
+        // Deny a different account (not sender or receiver)
+        const fakeAccount = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    writableAccounts: {
+                      type: "deny",
+                      accounts: [fakeAccount],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Deny List Writable Accounts Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction when writable account is in deny list", async () => {
+        // Deny receiver as writable
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    writableAccounts: {
+                      type: "deny",
+                      accounts: [receiverPubkey],
+                    },
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Deny Receiver Writable Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+    });
+
+    describe("Required Cosigners", () => {
+      it("should allow transaction without cosigners when none required", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    requiredCosigners: [], // No cosigners required
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "No Cosigners Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny transaction when required cosigner is missing", async () => {
+        // Require receiver as cosigner (but it won't be in the transaction)
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    requiredCosigners: [receiverPubkey],
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Required Cosigner Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+
+      it("should deny transaction when multiple required cosigners are missing", async () => {
+        // Require multiple cosigners that won't be in the transaction
+        const fakeCosigner1 = "CosignerAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        const fakeCosigner2 = "CosignerBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  transactionPatterns: {
+                    requiredCosigners: [fakeCosigner1, fakeCosigner2],
+                  },
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Multiple Cosigners Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+
+      it("should allow transaction by default when no cosigners specified", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey],
+                  // No requiredCosigners field means any transaction is allowed
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Default Cosigners Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+    });
+
+    describe("Allowlist", () => {
+      it("should allow signing from account in allowlist", async () => {
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [senderPubkey], // Explicitly allow sender
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Allowlist Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(true);
+        expect(signatureResult.data?.signature).toBeTruthy();
+      });
+
+      it("should deny signing from account not in allowlist", async () => {
+        // Create allowlist with only receiver (not sender)
+        const expiresAt = new Date(Date.now() + 3600000).toISOString();
+        const accessTokenResult = await createAccessToken({
+          client: vaultClient,
+          request: {
+            auth: { adminKey },
+            options: {
+              policies: [
+                {
+                  type: "solana:signTransaction",
+                  allowlist: [receiverPubkey], // Only allow receiver, not sender
+                },
+              ],
+              expiresAt,
+              metadata: {
+                name: "Restricted Allowlist Token",
+              },
+            },
+          },
+        });
+
+        expect(accessTokenResult.success).toBe(true);
+        const accessToken = accessTokenResult.data?.accessToken || "";
+
+        const base64Transaction = await createTransferTransaction(
+          senderPubkey,
+          receiverPubkey,
+          1n,
+        );
+
+        const signatureResult = await signSolanaTransaction({
+          client: vaultClient,
+          request: {
+            auth: { accessToken },
+            options: {
+              transaction: base64Transaction,
+              from: senderPubkey,
+            },
+          },
+        });
+
+        expect(signatureResult.success).toBe(false);
+        expect(signatureResult.error).toBeTruthy();
+      });
+    });
   });
 });
