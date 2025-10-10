@@ -3,57 +3,16 @@ import { x25519 } from "@noble/curves/ed25519";
 import { hkdf } from "@noble/hashes/hkdf";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex, hexToBytes, randomBytes } from "@noble/hashes/utils";
+
+import {
+	address,
+	getBase58Encoder,
+	getTransactionDecoder,
+	getTransactionEncoder,
+} from "@solana/kit";
+
 import type { TypedData } from "abitype";
 import * as jose from "jose";
-
-// Base58 encoding for Solana public keys
-const BASE58_ALPHABET =
-	"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-function base58Encode(bytes: number[] | Uint8Array): string {
-	const byteArray = Array.isArray(bytes) ? new Uint8Array(bytes) : bytes;
-
-	if (byteArray.length === 0) return "";
-
-	// Convert to big integer
-	let num = 0n;
-	for (const byte of byteArray) {
-		num = num * 256n + BigInt(byte);
-	}
-
-	// Convert to base58
-	let result = "";
-	while (num > 0n) {
-		const remainder = Number(num % 58n);
-		result = BASE58_ALPHABET[remainder] + result;
-		num = num / 58n;
-	}
-
-	// Add leading zeros
-	for (const byte of byteArray) {
-		if (byte === 0) {
-			result = BASE58_ALPHABET[0] + result;
-		} else {
-			break;
-		}
-	}
-
-	return result;
-}
-
-// Helper function to process Solana account data
-function _processSolanaAccountData(accountData: any): any {
-	if (!accountData) return accountData;
-
-	// If we have a pubkey byte array, convert it to base58 string
-	if (accountData.pubkey && Array.isArray(accountData.pubkey)) {
-		accountData.publicKey = base58Encode(accountData.pubkey);
-		accountData.address = accountData.publicKey; // Use the same value for address
-	}
-
-	return accountData;
-}
-
 import type {
 	CheckedSignTypedDataPayload,
 	CreateAccessTokenPayload,
@@ -538,6 +497,42 @@ export function signSolanaTransaction({
 			...options,
 		},
 	});
+}
+
+/**
+ * Reconstruct a signed solana transaction from the vault signature using @solana/kit
+ */
+export function reconstructSolanaSignedTransaction(
+	base64Transaction: string,
+	base58Signature: string,
+	signerPubkey: string,
+): Uint8Array {
+	// Decode the base64 transaction into bytes
+	const base64TransactionBytes = new Uint8Array(
+		Buffer.from(base64Transaction, "base64"),
+	);
+	// Decode the transaction to get its structure
+	const transactionDecoder = getTransactionDecoder();
+	const transaction = transactionDecoder.decode(base64TransactionBytes);
+
+	// Decode the base58 signature to bytes
+	const base58Encoder = getBase58Encoder();
+	const signatureBytes = base58Encoder.encode(base58Signature);
+
+	// Add the signature to the transaction
+	const signedTransaction = {
+		...transaction,
+		signatures: {
+			...transaction.signatures,
+			[address(signerPubkey)]: signatureBytes,
+		},
+	};
+
+	// Re-encode the signed transaction
+	const transactionEncoder = getTransactionEncoder();
+	const signedTransactionBytes = transactionEncoder.encode(signedTransaction);
+
+	return new Uint8Array(signedTransactionBytes);
 }
 
 export function signSolanaMessage({
