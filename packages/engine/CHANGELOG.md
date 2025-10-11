@@ -1,5 +1,11 @@
 # @thirdweb-dev/engine
 
+## 3.3.0
+
+### Minor Changes
+
+- [#8238](https://github.com/thirdweb-dev/js/pull/8238) [`9545b43`](https://github.com/thirdweb-dev/js/commit/9545b4367598408dbb88c63d8a8fe21305f870b5) Thanks [@d4mr](https://github.com/d4mr)! - Add Solana endpoints
+
 ## 3.2.2
 
 ### Patch Changes
