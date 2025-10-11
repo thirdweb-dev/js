@@ -560,6 +560,98 @@ export async function createWalletAccessToken(props: {
             ],
             type: "eoa:create",
           },
+          {
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:read",
+          },
+          {
+            requiredMetadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:create",
+          },
+          {
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:signTransaction",
+          },
+          {
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:signMessage",
+          },
         ],
       },
     },
@@ -632,6 +724,52 @@ async function createManagementAccessToken(props: {
               },
             ],
             type: "eoa:create",
+          },
+          {
+            metadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:read",
+          },
+          {
+            requiredMetadataPatterns: [
+              {
+                key: "projectId",
+                rule: {
+                  pattern: props.project.id,
+                },
+              },
+              {
+                key: "teamId",
+                rule: {
+                  pattern: props.project.teamId,
+                },
+              },
+              {
+                key: "type",
+                rule: {
+                  pattern: "server-wallet",
+                },
+              },
+            ],
+            type: "solana:create",
           },
           {
             metadataPatterns: [
