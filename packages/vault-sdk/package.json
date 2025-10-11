@@ -59,7 +59,7 @@
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
     "build:types": "tsc --project ./tsconfig.build.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
     "clean": "rimraf dist",
-    "test": "vitest",
+    "test:solana": "vitest ./tests/solana.test.ts",
     "dev": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
     "fix": "biome check ./src --fix",
     "format": "biome format ./src --write",
