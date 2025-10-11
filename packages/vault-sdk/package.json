@@ -9,10 +9,10 @@
     "@noble/hashes": "1.7.2",
     "@solana/addresses": "^3.0.0",
     "@solana/keys": "^3.0.0",
+    "@solana/kit": "^4.0.0",
     "@solana/rpc": "^3.0.0",
     "@solana/transactions": "^3.0.0",
     "abitype": "1.0.8",
-    "@solana/kit": "^4.0.0",
     "jose": "6.0.11"
   },
   "devDependencies": {

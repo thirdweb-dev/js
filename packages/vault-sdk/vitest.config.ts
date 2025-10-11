@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -10,5 +11,7 @@ export default defineConfig({
     sequence: {
       shuffle: false, // Run tests in order
     },
+    // load .env.test
+    setupFiles: [join(__dirname, "./tests/env-setup.ts")],
   },
 });
