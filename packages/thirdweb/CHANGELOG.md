@@ -1,5 +1,12 @@
 # thirdweb
 
+## 5.108.13
+
+### Patch Changes
+
+- Updated dependencies [[`9545b43`](https://github.com/thirdweb-dev/js/commit/9545b4367598408dbb88c63d8a8fe21305f870b5)]:
+  - @thirdweb-dev/engine@3.3.0
+
 ## 5.108.12
 
 ### Patch Changes
