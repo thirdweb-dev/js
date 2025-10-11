@@ -58,7 +58,7 @@ export type UnencryptedErrorResponse = {
 type EncryptedError = {
   code: string;
   message: string;
-  details?: string;
+  details?: string | { reason: string };
 };
 
 type GenericSuccessResponse<Data> = {
@@ -145,6 +145,50 @@ type SignMessageOptions = {
   message: string;
   from: string;
   chainId?: number;
+  format?: "text" | "hex";
+};
+
+// ========== Solana Options Types ==========
+
+// Solana message type that's compatible with both Kit and our Rust serialization
+export type SolanaVersionedMessage = {
+  version: "legacy" | "v0";
+  header: {
+    numRequiredSignatures: number;
+    numReadonlySignedAccounts: number;
+    numReadonlyUnsignedAccounts: number;
+  };
+  staticAccountKeys: string[]; // Use string instead of SolanaAddress for simplicity
+  recentBlockhash: string;
+  instructions: Array<{
+    programIdIndex: number;
+    accountKeyIndexes: number[];
+    data: Uint8Array;
+  }>;
+  addressTableLookups?: Array<{
+    accountKey: string; // Use string instead of SolanaAddress
+    writableIndexes: number[];
+    readonlyIndexes: number[];
+  }>;
+};
+
+type CreateSolanaAccountOptions = {
+  metadata: Record<string, MetadataValue>;
+};
+
+type GetSolanaAccountsOptions = {
+  page?: number;
+  pageSize?: number;
+};
+
+type SignSolanaTransactionOptions = {
+  transaction: string; // Base64 encoded VersionedTransaction
+  from: string; // Use string for Solana public key
+};
+
+type SignSolanaMessageOptions = {
+  message: string;
+  from: string; // Use string for Solana public key
   format?: "text" | "hex";
 };
 
@@ -316,9 +360,60 @@ export type PolicyComponent =
       };
     }
   | {
+      type: "solana:create";
+      requiredMetadataPatterns?: MetadataRule[];
+      allowedMetadataPatterns?: MetadataRule[];
+    }
+  | {
+      type: "solana:read";
+      metadataPatterns?: MetadataRule[];
+    }
+  | {
+      type: "solana:signTransaction";
+      allowlist?: string[]; // Use string for Solana addresses
+      metadataPatterns?: MetadataRule[];
+      payloadPatterns?: Record<string, Rule[]>;
+      transactionPatterns?: SolanaTransactionPatterns;
+    }
+  | {
+      type: "solana:signMessage";
+      allowlist?: string[]; // Use string for Solana addresses
+      metadataPatterns?: MetadataRule[];
+      messagePattern?: string;
+    }
+  | {
       type: "accessToken:read";
       metadataPatterns?: MetadataRule[];
       revealSensitive: boolean;
+    };
+
+// Solana transaction patterns
+export type SolanaTransactionPatterns = {
+  programs?: ProgramAccessControl;
+  writableAccounts?: AccountAccessControl;
+  requiredCosigners?: string[];
+  maxInstructions?: number;
+  canPayFees?: boolean;
+};
+
+export type ProgramAccessControl =
+  | {
+      type: "allow";
+      programs: string[];
+    }
+  | {
+      type: "deny";
+      programs: string[];
+    };
+
+export type AccountAccessControl =
+  | {
+      type: "allow";
+      accounts: string[];
+    }
+  | {
+      type: "deny";
+      accounts: string[];
     };
 
 type OwnerType = string; // Define based on your eoa models
@@ -397,6 +492,30 @@ type SignTransactionData = {
 
 type SignMessageData = {
   signature: string;
+};
+
+// ========== Solana Data Types ==========
+type CreateSolanaAccountData = {
+  pubkey: string;
+  metadata: Record<string, MetadataValue>;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type GetSolanaAccountsData = {
+  accounts: CreateSolanaAccountData[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+};
+
+type SignSolanaTransactionData = {
+  signature: string; // Base58 encoded signature
+  signerPubkey: string; // Use string for Solana public key
+};
+
+type SignSolanaMessageData = {
+  signature: string; // Base58 encoded signature
 };
 
 type SignTypedDataData = {
@@ -553,6 +672,35 @@ export type RevokeAccessTokenPayload = GenericPayload<{
   data: AccessTokenData;
 }>;
 
+// ========== Solana Payload Types ==========
+export type CreateSolanaAccountPayload = GenericPayload<{
+  operation: "solana:create";
+  auth: Auth;
+  options: CreateSolanaAccountOptions;
+  data: CreateSolanaAccountData;
+}>;
+
+export type ListSolanaAccountsPayload = GenericPayload<{
+  operation: "solana:list";
+  auth: Auth;
+  options: GetSolanaAccountsOptions;
+  data: GetSolanaAccountsData;
+}>;
+
+export type SignSolanaTransactionPayload = GenericPayload<{
+  operation: "solana:signTransaction";
+  auth: Auth;
+  options: SignSolanaTransactionOptions;
+  data: SignSolanaTransactionData;
+}>;
+
+export type SignSolanaMessagePayload = GenericPayload<{
+  operation: "solana:signMessage";
+  auth: Auth;
+  options: SignSolanaMessageOptions;
+  data: SignSolanaMessageData;
+}>;
+
 // ========== Union of all payloads ==========
 export type Payload =
   | PingPayload
@@ -568,4 +716,8 @@ export type Payload =
   | RevokeAccessTokenPayload
   | SignAuthorizationPayload
   | SignStructuredMessagePayload
-  | ListAccessTokensPayload;
+  | ListAccessTokensPayload
+  | CreateSolanaAccountPayload
+  | ListSolanaAccountsPayload
+  | SignSolanaTransactionPayload
+  | SignSolanaMessagePayload;
