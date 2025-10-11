@@ -1,4 +1,6 @@
-import { join } from "node:path";
-import { cwd, loadEnvFile } from "node:process";
+import { dirname, join } from "node:path";
+import { loadEnvFile } from "node:process";
+import { fileURLToPath } from "node:url";
 
-loadEnvFile(join(cwd(), "tests", ".env"));
+const __dirname = dirname(fileURLToPath(import.meta.url));
+loadEnvFile(join(__dirname, ".env"));
