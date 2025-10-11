@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { getUnixTime, subDays } from "date-fns";
 import { isProd } from "@/constants/env-utils";
 import { NEXT_PUBLIC_DASHBOARD_CLIENT_ID } from "@/constants/public-envs";
 
@@ -35,6 +36,11 @@ export function useTokenTransfers(params: {
       url.searchParams.set("page", params.page.toString());
       url.searchParams.set("limit", params.limit.toString());
       url.searchParams.set("clientId", NEXT_PUBLIC_DASHBOARD_CLIENT_ID);
+      const THIRTY_DAYS_AGO = subDays(new Date(), 30);
+      url.searchParams.set(
+        "block_timestamp_from",
+        getUnixTime(THIRTY_DAYS_AGO).toString(),
+      );
 
       const res = await fetch(url);
       if (!res.ok) {
@@ -46,7 +52,12 @@ export function useTokenTransfers(params: {
       return data;
     },
     queryKey: ["token-transfers", params],
-    refetchInterval: 5000,
+    refetchInterval: (data) => {
+      if (data?.state.error) {
+        return false;
+      }
+      return 5000;
+    },
     refetchOnWindowFocus: false,
     retry: false,
     retryOnMount: false,
