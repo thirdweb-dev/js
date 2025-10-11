@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 0.1.0
+
+### Minor Changes
+
+- [#8168](https://github.com/thirdweb-dev/js/pull/8168) [`35c7d21`](https://github.com/thirdweb-dev/js/commit/35c7d21e368f9ea5636c8663ba31b7d473b5b343) Thanks [@d4mr](https://github.com/d4mr)! - Added Vault operations support for Solana.
+
 ## 0.0.3
 
 ### Patch Changes
