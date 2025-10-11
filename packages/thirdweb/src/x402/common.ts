@@ -8,6 +8,7 @@ import { getContract } from "../contract/contract.js";
 import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
 import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 import { getAddress } from "../utils/address.js";
+import { toUnits } from "../utils/units.js";
 import { decodePayment } from "./encode.js";
 import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import {
@@ -16,6 +17,7 @@ import {
   type RequestedPaymentRequirements,
 } from "./schemas.js";
 import {
+  type DefaultAsset,
   type ERC20TokenAmount,
   type PaymentArgs,
   type PaymentRequiredResult,
@@ -42,9 +44,9 @@ export async function decodePaymentRequest(
     price,
     network,
     facilitator,
+    payTo,
     resourceUrl,
     routeConfig = {},
-    payTo,
     method,
     paymentData,
   } = args;
@@ -103,10 +105,9 @@ export async function decodePaymentRequest(
     resource: resourceUrl,
     description: description ?? "",
     mimeType: mimeType ?? "application/json",
-    payTo: getAddress(payTo),
+    payTo: getAddress(facilitator.address), // always pay to the facilitator address first
     maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
     asset: getAddress(asset.address),
-    // TODO: Rename outputSchema to requestStructure
     outputSchema: {
       input: {
         type: "http",
@@ -117,7 +118,7 @@ export async function decodePaymentRequest(
       output: outputSchema,
     },
     extra: {
-      facilitatorAddress: facilitator.address,
+      recipientAddress: payTo, // input payTo is the final recipient address
       ...((asset as ERC20TokenAmount["asset"]).eip712 ?? {}),
     },
   });
@@ -137,7 +138,7 @@ export async function decodePaymentRequest(
     };
   }
 
-  // Verify payment
+  // decode b64 payment
   let decodedPayment: RequestedPaymentPayload;
   try {
     decodedPayment = decodePayment(paymentData);
@@ -199,12 +200,11 @@ async function processPriceToAtomicAmount(
   chainId: number,
   facilitator: ThirdwebX402Facilitator,
 ): Promise<
-  | { maxAmountRequired: string; asset: ERC20TokenAmount["asset"] }
-  | { error: string }
+  { maxAmountRequired: string; asset: DefaultAsset } | { error: string }
 > {
   // Handle USDC amount (string) or token amount (ERC20TokenAmount)
   let maxAmountRequired: string;
-  let asset: ERC20TokenAmount["asset"];
+  let asset: DefaultAsset;
 
   if (typeof price === "string" || typeof price === "number") {
     // USDC amount in dollars
@@ -222,11 +222,32 @@ async function processPriceToAtomicAmount(
       };
     }
     asset = defaultAsset;
-    maxAmountRequired = (parsedUsdAmount * 10 ** asset.decimals).toString();
+    maxAmountRequired = toUnits(
+      parsedUsdAmount.toString(),
+      defaultAsset.decimals,
+    ).toString();
   } else {
     // Token amount in atomic units
     maxAmountRequired = price.amount;
-    asset = price.asset;
+    const tokenExtras = await getOrDetectTokenExtras({
+      facilitator,
+      partialAsset: price.asset,
+      chainId,
+    });
+    if (!tokenExtras) {
+      return {
+        error: `Unable to find token information for ${price.asset.address} on chain ${chainId}. Please specify the asset decimals and eip712 information in the asset options.`,
+      };
+    }
+    asset = {
+      address: price.asset.address,
+      decimals: tokenExtras.decimals,
+      eip712: {
+        name: tokenExtras.name,
+        version: tokenExtras.version,
+        primaryType: tokenExtras.primaryType,
+      },
+    };
   }
 
   return {
@@ -238,13 +259,12 @@ async function processPriceToAtomicAmount(
 async function getDefaultAsset(
   chainId: number,
   facilitator: ThirdwebX402Facilitator,
-): Promise<ERC20TokenAmount["asset"] | undefined> {
+): Promise<DefaultAsset | undefined> {
   const supportedAssets = await facilitator.supported();
   const matchingAsset = supportedAssets.kinds.find(
     (supported) => supported.network === `eip155:${chainId}`,
   );
-  const assetConfig = matchingAsset?.extra
-    ?.defaultAsset as ERC20TokenAmount["asset"];
+  const assetConfig = matchingAsset?.extra?.defaultAsset as DefaultAsset;
   return assetConfig;
 }
 
@@ -286,4 +306,62 @@ export async function getSupportedSignatureType(args: {
     return "Permit";
   }
   return undefined;
+}
+
+async function getOrDetectTokenExtras(args: {
+  facilitator: ThirdwebX402Facilitator;
+  partialAsset: ERC20TokenAmount["asset"];
+  chainId: number;
+}): Promise<
+  | {
+      name: string;
+      version: string;
+      decimals: number;
+      primaryType: SupportedSignatureType;
+    }
+  | undefined
+> {
+  const { facilitator, partialAsset, chainId } = args;
+  if (
+    partialAsset.eip712?.name &&
+    partialAsset.eip712?.version &&
+    partialAsset.decimals !== undefined
+  ) {
+    return {
+      name: partialAsset.eip712.name,
+      version: partialAsset.eip712.version,
+      decimals: partialAsset.decimals,
+      primaryType: partialAsset.eip712.primaryType,
+    };
+  }
+  // read from facilitator
+  const response = await facilitator
+    .supported({
+      chainId,
+      tokenAddress: partialAsset.address,
+    })
+    .catch(() => {
+      return {
+        kinds: [],
+      };
+    });
+
+  const exactScheme = response.kinds?.find((kind) => kind.scheme === "exact");
+  if (!exactScheme) {
+    return undefined;
+  }
+  const supportedAsset = exactScheme.extra?.supportedAssets?.find(
+    (asset) =>
+      asset.address.toLowerCase() === partialAsset.address.toLowerCase(),
+  );
+  if (!supportedAsset) {
+    return undefined;
+  }
+
+  return {
+    name: supportedAsset.eip712.name,
+    version: supportedAsset.eip712.version,
+    decimals: supportedAsset.decimals,
+    primaryType: supportedAsset.eip712.primaryType as SupportedSignatureType,
+  };
 }

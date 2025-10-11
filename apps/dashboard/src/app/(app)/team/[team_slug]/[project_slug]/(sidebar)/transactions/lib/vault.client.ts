@@ -3,14 +3,17 @@
 import { encrypt } from "@thirdweb-dev/service-utils";
 import {
   createAccessToken,
+  createEoa,
   createServiceAccount,
   createVaultClient,
   rotateServiceAccount,
   type VaultClient,
 } from "@thirdweb-dev/vault-sdk";
+import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/project/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { updateProjectClient } from "@/hooks/useApi";
+import { getProjectWalletLabel } from "@/lib/project-wallet";
 
 const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
   "Access Token for All Server Wallets";
@@ -126,6 +129,92 @@ export async function createVaultAccountAndAccessToken(props: {
   }
 }
 
+export async function createProjectServerWallet(props: {
+  project: Project;
+  managementAccessToken: string;
+  label?: string;
+  setAsProjectWallet?: boolean;
+}) {
+  const vaultClient = await initVaultClient();
+
+  const walletLabel = props.label?.trim()
+    ? props.label.trim()
+    : getProjectWalletLabel(props.project.name);
+
+  const eoa = await createEoa({
+    client: vaultClient,
+    request: {
+      auth: {
+        accessToken: props.managementAccessToken,
+      },
+      options: {
+        metadata: {
+          label: walletLabel,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+          type: "server-wallet",
+        },
+      },
+    },
+  });
+
+  if (!eoa.success) {
+    throw new Error(eoa.error?.message || "Failed to create server wallet");
+  }
+
+  engineCloudProxy({
+    body: JSON.stringify({
+      signerAddress: eoa.data.address,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      "x-client-id": props.project.publishableKey,
+      "x-team-id": props.project.teamId,
+    },
+    method: "POST",
+    pathname: "/cache/smart-account",
+  }).catch((err) => {
+    console.warn("failed to cache server wallet", err);
+  });
+
+  if (props.setAsProjectWallet) {
+    await updateDefaultProjectWallet({
+      project: props.project,
+      projectWalletAddress: eoa.data.address,
+    });
+  }
+
+  return eoa.data;
+}
+
+export async function updateDefaultProjectWallet(props: {
+  project: Project;
+  projectWalletAddress: string;
+}) {
+  const services = props.project.services.filter(
+    (service) => service.name !== "engineCloud",
+  );
+  const engineCloudService = props.project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+  if (engineCloudService) {
+    const engineCloudServiceWithProjectWallet = {
+      ...engineCloudService,
+      projectWalletAddress: props.projectWalletAddress,
+    };
+
+    await updateProjectClient(
+      {
+        projectId: props.project.id,
+        teamId: props.project.teamId,
+      },
+      {
+        services: [...services, engineCloudServiceWithProjectWallet],
+      },
+    );
+  }
+}
+
 async function createAndEncryptVaultAccessTokens(props: {
   project: Project;
   vaultClient: VaultClient;
@@ -157,6 +246,13 @@ async function createAndEncryptVaultAccessTokens(props: {
   const managementToken = managementTokenResult.data;
   const walletToken = walletTokenResult.data;
 
+  // create a default project server wallet
+  const defaultProjectServerWallet = await createProjectServerWallet({
+    project,
+    managementAccessToken: managementToken.accessToken,
+    label: getProjectWalletLabel(project.name),
+  });
+
   if (projectSecretKey) {
     // verify that the project secret key is valid
     const projectSecretKeyHash = await hashSecretKey(projectSecretKey);
@@ -182,7 +278,9 @@ async function createAndEncryptVaultAccessTokens(props: {
       },
       {
         services: [
-          ...props.project.services,
+          ...props.project.services.filter(
+            (service) => service.name !== "engineCloud",
+          ),
           {
             name: "engineCloud",
             actions: [],
@@ -191,6 +289,7 @@ async function createAndEncryptVaultAccessTokens(props: {
             encryptedAdminKey,
             encryptedWalletAccessToken,
             rotationCode: rotationCode,
+            projectWalletAddress: defaultProjectServerWallet.address,
           },
         ],
       },
@@ -204,7 +303,9 @@ async function createAndEncryptVaultAccessTokens(props: {
       },
       {
         services: [
-          ...props.project.services,
+          ...props.project.services.filter(
+            (service) => service.name !== "engineCloud",
+          ),
           {
             name: "engineCloud",
             actions: [],
@@ -213,6 +314,7 @@ async function createAndEncryptVaultAccessTokens(props: {
             encryptedAdminKey: null,
             encryptedWalletAccessToken: null,
             rotationCode: rotationCode,
+            projectWalletAddress: defaultProjectServerWallet.address,
           },
         ],
       },

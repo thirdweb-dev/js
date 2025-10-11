@@ -61,12 +61,35 @@ export const sidebar: SideBar = {
           href: `${paymentsSlug}/custom-data`,
           name: "Custom Data",
         },
-        {
-          href: `${paymentsSlug}/x402`,
-          name: "x402",
-        },
       ],
       name: "Guides",
+    },
+    { separator: true },
+    {
+      isCollapsible: false,
+      links: [
+        {
+          href: `${paymentsSlug}/x402`,
+          name: "Get Started",
+        },
+        {
+          href: `${paymentsSlug}/x402/client`,
+          name: "Client Side",
+        },
+        {
+          href: `${paymentsSlug}/x402/server`,
+          name: "Server Side",
+        },
+        {
+          href: `${paymentsSlug}/x402/agents`,
+          name: "Agents",
+        },
+        {
+          href: `${paymentsSlug}/x402/facilitator`,
+          name: "Facilitator",
+        },
+      ],
+      name: "x402",
     },
     { separator: true },
     {

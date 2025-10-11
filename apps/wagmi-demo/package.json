@@ -1,0 +1,33 @@
+{
+  "name": "wagmi-inapp",
+  "private": true,
+  "version": "0.0.7",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "fix": "biome check ./src --fix",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.81.5",
+    "@thirdweb-dev/wagmi-adapter": "workspace:*",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "thirdweb": "workspace:*",
+    "viem": "2.37.9",
+    "wagmi": "2.17.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "5.0.4",
+    "@wagmi/cli": "latest",
+    "buffer": "^6.0.3",
+    "typescript": "5.8.3",
+    "vite": "7.1.7"
+  }
+}

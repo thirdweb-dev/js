@@ -76,7 +76,11 @@ export async function ERC20PublicPage(props: {
 
   return (
     <div className="flex grow flex-col">
-      <AssetPageView assetType="coin" chainId={props.chainMetadata.chainId} />
+      <AssetPageView
+        assetType="coin"
+        chainId={props.chainMetadata.chainId}
+        is_testnet={props.chainMetadata.testnet}
+      />
       <PageHeader containerClassName="max-w-7xl" />
 
       <div className="border-b border-dashed">
@@ -199,6 +203,7 @@ function BuyEmbed(props: {
         tokenAddress={props.clientContract.address}
         buyAmount={undefined}
         pageType="asset"
+        isTestnet={props.chainMetadata.testnet}
       />
     );
   }

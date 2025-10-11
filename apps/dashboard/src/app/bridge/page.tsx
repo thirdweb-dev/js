@@ -14,7 +14,7 @@ import { bridgeAppThirdwebClient } from "./constants";
 
 const title = "thirdweb Bridge: Buy, Bridge & Swap Crypto on 85+ Chains";
 const description =
-  "Bridge, swap, and on-ramp across 9M+ token routes on 85+ chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing and near-instant fast finality";
+  "Bridge and swap 4500+ tokens across 85+ chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing with near-instant finality";
 
 export const metadata: Metadata = {
   description,
@@ -73,7 +73,7 @@ export default async function BridgePage({
 
             <div className="flex-wrap flex gap-3 items-center justify-center">
               <DataPill>85+ Chains Supported</DataPill>
-              <DataPill>3200+ Tokens Supported</DataPill>
+              <DataPill>4500+ Tokens Supported</DataPill>
               <DataPill>9+ Million Routes Available</DataPill>
             </div>
           </div>
@@ -105,8 +105,7 @@ export default async function BridgePage({
             href="https://portal.thirdweb.com/bridge"
             linkType="integrate-bridge"
           >
-            Integrate Bridge in your apps in minutes, and start generating
-            revenue
+            Accept Payments in Any Token Right Inside Your App
           </PillLink>
 
           <PillLink

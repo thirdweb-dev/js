@@ -20,19 +20,31 @@ export function NftGalleryLoading() {
 export default async function NftGallery({
   owner,
   chainId,
+  allowedChainIds,
 }: {
   owner: Address;
   chainId?: number;
   page?: number;
+  allowedChainIds?: number[];
 }) {
+  const resolvedChainId =
+    chainId && allowedChainIds && !allowedChainIds.includes(chainId)
+      ? undefined
+      : chainId;
+
+  const chainIdsToQuery =
+    resolvedChainId !== undefined
+      ? [Number(resolvedChainId)]
+      : (allowedChainIds ?? SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS);
+
   const erc721TokensResult = await getErc721Tokens({
-    chainIds: chainId ? [Number(chainId)] : SIMPLEHASH_NFT_SUPPORTED_CHAIN_IDS,
+    chainIds: chainIdsToQuery,
     limit: 36,
     owner,
   });
 
   if (erc721TokensResult.tokens.length === 0) {
-    return <NftGalleryEmpty chainId={chainId} />;
+    return <NftGalleryEmpty chainId={resolvedChainId} />;
   }
 
   return (

@@ -17,6 +17,7 @@ const defaultOptions: BridgeComponentsPlaygroundOptions = {
     paymentMethods: ["crypto", "card"],
     sellerAddress: "0x0000000000000000000000000000000000000000",
     title: "",
+    receiverAddress: undefined,
     transactionData: "",
     currency: "USD",
     showThirdwebBranding: true,

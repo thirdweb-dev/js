@@ -3,7 +3,6 @@ import {
   CustomThemeProvider,
   useCustomTheme,
 } from "../react/core/design-system/CustomThemeProvider.js";
-import type { Theme } from "../react/core/design-system/index.js";
 import { radius } from "../react/native/design-system/index.js";
 
 const clientId = process.env.STORYBOOK_CLIENT_ID;
@@ -16,15 +15,23 @@ export const storyClient = createThirdwebClient({
   clientId: clientId,
 });
 
-export const ModalThemeWrapper = (props: {
-  children: React.ReactNode;
-  theme: "light" | "dark" | Theme;
-}) => {
-  const { theme } = props;
+export const ModalThemeWrapper = (props: { children: React.ReactNode }) => {
   return (
-    <CustomThemeProvider theme={theme}>
-      <ModalWrapper>{props.children}</ModalWrapper>
-    </CustomThemeProvider>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+      }}
+    >
+      <CustomThemeProvider theme={"dark"}>
+        <ModalWrapper>{props.children}</ModalWrapper>
+      </CustomThemeProvider>
+
+      <CustomThemeProvider theme={"light"}>
+        <ModalWrapper>{props.children}</ModalWrapper>
+      </CustomThemeProvider>
+    </div>
   );
 };
 

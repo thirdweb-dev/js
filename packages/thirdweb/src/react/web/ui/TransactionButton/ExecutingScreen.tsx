@@ -20,7 +20,7 @@ export function ExecutingTxScreen(props: {
   tx: PreparedTransaction;
   closeModal: () => void;
   onTxSent: (data: WaitForReceiptOptions) => void;
-  onBack?: () => void;
+  onBack: (() => void) | undefined;
   windowAdapter: WindowAdapter;
 }) {
   const sendTxCore = useSendTransaction({

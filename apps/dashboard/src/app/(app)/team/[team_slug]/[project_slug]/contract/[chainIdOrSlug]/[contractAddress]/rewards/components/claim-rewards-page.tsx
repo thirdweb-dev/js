@@ -29,11 +29,13 @@ export function ClaimRewardsPage(props: {
       address: string;
       amount: bigint;
       symbol: string;
+      decimals: number;
     };
     token1: {
       address: string;
       amount: bigint;
       symbol: string;
+      decimals: number;
     };
   };
   chainSlug: string;
@@ -98,11 +100,13 @@ export function ClaimRewardsPageUI(props: {
       address: string;
       amount: bigint;
       symbol: string;
+      decimals: number;
     };
     token1: {
       address: string;
       amount: bigint;
       symbol: string;
+      decimals: number;
     };
   };
   recipient: string;
@@ -275,6 +279,7 @@ function TokenReward(props: {
     address: string;
     amount: bigint;
     symbol: string;
+    decimals: number;
   };
   client: ThirdwebClient;
   chain: Chain;
@@ -303,7 +308,8 @@ function TokenReward(props: {
       </div>
       <div className="space-y-0.5">
         <p className="font-bold text-sm">
-          {toTokens(props.token.amount, 18)} {props.token.symbol}
+          {toTokens(props.token.amount, props.token.decimals)}{" "}
+          {props.token.symbol}
         </p>
         <Link
           target="_blank"

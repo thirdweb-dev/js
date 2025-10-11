@@ -1,6 +1,16 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
+
 # Session Keys Guide
 
-Session keys enable secure transaction execution on behalf of smart accounts without requiring direct access to the main account's private key. This guide will walk you through creating and using session keys with the thirdweb TypeScript SDK.
+Session keys enable secure transaction execution on behalf of accounts without requiring direct access to the main account's private key. This guide covers session keys for both ERC-4337 smart accounts and ERC-7702 smart EOAs (Externally Owned Accounts).
+
+<Tabs defaultValue="erc4337">
+<TabsList>
+<TabsTrigger value="erc4337">ERC-4337 Smart Accounts</TabsTrigger>
+<TabsTrigger value="erc7702">ERC-7702 Smart EOAs</TabsTrigger>
+</TabsList>
+
+<TabsContent value="erc4337">
 
 ## Prerequisites
 
@@ -323,8 +333,409 @@ try {
 }
 ```
 
+</TabsContent>
+
+<TabsContent value="erc7702">
+
+## Prerequisites
+
+Before you begin, ensure you have:
+- A thirdweb client configured
+- An in-app wallet with ERC-7702 support
+- A session key account address (can be generated or an existing wallet)
+
+## Setup
+
+First, let's set up the necessary imports and configuration:
+
+```typescript
+import { 
+  createThirdwebClient,
+  getContract,
+  sendTransaction,
+  prepareTransaction
+} from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { inAppWallet, createSessionKey } from "thirdweb/wallets/in-app";
+
+// Configure your client
+const client = createThirdwebClient({
+  clientId: "your-client-id",
+  secretKey: "your-secret-key" // Only use in server environments
+});
+
+// Your session key account address
+const sessionKeyAccountAddress = "0x..."; // Replace with your session key address
+```
+
+## Step 1: Create ERC-7702 Smart EOA
+
+Create an in-app wallet configured with ERC-7702 execution mode:
+
+```typescript
+const wallet = inAppWallet({
+  executionMode: {
+    mode: "EIP7702",
+    sponsorGas: true, // Enable gas sponsorship
+  },
+});
+
+// Connect the wallet (user authentication)
+const account = await wallet.connect({
+  chain: sepolia,
+  client: client,
+  strategy: "google", // or "email", "guest", etc.
+});
+
+console.log("Smart EOA address:", account.address);
+```
+
+### Execution Modes
+
+The `executionMode` option allows you to configure the wallet behavior:
+
+- `mode`: Set to `"EIP7702"` for ERC-7702 smart EOA functionality
+- `sponsorGas`: Enable gas sponsorship for gasless transactions
+
+## Step 2: Deploy/Upgrade the Account
+
+Send a transaction to trigger the account deployment or upgrade to ERC-7702:
+
+```typescript
+await sendTransaction({
+  account: account,
+  transaction: prepareTransaction({
+    chain: sepolia,
+    client: client,
+    to: account.address,
+    value: 0n, // Self-transfer to trigger deployment
+  }),
+});
+
+console.log("Smart EOA deployed/upgraded successfully");
+```
+
+## Step 3: Get Account Contract
+
+Create a contract instance for the deployed smart EOA:
+
+```typescript
+const accountContract = getContract({
+  address: account.address,
+  chain: sepolia,
+  client: client,
+  // ABI will be automatically resolved since the contract is deployed
+});
+```
+
+## Step 4: Create Session Key with Full Permissions
+
+Add a session key with full execution permissions:
+
+```typescript
+const tx = await sendTransaction({
+  account: account,
+  transaction: createSessionKey({
+    account: account,
+    contract: accountContract,
+    sessionKeyAddress: sessionKeyAccountAddress,
+    durationInSeconds: 86400, // 1 day
+    grantFullPermissions: true, // Allow unrestricted access
+  }),
+});
+
+console.log("Session key created:", tx.transactionHash);
+```
+
+### Session Key Options
+
+- `account`: The admin account that will create the session key
+- `contract`: The smart EOA contract instance
+- `sessionKeyAddress`: The address that will be granted session key permissions
+- `durationInSeconds`: How long the session key should be valid (in seconds)
+- `grantFullPermissions`: If `true`, grants unrestricted access. If `false`, you must specify policies.
+
+## Step 5 (Advanced): Create Session Key with Granular Permissions
+
+For more fine-grained control, you can specify call and transfer policies:
+
+```typescript
+import { Condition, LimitType } from "thirdweb/wallets/in-app";
+
+const tx = await sendTransaction({
+  account: account,
+  transaction: createSessionKey({
+    account: account,
+    contract: accountContract,
+    sessionKeyAddress: sessionKeyAccountAddress,
+    durationInSeconds: 86400, // 1 day
+    grantFullPermissions: false, // Use granular permissions
+    callPolicies: [
+      {
+        target: "0x123...", // Target contract address
+        selector: "0xa9059cbb", // Function selector (e.g., ERC20 transfer)
+        maxValuePerUse: 0n, // Max ETH value per call
+        valueLimit: {
+          limitType: LimitType.Lifetime, // Lifetime limit
+          limit: 1000000n, // Max total value in wei
+          period: 0n, // Not used for lifetime limits
+        },
+        constraints: [
+          {
+            condition: Condition.Equal, // Constraint type
+            index: 0n, // Parameter index
+            refValue: "0x000000000000000000000000abc...", // Expected value
+          },
+        ],
+      },
+    ],
+    transferPolicies: [
+      {
+        target: "0x456...", // Recipient address for transfers
+        maxValuePerUse: 100000n, // Max wei per transfer
+        valueLimit: {
+          limitType: LimitType.Allowance, // Allowance-based limit
+          limit: 1000000n, // Total allowance in wei
+          period: 86400n, // Reset period in seconds
+        },
+      },
+    ],
+  }),
+});
+
+console.log("Session key with policies created:", tx.transactionHash);
+```
+
+### Permission Types
+
+#### Call Policies
+
+Control which smart contract calls the session key can make:
+
+- `target`: The contract address the session key can call
+- `selector`: The function selector (4-byte identifier) that can be called
+- `maxValuePerUse`: Maximum ETH value that can be sent per transaction
+- `valueLimit`: Total value limits over time
+- `constraints`: Parameter-level constraints for function calls
+
+#### Transfer Policies
+
+Control native token transfers the session key can make:
+
+- `target`: The recipient address for transfers
+- `maxValuePerUse`: Maximum wei per individual transfer
+- `valueLimit`: Total transfer limits over time
+
+#### Limit Types
+
+```typescript
+enum LimitType {
+  Unlimited = 0,  // No limit
+  Lifetime = 1,   // One-time total limit
+  Allowance = 2,  // Renewable allowance based on period
+}
+```
+
+#### Constraint Conditions
+
+```typescript
+enum Condition {
+  Unconstrained = 0,    // No constraint
+  Equal = 1,            // Must equal reference value
+  Greater = 2,          // Must be greater than reference value
+  Less = 3,             // Must be less than reference value
+  GreaterOrEqual = 4,   // Must be >= reference value
+  LessOrEqual = 5,      // Must be <= reference value
+  NotEqual = 6,         // Must not equal reference value
+}
+```
+
+## Step 6: Use the Session Key
+
+Once created, the session key can be used with Engine or other server-side execution:
+
+```typescript
+import { Engine } from "thirdweb/engine";
+
+const serverWallet = Engine.serverWallet({
+  address: sessionKeyAccountAddress,
+  chain: sepolia,
+  client: client,
+  vaultAccessToken: process.env.VAULT_TOKEN as string,
+});
+
+// Execute transactions with the session key
+const tx = await sendTransaction({
+  account: serverWallet,
+  transaction: prepareTransaction({
+    chain: sepolia,
+    client: client,
+    to: "0x...", // Target address
+    value: 0n,
+  }),
+});
+
+console.log("Transaction executed:", tx.transactionHash);
+```
+
+## Complete Example
+
+Here's a complete example for setting up and using a session key with ERC-7702:
+
+```typescript
+import { 
+  createThirdwebClient,
+  getContract,
+  sendTransaction,
+  prepareTransaction
+} from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { inAppWallet, createSessionKey } from "thirdweb/wallets/in-app";
+import { Engine } from "thirdweb/engine";
+
+async function setupSessionKeyWith7702() {
+  // Configuration
+  const client = createThirdwebClient({
+    clientId: "your-client-id",
+    secretKey: "your-secret-key"
+  });
+  
+  const sessionKeyAccountAddress = "0x..."; // Your session key address
+  
+  try {
+    // Step 1: Create 7702 Smart EOA
+    const wallet = inAppWallet({
+      executionMode: {
+        mode: "EIP7702",
+        sponsorGas: true,
+      },
+    });
+    
+    const account = await wallet.connect({
+      chain: sepolia,
+      client: client,
+      strategy: "google",
+    });
+    
+    console.log("Smart EOA created:", account.address);
+    
+    // Step 2: Deploy/upgrade the account
+    await sendTransaction({
+      account: account,
+      transaction: prepareTransaction({
+        chain: sepolia,
+        client: client,
+        to: account.address,
+        value: 0n,
+      }),
+    });
+    
+    // Step 3: Get account contract
+    const accountContract = getContract({
+      address: account.address,
+      chain: sepolia,
+      client: client,
+    });
+    
+    // Step 4: Create session key
+    const sessionTx = await sendTransaction({
+      account: account,
+      transaction: createSessionKey({
+        account: account,
+        contract: accountContract,
+        sessionKeyAddress: sessionKeyAccountAddress,
+        durationInSeconds: 86400, // 1 day
+        grantFullPermissions: true,
+      }),
+    });
+    
+    console.log("Session key created:", sessionTx.transactionHash);
+    
+    // Step 5: Use the session key with Engine
+    const serverWallet = Engine.serverWallet({
+      address: sessionKeyAccountAddress,
+      chain: sepolia,
+      client: client,
+      vaultAccessToken: process.env.VAULT_TOKEN as string,
+    });
+    
+    // Execute a transaction with the session key
+    const tx = await sendTransaction({
+      account: serverWallet,
+      transaction: prepareTransaction({
+        chain: sepolia,
+        client: client,
+        to: "0x...", // Target address
+        value: 0n,
+      }),
+    });
+    
+    console.log("Transaction successful:", tx.transactionHash);
+    return tx;
+    
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+// Execute the function
+setupSessionKeyWith7702()
+  .then((tx) => console.log("Done!", tx.transactionHash))
+  .catch((error) => console.error("Failed:", error));
+```
+
+## Security Considerations
+
+- **Session Key Storage**: Store session keys securely, preferably in a vault system
+- **Permission Scope**: Use granular permissions (`grantFullPermissions: false`) for production use cases
+- **Time Limits**: Set appropriate `durationInSeconds` values based on your use case
+- **Policy Design**: Carefully design call and transfer policies to minimize risk
+- **Key Rotation**: Regularly rotate session keys and revoke unused ones
+- **Monitoring**: Monitor session key usage for suspicious activity
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Account not deployed**: Ensure you've sent a transaction to trigger the account deployment/upgrade
+2. **Invalid signature**: Make sure the admin account is properly authenticated and can sign typed data
+3. **Permission denied**: Verify the session key has the necessary policies for the operation
+4. **Expired session key**: Check that the current time is within the session key's validity period
+
+### Error Handling
+
+Always wrap your session key operations in try-catch blocks:
+
+```typescript
+try {
+  const tx = await sendTransaction({
+    account: account,
+    transaction: createSessionKey({
+      account: account,
+      contract: accountContract,
+      sessionKeyAddress: sessionKeyAccountAddress,
+      durationInSeconds: 86400,
+      grantFullPermissions: true,
+    }),
+  });
+} catch (error) {
+  if (error.message.includes("signature")) {
+    console.error("Failed to sign session key creation");
+  } else if (error.message.includes("duration")) {
+    console.error("Invalid duration specified");
+  } else {
+    console.error("Session key creation failed:", error);
+  }
+}
+```
+
+</TabsContent>
+</Tabs>
+
 ## Next Steps
 
-- Learn more about [Smart Wallets](/engine/v3/configure-wallets/server-wallets)
+- Learn more about [In-App Wallets](/wallets/in-app-wallet/overview)
 - Explore [Engine API Reference](https://engine.thirdweb.com/reference)
-- Check out the [TypeScript SDK](/references/typescript/v5/serverWallet) documentation
+- Check out the [TypeScript SDK](/references/typescript/v5) documentation
+- Read about [ERC-7702](https://eips.ethereum.org/EIPS/eip-7702) specification

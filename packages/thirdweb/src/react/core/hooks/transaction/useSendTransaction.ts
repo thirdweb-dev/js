@@ -6,6 +6,7 @@ import * as Bridge from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
+import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import type { FiatProvider } from "../../../../pay/utils/commonTypes.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
@@ -94,6 +95,11 @@ export type SendTransactionPayModalConfig =
        * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
        */
       country?: string;
+      /**
+       * The currency to use for showing the fiat values
+       * @default "USD"
+       */
+      currency?: SupportedFiatCurrency;
     }
   | false;
 

@@ -48,6 +48,7 @@ export type BridgeComponentsPlaygroundOptions = {
 
     // direct_payment mode options
     sellerAddress: Address;
+    receiverAddress: Address | undefined;
 
     // transaction mode options
     transactionData?: string; // Simplified for demo; could be more complex in real implementation

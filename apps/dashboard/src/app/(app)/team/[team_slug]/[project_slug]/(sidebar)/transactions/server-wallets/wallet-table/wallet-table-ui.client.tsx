@@ -1,8 +1,9 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import {
+  CheckIcon,
   MoreVerticalIcon,
   RefreshCcwIcon,
   SendIcon,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { useWalletBalance } from "thirdweb/react";
 import {
@@ -20,6 +22,7 @@ import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -50,7 +53,9 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import { updateDefaultProjectWallet } from "../../lib/vault.client";
 import CreateServerWallet from "../components/create-server-wallet.client";
 import type { Wallet } from "./types";
 
@@ -96,15 +101,22 @@ export function ServerWalletsTableUI({
           </div>
 
           <div className="flex flex-col items-start lg:items-end gap-5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">
-            <SingleNetworkSelector
-              chainId={selectedChainId}
-              onChange={setSelectedChainId}
-              client={client}
-              disableChainId
-              className="w-fit min-w-[180px] rounded-full bg-background hover:bg-accent/50"
-              placeholder="Select network"
-              popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
-            />
+            <div className="flex flex-row gap-2.5">
+              <CreateServerWallet
+                managementAccessToken={managementAccessToken}
+                project={project}
+                teamSlug={teamSlug}
+              />
+              <SingleNetworkSelector
+                chainId={selectedChainId}
+                onChange={setSelectedChainId}
+                client={client}
+                disableChainId
+                className="w-fit min-w-[180px] rounded-full bg-background hover:bg-accent/50"
+                placeholder="Select network"
+                popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
+              />
+            </div>
 
             <div className="flex items-center gap-2.5">
               <Label
@@ -187,24 +199,9 @@ export function ServerWalletsTableUI({
                 <XIcon className="size-5 text-muted-foreground" />
               </div>
               <p className="text-muted-foreground">No server wallets found</p>
-              <CreateServerWallet
-                managementAccessToken={managementAccessToken}
-                project={project}
-                teamSlug={teamSlug}
-              />
             </div>
           )}
         </TableContainer>
-
-        {wallets.length > 0 && (
-          <div className="flex justify-end items-center p-4 py-5 lg:px-6 border-t">
-            <CreateServerWallet
-              managementAccessToken={managementAccessToken}
-              project={project}
-              teamSlug={teamSlug}
-            />
-          </div>
-        )}
 
         {totalPages > 1 && (
           <div className="flex flex-col items-center border-t p-6">
@@ -295,18 +292,34 @@ function ServerWalletTableRow(props: {
     queryKey: ["smart-account-address", wallet.address, chainId],
   });
 
+  // Get the project wallet address
+  const engineCloudService = project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+  const defaultWalletAddress = engineCloudService?.projectWalletAddress;
+  const isDefaultWallet =
+    defaultWalletAddress &&
+    wallet.address.toLowerCase() === defaultWalletAddress.toLowerCase();
+
   return (
     <TableRow key={wallet.id}>
       {/* Label */}
       <TableCell>
-        <span
-          className={cn(
-            "text-sm text-foreground",
-            !wallet.metadata.label && "text-muted-foreground",
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "text-sm text-foreground",
+              !wallet.metadata.label && "text-muted-foreground",
+            )}
+          >
+            {wallet.metadata.label || "N/A"}
+          </span>
+          {isDefaultWallet && (
+            <Badge variant="success" className="text-xs">
+              default
+            </Badge>
           )}
-        >
-          {wallet.metadata.label || "N/A"}
-        </span>
+        </div>
       </TableCell>
 
       {/* Address */}
@@ -399,6 +412,25 @@ function WalletActionsDropdown(props: {
   chainId: number;
 }) {
   const [showFundModal, setShowFundModal] = useState(false);
+  const router = useDashboardRouter();
+
+  const setAsDefaultMutation = useMutation({
+    mutationFn: async () => {
+      await updateDefaultProjectWallet({
+        project: props.project,
+        projectWalletAddress: props.wallet.address,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Wallet set as project wallet");
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to set default wallet",
+      );
+    },
+  });
 
   return (
     <>
@@ -428,6 +460,14 @@ function WalletActionsDropdown(props: {
               Fund wallet
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem
+            onClick={() => setAsDefaultMutation.mutate()}
+            disabled={setAsDefaultMutation.isPending}
+            className="flex items-center gap-2 h-9 rounded-lg"
+          >
+            <CheckIcon className="size-4 text-muted-foreground" />
+            Set as default
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

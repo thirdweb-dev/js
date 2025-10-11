@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -49,6 +50,8 @@ export function TransactionsTableUI(props: {
   getData: (params: {
     page: number;
     status: TransactionStatus | undefined;
+    id: string | undefined;
+    from: string | undefined;
   }) => Promise<TransactionsResponse>;
   project: Project;
   teamSlug: string;
@@ -60,13 +63,15 @@ export function TransactionsTableUI(props: {
   const [status, setStatus] = useState<TransactionStatus | undefined>(
     undefined,
   );
+  const [id, setId] = useState<string | undefined>(undefined);
+  const [from, setFrom] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
 
   const pageSize = 10;
   const transactionsQuery = useQuery({
     placeholderData: keepPreviousData,
-    queryFn: () => props.getData({ page, status }),
-    queryKey: ["transactions", props.project.id, page, status],
+    queryFn: () => props.getData({ page, status, id, from }),
+    queryKey: ["transactions", props.project.id, page, status, id, from],
     refetchInterval: autoUpdate ? 4_000 : false,
   });
 
@@ -84,18 +89,18 @@ export function TransactionsTableUI(props: {
 
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
-      <div className="flex flex-col gap-4 rounded-lg rounded-b-none px-6 py-6 lg:flex-row lg:justify-between">
-        <div>
-          <h2 className="font-semibold text-2xl tracking-tight">
-            Transaction History
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            Transactions sent from server wallets
-          </p>
-        </div>
+      <div className="flex flex-col gap-4 rounded-lg rounded-b-none px-6 py-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="font-semibold text-2xl tracking-tight">
+              Transaction History
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Transactions sent from server wallets
+            </p>
+          </div>
 
-        <div className="flex items-center justify-end gap-5 border-border border-t pt-4 lg:border-none lg:pt-0">
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2 border-border border-t pt-4 lg:border-none lg:pt-0">
             <Label htmlFor={autoUpdateId}>Auto Update</Label>
             <Switch
               checked={autoUpdate}
@@ -103,14 +108,39 @@ export function TransactionsTableUI(props: {
               onCheckedChange={(v) => setAutoUpdate(!!v)}
             />
           </div>
-          <StatusSelector
-            setStatus={(v) => {
-              setStatus(v);
-              // reset page
+        </div>
+
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <Input
+            className="max-w-[250px]"
+            onChange={(e) => {
+              const value = e.target.value.trim();
+              setId(value || undefined);
               setPage(1);
             }}
-            status={status}
+            placeholder="Filter by Queue ID"
+            value={id || ""}
           />
+          <Input
+            className="max-w-[250px]"
+            onChange={(e) => {
+              const value = e.target.value.trim();
+              setFrom(value || undefined);
+              setPage(1);
+            }}
+            placeholder="Filter by wallet address"
+            value={from || ""}
+          />
+          <div>
+            <StatusSelector
+              setStatus={(v) => {
+                setStatus(v);
+                // reset page
+                setPage(1);
+              }}
+              status={status}
+            />
+          </div>
         </div>
       </div>
 

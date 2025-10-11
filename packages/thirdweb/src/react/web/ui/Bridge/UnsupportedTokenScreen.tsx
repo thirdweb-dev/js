@@ -9,14 +9,14 @@ import { Container } from "../components/basic.js";
 import { Spacer } from "../components/Spacer.js";
 import { Text } from "../components/text.js";
 
-export interface UnsupportedTokenScreenProps {
+type UnsupportedTokenScreenProps = {
   /**
    * The chain the token is on
    */
   chain: Chain;
   client: ThirdwebClient;
-  tokenAddress?: string;
-}
+  tokenAddress: string;
+};
 
 /**
  * Screen displayed when a specified token is not supported by the Bridge API

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
+// biome-ignore lint/correctness/noUnusedVariables: banner is toggled on-demand via API content changes
 function AnnouncementBannerUI(props: {
   href: string;
   label: string;

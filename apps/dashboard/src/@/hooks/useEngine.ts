@@ -379,12 +379,27 @@ export function useEngineTransactions(params: {
     page?: number;
     status?: EngineStatus;
   };
+  id?: string;
 }) {
-  const { instanceUrl, autoUpdate, authToken } = params;
+  const { instanceUrl, autoUpdate, authToken, id } = params;
 
   return useQuery({
     placeholderData: keepPreviousData,
     queryFn: async () => {
+      if (id) {
+        const res = await fetch(`${instanceUrl}transaction/status/${id}`, {
+          headers: getEngineRequestHeaders(authToken),
+          method: "GET",
+        });
+
+        const json = await res.json();
+        const transaction = (json.result as Transaction) || {};
+        return {
+          transactions: [transaction],
+          totalCount: 1,
+        };
+      }
+
       const url = new URL(`${instanceUrl}transaction/get-all`);
       if (params.queryParams) {
         for (const key in params.queryParams) {
@@ -402,7 +417,6 @@ export function useEngineTransactions(params: {
       });
 
       const json = await res.json();
-
       return (json.result as TransactionResponse) || {};
     },
     queryKey: engineKeys.transactions(instanceUrl, params),

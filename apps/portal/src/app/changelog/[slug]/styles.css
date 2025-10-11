@@ -2,15 +2,6 @@
   display: none;
 }
 
-.changelog-page a {
-  text-decoration: underline;
-  text-decoration-color: hsl(var(--muted-foreground));
-  text-decoration-style: dotted;
-  color: hsl(var(--foreground));
-  text-underline-offset: 5px;
-  transition: color 200ms ease;
-}
-
 .changelog-page h2 a {
   text-decoration: none;
 }

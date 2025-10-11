@@ -40,7 +40,11 @@ import { ErrorState } from "../../components/ErrorState";
 import { formatTokenAmount } from "../../components/format";
 import { CreatePaymentLinkButton } from "./CreatePaymentLinkButton.client";
 
-export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
+export function PaymentLinksTable(props: {
+  clientId: string;
+  teamId: string;
+  projectWalletAddress?: string;
+}) {
   return (
     <section>
       <div className="mb-4">
@@ -49,12 +53,20 @@ export function PaymentLinksTable(props: { clientId: string; teamId: string }) {
           The payments you have created in this project
         </p>
       </div>
-      <PaymentLinksTableInner clientId={props.clientId} teamId={props.teamId} />
+      <PaymentLinksTableInner
+        clientId={props.clientId}
+        projectWalletAddress={props.projectWalletAddress}
+        teamId={props.teamId}
+      />
     </section>
   );
 }
 
-function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
+function PaymentLinksTableInner(props: {
+  clientId: string;
+  teamId: string;
+  projectWalletAddress?: string;
+}) {
   const paymentLinksQuery = useQuery({
     queryFn: async () => {
       return getPaymentLinks({
@@ -120,6 +132,7 @@ function PaymentLinksTableInner(props: { clientId: string; teamId: string }) {
           <CreatePaymentLinkButton
             key="create-payment-link"
             clientId={props.clientId}
+            projectWalletAddress={props.projectWalletAddress}
             teamId={props.teamId}
           >
             <Button className="gap-2 rounded-full" variant="default" size="sm">

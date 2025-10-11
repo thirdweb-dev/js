@@ -120,6 +120,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
             chainId: props.contract.chain.id,
             contractType: "DropERC1155",
             error: errorMessage,
+            is_testnet: props.chainMetadata.testnet,
           });
 
           console.error(errorMessage);
@@ -147,6 +148,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
           assetType: "nft",
           chainId: props.contract.chain.id,
           contractType: "DropERC1155",
+          is_testnet: props.chainMetadata.testnet,
         });
 
         props.onSuccess?.();
@@ -163,6 +165,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
           chainId: props.contract.chain.id,
           contractType: "DropERC1155",
           error: errorMessage,
+          is_testnet: props.chainMetadata.testnet,
         });
 
         return;
@@ -180,6 +183,7 @@ export function BuyEditionDrop(props: BuyEditionDropProps) {
         chainId: props.contract.chain.id,
         contractType: "DropERC1155",
         error: errorMessage,
+        is_testnet: props.chainMetadata.testnet,
       });
     }
   });

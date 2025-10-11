@@ -15,6 +15,7 @@ export function useTokens(options: {
   return useQuery<Token[]>({
     queryKey: ["tokens", options],
     enabled: !!options.chainId,
+    retry: false,
     queryFn: () => {
       if (!options.chainId) {
         throw new Error("Chain ID is required");
@@ -30,8 +31,9 @@ export function useTokens(options: {
         offset: options.offset,
         limit: options.limit,
         includePrices: false,
-        name: !options.search || isSearchAddress ? undefined : options.search,
-        tokenAddress: isSearchAddress ? options.search : undefined,
+        query: options.search && !isSearchAddress ? options.search : undefined,
+        tokenAddress:
+          options.search && isSearchAddress ? options.search : undefined,
       });
     },
   });
@@ -115,6 +117,7 @@ export function useTokenBalances(options: {
       return json.result;
     },
     refetchOnMount: false,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 }

@@ -31,6 +31,7 @@ export default async function Page(props: {
   const chain = info.clientContract.chain;
   const assetContractServer = info.serverContract;
   const serverClient = assetContractServer.client;
+  const chainMetadata = info.chainMetadata;
 
   const { address: entrypointContractAddress } =
     await getDeployedEntrypointERC20({
@@ -56,6 +57,7 @@ export default async function Page(props: {
 
   // Note: must use server contract/client here
   const unclaimedFees = await getUnclaimedFees({
+    chainMetadata,
     positionManager: getContract({
       address: reward.positionManager,
       chain,

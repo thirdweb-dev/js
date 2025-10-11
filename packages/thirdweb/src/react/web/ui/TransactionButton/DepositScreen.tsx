@@ -75,7 +75,6 @@ const WaitingBadge = /* @__PURE__ */ StyledDiv(() => {
  * @internal
  */
 export function DepositScreen(props: {
-  onBack: (() => void) | undefined;
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   tx: PreparedTransaction;
@@ -144,7 +143,7 @@ export function DepositScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader onBack={props.onBack} title={"Insufficient funds"} />
+      <ModalHeader title={"Insufficient funds"} />
 
       <Spacer y="lg" />
 

@@ -1,20 +1,14 @@
 import styled from "@emotion/styled";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { prepare as BuyPrepare } from "../../../../../bridge/Buy.js";
 import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { prepare as SellPrepare } from "../../../../../bridge/Sell.js";
-import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
-import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getToken } from "../../../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
-import { getAddress, shortenAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
-import { AccountProvider } from "../../../../core/account/provider.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -23,9 +17,7 @@ import {
   spacing,
   type Theme,
 } from "../../../../core/design-system/index.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
-import { WalletProvider } from "../../../../core/wallet/provider.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
 import { DetailsModal } from "../../ConnectWallet/Details.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
@@ -37,18 +29,16 @@ import {
 } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
-import { Input } from "../../components/formElements.js";
-import { Img } from "../../components/Img.js";
 import { Modal } from "../../components/Modal.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
 import { useIsMobile } from "../../hooks/useisMobile.js";
-import { AccountAvatar } from "../../prebuilt/Account/avatar.js";
-import { AccountBlobbie } from "../../prebuilt/Account/blobbie.js";
-import { AccountName } from "../../prebuilt/Account/name.js";
-import { WalletIcon } from "../../prebuilt/Wallet/icon.js";
+import { ActiveWalletDetails } from "../common/active-wallet-details.js";
+import { DecimalInput } from "../common/decimal-input.js";
+import { SelectedTokenButton } from "../common/selected-token-button.js";
+import { useTokenBalance } from "../common/token-balance.js";
 import { SelectToken } from "./select-token-ui.js";
 import type {
   ActiveWalletInfo,
@@ -57,7 +47,6 @@ import type {
   TokenSelection,
 } from "./types.js";
 import { useBridgeChains } from "./use-bridge-chains.js";
-import { cleanedChainName } from "./utils.js";
 
 type SwapUIProps = {
   activeWalletInfo: ActiveWalletInfo | undefined;
@@ -107,6 +96,7 @@ function useTokenPrice(options: {
       );
     },
     refetchOnMount: false,
+    retry: false,
     refetchOnWindowFocus: false,
   });
 }
@@ -331,6 +321,7 @@ export function SwapUI(props: SwapUIProps) {
             ? {
                 data: sellTokenQuery.data,
                 isFetching: sellTokenQuery.isFetching,
+                isError: sellTokenQuery.isError,
               }
             : undefined
         }
@@ -383,6 +374,7 @@ export function SwapUI(props: SwapUIProps) {
             ? {
                 data: buyTokenQuery.data,
                 isFetching: buyTokenQuery.isFetching,
+                isError: buyTokenQuery.isError,
               }
             : undefined
         }
@@ -400,7 +392,9 @@ export function SwapUI(props: SwapUIProps) {
       />
 
       {/* error message */}
-      {preparedResultQuery.error ? (
+      {preparedResultQuery.error ||
+      buyTokenQuery.isError ||
+      sellTokenQuery.isError ? (
         <Text
           size="sm"
           color="danger"
@@ -409,7 +403,13 @@ export function SwapUI(props: SwapUIProps) {
             paddingBlock: spacing.md,
           }}
         >
-          Failed to get a quote
+          {preparedResultQuery.error
+            ? "Failed to get a quote"
+            : buyTokenQuery.isError
+              ? "Failed to fetch buy token details"
+              : sellTokenQuery.isError
+                ? "Failed to fetch sell token details"
+                : "Failed to get a quote"}
         </Text>
       ) : (
         <Spacer y="md" />
@@ -423,7 +423,7 @@ export function SwapUI(props: SwapUIProps) {
             label: "Swap",
             style: {
               width: "100%",
-              borderRadius: radius.lg,
+              borderRadius: radius.full,
             },
           }}
           theme={props.theme}
@@ -625,66 +625,6 @@ function useSwapQuote(params: {
   });
 }
 
-function DecimalInput(props: {
-  value: string;
-  setValue: (value: string) => void;
-}) {
-  const handleAmountChange = (inputValue: string) => {
-    let processedValue = inputValue;
-
-    // Replace comma with period if it exists
-    processedValue = processedValue.replace(",", ".");
-
-    if (processedValue.startsWith(".")) {
-      processedValue = `0${processedValue}`;
-    }
-
-    const numValue = Number(processedValue);
-    if (Number.isNaN(numValue)) {
-      return;
-    }
-
-    if (processedValue.startsWith("0") && !processedValue.startsWith("0.")) {
-      props.setValue(processedValue.slice(1));
-    } else {
-      props.setValue(processedValue);
-    }
-  };
-
-  return (
-    <Input
-      inputMode="decimal"
-      onChange={(e) => {
-        handleAmountChange(e.target.value);
-      }}
-      onClick={(e) => {
-        // put cursor at the end of the input
-        if (props.value === "") {
-          e.currentTarget.setSelectionRange(
-            e.currentTarget.value.length,
-            e.currentTarget.value.length,
-          );
-        }
-      }}
-      pattern="^[0-9]*[.,]?[0-9]*$"
-      placeholder="0.0"
-      style={{
-        border: "none",
-        boxShadow: "none",
-        fontSize: fontSize.xl,
-        fontWeight: 500,
-        paddingInline: 0,
-        paddingBlock: 0,
-        letterSpacing: "-0.025em",
-        height: "30px",
-      }}
-      type="text"
-      value={props.value}
-      variant="transparent"
-    />
-  );
-}
-
 function TokenSection(props: {
   type: "buy" | "sell";
   amount: {
@@ -697,6 +637,7 @@ function TokenSection(props: {
     | {
         data: TokenWithPrices | undefined;
         isFetching: boolean;
+        isError: boolean;
       }
     | undefined;
   currency: SupportedFiatCurrency;
@@ -774,19 +715,11 @@ function TokenSection(props: {
             </Text>
           </Container>
           {props.activeWalletInfo && (
-            <WalletButton
-              variant="ghost-solid"
-              style={{
-                paddingInline: spacing.xxs,
-                paddingBlock: "2px",
-              }}
+            <ActiveWalletDetails
+              activeWalletInfo={props.activeWalletInfo}
+              client={props.client}
               onClick={props.onWalletClick}
-            >
-              <ActiveWalletDetails
-                activeWalletInfo={props.activeWalletInfo}
-                client={props.client}
-              />
-            </WalletButton>
+            />
           )}
         </Container>
 
@@ -829,6 +762,16 @@ function TokenSection(props: {
                 <DecimalInput
                   value={props.amount.data}
                   setValue={props.setAmount}
+                  style={{
+                    border: "none",
+                    boxShadow: "none",
+                    fontSize: fontSize.xl,
+                    fontWeight: 500,
+                    paddingInline: 0,
+                    paddingBlock: 0,
+                    letterSpacing: "-0.025em",
+                    height: "30px",
+                  }}
                 />
               )}
 
@@ -914,157 +857,6 @@ function TokenSection(props: {
   );
 }
 
-function SelectedTokenButton(props: {
-  selectedToken:
-    | {
-        data: TokenWithPrices | undefined;
-        isFetching: boolean;
-      }
-    | undefined;
-  client: ThirdwebClient;
-  onSelectToken: () => void;
-  chain: BridgeChain | undefined;
-}) {
-  const theme = useCustomTheme();
-  return (
-    <Button
-      variant="ghost-solid"
-      hoverBg="secondaryButtonBg"
-      fullWidth
-      onClick={props.onSelectToken}
-      gap="sm"
-      style={{
-        borderBottom: `1px dashed ${theme.colors.borderColor}`,
-        justifyContent: "space-between",
-        paddingInline: spacing.md,
-        paddingBlock: spacing.md,
-        borderRadius: 0,
-      }}
-    >
-      <Container gap="sm" flex="row" center="y">
-        {/* icons */}
-        <Container relative color="secondaryText">
-          {/* token icon */}
-          {props.selectedToken ? (
-            <Img
-              key={props.selectedToken?.data?.iconUri}
-              src={
-                props.selectedToken?.data === undefined
-                  ? undefined
-                  : props.selectedToken.data.iconUri || ""
-              }
-              client={props.client}
-              width="40"
-              height="40"
-              fallback={
-                <Container
-                  style={{
-                    background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
-                    borderRadius: radius.full,
-                    width: "40px",
-                    height: "40px",
-                  }}
-                />
-              }
-              style={{
-                objectFit: "cover",
-                borderRadius: radius.full,
-              }}
-            />
-          ) : (
-            <Container
-              style={{
-                border: `1px solid ${theme.colors.borderColor}`,
-                background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
-                borderRadius: radius.full,
-                width: "40px",
-                height: "40px",
-              }}
-            />
-          )}
-
-          {/* chain icon */}
-          {props.chain && (
-            <Container
-              bg="modalBg"
-              style={{
-                padding: "2px",
-                position: "absolute",
-                bottom: -2,
-                right: -2,
-                display: "flex",
-                borderRadius: radius.full,
-              }}
-            >
-              <Img
-                src={props.chain?.icon}
-                client={props.client}
-                width={iconSize.sm}
-                height={iconSize.sm}
-                style={{
-                  borderRadius: radius.full,
-                }}
-              />
-            </Container>
-          )}
-        </Container>
-
-        {/* token symbol and chain name */}
-        {props.selectedToken ? (
-          <Container flex="column" style={{ gap: "3px" }}>
-            {props.selectedToken?.isFetching ? (
-              <Skeleton width="60px" height={fontSize.md} />
-            ) : (
-              <Text size="md" color="primaryText" weight={500}>
-                {props.selectedToken?.data?.symbol}
-              </Text>
-            )}
-
-            {props.chain ? (
-              <Text
-                size="xs"
-                color="secondaryText"
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {cleanedChainName(props.chain.name)}
-              </Text>
-            ) : (
-              <Skeleton width="140px" height={fontSize.sm} />
-            )}
-          </Container>
-        ) : (
-          <Container flex="column" style={{ gap: "3px" }}>
-            <Text size="md" color="primaryText" weight={500}>
-              Select Token
-            </Text>
-            <Text size="xs" color="secondaryText">
-              Required
-            </Text>
-          </Container>
-        )}
-      </Container>
-      <Container
-        color="secondaryText"
-        flex="row"
-        center="both"
-        borderColor="borderColor"
-        style={{
-          borderRadius: radius.full,
-          borderWidth: 1,
-          borderStyle: "solid",
-          padding: spacing.xs,
-        }}
-      >
-        <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-      </Container>
-    </Button>
-  );
-}
-
 function SwitchButton(props: { onClick: () => void }) {
   return (
     <div
@@ -1108,98 +900,5 @@ const SwitchButtonInner = /* @__PURE__ */ styled(Button)(() => {
     color: theme.colors.primaryText,
     background: theme.colors.modalBg,
     border: `1px solid ${theme.colors.borderColor}`,
-  };
-});
-
-function useTokenBalance(props: {
-  chainId: number | undefined;
-  tokenAddress: string | undefined;
-  client: ThirdwebClient;
-  walletAddress: string | undefined;
-}) {
-  return useWalletBalance({
-    address: props.walletAddress,
-    chain: props.chainId ? defineChain(props.chainId) : undefined,
-    client: props.client,
-    tokenAddress: props.tokenAddress
-      ? getAddress(props.tokenAddress) === getAddress(NATIVE_TOKEN_ADDRESS)
-        ? undefined
-        : getAddress(props.tokenAddress)
-      : undefined,
-  });
-}
-
-function ActiveWalletDetails(props: {
-  activeWalletInfo: ActiveWalletInfo;
-  client: ThirdwebClient;
-}) {
-  const wallet = props.activeWalletInfo.activeWallet;
-  const account = props.activeWalletInfo.activeAccount;
-
-  const accountBlobbie = (
-    <AccountBlobbie
-      style={{
-        width: `${iconSize.xs}px`,
-        height: `${iconSize.xs}px`,
-        borderRadius: radius.full,
-      }}
-    />
-  );
-  const accountAvatarFallback = (
-    <WalletIcon
-      style={{
-        width: `${iconSize.xs}px`,
-        height: `${iconSize.xs}px`,
-      }}
-      fallbackComponent={accountBlobbie}
-      loadingComponent={accountBlobbie}
-    />
-  );
-
-  return (
-    <WalletProvider id={props.activeWalletInfo.activeWallet.id}>
-      <AccountProvider address={account.address} client={props.client}>
-        <WalletProvider id={wallet.id}>
-          <Container flex="row" gap="xxs" center="y">
-            <AccountAvatar
-              style={{
-                width: `${iconSize.xs}px`,
-                height: `${iconSize.xs}px`,
-                borderRadius: radius.full,
-              }}
-              fallbackComponent={accountAvatarFallback}
-              loadingComponent={accountAvatarFallback}
-            />
-
-            <span
-              style={{
-                fontSize: fontSize.xs,
-                letterSpacing: "0.025em",
-              }}
-            >
-              <AccountName
-                fallbackComponent={
-                  <span>{shortenAddress(account.address)}</span>
-                }
-                loadingComponent={
-                  <span>{shortenAddress(account.address)}</span>
-                }
-              />
-            </span>
-          </Container>
-        </WalletProvider>
-      </AccountProvider>
-    </WalletProvider>
-  );
-}
-
-const WalletButton = /* @__PURE__ */ styled(Button)(() => {
-  const theme = useCustomTheme();
-  return {
-    color: theme.colors.secondaryText,
-    transition: "color 200ms ease",
-    "&:hover": {
-      color: theme.colors.primaryText,
-    },
   };
 });

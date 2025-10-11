@@ -74,6 +74,10 @@ export type CreateNFTCollectionFunctions = {
         count: number;
       };
       gasless: boolean;
+      onNotEnoughFunds: (data: {
+        requiredAmount: string;
+        balance: string;
+      }) => void;
     }) => Promise<void>;
     lazyMintNFTs: (params: {
       values: CreateNFTCollectionAllValues;

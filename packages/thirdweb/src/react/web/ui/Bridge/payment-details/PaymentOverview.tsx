@@ -1,21 +1,22 @@
 import type { Token } from "../../../../../bridge/index.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
 import { useTransactionDetails } from "../../../../core/hooks/useTransactionDetails.js";
-import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import { getFiatCurrencyIcon } from "../../ConnectWallet/screens/Buy/fiat/currencies.js";
 import { FiatValue } from "../../ConnectWallet/screens/Buy/swap/FiatValue.js";
 import { StepConnectorArrow } from "../../ConnectWallet/screens/Buy/swap/StepConnector.js";
 import { WalletRow } from "../../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { Container } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import type { UIOptions } from "../BridgeOrchestrator.js";
 import { TokenBalanceRow } from "../common/TokenBalanceRow.js";
+import type { ModeInfo, PaymentMethod } from "../types.js";
 
 export function PaymentOverview(props: {
-  uiOptions: UIOptions;
+  currency: SupportedFiatCurrency;
   receiver: string;
   sender?: string;
   client: ThirdwebClient;
@@ -23,6 +24,11 @@ export function PaymentOverview(props: {
   toToken: Token;
   fromAmount: string;
   toAmount: string;
+  metadata: {
+    title: string | undefined;
+    description: string | undefined;
+  };
+  modeInfo: ModeInfo;
 }) {
   const theme = useCustomTheme();
   const sender =
@@ -32,6 +38,7 @@ export function PaymentOverview(props: {
       : undefined);
   const isDifferentRecipient =
     props.receiver.toLowerCase() !== sender?.toLowerCase();
+
   return (
     <Container>
       {/* Sell */}
@@ -63,7 +70,7 @@ export function PaymentOverview(props: {
         )}
         {props.paymentMethod.type === "wallet" && (
           <TokenBalanceRow
-            currency={props.uiOptions.currency}
+            currency={props.currency}
             amount={props.fromAmount}
             client={props.client}
             onClick={() => {}}
@@ -134,7 +141,7 @@ export function PaymentOverview(props: {
             />
           </Container>
         )}
-        {props.uiOptions.mode === "direct_payment" && (
+        {props.modeInfo.mode === "direct_payment" && (
           <Container
             center="y"
             flex="row"
@@ -144,11 +151,11 @@ export function PaymentOverview(props: {
           >
             <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
               <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-                {props.uiOptions.metadata?.title || "Payment"}
+                {props.metadata.title || "Payment"}
               </Text>
-              {props.uiOptions.metadata?.description && (
+              {props.metadata.description && (
                 <Text color="secondaryText" size="xs">
-                  {props.uiOptions.metadata.description}
+                  {props.metadata.description}
                 </Text>
               )}
             </Container>
@@ -159,24 +166,24 @@ export function PaymentOverview(props: {
               style={{ alignItems: "flex-end" }}
             >
               <FiatValue
-                currency={props.uiOptions.currency}
+                currency={props.currency}
                 chain={defineChain(props.toToken.chainId)}
                 client={props.client}
                 color="primaryText"
                 size="sm"
                 token={props.toToken}
-                tokenAmount={props.uiOptions.paymentInfo.amount}
+                tokenAmount={props.modeInfo.paymentInfo.amount}
                 weight={600}
               />
               <Text color="secondaryText" size="xs">
-                {props.uiOptions.paymentInfo.amount} {props.toToken.symbol}
+                {props.modeInfo.paymentInfo.amount} {props.toToken.symbol}
               </Text>
             </Container>
           </Container>
         )}
-        {props.uiOptions.mode === "fund_wallet" && (
+        {props.modeInfo.mode === "fund_wallet" && (
           <TokenBalanceRow
-            currency={props.uiOptions.currency}
+            currency={props.currency}
             amount={props.toAmount}
             client={props.client}
             onClick={() => {}}
@@ -188,11 +195,12 @@ export function PaymentOverview(props: {
             token={props.toToken}
           />
         )}
-        {props.uiOptions.mode === "transaction" && (
+        {props.modeInfo.mode === "transaction" && (
           <TransactionOverViewCompact
             client={props.client}
             paymentMethod={props.paymentMethod}
-            uiOptions={props.uiOptions}
+            transaction={props.modeInfo.transaction}
+            metadata={props.metadata}
           />
         )}
       </Container>
@@ -201,16 +209,19 @@ export function PaymentOverview(props: {
 }
 
 const TransactionOverViewCompact = (props: {
-  uiOptions: Extract<UIOptions, { mode: "transaction" }>;
+  transaction: PreparedTransaction;
   paymentMethod: PaymentMethod;
   client: ThirdwebClient;
+  metadata: {
+    title: string | undefined;
+    description: string | undefined;
+  };
 }) => {
   const theme = useCustomTheme();
   const txInfo = useTransactionDetails({
     client: props.client,
-    transaction: props.uiOptions.transaction,
+    transaction: props.transaction,
     wallet: props.paymentMethod.payerWallet,
-    currency: props.uiOptions.currency,
   });
 
   if (!txInfo.data) {
@@ -234,7 +245,7 @@ const TransactionOverViewCompact = (props: {
             }}
           />
           {/* Description skeleton - only if metadata exists */}
-          {props.uiOptions.metadata?.description && (
+          {props.metadata.description && (
             <div
               style={{
                 backgroundColor: theme.colors.skeletonBg,
@@ -275,11 +286,11 @@ const TransactionOverViewCompact = (props: {
     >
       <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
         <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-          {props.uiOptions.metadata?.title || "Transaction"}
+          {props.metadata.title || "Transaction"}
         </Text>
-        {props.uiOptions.metadata?.description && (
+        {props.metadata.description && (
           <Text color="secondaryText" size="xs">
-            {props.uiOptions.metadata.description}
+            {props.metadata.description}
           </Text>
         )}
       </Container>

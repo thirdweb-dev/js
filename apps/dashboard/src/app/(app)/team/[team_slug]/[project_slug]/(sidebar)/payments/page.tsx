@@ -6,6 +6,7 @@ import { getProject } from "@/api/project/projects";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { PayIcon } from "@/icons/PayIcon";
+import { getProjectWallet } from "@/lib/server/project-wallet";
 import { loginRedirect } from "@/utils/redirects";
 import { AdvancedSection } from "./components/AdvancedSection.client";
 import { QuickStartSection } from "./components/QuickstartSection.client";
@@ -29,6 +30,8 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
+  const projectWallet = await getProjectWallet(project);
+
   const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: project.teamId,
@@ -51,6 +54,7 @@ export default async function Page(props: {
             component: (
               <CreatePaymentLinkButton
                 clientId={project.publishableKey}
+                projectWalletAddress={projectWallet?.address}
                 teamId={project.teamId}
               >
                 <Button className="gap-1.5 rounded-full" size="sm">
@@ -141,12 +145,14 @@ export default async function Page(props: {
       <div className="flex flex-col gap-12">
         <PaymentLinksTable
           clientId={project.publishableKey}
+          projectWalletAddress={projectWallet?.address}
           teamId={project.teamId}
         />
         <QuickStartSection
           projectSlug={params.project_slug}
           teamSlug={params.team_slug}
           clientId={project.publishableKey}
+          projectWalletAddress={projectWallet?.address}
           teamId={project.teamId}
         />
 

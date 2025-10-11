@@ -1,14 +1,11 @@
 import {
   ArrowLeftRightIcon,
   ChevronRightIcon,
-  CircleAlertIcon,
   ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeServer } from "@/components/ui/code/code.server";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
 import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
 import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
@@ -18,17 +15,34 @@ import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
+import { WalletProductIcon } from "@/icons/WalletProductIcon";
+import { getProjectWalletLabel } from "@/lib/project-wallet";
+import {
+  getProjectWallet,
+  type ProjectWalletSummary,
+} from "@/lib/server/project-wallet";
 import { ClientIDSection } from "./ClientIDSection";
-import { IntegrateAPIKeyCodeTabs } from "./IntegrateAPIKeyCodeTabs";
+import { ProjectWalletControls } from "./ProjectWalletControls.client";
+import { ProjectWalletSetup } from "./ProjectWalletSetup.client";
 import { SecretKeySection } from "./SecretKeySection";
 
-export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
+export async function ProjectFTUX(props: {
+  project: Project;
+  teamSlug: string;
+  wallet?: ProjectWalletSummary | undefined;
+  managementAccessToken: string | undefined;
+}) {
+  const projectWallet = props.wallet ?? (await getProjectWallet(props.project));
+
   return (
     <div className="flex flex-col gap-10">
-      <IntegrateAPIKeySection
+      <ProjectWalletSection
         project={props.project}
         teamSlug={props.teamSlug}
+        wallet={projectWallet}
+        managementAccessToken={props.managementAccessToken}
       />
+      <IntegrateAPIKeySection project={props.project} />
       <ProductsSection
         projectSlug={props.project.slug}
         teamSlug={props.teamSlug}
@@ -39,15 +53,67 @@ export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
   );
 }
 
-// Integrate API key section ------------------------------------------------------------
-
-function IntegrateAPIKeySection({
-  project,
-  teamSlug,
-}: {
+export function ProjectWalletSection(props: {
   project: Project;
   teamSlug: string;
+  wallet: ProjectWalletSummary | undefined;
+  managementAccessToken: string | undefined;
 }) {
+  const defaultLabel = getProjectWalletLabel(props.project.name);
+  const walletAddress = props.wallet?.address;
+  const label = props.wallet?.label ?? defaultLabel;
+
+  return (
+    <section>
+      <div className="rounded-lg border border-border bg-card p-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border border-border bg-background p-2">
+              <WalletProductIcon className="size-5 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-semibold text-lg tracking-tight">
+                Project Wallet
+              </p>
+              <p className="text-muted-foreground text-sm">
+                Use it for deployments, payments, and API integrations.
+              </p>
+            </div>
+          </div>
+
+          {walletAddress ? (
+            <>
+              <ProjectWalletControls
+                label={label}
+                project={props.project}
+                walletAddress={walletAddress}
+              />
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                <Link
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                  href={`/team/${props.teamSlug}/${props.project.slug}/transactions`}
+                >
+                  View Transactions
+                  <ChevronRightIcon className="size-4" />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <ProjectWalletSetup
+              managementAccessToken={props.managementAccessToken}
+              project={props.project}
+              teamSlug={props.teamSlug}
+            />
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Integrate API key section ------------------------------------------------------------
+
+function IntegrateAPIKeySection({ project }: { project: Project }) {
   const secretKeyMasked = project.secretKeys[0]?.masked;
   const clientId = project.publishableKey;
 
@@ -69,194 +135,38 @@ function IntegrateAPIKeySection({
         </div>
 
         <div className="h-5" />
-        <IntegrationCodeExamples project={project} teamSlug={teamSlug} />
+        <div className="flex flex-col gap-3">
+          <p className="text-muted-foreground text-sm">
+            Run this command in your terminal to send a test transaction using
+            your Project Wallet.
+          </p>
+          <CodeServer
+            className="bg-background"
+            code={curlCodeExample(project)}
+            lang="bash"
+          />
+        </div>
       </div>
     </section>
   );
 }
-
-function IntegrationCodeExamples(props: {
-  project: Project;
-  teamSlug: string;
-}) {
-  return (
-    <IntegrateAPIKeyCodeTabs
-      tabs={{
-        dotnet: (
-          <div className="flex flex-col gap-3">
-            <CodeServer
-              className="bg-background"
-              code={dotNotCodeExample(props.project)}
-              lang="csharp"
-            />
-            <Alert className="bg-background" variant="info">
-              <CircleAlertIcon className="size-5" />
-              <AlertTitle>
-                Configure your app's bundle ID in "Allowed Bundle IDs" in
-                Project
-              </AlertTitle>
-              <AlertDescription className="leading-loose">
-                Go to{" "}
-                <UnderlineLink
-                  href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
-                  target="_blank"
-                >
-                  Project settings
-                </UnderlineLink>{" "}
-                and add your app's bundle ID to the "Allowed Bundle IDs" list.
-              </AlertDescription>
-            </Alert>
-          </div>
-        ),
-        react: (
-          <CodeServer
-            className="bg-background"
-            code={reactCodeExample(props.project)}
-            lang="ts"
-          />
-        ),
-        "react-native": (
-          <CodeServer
-            className="bg-background"
-            code={reactCodeExample(props.project)}
-            lang="ts"
-          />
-        ),
-        ts: (
-          <CodeServer
-            className="bg-background"
-            code={typescriptCodeExample(props.project)}
-            lang="ts"
-          />
-        ),
-        unity: (
-          <Alert className="bg-background" variant="info">
-            <CircleAlertIcon className="size-5" />
-            <AlertTitle>
-              Configure Client ID in Thirdweb Manager prefab
-            </AlertTitle>
-            <AlertDescription className="leading-loose">
-              Configure "Client ID" and "Bundle ID" in{" "}
-              <UnderlineLink
-                href="https://portal.thirdweb.com/unity/v5/thirdwebmanager"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Thirdweb Manager prefab
-              </UnderlineLink>
-              <span className="block text-sm">
-                Make sure to configure your app's bundle ID in "Allowed Bundle
-                IDs" in{" "}
-                <UnderlineLink
-                  href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Project settings
-                </UnderlineLink>
-              </span>
-            </AlertDescription>
-          </Alert>
-        ),
-        unreal: (
-          <Alert className="bg-background" variant="info">
-            <CircleAlertIcon className="size-5" />
-            <AlertTitle>
-              Configure Client ID in Thirdweb Unreal Plugin{" "}
-            </AlertTitle>
-            <AlertDescription className="leading-loose">
-              Configure "Client ID" and "Bundle ID" in{" "}
-              <UnderlineLink
-                href="https://portal.thirdweb.com/unreal-engine/getting-started"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                thirdweb plugin settings
-              </UnderlineLink>
-              <span className="block text-sm">
-                Make sure to configure your app's bundle ID in "Allowed Bundle
-                IDs" in{" "}
-                <UnderlineLink
-                  href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  Project settings
-                </UnderlineLink>
-              </span>
-            </AlertDescription>
-          </Alert>
-        ),
-        api: (
-          <CodeServer
-            className="bg-background"
-            code={apiCodeExample(props.project)}
-            lang="javascript"
-          />
-        ),
-        curl: (
-          <CodeServer
-            className="bg-background"
-            code={curlCodeExample(props.project)}
-            lang="bash"
-          />
-        ),
-      }}
-    />
-  );
-}
-
-const typescriptCodeExample = (project: Project) => `\
-import { createThirdwebClient } from "thirdweb";
-
-const client = createThirdwebClient({
-  // use clientId for client side usage
-  clientId: "${project.publishableKey}",
-  // use secretKey for server side usage
-  secretKey: "${project.secretKeys[0]?.masked}", // replace this with full secret key
-});`;
-
-const reactCodeExample = (project: Project) => `\
-import { createThirdwebClient } from "thirdweb";
-
-const client = createThirdwebClient({
-  clientId: "${project.publishableKey}",
-});`;
-
-const dotNotCodeExample = (project: Project) => `\
-using Thirdweb;
-
-// For web applications
-var client = ThirdwebClient.Create(clientId: "${project.publishableKey}");
-
-// For native applications - Replace "yourBundleId" with your app's bundle ID
-var client = ThirdwebClient.Create(clientId: "${project.publishableKey}", bundleId: "yourBundleId");
-
-// For backend applications (Note: below shown secret key is not the full secret key)
-var client = ThirdwebClient.Create(secretKey: "${project.secretKeys[0]?.masked}");`;
-
-const apiCodeExample = (project: Project): string => `\
-// Server-side only: replace with your full secret key. Never expose in browser code.
-fetch('https://api.thirdweb.com/v1/wallets/server', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'x-secret-key': '${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}'
-  },
-  body: JSON.stringify({
-    identifier: 'treasury-wallet-123'
-  })
-});`;
-
 const curlCodeExample = (project: Project): string => `\
-// Server-side only: replace with your full secret key. Never expose in browser code.
-curl https://api.thirdweb.com/v1/wallets/server \\
+curl https://api.thirdweb.com/v1/transactions \\
   --request POST \\
   --header 'Content-Type: application/json' \\
   --header 'x-secret-key: ${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}' \\
   --data '{
-  "identifier": "treasury-wallet-123"
-}'`;
+  "chainId": 421614,
+  "transactions": [
+    {
+      "data": "0x",
+      "to": "vitalik.eth",
+      "value": "0"
+    }
+  ]
+}'
+`;
+
 // products section ------------------------------------------------------------
 
 function ProductsSection(props: { teamSlug: string; projectSlug: string }) {

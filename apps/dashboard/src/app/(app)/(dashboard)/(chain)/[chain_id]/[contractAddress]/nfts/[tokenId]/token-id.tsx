@@ -2,7 +2,7 @@
 
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import type { NFT, ThirdwebClient, ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
@@ -89,7 +89,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
 
   if (isPending) {
     return (
-      <div className="flex h-[400px] items-center justify-center">
+      <div className="flex h-[400px] items-center justify-center py-20">
         <Spinner className="size-10" />
       </div>
     );
@@ -179,15 +179,26 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             <NFTDetailsTab client={contract.client} nft={nft} />
           )}
 
-          {tabs.map((tb) => {
-            return (
-              tb.title === tab && (
-                <div className="w-full" key={tb.title}>
-                  {tb.children}
+          <Suspense
+            fallback={
+              <div className="h-full">
+                <div className="flex items-center gap-1.5">
+                  <Spinner className="size-4" />
+                  <p className="text-sm text-muted-foreground"> Loading </p>
                 </div>
-              )
-            );
-          })}
+              </div>
+            }
+          >
+            {tabs.map((tb) => {
+              return (
+                tb.title === tab && (
+                  <div className="w-full" key={tb.title}>
+                    {tb.children}
+                  </div>
+                )
+              );
+            })}
+          </Suspense>
         </div>
       </div>
     </div>

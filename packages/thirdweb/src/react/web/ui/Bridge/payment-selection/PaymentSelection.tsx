@@ -12,18 +12,18 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { usePaymentMethods } from "../../../../core/hooks/usePaymentMethods.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
-import type { PaymentMethod } from "../../../../core/machines/paymentMachine.js";
 import type { SupportedTokens } from "../../../../core/utils/defaultTokens.js";
 import type { ConnectLocale } from "../../ConnectWallet/locale/types.js";
 import { WalletSwitcherConnectionScreen } from "../../ConnectWallet/screens/WalletSwitcherConnectionScreen.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import type { PayEmbedConnectOptions } from "../../PayEmbed.js";
+import type { PaymentMethod } from "../types.js";
 import { FiatProviderSelection } from "./FiatProviderSelection.js";
 import { TokenSelection } from "./TokenSelection.js";
 import { WalletFiatSelection } from "./WalletFiatSelection.js";
 
-export interface PaymentSelectionProps {
+type PaymentSelectionProps = {
   /**
    * The destination token to bridge to
    */
@@ -37,7 +37,7 @@ export interface PaymentSelectionProps {
   /**
    * The receiver address
    */
-  receiverAddress?: Address;
+  receiverAddress: Address;
 
   /**
    * ThirdwebClient for API calls
@@ -57,12 +57,12 @@ export interface PaymentSelectionProps {
   /**
    * Called when user wants to go back
    */
-  onBack?: () => void;
+  onBack: () => void;
 
   /**
    * Connect options for wallet connection
    */
-  connectOptions?: PayEmbedConnectOptions;
+  connectOptions: PayEmbedConnectOptions | undefined;
 
   /**
    * Locale for connect UI
@@ -70,34 +70,28 @@ export interface PaymentSelectionProps {
   connectLocale: ConnectLocale;
 
   /**
-   * Whether to include the destination token in the payment methods
-   */
-  includeDestinationToken?: boolean;
-
-  /**
    * Allowed payment methods
-   * @default ["crypto", "card"]
    */
-  paymentMethods?: ("crypto" | "card")[];
+  paymentMethods: ("crypto" | "card")[];
 
   /**
    * Fee payer
    */
-  feePayer?: "sender" | "receiver";
+  feePayer: "sender" | "receiver" | undefined;
 
   /**
    * The currency to use for the payment.
    * @default "USD"
    */
-  currency?: SupportedFiatCurrency;
+  currency: SupportedFiatCurrency;
 
   /**
    * The user's ISO 3166 alpha-2 country code. This is used to determine onramp provider support.
    */
   country: string | undefined;
 
-  supportedTokens?: SupportedTokens;
-}
+  supportedTokens: SupportedTokens | undefined;
+};
 
 type Step =
   | { type: "walletSelection" }
@@ -115,8 +109,7 @@ export function PaymentSelection({
   onBack,
   connectOptions,
   connectLocale,
-  includeDestinationToken,
-  paymentMethods = ["crypto", "card"],
+  paymentMethods,
   supportedTokens,
   feePayer,
   currency,
@@ -161,10 +154,6 @@ export function PaymentSelection({
     client,
     destinationAmount,
     destinationToken,
-    includeDestinationToken:
-      includeDestinationToken ||
-      receiverAddress?.toLowerCase() !==
-        payerWallet?.getAccount()?.address?.toLowerCase(),
     payerWallet,
     supportedTokens,
   });

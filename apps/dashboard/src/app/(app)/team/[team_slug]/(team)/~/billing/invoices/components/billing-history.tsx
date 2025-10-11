@@ -25,6 +25,34 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { ThirdwebMiniLogo } from "../../../../../../../components/ThirdwebMiniLogo";
 import { searchParams } from "../search-params";
 
+function getStatusBadge(invoice: Stripe.Invoice) {
+  switch (invoice.status) {
+    case "paid":
+      return <Badge variant="success">Paid</Badge>;
+    case "open":
+    // we treat "uncollectible" as unpaid
+    case "uncollectible": {
+      // if the invoice has a due date, use that, otherwise use the effective at date (which is the date the invoice was created)
+      const effectiveDueDate = invoice.due_date || invoice.effective_at;
+
+      // if the invoice due date is in the past, we want to display it as past due
+      if (effectiveDueDate && effectiveDueDate * 1000 < Date.now()) {
+        return <Badge variant="destructive">Past Due</Badge>;
+      }
+      return <Badge variant="outline">Open</Badge>;
+    }
+    case "void":
+      return <Badge variant="secondary">Void</Badge>;
+
+    default:
+      return <Badge variant="outline">Unknown</Badge>;
+  }
+}
+
+function isInvoicePayable(invoice: Stripe.Invoice) {
+  return invoice.status === "open" || invoice.status === "uncollectible";
+}
+
 export function BillingHistory(props: {
   teamSlug: string;
   invoices: Stripe.Invoice[];
@@ -55,27 +83,6 @@ export function BillingHistory(props: {
       month: "long",
       year: "numeric",
     });
-  };
-
-  const getStatusBadge = (invoice: Stripe.Invoice) => {
-    switch (invoice.status) {
-      case "paid":
-        return <Badge variant="success">Paid</Badge>;
-      case "open":
-      // we treate "uncollectible" as unpaid
-      case "uncollectible": {
-        // if the invoice due date is in the past, we want to display it as past due
-        if (invoice.due_date && invoice.due_date * 1000 < Date.now()) {
-          return <Badge variant="destructive">Past Due</Badge>;
-        }
-        return <Badge variant="outline">Open</Badge>;
-      }
-      case "void":
-        return <Badge variant="secondary">Void</Badge>;
-
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
   };
 
   if (props.invoices.length === 0) {
@@ -126,7 +133,7 @@ export function BillingHistory(props: {
                 <TableCell>{getStatusBadge(invoice)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
-                    {invoice.status === "open" && (
+                    {isInvoicePayable(invoice) && (
                       <>
                         {/* always show the crypto payment button */}
                         <ToolTipLabel

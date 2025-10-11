@@ -118,8 +118,12 @@ tokenId: 2n,
     tokenAddress: options.payOptions.buyTokenAddress
       ? quotes(options.payOptions.buyTokenAddress)
       : undefined,
-    seller: options.payOptions.sellerAddress
-      ? quotes(options.payOptions.sellerAddress)
+    seller:
+      widget === "checkout"
+        ? quotes(options.payOptions.sellerAddress)
+        : undefined,
+    receiverAddress: options.payOptions.receiverAddress
+      ? quotes(options.payOptions.receiverAddress)
       : undefined,
     buttonLabel: options.payOptions.buttonLabel
       ? quotes(options.payOptions.buttonLabel)

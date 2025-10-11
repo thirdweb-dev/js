@@ -1,13 +1,15 @@
 import type { Money, PaymentMiddlewareConfig } from "x402/types";
+import type z from "zod";
 import type { Chain } from "../chains/types.js";
-import type { Address } from "../utils/address.js";
 import type { Prettify } from "../utils/type-utils.js";
-import type { ThirdwebX402Facilitator } from "./facilitator.js";
+import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
 import type {
   FacilitatorNetwork,
   FacilitatorSettleResponse,
+  FacilitatorSupportedAssetSchema,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
+  SupportedSignatureTypeSchema,
 } from "./schemas.js";
 
 export const x402Version = 1;
@@ -24,8 +26,6 @@ export type PaymentArgs = {
   method: "GET" | "POST" | ({} & string);
   /** The payment data/proof provided by the client, typically from the X-PAYMENT header */
   paymentData?: string | null;
-  /** The wallet address that should receive the payment */
-  payTo: Address;
   /** The blockchain network where the payment should be processed */
   network: FacilitatorNetwork | Chain;
   /** The price for accessing the resource - either a USD amount (e.g., "$0.10") or a specific token amount */
@@ -34,6 +34,12 @@ export type PaymentArgs = {
   facilitator: ThirdwebX402Facilitator;
   /** Optional configuration for the payment middleware route */
   routeConfig?: PaymentMiddlewareConfig;
+  /** Optional recipient address to receive the payment if different from your facilitator address */
+  payTo?: string;
+};
+
+export type SettlePaymentArgs = PaymentArgs & {
+  waitUntil?: WaitUntil;
 };
 
 export type PaymentRequiredResult = {
@@ -43,8 +49,10 @@ export type PaymentRequiredResult = {
   responseBody: {
     /** The X402 protocol version */
     x402Version: number;
-    /** Human-readable error message */
+    /** error code */
     error: string;
+    /** Human-readable error message */
+    errorMessage?: string;
     /** Array of acceptable payment methods and requirements */
     accepts: RequestedPaymentRequirements[];
     /** Optional payer address if verification partially succeeded */
@@ -86,17 +94,21 @@ export type VerifyPaymentResult = Prettify<
   | PaymentRequiredResult
 >;
 
-export type SupportedSignatureType = "TransferWithAuthorization" | "Permit";
+export type SupportedSignatureType = z.infer<
+  typeof SupportedSignatureTypeSchema
+>;
 
 export type ERC20TokenAmount = {
   amount: string;
   asset: {
     address: `0x${string}`;
-    decimals: number;
-    eip712: {
+    decimals?: number;
+    eip712?: {
       name: string;
       version: string;
       primaryType: SupportedSignatureType;
     };
   };
 };
+
+export type DefaultAsset = z.infer<typeof FacilitatorSupportedAssetSchema>;

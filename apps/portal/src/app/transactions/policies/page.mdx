@@ -1,0 +1,63 @@
+# Gas Sponsorship Policies
+
+Sponsorship policies are a way to control the execution of sponsored transactions on your account.
+
+You can use them to:
+
+- Set global spend limits.
+- Restrict sponsorship to a particular chain.
+- Restrict sponsorship to a particular contract.
+- Allow/Disallow specific wallets
+- Setup your own server verifier.
+
+These policies can be set from your project dashboard, under project > account abstraction > settings.
+
+## Server Verifier
+
+The most flexible and powerful way to control the execution of sponsored transactions is to setup your own server verifier.
+
+In the project dashboard, under project > account abstraction > settings, setup your backend URL and any additional headers you need to pass to the verifier.
+
+On every user transaction, your backend will be called with the transaction data and the user's wallet address, your endpoint should return a boolean indicating whether the transaction should be sponsored.
+
+### Backend endpoint specification:
+
+Your backend will be called with the following request:
+
+```http
+POST https://your-backend-url/verify-transaction
+Content-Type: application/json
+Referer: "https://api.thirdweb.com",
+# additional custom headers
+
+# request body
+{
+  "clientId": string;
+  "chainId": number;
+  "userOp": {
+    sender: string;
+    targets: string[];
+    gasLimit: string;
+    gasPrice: string;
+    data?: {
+      targets: string[];
+      callDatas: string[];
+      values: string[];
+    };
+  }
+}
+```
+
+Your backend should process the request, apply your own policy logic based on the request data and return the following JSON response:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "isAllowed": boolean;
+  "reason"?: string;
+}
+```
+
+The `isAllowed` field indicates whether the transaction should be sponsored or not. `reason` is an optional field that can be used to provide a reason for the decision.

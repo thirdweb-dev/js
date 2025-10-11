@@ -119,12 +119,17 @@ export function useCsvUpload<
       }
       Papa.parse(csv, {
         complete: (results) => {
-          const data = props.csvParser(results.data as T[]);
-          if (!data[0]?.address) {
+          try {
+            const data = props.csvParser(results.data as T[]);
+            if (!data[0]?.address) {
+              setNoCsv(true);
+              return;
+            }
+            setRawData(data);
+          } catch (error) {
+            console.error(error);
             setNoCsv(true);
-            return;
           }
-          setRawData(data);
         },
         header: true,
       });

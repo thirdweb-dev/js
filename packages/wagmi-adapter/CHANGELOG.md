@@ -1,5 +1,27 @@
 # @thirdweb-dev/wagmi-adapter
 
+## 0.2.162
+
+## 0.2.161
+
+## 0.2.160
+
+## 0.2.159
+
+## 0.2.158
+
+## 0.2.157
+
+## 0.2.156
+
+### Patch Changes
+
+- [#8167](https://github.com/thirdweb-dev/js/pull/8167) [`eb603f8`](https://github.com/thirdweb-dev/js/commit/eb603f89086f25202b157eb748f70a252dd7c6e7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies, better storage management
+
+## 0.2.155
+
+## 0.2.154
+
 ## 0.2.153
 
 ### Patch Changes

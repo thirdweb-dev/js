@@ -64,6 +64,15 @@ const baseNextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false,
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        destination: "https://thirdweb.com/ai",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

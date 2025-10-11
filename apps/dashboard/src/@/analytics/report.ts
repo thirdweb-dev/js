@@ -24,6 +24,7 @@ export function reportContractDeployed(properties: {
   publisher: string | undefined;
   contractName: string | undefined;
   deploymentType?: "asset";
+  is_testnet: boolean | undefined;
 }) {
   posthog.capture("contract deployed", properties);
 }
@@ -40,6 +41,7 @@ export function reportContractDeployed(properties: {
 export function reportContractDeployFailed(properties: {
   errorMessage: string;
   chainId: number;
+  is_testnet: boolean | undefined;
   publisher: string | undefined;
   contractName: string | undefined;
 }) {
@@ -171,9 +173,7 @@ export function reportOnboardingCompleted() {
  *
  */
 export function reportFaucetUsed(properties: { chainId: number }) {
-  posthog.capture("faucet used", {
-    chainId: properties.chainId,
-  });
+  posthog.capture("faucet used", properties);
 }
 
 // ----------------------------
@@ -197,12 +197,7 @@ export function reportChainConfigurationAdded(properties: {
     decimals: number;
   };
 }) {
-  posthog.capture("chain configuration added", {
-    chainId: properties.chainId,
-    chainName: properties.chainName,
-    nativeCurrency: properties.nativeCurrency,
-    rpcURLs: properties.rpcURLs,
-  });
+  posthog.capture("chain configuration added", properties);
 }
 
 // ----------------------------
@@ -227,12 +222,9 @@ export function reportAssetBuySuccessful(properties: {
   chainId: number;
   contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
+  is_testnet: boolean | undefined;
 }) {
-  posthog.capture("asset buy successful", {
-    assetType: properties.assetType,
-    chainId: properties.chainId,
-    contractType: properties.contractType,
-  });
+  posthog.capture("asset buy successful", properties);
 }
 
 type TokenSwapParams = {
@@ -349,16 +341,12 @@ export function reportTokenSwapCancelled(properties: TokenSwapParams) {
  */
 export function reportAssetBuyFailed(properties: {
   chainId: number;
+  is_testnet: boolean | undefined;
   contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
   error: string;
 }) {
-  posthog.capture("asset buy failed", {
-    assetType: properties.assetType,
-    chainId: properties.chainId,
-    contractType: properties.contractType,
-    error: properties.error,
-  });
+  posthog.capture("asset buy failed", properties);
 }
 
 /**
@@ -371,14 +359,11 @@ export function reportAssetBuyFailed(properties: {
  */
 export function reportAssetBuyCancelled(properties: {
   chainId: number;
+  is_testnet: boolean | undefined;
   contractType: AssetContractType | undefined;
   assetType: "nft" | "coin";
 }) {
-  posthog.capture("asset buy cancelled", {
-    assetType: properties.assetType,
-    chainId: properties.chainId,
-    contractType: properties.contractType,
-  });
+  posthog.capture("asset buy cancelled", properties);
 }
 
 // Assets Landing Page ----------------------------
@@ -423,10 +408,7 @@ export function reportAssetCreationStepConfigured(
         step: "coin-info" | "token-distribution" | "launch-coin";
       },
 ) {
-  posthog.capture("asset creation step configured", {
-    assetType: properties.assetType,
-    step: properties.step,
-  });
+  posthog.capture("asset creation step configured", properties);
 }
 
 /**
@@ -440,11 +422,10 @@ export function reportAssetCreationStepConfigured(
 export function reportAssetCreationSuccessful(properties: {
   assetType: "nft" | "coin";
   contractType: AssetContractType;
+  chainId: number;
+  is_testnet: boolean | undefined;
 }) {
-  posthog.capture("asset creation successful", {
-    assetType: properties.assetType,
-    contractType: properties.contractType,
-  });
+  posthog.capture("asset creation successful", properties);
 }
 
 type CoinCreationStep =
@@ -466,7 +447,12 @@ type CoinCreationStep =
  * @MananTank
  */
 export function reportAssetCreationFailed(
-  properties: { contractType: AssetContractType; error: string } & (
+  properties: {
+    contractType: AssetContractType;
+    error: string;
+    is_testnet: boolean | undefined;
+    chainId: number;
+  } & (
     | {
         assetType: "nft";
         step:
@@ -481,12 +467,7 @@ export function reportAssetCreationFailed(
       }
   ),
 ) {
-  posthog.capture("asset creation failed", {
-    assetType: properties.assetType,
-    contractType: properties.contractType,
-    error: properties.error,
-    step: properties.step,
-  });
+  posthog.capture("asset creation failed", properties);
 }
 
 type UpsellParams = {
@@ -582,6 +563,7 @@ export function reportPaymentLinkBuyFailed(properties: {
 export function reportAssetPageview(properties: {
   assetType: "nft" | "coin";
   chainId: number;
+  is_testnet: boolean | undefined;
 }) {
   posthog.capture("asset pageview", properties);
 }
@@ -593,7 +575,10 @@ export function reportAssetPageview(properties: {
  * ### Who is responsible for this event?
  * @MananTank
  */
-export function reportChainPageview(properties: { chainId: number }) {
+export function reportChainPageview(properties: {
+  chainId: number;
+  is_testnet: boolean | undefined;
+}) {
   posthog.capture("chain pageview", properties);
 }
 
@@ -686,10 +671,7 @@ export function reportProductFeedback(properties: {
   feedback: string;
   source: "desktop" | "mobile";
 }) {
-  posthog.capture("product feedback submitted", {
-    feedback: properties.feedback,
-    source: properties.source,
-  });
+  posthog.capture("product feedback submitted", properties);
 }
 
 /**

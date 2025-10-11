@@ -149,15 +149,15 @@ export type BridgeWidgetProps = {
   /**
    * Configuration for the Buy tab. This mirrors {@link BuyWidget} options where applicable.
    */
-  buy: {
+  buy?: {
     /**
      * The amount to buy (as a decimal string), e.g. "1.5" for 1.5 tokens.
      */
-    amount: string; // TODO - make it optional
+    amount?: string;
     /**
      * The chain the accepted token is on.
      */
-    chainId: number; // TODO - make it optional
+    chainId?: number;
     /**
      * Address of the token to buy. Leave undefined for the native token, or use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE.
      */
@@ -291,21 +291,23 @@ export function BridgeWidget(props: BridgeWidgetProps) {
         {tab === "buy" && (
           <BuyWidget
             client={props.client}
-            amount={props.buy.amount}
+            amount={props.buy?.amount}
             showThirdwebBranding={props.showThirdwebBranding}
-            chain={defineChain(props.buy.chainId)}
+            chain={
+              props.buy?.chainId ? defineChain(props.buy.chainId) : undefined
+            }
             currency={props.currency}
             theme={props.theme}
             title="" // Keep it empty string to hide the title
-            tokenAddress={props.buy.tokenAddress as `0x${string}` | undefined}
-            buttonLabel={props.buy.buttonLabel}
-            className={props.buy.className}
-            country={props.buy.country}
-            onCancel={props.buy.onCancel}
-            onError={props.buy.onError}
-            onSuccess={props.buy.onSuccess}
-            presetOptions={props.buy.presetOptions}
-            purchaseData={props.buy.purchaseData}
+            tokenAddress={props.buy?.tokenAddress as `0x${string}` | undefined}
+            buttonLabel={props.buy?.buttonLabel}
+            className={props.buy?.className}
+            country={props.buy?.country}
+            onCancel={props.buy?.onCancel}
+            onError={props.buy?.onError}
+            onSuccess={props.buy?.onSuccess}
+            presetOptions={props.buy?.presetOptions}
+            purchaseData={props.buy?.purchaseData}
             paymentMethods={["card"]}
             style={{
               border: "none",

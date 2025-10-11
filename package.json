@@ -65,6 +65,7 @@
     "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula --filter=./packages/ai-sdk-provider",
     "playground:build": "turbo run build --filter=./apps/playground-web",
     "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb --filter=./packages/insight --filter=./packages/engine --filter=./packages/nebula",
+    "wagmi-demo": "turbo run dev --filter=./apps/wagmi-demo --filter=./packages/thirdweb --filter=./packages/wagmi-adapter",
     "portal:build": "turbo run build --filter=./apps/portal",
     "prefix": "pnpm dlx sherif@latest -i remark-gfm -i eslint --fix",
     "preinstall": "npx only-allow pnpm",

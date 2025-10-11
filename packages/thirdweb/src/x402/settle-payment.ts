@@ -2,7 +2,7 @@ import { stringify } from "../utils/json.js";
 import { decodePaymentRequest } from "./common.js";
 import { safeBase64Encode } from "./encode.js";
 import {
-  type PaymentArgs,
+  type SettlePaymentArgs,
   type SettlePaymentResult,
   x402Version,
 } from "./types.js";
@@ -97,6 +97,7 @@ import {
  *     payTo: "0x1234567890123456789012345678901234567890",
  *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.05",
+ *     waitUntil: "submitted",
  *     facilitator: thirdwebFacilitator,
  *   });
  *
@@ -124,7 +125,7 @@ import {
  * @bridge x402
  */
 export async function settlePayment(
-  args: PaymentArgs,
+  args: SettlePaymentArgs,
 ): Promise<SettlePaymentResult> {
   const { routeConfig = {}, facilitator } = args;
   const { errorMessages } = routeConfig;
@@ -142,6 +143,7 @@ export async function settlePayment(
     const settlement = await facilitator.settle(
       decodedPayment,
       selectedPaymentRequirements,
+      args.waitUntil,
     );
 
     if (settlement.success) {
@@ -154,6 +156,7 @@ export async function settlePayment(
         },
       };
     } else {
+      const error = settlement.errorReason || "Settlement error";
       return {
         status: 402,
         responseHeaders: {
@@ -161,10 +164,9 @@ export async function settlePayment(
         },
         responseBody: {
           x402Version,
-          error:
-            errorMessages?.settlementFailed ||
-            settlement.errorReason ||
-            "Settlement failed",
+          error,
+          errorMessage:
+            errorMessages?.settlementFailed || settlement.errorMessage,
           accepts: paymentRequirements,
         },
       };
@@ -177,9 +179,10 @@ export async function settlePayment(
       },
       responseBody: {
         x402Version,
-        error:
+        error: "Settlement error",
+        errorMessage:
           errorMessages?.settlementFailed ||
-          (error instanceof Error ? error.message : "Settlement error"),
+          (error instanceof Error ? error.message : undefined),
         accepts: paymentRequirements,
       },
     };

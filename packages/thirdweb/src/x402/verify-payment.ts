@@ -101,6 +101,7 @@ export async function verifyPayment(
         selectedPaymentRequirements,
       };
     } else {
+      const error = verification.invalidReason || "Verification failed";
       return {
         status: 402,
         responseHeaders: {
@@ -108,10 +109,9 @@ export async function verifyPayment(
         },
         responseBody: {
           x402Version,
-          error:
-            errorMessages?.verificationFailed ||
-            verification.invalidReason ||
-            "Verification failed",
+          error: error,
+          errorMessage:
+            errorMessages?.verificationFailed || verification.errorMessage,
           accepts: paymentRequirements,
         },
       };
@@ -124,9 +124,10 @@ export async function verifyPayment(
       },
       responseBody: {
         x402Version,
-        error:
+        error: "Verification error",
+        errorMessage:
           errorMessages?.verificationFailed ||
-          (error instanceof Error ? error.message : "Verification error"),
+          (error instanceof Error ? error.message : undefined),
         accepts: paymentRequirements,
       },
     };

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Stripe from "stripe";
 import type { Team } from "@/api/team/get-team";
 import {
@@ -88,6 +88,9 @@ export async function fetchClientSecret(team: Team) {
     throw new Error("No customer ID found");
   }
 
+  // try to get the gclid cookie
+  const gclid = (await cookies()).get("gclid")?.value;
+
   // Create Checkout Sessions from body params.
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",
@@ -117,6 +120,8 @@ export async function fetchClientSecret(team: Team) {
           missing_payment_method: "cancel",
         },
       },
+      // if gclid exists, set it as a metadata field so we can attribute the conversion later
+      metadata: gclid ? { gclid } : undefined,
     },
   });
 

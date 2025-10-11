@@ -77,6 +77,7 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
             chainId: props.contract.chain.id,
             contractType: "DropERC721",
             error: errorMessage,
+            is_testnet: props.chainMetadata.testnet,
           });
 
           return;
@@ -103,6 +104,7 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
           assetType: "nft",
           chainId: props.contract.chain.id,
           contractType: "DropERC721",
+          is_testnet: props.chainMetadata.testnet,
         });
 
         props.onSuccess?.();
@@ -115,6 +117,7 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
           chainId: props.contract.chain.id,
           contractType: "DropERC721",
           error: errorMessage,
+          is_testnet: props.chainMetadata.testnet,
         });
 
         return;
@@ -131,6 +134,7 @@ export function BuyNFTDrop(props: BuyNFTDropProps) {
         chainId: props.contract.chain.id,
         contractType: "DropERC721",
         error: errorMessage,
+        is_testnet: props.chainMetadata.testnet,
       });
     }
   };

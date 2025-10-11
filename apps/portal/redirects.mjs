@@ -738,6 +738,10 @@ const paymentRedirects = {
   "/connect/pay/buy-with-fiat": "/payments",
   "/connect/pay/enable-test-mode": "/payments",
   "/connect/pay/guides/enable-test-mode": "/payments",
+  "/payments/sell": "/bridge/sell",
+  "/payments/swap": "/bridge/swap",
+  "/payments/tokens": "/bridge/tokens",
+  "/payments/routes": "/bridge/routes",
 };
 
 const contractRedirects = {

@@ -122,6 +122,7 @@ export function TokenDropClaim(props: {
             chainId: props.contract.chain.id,
             contractType: "DropERC20",
             error: errorMessage,
+            is_testnet: props.chainMetadata.testnet,
           });
 
           toast.error("Failed to approve spending", {
@@ -160,6 +161,7 @@ export function TokenDropClaim(props: {
           chainId: props.contract.chain.id,
           contractType: "DropERC20",
           error: errorMessage,
+          is_testnet: props.chainMetadata.testnet,
         });
 
         toast.error("Failed to buy tokens", {
@@ -172,6 +174,7 @@ export function TokenDropClaim(props: {
         assetType: "coin",
         chainId: props.contract.chain.id,
         contractType: "DropERC20",
+        is_testnet: props.chainMetadata.testnet,
       });
 
       setStepsUI({

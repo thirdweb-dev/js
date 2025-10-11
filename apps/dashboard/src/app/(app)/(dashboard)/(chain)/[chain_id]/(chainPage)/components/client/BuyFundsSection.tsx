@@ -8,6 +8,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
   return (
     <GridPatternEmbedContainer>
       <BuyAndSwapEmbed
+        isTestnet={props.chain.testnet}
         // eslint-disable-next-line no-restricted-syntax
         chain={defineDashboardChain(props.chain.chainId, props.chain)}
         buyAmount={undefined}

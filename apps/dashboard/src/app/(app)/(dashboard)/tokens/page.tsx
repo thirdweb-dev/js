@@ -1,7 +1,6 @@
 import { BringToFrontIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
-import Link from "next/link";
 import { Bridge } from "thirdweb";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { PageHeader } from "./components/header";
@@ -35,13 +34,10 @@ export default async function Page() {
           <h1 className="text-4xl font-bold tracking-tighter mb-1">
             Discover and swap any tokens on any chain, instantly
           </h1>
-          <Link
-            className="text-muted-foreground hover:text-foreground"
-            href="https://thirdweb.com/monetize/bridge"
-            target="_blank"
-          >
-            Powered by thirdweb bridge
-          </Link>
+
+          <p className="text-muted-foreground">
+            85+ chains, 4500+ tokens and 9+ million routes supported
+          </p>
         </div>
       </div>
       <TokenPage chains={chains} />

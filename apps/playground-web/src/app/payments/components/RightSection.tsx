@@ -67,6 +67,12 @@ export function RightSection(props: {
         tokenAddress={props.options.payOptions.buyTokenAddress}
         currency={props.options.payOptions.currency}
         showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
+        receiverAddress={props.options.payOptions.receiverAddress}
+        key={JSON.stringify({
+          amount: props.options.payOptions.buyTokenAmount,
+          chain: props.options.payOptions.buyTokenChain,
+          tokenAddress: props.options.payOptions.buyTokenAddress,
+        })}
         {...(props.options.payOptions.buttonLabel && {
           buttonLabel: props.options.payOptions.buttonLabel,
         })}
@@ -89,7 +95,6 @@ export function RightSection(props: {
         }
         name={props.options.payOptions.title || "Your Product Name"}
         paymentMethods={props.options.payOptions.paymentMethods}
-        presetOptions={[1, 2, 3]}
         seller={props.options.payOptions.sellerAddress}
         theme={themeObj}
         tokenAddress={props.options.payOptions.buyTokenAddress}

@@ -21,6 +21,7 @@ export function UniversalBridgeEmbed({
       buyAmount={amount}
       tokenAddress={token?.address}
       pageType="bridge"
+      isTestnet={chain.testnet}
     />
   );
 }

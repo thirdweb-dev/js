@@ -15,6 +15,7 @@ export function QuickStartSection(props: {
   projectSlug: string;
   clientId: string;
   teamId: string;
+  projectWalletAddress?: string;
 }) {
   return (
     <section>
@@ -43,6 +44,7 @@ export function QuickStartSection(props: {
           action={
             <CreatePaymentLinkButton
               clientId={props.clientId}
+              projectWalletAddress={props.projectWalletAddress}
               teamId={props.teamId}
             >
               <Button

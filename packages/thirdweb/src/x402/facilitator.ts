@@ -1,16 +1,21 @@
-import type { SupportedPaymentKindsResponse, VerifyResponse } from "x402/types";
+import type { VerifyResponse } from "x402/types";
 import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 import { withCache } from "../utils/promise/withCache.js";
 import type {
   FacilitatorSettleResponse,
+  FacilitatorSupportedResponse,
+  FacilitatorVerifyResponse,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
 } from "./schemas.js";
 
+export type WaitUntil = "simulated" | "submitted" | "confirmed";
+
 export type ThirdwebX402FacilitatorConfig = {
   client: ThirdwebClient;
   serverWalletAddress: string;
+  waitUntil?: WaitUntil;
   vaultAccessToken?: string;
   baseUrl?: string;
 };
@@ -31,12 +36,16 @@ export type ThirdwebX402Facilitator = {
   verify: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
-  ) => Promise<VerifyResponse>;
+  ) => Promise<FacilitatorVerifyResponse>;
   settle: (
     payload: RequestedPaymentPayload,
     paymentRequirements: RequestedPaymentRequirements,
+    waitUntil?: WaitUntil,
   ) => Promise<FacilitatorSettleResponse>;
-  supported: () => Promise<SupportedPaymentKindsResponse>;
+  supported: (filters?: {
+    chainId: number;
+    tokenAddress?: string;
+  }) => Promise<FacilitatorSupportedResponse>;
 };
 
 const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
@@ -77,6 +86,21 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  *   thirdwebX402Facilitator,
  * );
  * ```
+ * 
+ * #### Configuration Options
+ * 
+ * ```ts
+ * const thirdwebX402Facilitator = facilitator({
+ *   client: client,
+ *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ *   // Optional: Wait behavior for settlements
+ *   // - "simulated": Only simulate the transaction (fastest)
+ *   // - "submitted": Wait until transaction is submitted
+ *   // - "confirmed": Wait for full on-chain confirmation (slowest, default)
+ *   waitUntil: "confirmed",
+ * });
+
+ * ```
  *
  * @bridge x402
  */
@@ -103,7 +127,6 @@ export function facilitator(
         },
         settle: {
           "x-secret-key": secretKey,
-          "x-settlement-wallet-address": serverWalletAddress,
           ...(config.vaultAccessToken
             ? { "x-vault-access-token": config.vaultAccessToken }
             : {}),
@@ -126,7 +149,7 @@ export function facilitator(
     async verify(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
-    ): Promise<VerifyResponse> {
+    ): Promise<FacilitatorVerifyResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
 
       let headers = { "Content-Type": "application/json" };
@@ -162,12 +185,14 @@ export function facilitator(
     async settle(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
+      waitUntil?: WaitUntil,
     ): Promise<FacilitatorSettleResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
 
       let headers = { "Content-Type": "application/json" };
       const authHeaders = await facilitator.createAuthHeaders();
       headers = { ...headers, ...authHeaders.settle };
+      const waitUntilParam = waitUntil || config.waitUntil;
 
       const res = await fetch(`${url}/settle`, {
         method: "POST",
@@ -176,6 +201,7 @@ export function facilitator(
           x402Version: payload.x402Version,
           paymentPayload: payload,
           paymentRequirements: paymentRequirements,
+          ...(waitUntilParam ? { waitUntil: waitUntilParam } : {}),
         }),
       });
 
@@ -193,14 +219,27 @@ export function facilitator(
      *
      * @returns A promise that resolves to the supported payment kinds
      */
-    async supported(): Promise<SupportedPaymentKindsResponse> {
+    async supported(filters?: {
+      chainId: number;
+      tokenAddress?: string;
+    }): Promise<FacilitatorSupportedResponse> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
       return withCache(
         async () => {
           let headers = { "Content-Type": "application/json" };
           const authHeaders = await facilitator.createAuthHeaders();
           headers = { ...headers, ...authHeaders.supported };
-          const res = await fetch(`${url}/supported`, { headers });
+          const supportedUrl = new URL(`${url}/supported`);
+          if (filters?.chainId) {
+            supportedUrl.searchParams.set(
+              "chainId",
+              filters.chainId.toString(),
+            );
+          }
+          if (filters?.tokenAddress) {
+            supportedUrl.searchParams.set("tokenAddress", filters.tokenAddress);
+          }
+          const res = await fetch(supportedUrl.toString(), { headers });
 
           if (res.status !== 200) {
             throw new Error(
@@ -209,11 +248,11 @@ export function facilitator(
           }
 
           const data = await res.json();
-          return data as SupportedPaymentKindsResponse;
+          return data as FacilitatorSupportedResponse;
         },
         {
-          cacheKey: `supported-payment-kinds-${url}`,
-          cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+          cacheKey: `supported-payment-kinds-${url}-${filters?.chainId}-${filters?.tokenAddress}2`,
+          cacheTime: 1000 * 60 * 60 * 1, // 1 hour
         },
       );
     },

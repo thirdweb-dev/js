@@ -18,6 +18,7 @@ const defaultOptions: BridgeComponentsPlaygroundOptions = {
     sellerAddress: "0x0000000000000000000000000000000000000000",
     title: "",
     transactionData: "",
+    receiverAddress: undefined,
     currency: "USD",
     showThirdwebBranding: true,
   },

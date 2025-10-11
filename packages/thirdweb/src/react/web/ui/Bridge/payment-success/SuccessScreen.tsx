@@ -13,14 +13,13 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
-import type { UIOptions } from "../BridgeOrchestrator.js";
 import { PaymentReceipt } from "./PaymentReceipt.js";
 
-export interface SuccessScreenProps {
+type SuccessScreenProps = {
   /**
    * UI options
    */
-  uiOptions: UIOptions;
+  showContinueWithTx: boolean;
   /**
    * Prepared quote from Bridge.prepare
    */
@@ -46,19 +45,19 @@ export interface SuccessScreenProps {
   /**
    * Whether or not this payment is associated with a payment ID. If it does, we show a different message.
    */
-  hasPaymentId?: boolean;
-}
+  hasPaymentId: boolean;
+};
 
 type ViewState = "success" | "detail";
 
 export function SuccessScreen({
-  uiOptions,
   preparedQuote,
   completedStatuses,
   onDone,
   windowAdapter,
   client,
   hasPaymentId = false,
+  showContinueWithTx,
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
   const [viewState, setViewState] = useState<ViewState>("success");
@@ -137,7 +136,7 @@ export function SuccessScreen({
           <Text center color="secondaryText" size="sm">
             {hasPaymentId
               ? "You can now close this page and return to the application."
-              : uiOptions.mode === "transaction"
+              : showContinueWithTx
                 ? "Click continue to execute your transaction."
                 : "Your payment has been completed successfully."}
           </Text>
@@ -158,7 +157,7 @@ export function SuccessScreen({
 
         {!hasPaymentId && (
           <Button fullWidth onClick={onDone} variant="accent">
-            {uiOptions.mode === "transaction" ? "Continue" : "Done"}
+            {showContinueWithTx ? "Continue" : "Done"}
           </Button>
         )}
       </Container>

@@ -17,6 +17,76 @@ https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>
 
 Make sure to keep your secret key safe and never share it with anyone.
 
+By default, all tools are available. You can filter the tools available by passing a comma-separated list of tools as a query parameter.
+
+```http
+https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,getWalletBalance
+```
+
+You can find all available tools at the bottom of this page.
+
+## Usage with agents
+
+Use your favorite agent framework to plug in the MCP server as a collection of tools for your agent.  Refer to your agent framework's documentation for more information.
+
+#### Example usage with langchain:
+
+<Tabs defaultValue="typescript">
+
+<TabsList>
+<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+<TabsTrigger value="python">Python</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
+
+```typescript
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { MultiServerMCPClient } from "@langchain/mcp-adapters";
+
+const mcpServers = {
+  thirdweb: {
+    url: `https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>`
+  }
+};
+
+// Connect to MCP servers and get tools
+const client = new MultiServerMCPClient(mcpServers);
+const tools = await client.getTools();
+
+const agent = createReactAgent({
+  llm: model,
+  tools: tools,
+});
+await agent.invoke({messages: [{ role: "user", content: "create a server wallet called 'my-wallet'" }]})
+```
+
+</TabsContent>
+
+<TabsContent value="python">
+
+```python
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langgraph.prebuilt import create_react_agent
+
+client = MultiServerMCPClient(
+    {
+        "thirdweb": {
+            "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>",
+        }
+    }
+)
+tools = await client.get_tools()
+agent = create_react_agent("openai:gpt-4.1", tools)
+response = await agent.invoke({"messages": "create a server wallet called 'my-wallet'"})
+```
+
+</TabsContent>
+
+</Tabs>
+
+Once installed, you can use the entire thirdweb API with natural language.
+
 ## Usage with LLM clients
 
 You can also use the MCP server on your own LLM client, like cursor, claude code and more. Refer to your LLM client's documentation for more information.
@@ -112,31 +182,6 @@ claude mcp add --transport http "thirdweb-api" "https://api.thirdweb.com/mcp?sec
 
 </Tabs>
 
-## Usage with agents
-
-Use your favorite agent framework to plug in the MCP server as a collection of tools for your agent.  Refer to your agent framework's documentation for more information.
-
-#### Example usage with langchain:
-
-```python
-from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.prebuilt import create_react_agent
-
-client = MultiServerMCPClient(
-    {
-        "thirdweb-api": {
-            "transport": "streamable_http",
-            "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>",
-        }
-    }
-)
-tools = await client.get_tools()
-agent = create_react_agent("openai:gpt-4.1", tools)
-response = await agent.ainvoke({"messages": "create a server wallet called 'my-wallet'"})
-```
-
-Once installed, you can use the entire thirdweb API with natural language. 
-
 ## Example prompts
 
 #### Managing server wallets
@@ -164,3 +209,46 @@ List my contracts
 ```
 approve 100 USDC from treasury wallet to executor wallet
 ```
+
+## Available tools
+
+Currently, the following tools are available:
+
+- `initiateAuthentication`
+- `completeAuthentication`
+- `linkAuthentication`
+- `unlinkAuthentication`
+- `getMyWallet`
+- `listUserWallets`
+- `createUserWallet`
+- `listServerWallets`
+- `createServerWallet`
+- `getWalletBalance`
+- `getWalletTransactions`
+- `getWalletTokens`
+- `getWalletNFTs`
+- `signMessage`
+- `signTypedData`
+- `sendTokens`
+- `listContracts`
+- `deployContract`
+- `readContract`
+- `writeContract`
+- `getContractTransactions`
+- `getContractEvents`
+- `getContractMetadata`
+- `getContractSignatures`
+- `getTransactionById`
+- `listTransactions`
+- `sendTransactions`
+- `createPayment`
+- `paymentsPurchase`
+- `getPaymentHistory`
+- `fetchWithPayment`
+- `createToken`
+- `listTokens`
+- `getTokenOwners`
+- `getBridgeChains`
+- `convertFiatToCrypto`
+- `bridgeSwap`
+- `chat`

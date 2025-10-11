@@ -39,6 +39,7 @@ export function TokensTable(props: {
               <TableHead>Price</TableHead>
               <TableHead>Market cap</TableHead>
               <TableHead>Volume (24h)</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -64,6 +65,9 @@ export function TokensTable(props: {
                     <TableCell>
                       <Skeleton className="ml-auto h-4 w-20" />
                     </TableCell>
+                    <TableCell>
+                      <Skeleton className="ml-auto h-4 w-20" />
+                    </TableCell>
                   </TableRow>
                 ))
               : tokens.length > 0
@@ -81,6 +85,7 @@ export function TokensTable(props: {
                               <AvatarImage
                                 src={token.iconUri ?? undefined}
                                 alt={token.symbol}
+                                className="rounded-full"
                               />
                               <AvatarFallback>
                                 {token.symbol?.slice(0, 2)?.toUpperCase()}
@@ -90,20 +95,9 @@ export function TokensTable(props: {
                               <span className="font-medium leading-none text-base">
                                 {token.symbol}
                               </span>
-                              <Link
-                                href={
-                                  token.address.toLowerCase() ===
-                                  NATIVE_TOKEN_ADDRESS.toLowerCase()
-                                    ? `/${token.chainId}`
-                                    : `/${token.chainId}/${token.address}`
-                                }
-                                prefetch={false}
-                                className="before:absolute before:inset-0"
-                              >
-                                <span className="text-sm text-muted-foreground leading-none">
-                                  {token.name}
-                                </span>
-                              </Link>
+                              <span className="text-sm text-muted-foreground leading-none">
+                                {token.name}
+                              </span>
                             </div>
                           </div>
                         </TableCell>
@@ -119,6 +113,29 @@ export function TokensTable(props: {
                           {token.volume24hUsd
                             ? formatUsdCompact(token.volume24hUsd)
                             : "N/A"}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            asChild
+                            variant="outline"
+                            size="sm"
+                            className="gap-2 rounded-full bg-card hover:border-foreground/50 text-muted-foreground hover:bg-inverted hover:text-inverted-foreground"
+                          >
+                            <Link
+                              aria-label={`Buy ${token.symbol}`}
+                              href={
+                                token.address.toLowerCase() ===
+                                NATIVE_TOKEN_ADDRESS.toLowerCase()
+                                  ? `/${token.chainId}`
+                                  : `/${token.chainId}/${token.address}`
+                              }
+                              prefetch={false}
+                              className="before:absolute before:inset-0"
+                            >
+                              Buy
+                              <ArrowRightIcon className="size-3" />
+                            </Link>
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );

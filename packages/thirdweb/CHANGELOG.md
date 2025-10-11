@@ -1,5 +1,79 @@
 # thirdweb
 
+## 5.108.12
+
+### Patch Changes
+
+- [#8226](https://github.com/thirdweb-dev/js/pull/8226) [`0082e99`](https://github.com/thirdweb-dev/js/commit/0082e996cae47a326110e74457c72b3f3936743d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add optional recipientAddress to x402 settlePayment
+
+- [#8226](https://github.com/thirdweb-dev/js/pull/8226) [`0082e99`](https://github.com/thirdweb-dev/js/commit/0082e996cae47a326110e74457c72b3f3936743d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose 7702 utility functions
+
+## 5.108.11
+
+### Patch Changes
+
+- [#8228](https://github.com/thirdweb-dev/js/pull/8228) [`05550d0`](https://github.com/thirdweb-dev/js/commit/05550d045f291b8e53afd0d7e73c438bee202fb7) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Export ERC7702 MinimalAccount helpers and events
+
+## 5.108.10
+
+### Patch Changes
+
+- [#8218](https://github.com/thirdweb-dev/js/pull/8218) [`f630912`](https://github.com/thirdweb-dev/js/commit/f630912b9b0e1d8ebe22b0b52c650f5e40e12baf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export missing x402 types
+
+- [#8215](https://github.com/thirdweb-dev/js/pull/8215) [`62cfbb7`](https://github.com/thirdweb-dev/js/commit/62cfbb7441e66156c55c76d73f5b481f5ea576bc) Thanks [@MananTank](https://github.com/MananTank)! - Show error in BuyWidget and SwapWidget UI if fetching token details fails
+
+- Updated dependencies [[`f630912`](https://github.com/thirdweb-dev/js/commit/f630912b9b0e1d8ebe22b0b52c650f5e40e12baf)]:
+  - @thirdweb-dev/engine@3.2.2
+
+## 5.108.9
+
+### Patch Changes
+
+- [#8192](https://github.com/thirdweb-dev/js/pull/8192) [`968913d`](https://github.com/thirdweb-dev/js/commit/968913d55b761c1e23062fdf6008904fa8c17050) Thanks [@MananTank](https://github.com/MananTank)! - Fix TransactionWidget not updating when `currency` prop is changed after initial render
+
+## 5.108.8
+
+### Patch Changes
+
+- [#8184](https://github.com/thirdweb-dev/js/pull/8184) [`af9a73d`](https://github.com/thirdweb-dev/js/commit/af9a73d9302078a506b7d3cb8d55b611f15b6293) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix waitUntil facilitator param not being respected
+
+## 5.108.7
+
+### Patch Changes
+
+- [#8181](https://github.com/thirdweb-dev/js/pull/8181) [`e612f16`](https://github.com/thirdweb-dev/js/commit/e612f16a85ffda024d7f74b41abb48b2999b9107) Thanks [@MananTank](https://github.com/MananTank)! - BuyWidget UI improvements and new features:
+  - `chain`, and `amount` props are now optional
+  - User can always change the token and chain selection in the widget
+  - Both fiat and token amounts are editable
+  - connected wallet can be disconnected from the widget
+  - current balance displayed in the widget
+
+## 5.108.6
+
+### Patch Changes
+
+- [#8167](https://github.com/thirdweb-dev/js/pull/8167) [`eb603f8`](https://github.com/thirdweb-dev/js/commit/eb603f89086f25202b157eb748f70a252dd7c6e7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update dependencies
+
+## 5.108.5
+
+### Patch Changes
+
+- [#8145](https://github.com/thirdweb-dev/js/pull/8145) [`7495f46`](https://github.com/thirdweb-dev/js/commit/7495f462221e9e4319d2dd08942693d7888cabe6) Thanks [@MananTank](https://github.com/MananTank)! - Token Search improvements in SwapWidget
+
+- [#8142](https://github.com/thirdweb-dev/js/pull/8142) [`496615f`](https://github.com/thirdweb-dev/js/commit/496615feaea0e8dfaaf0612e1cc94b60fcae9f4f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve token info discovery for x402 payments
+
+- [#8144](https://github.com/thirdweb-dev/js/pull/8144) [`b8afa98`](https://github.com/thirdweb-dev/js/commit/b8afa98de6bd38376e190f3c54ee9fdadccfebe7) Thanks [@MananTank](https://github.com/MananTank)! - Remove retries when fetching list of tokens fails in SwapWidget to reduce time loading skeletons are shown in the UI
+
+- [#8153](https://github.com/thirdweb-dev/js/pull/8153) [`94aae90`](https://github.com/thirdweb-dev/js/commit/94aae902a1d036e1f706fc37f1167a47820a6e4e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Also expose waitUntil param in settlePayment()
+
+## 5.108.4
+
+### Patch Changes
+
+- [#8141](https://github.com/thirdweb-dev/js/pull/8141) [`85bde21`](https://github.com/thirdweb-dev/js/commit/85bde21dc97d2ad06547832e9470532069d0cbf5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle 7702 accounts in verifyTypedData
+
+- [#8136](https://github.com/thirdweb-dev/js/pull/8136) [`aa0d23e`](https://github.com/thirdweb-dev/js/commit/aa0d23e966d4fd34ebadc38793f0f006aa70004f) Thanks [@MananTank](https://github.com/MananTank)! - Fix Embed container size
+
 ## 5.108.3
 
 ### Patch Changes

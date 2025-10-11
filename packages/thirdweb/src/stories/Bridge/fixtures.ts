@@ -13,8 +13,11 @@ import type {
   BridgePrepareResult,
 } from "../../react/core/hooks/useBridgePrepare.js";
 import { getDefaultToken } from "../../react/core/utils/defaultTokens.js";
-import type { UIOptions } from "../../react/web/ui/Bridge/BridgeOrchestrator.js";
-import { prepareTransaction } from "../../transaction/prepare-transaction.js";
+import type { DirectPaymentInfo } from "../../react/web/ui/Bridge/types.js";
+import {
+  type PreparedTransaction,
+  prepareTransaction,
+} from "../../transaction/prepare-transaction.js";
 import { toWei } from "../../utils/units.js";
 import type { Account, Wallet } from "../../wallets/interfaces/wallet.js";
 import { storyClient } from "../utils.js";
@@ -636,7 +639,7 @@ const contractInteractionTransaction = claimTo({
 // ========== COMMON DUMMY DATA FOR STORYBOOK ========== //
 
 // Common receiver addresses for testing
-export const RECEIVER_ADDRESSES = {
+const RECEIVER_ADDRESSES = {
   physical: "0x5555666677778888999900001111222233334444" as const,
   primary: "0x2247d5d238d0f9d37184d8332aE0289d1aD9991b" as const,
   secondary: "0xa3841994009B4fEabb01ebcC62062F9E56F701CD" as const,
@@ -677,57 +680,24 @@ const PRODUCT_METADATA = {
   },
 };
 
-// Type aliases for better type safety
-type FundWalletUIOptions = Extract<UIOptions, { mode: "fund_wallet" }>;
-type DirectPaymentUIOptions = Extract<UIOptions, { mode: "direct_payment" }>;
-type TransactionUIOptions = Extract<UIOptions, { mode: "transaction" }>;
+type DirectPaymentUIOptions = {
+  metadata: {
+    description: string | undefined;
+    title: string | undefined;
+    image: string | undefined;
+  };
+  paymentInfo: DirectPaymentInfo;
+  buttonLabel: string | undefined;
+};
 
-// UI Options for FundWallet mode
-export const FUND_WALLET_UI_OPTIONS: Record<
-  "ethDefault" | "ethWithAmount" | "usdcDefault" | "uniLarge" | "customButton",
-  FundWalletUIOptions
-> = {
-  ethDefault: {
-    destinationToken: ETH,
-    metadata: {
-      description: "Add funds to your wallet",
-      title: "Fund Wallet",
-    },
-    mode: "fund_wallet" as const,
-  },
-  ethWithAmount: {
-    destinationToken: ETH,
-    initialAmount: "0.001",
-    metadata: {
-      description: "Add funds to your wallet",
-      title: "Fund Wallet",
-    },
-    mode: "fund_wallet" as const,
-  },
-  uniLarge: {
-    destinationToken: UNI,
-    initialAmount: "150000",
-    metadata: {
-      description: "Add UNI tokens to your wallet",
-      title: "Fund Wallet",
-    },
-    mode: "fund_wallet" as const,
-  },
-  usdcDefault: {
-    destinationToken: USDC,
-    initialAmount: "5",
-    mode: "fund_wallet" as const,
-  },
-  customButton: {
-    destinationToken: ETH,
-    initialAmount: "0.01",
-    metadata: {
-      description: "Test custom button label for funding",
-      title: "Custom Fund Wallet",
-    },
-    mode: "fund_wallet" as const,
-    buttonLabel: "Add Funds Now",
-  },
+type TransactionUIOptions = {
+  metadata: {
+    description: string | undefined;
+    title: string | undefined;
+    image: string | undefined;
+  };
+  transaction: PreparedTransaction;
+  buttonLabel: string | undefined;
 };
 
 // UI Options for DirectPayment mode
@@ -746,7 +716,7 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       image: PRODUCT_METADATA.concertTicket.image,
       title: "Buy Concert Ticket",
     },
-    mode: "direct_payment" as const,
+    buttonLabel: undefined,
     paymentInfo: {
       amount: "25.00",
       feePayer: "receiver" as const,
@@ -758,8 +728,9 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
     metadata: {
       description: PRODUCT_METADATA.credits.description,
       title: "Add Credits",
+      image: undefined,
     },
-    mode: "direct_payment" as const,
+    buttonLabel: undefined,
     paymentInfo: {
       amount: "25",
       feePayer: "receiver" as const,
@@ -773,7 +744,7 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       image: PRODUCT_METADATA.digitalArt.image,
       title: "Purchase Digital Art",
     },
-    mode: "direct_payment" as const,
+    buttonLabel: undefined,
     paymentInfo: {
       amount: "0.1",
       feePayer: "sender" as const,
@@ -787,7 +758,7 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       image: PRODUCT_METADATA.sneakers.image,
       title: "Buy Sneakers",
     },
-    mode: "direct_payment" as const,
+    buttonLabel: undefined,
     paymentInfo: {
       amount: "0.05",
       feePayer: "receiver" as const,
@@ -801,7 +772,7 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       image: PRODUCT_METADATA.subscription.image,
       title: "Subscribe to Premium",
     },
-    mode: "direct_payment" as const,
+    buttonLabel: undefined,
     paymentInfo: {
       amount: "9.99",
       feePayer: "sender" as const,
@@ -815,7 +786,6 @@ export const DIRECT_PAYMENT_UI_OPTIONS: Record<
       image: PRODUCT_METADATA.digitalArt.image,
       title: "Custom Button Test",
     },
-    mode: "direct_payment" as const,
     buttonLabel: "Purchase Now",
     paymentInfo: {
       amount: "0.05",
@@ -835,32 +805,35 @@ export const TRANSACTION_UI_OPTIONS: Record<
     metadata: {
       description: "Interact with smart contract",
       title: "Contract Interaction",
+      image: undefined,
     },
-    mode: "transaction" as const,
+    buttonLabel: undefined,
     transaction: contractInteractionTransaction,
   },
   erc20Transfer: {
     metadata: {
       description: "Transfer ERC20 tokens",
       title: "Token Transfer",
+      image: undefined,
     },
-    mode: "transaction" as const,
+    buttonLabel: undefined,
     transaction: erc20Transaction,
   },
   ethTransfer: {
     metadata: {
       description: "Review and execute transaction",
       title: "Execute Transaction",
+      image: undefined,
     },
-    mode: "transaction" as const,
+    buttonLabel: undefined,
     transaction: ethTransferTransaction,
   },
   customButton: {
     metadata: {
       description: "Test custom button label for transactions",
       title: "Custom Transaction",
+      image: undefined,
     },
-    mode: "transaction" as const,
     buttonLabel: "Execute Now",
     transaction: ethTransferTransaction,
   },

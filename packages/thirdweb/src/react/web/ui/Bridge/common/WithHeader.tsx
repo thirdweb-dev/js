@@ -5,31 +5,25 @@ import { radius } from "../../../../core/design-system/index.js";
 import { Container } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
-import type { UIOptions } from "../BridgeOrchestrator.js";
 
-export function WithHeader({
-  children,
-  uiOptions,
-  defaultTitle,
-  client,
-}: {
+export function WithHeader(props: {
   children: React.ReactNode;
-  uiOptions: UIOptions;
-  defaultTitle: string;
+  title: string | undefined;
+  description: string | undefined;
+  image: string | undefined;
   client: ThirdwebClient;
 }) {
   const theme = useCustomTheme();
-  const showTitle = uiOptions.metadata?.title !== "";
 
   return (
     <Container flex="column">
       {/* image */}
-      {uiOptions.metadata?.image && (
+      {props.image && (
         <div
           style={{
             aspectRatio: "16/9",
             backgroundColor: theme.colors.tertiaryBg,
-            backgroundImage: `url(${getUrl(client, uiOptions.metadata.image)})`,
+            backgroundImage: `url(${getUrl(props.client, props.image)})`,
             backgroundPosition: "center",
             backgroundSize: "cover",
             borderRadius: `${radius.md} ${radius.md} 0 0`,
@@ -40,23 +34,23 @@ export function WithHeader({
       )}
 
       <Container flex="column" px="md">
-        <Spacer y="md+" />
+        <Spacer y="md" />
 
-        {(showTitle || uiOptions.metadata?.description) && (
+        {(props.title || props.description) && (
           <>
             {/* title */}
-            {showTitle && (
+            {props.title && (
               <Text color="primaryText" size="lg" weight={600}>
-                {uiOptions.metadata?.title || defaultTitle}
+                {props.title}
               </Text>
             )}
 
             {/* Description */}
-            {uiOptions.metadata?.description && (
+            {props.description && (
               <>
                 <Spacer y="xxs" />
                 <Text color="secondaryText" size="sm" multiline>
-                  {uiOptions.metadata?.description}
+                  {props.description}
                 </Text>
               </>
             )}
@@ -65,7 +59,7 @@ export function WithHeader({
           </>
         )}
 
-        {children}
+        {props.children}
       </Container>
     </Container>
   );

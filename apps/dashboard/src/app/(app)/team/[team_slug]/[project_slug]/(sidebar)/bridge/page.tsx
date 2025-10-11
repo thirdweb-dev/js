@@ -69,69 +69,19 @@ export default async function Page(props: {
           },
         },
         links: [
-          // TODO - add docs when bridge docs are added in portal
-          // {
-          // 	type: "docs",
-          // 	href: "https://portal.thirdweb.com/payments",
-          // },
+          {
+            type: "docs",
+            href: "https://portal.thirdweb.com/bridge",
+          },
+          {
+            type: "playground",
+            href: "https://playground.thirdweb.com/bridge/swap-widget",
+          },
           {
             type: "api",
             href: "https://api.thirdweb.com/reference#tag/bridge",
           },
         ],
-      }}
-      footer={{
-        center: {
-          links: [
-            {
-              href: "https://playground.thirdweb.com/payments/ui-components",
-              label: "UI Component",
-            },
-            {
-              href: "https://playground.thirdweb.com/connect/payments/fund-wallet",
-              label: "Buy Crypto",
-            },
-            {
-              href: "https://playground.thirdweb.com/connect/payments/commerce",
-              label: "Checkout",
-            },
-            {
-              href: "https://playground.thirdweb.com/connect/payments/transactions",
-              label: "Transactions",
-            },
-          ],
-          title: "Demos",
-        },
-        left: {
-          links: [
-            {
-              href: "https://portal.thirdweb.com/payments",
-              label: "Overview",
-            },
-            {
-              href: "https://portal.thirdweb.com/typescript/v5/convertCryptoToFiat",
-              label: "TypeScript",
-            },
-            {
-              href: "https://portal.thirdweb.com/react/v5/pay/fund-wallets",
-              label: "React",
-            },
-            {
-              href: "https://portal.thirdweb.com/dotnet/universal-bridge/quickstart",
-              label: ".NET",
-            },
-          ],
-          title: "Documentation",
-        },
-        right: {
-          links: [
-            {
-              href: "https://www.youtube.com/watch?v=aBu175-VsNY",
-              label: "Implement cross-chain payments in any app",
-            },
-          ],
-          title: "Tutorials",
-        },
       }}
     >
       <div className="flex flex-col gap-12">
