@@ -27,6 +27,7 @@ interface PayConfigProps {
   teamSlug: string;
   fees: Fee;
   projectWalletAddress?: string;
+  authToken: string;
 }
 
 export const PayConfig: React.FC<PayConfigProps> = (props) => {
@@ -48,6 +49,7 @@ export const PayConfig: React.FC<PayConfigProps> = (props) => {
         feeBps: values.developerFeeBPS,
         feeRecipient: values.payoutAddress,
         teamId: props.teamId,
+        authToken: props.authToken,
       });
     },
   });
