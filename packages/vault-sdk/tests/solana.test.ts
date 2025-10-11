@@ -314,7 +314,7 @@ describe("Solana Vault Integration Tests", () => {
 
   describe("Transaction Creation and Signing", () => {
     it("should create a valid transfer transaction", async () => {
-      const transferAmount = lamports(100_000_000n); // 1 lamport - minimum possible
+      const transferAmount = lamports(100_000_000n);
 
       // Get latest blockhash
       const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
@@ -348,7 +348,7 @@ describe("Solana Vault Integration Tests", () => {
     });
 
     it("should sign transaction with vault and return valid signature", async () => {
-      const transferAmount = lamports(100_000_000n); // 1 lamport - minimum possible
+      const transferAmount = lamports(100_000_000n);
 
       // Get latest blockhash
       const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
@@ -404,7 +404,7 @@ describe("Solana Vault Integration Tests", () => {
 
   describe("End-to-End Transfer", () => {
     it("should create, sign, and broadcast a SOL transfer", async () => {
-      const transferAmount = lamports(100_000_000n); // 1 lamport - minimum possible
+      const transferAmount = lamports(100_000_000n);
 
       // Get sender's initial balance
       const initialBalance = await rpc.getBalance(address(senderPubkey)).send();
@@ -510,7 +510,7 @@ describe("Solana Vault Integration Tests", () => {
   describe("Multiple Transfers", () => {
     it("should handle multiple sequential transfers", async () => {
       const numTransfers = 3;
-      const transferAmount = lamports(100_000_000n); // 1 lamport each - minimum possible
+      const transferAmount = lamports(100_000_000n);
 
       const signatures: string[] = [];
 
