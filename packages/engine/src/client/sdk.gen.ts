@@ -11,11 +11,18 @@ import type {
 	CancelTransactionResponses,
 	CreateAccountData,
 	CreateAccountResponses,
+	CreateSolanaAccountData,
+	CreateSolanaAccountResponses,
 	EncodeContractData,
 	EncodeContractResponses,
 	GetActivityLogsData,
 	GetActivityLogsErrors,
 	GetActivityLogsResponses,
+	GetSolanaActivityLogsData,
+	GetSolanaActivityLogsErrors,
+	GetSolanaActivityLogsResponses,
+	GetSolanaTransactionsData,
+	GetSolanaTransactionsResponses,
 	GetTransactionAnalyticsData,
 	GetTransactionAnalyticsResponses,
 	GetTransactionAnalyticsSummaryData,
@@ -25,17 +32,30 @@ import type {
 	GetTransactionsResponses,
 	ListAccountsData,
 	ListAccountsResponses,
+	ListSolanaAccountsData,
+	ListSolanaAccountsResponses,
 	ReadContractData,
 	ReadContractResponses,
 	SearchActivityLogsData,
 	SearchActivityLogsErrors,
 	SearchActivityLogsResponses,
+	SearchSolanaActivityLogsData,
+	SearchSolanaActivityLogsErrors,
+	SearchSolanaActivityLogsResponses,
+	SearchSolanaTransactionsData,
+	SearchSolanaTransactionsResponses,
 	SearchTransactionsData,
 	SearchTransactionsResponses,
+	SendSolanaTransactionData,
+	SendSolanaTransactionResponses,
 	SendTransactionData,
 	SendTransactionResponses,
 	SignMessageData,
 	SignMessageResponses,
+	SignSolanaMessageData,
+	SignSolanaMessageResponses,
+	SignSolanaTransactionData,
+	SignSolanaTransactionResponses,
 	SignTypedDataData,
 	SignTypedDataResponses,
 	WriteContractData,
@@ -228,6 +248,33 @@ export const encodeContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Send Solana Transaction
+ * Execute a Solana transaction with custom instructions
+ */
+export const sendSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options: Options<SendSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		SendSolanaTransactionResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transaction",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
  * Cancel Transaction
  * Attempt to cancel a queued transaction. Transactions that have been sent and are waiting for mine cannot be cancelled.
  */
@@ -292,6 +339,110 @@ export const createAccount = <ThrowOnError extends boolean = false>(
 			},
 		],
 		url: "/v1/accounts",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * List Solana Accounts
+ * List all Solana wallets provisioned for the project.
+ */
+export const listSolanaAccounts = <ThrowOnError extends boolean = false>(
+	options?: Options<ListSolanaAccountsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListSolanaAccountsResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/accounts",
+		...options,
+	});
+};
+
+/**
+ * Get or Create Solana Account
+ * Create a new solana wallet in the vault or return the existing wallet for a given label.
+ */
+export const createSolanaAccount = <ThrowOnError extends boolean = false>(
+	options?: Options<CreateSolanaAccountData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		CreateSolanaAccountResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/accounts",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Sign Solana Message
+ * Sign an arbitrary message with a Solana wallet.
+ */
+export const signSolanaMessage = <ThrowOnError extends boolean = false>(
+	options?: Options<SignSolanaMessageData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignSolanaMessageResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/sign-message",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Sign Solana Transaction
+ * Sign a serialized Solana transaction.
+ */
+export const signSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options?: Options<SignSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignSolanaTransactionResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/sign-transaction",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -448,6 +599,106 @@ export const searchActivityLogs = <ThrowOnError extends boolean = false>(
 			},
 		],
 		url: "/v1/transactions/activity-logs/search",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Solana Transactions
+ * Search Solana transactions with various filters and pagination
+ */
+export const getSolanaTransactions = <ThrowOnError extends boolean = false>(
+	options?: Options<GetSolanaTransactionsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		GetSolanaTransactionsResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions",
+		...options,
+	});
+};
+
+/**
+ * Search Solana Transactions
+ * Advanced search for Solana transactions with complex nested filters
+ */
+export const searchSolanaTransactions = <ThrowOnError extends boolean = false>(
+	options?: Options<SearchSolanaTransactionsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SearchSolanaTransactionsResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions/search",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Solana Activity Logs
+ * Get paginated activity logs for a specific Solana transaction with tenancy enforcement
+ */
+export const getSolanaActivityLogs = <ThrowOnError extends boolean = false>(
+	options: Options<GetSolanaActivityLogsData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetSolanaActivityLogsResponses,
+		GetSolanaActivityLogsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions/activity-logs",
+		...options,
+	});
+};
+
+/**
+ * Search Solana Activity Logs
+ * Search Solana activity logs across transactions with advanced filtering and tenancy enforcement
+ */
+export const searchSolanaActivityLogs = <ThrowOnError extends boolean = false>(
+	options?: Options<SearchSolanaActivityLogsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SearchSolanaActivityLogsResponses,
+		SearchSolanaActivityLogsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions/activity-logs/search",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
