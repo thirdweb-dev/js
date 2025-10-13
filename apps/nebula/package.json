@@ -61,7 +61,7 @@
     "next-sitemap": "^4.2.3",
     "postcss": "8.5.6",
     "storybook": "9.0.15",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "4.1.14",
     "typescript": "5.8.3"
   },
   "name": "nebula-app",
