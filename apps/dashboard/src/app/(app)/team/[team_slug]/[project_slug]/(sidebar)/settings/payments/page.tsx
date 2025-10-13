@@ -37,6 +37,7 @@ export default async function Page(props: {
   let fees = await getFees({
     clientId: project.publishableKey,
     teamId: team.id,
+    authToken: authToken,
   }).catch(() => {
     return {
       createdAt: "",
@@ -69,6 +70,7 @@ export default async function Page(props: {
         teamId={team.id}
         projectWalletAddress={projectWallet?.address}
         teamSlug={team_slug}
+        authToken={authToken}
       />
     </div>
   );

@@ -49,6 +49,7 @@ export function CreatePaymentLinkButton(
     clientId: string;
     teamId: string;
     projectWalletAddress?: string;
+    authToken: string;
   }>,
 ) {
   const [open, setOpen] = useState(false);
@@ -62,6 +63,7 @@ export function CreatePaymentLinkButton(
           projectWalletAddress={props.projectWalletAddress}
           setOpen={setOpen}
           teamId={props.teamId}
+          authToken={props.authToken}
         />
       </DialogContent>
     </Dialog>
@@ -73,6 +75,7 @@ function CreatePaymentLinkDialogContent(props: {
   teamId: string;
   setOpen: (open: boolean) => void;
   projectWalletAddress?: string;
+  authToken: string;
 }) {
   const client = getClientThirdwebClient();
 
@@ -125,6 +128,7 @@ function CreatePaymentLinkDialogContent(props: {
           amount: toUnits(values.amount.toString(), token.decimals),
         },
         title: values.title,
+        authToken: props.authToken,
       });
 
       return result;

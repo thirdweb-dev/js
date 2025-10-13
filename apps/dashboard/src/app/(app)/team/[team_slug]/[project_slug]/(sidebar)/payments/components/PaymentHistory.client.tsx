@@ -28,6 +28,7 @@ export function PaymentHistory(props: {
   client: ThirdwebClient;
   projectClientId: string;
   teamId: string;
+  authToken: string;
 }) {
   const [page, setPage] = useState(1);
   const { data: payPurchaseData, isLoading } = useQuery<
@@ -40,6 +41,7 @@ export function PaymentHistory(props: {
         limit: pageSize,
         offset: (page - 1) * pageSize,
         teamId: props.teamId,
+        authToken: props.authToken,
       });
       return res;
     },

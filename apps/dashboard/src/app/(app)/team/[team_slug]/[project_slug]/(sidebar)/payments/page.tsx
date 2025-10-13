@@ -56,6 +56,7 @@ export default async function Page(props: {
                 clientId={project.publishableKey}
                 projectWalletAddress={projectWallet?.address}
                 teamId={project.teamId}
+                authToken={authToken}
               >
                 <Button className="gap-1.5 rounded-full" size="sm">
                   <PlusIcon className="size-4" />
@@ -147,6 +148,7 @@ export default async function Page(props: {
           clientId={project.publishableKey}
           projectWalletAddress={projectWallet?.address}
           teamId={project.teamId}
+          authToken={authToken}
         />
         <QuickStartSection
           projectSlug={params.project_slug}
@@ -154,6 +156,7 @@ export default async function Page(props: {
           clientId={project.publishableKey}
           projectWalletAddress={projectWallet?.address}
           teamId={project.teamId}
+          authToken={authToken}
         />
 
         <AdvancedSection

@@ -21,6 +21,9 @@ export default async function Page(props: {
     <PayWebhooksPage
       clientId={project.publishableKey}
       teamId={project.teamId}
+      teamSlug={params.team_slug}
+      projectSlug={params.project_slug}
+      authToken={authToken}
     />
   );
 }

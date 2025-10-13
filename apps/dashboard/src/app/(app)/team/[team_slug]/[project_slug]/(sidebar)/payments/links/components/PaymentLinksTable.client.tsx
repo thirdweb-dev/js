@@ -44,6 +44,7 @@ export function PaymentLinksTable(props: {
   clientId: string;
   teamId: string;
   projectWalletAddress?: string;
+  authToken: string;
 }) {
   return (
     <section>
@@ -57,6 +58,7 @@ export function PaymentLinksTable(props: {
         clientId={props.clientId}
         projectWalletAddress={props.projectWalletAddress}
         teamId={props.teamId}
+        authToken={props.authToken}
       />
     </section>
   );
@@ -66,12 +68,14 @@ function PaymentLinksTableInner(props: {
   clientId: string;
   teamId: string;
   projectWalletAddress?: string;
+  authToken: string;
 }) {
   const paymentLinksQuery = useQuery({
     queryFn: async () => {
       return getPaymentLinks({
         clientId: props.clientId,
         teamId: props.teamId,
+        authToken: props.authToken,
       });
     },
     queryKey: ["payment-links", props.clientId, props.teamId],
@@ -83,6 +87,7 @@ function PaymentLinksTableInner(props: {
       return await Promise.all(
         paymentLinks.map(async (paymentLink) => {
           const { data } = await getPayments({
+            authToken: props.authToken,
             clientId: props.clientId,
             teamId: props.teamId,
             paymentLinkId: paymentLink.id,
@@ -134,6 +139,7 @@ function PaymentLinksTableInner(props: {
             clientId={props.clientId}
             projectWalletAddress={props.projectWalletAddress}
             teamId={props.teamId}
+            authToken={props.authToken}
           >
             <Button className="gap-2 rounded-full" variant="default" size="sm">
               <PlusIcon className="size-4" />
@@ -228,6 +234,7 @@ function PaymentLinksTableInner(props: {
                         clientId={props.clientId}
                         teamId={props.teamId}
                         paymentLinkId={paymentLink.id}
+                        authToken={props.authToken}
                       >
                         <Button size="icon" variant="ghost">
                           <TrashIcon className="size-4" strokeWidth={1} />
@@ -277,6 +284,7 @@ function DeletePaymentLinkButton(
     paymentLinkId: string;
     clientId: string;
     teamId: string;
+    authToken: string;
   }>,
 ) {
   const [open, setOpen] = useState(false);
@@ -287,6 +295,7 @@ function DeletePaymentLinkButton(
         clientId: props.clientId,
         teamId: props.teamId,
         paymentLinkId: id,
+        authToken: props.authToken,
       });
       return null;
     },
