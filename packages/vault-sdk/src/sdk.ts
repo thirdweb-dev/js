@@ -3,18 +3,27 @@ import { x25519 } from "@noble/curves/ed25519";
 import { hkdf } from "@noble/hashes/hkdf";
 import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex, hexToBytes, randomBytes } from "@noble/hashes/utils";
+
+import {
+  address,
+  getBase58Encoder,
+  getTransactionDecoder,
+  getTransactionEncoder,
+} from "@solana/kit";
+
 import type { TypedData } from "abitype";
 import * as jose from "jose";
-
 import type {
   CheckedSignTypedDataPayload,
   CreateAccessTokenPayload,
   CreateEoaPayload,
   CreateServiceAccountPayload,
+  CreateSolanaAccountPayload,
   EncryptedPayload,
   GetServiceAccountPayload,
   ListAccessTokensPayload,
   ListEoaPayload,
+  ListSolanaAccountsPayload,
   Payload,
   PingPayload,
   PolicyComponent,
@@ -23,6 +32,8 @@ import type {
   RotateServiceAccountPayload,
   SignAuthorizationPayload,
   SignMessagePayload,
+  SignSolanaMessagePayload,
+  SignSolanaTransactionPayload,
   SignStructuredMessagePayload,
   SignTransactionPayload,
   UnencryptedErrorResponse,
@@ -442,6 +453,96 @@ export function listAccessTokens({
     client,
     request: {
       operation: "accessToken:list",
+      ...options,
+    },
+  });
+}
+
+// ========== Solana Functions ==========
+
+export function createSolanaAccount({
+  client,
+  request: options,
+}: PayloadParams<CreateSolanaAccountPayload>) {
+  return sendRequest<CreateSolanaAccountPayload>({
+    client,
+    request: {
+      operation: "solana:create",
+      ...options,
+    },
+  });
+}
+
+export function listSolanaAccounts({
+  client,
+  request: options,
+}: PayloadParams<ListSolanaAccountsPayload>) {
+  return sendRequest<ListSolanaAccountsPayload>({
+    client,
+    request: {
+      operation: "solana:list",
+      ...options,
+    },
+  });
+}
+
+export function signSolanaTransaction({
+  client,
+  request: options,
+}: PayloadParams<SignSolanaTransactionPayload>) {
+  return sendRequest<SignSolanaTransactionPayload>({
+    client,
+    request: {
+      operation: "solana:signTransaction",
+      ...options,
+    },
+  });
+}
+
+/**
+ * Reconstruct a signed solana transaction from the vault signature using @solana/kit
+ */
+export function reconstructSolanaSignedTransaction(
+  base64Transaction: string,
+  base58Signature: string,
+  signerPubkey: string,
+): Uint8Array {
+  // Decode the base64 transaction into bytes
+  const base64TransactionBytes = new Uint8Array(
+    Buffer.from(base64Transaction, "base64"),
+  );
+  // Decode the transaction to get its structure
+  const transactionDecoder = getTransactionDecoder();
+  const transaction = transactionDecoder.decode(base64TransactionBytes);
+
+  // Decode the base58 signature to bytes
+  const base58Encoder = getBase58Encoder();
+  const signatureBytes = base58Encoder.encode(base58Signature);
+
+  // Add the signature to the transaction
+  const signedTransaction = {
+    ...transaction,
+    signatures: {
+      ...transaction.signatures,
+      [address(signerPubkey)]: signatureBytes,
+    },
+  };
+
+  // Re-encode the signed transaction
+  const transactionEncoder = getTransactionEncoder();
+  const signedTransactionBytes = transactionEncoder.encode(signedTransaction);
+
+  return new Uint8Array(signedTransactionBytes);
+}
+
+export function signSolanaMessage({
+  client,
+  request: options,
+}: PayloadParams<SignSolanaMessagePayload>) {
+  return sendRequest<SignSolanaMessagePayload>({
+    client,
+    request: {
+      operation: "solana:signMessage",
       ...options,
     },
   });
