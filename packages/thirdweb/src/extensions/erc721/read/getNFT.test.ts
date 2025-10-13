@@ -44,7 +44,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
           "uri": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         },
         "owner": null,
-        "tokenAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
+        "tokenAddress": "0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e",
         "tokenURI": "ipfs://QmPMc4tcBsMqLRuCQtPmPe84bpSjrC3Ky7t3JWuHXYB4aS/1",
         "type": "ERC721",
       }

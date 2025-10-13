@@ -7,25 +7,27 @@ import { token } from "../../payments/x402/components/constants";
 // Allow streaming responses up to 5 minutes
 export const maxDuration = 300;
 
-const client = createThirdwebClient({
-  secretKey: process.env.THIRDWEB_SECRET_KEY as string,
-});
-
-const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
-// const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_SMART_WALLET as string;
-const ENGINE_VAULT_ACCESS_TOKEN = process.env
-  .ENGINE_VAULT_ACCESS_TOKEN as string;
-// const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-const API_URL = "http://localhost:3030";
-
-const twFacilitator = facilitator({
-  baseUrl: `${API_URL}/v1/payments/x402`,
-  client,
-  serverWalletAddress: BACKEND_WALLET_ADDRESS,
-  vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
-});
-
 export async function GET(request: NextRequest) {
+  const SECRET_KEY = process.env.THIRDWEB_SECRET_KEY as string;
+
+  const client = createThirdwebClient({
+    secretKey: SECRET_KEY,
+  });
+
+  const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_WALLET as string;
+  // const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_SMART_WALLET as string;
+  const ENGINE_VAULT_ACCESS_TOKEN = process.env
+    .ENGINE_VAULT_ACCESS_TOKEN as string;
+  // const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
+  const API_URL = "http://localhost:3030";
+
+  const twFacilitator = facilitator({
+    baseUrl: `${API_URL}/v1/payments/x402`,
+    client,
+    serverWalletAddress: BACKEND_WALLET_ADDRESS,
+    vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
+  });
+
   const paymentData = request.headers.get("X-PAYMENT");
   const queryParams = request.nextUrl.searchParams;
 
