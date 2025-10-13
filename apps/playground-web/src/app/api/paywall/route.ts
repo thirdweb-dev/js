@@ -4,6 +4,8 @@ import { toUnits } from "thirdweb/utils";
 import { facilitator, settlePayment } from "thirdweb/x402";
 import { token } from "../../payments/x402/components/constants";
 
+export const runtime = "edge";
+
 // Allow streaming responses up to 5 minutes
 export const maxDuration = 300;
 
