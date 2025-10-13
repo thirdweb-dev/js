@@ -6,7 +6,7 @@ import { ThirdwebMiniLogo } from "../../(app)/components/ThirdwebMiniLogo";
 
 export function PageHeader(props: { containerClassName?: string }) {
   return (
-    <div className="border-b border-border/50 border-dashed">
+    <div className="border-b border-dashed">
       <header
         className={cn(
           "container flex max-w-7xl justify-between py-4",
