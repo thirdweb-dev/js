@@ -2,8 +2,9 @@
 
 import type { Project } from "@/api/project/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
+import type { SolanaWallet } from "../wallet-table/types";
 
-interface SolanaAccount {
+interface SolanaAccountResponse {
   publicKey: string;
   label: string;
   createdAt: string;
@@ -12,7 +13,7 @@ interface SolanaAccount {
 
 interface ListSolanaAccountsResponse {
   result: {
-    accounts: SolanaAccount[];
+    accounts: SolanaAccountResponse[];
     pagination: {
       totalCount: number;
       page: number;
@@ -25,15 +26,16 @@ export async function listSolanaAccounts(params: {
   managementAccessToken: string;
   page?: number;
   limit?: number;
+  projectId?: string;
 }): Promise<{
   data: {
-    items: SolanaAccount[];
+    items: SolanaWallet[];
     totalRecords: number;
   };
   error: Error | null;
   success: boolean;
 }> {
-  const { managementAccessToken, page = 1, limit = 100 } = params;
+  const { managementAccessToken, page = 1, limit = 100, projectId } = params;
 
   try {
     const url = new URL(`/v1/solana/accounts`, NEXT_PUBLIC_THIRDWEB_VAULT_URL);
@@ -55,9 +57,24 @@ export async function listSolanaAccounts(params: {
 
     const data = (await response.json()) as ListSolanaAccountsResponse;
 
+    // Transform the response to match SolanaWallet type
+    const wallets: SolanaWallet[] = data.result.accounts.map(
+      (account, index) => ({
+        id: `${account.publicKey}-${index}`, // Generate ID from publicKey
+        publicKey: account.publicKey,
+        metadata: {
+          type: "solana-wallet",
+          projectId: projectId || "",
+          label: account.label,
+        },
+        createdAt: account.createdAt,
+        updatedAt: account.updatedAt,
+      }),
+    );
+
     return {
       data: {
-        items: data.result.accounts,
+        items: wallets,
         totalRecords: data.result.pagination.totalCount,
       },
       error: null,
@@ -79,7 +96,7 @@ export async function createSolanaAccount(params: {
   managementAccessToken: string;
   label: string;
 }): Promise<{
-  data: SolanaAccount | null;
+  data: SolanaAccountResponse | null;
   error: Error | null;
   success: boolean;
 }> {
@@ -103,7 +120,7 @@ export async function createSolanaAccount(params: {
       );
     }
 
-    const data = (await response.json()) as { result: SolanaAccount };
+    const data = (await response.json()) as { result: SolanaAccountResponse };
 
     return {
       data: data.result,

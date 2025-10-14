@@ -89,12 +89,11 @@ export default async function TransactionsAnalyticsPage(props: {
         managementAccessToken,
         page: solanCurrentPage,
         limit: pageSize,
+        projectId: project.id,
       })
     : { data: { items: [], totalRecords: 0 }, error: null, success: true };
 
-  const solanaWallets = solanaAccounts.data?.items as
-    | SolanaWallet[]
-    | undefined;
+  const solanaWallets = solanaAccounts.data?.items;
 
   const initialData = await getTransactionAnalyticsSummary({
     clientId: project.publishableKey,
@@ -202,7 +201,7 @@ export default async function TransactionsAnalyticsPage(props: {
             teamSlug={params.team_slug}
             totalPages={Math.ceil(solanaAccounts.data.totalRecords / pageSize)}
             totalRecords={solanaAccounts.data.totalRecords}
-            wallets={solanaAccounts.data.items as SolanaWallet[]}
+            wallets={solanaAccounts.data.items}
           />
         )}
       </div>

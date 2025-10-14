@@ -230,9 +230,8 @@ function SolanaWalletTableRow(props: {
   // Get the project Solana wallet public key
   const engineCloudService = project.services.find(
     (service: { name: string }) => service.name === "engineCloud",
-  );
-  const defaultWalletPublicKey =
-    engineCloudService?.projectSolanaWalletPublicKey;
+  ) as { projectSolanaWalletPublicKey?: string } | undefined;
+  const defaultWalletPublicKey = engineCloudService?.projectSolanaWalletPublicKey;
   const isDefaultWallet =
     defaultWalletPublicKey &&
     wallet.publicKey.toLowerCase() === defaultWalletPublicKey.toLowerCase();
