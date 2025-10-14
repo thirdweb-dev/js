@@ -188,7 +188,17 @@ function createAccount({
     onTransactionRequested: async () => {
       // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
       // otherwise the popup might get blocked in safari
-      await showCoinbasePopup(provider);
+      // but only if using cb smart wallet (web based)
+      if (window.localStorage) {
+        // this is the local storage key for the signer type in the cb web sdk
+        // value can be "scw" (web) or "walletlink" (mobile wallet)
+        const signerType = window.localStorage.getItem(
+          "-CBWSDK:SignerConfigurator:SignerType",
+        );
+        if (signerType === "scw") {
+          await showCoinbasePopup(provider);
+        }
+      }
     },
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
