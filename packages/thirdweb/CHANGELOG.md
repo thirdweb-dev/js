@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.108.14
+
+### Patch Changes
+
+- [#8253](https://github.com/thirdweb-dev/js/pull/8253) [`8280efb`](https://github.com/thirdweb-dev/js/commit/8280efb99189c5b849156df383522f9e1b8f2c52) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix cb wallet transaction desktop popup when logged in via mobile QR code
+
+- [#8235](https://github.com/thirdweb-dev/js/pull/8235) [`464af6a`](https://github.com/thirdweb-dev/js/commit/464af6a54cb776158a1656e793ee181c2c221f27) Thanks [@kumaryash90](https://github.com/kumaryash90)! - CLI updates for stylus - new templates
+
 ## 5.108.13
 
 ### Patch Changes
