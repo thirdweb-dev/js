@@ -5,10 +5,10 @@
  * @returns The Solscan URL for the transaction
  */
 export function getSolscanUrl(signature: string, chainId: string): string {
-  const network = getSolanaNetworkName(chainId);
+  const network = chainId.split(":")[1] || "mainnet";
 
   // Solscan uses different subdomains for different networks
-  switch (network) {
+  switch (network.toLowerCase()) {
     case "devnet":
       return `https://solscan.io/tx/${signature}?cluster=devnet`;
     case "testnet":
@@ -19,9 +19,9 @@ export function getSolscanUrl(signature: string, chainId: string): string {
 }
 
 /**
- * Get the network name from a Solana chain ID
+ * Get the display network name from a Solana chain ID (capitalized)
  * @param chainId - The chain ID in format "solana:mainnet", "solana:devnet", or "solana:testnet"
- * @returns The network name
+ * @returns The capitalized network name for display (e.g., "Devnet")
  */
 export function getSolanaNetworkName(chainId: string): string {
   const network = chainId.split(":")[1] || "mainnet";

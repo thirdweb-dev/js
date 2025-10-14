@@ -21,6 +21,7 @@ import {
 import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { SolanaAddress } from "@/components/blocks/solana-address";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,7 +61,6 @@ import { updateDefaultProjectWallet } from "../lib/vault.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet as EVMWallet } from "../server-wallets/wallet-table/types";
 import { CreateSolanaWallet } from "../solana-wallets/components/create-solana-wallet.client";
-import { updateDefaultProjectSolanaWallet } from "../solana-wallets/lib/vault.client";
 import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
 
 type WalletChain = "evm" | "solana";
@@ -572,9 +572,7 @@ function SolanaWalletRow({
       </TableCell>
 
       <TableCell>
-        <code className="text-xs font-mono">
-          {wallet.publicKey.slice(0, 8)}...{wallet.publicKey.slice(-8)}
-        </code>
+        <SolanaAddress address={wallet.publicKey} shortenAddress={true} />
       </TableCell>
 
       <TableCell>
@@ -716,28 +714,6 @@ function SolanaWalletActions({
   teamSlug: string;
   client: ThirdwebClient;
 }) {
-  const router = useDashboardRouter();
-
-  const setDefaultMutation = useMutation({
-    mutationFn: async () => {
-      await updateDefaultProjectSolanaWallet({
-        project,
-        publicKey: wallet.publicKey,
-      });
-    },
-    onSuccess: () => {
-      toast.success("Solana wallet set as default");
-      router.refresh();
-    },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to set default Solana wallet",
-      );
-    },
-  });
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -755,14 +731,6 @@ function SolanaWalletActions({
             <SendIcon className="size-4 text-muted-foreground" />
             Send test transaction
           </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setDefaultMutation.mutate()}
-          disabled={setDefaultMutation.isPending}
-          className="flex items-center gap-2 h-9 rounded-lg"
-        >
-          <CheckIcon className="size-4 text-muted-foreground" />
-          Set as default
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

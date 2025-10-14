@@ -9,6 +9,7 @@ import type { ThirdwebClient } from "thirdweb";
 import { engineCloudProxy } from "@/actions/proxies";
 import type { Project } from "@/api/project/projects";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
+import { SolanaAddress } from "@/components/blocks/solana-address";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -372,10 +373,10 @@ function SolanaTransactionsTable(props: {
                       <SolanaStatusCell transaction={tx} />
                     </TableCell>
                     <TableCell>
-                      <code className="text-xs font-mono">
-                        {tx.signerAddress.slice(0, 6)}...
-                        {tx.signerAddress.slice(-4)}
-                      </code>
+                      <SolanaAddress
+                        address={tx.signerAddress}
+                        shortenAddress={true}
+                      />
                     </TableCell>
                     <TableCell>
                       <SolanaTxHashCell transaction={tx} />

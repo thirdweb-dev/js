@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { stringify } from "thirdweb/utils";
 import type { Project } from "@/api/project/projects";
+import { SolanaAddress } from "@/components/blocks/solana-address";
 import { Badge } from "@/components/ui/badge";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -149,9 +150,7 @@ export function SolanaTransactionDetailsUI({
                 value={solanaStatusDetails[status].name}
               />
               <InfoRow label="Signer Address">
-                <code className="text-xs font-mono break-all">
-                  {signerAddress}
-                </code>
+                <SolanaAddress address={signerAddress} shortenAddress={false} />
               </InfoRow>
               {txSignature && (
                 <InfoRow label="Signature">
