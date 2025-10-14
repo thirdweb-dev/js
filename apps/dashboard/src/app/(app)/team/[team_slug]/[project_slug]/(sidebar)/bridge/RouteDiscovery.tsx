@@ -2,6 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectResponse } from "@thirdweb-dev/service-utils";
+import { Button } from "@workspace/ui/components/button";
+import { Spinner } from "@workspace/ui/components/spinner";
+import { PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
@@ -19,7 +22,6 @@ import {
   type RouteDiscoveryValidationSchema,
   routeDiscoveryValidationSchema,
 } from "@/schema/validations";
-import { RouteDiscoveryCard } from "./RouteDiscoveryCard";
 
 export const RouteDiscovery = ({
   project,
@@ -77,33 +79,21 @@ export const RouteDiscovery = ({
     },
   );
 
+  const errorText = form.getFieldState("tokenAddress").error?.message;
+
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={handleSubmit}>
-        <RouteDiscoveryCard
-          bottomText=""
-          errorText={form.getFieldState("tokenAddress").error?.message}
-          noPermissionText={undefined}
-          saveButton={
-            // Only show the submit button in the default state
-            {
-              disabled: !form.formState.isDirty,
-              isPending: submitDiscoveryMutation.isPending,
-              type: "submit",
-              variant: "outline",
-            }
-          }
-        >
-          <div>
-            <h3 className="font-semibold text-xl tracking-tight">
+        <div className="relative rounded-lg border border-border bg-card">
+          <div className="relative border-dashed border-b px-4 py-6 lg:px-6">
+            <h3 className="font-semibold text-xl tracking-tight mb-1">
               Add a token to Bridge
             </h3>
-            <p className="mt-1.5 mb-4 text-muted-foreground max-w-3xl text-sm text-pretty">
+            <p className="mb-4 text-muted-foreground max-w-3xl text-sm text-pretty">
               Select your chain and input the token address to automatically
               kick-off the token route discovery process. <br /> This may take
               up to 20-40 minutes to complete.
             </p>
-
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 max-w-3xl">
               <FormField
                 control={form.control}
@@ -142,7 +132,33 @@ export const RouteDiscovery = ({
               />
             </div>
           </div>
-        </RouteDiscoveryCard>
+          <div>
+            <div className="flex items-center justify-between gap-2 px-4 py-4 lg:px-6">
+              {errorText ? (
+                <p className="text-destructive-text text-sm">{errorText}</p>
+              ) : (
+                <div />
+              )}
+
+              <Button
+                className="gap-1.5 rounded-full"
+                disabled={
+                  !form.formState.isDirty || submitDiscoveryMutation.isPending
+                }
+                size="sm"
+                type="submit"
+                variant={"outline"}
+              >
+                {submitDiscoveryMutation.isPending ? (
+                  <Spinner className="size-3" />
+                ) : (
+                  <PlusIcon className="size-4 text-muted-foreground" />
+                )}
+                Add Token
+              </Button>
+            </div>
+          </div>
+        </div>
       </form>
     </Form>
   );

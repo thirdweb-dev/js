@@ -1,10 +1,11 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { Img } from "@workspace/ui/components/img";
 import { Spinner } from "@workspace/ui/components/spinner";
 import { ArrowRightIcon, CircleCheckIcon, CircleXIcon } from "lucide-react";
 import Link from "next/link";
-import type { ThirdwebClient } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, type ThirdwebClient } from "thirdweb";
 import type { Status, Token } from "thirdweb/bridge";
 import { status } from "thirdweb/bridge";
 import { toTokens } from "thirdweb/utils";
@@ -15,11 +16,17 @@ import { cn } from "@/lib/utils";
 import { fetchChain } from "@/utils/fetchChain";
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 
+type PurchaseData = Exclude<Status, { status: "NOT_FOUND" }>["purchaseData"];
+
 export function BridgeStatus(props: {
   bridgeStatus: Status;
   client: ThirdwebClient;
 }) {
   const { bridgeStatus } = props;
+  const purchaseDataString =
+    bridgeStatus.status !== "NOT_FOUND" && bridgeStatus.purchaseData
+      ? getPurchaseData(bridgeStatus.purchaseData)
+      : undefined;
 
   return (
     <div className="bg-card rounded-xl border relative">
@@ -39,7 +46,7 @@ export function BridgeStatus(props: {
         />
       )}
 
-      <div className="px-6 lg:px-10 py-7 space-y-1.5">
+      <div className="px-6 lg:px-8 py-7 space-y-1.5">
         <div className="flex justify-between items-center">
           <p className="text-sm text-muted-foreground "> Status </p>
 
@@ -80,6 +87,18 @@ export function BridgeStatus(props: {
           />
         </div>
       </div>
+
+      {purchaseDataString && (
+        <div className="px-6 lg:px-8 py-7 space-y-2 border-t border-dashed">
+          <p className="text-sm text-muted-foreground ">Purchase Data</p>
+          <CodeClient
+            code={purchaseDataString}
+            lang="json"
+            className="[&_code]:text-xs"
+            scrollableClassName="p-3"
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -96,7 +115,7 @@ function TokenInfo(props: {
   const chainQuery = useChainQuery(props.token.chainId);
 
   return (
-    <div className="flex-1 pt-10 pb-9 px-6 lg:px-10">
+    <div className="flex-1 pt-10 pb-9 px-6 lg:px-8">
       <div className="flex justify-between items-center">
         <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {props.label}
@@ -107,7 +126,12 @@ function TokenInfo(props: {
         <div className="flex items-center gap-3">
           <div className="relative hover:ring-2 hover:ring-offset-2 hover:ring-offset-card hover:ring-foreground/30 rounded-full">
             <Link
-              href={`/${chainQuery.data?.slug || props.token.chainId}/${props.token.address}`}
+              href={
+                props.token.address.toLowerCase() ===
+                NATIVE_TOKEN_ADDRESS.toLowerCase()
+                  ? `/${chainQuery.data?.slug || props.token.chainId}`
+                  : `/${chainQuery.data?.slug || props.token.chainId}/${props.token.address}`
+              }
               target="_blank"
               aria-label="View Token"
               className="absolute inset-0 z-10"
@@ -263,7 +287,7 @@ function FailedBridgeStatusContent(props: {
   client: ThirdwebClient;
 }) {
   return (
-    <div className="px-6 lg:px-10 py-7 space-y-1.5 border-b border-dashed">
+    <div className="px-6 lg:px-8 py-7 space-y-1.5 border-b border-dashed">
       <h3 className="text-base font-medium tracking-tight mb-3">
         Transactions
       </h3>
@@ -369,4 +393,12 @@ export function BridgeStatusWithPolling(props: {
       client={props.client}
     />
   );
+}
+
+function getPurchaseData(purchaseData: PurchaseData) {
+  try {
+    return JSON.stringify(purchaseData, null, 2);
+  } catch {
+    return undefined;
+  }
 }

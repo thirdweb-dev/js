@@ -8,7 +8,6 @@ import {
   Clock4Icon,
   InfoIcon,
 } from "lucide-react";
-import { notFound } from "next/navigation";
 import { toTokens } from "thirdweb";
 import { status } from "thirdweb/bridge";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -55,10 +54,10 @@ export default async function Page(props: {
   const [transaction, receipt, bridgeStatus] = await Promise.all([
     eth_getTransactionByHash(rpcRequest, {
       hash: params.txHash,
-    }),
+    }).catch(() => undefined),
     eth_getTransactionReceipt(rpcRequest, {
       hash: params.txHash,
-    }),
+    }).catch(() => undefined),
     status({
       chainId: chain.chainId,
       transactionHash: params.txHash,
@@ -66,8 +65,17 @@ export default async function Page(props: {
     }).catch(() => undefined),
   ]);
 
-  if (!transaction.blockHash) {
-    notFound();
+  if (!transaction?.blockHash || !receipt) {
+    return (
+      <div className="flex flex-col items-center justify-center grow">
+        <div className="flex flex-col items-center justify-center gap-3">
+          <div className="p-2 rounded-full bg-background border">
+            <CircleAlertIcon className="size-5 text-muted-foreground" />
+          </div>
+          Transaction not found
+        </div>
+      </div>
+    );
   }
 
   const block = await eth_getBlockByHash(rpcRequest, {

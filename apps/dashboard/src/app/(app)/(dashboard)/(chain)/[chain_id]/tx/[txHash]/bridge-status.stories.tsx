@@ -104,3 +104,17 @@ export const NotFound: Story = {
     client: storybookThirdwebClient,
   },
 };
+
+export const WithPurchaseData: Story = {
+  args: {
+    bridgeStatus: {
+      ...completedStatus,
+      purchaseData: {
+        userId: "68d645b7ded999651272bf1e",
+        credits: 32000,
+        transactionId: "fd2606d1-90df-45c6-bd2c-b19a34764a31",
+      },
+    },
+    client: storybookThirdwebClient,
+  },
+};

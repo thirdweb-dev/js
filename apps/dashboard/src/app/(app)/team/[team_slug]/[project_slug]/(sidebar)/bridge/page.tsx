@@ -11,6 +11,7 @@ import { PayAnalytics } from "../payments/components/PayAnalytics";
 import { getUniversalBridgeFiltersFromSearchParams } from "../payments/components/time";
 import { QuickStartSection } from "./QuickstartSection.client";
 import { RouteDiscovery } from "./RouteDiscovery";
+import { ViewTxStatus } from "./view-tx-status";
 
 export default async function Page(props: {
   params: Promise<{
@@ -84,7 +85,7 @@ export default async function Page(props: {
         ],
       }}
     >
-      <div className="flex flex-col gap-12">
+      <div className="flex flex-col gap-6">
         <ResponsiveSearchParamsProvider value={searchParams}>
           <PayAnalytics
             client={client}
@@ -99,12 +100,16 @@ export default async function Page(props: {
 
         <RouteDiscovery client={client} project={project} />
 
-        <QuickStartSection
-          projectSlug={params.project_slug}
-          teamSlug={params.team_slug}
-          clientId={project.publishableKey}
-          teamId={project.teamId}
-        />
+        <ViewTxStatus client={client} />
+
+        <div className="pt-4">
+          <QuickStartSection
+            projectSlug={params.project_slug}
+            teamSlug={params.team_slug}
+            clientId={project.publishableKey}
+            teamId={project.teamId}
+          />
+        </div>
       </div>
     </ProjectPage>
   );
