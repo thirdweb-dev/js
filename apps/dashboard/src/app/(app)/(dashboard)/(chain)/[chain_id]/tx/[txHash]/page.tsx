@@ -311,7 +311,10 @@ function GeneericTxDetails(props: {
           label="Burnt fees"
           tooltip="The amount of fees that were burnt by the transaction."
         >
-          <p>{toEther(block.baseFeePerGas || 0n * receipt.gasUsed)}</p>
+          <p>
+            {toEther((block.baseFeePerGas || 0n) * receipt.gasUsed)}{" "}
+            {chain.nativeCurrency?.symbol}
+          </p>
         </GridItem>
       </section>
 

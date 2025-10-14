@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { type Bridge, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import { reportTokenRowClicked } from "@/analytics/report";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -122,6 +123,12 @@ export function TokensTable(props: {
                             className="gap-2 rounded-full bg-card hover:border-foreground/50 text-muted-foreground hover:bg-inverted hover:text-inverted-foreground"
                           >
                             <Link
+                              onClick={() =>
+                                reportTokenRowClicked({
+                                  chainId: token.chainId,
+                                  tokenAddress: token.address,
+                                })
+                              }
                               aria-label={`Buy ${token.symbol}`}
                               href={
                                 token.address.toLowerCase() ===
