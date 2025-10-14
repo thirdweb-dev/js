@@ -8,10 +8,14 @@ import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { EngineChecklist } from "./analytics/ftux.client";
+import { SolanaTransactionsTable } from "./analytics/solana-tx-table/solana-tx-table";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
 import { getTransactionAnalyticsSummary } from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 import { ServerWalletsTable } from "./server-wallets/wallet-table/wallet-table";
+import { listSolanaAccounts } from "./solana-wallets/lib/vault.client";
+import type { SolanaWallet } from "./solana-wallets/wallet-table/types";
+import { SolanaWalletsTable } from "./solana-wallets/wallet-table/wallet-table";
 
 export default async function TransactionsAnalyticsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -21,6 +25,7 @@ export default async function TransactionsAnalyticsPage(props: {
     interval?: string | string[] | undefined;
     testTxWithWallet?: string | string[] | undefined;
     page?: string;
+    solana_page?: string;
   }>;
 }) {
   const [params, searchParams, authToken] = await Promise.all([
@@ -58,6 +63,7 @@ export default async function TransactionsAnalyticsPage(props: {
 
   const pageSize = 10;
   const currentPage = Number.parseInt(searchParams.page ?? "1");
+  const solanCurrentPage = Number.parseInt(searchParams.solana_page ?? "1");
 
   const eoas = managementAccessToken
     ? await listEoas({
@@ -76,6 +82,19 @@ export default async function TransactionsAnalyticsPage(props: {
     : { data: { items: [], totalRecords: 0 }, error: null, success: true };
 
   const wallets = eoas.data?.items as Wallet[] | undefined;
+
+  // Fetch Solana accounts
+  const solanaAccounts = managementAccessToken
+    ? await listSolanaAccounts({
+        managementAccessToken,
+        page: solanCurrentPage,
+        limit: pageSize,
+      })
+    : { data: { items: [], totalRecords: 0 }, error: null, success: true };
+
+  const solanaWallets = solanaAccounts.data?.items as
+    | SolanaWallet[]
+    | undefined;
 
   const initialData = await getTransactionAnalyticsSummary({
     clientId: project.publishableKey,
@@ -160,6 +179,30 @@ export default async function TransactionsAnalyticsPage(props: {
             totalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
             totalRecords={eoas.data.totalRecords}
             wallets={eoas.data.items as Wallet[]}
+          />
+        )}
+
+        {/* Solana transactions */}
+        <SolanaTransactionsTable
+          client={client}
+          project={project}
+          teamSlug={params.team_slug}
+          wallets={solanaWallets ?? []}
+        />
+
+        {/* Solana server wallets */}
+        {solanaAccounts.error ? (
+          <div>Error: {solanaAccounts.error.message}</div>
+        ) : (
+          <SolanaWalletsTable
+            client={client}
+            currentPage={solanCurrentPage}
+            managementAccessToken={managementAccessToken ?? undefined}
+            project={project}
+            teamSlug={params.team_slug}
+            totalPages={Math.ceil(solanaAccounts.data.totalRecords / pageSize)}
+            totalRecords={solanaAccounts.data.totalRecords}
+            wallets={solanaAccounts.data.items as SolanaWallet[]}
           />
         )}
       </div>
