@@ -5,7 +5,6 @@ import {
   createSolanaAccount as vaultCreateSolanaAccount,
   listSolanaAccounts as vaultListSolanaAccounts,
 } from "@thirdweb-dev/vault-sdk";
-import type { Project } from "@/api/project/projects";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import type { SolanaWallet } from "../wallet-table/types";
 
@@ -198,13 +197,4 @@ export async function createSolanaAccount(params: {
       success: false,
     };
   }
-}
-
-export async function updateDefaultProjectSolanaWallet(_params: {
-  project: Project;
-  publicKey: string;
-}): Promise<void> {
-  // This would be implemented similar to the EVM version
-  // For now, this is a placeholder
-  // TODO: Implement default Solana wallet update
 }
