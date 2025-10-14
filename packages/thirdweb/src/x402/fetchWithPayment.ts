@@ -82,6 +82,7 @@ export function wrapFetchWithPayment(
       parsedPaymentRequirements,
       chain.id,
       "exact",
+      error,
     );
 
     if (!selectedPaymentRequirements) {
@@ -141,10 +142,11 @@ function defaultPaymentRequirementsSelector(
   paymentRequirements: RequestedPaymentRequirements[],
   chainId: number,
   scheme: "exact",
+  error?: string,
 ) {
   if (!paymentRequirements.length) {
     throw new Error(
-      "No valid payment requirements found in server 402 response",
+      `No valid payment requirements found in server 402 response. ${error}`,
     );
   }
   const currentWalletNetwork = ChainIdToNetwork[chainId] || `eip155:${chainId}`;
