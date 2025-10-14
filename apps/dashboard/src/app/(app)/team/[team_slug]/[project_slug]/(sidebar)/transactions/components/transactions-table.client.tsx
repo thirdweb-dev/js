@@ -49,7 +49,7 @@ import type {
   TransactionStatus,
   TransactionsResponse,
 } from "../analytics/tx-table/types";
-import { getSolscanUrl } from "../lib/solana-utils";
+import { getSolanaNetworkName, getSolscanUrl } from "../lib/solana-utils";
 
 type TransactionChain = "evm" | "solana";
 
@@ -554,7 +554,7 @@ function SolanaChainCell(props: { chainId: string | undefined }) {
     return "N/A";
   }
 
-  const network = chainId.split(":")[1] || "mainnet";
+  const network = getSolanaNetworkName(chainId);
   const displayName = network.charAt(0).toUpperCase() + network.slice(1);
 
   return (

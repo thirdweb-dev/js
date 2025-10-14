@@ -19,7 +19,7 @@ import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { SolanaTransaction } from "../../analytics/solana-tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
-import { getSolscanUrl } from "../../lib/solana-utils";
+import { getSolanaNetworkName, getSolscanUrl } from "../../lib/solana-utils";
 
 const solanaStatusDetails = {
   CONFIRMED: { name: "Confirmed", variant: "success" as const },
@@ -59,7 +59,7 @@ export function SolanaTransactionDetailsUI({
     "QUEUED") as keyof typeof solanaStatusDetails;
 
   // Parse network from chainId
-  const network = chainId.split(":")[1] || "mainnet";
+  const network = getSolanaNetworkName(chainId);
   const networkDisplay = network.charAt(0).toUpperCase() + network.slice(1);
 
   // Calculate time difference between creation and confirmation

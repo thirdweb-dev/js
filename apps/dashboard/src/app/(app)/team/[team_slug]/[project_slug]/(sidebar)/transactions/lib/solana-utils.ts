@@ -5,7 +5,7 @@
  * @returns The Solscan URL for the transaction
  */
 export function getSolscanUrl(signature: string, chainId: string): string {
-  const network = chainId.split(":")[1] || "mainnet";
+  const network = getSolanaNetworkName(chainId);
 
   // Solscan uses different subdomains for different networks
   switch (network) {
