@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { getSolscanUrl } from "../../lib/solana-utils";
 import type { SolanaWallet } from "../../solana-wallets/wallet-table/types";
 import type {
   SolanaTransaction,
@@ -168,7 +169,7 @@ export function SolanaTransactionsTableUI(props: {
               ) : (
                 transactionsQuery.data?.transactions.map((transaction) => (
                   <SolanaTransactionRow
-                    key={transaction.transactionId}
+                    key={transaction.id}
                     transaction={transaction}
                     project={props.project}
                     teamSlug={props.teamSlug}
@@ -245,9 +246,7 @@ function SolanaTransactionRow(props: {
     <TableRow>
       {/* Transaction ID */}
       <TableCell>
-        <code className="text-xs">
-          {transaction.transactionId.slice(0, 12)}...
-        </code>
+        <code className="text-xs">{transaction.id.slice(0, 12)}...</code>
       </TableCell>
 
       {/* Signer */}
@@ -262,19 +261,19 @@ function SolanaTransactionRow(props: {
 
       {/* Status */}
       <TableCell>
-        <TransactionStatusBadge status={transaction.status} />
+        <TransactionStatusBadge status={transaction.status ?? "QUEUED"} />
       </TableCell>
 
       {/* Queued At */}
       <TableCell>
-        <TransactionDateCell date={transaction.queuedAt} />
+        <TransactionDateCell date={transaction.createdAt} />
       </TableCell>
 
       {/* Signature */}
       <TableCell>
         {transaction.signature ? (
           <Link
-            href={`https://solscan.io/tx/${transaction.signature}`}
+            href={getSolscanUrl(transaction.signature, transaction.chainId)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-link-foreground hover:underline"
@@ -301,29 +300,21 @@ function TransactionStatusBadge({
       icon: React.ReactNode;
     }
   > = {
-    queued: {
+    QUEUED: {
       variant: "default",
       icon: <ClockIcon className="size-3" />,
     },
-    processing: {
+    SUBMITTED: {
       variant: "warning",
       icon: <ClockIcon className="size-3" />,
     },
-    sent: {
-      variant: "warning",
-      icon: <ClockIcon className="size-3" />,
-    },
-    confirmed: {
+    CONFIRMED: {
       variant: "success",
       icon: <CheckCircle2Icon className="size-3" />,
     },
-    failed: {
+    FAILED: {
       variant: "destructive",
       icon: <CircleAlertIcon className="size-3" />,
-    },
-    cancelled: {
-      variant: "destructive",
-      icon: <XIcon className="size-3" />,
     },
   };
 
@@ -337,12 +328,12 @@ function TransactionStatusBadge({
   );
 }
 
-function TransactionDateCell({ date }: { date: string }) {
+function TransactionDateCell({ date }: { date: string | Date }) {
   if (!date) {
     return <span className="text-muted-foreground">-</span>;
   }
 
-  const dateObj = new Date(date);
+  const dateObj = date instanceof Date ? date : new Date(date);
   return (
     <ToolTipLabel label={format(dateObj, "PP pp z")}>
       <p className="text-sm">

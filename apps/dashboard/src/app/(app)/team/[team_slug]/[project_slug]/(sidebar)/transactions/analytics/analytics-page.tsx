@@ -1,10 +1,10 @@
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/project/projects";
+import { UnifiedTransactionsTable } from "../components/transactions-table.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import { TransactionAnalyticsFilter } from "./filter";
 import { TransactionsChartCard } from "./tx-chart/tx-chart";
-import { TransactionsTable } from "./tx-table/tx-table";
 
 export function TransactionsAnalyticsPageContent(props: {
   searchParams: {
@@ -34,11 +34,10 @@ export function TransactionsAnalyticsPageContent(props: {
             />
           </>
         )}
-        <TransactionsTable
+        <UnifiedTransactionsTable
           client={props.client}
           project={props.project}
           teamSlug={props.teamSlug}
-          wallets={props.wallets}
         />
       </div>
     </ResponsiveSearchParamsProvider>

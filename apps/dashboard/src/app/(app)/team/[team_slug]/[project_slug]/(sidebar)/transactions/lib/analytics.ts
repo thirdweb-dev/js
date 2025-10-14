@@ -205,6 +205,64 @@ export async function getSingleTransaction({
   return data.transactions[0];
 }
 
+export async function getSingleSolanaTransaction({
+  teamId,
+  clientId,
+  transactionId,
+}: {
+  teamId: string;
+  clientId: string;
+  transactionId: string;
+}): Promise<
+  import("../analytics/solana-tx-table/types").SolanaTransaction | undefined
+> {
+  const authToken = await getAuthToken();
+
+  const filters = {
+    filters: [
+      {
+        field: "id",
+        operation: "OR",
+        values: [transactionId],
+      },
+    ],
+  };
+
+  const response = await fetch(
+    `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/solana/transactions/search`,
+    {
+      body: JSON.stringify(filters),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-team-id": teamId,
+        "x-chain-id": "solana:devnet", // TODO: Support multiple Solana networks
+      },
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      return undefined;
+    }
+
+    const errorText = await response.text().catch(() => "Unknown error");
+    throw new Error(
+      `Error fetching single Solana transaction data: ${response.status} ${
+        response.statusText
+      } - ${errorText}`,
+    );
+  }
+
+  const rawData = await response.json();
+  const data =
+    rawData.result as import("../analytics/solana-tx-table/types").SolanaTransactionsResponse;
+
+  return data.transactions[0];
+}
+
 // Activity log types
 export type ActivityLogEntry = {
   id: string;
@@ -260,18 +318,45 @@ export async function getTransactionActivityLogs({
   );
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 404) {
       return [];
     }
+    return [];
+  }
 
-    // Don't throw on 404 - activity logs might not exist for all transactions
-    if (response.status === 404) {
+  const data = (await response.json()) as ActivityLogsResponse;
+  return data.result.activityLogs;
+}
+
+export async function getSolanaTransactionActivityLogs({
+  teamId,
+  clientId,
+  transactionId,
+}: {
+  teamId: string;
+  clientId: string;
+  transactionId: string;
+}): Promise<ActivityLogEntry[]> {
+  const authToken = await getAuthToken();
+
+  const response = await fetch(
+    `${NEXT_PUBLIC_ENGINE_CLOUD_URL}/v1/solana/transactions/activity-logs?transactionId=${transactionId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        "Content-Type": "application/json",
+        "x-client-id": clientId,
+        "x-team-id": teamId,
+        "x-chain-id": "solana:devnet", // TODO: Support multiple Solana networks
+      },
+      method: "GET",
+    },
+  );
+
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 404) {
       return [];
     }
-
-    console.error(
-      `Error fetching activity logs: ${response.status} ${response.statusText}`,
-    );
     return [];
   }
 
