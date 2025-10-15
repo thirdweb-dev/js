@@ -515,29 +515,6 @@ export async function createWalletAccessToken(props: {
             type: "eoa:signStructuredMessage",
           },
           {
-            metadataPatterns: [
-              {
-                key: "projectId",
-                rule: {
-                  pattern: props.project.id,
-                },
-              },
-              {
-                key: "teamId",
-                rule: {
-                  pattern: props.project.teamId,
-                },
-              },
-              {
-                key: "type",
-                rule: {
-                  pattern: "server-wallet",
-                },
-              },
-            ],
-            type: "eoa:read",
-          },
-          {
             requiredMetadataPatterns: [
               {
                 key: "projectId",
