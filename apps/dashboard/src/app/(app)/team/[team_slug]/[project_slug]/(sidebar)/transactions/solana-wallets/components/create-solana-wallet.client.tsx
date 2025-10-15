@@ -23,6 +23,7 @@ export function CreateSolanaWallet(props: {
   managementAccessToken: string | undefined;
   project: Project;
   teamSlug: string;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [label, setLabel] = useState("");
@@ -68,6 +69,7 @@ export function CreateSolanaWallet(props: {
         <Button
           variant="default"
           className="gap-2 rounded-full bg-foreground hover:bg-foreground/90"
+          disabled={props.disabled}
         >
           <PlusIcon className="size-4" />
           Create Solana Wallet

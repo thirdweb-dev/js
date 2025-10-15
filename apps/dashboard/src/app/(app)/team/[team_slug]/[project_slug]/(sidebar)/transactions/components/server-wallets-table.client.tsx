@@ -61,6 +61,7 @@ import { updateDefaultProjectWallet } from "../lib/vault.client";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet as EVMWallet } from "../server-wallets/wallet-table/types";
 import { CreateSolanaWallet } from "../solana-wallets/components/create-solana-wallet.client";
+import { UpgradeSolanaPermissions } from "../solana-wallets/components/upgrade-solana-permissions.client";
 import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
 
 type WalletChain = "evm" | "solana";
@@ -154,6 +155,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
                   managementAccessToken={managementAccessToken}
                   project={project}
                   teamSlug={teamSlug}
+                  disabled={solanaPermissionError}
                 />
               )}
             </div>
@@ -211,7 +213,9 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
 
         {/* Table Content */}
         {activeChain === "solana" && solanaPermissionError ? (
-          <SolanaPermissionMessage teamSlug={teamSlug} />
+          <div className="p-6">
+            <UpgradeSolanaPermissions project={project} />
+          </div>
         ) : (
           <>
             <TableContainer className="rounded-none border-x-0 border-b-0">
@@ -310,32 +314,6 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
             )}
           </>
         )}
-      </div>
-    </div>
-  );
-}
-
-// Solana Permission Error Message
-function SolanaPermissionMessage({ teamSlug }: { teamSlug: string }) {
-  return (
-    <div className="p-8 flex flex-col items-center justify-center text-center gap-4 border-t">
-      <div className="p-3 rounded-full bg-warning/10 border border-warning/50">
-        <XIcon className="size-6 text-warning" />
-      </div>
-      <div className="max-w-md">
-        <h3 className="font-semibold text-lg mb-2">
-          Solana Access Not Available
-        </h3>
-        <p className="text-muted-foreground text-sm mb-4">
-          This project doesn't have access to Solana functionality. To use
-          Solana server wallets, please create a new project with Solana support
-          enabled.
-        </p>
-        <Link href={`/team/${teamSlug}`}>
-          <Button variant="default" className="rounded-full">
-            Create New Project
-          </Button>
-        </Link>
       </div>
     </div>
   );

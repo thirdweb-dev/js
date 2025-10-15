@@ -15,6 +15,8 @@ import type { Wallet } from "./server-wallets/wallet-table/types";
 import { listSolanaAccounts } from "./solana-wallets/lib/vault.client";
 import type { SolanaWallet } from "./solana-wallets/wallet-table/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function TransactionsAnalyticsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
   searchParams: Promise<{

@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExternalLinkIcon, Loader2Icon, LockIcon } from "lucide-react";
 import Link from "next/link";
+import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -50,6 +51,9 @@ function SendTestSolanaTransactionModal(props: {
   onOpenChange: (open: boolean) => void;
 }) {
   const queryClient = useQueryClient();
+  const [, setTxChain] = useQueryState("txChain", {
+    history: "push",
+  });
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -122,6 +126,8 @@ function SendTestSolanaTransactionModal(props: {
     },
     onSuccess: () => {
       toast.success("Test Solana transaction sent successfully!");
+      // Set the transaction chain to solana so the table switches
+      setTxChain("solana");
       // Close the modal after successful transaction
       setTimeout(() => {
         props.onOpenChange(false);

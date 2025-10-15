@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { format, formatDistanceToNowStrict } from "date-fns";
 import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
+import { useQueryState } from "nuqs";
 import { useId, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { engineCloudProxy } from "@/actions/proxies";
@@ -66,7 +67,17 @@ export function UnifiedTransactionsTable({
   client,
 }: UnifiedTransactionsTableProps) {
   const router = useDashboardRouter();
-  const [activeChain, setActiveChain] = useState<TransactionChain>("evm");
+
+  // Use nuqs to manage chain selection in URL - this is the source of truth
+  const [activeChainParam, setActiveChainParam] = useQueryState("txChain", {
+    defaultValue: "evm",
+    history: "push",
+  });
+
+  const activeChain = (activeChainParam || "evm") as TransactionChain;
+  const setActiveChain = (chain: TransactionChain) =>
+    setActiveChainParam(chain);
+
   const [autoUpdate, setAutoUpdate] = useState(true);
   const [status, setStatus] = useState<
     TransactionStatus | SolanaTransactionStatus | undefined
