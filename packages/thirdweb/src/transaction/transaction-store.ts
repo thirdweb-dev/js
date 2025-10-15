@@ -11,6 +11,13 @@ export type StoredTransaction = {
     status: "success" | "failed";
     to: string;
   };
+  decoded?: {
+    name: string;
+    signature: string;
+    inputs?: {
+      [key: string]: unknown;
+    };
+  };
 };
 
 const transactionsByAddress = new Map<string, Store<StoredTransaction[]>>();
@@ -81,6 +88,7 @@ export async function getPastTransactions(options: {
     queryOptions: {
       filter_block_timestamp_gte: oneMonthsAgoInSeconds,
       limit: 20,
+      decode: true,
     },
     walletAddress,
   });
@@ -90,9 +98,10 @@ export async function getPastTransactions(options: {
         ? Number(tx.chain_id)
         : (tx.chain_id as number),
     receipt: {
-      status: tx.status === 1 ? "success" : "failed",
+      status: tx.status === 0 ? "failed" : "success",
       to: tx.to_address,
     },
     transactionHash: tx.hash as Hex,
+    decoded: tx.decoded,
   }));
 }

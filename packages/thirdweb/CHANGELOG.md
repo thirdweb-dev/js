@@ -1,5 +1,12 @@
 # thirdweb
 
+## 5.108.15
+
+### Patch Changes
+
+- [#8257](https://github.com/thirdweb-dev/js/pull/8257) [`e7f42e6`](https://github.com/thirdweb-dev/js/commit/e7f42e6ac591102145f5e25983aeaa6f3647ad7f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve Transactions list in connect modal
+  Fix query cache for block explorers for raw chains
+
 ## 5.108.14
 
 ### Patch Changes
