@@ -48,7 +48,11 @@ export function ProjectSidebarLayout(props: {
             {
               href: `${props.layoutPath}/transactions`,
               icon: ArrowLeftRightIcon,
-              label: "Transactions",
+              label: (
+                <span className="flex items-center gap-2">
+                  Transactions <Badge>New</Badge>
+                </span>
+              ),
             },
             {
               href: `${props.layoutPath}/contracts`,
@@ -81,11 +85,7 @@ export function ProjectSidebarLayout(props: {
             {
               href: `${props.layoutPath}/tokens`,
               icon: TokenIcon,
-              label: (
-                <span className="flex items-center gap-2">
-                  Tokens <Badge>New</Badge>
-                </span>
-              ),
+              label: "Tokens",
             },
           ],
         },

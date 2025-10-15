@@ -15,9 +15,12 @@ import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { loginRedirect } from "@/utils/redirects";
 import type { Transaction } from "../../analytics/tx-table/types";
 import {
+  getSingleSolanaTransaction,
   getSingleTransaction,
+  getSolanaTransactionActivityLogs,
   getTransactionActivityLogs,
 } from "../../lib/analytics";
+import { SolanaTransactionDetailsUI } from "./solana-transaction-details-ui";
 import { TransactionDetailsUI } from "./transaction-details-ui";
 
 type AbiItem =
@@ -195,17 +198,18 @@ export default async function TransactionPage({
     redirect(`/team/${team_slug}`);
   }
 
-  const [transactionData, activityLogs] = await Promise.all([
+  // Try fetching both EVM and Solana transactions
+  const [evmTransactionData, solanaTransactionData] = await Promise.all([
     getSingleTransaction({
       clientId: project.publishableKey,
       teamId: project.teamId,
       transactionId: id,
-    }),
-    getTransactionActivityLogs({
+    }).catch(() => null),
+    getSingleSolanaTransaction({
       clientId: project.publishableKey,
       teamId: project.teamId,
       transactionId: id,
-    }),
+    }).catch(() => null),
   ]);
 
   const client = getClientThirdwebClient({
@@ -213,23 +217,50 @@ export default async function TransactionPage({
     teamId: project.teamId,
   });
 
-  if (!transactionData) {
-    notFound();
+  // Determine which transaction type we have and fetch appropriate activity logs
+  if (solanaTransactionData) {
+    const activityLogs = await getSolanaTransactionActivityLogs({
+      clientId: project.publishableKey,
+      teamId: project.teamId,
+      transactionId: id,
+    });
+
+    // Render Solana transaction details
+    return (
+      <SolanaTransactionDetailsUI
+        activityLogs={activityLogs}
+        client={client}
+        project={project}
+        teamSlug={team_slug}
+        transaction={solanaTransactionData}
+      />
+    );
   }
 
-  // Decode transaction data on the server
-  const decodedTransactionData = await decodeTransactionData(transactionData);
+  if (evmTransactionData) {
+    const activityLogs = await getTransactionActivityLogs({
+      clientId: project.publishableKey,
+      teamId: project.teamId,
+      transactionId: id,
+    });
 
-  return (
-    <div className="space-y-6 p-2">
+    // Decode transaction data on the server for EVM
+    const decodedTransactionData =
+      await decodeTransactionData(evmTransactionData);
+
+    // Render EVM transaction details
+    return (
       <TransactionDetailsUI
         activityLogs={activityLogs}
         client={client}
         decodedTransactionData={decodedTransactionData}
         project={project}
         teamSlug={team_slug}
-        transaction={transactionData}
+        transaction={evmTransactionData}
       />
-    </div>
-  );
+    );
+  }
+
+  // No transaction found
+  notFound();
 }

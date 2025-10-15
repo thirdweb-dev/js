@@ -97,3 +97,22 @@ export type TransactionsResponse = {
   transactions: Transaction[];
   pagination: Pagination;
 };
+
+export const statusDetails = {
+  CONFIRMED: {
+    name: "Confirmed",
+    type: "success",
+  },
+  FAILED: {
+    name: "Failed",
+    type: "destructive",
+  },
+  QUEUED: {
+    name: "Queued",
+    type: "warning",
+  },
+  SUBMITTED: {
+    name: "Submitted",
+    type: "warning",
+  },
+} as const;

@@ -5,15 +5,19 @@ import type { Project } from "@/api/project/projects";
 import { type Step, StepsCard } from "@/components/blocks/StepsCard";
 import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
+import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
+import { SendTestSolanaTransaction } from "./send-test-solana-tx.client";
 import { SendTestTransaction } from "./send-test-tx.client";
 
 interface Props {
   managementAccessToken: string | undefined;
   project: Project;
   wallets: Wallet[];
+  solanaWallets: SolanaWallet[];
   hasTransactions: boolean;
   teamSlug: string;
   testTxWithWallet?: string | undefined;
+  testSolanaTxWithWallet?: string | undefined;
   client: ThirdwebClient;
   isManagedVault: boolean;
 }
@@ -81,6 +85,19 @@ export const EngineChecklist: React.FC<Props> = (props) => {
         teamSlug={props.teamSlug}
         walletId={props.testTxWithWallet}
         wallets={props.wallets}
+      />
+    );
+  }
+
+  if (props.testSolanaTxWithWallet) {
+    return (
+      <SendTestSolanaTransaction
+        isManagedVault={props.isManagedVault}
+        client={props.client}
+        project={props.project}
+        teamSlug={props.teamSlug}
+        walletId={props.testSolanaTxWithWallet}
+        wallets={props.solanaWallets}
       />
     );
   }

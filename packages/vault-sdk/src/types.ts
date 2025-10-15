@@ -503,7 +503,7 @@ type CreateSolanaAccountData = {
 };
 
 type GetSolanaAccountsData = {
-  accounts: CreateSolanaAccountData[];
+  items: CreateSolanaAccountData[];
   totalCount: number;
   page: number;
   pageSize: number;
