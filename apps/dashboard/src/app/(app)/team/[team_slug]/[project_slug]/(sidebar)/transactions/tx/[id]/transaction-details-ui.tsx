@@ -22,8 +22,8 @@ import { TabButtons } from "@/components/ui/tabs";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
-import { statusDetails } from "../../analytics/tx-table/tx-table-ui";
 import type { Transaction } from "../../analytics/tx-table/types";
+import { statusDetails } from "../../analytics/tx-table/types";
 import type { ActivityLogEntry } from "../../lib/analytics";
 import type { DecodedTransactionData, DecodedTransactionResult } from "./page";
 

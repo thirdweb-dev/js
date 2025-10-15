@@ -9,9 +9,13 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
 import { EngineChecklist } from "./analytics/ftux.client";
 import { TransactionAnalyticsSummary } from "./analytics/summary";
+import { ServerWalletsTable } from "./components/server-wallets-table.client";
 import { getTransactionAnalyticsSummary } from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
-import { ServerWalletsTable } from "./server-wallets/wallet-table/wallet-table";
+import { listSolanaAccounts } from "./solana-wallets/lib/vault.client";
+import type { SolanaWallet } from "./solana-wallets/wallet-table/types";
+
+export const dynamic = "force-dynamic";
 
 export default async function TransactionsAnalyticsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -20,7 +24,9 @@ export default async function TransactionsAnalyticsPage(props: {
     to?: string | string[] | undefined;
     interval?: string | string[] | undefined;
     testTxWithWallet?: string | string[] | undefined;
+    testSolanaTxWithWallet?: string | string[] | undefined;
     page?: string;
+    solana_page?: string;
   }>;
 }) {
   const [params, searchParams, authToken] = await Promise.all([
@@ -58,6 +64,7 @@ export default async function TransactionsAnalyticsPage(props: {
 
   const pageSize = 10;
   const currentPage = Number.parseInt(searchParams.page ?? "1");
+  const solanCurrentPage = Number.parseInt(searchParams.solana_page ?? "1");
 
   const eoas = managementAccessToken
     ? await listEoas({
@@ -76,6 +83,32 @@ export default async function TransactionsAnalyticsPage(props: {
     : { data: { items: [], totalRecords: 0 }, error: null, success: true };
 
   const wallets = eoas.data?.items as Wallet[] | undefined;
+
+  // Fetch Solana accounts - gracefully handle permission errors
+  let solanaAccounts: {
+    data: { items: SolanaWallet[]; totalRecords: number };
+    error: Error | null;
+    success: boolean;
+  };
+
+  if (managementAccessToken) {
+    solanaAccounts = await listSolanaAccounts({
+      managementAccessToken,
+      page: solanCurrentPage,
+      limit: pageSize,
+      projectId: project.id,
+    });
+  } else {
+    solanaAccounts = {
+      data: { items: [], totalRecords: 0 },
+      error: null,
+      success: true,
+    };
+  }
+
+  // Check if error is a permission error
+  const isSolanaPermissionError =
+    solanaAccounts.error?.message.includes("AUTH_INSUFFICIENT_SCOPE") ?? false;
 
   const initialData = await getTransactionAnalyticsSummary({
     clientId: project.publishableKey,
@@ -127,39 +160,63 @@ export default async function TransactionsAnalyticsPage(props: {
           project={project}
           teamSlug={params.team_slug}
           testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
+          testSolanaTxWithWallet={
+            searchParams.testSolanaTxWithWallet as string | undefined
+          }
           wallets={wallets ?? []}
+          solanaWallets={solanaAccounts.data.items}
         />
-        {hasTransactions && !searchParams.testTxWithWallet && (
-          <TransactionAnalyticsSummary
-            clientId={project.publishableKey}
-            initialData={initialData}
-            teamId={project.teamId}
-          />
-        )}
+        {hasTransactions &&
+          !searchParams.testTxWithWallet &&
+          !searchParams.testSolanaTxWithWallet && (
+            <TransactionAnalyticsSummary
+              clientId={project.publishableKey}
+              initialData={initialData}
+              teamId={project.teamId}
+            />
+          )}
 
         {/* transactions */}
         <TransactionsAnalyticsPageContent
           client={client}
           project={project}
           searchParams={searchParams}
-          showAnalytics={hasTransactions && !searchParams.testTxWithWallet}
+          showAnalytics={
+            hasTransactions &&
+            !searchParams.testTxWithWallet &&
+            !searchParams.testSolanaTxWithWallet
+          }
           teamSlug={params.team_slug}
           wallets={wallets}
         />
 
-        {/* server wallets */}
+        {/* Server Wallets (EVM + Solana) */}
         {eoas.error ? (
-          <div>Error: {eoas.error.message}</div>
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4">
+            <p className="text-destructive font-semibold mb-2">
+              EVM Wallet Error
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {eoas.error.message}
+            </p>
+          </div>
         ) : (
           <ServerWalletsTable
             client={client}
-            currentPage={currentPage}
+            evmCurrentPage={currentPage}
+            evmTotalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
+            evmTotalRecords={eoas.data.totalRecords}
+            evmWallets={eoas.data.items as Wallet[]}
             managementAccessToken={managementAccessToken ?? undefined}
             project={project}
+            solanaCurrentPage={solanCurrentPage}
+            solanaTotalPages={Math.ceil(
+              solanaAccounts.data.totalRecords / pageSize,
+            )}
+            solanaTotalRecords={solanaAccounts.data.totalRecords}
+            solanaWallets={solanaAccounts.data.items}
             teamSlug={params.team_slug}
-            totalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
-            totalRecords={eoas.data.totalRecords}
-            wallets={eoas.data.items as Wallet[]}
+            solanaPermissionError={isSolanaPermissionError}
           />
         )}
       </div>

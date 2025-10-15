@@ -1,6 +1,6 @@
 "use client";
 
-import { encrypt } from "@thirdweb-dev/service-utils";
+import { decrypt, encrypt } from "@thirdweb-dev/service-utils";
 import {
   createAccessToken,
   createEoa,
@@ -515,29 +515,6 @@ export async function createWalletAccessToken(props: {
             type: "eoa:signStructuredMessage",
           },
           {
-            metadataPatterns: [
-              {
-                key: "projectId",
-                rule: {
-                  pattern: props.project.id,
-                },
-              },
-              {
-                key: "teamId",
-                rule: {
-                  pattern: props.project.teamId,
-                },
-              },
-              {
-                key: "type",
-                rule: {
-                  pattern: "server-wallet",
-                },
-              },
-            ],
-            type: "eoa:read",
-          },
-          {
             requiredMetadataPatterns: [
               {
                 key: "projectId",
@@ -793,6 +770,187 @@ async function createManagementAccessToken(props: {
       },
     },
   });
+}
+
+/**
+ * Upgrades existing access tokens to include Solana permissions
+ * This is needed when a project was created before Solana support was added
+ *
+ * Returns an object with success/error instead of throwing for Next.js server actions
+ */
+export async function upgradeAccessTokensForSolana(props: {
+  project: Project;
+  projectSecretKey?: string;
+}): Promise<{
+  success: boolean;
+  error?: string;
+  data?: {
+    managementToken: string;
+    walletToken?: string;
+  };
+}> {
+  const { project, projectSecretKey } = props;
+
+  try {
+    // Find the engineCloud service
+    const engineCloudService = project.services.find(
+      (service) => service.name === "engineCloud",
+    );
+
+    if (!engineCloudService) {
+      return {
+        success: false,
+        error: "No engineCloud service found on project",
+      };
+    }
+
+    const vaultClient = await initVaultClient();
+    const hasEncryptedAdminKey = !!engineCloudService.encryptedAdminKey;
+
+    // Check if this is an ejected vault (no encrypted admin key stored)
+    if (!hasEncryptedAdminKey) {
+      // For ejected vaults, we only need to update the management token
+      // User manages their own admin key, so we can't create wallet tokens
+
+      // We need the admin key from the user
+      if (!projectSecretKey) {
+        return {
+          success: false,
+          error: "Admin key required. Please enter your vault admin key.",
+        };
+      }
+
+      // For ejected vault, the "secret key" parameter is actually the admin key
+      const managementTokenResult = await createManagementAccessToken({
+        project,
+        adminKey: projectSecretKey,
+        vaultClient,
+      });
+
+      if (!managementTokenResult.success) {
+        return {
+          success: false,
+          error: `Failed to create management token: ${managementTokenResult.error}`,
+        };
+      }
+
+      // Update only the management token for ejected vaults
+      // Keep everything else the same (no encrypted keys to update)
+      await updateProjectClient(
+        {
+          projectId: project.id,
+          teamId: project.teamId,
+        },
+        {
+          services: [
+            ...project.services.filter(
+              (service) => service.name !== "engineCloud",
+            ),
+            {
+              ...engineCloudService,
+              managementAccessToken: managementTokenResult.data.accessToken,
+            },
+          ],
+        },
+      );
+
+      return {
+        success: true,
+        data: {
+          managementToken: managementTokenResult.data.accessToken,
+        },
+      };
+    }
+
+    // For non-ejected vaults (with encrypted admin key)
+    if (!projectSecretKey) {
+      return {
+        success: false,
+        error: "Project secret key is required to upgrade tokens",
+      };
+    }
+
+    // Verify the project secret key
+    const projectSecretKeyHash = await hashSecretKey(projectSecretKey);
+    if (!project.secretKeys.some((key) => key?.hash === projectSecretKeyHash)) {
+      return {
+        success: false,
+        error: "Invalid project secret key",
+      };
+    }
+
+    // Decrypt the admin key (we know it exists from the hasEncryptedAdminKey check)
+    const adminKey = await decrypt(
+      engineCloudService.encryptedAdminKey as string,
+      projectSecretKey,
+    );
+
+    // Create new tokens with Solana permissions
+    const [managementTokenResult, walletTokenResult] = await Promise.all([
+      createManagementAccessToken({ project, adminKey, vaultClient }),
+      createWalletAccessToken({ project, adminKey, vaultClient }),
+    ]);
+
+    if (!managementTokenResult.success) {
+      return {
+        success: false,
+        error: `Failed to create management token: ${managementTokenResult.error}`,
+      };
+    }
+
+    if (!walletTokenResult.success) {
+      return {
+        success: false,
+        error: `Failed to create wallet token: ${walletTokenResult.error}`,
+      };
+    }
+
+    const managementToken = managementTokenResult.data;
+    const walletToken = walletTokenResult.data;
+
+    // Encrypt the new wallet token
+    const [encryptedAdminKey, encryptedWalletAccessToken] = await Promise.all([
+      encrypt(adminKey, projectSecretKey),
+      encrypt(walletToken.accessToken, projectSecretKey),
+    ]);
+
+    // Update the project with new tokens
+    await updateProjectClient(
+      {
+        projectId: project.id,
+        teamId: project.teamId,
+      },
+      {
+        services: [
+          ...project.services.filter(
+            (service) => service.name !== "engineCloud",
+          ),
+          {
+            ...engineCloudService,
+            managementAccessToken: managementToken.accessToken,
+            encryptedAdminKey,
+            encryptedWalletAccessToken,
+          },
+        ],
+      },
+    );
+
+    return {
+      success: true,
+      data: {
+        managementToken: managementToken.accessToken,
+        walletToken: walletToken.accessToken,
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to upgrade access tokens",
+    };
+  }
 }
 
 export function maskSecret(secret: string) {

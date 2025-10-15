@@ -12,10 +12,14 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
+import { ServerWalletsTable } from "../transactions/components/server-wallets-table.client";
 import type { Wallet } from "../transactions/server-wallets/wallet-table/types";
-import { ServerWalletsTable } from "../transactions/server-wallets/wallet-table/wallet-table";
+import { listSolanaAccounts } from "../transactions/solana-wallets/lib/vault.client";
+import type { SolanaWallet } from "../transactions/solana-wallets/wallet-table/types";
 import { InAppWalletAnalytics } from "./analytics/chart";
 import { InAppWalletsSummary } from "./analytics/chart/Summary";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -25,6 +29,7 @@ export default async function Page(props: {
     type?: string;
     interval?: string;
     page?: string;
+    solana_page?: string;
   }>;
 }) {
   const [searchParams, params] = await Promise.all([
@@ -66,7 +71,9 @@ export default async function Page(props: {
   // Fetch server wallets with pagination (5 per page)
   const pageSize = 5;
   const currentPage = Number.parseInt(searchParams.page ?? "1");
+  const solanCurrentPage = Number.parseInt(searchParams.solana_page ?? "1");
 
+  // Fetch EVM wallets
   const eoas =
     vaultClient && managementAccessToken
       ? await listEoas({
@@ -84,7 +91,32 @@ export default async function Page(props: {
         })
       : { data: { items: [], totalRecords: 0 }, error: null, success: true };
 
-  const serverWallets = eoas.data?.items as Wallet[] | undefined;
+  // Fetch Solana wallets
+  let solanaAccounts: {
+    data: { items: SolanaWallet[]; totalRecords: number };
+    error: Error | null;
+    success: boolean;
+  };
+
+  if (managementAccessToken) {
+    solanaAccounts = await listSolanaAccounts({
+      managementAccessToken,
+      page: solanCurrentPage,
+      limit: pageSize,
+      projectId: project.id,
+    });
+  } else {
+    solanaAccounts = {
+      data: { items: [], totalRecords: 0 },
+      error: null,
+      success: true,
+    };
+  }
+
+  // Check for Solana permission errors
+  const isSolanaPermissionError = solanaAccounts.error?.message?.includes(
+    "AUTH_INSUFFICIENT_SCOPE",
+  );
 
   const client = getClientThirdwebClient({
     jwt: authToken,
@@ -143,18 +175,34 @@ export default async function Page(props: {
             authToken={authToken}
           />
 
-          {/* Server Wallets Section */}
+          {/* Server Wallets Section (EVM + Solana) */}
           <div className="flex flex-col gap-4">
-            {eoas.error ? null : (
+            {eoas.error ? (
+              <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4">
+                <p className="text-destructive font-semibold mb-2">
+                  EVM Wallet Error
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {eoas.error.message || "Failed to load EVM wallets"}
+                </p>
+              </div>
+            ) : (
               <ServerWalletsTable
                 client={client}
-                currentPage={currentPage}
+                evmCurrentPage={currentPage}
+                evmTotalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
+                evmTotalRecords={eoas.data.totalRecords}
+                evmWallets={eoas.data.items as Wallet[]}
                 managementAccessToken={managementAccessToken ?? undefined}
                 project={project}
+                solanaCurrentPage={solanCurrentPage}
+                solanaTotalPages={Math.ceil(
+                  solanaAccounts.data.totalRecords / pageSize,
+                )}
+                solanaTotalRecords={solanaAccounts.data.totalRecords}
+                solanaWallets={solanaAccounts.data.items}
                 teamSlug={params.team_slug}
-                totalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
-                totalRecords={eoas.data.totalRecords}
-                wallets={serverWallets ?? []}
+                solanaPermissionError={isSolanaPermissionError || false}
               />
             )}
           </div>
