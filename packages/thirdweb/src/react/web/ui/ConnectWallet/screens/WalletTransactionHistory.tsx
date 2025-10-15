@@ -24,7 +24,6 @@ import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWa
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
-import { ChainName } from "../../components/ChainName.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
@@ -141,6 +140,7 @@ function TransactionButton(props: {
   });
   const chainIconQuery = useChainIconUrl(getCachedChain(props.tx.chainId));
   const receipt = props.tx.receipt ?? fetchedReceipt;
+  const decoded = props.tx.decoded;
 
   const content = (
     <TxButton
@@ -181,9 +181,7 @@ function TransactionButton(props: {
             }}
           >
             <Text color="primaryText" size="sm">
-              {receipt?.to
-                ? `Interacted with ${shortenHex(receipt?.to, 4)}`
-                : `Hash: ${shortenHex(props.tx.transactionHash, 4)}`}
+              {decoded ? decoded.name : `Transaction Sent`}
             </Text>
           </Container>
 
@@ -198,11 +196,11 @@ function TransactionButton(props: {
               justifyContent: "space-between",
             }}
           >
-            <ChainName
-              chain={getCachedChain(props.tx.chainId)}
-              client={props.client}
-              size="xs"
-            />
+            <Text color="secondaryText" size="xs">
+              {receipt?.to
+                ? shortenHex(receipt?.to, 4)
+                : shortenHex(props.tx.transactionHash, 4)}
+            </Text>
           </Container>
         </div>
       </Container>
