@@ -4,7 +4,6 @@ import { ArrowDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import {
   getFiatSymbol,
   type SupportedFiatCurrency,
@@ -86,11 +85,10 @@ type FundWalletProps = {
    */
   showThirdwebBranding: boolean;
 
-  initialSelection: {
-    tokenAddress: string | undefined;
-    chainId: number | undefined;
-    amount: string | undefined;
-  };
+  selectedToken: SelectedToken | undefined;
+  setSelectedToken: (token: SelectedToken | undefined) => void;
+  amountSelection: AmountSelection;
+  setAmountSelection: (amountSelection: AmountSelection) => void;
 
   /**
    * The currency to use for the payment.
@@ -116,14 +114,14 @@ type FundWalletProps = {
   };
 };
 
-type SelectedToken =
+export type SelectedToken =
   | {
       chainId: number;
       tokenAddress: string;
     }
   | undefined;
 
-type AmountSelection =
+export type AmountSelection =
   | {
       type: "usd";
       value: string;
@@ -134,10 +132,6 @@ type AmountSelection =
     };
 
 export function FundWallet(props: FundWalletProps) {
-  const [amountSelection, setAmountSelection] = useState<AmountSelection>({
-    type: "token",
-    value: props.initialSelection.amount ?? "",
-  });
   const theme = useCustomTheme();
   const activeWalletInfo = useActiveWalletInfo();
   const receiver =
@@ -154,20 +148,9 @@ export function FundWallet(props: FundWalletProps) {
         checksumAddress(activeWalletInfo?.activeAccount?.address)
       : true);
 
-  const [selectedToken, setSelectedToken] = useState<SelectedToken>(() => {
-    if (!props.initialSelection.chainId) {
-      return undefined;
-    }
-
-    return {
-      chainId: props.initialSelection.chainId,
-      tokenAddress: props.initialSelection.tokenAddress || NATIVE_TOKEN_ADDRESS,
-    };
-  });
-
   const tokenQuery = useTokenQuery({
-    tokenAddress: selectedToken?.tokenAddress,
-    chainId: selectedToken?.chainId,
+    tokenAddress: props.selectedToken?.tokenAddress,
+    chainId: props.selectedToken?.chainId,
     client: props.client,
   });
 
@@ -175,8 +158,8 @@ export function FundWallet(props: FundWalletProps) {
     tokenQuery.data?.type === "success" ? tokenQuery.data.token : undefined;
 
   const tokenBalanceQuery = useTokenBalance({
-    chainId: selectedToken?.chainId,
-    tokenAddress: selectedToken?.tokenAddress,
+    chainId: props.selectedToken?.chainId,
+    tokenAddress: props.selectedToken?.tokenAddress,
     client: props.client,
     walletAddress: activeWalletInfo?.activeAccount?.address,
   });
@@ -227,9 +210,9 @@ export function FundWallet(props: FundWalletProps) {
           activeWalletInfo={activeWalletInfo}
           onClose={() => setIsTokenSelectionOpen(false)}
           client={props.client}
-          selectedToken={selectedToken}
+          selectedToken={props.selectedToken}
           setSelectedToken={(token) => {
-            setSelectedToken(token);
+            props.setSelectedToken(token);
             setIsTokenSelectionOpen(false);
           }}
         />
@@ -240,11 +223,11 @@ export function FundWallet(props: FundWalletProps) {
         <TokenSection
           title={actionLabel}
           presetOptions={props.presetOptions}
-          amountSelection={amountSelection}
-          setAmount={setAmountSelection}
+          amountSelection={props.amountSelection}
+          setAmount={props.setAmountSelection}
           activeWalletInfo={activeWalletInfo}
           selectedToken={
-            selectedToken
+            props.selectedToken
               ? {
                   data:
                     tokenQuery.data?.type === "success"
@@ -310,7 +293,7 @@ export function FundWallet(props: FundWalletProps) {
 
             const fiatPricePerToken = destinationToken.prices[props.currency];
             const { tokenValue } = getAmounts(
-              amountSelection,
+              props.amountSelection,
               fiatPricePerToken,
             );
 

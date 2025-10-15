@@ -6,6 +6,7 @@ import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { TokenWithPrices } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../pay/types.js";
 import type { Address } from "../../../../utils/address.js";
@@ -28,7 +29,11 @@ import connectLocaleEn from "../ConnectWallet/locale/en.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
 import { ErrorBanner } from "./ErrorBanner.js";
-import { FundWallet } from "./FundWallet.js";
+import {
+  type AmountSelection,
+  FundWallet,
+  type SelectedToken,
+} from "./FundWallet.js";
 import { PaymentDetails } from "./payment-details/PaymentDetails.js";
 import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
@@ -454,6 +459,22 @@ function BridgeWidgetContent(
     [props.onCancel],
   );
 
+  const [amountSelection, setAmountSelection] = useState<AmountSelection>({
+    type: "token",
+    value: props.amount ?? "",
+  });
+
+  const [selectedToken, setSelectedToken] = useState<SelectedToken>(() => {
+    if (!props.chain?.id) {
+      return undefined;
+    }
+
+    return {
+      chainId: props.chain.id,
+      tokenAddress: props.tokenAddress || NATIVE_TOKEN_ADDRESS,
+    };
+  });
+
   if (screen.id === "1:buy-ui" || !activeWalletInfo) {
     return (
       <FundWallet
@@ -479,11 +500,10 @@ function BridgeWidgetContent(
         }}
         buttonLabel={props.buttonLabel}
         currency={props.currency}
-        initialSelection={{
-          tokenAddress: props.tokenAddress,
-          chainId: props.chain?.id,
-          amount: props.amount,
-        }}
+        selectedToken={selectedToken}
+        setSelectedToken={setSelectedToken}
+        amountSelection={amountSelection}
+        setAmountSelection={setAmountSelection}
       />
     );
   }
