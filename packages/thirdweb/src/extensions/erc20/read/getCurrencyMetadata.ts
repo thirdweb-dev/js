@@ -1,8 +1,21 @@
+import { z } from "zod";
 import { isNativeTokenAddress } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { name } from "../../common/read/name.js";
 import { symbol } from "../../common/read/symbol.js";
 import { decimals } from "../__generated__/IERC20/read/decimals.js";
+
+const NATIVE_CURRENCY_SCHEMA = z
+  .object({
+    name: z.string().default("Ether"),
+    symbol: z.string().default("ETH"),
+    decimals: z.number().default(18),
+  })
+  .default({
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  });
 
 /**
  * @extension ERC20
@@ -30,13 +43,27 @@ export async function getCurrencyMetadata(
 ): Promise<GetCurrencyMetadataResult> {
   // if the contract is the native token, return the native currency metadata
   if (isNativeTokenAddress(options.contract.address)) {
-    return {
-      decimals: 18,
-      name: "Ether",
-      symbol: "ETH",
-      // overwrite with native currency of the chain if available
-      ...options.contract.chain.nativeCurrency,
-    };
+    // if the chain definition does not have a native currency, attempt to fetch it from the API
+    if (
+      !options.contract.chain.nativeCurrency ||
+      !options.contract.chain.nativeCurrency.name ||
+      !options.contract.chain.nativeCurrency.symbol ||
+      !options.contract.chain.nativeCurrency.decimals
+    ) {
+      try {
+        const { getChainMetadata } = await import("../../../chains/utils.js");
+        const chain = await getChainMetadata(options.contract.chain);
+        // return the native currency of the chain
+        return NATIVE_CURRENCY_SCHEMA.parse({
+          ...chain.nativeCurrency,
+          ...options.contract.chain.nativeCurrency,
+        });
+      } catch {
+        // no-op, fall through to the default values below
+      }
+    }
+
+    return NATIVE_CURRENCY_SCHEMA.parse(options.contract.chain.nativeCurrency);
   }
 
   try {
