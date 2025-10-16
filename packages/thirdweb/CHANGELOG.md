@@ -1,5 +1,24 @@
 # thirdweb
 
+## 5.109.0
+
+### Minor Changes
+
+- [#8259](https://github.com/thirdweb-dev/js/pull/8259) [`d68da22`](https://github.com/thirdweb-dev/js/commit/d68da2239b628f7835b0545a143b69e09cdf4141) Thanks [@MananTank](https://github.com/MananTank)! - Update `onSuccess` prop on `BuyWidget`, `CheckoutWidget`, `SwapWidget`, and `BridgeWidget` components to include `statuses` and `quote` objects instead of just `quote`.
+
+  ```tsx
+  <BuyWidget
+    onSuccess={(data) => {
+      console.log(data.statuses);
+      console.log(data.quote);
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#8267](https://github.com/thirdweb-dev/js/pull/8267) [`51c8318`](https://github.com/thirdweb-dev/js/commit/51c8318df7b51126496ee94b1fd79a338734fced) Thanks [@jnsdls](https://github.com/jnsdls)! - fetch native currency from chain API if required
+
 ## 5.108.15
 
 ### Patch Changes
