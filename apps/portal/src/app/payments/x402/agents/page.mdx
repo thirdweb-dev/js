@@ -20,7 +20,7 @@ The easiest way to equip your agents with the ability to pay for API calls is to
 
 The MCP server comes with all the tools by default, but you can filter the tools available by passing a comma-separated list of tools as a query parameter.
 
-In this example, we create a ReAct agent using LangChain and filter the MCP tools to `fetchWithPayment` and `getWalletBalance` as the only 2 tools we give our agent. You can view the full list of available tools [here](/ai/mcp#available-tools).
+In this example, we create a ReAct agent using LangChain and filter the MCP tools to `fetchWithPayment` and `listDiscoveryResources` as the only 2 tools we give our agent. You can view the full list of available tools [here](/ai/mcp#available-tools).
 
 <Tabs defaultValue="typescript">
 
@@ -42,7 +42,7 @@ const model = new ChatOpenAI({
 
 const mcpServers = {
   thirdweb: {
-    url: `https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,getWalletBalance`
+    url: `https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,listDiscoveryResources`
   }
 };
 
@@ -53,7 +53,7 @@ const tools = await client.getTools();
 const agent = createReactAgent({
   llm: model,
   tools: tools,
-  prompt: "Use the fetchWithPayment tool to fetch any endpoint. Always pay in {{tokenAddress}}. Your wallet address is {{walletAddress}}."
+  prompt: "Use the fetchWithPayment tool to fetch any endpoint. Discover the available endpoints with the listDiscoveryResources tool."
 });
 ```
 
@@ -68,12 +68,12 @@ from langgraph.prebuilt import create_react_agent
 client = MultiServerMCPClient(
     {
         "thirdweb": {
-            "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,getWalletBalance",
+            "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,listDiscoveryResources",
         }
     }
 )
 tools = await client.get_tools()
-agent = create_react_agent("openai:gpt-4.1", tools, prompt="Use the fetchWithPayment tool to fetch any endpoint. Always pay in {{tokenAddress}}. Your wallet address is {{walletAddress}}.")
+agent = create_react_agent("openai:gpt-4.1", tools, prompt="Use the fetchWithPayment tool to fetch any endpoint. Discover the available endpoints with the listDiscoveryResources tool.")
 ```
 
 </TabsContent>
@@ -83,10 +83,10 @@ agent = create_react_agent("openai:gpt-4.1", tools, prompt="Use the fetchWithPay
 
 You can also create your own MCP tool or wrap all external calls with the `/v1/x402/fetchWithPayment` endpoint to automatically handle payment flows when APIs return a `402 Payment Required` response.
 
-Pass the target `url`, `method` and optional `from` wallet address to the endpoint that will complete the payment. The address should be one of your [user wallets](/wallets/users) or [server wallets](/wallets/server).
+Pass the target `url`, `method`. By default, it will use your default project wallet for payments, but you can also pass an optional `from` wallet address to the endpoint that will complete the payment. The address should be one of your [user wallets](/wallets/users) or [server wallets](/wallets/server).
 
 ```bash
-curl -X POST https://api.thirdweb.com/v1/payments/x402/fetch?url=https://api.example.com/premium&method=GET&from=0x1234... \
+curl -X POST https://api.thirdweb.com/v1/payments/x402/fetch?url=https://api.example.com/premium&method=GET \
     -H "Content-Type: application/json" \
     -H "x-secret-key: <your-project-secret-key>" \
     -d '{ ... }' # optional request body passed through to the url called.
