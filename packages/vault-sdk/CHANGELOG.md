@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 0.1.1
+
+### Patch Changes
+
+- [#8263](https://github.com/thirdweb-dev/js/pull/8263) [`fe50abd`](https://github.com/thirdweb-dev/js/commit/fe50abd5aba396c244dc8c5c1539e75ccd28ca97) Thanks [@d4mr](https://github.com/d4mr)! - Fixed bug with listing solana accounts response type
+
 ## 0.1.0
 
 ### Minor Changes
