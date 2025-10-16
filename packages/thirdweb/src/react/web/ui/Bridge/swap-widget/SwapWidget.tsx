@@ -145,7 +145,10 @@ export type SwapWidgetProps = {
   /**
    * Callback to be called when the swap is successful.
    */
-  onSuccess?: (quote: SwapPreparedQuote) => void;
+  onSuccess?: (data: {
+    quote: SwapPreparedQuote;
+    statuses: CompletedStatusResult[];
+  }) => void;
   /**
    * Callback to be called when user encounters an error when swapping.
    */
@@ -465,7 +468,10 @@ function SwapWidgetContent(
         }}
         onCancel={() => props.onCancel?.(screen.preparedQuote)}
         onComplete={(completedStatuses) => {
-          props.onSuccess?.(screen.preparedQuote);
+          props.onSuccess?.({
+            quote: screen.preparedQuote,
+            statuses: completedStatuses,
+          });
           setScreen({
             ...screen,
             id: "4:success",

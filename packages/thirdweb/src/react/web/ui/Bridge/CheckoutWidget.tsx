@@ -170,7 +170,10 @@ export type CheckoutWidgetProps = {
   /**
    * Callback triggered when the purchase is successful.
    */
-  onSuccess?: (quote: BridgePrepareResult) => void;
+  onSuccess?: (data: {
+    quote: BridgePrepareResult;
+    statuses: CompletedStatusResult[];
+  }) => void;
 
   /**
    * Callback triggered when the purchase encounters an error.
@@ -660,7 +663,10 @@ function CheckoutWidgetContent(
           handleCancel(screen.preparedQuote);
         }}
         onComplete={(completedStatuses) => {
-          props.onSuccess?.(screen.preparedQuote);
+          props.onSuccess?.({
+            quote: screen.preparedQuote,
+            statuses: completedStatuses,
+          });
           setScreen({
             id: "6:success",
             preparedQuote: screen.preparedQuote,

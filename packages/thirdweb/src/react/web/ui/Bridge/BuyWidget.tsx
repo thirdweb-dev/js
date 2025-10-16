@@ -158,7 +158,10 @@ export type BuyWidgetProps = {
   /**
    * Callback triggered when the purchase is successful.
    */
-  onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
+  onSuccess?: (data: {
+    quote: BuyOrOnrampPrepareResult;
+    statuses: CompletedStatusResult[];
+  }) => void;
 
   /**
    * Callback triggered when the purchase encounters an error.
@@ -616,7 +619,10 @@ function BridgeWidgetContent(
             screen.preparedQuote.type === "buy" ||
             screen.preparedQuote.type === "onramp"
           ) {
-            props.onSuccess?.(screen.preparedQuote);
+            props.onSuccess?.({
+              quote: screen.preparedQuote,
+              statuses: completedStatuses,
+            });
           }
           setScreen({
             id: "6:success",

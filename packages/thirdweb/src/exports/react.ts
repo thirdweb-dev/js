@@ -73,10 +73,12 @@ export type {
   SendTransactionPayModalConfig,
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
+export type { BridgePrepareResult } from "../react/core/hooks/useBridgePrepare.js";
 export {
   type UseBridgeRoutesParams,
   useBridgeRoutes,
 } from "../react/core/hooks/useBridgeRoutes.js";
+export type { CompletedStatusResult } from "../react/core/hooks/useStepExecutor.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
 // wallet hooks
 export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
@@ -133,7 +135,7 @@ export { useProfiles } from "../react/web/hooks/wallets/useProfiles.js";
 export { useUnlinkProfile } from "../react/web/hooks/wallets/useUnlinkProfile.js";
 export { ThirdwebProvider } from "../react/web/providers/thirdweb-provider.js";
 export { AutoConnect } from "../react/web/ui/AutoConnect/AutoConnect.js";
-
+export type { BuyOrOnrampPrepareResult } from "../react/web/ui/Bridge/BuyWidget.js";
 export {
   BuyWidget,
   type BuyWidgetProps,
@@ -276,7 +278,6 @@ export { SiteEmbed } from "../react/web/ui/SiteEmbed.js";
 export { SiteLink } from "../react/web/ui/SiteLink.js";
 export { TransactionButton } from "../react/web/ui/TransactionButton/index.js";
 export type { LocaleId } from "../react/web/ui/types.js";
-
 // Utils
 export { getLastAuthProvider } from "../react/web/utils/storage.js";
 export type {
