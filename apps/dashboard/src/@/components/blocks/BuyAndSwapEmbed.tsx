@@ -147,7 +147,7 @@ export function BuyAndSwapEmbed(props: {
               });
             }
           }}
-          onSuccess={(quote) => {
+          onSuccess={({ quote }) => {
             reportTokenBuySuccessful({
               buyTokenChainId:
                 quote.type === "buy"
@@ -208,7 +208,7 @@ export function BuyAndSwapEmbed(props: {
               pageType: props.pageType,
             });
           }}
-          onSuccess={(quote) => {
+          onSuccess={({ quote }) => {
             reportTokenSwapSuccessful({
               buyTokenChainId: quote.intent.destinationChainId,
               buyTokenAddress: quote.intent.destinationTokenAddress,

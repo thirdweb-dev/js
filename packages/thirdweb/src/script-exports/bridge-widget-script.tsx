@@ -7,6 +7,7 @@ import {
   type Theme,
   type ThemeOverrides,
 } from "../react/core/design-system/index.js";
+import type { CompletedStatusResult } from "../react/core/hooks/useStepExecutor.js";
 import type { BuyOrOnrampPrepareResult } from "../react/web/ui/Bridge/BuyWidget.js";
 import { BridgeWidget } from "../react/web/ui/Bridge/bridge-widget/bridge-widget.js";
 import type { SwapPreparedQuote } from "../react/web/ui/Bridge/swap-widget/types.js";
@@ -23,7 +24,10 @@ export type BridgeWidgetScriptProps = {
   swap?: {
     className?: string;
     style?: React.CSSProperties;
-    onSuccess?: (quote: SwapPreparedQuote) => void;
+    onSuccess?: (data: {
+      quote: SwapPreparedQuote;
+      statuses: CompletedStatusResult[];
+    }) => void;
     onError?: (error: Error, quote: SwapPreparedQuote) => void;
     onCancel?: (quote: SwapPreparedQuote) => void;
     onDisconnect?: () => void;
@@ -51,7 +55,10 @@ export type BridgeWidgetScriptProps = {
       error: Error,
       quote: BuyOrOnrampPrepareResult | undefined,
     ) => void;
-    onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
+    onSuccess?: (data: {
+      quote: BuyOrOnrampPrepareResult;
+      statuses: CompletedStatusResult[];
+    }) => void;
     className?: string;
     country?: string;
     presetOptions?: [number, number, number];

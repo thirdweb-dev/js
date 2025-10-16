@@ -15,6 +15,7 @@ import {
   spacing,
   type Theme,
 } from "../../../../core/design-system/index.js";
+import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
 import { EmbedContainer } from "../../ConnectWallet/Modal/ConnectEmbed.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
@@ -84,7 +85,10 @@ export type BridgeWidgetProps = {
     /** Optional style overrides applied to the Swap tab content container. */
     style?: React.CSSProperties;
     /** Callback invoked when a swap is successful. */
-    onSuccess?: (quote: SwapPreparedQuote) => void;
+    onSuccess?: (data: {
+      quote: SwapPreparedQuote;
+      statuses: CompletedStatusResult[];
+    }) => void;
     /** Callback invoked when an error occurs during swapping. */
     onError?: (error: Error, quote: SwapPreparedQuote) => void;
     /** Callback invoked when the user cancels the swap. */
@@ -174,7 +178,10 @@ export type BridgeWidgetProps = {
       quote: BuyOrOnrampPrepareResult | undefined,
     ) => void;
     /** Callback triggered when the purchase is successful. */
-    onSuccess?: (quote: BuyOrOnrampPrepareResult) => void;
+    onSuccess?: (data: {
+      quote: BuyOrOnrampPrepareResult;
+      statuses: CompletedStatusResult[];
+    }) => void;
     /** Optional class name applied to the Buy tab content container. */
     className?: string;
     /** The user's ISO 3166 alpha-2 country code. Used to determine onramp provider support. */
