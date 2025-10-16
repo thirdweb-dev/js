@@ -687,3 +687,18 @@ export function reportBridgePageLinkClick(params: {
 }) {
   posthog.capture("bridge page link clicked", params);
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track which tokens are users are clicking on in the token list page
+ *
+ * ### Who is responsible for this event?
+ * @MananTank
+ *
+ */
+export function reportTokenRowClicked(params: {
+  chainId: number;
+  tokenAddress: string;
+}) {
+  posthog.capture("token row clicked", params);
+}
