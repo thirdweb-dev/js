@@ -82,7 +82,6 @@
     "@chromatic-com/storybook": "4.0.1",
     "@next/bundle-analyzer": "15.3.5",
     "@next/eslint-plugin-next": "15.3.5",
-    "@playwright/test": "1.53.2",
     "@storybook/addon-docs": "9.0.15",
     "@storybook/addon-links": "9.0.15",
     "@storybook/addon-onboarding": "9.0.15",
@@ -99,7 +98,6 @@
     "@typescript-eslint/eslint-plugin": "7.14.1",
     "@typescript-eslint/parser": "7.14.1",
     "autoprefixer": "^10.4.21",
-    "checkly": "6.0.1",
     "eslint": "8.57.0",
     "eslint-config-biome": "1.9.4",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
@@ -122,13 +120,11 @@
     "format": "biome format ./src --write",
     "knip": "knip",
     "lint": "biome check ./src && knip && eslint ./src",
-    "playwright": "playwright test",
     "postbuild": "next-sitemap",
     "preinstall": "npx only-allow pnpm",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
-    "typecheck": "tsc --noEmit",
-    "update-checkly": "npx checkly deploy"
+    "typecheck": "tsc --noEmit"
   },
   "version": "3.0.0"
 }
