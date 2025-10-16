@@ -151,6 +151,7 @@ export function SettingsRoyalties({
                           onChange={(value) =>
                             form.setValue("seller_fee_basis_points", value, {
                               shouldValidate: true,
+                              shouldDirty: true,
                             })
                           }
                           value={form.watch("seller_fee_basis_points")}

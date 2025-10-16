@@ -137,6 +137,7 @@ export function SettingsPlatformFees({
                           onChange={(value) =>
                             form.setValue("platform_fee_basis_points", value, {
                               shouldValidate: true,
+                              shouldDirty: true,
                             })
                           }
                           value={form.watch("platform_fee_basis_points")}
