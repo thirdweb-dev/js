@@ -199,11 +199,21 @@ function BuyEmbed(props: {
   if (!props.claimConditionMeta) {
     return (
       <BuyAndSwapEmbed
-        chain={props.clientContract.chain}
-        tokenAddress={props.clientContract.address}
-        buyAmount={undefined}
+        // chain={props.clientContract.chain}
+        swapTab={{
+          sellToken: {
+            chainId: props.clientContract.chain.id,
+            tokenAddress: props.clientContract.address,
+          },
+          buyToken: undefined,
+        }}
+        buyTab={{
+          buyToken: {
+            chainId: props.clientContract.chain.id,
+            tokenAddress: props.clientContract.address,
+          },
+        }}
         pageType="asset"
-        isTestnet={props.chainMetadata.testnet}
       />
     );
   }

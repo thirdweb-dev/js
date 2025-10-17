@@ -1,8 +1,9 @@
+/* eslint-disable no-restricted-syntax */
 "use client";
 
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Chain } from "thirdweb";
+import { defineChain } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
 import type { Wallet } from "thirdweb/wallets";
 import {
@@ -31,14 +32,41 @@ import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
 
 type PageType = "asset" | "bridge" | "chain";
 
-export function BuyAndSwapEmbed(props: {
-  chain: Chain;
-  tokenAddress: string | undefined;
-  buyAmount: string | undefined;
+export type BuyAndSwapEmbedProps = {
+  buyTab:
+    | {
+        buyToken:
+          | {
+              tokenAddress: string;
+              chainId: number;
+              amount?: string;
+            }
+          | undefined;
+      }
+    | undefined;
+  swapTab:
+    | {
+        sellToken:
+          | {
+              chainId: number;
+              tokenAddress: string;
+              amount?: string;
+            }
+          | undefined;
+        buyToken:
+          | {
+              chainId: number;
+              tokenAddress: string;
+              amount?: string;
+            }
+          | undefined;
+      }
+    | undefined;
   pageType: PageType;
-  isTestnet: boolean | undefined;
   wallets?: Wallet[];
-}) {
+};
+
+export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
   const themeObj = getSDKTheme(theme === "light" ? "light" : "dark");
@@ -87,8 +115,15 @@ export function BuyAndSwapEmbed(props: {
 
       {tab === "buy" && (
         <BuyWidget
-          amount={props.buyAmount || "1"}
-          chain={props.chain}
+          amount={props.buyTab?.buyToken?.amount || "1"}
+          chain={
+            props.buyTab?.buyToken?.chainId
+              ? defineChain(props.buyTab.buyToken.chainId)
+              : undefined
+          }
+          tokenAddress={
+            props.buyTab?.buyToken?.tokenAddress as `0x${string}` | undefined
+          }
           className="!rounded-2xl !border-none"
           title=""
           client={client}
@@ -100,13 +135,19 @@ export function BuyAndSwapEmbed(props: {
           onError={(e, quote) => {
             const errorMessage = parseError(e);
 
+            const buyChainId =
+              quote?.type === "buy"
+                ? quote.intent.destinationChainId
+                : quote?.type === "onramp"
+                  ? quote.intent.chainId
+                  : undefined;
+
+            if (!buyChainId) {
+              return;
+            }
+
             reportTokenBuyFailed({
-              buyTokenChainId:
-                quote?.type === "buy"
-                  ? quote.intent.destinationChainId
-                  : quote?.type === "onramp"
-                    ? quote.intent.chainId
-                    : undefined,
+              buyTokenChainId: buyChainId,
               buyTokenAddress:
                 quote?.type === "buy"
                   ? quote.intent.destinationTokenAddress
@@ -119,21 +160,27 @@ export function BuyAndSwapEmbed(props: {
             if (props.pageType === "asset") {
               reportAssetBuyFailed({
                 assetType: "coin",
-                chainId: props.chain.id,
+                chainId: buyChainId,
                 error: errorMessage,
                 contractType: undefined,
-                is_testnet: props.isTestnet,
+                is_testnet: false,
               });
             }
           }}
           onCancel={(quote) => {
+            const buyChainId =
+              quote?.type === "buy"
+                ? quote.intent.destinationChainId
+                : quote?.type === "onramp"
+                  ? quote.intent.chainId
+                  : undefined;
+
+            if (!buyChainId) {
+              return;
+            }
+
             reportTokenBuyCancelled({
-              buyTokenChainId:
-                quote?.type === "buy"
-                  ? quote.intent.destinationChainId
-                  : quote?.type === "onramp"
-                    ? quote.intent.chainId
-                    : undefined,
+              buyTokenChainId: buyChainId,
               buyTokenAddress:
                 quote?.type === "buy"
                   ? quote.intent.destinationTokenAddress
@@ -146,24 +193,30 @@ export function BuyAndSwapEmbed(props: {
             if (props.pageType === "asset") {
               reportAssetBuyCancelled({
                 assetType: "coin",
-                chainId: props.chain.id,
+                chainId: buyChainId,
                 contractType: undefined,
-                is_testnet: props.isTestnet,
+                is_testnet: false,
               });
             }
           }}
           onSuccess={({ quote }) => {
+            const buyChainId =
+              quote?.type === "buy"
+                ? quote.intent.destinationChainId
+                : quote?.type === "onramp"
+                  ? quote.intent.chainId
+                  : undefined;
+
+            if (!buyChainId) {
+              return;
+            }
+
             reportTokenBuySuccessful({
-              buyTokenChainId:
-                quote.type === "buy"
-                  ? quote.intent.destinationChainId
-                  : quote.type === "onramp"
-                    ? quote.intent.chainId
-                    : undefined,
+              buyTokenChainId: buyChainId,
               buyTokenAddress:
-                quote.type === "buy"
+                quote?.type === "buy"
                   ? quote.intent.destinationTokenAddress
-                  : quote.type === "onramp"
+                  : quote?.type === "onramp"
                     ? quote.intent.tokenAddress
                     : undefined,
               pageType: props.pageType,
@@ -172,14 +225,13 @@ export function BuyAndSwapEmbed(props: {
             if (props.pageType === "asset") {
               reportAssetBuySuccessful({
                 assetType: "coin",
-                chainId: props.chain.id,
+                chainId: buyChainId,
                 contractType: undefined,
-                is_testnet: props.isTestnet,
+                is_testnet: false,
               });
             }
           }}
           theme={themeObj}
-          tokenAddress={props.tokenAddress as `0x${string}`}
           paymentMethods={["card"]}
         />
       )}
@@ -195,17 +247,8 @@ export function BuyAndSwapEmbed(props: {
             appMetadata: appMetadata,
           }}
           prefill={{
-            // buy this token by default
-            buyToken: {
-              chainId: props.chain.id,
-              tokenAddress: props.tokenAddress,
-            },
-            // sell the native token by default (but if buytoken is a native token, don't set)
-            sellToken: props.tokenAddress
-              ? {
-                  chainId: props.chain.id,
-                }
-              : undefined,
+            buyToken: props.swapTab?.buyToken,
+            sellToken: props.swapTab?.sellToken,
           }}
           onError={(error, quote) => {
             const errorMessage = parseError(error);

@@ -1,10 +1,11 @@
 "use client";
 
-import type { TokenInfo } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
-import { BuyAndSwapEmbed } from "@/components/blocks/BuyAndSwapEmbed";
+import {
+  BuyAndSwapEmbed,
+  type BuyAndSwapEmbedProps,
+} from "@/components/blocks/BuyAndSwapEmbed";
 import { appMetadata } from "@/constants/connect";
-import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 
 export const bridgeWallets = [
   createWallet("io.metamask"),
@@ -16,25 +17,16 @@ export const bridgeWallets = [
   createWallet("io.zerion.wallet"),
 ];
 
-export function UniversalBridgeEmbed({
-  chainId,
-  token,
-  amount,
-}: {
-  chainId?: number;
-  token: TokenInfo | undefined;
-  amount?: string;
+export function UniversalBridgeEmbed(props: {
+  buyTab: BuyAndSwapEmbedProps["buyTab"];
+  swapTab: BuyAndSwapEmbedProps["swapTab"];
 }) {
-  const chain = useV5DashboardChain(chainId || 1);
-
   return (
     <BuyAndSwapEmbed
-      chain={chain}
-      wallets={bridgeWallets}
-      buyAmount={amount}
-      tokenAddress={token?.address}
+      buyTab={props.buyTab}
+      swapTab={props.swapTab}
       pageType="bridge"
-      isTestnet={chain.testnet}
+      wallets={bridgeWallets}
     />
   );
 }
