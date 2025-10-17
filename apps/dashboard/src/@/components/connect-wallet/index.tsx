@@ -17,6 +17,7 @@ import { resetAnalytics } from "@/analytics/reset";
 import { CustomChainRenderer } from "@/components/misc/CustomChainRenderer";
 import { LazyConfigureNetworkModal } from "@/components/misc/configure-networks/LazyConfigureNetworkModal";
 import { Button } from "@/components/ui/button";
+import { appMetadata } from "@/constants/connect";
 import { popularChains } from "@/constants/popularChains";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { useFavoriteChainIds } from "@/hooks/favorite-chains";
@@ -138,11 +139,7 @@ export const CustomConnectWallet = (props: {
   return (
     <>
       <ConnectButton
-        appMetadata={{
-          logoUrl: "https://thirdweb.com/favicon.ico",
-          name: "thirdweb",
-          url: "https://thirdweb.com",
-        }}
+        appMetadata={appMetadata}
         chain={props.chain}
         chains={allChainsV5}
         client={client}
@@ -280,11 +277,7 @@ export function useCustomConnectModal() {
   return useCallback(
     (options: { chain?: Chain; client: ThirdwebClient }) => {
       return connect({
-        appMetadata: {
-          logoUrl: "https://thirdweb.com/favicon.ico",
-          name: "thirdweb",
-          url: "https://thirdweb.com",
-        },
+        appMetadata,
         chain: options?.chain,
         client: options.client,
         privacyPolicyUrl: "/privacy-policy",

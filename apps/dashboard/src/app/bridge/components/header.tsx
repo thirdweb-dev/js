@@ -3,6 +3,7 @@ import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { cn } from "@/lib/utils";
 import { PublicPageConnectButton } from "../../(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/public-pages/_components/PublicPageConnectButton";
 import { ThirdwebMiniLogo } from "../../(app)/components/ThirdwebMiniLogo";
+import { bridgeWallets } from "./client/UniversalBridgeEmbed";
 
 export function PageHeader(props: { containerClassName?: string }) {
   return (
@@ -31,7 +32,10 @@ export function PageHeader(props: { containerClassName?: string }) {
             Docs
           </Link>
           <ToggleThemeButton className="bg-transparent" />
-          <PublicPageConnectButton connectButtonClassName="!rounded-full" />
+          <PublicPageConnectButton
+            connectButtonClassName="!rounded-full"
+            wallets={bridgeWallets}
+          />
         </div>
       </header>
     </div>

@@ -11,6 +11,7 @@ import {
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
+import { appMetadata } from "@/constants/connect";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { cn } from "@/lib/utils";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
@@ -65,11 +66,7 @@ export const NebulaConnectWallet = (props: {
   const { customDetailsButton } = props;
   return (
     <ConnectButton
-      appMetadata={{
-        logoUrl: "https://thirdweb.com/favicon.ico",
-        name: "thirdweb",
-        url: "https://thirdweb.com",
-      }}
+      appMetadata={appMetadata}
       autoConnect={false}
       chains={allChainsV5}
       client={props.client}

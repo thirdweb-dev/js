@@ -2,6 +2,8 @@
 
 import { useTheme } from "next-themes";
 import { ConnectButton } from "thirdweb/react";
+import type { Wallet } from "thirdweb/wallets";
+import { appMetadata } from "@/constants/connect";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
@@ -10,6 +12,7 @@ const client = getClientThirdwebClient();
 
 export function PublicPageConnectButton(props: {
   connectButtonClassName?: string;
+  wallets?: Wallet[];
 }) {
   const { theme } = useTheme();
   const t = theme === "light" ? "light" : "dark";
@@ -17,11 +20,7 @@ export function PublicPageConnectButton(props: {
 
   return (
     <ConnectButton
-      appMetadata={{
-        logoUrl: "https://thirdweb.com/favicon.ico",
-        name: "thirdweb",
-        url: "https://thirdweb.com",
-      }}
+      appMetadata={appMetadata}
       autoConnect={false}
       chains={allChainsV5}
       client={client}
@@ -38,6 +37,7 @@ export function PublicPageConnectButton(props: {
       }}
       // we have an AutoConnect already added in root layout with AA configuration
       theme={getSDKTheme(t)}
+      wallets={props.wallets}
     />
   );
 }

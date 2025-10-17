@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Chain } from "thirdweb";
 import { BuyWidget, SwapWidget } from "thirdweb/react";
+import type { Wallet } from "thirdweb/wallets";
 import {
   reportAssetBuyCancelled,
   reportAssetBuyFailed,
@@ -25,6 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
+import { appMetadata } from "../../constants/connect";
 import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
 
 type PageType = "asset" | "bridge" | "chain";
@@ -35,6 +37,7 @@ export function BuyAndSwapEmbed(props: {
   buyAmount: string | undefined;
   pageType: PageType;
   isTestnet: boolean | undefined;
+  wallets?: Wallet[];
 }) {
   const { theme } = useTheme();
   const [tab, setTab] = useState<"buy" | "swap">("swap");
@@ -91,6 +94,8 @@ export function BuyAndSwapEmbed(props: {
           client={client}
           connectOptions={{
             autoConnect: false,
+            wallets: props.wallets,
+            appMetadata: appMetadata,
           }}
           onError={(e, quote) => {
             const errorMessage = parseError(e);
@@ -184,6 +189,11 @@ export function BuyAndSwapEmbed(props: {
           client={client}
           theme={themeObj}
           className="!rounded-2xl !border-none"
+          connectOptions={{
+            autoConnect: false,
+            wallets: props.wallets,
+            appMetadata: appMetadata,
+          }}
           prefill={{
             // buy this token by default
             buyToken: {
