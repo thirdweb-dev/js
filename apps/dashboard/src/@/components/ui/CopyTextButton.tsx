@@ -41,7 +41,7 @@ export function CopyTextButton(props: {
       <Button
         aria-label={props.tooltip}
         className={cn(
-          "flex h-auto w-auto gap-2 rounded-lg px-1.5 py-0.5 font-normal text-foreground",
+          "flex h-auto w-auto gap-2 rounded-lg px-1.5 py-0.5 font-normal text-foreground max-w-full truncate",
           props.className,
         )}
         onClick={(e) => {

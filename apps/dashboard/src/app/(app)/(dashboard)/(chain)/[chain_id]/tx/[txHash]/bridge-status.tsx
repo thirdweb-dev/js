@@ -3,7 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { Img } from "@workspace/ui/components/img";
 import { Spinner } from "@workspace/ui/components/spinner";
-import { ArrowRightIcon, CircleCheckIcon, CircleXIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  CircleCheckIcon,
+  CircleXIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { NATIVE_TOKEN_ADDRESS, type ThirdwebClient } from "thirdweb";
 import type { Status, Token } from "thirdweb/bridge";
@@ -11,6 +16,7 @@ import { status } from "thirdweb/bridge";
 import { toTokens } from "thirdweb/utils";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { LinkWithCopyButton } from "@/components/ui/link-with-copy-button";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { fetchChain } from "@/utils/fetchChain";
@@ -46,9 +52,9 @@ export function BridgeStatus(props: {
         />
       )}
 
-      <div className="px-6 lg:px-8 py-7 space-y-1.5">
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground "> Status </p>
+      <div className="px-6 lg:px-8 py-7 space-y-4">
+        <div className="space-y-1">
+          <p className="text-sm text-foreground "> Status </p>
 
           <div
             className={cn(
@@ -75,14 +81,15 @@ export function BridgeStatus(props: {
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground ">Payment ID</p>
+        <div className="space-y-1">
+          <p className="text-sm text-foreground ">Payment ID</p>
           <CopyTextButton
             textToCopy={bridgeStatus.paymentId}
-            textToShow={`${bridgeStatus.paymentId.slice(0, 6)}...${bridgeStatus.paymentId.slice(-4)}`}
+            textToShow={bridgeStatus.paymentId}
             tooltip="Payment ID"
-            className="text-sm translate-x-1.5"
+            className="text-sm -translate-x-1.5 tabular-nums text-muted-foreground"
             copyIconPosition="left"
+            iconClassName="text-muted-foreground/70"
             variant="ghost"
           />
         </div>
@@ -90,7 +97,7 @@ export function BridgeStatus(props: {
 
       {purchaseDataString && (
         <div className="px-6 lg:px-8 py-7 space-y-2 border-t border-dashed">
-          <p className="text-sm text-muted-foreground ">Purchase Data</p>
+          <p className="text-sm text-foreground ">Purchase Data</p>
           <CodeClient
             code={purchaseDataString}
             lang="json"
@@ -113,6 +120,8 @@ function TokenInfo(props: {
   txHash: string | undefined;
 }) {
   const chainQuery = useChainQuery(props.token.chainId);
+  const isNativeToken =
+    props.token.address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase();
 
   return (
     <div className="flex-1 pt-10 pb-9 px-6 lg:px-8">
@@ -121,8 +130,9 @@ function TokenInfo(props: {
           {props.label}
         </h3>
       </div>
+      <div className="h-6" />
 
-      <div className="pb-7 pt-6 border-b border-dashed">
+      <div>
         <div className="flex items-center gap-3">
           <div className="relative hover:ring-2 hover:ring-offset-2 hover:ring-offset-card hover:ring-foreground/30 rounded-full">
             <Link
@@ -178,10 +188,11 @@ function TokenInfo(props: {
               render={(data) => (
                 <Link
                   href={`/${chainQuery.data?.slug || props.token.chainId}`}
-                  className="text-sm text-muted-foreground leading-none hover:underline"
+                  className="text-sm text-muted-foreground leading-none hover:underline flex items-center gap-1"
                   target="_blank"
                 >
-                  {data}
+                  {data}{" "}
+                  <ArrowUpRightIcon className="size-3.5 text-muted-foreground/70 shrink-0" />
                 </Link>
               )}
             />
@@ -189,41 +200,44 @@ function TokenInfo(props: {
         </div>
       </div>
 
-      <div className="h-6" />
+      <div className="h-8" />
 
-      <div className="space-y-1.5">
-        <div className="flex gap-2.5 justify-between">
-          <p className="text-sm text-muted-foreground ">{props.addressLabel}</p>
+      <div className="space-y-4">
+        <div className="space-y-1">
+          <p className="text-sm text-foreground ">{props.addressLabel}</p>
           <WalletAddress
             address={props.walletAddress}
             client={props.client}
-            className="py-0.5 h-auto text-sm [&>*]:!font-sans"
-            iconClassName="size-3.5"
+            className="py-0.5 h-auto text-sm [&>*]:!font-sans tabular-nums [&>*]:font-normal text-muted-foreground hover:text-foreground"
+            iconClassName="size-3"
+            shortenAddress={false}
           />
         </div>
 
-        <div className="flex gap-2 justify-between">
-          <p className="text-sm text-muted-foreground ">Token Address</p>
-          <CopyTextButton
+        <div className="space-y-1">
+          <p className="text-sm text-foreground ">Token Address</p>
+          <LinkWithCopyButton
+            href={
+              isNativeToken
+                ? `/${chainQuery.data?.slug || props.token.chainId}`
+                : `/${chainQuery.data?.slug || props.token.chainId}/${props.token.address}`
+            }
+            textToShow={props.token.address}
             textToCopy={props.token.address}
-            textToShow={`${props.token.address.slice(0, 6)}...${props.token.address.slice(-4)}`}
-            tooltip="Token Address"
-            className="text-sm translate-x-1.5"
-            copyIconPosition="left"
-            variant="ghost"
+            copyTooltip="Copy Token Address"
+            className="-translate-x-1"
           />
         </div>
 
-        <div className="flex gap-2 justify-between">
-          <p className="text-sm text-muted-foreground ">Transaction Hash</p>
+        <div className="space-y-1">
+          <p className="text-sm text-foreground ">Transaction Hash</p>
           {props.txHash ? (
-            <CopyTextButton
+            <LinkWithCopyButton
+              className="-translate-x-1"
+              href={`/${chainQuery.data?.slug || props.token.chainId}/tx/${props.txHash}`}
+              textToShow={`${props.txHash.slice(0, 12)}...${props.txHash.slice(-4)}`}
               textToCopy={props.txHash}
-              textToShow={`${props.txHash.slice(0, 6)}...${props.txHash.slice(-4)}`}
-              tooltip="Transaction Hash"
-              className="text-sm translate-x-1.5"
-              copyIconPosition="left"
-              variant="ghost"
+              copyTooltip="Copy Transaction Hash"
             />
           ) : (
             <p className="text-sm text-muted-foreground ">N/A</p>
@@ -288,10 +302,8 @@ function FailedBridgeStatusContent(props: {
 }) {
   return (
     <div className="px-6 lg:px-8 py-7 space-y-1.5 border-b border-dashed">
-      <h3 className="text-base font-medium tracking-tight mb-3">
-        Transactions
-      </h3>
-      <div className="flex flex-col gap-2">
+      <h3 className="text-lg font-medium tracking-tight mb-4">Transactions</h3>
+      <div className="space-y-4">
         {props.transactions.map((tx) => {
           return (
             <TxHashRow
@@ -328,7 +340,7 @@ function TxHashRow(props: {
   const chainQuery = useChainQuery(props.chainId);
 
   return (
-    <div className="flex items-center gap-2 justify-between">
+    <div className="space-y-1">
       <div className="flex items-center gap-2">
         <Img
           src={resolveSchemeWithErrorHandler({
@@ -336,26 +348,23 @@ function TxHashRow(props: {
             uri: chainQuery.data?.icon?.url,
           })}
           alt={chainQuery.data?.name}
-          className="size-4 rounded-full"
+          className="size-3.5 rounded-full"
           fallback={
-            <div className="size-4 from-blue-500 to-foreground rounded-full bg-gradient-to-b" />
+            <div className="size-3.5 from-blue-500 to-foreground rounded-full bg-gradient-to-b" />
           }
         />
         <SkeletonContainer
           skeletonData={`Chain ${props.chainId}`}
           loadedData={chainQuery.data?.name}
-          render={(data) => (
-            <p className="text-sm text-muted-foreground">{data}</p>
-          )}
+          render={(data) => <p className="text-sm text-foreground">{data}</p>}
         />
       </div>
-      <CopyTextButton
+      <LinkWithCopyButton
+        href={`/${chainQuery.data?.slug || props.chainId}/tx/${props.txHash}`}
+        textToShow={props.txHash}
         textToCopy={props.txHash}
-        textToShow={`${props.txHash.slice(0, 6)}...${props.txHash.slice(-4)}`}
-        tooltip="Copy Transaction Hash"
-        className="text-sm"
-        copyIconPosition="right"
-        variant="ghost"
+        copyTooltip="Copy Transaction Hash"
+        className="-translate-x-0.5"
       />
     </div>
   );

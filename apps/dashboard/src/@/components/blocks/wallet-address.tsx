@@ -78,7 +78,7 @@ export function WalletAddress(props: {
       <HoverCardTrigger asChild tabIndex={-1}>
         <Button
           className={cn(
-            "flex flex-row items-center gap-2 px-0",
+            "flex flex-row items-center gap-2 px-0 max-w-full truncate",
             props.className,
           )}
           onClick={(e) => e.stopPropagation()}
@@ -93,7 +93,7 @@ export function WalletAddress(props: {
               fallbackIcon={props.fallbackIcon}
             />
           )}
-          <span className="cursor-pointer font-mono">
+          <span className="cursor-pointer font-mono max-w-full truncate">
             {profiles.data?.[0]?.name || shortenedAddress}
           </span>
         </Button>
