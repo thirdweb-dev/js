@@ -205,6 +205,7 @@ export function FundWallet(props: FundWalletProps) {
           transform: "none",
         }}
         setOpen={(v) => setIsTokenSelectionOpen(v)}
+        autoFocusCrossIcon={false}
       >
         <SelectToken
           activeWalletInfo={activeWalletInfo}

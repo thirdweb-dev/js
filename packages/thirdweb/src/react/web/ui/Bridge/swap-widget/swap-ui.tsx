@@ -204,6 +204,7 @@ export function SwapUI(props: SwapUIProps) {
     <Container p="md">
       <Modal
         hide={false}
+        autoFocusCrossIcon={false}
         className="tw-modal__swap-widget"
         size={isMobile ? "compact" : "wide"}
         title="Select Token"

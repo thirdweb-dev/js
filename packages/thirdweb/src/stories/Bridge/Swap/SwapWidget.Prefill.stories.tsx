@@ -1,19 +1,19 @@
 import type { Meta } from "@storybook/react-vite";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
-import { SwapWidget } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
+import {
+  SwapWidget,
+  type SwapWidgetProps,
+} from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
 import { storyClient } from "../../utils.js";
 
 const meta = {
-  parameters: {
-    layout: "centered",
-  },
   title: "Bridge/Swap/SwapWidget/Prefill",
 } satisfies Meta<typeof SwapWidget>;
 export default meta;
 
 export function Buy_NativeToken() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         buyToken: {
@@ -26,7 +26,7 @@ export function Buy_NativeToken() {
 
 export function Buy_Base_USDC() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         buyToken: {
@@ -40,7 +40,7 @@ export function Buy_Base_USDC() {
 
 export function Buy_NativeToken_With_Amount() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         buyToken: {
@@ -55,7 +55,7 @@ export function Buy_NativeToken_With_Amount() {
 
 export function Sell_NativeToken() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         sellToken: {
@@ -82,7 +82,7 @@ export function Sell_Base_USDC() {
 
 export function Sell_NativeToken_With_Amount() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         sellToken: {
@@ -97,7 +97,7 @@ export function Sell_NativeToken_With_Amount() {
 
 export function Buy_And_Sell_NativeToken() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       prefill={{
         // base native token
@@ -112,5 +112,21 @@ export function Buy_And_Sell_NativeToken() {
         },
       }}
     />
+  );
+}
+
+function Variant(props: SwapWidgetProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+        alignItems: "center",
+      }}
+    >
+      <SwapWidget {...props} theme="dark" />
+      <SwapWidget {...props} theme="light" />
+    </div>
   );
 }

@@ -11,6 +11,7 @@ export function SearchInput(props: {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
+  autoFocus?: boolean;
 }) {
   return (
     <div
@@ -41,6 +42,7 @@ export function SearchInput(props: {
           paddingLeft: "44px",
         }}
         onChange={(e) => props.onChange(e.target.value)}
+        autoFocus={props.autoFocus}
       />
     </div>
   );

@@ -9,9 +9,6 @@ import {
 import { storyClient } from "./utils.js";
 
 const meta = {
-  parameters: {
-    layout: "centered",
-  },
   title: "Bridge/Buy/BuyWidget",
 } satisfies Meta<typeof BuyWidget>;
 export default meta;
@@ -143,7 +140,14 @@ export function LargeAmount() {
 
 function Variant(props: BuyWidgetProps) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+        alignItems: "center",
+      }}
+    >
       <BuyWidget {...props} theme="dark" />
       <BuyWidget {...props} theme="light" />
     </div>

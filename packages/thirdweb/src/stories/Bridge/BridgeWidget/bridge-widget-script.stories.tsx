@@ -1,27 +1,18 @@
 import type { Meta } from "@storybook/react";
-import { BridgeWidgetScript } from "../../../script-exports/bridge-widget-script.js";
+import {
+  BridgeWidgetScript,
+  type BridgeWidgetScriptProps,
+} from "../../../script-exports/bridge-widget-script.js";
 import { storyClient } from "../../utils.js";
 
 const meta: Meta<typeof BridgeWidgetScript> = {
   title: "Bridge/BridgeWidgetScript",
-  parameters: {
-    layout: "centered",
-  },
-  decorators: [
-    (Story) => {
-      return (
-        <div>
-          <Story />
-        </div>
-      );
-    },
-  ],
 };
 export default meta;
 
 export function BasicUsage() {
   return (
-    <BridgeWidgetScript
+    <Variant
       clientId={storyClient.clientId}
       buy={{ chainId: 8453, amount: "0.1" }}
     />
@@ -30,7 +21,7 @@ export function BasicUsage() {
 
 export function LightTheme() {
   return (
-    <BridgeWidgetScript
+    <Variant
       clientId={storyClient.clientId}
       theme="light"
       buy={{ chainId: 8453, amount: "0.1" }}
@@ -40,7 +31,7 @@ export function LightTheme() {
 
 export function CurrencySet() {
   return (
-    <BridgeWidgetScript
+    <Variant
       clientId={storyClient.clientId}
       currency="JPY"
       buy={{ chainId: 8453, amount: "0.1" }}
@@ -50,7 +41,7 @@ export function CurrencySet() {
 
 export function NoThirdwebBranding() {
   return (
-    <BridgeWidgetScript
+    <Variant
       clientId={storyClient.clientId}
       theme="light"
       buy={{ chainId: 8453, amount: "0.1" }}
@@ -61,7 +52,7 @@ export function NoThirdwebBranding() {
 
 export function CustomTheme() {
   return (
-    <BridgeWidgetScript
+    <Variant
       clientId={storyClient.clientId}
       buy={{ chainId: 8453, amount: "0.1" }}
       theme={{
@@ -75,5 +66,21 @@ export function CustomTheme() {
         },
       }}
     />
+  );
+}
+
+function Variant(props: BridgeWidgetScriptProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+        alignItems: "center",
+      }}
+    >
+      <BridgeWidgetScript {...props} theme="dark" />
+      <BridgeWidgetScript {...props} theme="light" />
+    </div>
   );
 }

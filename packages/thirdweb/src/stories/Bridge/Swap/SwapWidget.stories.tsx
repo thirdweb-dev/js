@@ -1,22 +1,13 @@
 import type { Meta } from "@storybook/react";
 import { lightTheme } from "../../../react/core/design-system/index.js";
-import { SwapWidget } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
+import {
+  SwapWidget,
+  type SwapWidgetProps,
+} from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
 import { storyClient } from "../../utils.js";
 
 const meta: Meta<typeof SwapWidget> = {
-  parameters: {
-    layout: "centered",
-  },
   title: "Bridge/Swap/SwapWidget",
-  decorators: [
-    (Story) => {
-      return (
-        <div>
-          <Story />
-        </div>
-      );
-    },
-  ],
 };
 export default meta;
 
@@ -26,7 +17,7 @@ export function BasicUsage() {
 
 export function CurrencySet() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       currency="JPY"
       persistTokenSelections={false}
@@ -36,7 +27,7 @@ export function CurrencySet() {
 
 export function LightMode() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       currency="JPY"
       theme="light"
@@ -47,7 +38,7 @@ export function LightMode() {
 
 export function NoThirdwebBranding() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       currency="JPY"
       showThirdwebBranding={false}
@@ -58,7 +49,7 @@ export function NoThirdwebBranding() {
 
 export function CustomTheme() {
   return (
-    <SwapWidget
+    <Variant
       client={storyClient}
       currency="JPY"
       persistTokenSelections={false}
@@ -72,5 +63,21 @@ export function CustomTheme() {
         },
       })}
     />
+  );
+}
+
+function Variant(props: SwapWidgetProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "40px",
+        alignItems: "center",
+      }}
+    >
+      <SwapWidget {...props} theme="dark" />
+      <SwapWidget {...props} theme="light" />
+    </div>
   );
 }

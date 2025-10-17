@@ -41,6 +41,7 @@ export const Modal: React.FC<{
   title: string;
   hide?: boolean;
   crossContainerStyles?: React.CSSProperties;
+  autoFocusCrossIcon?: boolean;
 }> = (props) => {
   const [open, setOpen] = useState(props.open);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -143,7 +144,15 @@ export const Modal: React.FC<{
                   }}
                 >
                   <Dialog.Close asChild>
-                    <IconButton aria-label="Close" autoFocus type="button">
+                    <IconButton
+                      aria-label="Close"
+                      autoFocus={
+                        props.autoFocusCrossIcon === undefined
+                          ? true
+                          : props.autoFocusCrossIcon
+                      }
+                      type="button"
+                    >
                       <Cross2Icon
                         height={iconSize.md}
                         style={{

@@ -496,6 +496,7 @@ function TokenSelectionScreen(props: {
               value={props.search}
               onChange={props.setSearch}
               placeholder="Search by token or address"
+              autoFocus={!props.isMobile}
             />
           </Container>
 
