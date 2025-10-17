@@ -1,6 +1,6 @@
 import { CircleAlertIcon } from "lucide-react";
 import { getRawAccount } from "@/api/account/get-account";
-import { FaqSection } from "@/components/blocks/faq-section";
+import { FaqAccordion } from "@/components/blocks/faq-section";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getChain, getCustomChainMetadata } from "../../utils";
 import { fetchChainSeo } from "./apis/chain-seo";
@@ -67,10 +67,21 @@ export default async function Page(props: Props) {
       )}
 
       {chainSeo?.faqs && chainSeo.faqs.length > 0 && (
-        <div className="py-10">
-          <FaqSection faqs={chainSeo.faqs} />
-        </div>
+        <FaqSection faqs={chainSeo.faqs} />
       )}
     </div>
+  );
+}
+
+function FaqSection(props: {
+  faqs: Array<{ title: string; description: string }>;
+}) {
+  return (
+    <section className="py-10">
+      <h2 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">
+        Frequently asked questions
+      </h2>
+      <FaqAccordion faqs={props.faqs} />
+    </section>
   );
 }

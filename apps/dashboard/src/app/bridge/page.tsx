@@ -1,15 +1,12 @@
 import { cn } from "@workspace/ui/lib/utils";
-import { DotIcon } from "lucide-react";
 import type { Metadata } from "next";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb/chains";
 import { getContract } from "thirdweb/contract";
 import { getCurrencyMetadata } from "thirdweb/extensions/erc20";
-import { FaqSection } from "@/components/blocks/faq-section";
-import { AppFooter } from "@/components/footers/app-footer";
-import { PillLink } from "./components/client/pill-link";
+import { FaqAccordion } from "@/components/blocks/faq-section";
 import { UniversalBridgeEmbed } from "./components/client/UniversalBridgeEmbed";
-import { PageHeader } from "./components/header";
+import { BridgePageHeader } from "./components/header";
 import { bridgeAppThirdwebClient } from "./constants";
 
 const title = "thirdweb Bridge: Buy, Bridge & Swap Crypto on 85+ Chains";
@@ -56,74 +53,54 @@ export default async function BridgePage({
   return (
     <div className="grow flex flex-col relative overflow-hidden">
       <div className="relative z-10">
-        <PageHeader />
+        <BridgePageHeader />
 
-        <div className="h-12 lg:h-20" />
-
-        <div className="relative z-10">
-          <div className="container">
-            <h1 className="text-3xl md:text-6xl font-bold mb-6 tracking-tighter text-center leading-8 lg:leading-none text-balance">
-              Bridge and Swap tokens <br className="max-sm:hidden" /> across any
-              chain, instantly
-            </h1>
-
-            <div className="flex flex-wrap gap-2 items-center justify-center">
-              <DataPill>85+ Chains Supported</DataPill>
-              <DotIcon className="size-3 text-muted-foreground lg:hidden" />
-              <DataPill>4500+ Tokens Supported</DataPill>
-              <DataPill>9+ Million Routes Available</DataPill>
-            </div>
-          </div>
-
-          <div className="h-12 lg:h-16" />
-
-          <div className="flex grow items-center justify-center px-4 relative">
-            <DotsBackgroundPattern />
-            <UniversalBridgeEmbed
-              amount={amount as string}
-              chainId={chainId ? Number(chainId) : undefined}
-              token={
-                symbol && decimals && tokenName
-                  ? {
-                      address: tokenAddress as Address,
-                      name: tokenName,
-                      symbol,
-                    }
-                  : undefined
-              }
-            />
-          </div>
+        <div className="flex grow items-center justify-center px-4 relative pt-12 pb-20 lg:py-28 min-h-[calc(100dvh-60px)]">
+          <DotsBackgroundPattern />
+          <UniversalBridgeEmbed
+            amount={amount as string}
+            chainId={chainId ? Number(chainId) : undefined}
+            token={
+              symbol && decimals && tokenName
+                ? {
+                    address: tokenAddress as Address,
+                    name: tokenName,
+                    symbol,
+                  }
+                : undefined
+            }
+          />
         </div>
+
+        <HeadingSection />
+
+        <div className="h-20 lg:h-40" />
+
+        <BridgeFaqSection />
 
         <div className="h-32" />
+      </div>
+    </div>
+  );
+}
 
-        <div className="flex flex-col gap-4 items-center container">
-          <PillLink
-            href="https://portal.thirdweb.com/bridge"
-            linkType="integrate-bridge"
-          >
-            Accept Payments in Any Token Right Inside Your App
-          </PillLink>
+function HeadingSection() {
+  return (
+    <div className="container">
+      <h1 className="text-3xl md:text-6xl font-semibold mb-3 lg:mb-6 tracking-tighter text-center text-balance">
+        Bridge and Swap tokens <br className="max-sm:hidden" /> across any
+        chain, instantly
+      </h1>
 
-          <PillLink
-            href="https://thirdweb.com/tokens"
-            linkType="trending-tokens"
-          >
-            Discover Trending Tokens
-          </PillLink>
-        </div>
+      <p className="text-muted-foreground text-sm text-pretty text-center lg:text-lg mb-6 lg:mb-8">
+        Seamlessly move your assets across 85+ chains with the best rates and
+        fastest execution
+      </p>
 
-        <div className="h-32" />
-
-        <div className="container max-w-2xl">
-          <BridgeFaqSection />
-        </div>
-
-        <div className="h-32" />
-
-        <div className="relative">
-          <AppFooter />
-        </div>
+      <div className="flex flex-col lg:flex-row gap-3 lg:gap-2 items-center justify-center">
+        <DataPill>85+ Chains Supported</DataPill>
+        <DataPill>4500+ Tokens Supported</DataPill>
+        <DataPill>9+ Million Routes Available</DataPill>
       </div>
     </div>
   );
@@ -131,7 +108,7 @@ export default async function BridgePage({
 
 function DataPill(props: { children: React.ReactNode }) {
   return (
-    <p className="lg:bg-card flex items-center gap-1.5 text-muted-foreground text-xs lg:backdrop-blur-lg lg:border lg:border-border/70 rounded-full lg:px-3 lg:py-1.5 hover:text-foreground transition-colors duration-300">
+    <p className="bg-card flex items-center text-xs lg:text-sm gap-1.5 text-foreground border rounded-full px-8 lg:px-3 py-1.5 hover:text-foreground transition-colors duration-300">
       {props.children}
     </p>
   );
@@ -183,5 +160,12 @@ const bridgeFaqs: Array<{ title: string; description: string }> = [
 ];
 
 function BridgeFaqSection() {
-  return <FaqSection faqs={bridgeFaqs} />;
+  return (
+    <section className="container max-w-2xl">
+      <h2 className="text-2xl md:text-3xl font-semibold mb-4 lg:mb-8 tracking-tight text-center">
+        Frequently Asked Questions
+      </h2>
+      <FaqAccordion faqs={bridgeFaqs} />
+    </section>
+  );
 }

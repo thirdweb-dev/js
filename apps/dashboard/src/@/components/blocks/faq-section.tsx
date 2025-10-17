@@ -5,25 +5,20 @@ import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { cn } from "@/lib/utils";
 
-export function FaqSection(props: {
+export function FaqAccordion(props: {
   faqs: Array<{ title: string; description: string }>;
 }) {
   return (
-    <section>
-      <h2 className="text-2xl md:text-3xl font-semibold mb-4 tracking-tight">
-        Frequently asked questions
-      </h2>
-      <div className="flex flex-col">
-        {props.faqs.map((faq, faqIndex) => (
-          <FaqItem
-            key={faq.title}
-            title={faq.title}
-            description={faq.description}
-            className={cn(faqIndex === props.faqs.length - 1 && "border-b-0")}
-          />
-        ))}
-      </div>
-    </section>
+    <div className="flex flex-col">
+      {props.faqs.map((faq, faqIndex) => (
+        <FaqItem
+          key={faq.title}
+          title={faq.title}
+          description={faq.description}
+          className={cn(faqIndex === props.faqs.length - 1 && "border-b-0")}
+        />
+      ))}
+    </div>
   );
 }
 

@@ -683,7 +683,7 @@ export function reportProductFeedback(properties: {
  *
  */
 export function reportBridgePageLinkClick(params: {
-  linkType: "integrate-bridge" | "trending-tokens";
+  linkType: "bridge-docs" | "trending-tokens";
 }) {
   posthog.capture("bridge page link clicked", params);
 }
