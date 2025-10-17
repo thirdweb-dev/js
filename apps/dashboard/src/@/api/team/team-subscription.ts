@@ -82,7 +82,7 @@ const CHAIN_PLAN_TO_INFRA = {
   ],
 };
 
-export async function getChainSubscriptions(slug: string) {
+async function getChainSubscriptions(slug: string) {
   const allSubscriptions = await getTeamSubscriptions(slug);
   if (!allSubscriptions) {
     return null;

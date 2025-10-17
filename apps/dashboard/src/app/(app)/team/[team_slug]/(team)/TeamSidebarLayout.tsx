@@ -10,7 +10,6 @@ import {
   HelpCircleIcon,
   HomeIcon,
   SettingsIcon,
-  WalletCardsIcon,
 } from "lucide-react";
 import { FullWidthSidebarLayout } from "@/components/blocks/full-width-sidebar-layout";
 
@@ -18,11 +17,6 @@ export function TeamSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
   ecosystems: Array<{ name: string; slug: string }>;
-  chainSubscriptions: Array<{
-    chainId: number;
-    chainName: string;
-    slug: string;
-  }>;
 }) {
   const { layoutPath, children } = props;
 
@@ -72,24 +66,6 @@ export function TeamSidebarLayout(props: {
         {
           separator: true,
         } as const,
-        // infrastructure below here
-        // TODO: make this one link to an overview page that has a list of all the chains currently deployed
-        {
-          links: [
-            ...props.chainSubscriptions.map((chainSubscription) => ({
-              href: `${layoutPath}/~/infrastructure/${chainSubscription.slug}`,
-              label: chainSubscription.chainName,
-            })),
-            {
-              href: `${layoutPath}/~/infrastructure/deploy`,
-              label: "Deploy Infrastructure",
-            },
-          ],
-          subMenu: {
-            icon: WalletCardsIcon,
-            label: "Chain Infrastucture",
-          },
-        },
       ]}
       footerSidebarLinks={[
         {
