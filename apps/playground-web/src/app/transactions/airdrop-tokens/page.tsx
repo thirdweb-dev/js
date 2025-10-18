@@ -26,7 +26,7 @@ export default function Page() {
       <PageLayout
         icon={PlaneIcon}
         description={description}
-        docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc20/POST/contract/{chain}/{contractAddress}/erc20/mint-batch-to?utm_source=playground"
+        docsLink="https://engine.thirdweb.com/reference"
         title={title}
       >
         <EngineAirdropPreview />
