@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.109.1
+
+### Patch Changes
+
+- [#8266](https://github.com/thirdweb-dev/js/pull/8266) [`5ff6063`](https://github.com/thirdweb-dev/js/commit/5ff6063961c5b58e6a49cae77c803155072f30fc) Thanks [@MananTank](https://github.com/MananTank)! - autofocus token search input when token selector modal opens in `BuyWidget`, `SwapWidget` and `BridgeWidget` components
+
 ## 5.109.0
 
 ### Minor Changes
