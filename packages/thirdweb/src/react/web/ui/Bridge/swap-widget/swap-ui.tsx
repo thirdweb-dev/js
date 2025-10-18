@@ -399,13 +399,14 @@ export function SwapUI(props: SwapUIProps) {
         <Text
           size="sm"
           color="danger"
+          multiline
           center
           style={{
             paddingBlock: spacing.md,
           }}
         >
           {preparedResultQuery.error
-            ? "Failed to get a quote"
+            ? preparedResultQuery.error.message || "Failed to get a quote"
             : buyTokenQuery.isError
               ? "Failed to fetch buy token details"
               : sellTokenQuery.isError
