@@ -37,6 +37,6 @@ export function useSocialProfiles(options: {
       return await getSocialProfiles({ address, client });
     },
     queryKey: ["social-profiles", address],
-    retry: 3,
+    retry: false,
   });
 }
