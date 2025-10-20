@@ -3,9 +3,10 @@ export const ZKSYNC_SINGLETON_FACTORY =
 export const CONTRACT_DEPLOYER_ADDRESS =
   "0x0000000000000000000000000000000000008006" as const;
 export const KNOWN_CODES_STORAGE = "0x0000000000000000000000000000000000008004";
-export const PUBLISHED_PRIVATE_KEY = process
-  ? process.env.ZKSYNC_PUBLISHED_PRIVATE_KEY
-  : undefined;
+export const PUBLISHED_PRIVATE_KEY =
+  typeof process !== "undefined" && process && process.env
+    ? process.env.ZKSYNC_PUBLISHED_PRIVATE_KEY
+    : undefined;
 
 export const singletonFactoryAbi = [
   "function deploy(bytes32,bytes32,bytes) external payable",
