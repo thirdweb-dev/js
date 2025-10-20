@@ -84,7 +84,10 @@ export const SettingsMetadata = ({
         console.error(err);
       }
     }
-    let image: string | undefined = metadata.data?.image;
+    let image: string | undefined =
+      metadata.data?.image && typeof metadata.data.image === "string"
+        ? metadata.data.image
+        : undefined;
     try {
       image = image
         ? // eslint-disable-next-line no-restricted-syntax

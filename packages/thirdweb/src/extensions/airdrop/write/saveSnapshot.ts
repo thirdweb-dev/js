@@ -1,5 +1,6 @@
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { isRecord } from "../../../utils/type-guards.js";
 import { setContractURI } from "../../common/__generated__/IContractMetadata/write/setContractURI.js";
 
 /**
@@ -80,7 +81,12 @@ export function saveSnapshot(
 
       // keep the old merkle roots from other tokenIds
       for (const key of Object.keys(metadata.merkle || {})) {
-        merkleInfos[key] = metadata.merkle[key];
+        const merkleInfo = isRecord(metadata.merkle)
+          ? metadata.merkle[key]
+          : undefined;
+        if (merkleInfo) {
+          merkleInfos[key] = merkleInfo;
+        }
       }
       const mergedMetadata = {
         ...metadata,

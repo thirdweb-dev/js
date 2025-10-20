@@ -10,8 +10,7 @@ import * as ERC20Ext from "thirdweb/extensions/erc20";
 import * as ERC721Ext from "thirdweb/extensions/erc721";
 import * as ERC1155Ext from "thirdweb/extensions/erc1155";
 import { download } from "thirdweb/storage";
-import type { OverrideEntry } from "thirdweb/utils";
-import { maxUint256 } from "thirdweb/utils";
+import { isRecord, maxUint256, type OverrideEntry } from "thirdweb/utils";
 import type { z } from "zod";
 import type {
   ClaimCondition as LegacyClaimCondition,
@@ -86,7 +85,7 @@ export async function getClaimPhasesInLegacyFormat(
       ]);
       const snapshot = await fetchSnapshot(
         condition.merkleRoot,
-        contractMetadata.merkle,
+        isRecord(contractMetadata.merkle) ? contractMetadata.merkle : {},
         options.contract.client,
       );
       return {

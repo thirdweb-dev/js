@@ -47,7 +47,10 @@ export default async function Image({
       chainName: info.chainMetadata.name,
       contractAddress: info.serverContract.address,
       displayName: contractDisplayName,
-      logo: contractMetadata.image,
+      logo:
+        contractMetadata.image && typeof contractMetadata.image === "string"
+          ? contractMetadata.image
+          : undefined,
     });
   } catch {
     return contractOGImageTemplate({

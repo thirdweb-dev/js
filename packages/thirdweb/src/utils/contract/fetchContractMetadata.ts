@@ -18,8 +18,7 @@ export type FetchContractMetadata = {
  */
 export async function fetchContractMetadata(
   options: FetchContractMetadata,
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-): Promise<{ [key: string]: any } | undefined> {
+): Promise<{ [key: string]: unknown } | undefined> {
   const { client, uri } = options;
 
   // handle case where the URI is a base64 encoded JSON

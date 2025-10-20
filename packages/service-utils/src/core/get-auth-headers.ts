@@ -18,19 +18,19 @@ export function getAuthHeaders(
     case !!secretKey:
       return {
         "x-secret-key": secretKey,
-      } as Record<string, string>;
+      };
 
     // 2. if we have a JWT AND either a teamId or clientId, we'll use the JWT for auth
     case !!(jwt && (teamId || clientId)):
       return {
         Authorization: `Bearer ${jwt}`,
-      } as Record<string, string>;
+      };
 
     // 3. if we have an incoming service api key, we'll use it
     case !!incomingServiceApiKey: {
       return {
         "x-service-api-key": incomingServiceApiKey,
-      } as Record<string, string>;
+      };
     }
 
     // 4. if nothing else is present, we'll use the service api key

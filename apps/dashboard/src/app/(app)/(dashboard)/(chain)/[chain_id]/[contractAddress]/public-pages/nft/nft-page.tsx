@@ -53,6 +53,13 @@ export async function NFTPublicPage(props: {
   const _isTokenByIndexSupported =
     props.type === "erc721" && isTokenByIndexSupported(functionSelectors);
 
+  // FIXME: this is technically a bad fallback but we gotta do what we gotta do
+  const contractMetadataWithNameAndSymbolFallback = {
+    ...contractMetadata,
+    // fall back to the contract address if the name is not set
+    name: contractMetadata.name || props.clientContract.address,
+    symbol: contractMetadata.symbol || "",
+  };
   const buyNFTDropCard = nftDropClaimParams ? (
     <BuyNFTDropCardServer
       chainMetadata={props.chainMetadata}
@@ -73,7 +80,7 @@ export async function NFTPublicPage(props: {
     <NFTsGrid
       chainMetadata={props.chainMetadata}
       clientContract={props.clientContract}
-      collectionMetadata={contractMetadata}
+      collectionMetadata={contractMetadataWithNameAndSymbolFallback}
       gridClassName={
         buyNFTDropCard
           ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
@@ -110,7 +117,7 @@ export async function NFTPublicPage(props: {
       chainMetadata={props.chainMetadata}
       clientContract={props.clientContract}
       contractCreator={contractCreator}
-      contractMetadata={contractMetadata}
+      contractMetadata={contractMetadataWithNameAndSymbolFallback}
       isDashboardUser={isDashboardUser}
     >
       <ResponsiveLayout
@@ -138,7 +145,7 @@ export async function NFTPublicPage(props: {
         <PageLoadTokenViewerSheet
           chainMetadata={props.chainMetadata}
           clientContract={props.clientContract}
-          collectionMetadata={contractMetadata}
+          collectionMetadata={contractMetadataWithNameAndSymbolFallback}
           tokenByIndexSupported={_isTokenByIndexSupported}
           tokenId={BigInt(props.tokenId)}
           type={props.type}

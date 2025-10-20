@@ -11,6 +11,7 @@ import {
   createListing,
 } from "../../../../../../extensions/marketplace/direct-listings/write/createListing.js";
 import type { BaseTransactionOptions } from "../../../../../../transaction/types.js";
+import { isString } from "../../../../../../utils/type-guards.js";
 import { useReadContract } from "../../../../../core/hooks/contract/useReadContract.js";
 import type { TransactionButtonProps } from "../../../../../core/hooks/transaction/transaction-button-utils.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
@@ -228,7 +229,9 @@ async function getPayMetadata(
   }
 
   return {
-    image: contractMetadata?.image,
-    name: contractMetadata?.name,
+    image: isString(contractMetadata?.image)
+      ? contractMetadata.image
+      : undefined,
+    name: isString(contractMetadata?.name) ? contractMetadata.name : undefined,
   };
 }

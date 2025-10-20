@@ -76,7 +76,9 @@ export default async function DropPage({
   ]);
 
   const thumbnail =
-    project.thumbnail || nft.metadata.image || contractMetadata.image || "";
+    project.thumbnail ||
+    nft.metadata.image ||
+    (typeof contractMetadata.image === "string" ? contractMetadata.image : "");
 
   const displayName = contractMetadata.name || nft.metadata.name || "";
 

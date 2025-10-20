@@ -6,6 +6,7 @@ import {
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import type { Hex } from "../../encoding/hex.js";
+import { isRecord } from "../../type-guards.js";
 import type { ClaimCondition, OverrideProof } from "./types.js";
 
 export type GetClaimParamsOptions = {
@@ -118,7 +119,8 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     const metadata = await getContractMetadata({
       contract: options.contract,
     });
-    const merkleData: Record<string, string> = metadata.merkle || {};
+
+    const merkleData = isRecord(metadata.merkle) ? metadata.merkle : {};
     const snapshotUri = merkleData[cc.merkleRoot];
 
     if (!snapshotUri) {

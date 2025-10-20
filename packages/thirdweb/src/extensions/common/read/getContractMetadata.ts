@@ -20,10 +20,9 @@ export { isContractURISupported as isGetContractMetadataSupported } from "../__g
 export async function getContractMetadata(
   options: BaseTransactionOptions,
 ): Promise<{
-  name: string;
-  symbol: string;
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
-  [key: string]: any;
+  name: string | null;
+  symbol: string | null;
+  [key: string]: unknown;
 }> {
   const [resolvedMetadata, resolvedName, resolvedSymbol] = await Promise.all([
     contractURI(options)
@@ -43,8 +42,14 @@ export async function getContractMetadata(
 
   // TODO: basic parsing?
   return {
-    ...resolvedMetadata,
-    name: resolvedMetadata?.name ?? resolvedName,
-    symbol: resolvedMetadata?.symbol ?? resolvedSymbol,
+    ...(resolvedMetadata ?? {}),
+    name:
+      resolvedMetadata?.name && typeof resolvedMetadata.name === "string"
+        ? resolvedMetadata.name
+        : resolvedName,
+    symbol:
+      resolvedMetadata?.symbol && typeof resolvedMetadata.symbol === "string"
+        ? resolvedMetadata.symbol
+        : resolvedSymbol,
   };
 }

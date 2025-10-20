@@ -21,7 +21,7 @@ export async function addUniversalBridgeTokenRoute(props: {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
       "x-client-id": props.project.publishableKey,
-    } as Record<string, string>,
+    },
     method: "POST",
   });
 

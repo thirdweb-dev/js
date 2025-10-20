@@ -89,16 +89,31 @@ export async function ERC20PublicPage(props: {
             chainMetadata={props.chainMetadata}
             clientContract={props.clientContract}
             contractCreator={contractCreator}
-            image={contractMetadata.image}
+            image={
+              contractMetadata.image &&
+              typeof contractMetadata.image === "string"
+                ? contractMetadata.image
+                : undefined
+            }
             isDashboardUser={isDashboardUser}
-            name={contractMetadata.name}
+            name={
+              contractMetadata.name && typeof contractMetadata.name === "string"
+                ? contractMetadata.name
+                : // if we do not have a contract name fall back to the address
+                  props.clientContract.address
+            }
             socialUrls={
               typeof contractMetadata.social_urls === "object" &&
               contractMetadata.social_urls !== null
                 ? contractMetadata.social_urls
                 : {}
             }
-            symbol={contractMetadata.symbol}
+            symbol={
+              contractMetadata.symbol &&
+              typeof contractMetadata.symbol === "string"
+                ? contractMetadata.symbol
+                : undefined
+            }
           />
         </div>
       </div>
@@ -143,21 +158,25 @@ export async function ERC20PublicPage(props: {
         </div>
       )}
 
-      {showBuyEmbed && (
-        <div className="container max-w-7xl pb-10">
-          <GridPatternEmbedContainer>
-            <BuyEmbed
-              chainMetadata={props.chainMetadata}
-              claimConditionMeta={claimConditionMeta}
-              clientContract={props.clientContract}
-              tokenAddress={props.clientContract.address}
-              tokenDecimals={tokenDecimals}
-              tokenName={contractMetadata.name}
-              tokenSymbol={contractMetadata.symbol}
-            />
-          </GridPatternEmbedContainer>
-        </div>
-      )}
+      {showBuyEmbed &&
+        contractMetadata.name &&
+        typeof contractMetadata.name === "string" &&
+        contractMetadata.symbol &&
+        typeof contractMetadata.symbol === "string" && (
+          <div className="container max-w-7xl pb-10">
+            <GridPatternEmbedContainer>
+              <BuyEmbed
+                chainMetadata={props.chainMetadata}
+                claimConditionMeta={claimConditionMeta}
+                clientContract={props.clientContract}
+                tokenAddress={props.clientContract.address}
+                tokenDecimals={tokenDecimals}
+                tokenName={contractMetadata.name}
+                tokenSymbol={contractMetadata.symbol}
+              />
+            </GridPatternEmbedContainer>
+          </div>
+        )}
 
       <div className="container flex max-w-7xl grow flex-col pb-10">
         <div className="flex grow flex-col gap-8">
@@ -167,12 +186,15 @@ export async function ERC20PublicPage(props: {
             contractAddress={props.clientContract.address}
           />
 
-          <RecentTransfers
-            chainMetadata={props.chainMetadata}
-            clientContract={props.clientContract}
-            decimals={tokenDecimals}
-            tokenSymbol={contractMetadata.symbol}
-          />
+          {contractMetadata.symbol &&
+            typeof contractMetadata.symbol === "string" && (
+              <RecentTransfers
+                chainMetadata={props.chainMetadata}
+                clientContract={props.clientContract}
+                decimals={tokenDecimals}
+                tokenSymbol={contractMetadata.symbol}
+              />
+            )}
         </div>
       </div>
     </div>

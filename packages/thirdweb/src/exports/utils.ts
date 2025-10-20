@@ -197,3 +197,8 @@ export type { JWTPayload } from "../utils/jwt/types.js";
 export type { NFTInput, NFTMetadata } from "../utils/nft/parseNft.js";
 export { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 export { shortenLargeNumber } from "../utils/shortenLargeNumber.js";
+
+// ------------------------------------------------
+// type guards
+// ------------------------------------------------
+export * from "../utils/type-guards.js";
