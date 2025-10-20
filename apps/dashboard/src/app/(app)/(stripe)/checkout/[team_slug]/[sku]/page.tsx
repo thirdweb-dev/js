@@ -7,6 +7,8 @@ import {
   getInvoicePaymentUrl,
 } from "../../../utils/billing";
 
+export const dynamic = "force-dynamic";
+
 export default async function CheckoutPage(props: {
   params: Promise<{
     team_slug: string;

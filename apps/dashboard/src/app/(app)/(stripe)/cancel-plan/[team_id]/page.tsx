@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { StripeRedirectErrorPage } from "../../_components/StripeRedirectErrorPage";
 import { getPlanCancelUrl } from "../../utils/billing";
 
+export const dynamic = "force-dynamic";
+
 export default async function CancelPlanPage(props: {
   params: Promise<{
     team_id: string;
