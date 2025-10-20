@@ -48,7 +48,6 @@ function App() {
     >
       <TokenIcon
         className="h-auto w-20 rounded-full"
-        iconResolver="/usdc.svg"
       />
     </TokenProvider>
   )
