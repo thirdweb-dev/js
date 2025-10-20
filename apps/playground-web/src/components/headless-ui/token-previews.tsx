@@ -31,10 +31,7 @@ export function TokenImageOverridePreview() {
       chain={ethereum}
       client={THIRDWEB_CLIENT}
     >
-      <TokenIcon
-        className="h-auto w-20 rounded-full"
-        iconResolver="/usdc.svg"
-      />
+      <TokenIcon className="h-auto w-20 rounded-full" />
     </TokenProvider>
   );
 }

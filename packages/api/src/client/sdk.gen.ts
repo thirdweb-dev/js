@@ -15,12 +15,18 @@ import type {
 	CompleteAuthenticationData,
 	CompleteAuthenticationErrors,
 	CompleteAuthenticationResponses,
+	ConvertFiatToCryptoData,
+	ConvertFiatToCryptoErrors,
+	ConvertFiatToCryptoResponses,
 	CreatePaymentData,
 	CreatePaymentErrors,
 	CreatePaymentResponses,
 	CreateServerWalletData,
 	CreateServerWalletErrors,
 	CreateServerWalletResponses,
+	CreateSolanaWalletData,
+	CreateSolanaWalletErrors,
+	CreateSolanaWalletResponses,
 	CreateTokenData,
 	CreateTokenErrors,
 	CreateTokenResponses,
@@ -30,6 +36,15 @@ import type {
 	DeployContractData,
 	DeployContractErrors,
 	DeployContractResponses,
+	FetchWithPaymentData,
+	FetchWithPaymentErrors,
+	FetchWithPaymentResponses,
+	GetBridgeChainsData,
+	GetBridgeChainsErrors,
+	GetBridgeChainsResponses,
+	GetBridgeSupportedRoutesData,
+	GetBridgeSupportedRoutesErrors,
+	GetBridgeSupportedRoutesResponses,
 	GetContractEventsData,
 	GetContractEventsErrors,
 	GetContractEventsResponses,
@@ -48,6 +63,9 @@ import type {
 	GetPaymentHistoryData,
 	GetPaymentHistoryErrors,
 	GetPaymentHistoryResponses,
+	GetSolanaTransactionData,
+	GetSolanaTransactionErrors,
+	GetSolanaTransactionResponses,
 	GetTokenOwnersData,
 	GetTokenOwnersErrors,
 	GetTokenOwnersResponses,
@@ -69,12 +87,21 @@ import type {
 	InitiateAuthenticationData,
 	InitiateAuthenticationErrors,
 	InitiateAuthenticationResponses,
+	LinkAuthenticationData,
+	LinkAuthenticationErrors,
+	LinkAuthenticationResponses,
 	ListContractsData,
 	ListContractsErrors,
 	ListContractsResponses,
+	ListPayableServicesData,
+	ListPayableServicesErrors,
+	ListPayableServicesResponses,
 	ListServerWalletsData,
 	ListServerWalletsErrors,
 	ListServerWalletsResponses,
+	ListSolanaWalletsData,
+	ListSolanaWalletsErrors,
+	ListSolanaWalletsResponses,
 	ListTokensData,
 	ListTokensErrors,
 	ListTokensResponses,
@@ -94,20 +121,41 @@ import type {
 	ReadContractData,
 	ReadContractErrors,
 	ReadContractResponses,
+	SendSolanaTokensData,
+	SendSolanaTokensErrors,
+	SendSolanaTokensResponses,
+	SendSolanaTransactionData,
+	SendSolanaTransactionErrors,
+	SendSolanaTransactionResponses,
 	SendTokensData,
 	SendTokensErrors,
 	SendTokensResponses,
 	SendTransactionsData,
 	SendTransactionsErrors,
 	SendTransactionsResponses,
+	SettleX402PaymentData,
+	SettleX402PaymentErrors,
+	SettleX402PaymentResponses,
 	SignMessageData,
 	SignMessageErrors,
 	SignMessageResponses,
+	SignSolanaMessageData,
+	SignSolanaMessageErrors,
+	SignSolanaMessageResponses,
 	SignTypedDataData,
 	SignTypedDataErrors,
 	SignTypedDataResponses,
 	SocialAuthenticationData,
 	SocialAuthenticationErrors,
+	SupportedX402PaymentsData,
+	SupportedX402PaymentsErrors,
+	SupportedX402PaymentsResponses,
+	UnlinkAuthenticationData,
+	UnlinkAuthenticationErrors,
+	UnlinkAuthenticationResponses,
+	VerifyX402PaymentData,
+	VerifyX402PaymentErrors,
+	VerifyX402PaymentResponses,
 	WriteContractData,
 	WriteContractErrors,
 	WriteContractResponses,
@@ -137,14 +185,8 @@ export type Options<
  * **Supported Methods:**
  * - **SMS** - Send verification code to phone number
  * - **Email** - Send verification code to email address
- * - **OAuth** - ⚠️ **DEPRECATED**: Use `/auth/social` instead for OAuth flows
  * - **Passkey** - Generate WebAuthn challenge for biometric authentication
  * - **SIWE** - Generate Sign-In with Ethereum payload
- *
- * **OAuth Migration:**
- * The OAuth method in this endpoint is deprecated. Please use the new `/auth/social` endpoint instead:
- * - **Old**: `POST /auth/initiate` with `{"method": "oauth", "provider": "google", "redirectUrl": "..."}`
- * - **New**: `GET /auth/social?provider=google&redirectUrl=...`
  *
  * **Flow:**
  * 1. Choose your authentication method
@@ -152,7 +194,15 @@ export type Options<
  * 3. Receive challenge data to complete authentication
  * 4. Use the /complete endpoint to finish the process
  *
- * NOTE: for custom authentication (JWT, auth-payload) and for guest authentication, you can skip this step and use the `/complete` endpoint directly.
+ * **OAuth:**
+ *
+ * The OAuth method uses a dedicated `/auth/social` endpoint instead of this one:
+ *
+ * `GET /auth/social?provider=google&redirectUrl=...`
+ *
+ * **Custom (JWT, auth-payload) and Guest:**
+ *
+ * For custom authentication (JWT, auth-payload) and for guest authentication, you can skip this step and use the `/auth/complete` endpoint directly.
  *
  * **Authentication:** Requires `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
  */
@@ -229,6 +279,82 @@ export const completeAuthentication = <ThrowOnError extends boolean = false>(
 			},
 		],
 		url: "/v1/auth/complete",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Link Auth
+ * Link an additional authentication method or external wallet to the currently authenticated user. Provide the authentication token from another completed login (for example, a SIWE wallet or OAuth account) and this endpoint will associate it with the user's existing wallet.
+ *
+ * **Usage:**
+ * 1. Complete an authentication flow using `/auth/complete` to obtain the new authentication token
+ * 2. Call this endpoint with the token you want to link
+ * 3. Receive the full list of linked authentication profiles for the wallet
+ *
+ * **Authentication:** Requires both client authentication (`x-client-id` or `x-secret-key`) and a wallet access token via `Authorization: Bearer <jwt>`.
+ */
+export const linkAuthentication = <ThrowOnError extends boolean = false>(
+	options?: Options<LinkAuthenticationData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		LinkAuthenticationResponses,
+		LinkAuthenticationErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/v1/auth/link",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Unlink Auth
+ * Disconnect an authentication method or external wallet from the currently authenticated user. Provide the identifiers for the provider you want to remove (for example, an email address or wallet address) and this endpoint will detach it from the user's account.
+ *
+ * **Usage:**
+ * 1. Choose the provider type you want to disconnect (email, phone, siwe, oauth, etc.)
+ * 2. Supply the provider-specific identifiers in the request body
+ * 3. Receive the updated list of linked authentication profiles
+ *
+ * **Authentication:** Requires both client authentication (`x-client-id` or `x-secret-key`) and a wallet access token via `Authorization: Bearer <jwt>`.
+ */
+export const unlinkAuthentication = <ThrowOnError extends boolean = false>(
+	options?: Options<UnlinkAuthenticationData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		UnlinkAuthenticationResponses,
+		UnlinkAuthenticationErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/v1/auth/unlink",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -507,7 +633,7 @@ export const getWalletTransactions = <ThrowOnError extends boolean = false>(
 
 /**
  * Get Tokens
- * Retrieves token balances for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive token data including ERC-20 tokens with their balances, metadata, and price information. Results can be filtered by chain and paginated to meet specific requirements.
+ * Retrieves token balances for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive token data including ERC-20 tokens with their balances, metadata, and price information. Results can be filtered by chain, sorted by balance or USD value, and customized to include/exclude spam tokens, native tokens, and tokens without price data. Supports pagination and metadata resolution options.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
@@ -1059,6 +1185,151 @@ export const paymentsPurchase = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * x402 - Verify payment
+ * Verify an x402 payment payload against the provided payment requirements. Compatible with any standard x402 middleware.
+ */
+export const verifyX402Payment = <ThrowOnError extends boolean = false>(
+	options?: Options<VerifyX402PaymentData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		VerifyX402PaymentResponses,
+		VerifyX402PaymentErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/verify",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * x402 - Settle payment
+ * Settle an x402 payment. Compatible with any standard x402 middleware.
+ */
+export const settleX402Payment = <ThrowOnError extends boolean = false>(
+	options?: Options<SettleX402PaymentData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SettleX402PaymentResponses,
+		SettleX402PaymentErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/settle",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * x402 - Supported payment methods
+ * List supported x402 payment methods, optionally filtered by token address and chainId. Compatible with any standard x402 middleware.
+ */
+export const supportedX402Payments = <ThrowOnError extends boolean = false>(
+	options?: Options<SupportedX402PaymentsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		SupportedX402PaymentsResponses,
+		SupportedX402PaymentsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/supported",
+		...options,
+	});
+};
+
+/**
+ * x402 - Fetch with payment
+ * Fetch any given url. If the url returns HTTP 402 payment required, this endpoint handles payment with the authenticated wallet.
+ *
+ * Optionally pass a 'from' query parameter with the authenticated wallet address (server or user wallet) to complete the payment.
+ *
+ * If no 'from' parameter is passed, the default project wallet address will be used.
+ *
+ * - Works with any x402 compatible endpoint.
+ * - Automatically selects a compatible payment method.
+ * - Signs the appropriate payment payload.
+ * - Sends the payment to the url.
+ * - Returns the final result from the url called.
+ *
+ * Request body and headers are always passed through to the url called.
+ *
+ * **Authentication**: This endpoint requires wallet authentication for the payment. For frontend usage, include `x-client-id` and `Authorization: Bearer <jwt>` headers. For backend usage, include `x-secret-key` header.
+ */
+export const fetchWithPayment = <ThrowOnError extends boolean = false>(
+	options: Options<FetchWithPaymentData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		FetchWithPaymentResponses,
+		FetchWithPaymentErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/fetch",
+		...options,
+		headers: {
+			"Content-Type": "*/*",
+			...options.headers,
+		},
+	});
+};
+
+/**
+ * x402 - Discover resources
+ * Discover payable x402 compatible services and HTTP endpoints that can be paid for using the fetchWithPayment tool. Use this tool to browse services, APIs and endpoints to find what you need for your tasks. Each item has a resource url that you can call with the fetchWithPayment tool.Price is in the base units of the asset. For example, if the price is 1000000 and the asset is USDC (which is the default and has 6 decimals), the price is 1 USDC.Examples: if network is eip155:8453, asset is 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, max amount required is 10000, resource is https://api.example.com/paid-api, then you should interpret that as "the api.example.com/paid-api service costs 0.01 USDC per call".
+ */
+export const listPayableServices = <ThrowOnError extends boolean = false>(
+	options?: Options<ListPayableServicesData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListPayableServicesResponses,
+		ListPayableServicesErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/discovery/resources",
+		...options,
+	});
+};
+
+/**
  * List Tokens
  * Lists or search existing tokens based on the provided filters. Supports querying by chain ID, token address, symbol, and/or name.
  *
@@ -1124,7 +1395,13 @@ export const createToken = <ThrowOnError extends boolean = false>(
 
 /**
  * Get Owners
- * Retrieves a paginated list of owners for a given ERC-20 token contract on a specific chain.
+ * Retrieves a paginated list of owners for a given token contract on a specific chain. Supports ERC-20 tokens, ERC-721 NFTs, and ERC-1155 tokens:
+ *
+ * - **ERC-20**: No `tokenId` provided - returns token holders with balances
+ * - **NFT Collection**: No `tokenId` provided - returns all owners of any token in the collection
+ * - **Specific NFT**: `tokenId` provided - returns owner(s) of that specific token ID
+ *
+ * The token standard is automatically detected using ERC165 interface detection when needed.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
  */
@@ -1143,6 +1420,83 @@ export const getTokenOwners = <ThrowOnError extends boolean = false>(
 			},
 		],
 		url: "/v1/tokens/{chainId}/{address}/owners",
+		...options,
+	});
+};
+
+/**
+ * List Supported Chains
+ * List all blockchain networks available for cross-chain bridging. Each chain includes metadata and native currency details.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const getBridgeChains = <ThrowOnError extends boolean = false>(
+	options?: Options<GetBridgeChainsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		GetBridgeChainsResponses,
+		GetBridgeChainsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/chains",
+		...options,
+	});
+};
+
+/**
+ * List Supported Routes
+ * List supported bridge routes with simple pagination and optional chain or token filters.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const getBridgeSupportedRoutes = <ThrowOnError extends boolean = false>(
+	options?: Options<GetBridgeSupportedRoutesData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		GetBridgeSupportedRoutesResponses,
+		GetBridgeSupportedRoutesErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/routes",
+		...options,
+	});
+};
+
+/**
+ * Convert Fiat to Crypto
+ * Convert fiat currency amount to cryptocurrency token amount. Supports multiple fiat currencies based on available price data for the specific token. Returns the equivalent amount of crypto tokens for the specified fiat amount based on current market prices. If price data is not available for the requested currency, the API will return a 404 error.
+ *
+ * **Native Tokens**: To get the price of native tokens (like ETH on Ethereum), use the address `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`. For example, to get the price of ETH on Ethereum Mainnet (chainId: 1), pass `to=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const convertFiatToCrypto = <ThrowOnError extends boolean = false>(
+	options: Options<ConvertFiatToCryptoData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		ConvertFiatToCryptoResponses,
+		ConvertFiatToCryptoErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/convert",
 		...options,
 	});
 };
@@ -1177,6 +1531,172 @@ export const bridgeSwap = <ThrowOnError extends boolean = false>(
 			"Content-Type": "application/json",
 			...options?.headers,
 		},
+	});
+};
+
+/**
+ * List Solana Wallets
+ * List all Solana wallets created for your project. Supports pagination with page and limit parameters.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const listSolanaWallets = <ThrowOnError extends boolean = false>(
+	options?: Options<ListSolanaWalletsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<
+		ListSolanaWalletsResponses,
+		ListSolanaWalletsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/wallets",
+		...options,
+	});
+};
+
+/**
+ * Create Solana Wallet
+ * Create a new Solana wallet or return the existing wallet for a given label. Labels must be unique within your project.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const createSolanaWallet = <ThrowOnError extends boolean = false>(
+	options?: Options<CreateSolanaWalletData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		CreateSolanaWalletResponses,
+		CreateSolanaWalletErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/wallets",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Sign Solana Message
+ * Sign an arbitrary message with a Solana wallet. Supports both text and hexadecimal message formats with automatic format detection.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const signSolanaMessage = <ThrowOnError extends boolean = false>(
+	options?: Options<SignSolanaMessageData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignSolanaMessageResponses,
+		SignSolanaMessageErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/sign-message",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Send Solana Tokens
+ * Transfer native SOL or SPL tokens on Solana. Automatically handles token account creation for SPL tokens if needed.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const sendSolanaTokens = <ThrowOnError extends boolean = false>(
+	options?: Options<SendSolanaTokensData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SendSolanaTokensResponses,
+		SendSolanaTokensErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/send",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Send Solana Transaction
+ * Submit a Solana transaction composed of one or more instructions. Transactions are queued and processed asynchronously.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const sendSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options?: Options<SendSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SendSolanaTransactionResponses,
+		SendSolanaTransactionErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Solana Transaction
+ * Retrieve the status and details of a queued Solana transaction using the identifier returned when the transaction was submitted.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const getSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options: Options<GetSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetSolanaTransactionResponses,
+		GetSolanaTransactionErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/transactions/:transactionId",
+		...options,
 	});
 };
 

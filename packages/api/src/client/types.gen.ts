@@ -340,6 +340,473 @@ export type CompleteAuthenticationResponses = {
 export type CompleteAuthenticationResponse =
 	CompleteAuthenticationResponses[keyof CompleteAuthenticationResponses];
 
+export type LinkAuthenticationData = {
+	/**
+	 * Authentication Link Request
+	 * Request body for linking an additional authentication method or external wallet to the currently authenticated user.
+	 */
+	body?: {
+		/**
+		 * Authentication token for the account that should be linked to the currently authenticated wallet.
+		 */
+		accountAuthTokenToConnect: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/auth/link";
+};
+
+export type LinkAuthenticationErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Wallet authentication required. Include Authorization: Bearer <jwt> header.
+	 */
+	401: unknown;
+	/**
+	 * Rate limit exceeded - Please wait before trying again
+	 */
+	429: unknown;
+	/**
+	 * Third-party provider did not return any linked accounts after processing the request.
+	 */
+	502: unknown;
+};
+
+export type LinkAuthenticationResponses = {
+	/**
+	 * Authentication Link Response
+	 * Response returned after successfully linking an additional authentication provider. The response includes all linked profiles for the user.
+	 */
+	200: {
+		/**
+		 * AuthenticationProviderDetail
+		 * Authentication provider details with type-based discrimination
+		 */
+		linkedAccounts: Array<
+			| {
+					email: string;
+					emailVerified: boolean;
+					familyName?: string;
+					givenName?: string;
+					hd: string;
+					id: string;
+					locale: string;
+					name?: string;
+					picture: string;
+					type: "google";
+			  }
+			| {
+					email?: string;
+					firstName?: string;
+					id: string;
+					lastName?: string;
+					name?: string;
+					picture?: string;
+					type: "facebook";
+			  }
+			| {
+					email?: string;
+					emailVerified: boolean;
+					id: string;
+					isPrivateEmail: boolean;
+					type: "apple";
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					name?: string;
+					type: "github";
+					username: string;
+			  }
+			| {
+					avatar: string;
+					email?: string;
+					emailVerified: boolean;
+					id: string;
+					type: "discord";
+					username: string;
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					name: string;
+					type: "coinbase";
+			  }
+			| {
+					id: string;
+					name: string;
+					type: "x";
+					username: string;
+					profileImageUrl?: string;
+			  }
+			| {
+					id: string;
+					displayName: string;
+					avatarUrl: string;
+					unionId?: string;
+					type: "tiktok";
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					metadata: {
+						avatar: {
+							large?: string;
+							medium?: string;
+							small?: string;
+						};
+						personaname?: string;
+						profileurl?: string;
+						realname?: string;
+					};
+					type: "steam";
+					username?: string;
+			  }
+			| {
+					firstName?: string;
+					id: string;
+					lastName?: string;
+					picture?: string;
+					type: "telegram";
+					username?: string;
+			  }
+			| {
+					avatar?: string;
+					description?: string;
+					email?: string;
+					id: string;
+					type: "twitch";
+					username: string;
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					type: "line";
+					username?: string;
+			  }
+			| {
+					fid: string;
+					id: string;
+					type: "farcaster";
+					walletAddress?: string;
+			  }
+			| {
+					algorithm: string;
+					credentialId: string;
+					publicKey: string;
+					type: "passkey";
+			  }
+			| {
+					email: string;
+					id: string;
+					type: "email";
+			  }
+			| {
+					id: string;
+					pregeneratedIdentifier: string;
+					type: "pre_generation";
+			  }
+			| {
+					id: string;
+					phone: string;
+					type: "phone";
+			  }
+			| {
+					id: string;
+					type: "siwe";
+					walletAddress: string;
+			  }
+			| {
+					id: string;
+					type: "guest";
+			  }
+			| {
+					id: string;
+					type: "backend";
+			  }
+			| {
+					identifier: string;
+					type: "server";
+			  }
+			| {
+					authProviderId?: string;
+					email?: string;
+					id: string;
+					phone?: string;
+					type: "custom_jwt";
+					walletAddress?: string;
+			  }
+			| {
+					authProviderId?: string;
+					email?: string;
+					id: string;
+					phone?: string;
+					type: "custom_auth_endpoint";
+					walletAddress?: string;
+			  }
+		>;
+	};
+};
+
+export type LinkAuthenticationResponse =
+	LinkAuthenticationResponses[keyof LinkAuthenticationResponses];
+
+export type UnlinkAuthenticationData = {
+	/**
+	 * Authentication Unlink Request
+	 * Request body for unlinking an authentication provider or wallet from the currently authenticated user.
+	 */
+	body?: {
+		/**
+		 * Authentication provider type to disconnect
+		 */
+		type:
+			| "apple"
+			| "coinbase"
+			| "discord"
+			| "email"
+			| "facebook"
+			| "farcaster"
+			| "github"
+			| "google"
+			| "guest"
+			| "line"
+			| "passkey"
+			| "phone"
+			| "siwe"
+			| "steam"
+			| "telegram"
+			| "twitch"
+			| "x"
+			| "tiktok"
+			| "backend"
+			| "wallet"
+			| "custom_auth_endpoint"
+			| "custom_jwt";
+		/**
+		 * Identifiers for the provider profile that should be disconnected
+		 */
+		details: {
+			address?: string;
+			/**
+			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+			 */
+			walletAddress?: string;
+			email?: string;
+			phone?: string;
+			id?: string;
+		};
+		/**
+		 * If true, allows the account to be deleted when unlinking removes the last authentication method. Defaults to false when omitted.
+		 */
+		allowAccountDeletion?: boolean;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/auth/unlink";
+};
+
+export type UnlinkAuthenticationErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Wallet authentication required. Include Authorization: Bearer <jwt> header.
+	 */
+	401: unknown;
+	/**
+	 * Rate limit exceeded - Please wait before trying again
+	 */
+	429: unknown;
+	/**
+	 * Third-party provider did not return any linked accounts after processing the request.
+	 */
+	502: unknown;
+};
+
+export type UnlinkAuthenticationResponses = {
+	/**
+	 * Authentication Link Response
+	 * Response returned after successfully linking an additional authentication provider. The response includes all linked profiles for the user.
+	 */
+	200: {
+		/**
+		 * AuthenticationProviderDetail
+		 * Authentication provider details with type-based discrimination
+		 */
+		linkedAccounts: Array<
+			| {
+					email: string;
+					emailVerified: boolean;
+					familyName?: string;
+					givenName?: string;
+					hd: string;
+					id: string;
+					locale: string;
+					name?: string;
+					picture: string;
+					type: "google";
+			  }
+			| {
+					email?: string;
+					firstName?: string;
+					id: string;
+					lastName?: string;
+					name?: string;
+					picture?: string;
+					type: "facebook";
+			  }
+			| {
+					email?: string;
+					emailVerified: boolean;
+					id: string;
+					isPrivateEmail: boolean;
+					type: "apple";
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					name?: string;
+					type: "github";
+					username: string;
+			  }
+			| {
+					avatar: string;
+					email?: string;
+					emailVerified: boolean;
+					id: string;
+					type: "discord";
+					username: string;
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					name: string;
+					type: "coinbase";
+			  }
+			| {
+					id: string;
+					name: string;
+					type: "x";
+					username: string;
+					profileImageUrl?: string;
+			  }
+			| {
+					id: string;
+					displayName: string;
+					avatarUrl: string;
+					unionId?: string;
+					type: "tiktok";
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					metadata: {
+						avatar: {
+							large?: string;
+							medium?: string;
+							small?: string;
+						};
+						personaname?: string;
+						profileurl?: string;
+						realname?: string;
+					};
+					type: "steam";
+					username?: string;
+			  }
+			| {
+					firstName?: string;
+					id: string;
+					lastName?: string;
+					picture?: string;
+					type: "telegram";
+					username?: string;
+			  }
+			| {
+					avatar?: string;
+					description?: string;
+					email?: string;
+					id: string;
+					type: "twitch";
+					username: string;
+			  }
+			| {
+					avatar?: string;
+					id: string;
+					type: "line";
+					username?: string;
+			  }
+			| {
+					fid: string;
+					id: string;
+					type: "farcaster";
+					walletAddress?: string;
+			  }
+			| {
+					algorithm: string;
+					credentialId: string;
+					publicKey: string;
+					type: "passkey";
+			  }
+			| {
+					email: string;
+					id: string;
+					type: "email";
+			  }
+			| {
+					id: string;
+					pregeneratedIdentifier: string;
+					type: "pre_generation";
+			  }
+			| {
+					id: string;
+					phone: string;
+					type: "phone";
+			  }
+			| {
+					id: string;
+					type: "siwe";
+					walletAddress: string;
+			  }
+			| {
+					id: string;
+					type: "guest";
+			  }
+			| {
+					id: string;
+					type: "backend";
+			  }
+			| {
+					identifier: string;
+					type: "server";
+			  }
+			| {
+					authProviderId?: string;
+					email?: string;
+					id: string;
+					phone?: string;
+					type: "custom_jwt";
+					walletAddress?: string;
+			  }
+			| {
+					authProviderId?: string;
+					email?: string;
+					id: string;
+					phone?: string;
+					type: "custom_auth_endpoint";
+					walletAddress?: string;
+			  }
+		>;
+	};
+};
+
+export type UnlinkAuthenticationResponse =
+	UnlinkAuthenticationResponses[keyof UnlinkAuthenticationResponses];
+
 export type SocialAuthenticationData = {
 	body?: never;
 	path?: never;
@@ -1581,7 +2048,7 @@ export type GetWalletBalanceErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -1690,7 +2157,7 @@ export type GetWalletTransactionsErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -1871,6 +2338,34 @@ export type GetWalletTokensData = {
 		 * The page number for pagination (default: 1, max: 20).
 		 */
 		page?: number;
+		/**
+		 * Whether to include token metadata (default: true).
+		 */
+		metadata?: "true" | "false";
+		/**
+		 * Whether to resolve metadata links to fetch additional token information (default: true).
+		 */
+		resolveMetadataLinks?: "true" | "false";
+		/**
+		 * Whether to include tokens marked as spam (default: false).
+		 */
+		includeSpam?: "true" | "false";
+		/**
+		 * Whether to include native tokens (e.g., ETH, MATIC) in the results (default: true).
+		 */
+		includeNative?: "true" | "false";
+		/**
+		 * Field to sort tokens by: 'balance' for token balance, 'token_address' for token address, 'token_price' for token price, 'usd_value' for USD value (default: usd_value).
+		 */
+		sortBy?: "balance" | "token_address" | "token_price" | "usd_value";
+		/**
+		 * Sort order: 'asc' for ascending, 'desc' for descending (default: desc).
+		 */
+		sortOrder?: "asc" | "desc";
+		/**
+		 * Whether to include tokens without price data (default: true).
+		 */
+		includeWithoutPrice?: "true" | "false";
 	};
 	url: "/v1/wallets/{address}/tokens";
 };
@@ -1881,7 +2376,7 @@ export type GetWalletTokensErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -1896,7 +2391,7 @@ export type GetWalletTokensErrors = {
 
 export type GetWalletTokensResponses = {
 	/**
-	 * Wallet tokens retrieved successfully. Returns token data with metadata including pagination information and chain details. Includes token balances, metadata, and price information when available.
+	 * Wallet tokens retrieved successfully. Returns token data with metadata including pagination information and chain details. Includes token balances, metadata, and price information when available. Results are sorted by the specified criteria (default: USD value descending) and filtered according to the provided parameters.
 	 */
 	200: {
 		result: {
@@ -1977,6 +2472,10 @@ export type GetWalletTokensResponses = {
 					 */
 					total_supply?: number;
 					/**
+					 * The value of the token balance in USD
+					 */
+					usd_value?: number;
+					/**
 					 * The volume of the token in USD
 					 */
 					volume_24h_usd?: number;
@@ -2032,7 +2531,7 @@ export type GetWalletNftsErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -2319,9 +2818,9 @@ export type SendTokensData = {
 	 */
 	body?: {
 		/**
-		 * The wallet address or ENS name that will send the tokens.
+		 * The wallet address or ENS name that will send the tokens. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 		/**
 		 * The blockchain network identifier where the transfer will be executed.
 		 */
@@ -2497,9 +2996,9 @@ export type DeployContractData = {
 		 */
 		chainId: number;
 		/**
-		 * The wallet address or ENS name that will deploy the contract.
+		 * The wallet address or ENS name that will deploy the contract. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 		/**
 		 * The contract bytecode as a hex string.
 		 */
@@ -2607,7 +3106,7 @@ export type ReadContractErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -2672,9 +3171,9 @@ export type WriteContractData = {
 		 */
 		chainId: number;
 		/**
-		 * The wallet address or ENS name that will send the transaction.
+		 * The wallet address or ENS name that will send the transaction. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 	};
 	path?: never;
 	query?: never;
@@ -2691,6 +3190,178 @@ export type WriteContractErrors = {
 	 */
 	401: unknown;
 	/**
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
+	 */
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
+	/**
 	 * Contract not found. The specified contract address does not exist on the given blockchain network or is not accessible.
 	 */
 	404: unknown;
@@ -2699,6 +3370,8 @@ export type WriteContractErrors = {
 	 */
 	500: unknown;
 };
+
+export type WriteContractError = WriteContractErrors[keyof WriteContractErrors];
 
 export type WriteContractResponses = {
 	/**
@@ -2784,7 +3457,7 @@ export type GetContractTransactionsErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -3011,7 +3684,7 @@ export type GetContractEventsErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -3328,7 +4001,7 @@ export type GetTransactionByIdErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -3444,7 +4117,7 @@ export type ListTransactionsErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -3561,9 +4234,9 @@ export type SendTransactionsData = {
 		 */
 		chainId: number;
 		/**
-		 * The wallet address or ENS name that will send the transaction.
+		 * The wallet address or ENS name that will send the transaction. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 		/**
 		 * Array of encoded blockchain transactions to execute. All transactions will use the same from address and chainId.
 		 */
@@ -3597,10 +4270,185 @@ export type SendTransactionsErrors = {
 	 */
 	401: unknown;
 	/**
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
+	 */
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
+	/**
 	 * Internal server error. This may occur due to blockchain connectivity issues, gas estimation failures, or unexpected server errors.
 	 */
 	500: unknown;
 };
+
+export type SendTransactionsError =
+	SendTransactionsErrors[keyof SendTransactionsErrors];
 
 export type SendTransactionsResponses = {
 	/**
@@ -3677,10 +4525,6 @@ export type CreatePaymentErrors = {
 	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` + `Authorization: Bearer <jwt>` headers.
 	 */
 	401: unknown;
-	/**
-	 * Payment required. Insufficient wallet balance to complete the purchase.
-	 */
-	402: unknown;
 	/**
 	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
 	 */
@@ -3816,9 +4660,9 @@ export type PaymentsPurchaseData = {
 	 */
 	body?: {
 		/**
-		 * The wallet address or ENS name that will purchase the product.
+		 * The wallet address or ENS name that will purchase the product. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 	};
 	path: {
 		id: string;
@@ -3837,14 +4681,185 @@ export type PaymentsPurchaseErrors = {
 	 */
 	401: unknown;
 	/**
-	 * Payment required. Insufficient wallet balance to complete the purchase.
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
 	 */
-	402: unknown;
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
 	/**
 	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
 	 */
 	500: unknown;
 };
+
+export type PaymentsPurchaseError =
+	PaymentsPurchaseErrors[keyof PaymentsPurchaseErrors];
 
 export type PaymentsPurchaseResponses = {
 	/**
@@ -3862,6 +4877,693 @@ export type PaymentsPurchaseResponses = {
 
 export type PaymentsPurchaseResponse =
 	PaymentsPurchaseResponses[keyof PaymentsPurchaseResponses];
+
+export type VerifyX402PaymentData = {
+	/**
+	 * Request body for x402 facilitator 'verify'
+	 */
+	body?: {
+		paymentPayload: {
+			x402Version: number;
+			scheme: "exact";
+			network:
+				| "base-sepolia"
+				| "base"
+				| "avalanche-fuji"
+				| "avalanche"
+				| "iotex"
+				| "solana-devnet"
+				| "solana"
+				| "sei"
+				| "sei-testnet"
+				| string;
+			payload:
+				| {
+						signature: string;
+						authorization: {
+							from: string;
+							to: string;
+							value: string;
+							validAfter: string;
+							validBefore: string;
+							nonce: string;
+						};
+				  }
+				| {
+						transaction: string;
+				  };
+		};
+		paymentRequirements: {
+			scheme: "exact";
+			network:
+				| "base-sepolia"
+				| "base"
+				| "avalanche-fuji"
+				| "avalanche"
+				| "iotex"
+				| "solana-devnet"
+				| "solana"
+				| "sei"
+				| "sei-testnet"
+				| string;
+			maxAmountRequired: string;
+			resource: string;
+			description: string;
+			mimeType: string;
+			outputSchema?: {
+				[key: string]: unknown;
+			};
+			payTo: string;
+			maxTimeoutSeconds: number;
+			asset: string;
+			extra?: {
+				[key: string]: unknown;
+			};
+		};
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/payments/x402/verify";
+};
+
+export type VerifyX402PaymentErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type VerifyX402PaymentResponses = {
+	/**
+	 * Response returned by x402 facilitator 'verify'
+	 */
+	200: {
+		isValid: boolean;
+		invalidReason?:
+			| "insufficient_funds"
+			| "invalid_exact_evm_payload_authorization_valid_after"
+			| "invalid_exact_evm_payload_authorization_valid_before"
+			| "invalid_exact_evm_payload_authorization_value"
+			| "invalid_exact_evm_payload_signature"
+			| "invalid_exact_evm_payload_recipient_mismatch"
+			| "invalid_exact_svm_payload_transaction"
+			| "invalid_exact_svm_payload_transaction_amount_mismatch"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction_incorrect_payee"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction_incorrect_asset"
+			| "invalid_exact_svm_payload_transaction_instructions"
+			| "invalid_exact_svm_payload_transaction_instructions_length"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_limit_instruction"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_price_instruction"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_price_instruction_too_high"
+			| "invalid_exact_svm_payload_transaction_instruction_not_spl_token_transfer_checked"
+			| "invalid_exact_svm_payload_transaction_instruction_not_token_2022_transfer_checked"
+			| "invalid_exact_svm_payload_transaction_not_a_transfer_instruction"
+			| "invalid_exact_svm_payload_transaction_cannot_derive_receiver_ata"
+			| "invalid_exact_svm_payload_transaction_receiver_ata_not_found"
+			| "invalid_exact_svm_payload_transaction_sender_ata_not_found"
+			| "invalid_exact_svm_payload_transaction_simulation_failed"
+			| "invalid_exact_svm_payload_transaction_transfer_to_incorrect_ata"
+			| "invalid_network"
+			| "invalid_payload"
+			| "invalid_payment_requirements"
+			| "invalid_scheme"
+			| "invalid_payment"
+			| "payment_expired"
+			| "unsupported_scheme"
+			| "invalid_x402_version"
+			| "invalid_transaction_state"
+			| "settle_exact_svm_block_height_exceeded"
+			| "settle_exact_svm_transaction_confirmation_timed_out"
+			| "unexpected_settle_error"
+			| "unexpected_verify_error";
+		payer?: string;
+		errorMessage?: string;
+	};
+};
+
+export type VerifyX402PaymentResponse =
+	VerifyX402PaymentResponses[keyof VerifyX402PaymentResponses];
+
+export type SettleX402PaymentData = {
+	/**
+	 * Request body for x402 facilitator 'settle'
+	 */
+	body?: {
+		paymentPayload: {
+			x402Version: number;
+			scheme: "exact";
+			network:
+				| "base-sepolia"
+				| "base"
+				| "avalanche-fuji"
+				| "avalanche"
+				| "iotex"
+				| "solana-devnet"
+				| "solana"
+				| "sei"
+				| "sei-testnet"
+				| string;
+			payload:
+				| {
+						signature: string;
+						authorization: {
+							from: string;
+							to: string;
+							value: string;
+							validAfter: string;
+							validBefore: string;
+							nonce: string;
+						};
+				  }
+				| {
+						transaction: string;
+				  };
+		};
+		paymentRequirements: {
+			scheme: "exact";
+			network:
+				| "base-sepolia"
+				| "base"
+				| "avalanche-fuji"
+				| "avalanche"
+				| "iotex"
+				| "solana-devnet"
+				| "solana"
+				| "sei"
+				| "sei-testnet"
+				| string;
+			maxAmountRequired: string;
+			resource: string;
+			description: string;
+			mimeType: string;
+			outputSchema?: {
+				[key: string]: unknown;
+			};
+			payTo: string;
+			maxTimeoutSeconds: number;
+			asset: string;
+			extra?: {
+				[key: string]: unknown;
+			};
+		};
+		/**
+		 * The event to wait for to determina a transaction confirmation. 'simulated' will only simulate the transaction (fastest), 'submitted' will wait till the transaction is submitted, and 'confirmed' will wait for the transaction to be fully confirmed on chain (slowest). Defaults to 'confirmed'.
+		 */
+		waitUntil?: "simulated" | "submitted" | "confirmed";
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/payments/x402/settle";
+};
+
+export type SettleX402PaymentErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type SettleX402PaymentResponses = {
+	/**
+	 * Response returned by x402 facilitator 'settle'
+	 */
+	200: {
+		success: boolean;
+		errorReason?:
+			| "insufficient_funds"
+			| "invalid_exact_evm_payload_authorization_valid_after"
+			| "invalid_exact_evm_payload_authorization_valid_before"
+			| "invalid_exact_evm_payload_authorization_value"
+			| "invalid_exact_evm_payload_signature"
+			| "invalid_exact_evm_payload_recipient_mismatch"
+			| "invalid_exact_svm_payload_transaction"
+			| "invalid_exact_svm_payload_transaction_amount_mismatch"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction_incorrect_payee"
+			| "invalid_exact_svm_payload_transaction_create_ata_instruction_incorrect_asset"
+			| "invalid_exact_svm_payload_transaction_instructions"
+			| "invalid_exact_svm_payload_transaction_instructions_length"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_limit_instruction"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_price_instruction"
+			| "invalid_exact_svm_payload_transaction_instructions_compute_price_instruction_too_high"
+			| "invalid_exact_svm_payload_transaction_instruction_not_spl_token_transfer_checked"
+			| "invalid_exact_svm_payload_transaction_instruction_not_token_2022_transfer_checked"
+			| "invalid_exact_svm_payload_transaction_not_a_transfer_instruction"
+			| "invalid_exact_svm_payload_transaction_cannot_derive_receiver_ata"
+			| "invalid_exact_svm_payload_transaction_receiver_ata_not_found"
+			| "invalid_exact_svm_payload_transaction_sender_ata_not_found"
+			| "invalid_exact_svm_payload_transaction_simulation_failed"
+			| "invalid_exact_svm_payload_transaction_transfer_to_incorrect_ata"
+			| "invalid_network"
+			| "invalid_payload"
+			| "invalid_payment_requirements"
+			| "invalid_scheme"
+			| "invalid_payment"
+			| "payment_expired"
+			| "unsupported_scheme"
+			| "invalid_x402_version"
+			| "invalid_transaction_state"
+			| "settle_exact_svm_block_height_exceeded"
+			| "settle_exact_svm_transaction_confirmation_timed_out"
+			| "unexpected_settle_error"
+			| "unexpected_verify_error";
+		payer?: string;
+		transaction: string;
+		network:
+			| "base-sepolia"
+			| "base"
+			| "avalanche-fuji"
+			| "avalanche"
+			| "iotex"
+			| "solana-devnet"
+			| "solana"
+			| "sei"
+			| "sei-testnet";
+		errorMessage?: string;
+	};
+};
+
+export type SettleX402PaymentResponse =
+	SettleX402PaymentResponses[keyof SettleX402PaymentResponses];
+
+export type SupportedX402PaymentsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+		 */
+		tokenAddress?: string;
+		/**
+		 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+		 */
+		chainId?: number;
+	};
+	url: "/v1/payments/x402/supported";
+};
+
+export type SupportedX402PaymentsErrors = {
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type SupportedX402PaymentsResponses = {
+	/**
+	 * Supported payment kinds for this facilitator
+	 */
+	200: {
+		kinds: Array<{
+			x402Version: 1;
+			scheme: "exact";
+			network:
+				| "base-sepolia"
+				| "base"
+				| "avalanche-fuji"
+				| "avalanche"
+				| "iotex"
+				| "solana-devnet"
+				| "solana"
+				| "sei"
+				| "sei-testnet"
+				| string;
+			extra?: {
+				defaultAsset?: {
+					/**
+					 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+					 */
+					address: string;
+					decimals: number;
+					eip712: {
+						name: string;
+						version: string;
+						primaryType: "TransferWithAuthorization" | "Permit";
+					};
+				};
+				supportedAssets?: Array<{
+					/**
+					 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+					 */
+					address: string;
+					decimals: number;
+					eip712: {
+						name: string;
+						version: string;
+						primaryType: "TransferWithAuthorization" | "Permit";
+					};
+				}>;
+			};
+		}>;
+	};
+};
+
+export type SupportedX402PaymentsResponse =
+	SupportedX402PaymentsResponses[keyof SupportedX402PaymentsResponses];
+
+export type FetchWithPaymentData = {
+	/**
+	 * Body
+	 * Optional body to send to the target url if method is POST, PUT, PATCH, or DELETE. Should be a valid javascript object.
+	 */
+	body?: {
+		[key: string]: unknown;
+	};
+	path?: never;
+	query: {
+		/**
+		 * From
+		 * The authenticated wallet address (server or user wallet)
+		 */
+		from?: string;
+		/**
+		 * URL
+		 * The url to fetch
+		 */
+		url: string;
+		/**
+		 * Method
+		 * The method to use, defaults to GET
+		 */
+		method?: "POST" | "PUT" | "DELETE" | "PATCH" | "GET";
+		/**
+		 * Max Value
+		 * The maximum value to fetch in base units of the asset (e.g. 1000000 for 1 USDC)
+		 */
+		maxValue?: string;
+		/**
+		 * Asset
+		 * The asset (token address) to use for the payment. If not provided, the asset from the url's payment requirements will be used.
+		 */
+		asset?: string;
+		/**
+		 * Chain ID
+		 * The chain ID to use for the payment. If not provided, the chain ID from the url's payment requirements will be used.
+		 */
+		chainId?: number;
+	};
+	url: "/v1/payments/x402/fetch";
+};
+
+export type FetchWithPaymentErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For frontend usage, include `x-client-id` and `Authorization: Bearer <jwt>` headers. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
+	 */
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type FetchWithPaymentError =
+	FetchWithPaymentErrors[keyof FetchWithPaymentErrors];
+
+export type FetchWithPaymentResponses = {
+	/**
+	 * Returns the final result from the API call
+	 */
+	200: unknown;
+};
+
+export type ListPayableServicesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		limit?: number;
+		offset?: number;
+		query?: string;
+		sortBy?:
+			| "createdAt"
+			| "totalRequests"
+			| "totalVolume"
+			| "price"
+			| "uniqueBuyers";
+		sortOrder?: "asc" | "desc";
+	};
+	url: "/v1/payments/x402/discovery/resources";
+};
+
+export type ListPayableServicesErrors = {
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type ListPayableServicesResponses = {
+	/**
+	 * List of discovered x402 resources
+	 */
+	200: {
+		x402Version: number;
+		items: Array<{
+			resource: string;
+			type: "http";
+			x402Version: number;
+			accepts: Array<{
+				scheme: "exact";
+				network:
+					| "base-sepolia"
+					| "base"
+					| "avalanche-fuji"
+					| "avalanche"
+					| "iotex"
+					| "solana-devnet"
+					| "solana"
+					| "sei"
+					| "sei-testnet"
+					| string;
+				maxAmountRequired: string;
+				resource: string;
+				description: string;
+				mimeType: string;
+				outputSchema?: {
+					[key: string]: unknown;
+				};
+				payTo: string;
+				maxTimeoutSeconds: number;
+				asset: string;
+				extra?: {
+					[key: string]: unknown;
+				};
+			}>;
+			lastUpdated: string;
+			metadata?: {
+				[key: string]: unknown;
+			};
+		}>;
+		pagination: {
+			limit: number;
+			offset: number;
+			total: number;
+		};
+	};
+};
+
+export type ListPayableServicesResponse =
+	ListPayableServicesResponses[keyof ListPayableServicesResponses];
 
 export type ListTokensData = {
 	body?: never;
@@ -3983,9 +5685,9 @@ export type CreateTokenData = {
 		 */
 		imageUrl: string;
 		/**
-		 * Wallet address or ENS that will deploy the token.
+		 * Wallet address or ENS that will deploy the token. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
 		/**
 		 * The token owner address, if different from `from`.
 		 */
@@ -4082,6 +5784,10 @@ export type GetTokenOwnersData = {
 	};
 	query?: {
 		/**
+		 * Optional token ID for NFT owners. If provided, returns owners of the specific NFT token.
+		 */
+		tokenId?: string;
+		/**
 		 * Number of owners to return per page (1-100).
 		 */
 		limit?: number;
@@ -4099,7 +5805,7 @@ export type GetTokenOwnersErrors = {
 	 */
 	400: unknown;
 	/**
-	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or x-secret-key for backend usage.
+	 * Authentication required. The request must include a valid `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
 	 */
 	401: unknown;
 	/**
@@ -4114,7 +5820,7 @@ export type GetTokenOwnersErrors = {
 
 export type GetTokenOwnersResponses = {
 	/**
-	 * Token owners retrieved successfully. Returns owners with pagination information.
+	 * Token owners retrieved successfully. Returns owners with pagination information. For ERC-20 tokens, `amount` represents token balance. For NFTs, `amount` represents quantity owned (usually '1' for ERC-721, can be >1 for ERC-1155).
 	 */
 	200: {
 		result: {
@@ -4130,6 +5836,10 @@ export type GetTokenOwnersResponses = {
 				 * Token amount owned as a string
 				 */
 				amount: string;
+				/**
+				 * Token ID for NFTs
+				 */
+				tokenId?: string;
 			}>;
 			pagination: {
 				/**
@@ -4155,6 +5865,324 @@ export type GetTokenOwnersResponses = {
 
 export type GetTokenOwnersResponse =
 	GetTokenOwnersResponses[keyof GetTokenOwnersResponses];
+
+export type GetBridgeChainsData = {
+	body?: never;
+	path?: never;
+	query?: never;
+	url: "/v1/bridge/chains";
+};
+
+export type GetBridgeChainsErrors = {
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while fetching bridge chains.
+	 */
+	500: unknown;
+};
+
+export type GetBridgeChainsResponses = {
+	/**
+	 * Successfully retrieved supported bridge chains.
+	 */
+	200: {
+		/**
+		 * Blockchain networks that support cross-chain bridging
+		 */
+		result: Array<{
+			/**
+			 * The chain ID of the chain
+			 */
+			chainId: number;
+			/**
+			 * The name of the chain
+			 */
+			name: string;
+			/**
+			 * The URL of the chain's icon
+			 */
+			icon: string;
+			/**
+			 * Information about the native currency of the chain
+			 */
+			nativeCurrency: {
+				/**
+				 * The name of the native currency
+				 */
+				name: string;
+				/**
+				 * The symbol of the native currency
+				 */
+				symbol: string;
+				/**
+				 * The number of decimals used by the native currency
+				 */
+				decimals: number;
+			};
+		}>;
+	};
+};
+
+export type GetBridgeChainsResponse =
+	GetBridgeChainsResponses[keyof GetBridgeChainsResponses];
+
+export type GetBridgeSupportedRoutesData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Maximum number of routes to return (1-100).
+		 */
+		limit?: number;
+		/**
+		 * Page number for pagination, starting at 1.
+		 */
+		page?: number;
+		/**
+		 * Filter routes by the origin chain ID.
+		 */
+		originChainId?: number;
+		/**
+		 * Filter routes by the destination chain ID.
+		 */
+		destinationChainId?: number;
+		/**
+		 * Filter routes by origin token address.
+		 */
+		originTokenAddress?: string;
+		/**
+		 * Filter routes by destination token address.
+		 */
+		destinationTokenAddress?: string;
+		/**
+		 * Maximum number of bridge steps allowed in the route.
+		 */
+		maxSteps?: number;
+	};
+	url: "/v1/bridge/routes";
+};
+
+export type GetBridgeSupportedRoutesErrors = {
+	/**
+	 * Invalid request parameters.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` header.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while fetching bridge routes.
+	 */
+	500: unknown;
+};
+
+export type GetBridgeSupportedRoutesResponses = {
+	/**
+	 * Successfully retrieved supported bridge routes.
+	 */
+	200: {
+		result: {
+			/**
+			 * Supported bridge routes that match the provided filters.
+			 */
+			routes: Array<{
+				originToken: {
+					/**
+					 * Chain identifier for the token
+					 */
+					chainId: number;
+					/**
+					 * Token contract address
+					 */
+					address: string;
+					/**
+					 * Token symbol
+					 */
+					symbol: string;
+					/**
+					 * Token name
+					 */
+					name: string;
+					/**
+					 * Number of decimals the token uses
+					 */
+					decimals: number;
+					/**
+					 * Optional icon URL for the token
+					 */
+					iconUri?: string;
+					/**
+					 * 24h market capitalization in USD when available
+					 */
+					marketCapUsd?: number;
+					/**
+					 * 24h trading volume in USD when available
+					 */
+					volume24hUsd?: number;
+					/**
+					 * Token price quotes keyed by fiat currency code
+					 */
+					prices?: {
+						[key: string]: number;
+					};
+				};
+				destinationToken: {
+					/**
+					 * Chain identifier for the token
+					 */
+					chainId: number;
+					/**
+					 * Token contract address
+					 */
+					address: string;
+					/**
+					 * Token symbol
+					 */
+					symbol: string;
+					/**
+					 * Token name
+					 */
+					name: string;
+					/**
+					 * Number of decimals the token uses
+					 */
+					decimals: number;
+					/**
+					 * Optional icon URL for the token
+					 */
+					iconUri?: string;
+					/**
+					 * 24h market capitalization in USD when available
+					 */
+					marketCapUsd?: number;
+					/**
+					 * 24h trading volume in USD when available
+					 */
+					volume24hUsd?: number;
+					/**
+					 * Token price quotes keyed by fiat currency code
+					 */
+					prices?: {
+						[key: string]: number;
+					};
+				};
+			}>;
+			/**
+			 * Pagination details for the returned routes.
+			 */
+			pagination: {
+				/**
+				 * Whether there are more items available
+				 */
+				hasMore?: boolean;
+				/**
+				 * Number of items per page
+				 */
+				limit?: number;
+				/**
+				 * Current page number
+				 */
+				page?: number;
+				/**
+				 * Total number of items available
+				 */
+				totalCount?: number;
+			};
+		};
+	};
+};
+
+export type GetBridgeSupportedRoutesResponse =
+	GetBridgeSupportedRoutesResponses[keyof GetBridgeSupportedRoutesResponses];
+
+export type ConvertFiatToCryptoData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * The fiat currency symbol
+		 */
+		from:
+			| "USD"
+			| "EUR"
+			| "GBP"
+			| "JPY"
+			| "KRW"
+			| "CNY"
+			| "INR"
+			| "NOK"
+			| "SEK"
+			| "CHF"
+			| "AUD"
+			| "CAD"
+			| "NZD"
+			| "MXN"
+			| "BRL"
+			| "CLP"
+			| "CZK"
+			| "DKK"
+			| "HKD"
+			| "HUF"
+			| "IDR"
+			| "ILS"
+			| "ISK";
+		/**
+		 * The amount of fiat currency to convert
+		 */
+		fromAmount: string;
+		/**
+		 * The blockchain network identifier
+		 */
+		chainId: number;
+		/**
+		 * The token address on the specified chain to convert to
+		 */
+		to: string;
+	};
+	url: "/v1/bridge/convert";
+};
+
+export type ConvertFiatToCryptoErrors = {
+	/**
+	 * Bad request. Invalid parameters such as invalid amounts, malformed token address, or invalid currency code.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include `x-client-id` header for frontend usage or `x-secret-key` for backend usage.
+	 */
+	401: unknown;
+	/**
+	 * Token not found, price data unavailable for the specified token on the given chain, or price data not available for the requested currency.
+	 */
+	404: unknown;
+	/**
+	 * Too many requests. Rate limit exceeded.
+	 */
+	429: unknown;
+	/**
+	 * Internal server error. This may occur due to network connectivity issues or external service failures.
+	 */
+	500: unknown;
+};
+
+export type ConvertFiatToCryptoResponses = {
+	/**
+	 * Conversion completed successfully. Returns the amount of crypto tokens equivalent to the specified fiat amount.
+	 */
+	200: {
+		/**
+		 * The conversion result - amount of crypto tokens for the fiat amount
+		 */
+		result: number;
+	};
+};
+
+export type ConvertFiatToCryptoResponse =
+	ConvertFiatToCryptoResponses[keyof ConvertFiatToCryptoResponses];
 
 export type BridgeSwapData = {
 	/**
@@ -4203,9 +6231,13 @@ export type BridgeSwapData = {
 			minAmount?: string;
 		};
 		/**
-		 * The wallet address or ENS name that will execute the swap.
+		 * The wallet address or ENS name that will execute the swap. If omitted, the project wallet will be used if available.
 		 */
-		from: string;
+		from?: string;
+		/**
+		 * The slippage tolerance in basis points. Will be automatically calculated by default.
+		 */
+		slippageToleranceBps?: number;
 	};
 	path?: never;
 	query?: never;
@@ -4222,14 +6254,184 @@ export type BridgeSwapErrors = {
 	 */
 	401: unknown;
 	/**
-	 * Payment required. Insufficient wallet balance to complete the purchase.
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
 	 */
-	402: unknown;
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
 	/**
 	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
 	 */
 	500: unknown;
 };
+
+export type BridgeSwapError = BridgeSwapErrors[keyof BridgeSwapErrors];
 
 export type BridgeSwapResponses = {
 	/**
@@ -4247,6 +6449,478 @@ export type BridgeSwapResponses = {
 };
 
 export type BridgeSwapResponse = BridgeSwapResponses[keyof BridgeSwapResponses];
+
+export type ListSolanaWalletsData = {
+	body?: never;
+	path?: never;
+	query?: {
+		/**
+		 * Page number for paginated results. Starts at 1.
+		 */
+		page?: number;
+		/**
+		 * Maximum number of wallets to return per page.
+		 */
+		limit?: number;
+	};
+	url: "/v1/solana/wallets";
+};
+
+export type ListSolanaWalletsErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while listing wallets.
+	 */
+	500: unknown;
+};
+
+export type ListSolanaWalletsResponses = {
+	/**
+	 * Successfully retrieved Solana wallets with pagination metadata.
+	 */
+	200: {
+		result: {
+			/**
+			 * Array of Solana wallets created for your project.
+			 */
+			wallets: Array<{
+				/**
+				 * Base58 encoded Solana address.
+				 */
+				address: string;
+				/**
+				 * Optional label associated with the wallet.
+				 */
+				label?: string;
+				/**
+				 * ISO 8601 timestamp indicating when the wallet was created.
+				 */
+				createdAt: string;
+				/**
+				 * ISO 8601 timestamp indicating when the wallet was last updated.
+				 */
+				updatedAt: string;
+			}>;
+			/**
+			 * Pagination details for the wallet list.
+			 */
+			pagination: {
+				/**
+				 * Total number of wallets available.
+				 */
+				totalCount: number;
+				/**
+				 * Current page number.
+				 */
+				page: number;
+				/**
+				 * Number of wallets returned per page.
+				 */
+				limit: number;
+			};
+		};
+	};
+};
+
+export type ListSolanaWalletsResponse =
+	ListSolanaWalletsResponses[keyof ListSolanaWalletsResponses];
+
+export type CreateSolanaWalletData = {
+	/**
+	 * Request payload for creating or fetching a Solana wallet by label.
+	 */
+	body?: {
+		/**
+		 * Unique label to identify the wallet. Used for retrieval and management.
+		 */
+		label: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/wallets";
+};
+
+export type CreateSolanaWalletErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while creating wallet.
+	 */
+	500: unknown;
+};
+
+export type CreateSolanaWalletResponses = {
+	/**
+	 * Solana wallet retrieved for the provided label.
+	 */
+	200: {
+		/**
+		 * Details for a Solana wallet in your project.
+		 */
+		result: {
+			/**
+			 * Base58 encoded Solana address.
+			 */
+			address: string;
+			/**
+			 * Optional label associated with the wallet.
+			 */
+			label?: string;
+			/**
+			 * ISO 8601 timestamp indicating when the wallet was created.
+			 */
+			createdAt: string;
+			/**
+			 * ISO 8601 timestamp indicating when the wallet was last updated.
+			 */
+			updatedAt: string;
+		};
+	};
+	/**
+	 * Solana wallet created for the provided label.
+	 */
+	201: {
+		/**
+		 * Details for a Solana wallet in your project.
+		 */
+		result: {
+			/**
+			 * Base58 encoded Solana address.
+			 */
+			address: string;
+			/**
+			 * Optional label associated with the wallet.
+			 */
+			label?: string;
+			/**
+			 * ISO 8601 timestamp indicating when the wallet was created.
+			 */
+			createdAt: string;
+			/**
+			 * ISO 8601 timestamp indicating when the wallet was last updated.
+			 */
+			updatedAt: string;
+		};
+	};
+};
+
+export type CreateSolanaWalletResponse =
+	CreateSolanaWalletResponses[keyof CreateSolanaWalletResponses];
+
+export type SignSolanaMessageData = {
+	/**
+	 * Request payload for signing an arbitrary Solana message.
+	 */
+	body?: {
+		/**
+		 * The Solana wallet address used for signing.
+		 */
+		from: string;
+		/**
+		 * Message to sign. Can be plain text or hexadecimal format (starting with 0x). The format is automatically detected.
+		 */
+		message: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/sign-message";
+};
+
+export type SignSolanaMessageErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while signing the message.
+	 */
+	500: unknown;
+};
+
+export type SignSolanaMessageResponses = {
+	/**
+	 * Message signed successfully. Returns the base58 signature.
+	 */
+	200: {
+		result: {
+			/**
+			 * Base58 encoded signature returned from the signer.
+			 */
+			signature: string;
+		};
+	};
+};
+
+export type SignSolanaMessageResponse =
+	SignSolanaMessageResponses[keyof SignSolanaMessageResponses];
+
+export type SendSolanaTokensData = {
+	/**
+	 * Request payload for transferring SOL or SPL tokens on Solana.
+	 */
+	body?: {
+		/**
+		 * Solana wallet address that will sign and submit the transfer.
+		 */
+		from: string;
+		/**
+		 * Destination Solana address.
+		 */
+		to: string;
+		/**
+		 * Amount to transfer expressed in base units (lamports for SOL or token decimals).
+		 */
+		amount: string;
+		/**
+		 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+		 */
+		chainId: "solana:mainnet" | "solana:devnet";
+		/**
+		 * Optional SPL token mint address. When omitted a native SOL transfer is performed.
+		 */
+		tokenAddress?: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/send";
+};
+
+export type SendSolanaTokensErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while processing the transfer.
+	 */
+	500: unknown;
+};
+
+export type SendSolanaTokensResponses = {
+	/**
+	 * Transfer queued successfully. Returns the transaction identifier for status polling.
+	 */
+	200: {
+		result: {
+			/**
+			 * Idempotency key assigned to the queued transaction.
+			 */
+			transactionId: string;
+		};
+	};
+	/**
+	 * Transfer accepted for asynchronous processing. Returns the transaction identifier for status polling.
+	 */
+	202: {
+		result: {
+			/**
+			 * Idempotency key assigned to the queued transaction.
+			 */
+			transactionId: string;
+		};
+	};
+};
+
+export type SendSolanaTokensResponse =
+	SendSolanaTokensResponses[keyof SendSolanaTokensResponses];
+
+export type SendSolanaTransactionData = {
+	/**
+	 * Submit a Solana transaction made up of one or more instructions.
+	 */
+	body?: {
+		/**
+		 * Solana wallet address that will sign and submit the transaction.
+		 */
+		from: string;
+		/**
+		 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+		 */
+		chainId: "solana:mainnet" | "solana:devnet";
+		/**
+		 * Set of instructions executed sequentially in a single transaction.
+		 */
+		transactions: Array<{
+			/**
+			 * Program address to invoke for this instruction.
+			 */
+			programId: string;
+			/**
+			 * Ordered list of accounts consumed by the instruction.
+			 */
+			accounts: Array<{
+				/**
+				 * Public key for the account.
+				 */
+				address: string;
+				/**
+				 * Whether this account must sign the transaction.
+				 */
+				isSigner: boolean;
+				/**
+				 * Whether this account can be modified by the instruction.
+				 */
+				isWritable: boolean;
+			}>;
+			/**
+			 * Instruction data encoded using the provided encoding.
+			 */
+			data: string;
+			/**
+			 * Encoding used for the instruction data payload.
+			 */
+			encoding?: "hex" | "base64";
+		}>;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/transactions";
+};
+
+export type SendSolanaTransactionErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while processing the transaction.
+	 */
+	500: unknown;
+};
+
+export type SendSolanaTransactionResponses = {
+	/**
+	 * Transaction queued successfully. Returns the transaction identifier for status polling.
+	 */
+	200: {
+		result: {
+			/**
+			 * Idempotency key assigned to the queued transaction.
+			 */
+			transactionId: string;
+		};
+	};
+	/**
+	 * Transaction accepted for asynchronous processing. Returns the transaction identifier for status polling.
+	 */
+	202: {
+		result: {
+			/**
+			 * Idempotency key assigned to the queued transaction.
+			 */
+			transactionId: string;
+		};
+	};
+};
+
+export type SendSolanaTransactionResponse =
+	SendSolanaTransactionResponses[keyof SendSolanaTransactionResponses];
+
+export type GetSolanaTransactionData = {
+	body?: never;
+	path: {
+		/**
+		 * Identifier returned when the transaction was queued.
+		 */
+		transactionId: string;
+	};
+	query?: never;
+	url: "/v1/solana/transactions/:transactionId";
+};
+
+export type GetSolanaTransactionErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Transaction not found. The identifier may be invalid or expired.
+	 */
+	404: unknown;
+	/**
+	 * Internal server error occurred while fetching transaction status.
+	 */
+	500: unknown;
+};
+
+export type GetSolanaTransactionResponses = {
+	/**
+	 * Transaction status retrieved successfully.
+	 */
+	200: {
+		/**
+		 * Transaction metadata and status information.
+		 */
+		result: {
+			/**
+			 * Unique identifier for the transaction.
+			 */
+			id: string;
+			/**
+			 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+			 */
+			chainId: "solana:mainnet" | "solana:devnet";
+			/**
+			 * Signer address used on submission.
+			 */
+			from: string;
+			/**
+			 * Signature recorded on-chain once available.
+			 */
+			signature?: string;
+			/**
+			 * Current status of the transaction in the processing pipeline.
+			 */
+			status?: "QUEUED" | "SUBMITTED" | "CONFIRMED" | "FAILED";
+			/**
+			 * Timestamp when the transaction reached the reported status.
+			 */
+			confirmedAt?: string;
+			/**
+			 * Slot where the transaction was confirmed, if available.
+			 */
+			confirmedAtSlot?: string;
+			/**
+			 * Unix timestamp of the processed block.
+			 */
+			blockTime?: number;
+			/**
+			 * ISO 8601 timestamp when the transaction was queued.
+			 */
+			createdAt: string;
+			/**
+			 * Error message if the transaction failed.
+			 */
+			errorMessage?: string;
+			/**
+			 * Resolved execution parameters used for the transaction.
+			 */
+			executionParams?: unknown;
+			/**
+			 * Raw execution result payload, if present.
+			 */
+			executionResult?: unknown;
+			/**
+			 * Original instruction payload submitted.
+			 */
+			transactionParams?: unknown;
+			/**
+			 * Project client identifier.
+			 */
+			clientId: string;
+			enrichedData?: unknown;
+			cancelledAt?: string;
+		};
+	};
+};
+
+export type GetSolanaTransactionResponse =
+	GetSolanaTransactionResponses[keyof GetSolanaTransactionResponses];
 
 export type ChatData = {
 	/**
@@ -4395,7 +7069,12 @@ export type ChatResponse = ChatResponses[keyof ChatResponses];
 export type McpServerData = {
 	body?: unknown;
 	path?: never;
-	query?: never;
+	query?: {
+		/**
+		 * Comma-separated list of tools to request. Maps to the operationId of the OpenAPI endpoint. Example: ?tools=getWalletBalance,fetchWithPayment. If not provided, all tools will be returned.
+		 */
+		tools?: string;
+	};
 	url: "/mcp";
 };
 
