@@ -1,5 +1,13 @@
 # wagmi-inapp
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies [[`5ff6063`](https://github.com/thirdweb-dev/js/commit/5ff6063961c5b58e6a49cae77c803155072f30fc), [`72fbb15`](https://github.com/thirdweb-dev/js/commit/72fbb1550f957c93cfde4e63d7bb6458fb192c47)]:
+  - thirdweb@5.109.1
+  - @thirdweb-dev/wagmi-adapter@0.2.167
+
 ## 0.0.11
 
 ### Patch Changes
