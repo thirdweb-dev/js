@@ -11,6 +11,7 @@ module.exports = [
   "/account-abstraction",
   "/payments",
   "/payments/x402",
+  "/nexus",
   "/auth",
   "/in-app-wallets",
   "/transactions",
