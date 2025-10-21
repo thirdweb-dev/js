@@ -17,11 +17,10 @@ import { CopyTextButton } from "../ui/CopyTextButton";
 const getAuthIdentifier = (user: WalletUser) => {
   const mainDetail = user.linkedAccounts[0]?.details;
   return (
+    mainDetail?.id ??
     mainDetail?.email ??
     mainDetail?.phone ??
-    mainDetail?.address ??
-    mainDetail?.id ??
-    user.id
+    mainDetail?.address
   );
 };
 
