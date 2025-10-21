@@ -244,6 +244,7 @@ export const initiateAuthentication = <ThrowOnError extends boolean = false>(
  * - `isNewUser` - Whether this is a new wallet creation
  * - `token` - JWT token for authenticated API requests
  * - `type` - The authentication method used
+ * - `userId` - Unique identifier for the authenticated user
  * - `walletAddress` - Your new or existing wallet address
  *
  * **Next step - Verify your token:**
@@ -442,6 +443,7 @@ export const socialAuthentication = <ThrowOnError extends boolean = false>(
  * Retrieve the authenticated user's wallet information including wallet addresses and linked authentication wallets. This endpoint provides comprehensive user data for the currently authenticated session.
  *
  * **Returns:**
+ * - userId - Unique identifier for this wallet in thirdweb auth
  * - Primary wallet address
  * - Smart wallet address (if available)
  * - Wallet creation timestamp

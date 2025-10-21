@@ -12,16 +12,23 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CopyTextButton } from "../ui/CopyTextButton";
 
-const getUserIdentifier = (user: WalletUser) => {
+const getAuthIdentifier = (user: WalletUser) => {
   const mainDetail = user.linkedAccounts[0]?.details;
   return (
+    mainDetail?.id ??
     mainDetail?.email ??
     mainDetail?.phone ??
-    mainDetail?.address ??
-    mainDetail?.id ??
-    user.id
+    mainDetail?.address
   );
+};
+
+const truncateIdentifier = (value: string) => {
+  if (value.length <= 18) {
+    return value;
+  }
+  return `${value.slice(0, 8)}...${value.slice(-4)}`;
 };
 
 export function SearchResults(props: {
@@ -51,6 +58,8 @@ export function SearchResults(props: {
         const mainDetail = user.linkedAccounts?.[0]?.details;
         const email = mainDetail?.email as string | undefined;
         const phone = mainDetail?.phone as string | undefined;
+        const authIdentifier = getAuthIdentifier(user);
+        const userIdentifier = user.id;
 
         // Get external wallet addresses from linkedAccounts where type is 'siwe'
         const externalWalletAccounts =
@@ -68,7 +77,34 @@ export function SearchResults(props: {
                   <p className="text-sm font-medium text-muted-foreground">
                     User Identifier
                   </p>
-                  <p className="text-sm">{getUserIdentifier(user)}</p>
+                  {userIdentifier ? (
+                    <CopyTextButton
+                      textToShow={truncateIdentifier(userIdentifier)}
+                      textToCopy={userIdentifier}
+                      tooltip="Copy User Identifier"
+                      copyIconPosition="left"
+                      variant="ghost"
+                    />
+                  ) : (
+                    <p className="text-sm">N/A</p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Auth Identifier
+                  </p>
+                  {authIdentifier ? (
+                    <CopyTextButton
+                      textToShow={truncateIdentifier(authIdentifier)}
+                      textToCopy={authIdentifier}
+                      tooltip="Copy Auth Identifier"
+                      copyIconPosition="left"
+                      variant="ghost"
+                    />
+                  ) : (
+                    <p className="text-sm">N/A</p>
+                  )}
                 </div>
 
                 {walletAddress && (

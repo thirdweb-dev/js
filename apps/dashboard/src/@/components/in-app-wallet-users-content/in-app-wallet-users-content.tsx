@@ -28,21 +28,41 @@ import { SearchResults } from "./SearchResults";
 import { searchUsers } from "./searchUsers";
 import type { SearchType } from "./types";
 
-const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
+const getAuthIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
   return (
+    mainDetail?.id ??
     mainDetail?.email ??
     mainDetail?.phone ??
-    mainDetail?.address ??
-    mainDetail?.id
+    mainDetail?.address
   );
 };
 
-const getExternalWallets = (accounts: WalletUser["linkedAccounts"]) => {
-  return accounts?.filter((account) => account.type === "siwe") || [];
+const getPrimaryEmail = (accounts: WalletUser["linkedAccounts"]) => {
+  const emailFromPrimary = accounts[0]?.details?.email;
+  if (emailFromPrimary) {
+    return emailFromPrimary;
+  }
+
+  const emailAccount = accounts.find((account) => {
+    return typeof account.details?.email === "string" && account.details.email;
+  });
+
+  if (emailAccount && typeof emailAccount.details.email === "string") {
+    return emailAccount.details.email;
+  }
+
+  return undefined;
 };
 
 const columnHelper = createColumnHelper<WalletUser>();
+
+const truncateIdentifier = (value: string) => {
+  if (value.length <= 18) {
+    return value;
+  }
+  return `${value.slice(0, 8)}...${value.slice(-4)}`;
+};
 
 export function InAppWalletUsersPageContent(
   props: {
@@ -56,9 +76,30 @@ export function InAppWalletUsersPageContent(
 ) {
   const columns = useMemo(() => {
     return [
+      columnHelper.accessor("id", {
+        cell: (cell) => {
+          const userId = cell.getValue();
+
+          if (!userId) {
+            return "N/A";
+          }
+
+          return (
+            <CopyTextButton
+              textToShow={truncateIdentifier(userId)}
+              textToCopy={userId}
+              tooltip="Copy User Identifier"
+              copyIconPosition="left"
+              variant="ghost"
+            />
+          );
+        },
+        header: "User Identifier",
+        id: "user_identifier",
+      }),
       columnHelper.accessor("linkedAccounts", {
         cell: (cell) => {
-          const identifier = getUserIdentifier(cell.getValue());
+          const identifier = getAuthIdentifier(cell.getValue());
 
           if (!identifier) {
             return "N/A";
@@ -66,21 +107,17 @@ export function InAppWalletUsersPageContent(
 
           return (
             <CopyTextButton
-              textToShow={
-                identifier.length > 30
-                  ? `${identifier.slice(0, 30)}...`
-                  : identifier
-              }
+              textToShow={truncateIdentifier(identifier)}
               textToCopy={identifier}
-              tooltip="Copy User Identifier"
+              tooltip="Copy Auth Identifier"
               copyIconPosition="left"
               variant="ghost"
             />
           );
         },
         enableColumnFilter: true,
-        header: "User Identifier",
-        id: "user_identifier",
+        header: "Auth Identifier",
+        id: "auth_identifier",
       }),
       columnHelper.accessor("wallets", {
         cell: (cell) => {
@@ -94,33 +131,24 @@ export function InAppWalletUsersPageContent(
       }),
       columnHelper.accessor("linkedAccounts", {
         cell: (cell) => {
-          const externalWallets = getExternalWallets(cell.getValue());
-          if (externalWallets.length === 0) {
-            return <span className="text-muted-foreground text-sm">None</span>;
+          const email = getPrimaryEmail(cell.getValue());
+
+          if (!email) {
+            return <span className="text-muted-foreground text-sm">N/A</span>;
           }
+
           return (
-            <div className="space-y-1">
-              {externalWallets.slice(0, 2).map((account) => {
-                const address = account.details?.address as string | undefined;
-                return address ? (
-                  <div
-                    key={`external-${address}-${account.details?.id}`}
-                    className="text-xs"
-                  >
-                    <WalletAddress address={address} client={props.client} />
-                  </div>
-                ) : null;
-              })}
-              {externalWallets.length > 2 && (
-                <span className="text-muted-foreground text-xs">
-                  +{externalWallets.length - 2} more
-                </span>
-              )}
-            </div>
+            <CopyTextButton
+              textToShow={email}
+              textToCopy={email}
+              tooltip="Copy Email"
+              copyIconPosition="left"
+              variant="ghost"
+            />
           );
         },
-        header: "External Wallets",
-        id: "external_wallets",
+        header: "Email",
+        id: "email",
       }),
       columnHelper.accessor("wallets", {
         cell: (cell) => {
@@ -230,20 +258,17 @@ export function InAppWalletUsersPageContent(
     });
     const csv = Papa.unparse(
       usersWallets.map((row) => {
-        const externalWallets = getExternalWallets(row.linkedAccounts);
-        const externalWalletAddresses = externalWallets
-          .map((account) => account.details?.address)
-          .filter(Boolean)
-          .join(", ");
+        const email = getPrimaryEmail(row.linkedAccounts);
 
         return {
           address: row.wallets[0]?.address || "Uninitialized",
           created: row.wallets[0]?.createdAt
             ? new Date(row.wallets[0].createdAt).toISOString()
             : "Wallet not created yet",
-          external_wallets: externalWalletAddresses || "None",
+          email: email || "N/A",
           login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
-          user_identifier: getUserIdentifier(row.linkedAccounts),
+          auth_identifier: getAuthIdentifier(row.linkedAccounts) || "N/A",
+          user_identifier: row.id || "N/A",
         };
       }),
     );

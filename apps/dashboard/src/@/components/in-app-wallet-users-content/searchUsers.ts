@@ -18,10 +18,10 @@ configure({
 type APIWallet = ListUserWalletsResponses[200]["result"]["wallets"][0];
 type APIProfile = APIWallet["profiles"][0];
 
-// Transform API response to match existing WalletUser format
+// Transform API response to match wallet user format
 function transformToWalletUser(apiWallet: APIWallet): WalletUser {
   return {
-    id: getProfileId(apiWallet.profiles[0]) || "",
+    id: apiWallet.userId || getProfileId(apiWallet.profiles[0]) || "",
     linkedAccounts: apiWallet.profiles.map((profile) => {
       // Create details object based on the profile data
       let details:
@@ -104,6 +104,9 @@ export async function searchUsers(
         break;
       case "externalWallet":
         queryParams.externalWalletAddress = query;
+        break;
+      case "userId":
+        queryParams.userId = query;
         break;
     }
 

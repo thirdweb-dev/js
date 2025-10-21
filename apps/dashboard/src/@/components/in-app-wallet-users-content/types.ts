@@ -3,4 +3,5 @@ export type SearchType =
   | "phone"
   | "id"
   | "address"
-  | "externalWallet";
+  | "externalWallet"
+  | "userId";
