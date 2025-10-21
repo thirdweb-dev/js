@@ -76,10 +76,10 @@ const fetchAccountList = ({
   };
 };
 
-// Transform API response to match existing WalletUser format
+// Transform API response to match the wallet user format
 function transformToWalletUser(apiWallet: APIWallet): WalletUser {
   return {
-    id: getProfileId(apiWallet.profiles[0]) || "",
+    id: apiWallet.userId || getProfileId(apiWallet.profiles[0]) || "",
     linkedAccounts: apiWallet.profiles.map((profile) => {
       // Create details object based on the profile data
       let details:

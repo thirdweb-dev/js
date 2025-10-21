@@ -28,7 +28,7 @@ import { SearchResults } from "./SearchResults";
 import { searchUsers } from "./searchUsers";
 import type { SearchType } from "./types";
 
-const getUserIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
+const getAuthIdentifier = (accounts: WalletUser["linkedAccounts"]) => {
   const mainDetail = accounts[0]?.details;
   return (
     mainDetail?.email ??
@@ -44,6 +44,13 @@ const getExternalWallets = (accounts: WalletUser["linkedAccounts"]) => {
 
 const columnHelper = createColumnHelper<WalletUser>();
 
+const truncateIdentifier = (value: string) => {
+  if (value.length <= 18) {
+    return value;
+  }
+  return `${value.slice(0, 8)}...${value.slice(-4)}`;
+};
+
 export function InAppWalletUsersPageContent(
   props: {
     authToken: string;
@@ -56,9 +63,30 @@ export function InAppWalletUsersPageContent(
 ) {
   const columns = useMemo(() => {
     return [
+      columnHelper.accessor("id", {
+        cell: (cell) => {
+          const userId = cell.getValue();
+
+          if (!userId) {
+            return "N/A";
+          }
+
+          return (
+            <CopyTextButton
+              textToShow={truncateIdentifier(userId)}
+              textToCopy={userId}
+              tooltip="Copy User Identifier"
+              copyIconPosition="left"
+              variant="ghost"
+            />
+          );
+        },
+        header: "User Identifier",
+        id: "user_identifier",
+      }),
       columnHelper.accessor("linkedAccounts", {
         cell: (cell) => {
-          const identifier = getUserIdentifier(cell.getValue());
+          const identifier = getAuthIdentifier(cell.getValue());
 
           if (!identifier) {
             return "N/A";
@@ -66,21 +94,17 @@ export function InAppWalletUsersPageContent(
 
           return (
             <CopyTextButton
-              textToShow={
-                identifier.length > 30
-                  ? `${identifier.slice(0, 30)}...`
-                  : identifier
-              }
+              textToShow={truncateIdentifier(identifier)}
               textToCopy={identifier}
-              tooltip="Copy User Identifier"
+              tooltip="Copy Auth Identifier"
               copyIconPosition="left"
               variant="ghost"
             />
           );
         },
         enableColumnFilter: true,
-        header: "User Identifier",
-        id: "user_identifier",
+        header: "Auth Identifier",
+        id: "auth_identifier",
       }),
       columnHelper.accessor("wallets", {
         cell: (cell) => {
@@ -243,7 +267,8 @@ export function InAppWalletUsersPageContent(
             : "Wallet not created yet",
           external_wallets: externalWalletAddresses || "None",
           login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
-          user_identifier: getUserIdentifier(row.linkedAccounts),
+          auth_identifier: getAuthIdentifier(row.linkedAccounts) || "N/A",
+          user_identifier: row.id || "N/A",
         };
       }),
     );

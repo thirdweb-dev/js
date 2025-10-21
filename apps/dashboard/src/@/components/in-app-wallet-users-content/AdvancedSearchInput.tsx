@@ -14,6 +14,15 @@ import {
 } from "@/components/ui/select";
 import type { SearchType } from "./types";
 
+const searchTypeLabels: Record<SearchType, string> = {
+  email: "Email",
+  phone: "Phone",
+  id: "Auth Identifier",
+  address: "Address",
+  externalWallet: "External Wallet",
+  userId: "User Identifier",
+};
+
 export function AdvancedSearchInput(props: {
   onSearch: (searchType: SearchType, query: string) => void;
   onClear: () => void;
@@ -52,7 +61,8 @@ export function AdvancedSearchInput(props: {
         <SelectContent>
           <SelectItem value="email">Email</SelectItem>
           <SelectItem value="phone">Phone</SelectItem>
-          <SelectItem value="id">ID</SelectItem>
+          <SelectItem value="id">Auth Identifier</SelectItem>
+          <SelectItem value="userId">User Identifier</SelectItem>
           <SelectItem value="address">Address</SelectItem>
           <SelectItem value="externalWallet">External Wallet</SelectItem>
         </SelectContent>
@@ -62,7 +72,7 @@ export function AdvancedSearchInput(props: {
         <div className="relative flex-1">
           <Input
             className="bg-background pl-9 border-r-0 rounded-r-none rounded-l-full"
-            placeholder={`Search by ${searchType}...`}
+            placeholder={`Search by ${searchTypeLabels[searchType]}...`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}

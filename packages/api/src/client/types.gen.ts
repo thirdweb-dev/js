@@ -331,6 +331,10 @@ export type CompleteAuthenticationResponses = {
 		 */
 		type: string;
 		/**
+		 * Unique identifier for the authenticated user
+		 */
+		userId: string;
+		/**
 		 * The wallet address
 		 */
 		walletAddress: string;
@@ -876,6 +880,10 @@ export type GetMyWalletResponses = {
 	200: {
 		result: {
 			/**
+			 * Unique identifier for the user wallet within the thirdweb auth system.
+			 */
+			userId?: string;
+			/**
 			 * The EOA (Externally Owned Wallet) address of the wallet. This is the traditional wallet address.
 			 */
 			address?: string;
@@ -1076,6 +1084,10 @@ export type ListUserWalletsData = {
 		address?: string;
 		externalWalletAddress?: string;
 		id?: string;
+		/**
+		 * Filter results by the unique user identifier returned by auth flows.
+		 */
+		userId?: string;
 	};
 	url: "/v1/wallets/user";
 };
@@ -1122,6 +1134,10 @@ export type ListUserWalletsResponses = {
 			 * Array of user wallets
 			 */
 			wallets: Array<{
+				/**
+				 * Unique identifier for the user wallet within the thirdweb auth system.
+				 */
+				userId?: string;
 				/**
 				 * The EOA (Externally Owned Wallet) address of the wallet. This is the traditional wallet address.
 				 */
@@ -1362,6 +1378,10 @@ export type CreateUserWalletResponses = {
 	 */
 	200: {
 		result: {
+			/**
+			 * Unique identifier for the user wallet within the thirdweb auth system.
+			 */
+			userId?: string;
 			/**
 			 * The EOA (Externally Owned Wallet) address of the wallet. This is the traditional wallet address.
 			 */
@@ -1605,6 +1625,10 @@ export type ListServerWalletsResponses = {
 			 */
 			wallets: Array<{
 				/**
+				 * Unique identifier for the user wallet within the thirdweb auth system.
+				 */
+				userId?: string;
+				/**
 				 * The EOA (Externally Owned Wallet) address of the wallet. This is the traditional wallet address.
 				 */
 				address?: string;
@@ -1831,6 +1855,10 @@ export type CreateServerWalletResponses = {
 	 */
 	200: {
 		result: {
+			/**
+			 * Unique identifier for the user wallet within the thirdweb auth system.
+			 */
+			userId?: string;
 			/**
 			 * The EOA (Externally Owned Wallet) address of the wallet. This is the traditional wallet address.
 			 */
