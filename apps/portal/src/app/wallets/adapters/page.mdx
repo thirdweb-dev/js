@@ -63,10 +63,48 @@ export const config = createConfig({
 });
 ```
 
-Then in your application, you can use the connector to trigger the in-app wallet connection.
+### Using the ConnectButton or ConnectEmbed with a wagmi application
+
+You can use the thirdweb react connection components and hooks like ConnectButton, ConnectEmbed, useConnectModal, etc, but still keep using wagmi for the rest of the application.
+
+To do so, you will need to connect the `inAppWalletConnector` connector from the `@thirdweb-dev/wagmi-adapter` package with the connected thirdweb wallet.
+
+You can do this at any time after connecting the thirdweb wallet, a convenient place to do this is in the `onConnect` callback of the ConnectButton or ConnectEmbed.
+
+```tsx
+const { connectors, connect } = useConnect(); // from wagmi
+
+<ConnectButton
+    client={client}
+    onConnect={(wallet) => {
+      // connect the wagmi connector with the connected thirdweb wallet
+      const twConnector = connectors.find(
+        (c) => c.id === "in-app-wallet",
+      );
+      if (twConnector) {
+        const options = {
+          wallet, // pass the connected wallet
+        } satisfies ConnectionOptions; // for type safety
+        connect({
+          connector: twConnector,
+          chainId: chain.id,
+          ...options,
+        });
+      }
+    }}
+/>
+```
+
+Make sure your app is wrapped in a `<ThirdwebProvider>` as well as a `<WagmiProvider>` since both contexts will be used here. From there, the wallet state will be in sync between the 2 libraries.
+
+**Note:** the ConnectButton and ConnectEmbed handle reconnecting automatically on page reload. If not using those components (ie. useConnectModal or useConnect hooks directly), you will need to handle reconnecting by explicitely calling `useAutoConnect()`, and doing the same wagmi connection from the `onConnect` callback.
+
+### Using the connector directly (headless mode)
+
+You can also use the `inAppWalletConnector` connector directly in your application to connect to the thirdweb wallet without needing a `<ThirdwebProvider>` at all.
 
 ```ts
-const { connect, connectors } = useConnect();
+const { connect, connectors } = useConnect(); // from wagmi
 
 const onClick = () => {
   // grab the connector
@@ -79,9 +117,10 @@ const onClick = () => {
 };
 ```
 
+
 ### Converting a wagmi wallet client to a thirdweb wallet
 
-You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `BuyWidget`, `TransactionButton`, etc.
+You can also use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `BuyWidget`, `TransactionButton`, etc.
 
 ```ts
 // Assumes you've wrapped your application in a `<ThirdwebProvider>`
