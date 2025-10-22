@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { isAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { BridgePageUI } from "./components/bridge-page";
+import { bridgeStats } from "./data";
 
-const title = "thirdweb Bridge: Buy, Bridge & Swap Crypto on 85+ Chains";
-const description =
-  "Bridge and swap 4500+ tokens across 85+ chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing with near-instant finality";
+const title = `thirdweb Bridge: Buy, Bridge & Swap Crypto on ${bridgeStats.supportedChains} Chains`;
+const description = `Bridge and swap ${bridgeStats.supportedTokens} tokens across ${bridgeStats.supportedChains} chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing with near-instant finality`;
 
 export const metadata: Metadata = {
   description,

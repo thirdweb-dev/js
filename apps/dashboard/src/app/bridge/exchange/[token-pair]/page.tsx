@@ -5,6 +5,7 @@ import type { ChainMetadata } from "thirdweb/chains";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
 import { fetchChain } from "@/utils/fetchChain";
 import { BridgePageUI } from "../../components/bridge-page";
+import { bridgeStats } from "../../data";
 import { generateTokenPairSlugs, getTokenPairData } from "./slug-map";
 
 type Params = {
@@ -35,8 +36,7 @@ export async function generateMetadata(
   }
 
   const title = getTitle(tokenMetadata);
-  const description =
-    "Bridge and swap 4500+ tokens across 85+ chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing with near-instant finality";
+  const description = `Bridge and swap ${bridgeStats.supportedTokens} tokens across ${bridgeStats.supportedChains} chains (Ethereum, Base, Optimism, Arbitrum, BNB & more). Best-price routing with near-instant finality`;
 
   const result: Metadata = {
     title,

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { Bridge } from "thirdweb";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
+import { bridgeStats } from "../../../bridge/data";
 import { PageHeader } from "./components/header";
 import { TokenPage } from "./components/token-page";
 
@@ -36,7 +37,8 @@ export default async function Page() {
           </h1>
 
           <p className="text-muted-foreground">
-            85+ chains, 4500+ tokens and 9+ million routes supported
+            {bridgeStats.supportedChains} chains, {bridgeStats.supportedTokens}{" "}
+            tokens and {bridgeStats.supportedRoutes} routes supported
           </p>
         </div>
       </div>

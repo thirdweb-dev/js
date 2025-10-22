@@ -1,6 +1,13 @@
+import type { Format } from "@number-flow/react";
 import { cn } from "@workspace/ui/lib/utils";
+import Image, { type StaticImageData } from "next/image";
 import type { BuyAndSwapEmbedProps } from "@/components/blocks/BuyAndSwapEmbed";
 import { FaqAccordion } from "@/components/blocks/faq-section";
+import ChainsImage from "../assets/chains.png";
+import RoutesImage from "../assets/routes.png";
+import TokensImage from "../assets/tokens.png";
+import { bridgeStats } from "../data";
+import { AnimatedNumbers } from "./client/animated-numbers";
 import { UniversalBridgeEmbed } from "./client/UniversalBridgeEmbed";
 import { BridgePageHeader } from "./header";
 
@@ -35,24 +42,58 @@ function HeadingSection(props: { title: React.ReactNode }) {
       <div className="mb-3 lg:mb-6">{props.title}</div>
 
       <p className="text-muted-foreground text-sm text-pretty text-center lg:text-lg mb-6 lg:mb-8">
-        Seamlessly move your assets across 85+ chains with the best rates and
-        fastest execution
+        Seamlessly move your assets across {bridgeStats.supportedChains} chains
+        with the best rates and fastest execution
       </p>
 
-      <div className="flex flex-col lg:flex-row gap-3 lg:gap-2 items-center justify-center">
-        <DataPill>85+ Chains Supported</DataPill>
-        <DataPill>4500+ Tokens Supported</DataPill>
-        <DataPill>9+ Million Routes Available</DataPill>
+      <div className="flex gap-3 items-center lg:justify-center flex-wrap">
+        <DataSquare data={90} label="Chains Supported" src={ChainsImage} />
+        <DataSquare
+          data={6700}
+          label="Tokens Supported"
+          src={TokensImage}
+          format={{ notation: "compact" }}
+        />
+        <DataSquare
+          data={14000000}
+          format={{ notation: "compact" }}
+          label="Routes Available"
+          src={RoutesImage}
+        />
       </div>
     </div>
   );
 }
 
-function DataPill(props: { children: React.ReactNode }) {
+function DataSquare(props: {
+  data: number;
+  label: string;
+  src: StaticImageData;
+  format?: Format;
+  imageClassName?: string;
+}) {
   return (
-    <p className="bg-card flex items-center text-xs lg:text-sm gap-1.5 text-foreground border rounded-full px-8 lg:px-3 py-1.5 hover:text-foreground transition-colors duration-300">
-      {props.children}
-    </p>
+    <div className="py-2 lg:py-0 size-full lg:size-[220px] rounded-xl border hover:bg-card bg-card/50 relative shrink-0 overflow-hidden">
+      <div className="p-4">
+        <div className="flex items-center gap-1 text-3xl lg:text-5xl font-medium tracking-tight font-mono mb-1 h-[45px] lg:h-[56px]">
+          <AnimatedNumbers
+            value={props.data}
+            format={props.format}
+            suffix="+"
+          />
+        </div>
+        <p className="text-sm text-foreground">{props.label}</p>
+      </div>
+      <Image
+        draggable={false}
+        src={props.src}
+        className={cn(
+          "object-cover h-full lg:h-auto absolute right-0 top-0 bottom-0 left-1/2 lg:left-0 lg:top-auto invert dark:invert-0 opacity-50 lg:opacity-100",
+          props.imageClassName,
+        )}
+        alt=""
+      />
+    </div>
   );
 }
 
