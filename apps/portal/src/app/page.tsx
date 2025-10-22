@@ -48,8 +48,8 @@ function Hero() {
           <h1 className="mb-3 font-bold text-4xl tracking-tighter lg:text-6xl">
             thirdweb Documentation
           </h1>
-          <p className="mb-8 max-w-md text-lg text-muted-foreground leading-normal">
-            Development framework for building onchain apps, games, and agents.
+          <p className="mb-8 max-w-lg text-lg text-muted-foreground leading-normal text-pretty">
+            Platform for building the next generation of internet products
           </p>
           <div className="flex gap-3">
             <ChatButton />
