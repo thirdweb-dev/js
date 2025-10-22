@@ -167,6 +167,9 @@ export function FundWallet(props: FundWalletProps) {
   const actionLabel = isReceiverDifferentFromActiveWallet ? "Pay" : "Buy";
   const isMobile = useIsMobile();
 
+  // if no receiver address is set - wallet must be connected because the user's wallet is the receiver
+  const showConnectButton = !props.receiverAddress && !activeWalletInfo;
+
   return (
     <WithHeader
       client={props.client}
@@ -283,7 +286,20 @@ export function FundWallet(props: FundWalletProps) {
       )}
 
       {/* Continue Button */}
-      {activeWalletInfo ? (
+      {showConnectButton ? (
+        <ConnectButton
+          client={props.client}
+          connectButton={{
+            label: props.buttonLabel || actionLabel,
+            style: {
+              width: "100%",
+              borderRadius: radius.full,
+            },
+          }}
+          theme={theme}
+          {...props.connectOptions}
+        />
+      ) : (
         <Button
           disabled={!receiver}
           fullWidth
@@ -316,19 +332,6 @@ export function FundWallet(props: FundWalletProps) {
         >
           {props.buttonLabel || actionLabel}
         </Button>
-      ) : (
-        <ConnectButton
-          client={props.client}
-          connectButton={{
-            label: props.buttonLabel || actionLabel,
-            style: {
-              width: "100%",
-              borderRadius: radius.full,
-            },
-          }}
-          theme={theme}
-          {...props.connectOptions}
-        />
       )}
 
       {props.showThirdwebBranding ? (

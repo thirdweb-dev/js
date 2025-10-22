@@ -39,7 +39,6 @@ import { PaymentSelection } from "./payment-selection/PaymentSelection.js";
 import { SuccessScreen } from "./payment-success/SuccessScreen.js";
 import { QuoteLoader } from "./QuoteLoader.js";
 import { StepRunner } from "./StepRunner.js";
-import { useActiveWalletInfo } from "./swap-widget/hooks.js";
 import type { PaymentMethod, RequiredParams } from "./types.js";
 
 export type BuyOrOnrampPrepareResult = Extract<
@@ -432,7 +431,6 @@ function BridgeWidgetContent(
   >,
 ) {
   const [screen, setScreen] = useState<BuyWidgetScreen>({ id: "1:buy-ui" });
-  const activeWalletInfo = useActiveWalletInfo();
 
   const handleError = useCallback(
     (error: Error, quote: BridgePrepareResult | undefined) => {
@@ -478,7 +476,7 @@ function BridgeWidgetContent(
     };
   });
 
-  if (screen.id === "1:buy-ui" || !activeWalletInfo) {
+  if (screen.id === "1:buy-ui") {
     return (
       <FundWallet
         theme={props.theme}
