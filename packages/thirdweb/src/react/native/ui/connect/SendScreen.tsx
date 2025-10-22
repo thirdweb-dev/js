@@ -183,7 +183,7 @@ export const SendScreen = (props: SendScreenProps) => {
             Amount
           </ThemedText>
           <ThemedInput
-            inputMode="numeric"
+            inputMode="decimal"
             onChangeText={setAmount}
             rightView={
               <ThemedText
