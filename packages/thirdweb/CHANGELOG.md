@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.110.1
+
+### Patch Changes
+
+- [#8299](https://github.com/thirdweb-dev/js/pull/8299) [`85fe949`](https://github.com/thirdweb-dev/js/commit/85fe9491cd6d2270847e9941ddb7df76aefd8b31) Thanks [@alecananian](https://github.com/alecananian)! - [React Native] Fixed Send Funds screen not allowing decimal amounts
+
+- [#8296](https://github.com/thirdweb-dev/js/pull/8296) [`e978809`](https://github.com/thirdweb-dev/js/commit/e9788096d665afef7c2a933cea5d6f522fc67273) Thanks [@MananTank](https://github.com/MananTank)! - Do not require connecting wallet in `BuyWidget` if `receiverAddress` is set
+
+- [#8298](https://github.com/thirdweb-dev/js/pull/8298) [`899051f`](https://github.com/thirdweb-dev/js/commit/899051f788b0c2521a022846782892a8c1405a66) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add EIP-5792 support for EIP1193.toProvider()
+
 ## 5.110.0
 
 ### Minor Changes
