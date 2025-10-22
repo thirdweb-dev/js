@@ -4,9 +4,14 @@ import { ProjectFTUX } from "./ProjectFTUX";
 
 const meta = {
   component: ProjectFTUX,
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+    },
+  },
   decorators: [
     (Story) => (
-      <div className="container py-8 pb-20">
+      <div className="container py-8 pb-20 max-w-7xl">
         <Story />
       </div>
     ),
@@ -31,6 +36,5 @@ export const Default: Story = {
       ],
     },
     teamSlug: "bar",
-    managementAccessToken: undefined,
   },
 };

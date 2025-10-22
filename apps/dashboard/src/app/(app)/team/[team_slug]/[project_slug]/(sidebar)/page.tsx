@@ -39,10 +39,8 @@ import type {
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
-import {
-  ProjectFTUX,
-  ProjectWalletSection,
-} from "./components/ProjectFTUX/ProjectFTUX";
+import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
+import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
 import { RpcMethodBarChartCardAsync } from "./components/RpcMethodBarChartCard";
 import { TransactionsChartCardAsync } from "./components/Transactions";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
@@ -112,9 +110,6 @@ export default async function ProjectOverviewPage(props: PageProps) {
   });
 
   const projectWallet = await getProjectWallet(project);
-  const managementAccessToken =
-    project.services?.find((service) => service.name === "engineCloud")
-      ?.managementAccessToken ?? undefined;
 
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
@@ -135,14 +130,17 @@ export default async function ProjectOverviewPage(props: PageProps) {
           actions: null,
         }}
       >
+        <ProjectWalletSection
+          project={project}
+          teamSlug={params.team_slug}
+          projectWallet={projectWallet}
+          client={client}
+        />
+
+        <div className="h-10" />
+
         {isActive ? (
           <div className="flex flex-col gap-4 md:gap-6">
-            <ProjectWalletSection
-              project={project}
-              teamSlug={params.team_slug}
-              wallet={projectWallet}
-              managementAccessToken={managementAccessToken}
-            />
             <ResponsiveTimeFilters defaultRange={defaultRange} />
             <ProjectAnalytics
               authToken={authToken}
@@ -155,12 +153,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
             />
           </div>
         ) : (
-          <ProjectFTUX
-            project={project}
-            teamSlug={params.team_slug}
-            wallet={projectWallet}
-            managementAccessToken={managementAccessToken}
-          />
+          <ProjectFTUX project={project} teamSlug={params.team_slug} />
         )}
       </ProjectPage>
     </ResponsiveSearchParamsProvider>

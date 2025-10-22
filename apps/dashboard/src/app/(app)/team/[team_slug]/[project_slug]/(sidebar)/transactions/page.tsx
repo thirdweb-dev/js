@@ -156,7 +156,6 @@ export default async function TransactionsAnalyticsPage(props: {
           isManagedVault={isManagedVault}
           client={client}
           hasTransactions={hasTransactions}
-          managementAccessToken={managementAccessToken ?? undefined}
           project={project}
           teamSlug={params.team_slug}
           testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
@@ -207,7 +206,6 @@ export default async function TransactionsAnalyticsPage(props: {
             evmTotalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
             evmTotalRecords={eoas.data.totalRecords}
             evmWallets={eoas.data.items as Wallet[]}
-            managementAccessToken={managementAccessToken ?? undefined}
             project={project}
             solanaCurrentPage={solanCurrentPage}
             solanaTotalPages={Math.ceil(

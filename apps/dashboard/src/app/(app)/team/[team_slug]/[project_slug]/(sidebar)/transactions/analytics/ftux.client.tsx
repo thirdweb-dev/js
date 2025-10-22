@@ -3,14 +3,13 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/project/projects";
 import { type Step, StepsCard } from "@/components/blocks/StepsCard";
-import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
+import { CreateServerWallet } from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
 import { SendTestSolanaTransaction } from "./send-test-solana-tx.client";
 import { SendTestTransaction } from "./send-test-tx.client";
 
 interface Props {
-  managementAccessToken: string | undefined;
   project: Project;
   wallets: Wallet[];
   solanaWallets: SolanaWallet[];
@@ -29,11 +28,12 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     const steps: Step[] = [];
     steps.push({
       children: (
-        <CreateServerWalletStep
-          managementAccessToken={props.managementAccessToken}
-          project={props.project}
-          teamSlug={props.teamSlug}
-        />
+        <div className="mt-4 flex flex-row gap-4">
+          <CreateServerWallet
+            project={props.project}
+            teamSlug={props.teamSlug}
+          />
+        </div>
       ),
       completed: props.wallets.length > 0 || props.hasTransactions,
       description:
@@ -61,7 +61,6 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     });
     return steps;
   }, [
-    props.managementAccessToken,
     props.project,
     props.wallets,
     props.hasTransactions,
@@ -113,19 +112,3 @@ export const EngineChecklist: React.FC<Props> = (props) => {
     />
   );
 };
-
-function CreateServerWalletStep(props: {
-  project: Project;
-  teamSlug: string;
-  managementAccessToken: string | undefined;
-}) {
-  return (
-    <div className="mt-4 flex flex-row gap-4">
-      <CreateServerWallet
-        managementAccessToken={props.managementAccessToken}
-        project={props.project}
-        teamSlug={props.teamSlug}
-      />
-    </div>
-  );
-}

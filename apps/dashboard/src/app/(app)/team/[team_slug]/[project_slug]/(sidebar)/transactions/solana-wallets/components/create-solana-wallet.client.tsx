@@ -20,7 +20,6 @@ import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { createSolanaAccount } from "../lib/vault.client";
 
 export function CreateSolanaWallet(props: {
-  managementAccessToken: string | undefined;
   project: Project;
   teamSlug: string;
   disabled?: boolean;
@@ -29,14 +28,18 @@ export function CreateSolanaWallet(props: {
   const [label, setLabel] = useState("");
   const router = useDashboardRouter();
 
+  const managementAccessToken =
+    props.project.services?.find((service) => service.name === "engineCloud")
+      ?.managementAccessToken ?? undefined;
+
   const createMutation = useMutation({
     mutationFn: async () => {
-      if (!props.managementAccessToken) {
+      if (!managementAccessToken) {
         throw new Error("No management access token");
       }
 
       const result = await createSolanaAccount({
-        managementAccessToken: props.managementAccessToken,
+        managementAccessToken: managementAccessToken,
         label: label.trim(),
         projectId: props.project.id,
         teamId: props.project.teamId,

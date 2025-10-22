@@ -51,17 +51,12 @@ export function WalletAddressUI(
     };
   },
 ) {
-  // default back to zero address if no address provided
-  const address = useMemo(() => props.address || ZERO_ADDRESS, [props.address]);
+  const address = props.address || ZERO_ADDRESS;
 
-  const [shortenedAddress, _lessShortenedAddress] = useMemo(() => {
-    return [
-      props.shortenAddress !== false
-        ? `${address.slice(0, 6)}...${address.slice(-4)}`
-        : address,
-      `${address.slice(0, 14)}...${address.slice(-12)}`,
-    ];
-  }, [address, props.shortenAddress]);
+  const shortenedAddress =
+    props.shortenAddress !== false
+      ? `${address.slice(0, 6)}...${address.slice(-4)}`
+      : address;
 
   if (!isAddress(address)) {
     return (

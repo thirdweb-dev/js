@@ -193,7 +193,6 @@ export default async function Page(props: {
                 evmTotalPages={Math.ceil(eoas.data.totalRecords / pageSize)}
                 evmTotalRecords={eoas.data.totalRecords}
                 evmWallets={eoas.data.items as Wallet[]}
-                managementAccessToken={managementAccessToken ?? undefined}
                 project={project}
                 solanaCurrentPage={solanCurrentPage}
                 solanaTotalPages={Math.ceil(

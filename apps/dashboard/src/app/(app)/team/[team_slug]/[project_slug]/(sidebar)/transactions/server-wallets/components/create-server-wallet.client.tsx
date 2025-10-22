@@ -15,17 +15,25 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { createProjectServerWallet } from "../../lib/vault.client";
 
-export default function CreateServerWallet(props: {
+export function CreateServerWallet(props: {
   project: Project;
   teamSlug: string;
-  managementAccessToken: string | undefined;
   setAsProjectWallet?: boolean;
+  button?: {
+    size?: "default" | "sm" | "lg";
+    iconClassName?: string;
+  };
 }) {
   const router = useDashboardRouter();
   const [label, setLabel] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+
+  const managementAccessToken =
+    props.project.services?.find((service) => service.name === "engineCloud")
+      ?.managementAccessToken ?? undefined;
 
   const createEoaMutation = useMutation({
     mutationFn: async ({
@@ -53,12 +61,12 @@ export default function CreateServerWallet(props: {
   });
 
   const handleCreateServerWallet = async () => {
-    if (!props.managementAccessToken) {
+    if (!managementAccessToken) {
       router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`);
     } else {
       await createEoaMutation.mutateAsync({
         label,
-        managementAccessToken: props.managementAccessToken,
+        managementAccessToken: managementAccessToken,
       });
     }
   };
@@ -68,21 +76,32 @@ export default function CreateServerWallet(props: {
   return (
     <>
       <Button
-        className="gap-1.5 rounded-full bg-background"
+        className="gap-1.5 rounded-full bg-background text-foreground"
         variant="outline"
+        size={props.button?.size}
         onClick={() =>
-          props.managementAccessToken
+          managementAccessToken
             ? setModalOpen(true)
             : router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`)
         }
       >
         {isLoading ? (
-          <Spinner className="size-4" />
+          <Spinner
+            className={cn(
+              "size-4 text-muted-foreground",
+              props.button?.iconClassName,
+            )}
+          />
         ) : (
-          <PlusIcon className="size-4 text-muted-foreground" />
+          <PlusIcon
+            className={cn(
+              "size-4 text-muted-foreground",
+              props.button?.iconClassName,
+            )}
+          />
         )}
 
-        {props.managementAccessToken
+        {managementAccessToken
           ? isLoading
             ? "Creating..."
             : "Create Server Wallet"

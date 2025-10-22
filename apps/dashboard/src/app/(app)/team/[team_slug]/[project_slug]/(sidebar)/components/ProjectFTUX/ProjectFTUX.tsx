@@ -15,33 +15,12 @@ import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
-import { WalletProductIcon } from "@/icons/WalletProductIcon";
-import { getProjectWalletLabel } from "@/lib/project-wallet";
-import {
-  getProjectWallet,
-  type ProjectWalletSummary,
-} from "@/lib/server/project-wallet";
 import { ClientIDSection } from "./ClientIDSection";
-import { ProjectWalletControls } from "./ProjectWalletControls.client";
-import { ProjectWalletSetup } from "./ProjectWalletSetup.client";
 import { SecretKeySection } from "./SecretKeySection";
 
-export async function ProjectFTUX(props: {
-  project: Project;
-  teamSlug: string;
-  wallet?: ProjectWalletSummary | undefined;
-  managementAccessToken: string | undefined;
-}) {
-  const projectWallet = props.wallet ?? (await getProjectWallet(props.project));
-
+export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
   return (
     <div className="flex flex-col gap-10">
-      <ProjectWalletSection
-        project={props.project}
-        teamSlug={props.teamSlug}
-        wallet={projectWallet}
-        managementAccessToken={props.managementAccessToken}
-      />
       <IntegrateAPIKeySection project={props.project} />
       <ProductsSection
         projectSlug={props.project.slug}
@@ -50,64 +29,6 @@ export async function ProjectFTUX(props: {
       <SDKSection />
       <StarterKitsSection />
     </div>
-  );
-}
-
-export function ProjectWalletSection(props: {
-  project: Project;
-  teamSlug: string;
-  wallet: ProjectWalletSummary | undefined;
-  managementAccessToken: string | undefined;
-}) {
-  const defaultLabel = getProjectWalletLabel(props.project.name);
-  const walletAddress = props.wallet?.address;
-  const label = props.wallet?.label ?? defaultLabel;
-
-  return (
-    <section>
-      <div className="rounded-lg border border-border bg-card p-4">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <div className="rounded-full border border-border bg-background p-2">
-              <WalletProductIcon className="size-5 text-muted-foreground" />
-            </div>
-            <div>
-              <p className="font-semibold text-lg tracking-tight">
-                Project Wallet
-              </p>
-              <p className="text-muted-foreground text-sm">
-                Use it for deployments, payments, and API integrations.
-              </p>
-            </div>
-          </div>
-
-          {walletAddress ? (
-            <>
-              <ProjectWalletControls
-                label={label}
-                project={props.project}
-                walletAddress={walletAddress}
-              />
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-                <Link
-                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-                  href={`/team/${props.teamSlug}/${props.project.slug}/transactions`}
-                >
-                  View Transactions
-                  <ChevronRightIcon className="size-4" />
-                </Link>
-              </div>
-            </>
-          ) : (
-            <ProjectWalletSetup
-              managementAccessToken={props.managementAccessToken}
-              project={props.project}
-              teamSlug={props.teamSlug}
-            />
-          )}
-        </div>
-      </div>
-    </section>
   );
 }
 

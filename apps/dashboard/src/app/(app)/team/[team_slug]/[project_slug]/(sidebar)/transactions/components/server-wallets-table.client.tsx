@@ -58,7 +58,7 @@ import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import { updateDefaultProjectWallet } from "../lib/vault.client";
-import CreateServerWallet from "../server-wallets/components/create-server-wallet.client";
+import { CreateServerWallet } from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet as EVMWallet } from "../server-wallets/wallet-table/types";
 import { CreateSolanaWallet } from "../solana-wallets/components/create-solana-wallet.client";
 import { UpgradeSolanaPermissions } from "../solana-wallets/components/upgrade-solana-permissions.client";
@@ -77,7 +77,6 @@ interface ServerWalletsTableProps {
   solanaTotalPages: number;
   project: Project;
   teamSlug: string;
-  managementAccessToken: string | undefined;
   client: ThirdwebClient;
   solanaPermissionError?: boolean;
 }
@@ -88,7 +87,6 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
     solanaWallets,
     project,
     teamSlug,
-    managementAccessToken,
     evmTotalRecords,
     evmCurrentPage,
     evmTotalPages,
@@ -134,11 +132,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
             <div className="flex flex-row gap-2.5">
               {activeChain === "evm" && (
                 <>
-                  <CreateServerWallet
-                    managementAccessToken={managementAccessToken}
-                    project={project}
-                    teamSlug={teamSlug}
-                  />
+                  <CreateServerWallet project={project} teamSlug={teamSlug} />
                   <SingleNetworkSelector
                     chainId={selectedChainId}
                     onChange={setSelectedChainId}
@@ -152,7 +146,6 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
               )}
               {activeChain === "solana" && (
                 <CreateSolanaWallet
-                  managementAccessToken={managementAccessToken}
                   project={project}
                   teamSlug={teamSlug}
                   disabled={solanaPermissionError}
