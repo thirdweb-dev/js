@@ -2,11 +2,13 @@ import type { ConnectionOptions } from "@thirdweb-dev/wagmi-adapter";
 import { ConnectButton } from "thirdweb/react";
 import {
   useAccount,
+  useCallsStatus,
   useConnect,
   useDisconnect,
+  useSendCalls,
   useSendTransaction,
 } from "wagmi";
-import { chain, client } from "./wagmi.js";
+import { chain, client, thirdwebChainForWallet, wallet } from "./wagmi.js";
 
 function App() {
   const account = useAccount();
@@ -20,6 +22,17 @@ function App() {
     error: sendTxError,
     data: sendTxData,
   } = useSendTransaction();
+  const { sendCalls, data, isPending: isPendingSendCalls } = useSendCalls();
+  const {
+    data: callStatus,
+    isLoading: isLoadingCallStatus,
+    error: callStatusError,
+  } = useCallsStatus({
+    id: data?.id || "",
+    query: {
+      enabled: !!data?.id,
+    },
+  });
   return (
     <>
       <div>
@@ -44,6 +57,8 @@ function App() {
         <h2>Connect</h2>
         <ConnectButton
           client={client}
+          chain={thirdwebChainForWallet}
+          wallets={[wallet]}
           onConnect={(wallet) => {
             // auto connect to wagmi on tw connect
             const twConnector = connectors.find(
@@ -95,12 +110,38 @@ function App() {
           >
             Send Tx
           </button>
-          <div>{isPending ? "Sending..." : ""}</div>
+          <button
+            onClick={() =>
+              sendCalls({
+                calls: [
+                  {
+                    to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                    value: 0n,
+                  },
+                ],
+              })
+            }
+            type="button"
+          >
+            Send Calls
+          </button>
+          <div>
+            {isPending || isPendingSendCalls || isLoadingCallStatus
+              ? "Sending..."
+              : ""}
+          </div>
           <div>
             {isSuccess
               ? `Success: ${sendTxData}`
               : isError
                 ? sendTxError?.message
+                : ""}
+          </div>
+          <div>
+            {callStatus
+              ? `Success: ${JSON.stringify(callStatus, null, 2)}`
+              : callStatusError
+                ? callStatusError?.message
                 : ""}
           </div>
         </div>

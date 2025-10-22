@@ -1,5 +1,6 @@
 import { inAppWalletConnector } from "@thirdweb-dev/wagmi-adapter";
 import { createThirdwebClient, defineChain as thirdwebChain } from "thirdweb";
+import { inAppWallet } from "thirdweb/wallets/in-app";
 import { createConfig, http } from "wagmi";
 import { baseSepolia } from "wagmi/chains";
 
@@ -15,6 +16,13 @@ export const client = createThirdwebClient({
   clientId,
 });
 
+export const wallet = inAppWallet({
+  executionMode: {
+    mode: "EIP7702",
+    sponsorGas: true,
+  },
+});
+
 export const chain = baseSepolia;
 export const thirdwebChainForWallet = thirdwebChain(baseSepolia.id);
 
@@ -23,8 +31,8 @@ export const config = createConfig({
   connectors: [
     inAppWalletConnector({
       client,
-      smartAccount: {
-        chain: thirdwebChain(chain.id),
+      executionMode: {
+        mode: "EIP7702",
         sponsorGas: true,
       },
     }),

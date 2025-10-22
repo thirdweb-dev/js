@@ -4,6 +4,7 @@ import { eth_getTransactionReceipt } from "../../../../rpc/actions/eth_getTransa
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import { sendAndConfirmTransaction } from "../../../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../../../transaction/actions/send-batch-transaction.js";
+import type { SendTransactionOptions } from "../../../../transaction/actions/send-transaction.js";
 import { LruMap } from "../../../../utils/caching/lru.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { randomBytesHex } from "../../../../utils/random.js";
@@ -22,8 +23,16 @@ const bundlesToTransactions = new LruMap<Hex[]>(1000);
 export async function inAppWalletSendCalls(args: {
   account: Account;
   calls: PreparedSendCall[];
+  chain: Chain;
 }): Promise<string> {
   const { account, calls } = args;
+
+  const transactions: SendTransactionOptions["transaction"][] = calls.map(
+    (call) => ({
+      ...call,
+      chain: args.chain,
+    }),
+  );
 
   const hashes: Hex[] = [];
   const id = randomBytesHex(65);
@@ -31,12 +40,12 @@ export async function inAppWalletSendCalls(args: {
   if (account.sendBatchTransaction) {
     const receipt = await sendBatchTransaction({
       account,
-      transactions: calls,
+      transactions,
     });
     hashes.push(receipt.transactionHash);
     bundlesToTransactions.set(id, hashes);
   } else {
-    for (const tx of calls) {
+    for (const tx of transactions) {
       const receipt = await sendAndConfirmTransaction({
         account,
         transaction: tx,

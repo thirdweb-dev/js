@@ -379,6 +379,7 @@ async function createSmartAccount(
       const id = await inAppWalletSendCalls({
         account: account,
         calls: options.calls,
+        chain,
       });
       return { chain, client, id };
     },
@@ -556,6 +557,7 @@ function createZkSyncAccount(args: {
       const id = await inAppWalletSendCalls({
         account: account,
         calls: options.calls,
+        chain,
       });
       return { chain, client, id };
     },

@@ -341,6 +341,7 @@ export const create7702MinimalAccount = (args: {
       const id = await inAppWalletSendCalls({
         account: minimalAccount,
         calls: options.calls,
+        chain,
       });
       return { chain, client, id };
     },
