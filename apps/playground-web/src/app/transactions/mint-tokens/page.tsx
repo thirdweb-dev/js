@@ -26,7 +26,7 @@ export default function Page() {
       <PageLayout
         icon={StampIcon}
         description={description}
-        docsLink="https://thirdweb-engine.apidocumentation.com/reference#tag/erc1155/POST/contract/{chain}/{contractAddress}/erc1155/mint-to?utm_source=playground"
+        docsLink="https://engine.thirdweb.com/reference"
         title={title}
       >
         <EngineMintPreview />
