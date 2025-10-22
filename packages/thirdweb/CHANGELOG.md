@@ -1,5 +1,55 @@
 # thirdweb
 
+## 5.110.0
+
+### Minor Changes
+
+- [#8289](https://github.com/thirdweb-dev/js/pull/8289) [`b30369f`](https://github.com/thirdweb-dev/js/commit/b30369f3cc0bbceed3470b6c905551a5c930f08f) Thanks [@jnsdls](https://github.com/jnsdls)! - ### `getContractMetadata()` now returns a record with `unknown` values instead of `any`.
+
+  before:
+
+  ```ts
+  const metadata = await getContractMetadata({ contract });
+  metadata; // Record<string, any>
+  metadata.name; // string
+  metadata.symbol; // string
+  ```
+
+  after:
+
+  ```ts
+  const metadata = await getContractMetadata({ contract });
+  metadata; // Record<string, unknown>
+  metadata.name; // string | null
+  metadata.symbol; // string | null
+  ```
+
+  Metadata is not (and was never) strictly defined outside of `name` and `symbol` and may contain any type of data in the record.
+  This is not a runtime change but it may break type inference in existing apps that relied on the previous return type.
+
+  **Recommended fix:**
+  You _should_ type-guard any key you access from "metadata".
+
+  ```ts
+  const metadata = await getContractMetadata({ contract });
+  if ("foo" in metadata && typeof metadata.foo === "string") {
+    metadata.foo; // string
+  }
+  ```
+
+  **Quick fix:**
+  If adding type assertions is not something you can do in the short term you can also assert the type directly.
+  _This is as "unsafe" as the type was before._
+
+  ```ts
+  const metadata = await getContractMetadata({ contract });
+  const foo = metadata.foo as string;
+  ```
+
+### Patch Changes
+
+- [#8280](https://github.com/thirdweb-dev/js/pull/8280) [`ceba683`](https://github.com/thirdweb-dev/js/commit/ceba6835dd60896efc34fe1495a1812c0cc39db7) Thanks [@MananTank](https://github.com/MananTank)! - Fix process not defined error when using "thirdweb/contract" import in Vite
+
 ## 5.109.1
 
 ### Patch Changes

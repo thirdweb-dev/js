@@ -1,5 +1,11 @@
 # @thirdweb-dev/api
 
+## 0.1.1
+
+### Patch Changes
+
+- [#8290](https://github.com/thirdweb-dev/js/pull/8290) [`f2121e9`](https://github.com/thirdweb-dev/js/commit/f2121e9519719ef809986c919acc5069b5b7ce74) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - added support for userId across wallet apis
+
 ## 0.1.0
 
 ### Minor Changes
