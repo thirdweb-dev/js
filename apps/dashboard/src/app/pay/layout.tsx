@@ -18,15 +18,11 @@ export default async function PayLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "h-screen w-screen bg-background font-sans antialiased",
+          "min-h-dvh w-screen bg-background font-sans antialiased flex flex-col",
           fontSans.variable,
         )}
       >
-        <PayProviders>
-          <div className="relative mx-auto flex h-full w-full items-center justify-center overflow-x-hidden overflow-y-scroll">
-            {children}
-          </div>
-        </PayProviders>
+        <PayProviders>{children}</PayProviders>
       </body>
     </html>
   );

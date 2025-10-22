@@ -15,6 +15,7 @@ export const bridgeWallets = [
   createWallet("me.rainbow"),
   createWallet("io.rabby"),
   createWallet("io.zerion.wallet"),
+  createWallet("com.okex.wallet"),
 ];
 
 export function UniversalBridgeEmbed(props: {

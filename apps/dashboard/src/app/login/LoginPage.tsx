@@ -49,6 +49,7 @@ const loginOptions = [
   createWallet("io.rabby"),
   createWallet("me.rainbow"),
   createWallet("io.zerion.wallet"),
+  createWallet("com.okex.wallet"),
 ];
 
 const inAppWalletLoginOptions = [
