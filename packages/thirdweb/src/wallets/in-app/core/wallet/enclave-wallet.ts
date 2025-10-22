@@ -277,6 +277,7 @@ export class EnclaveWallet implements IWebWallet {
         const id = await inAppWalletSendCalls({
           account: account,
           calls: options.calls,
+          chain,
         });
         return { chain, client, id };
       },
