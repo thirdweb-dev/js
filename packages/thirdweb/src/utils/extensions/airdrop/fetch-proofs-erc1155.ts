@@ -3,6 +3,7 @@ import { getContractMetadata } from "../../../extensions/common/read/getContract
 import { MerkleTree } from "../../../merkletree/MerkleTree.js";
 import { download } from "../../../storage/download.js";
 import type { Address } from "../../address.js";
+import { isRecord } from "../../type-guards.js";
 import { hashEntryERC1155 } from "./hash-entry-erc1155.js";
 import type {
   ClaimProofERC1155,
@@ -54,7 +55,8 @@ export async function fetchProofsERC1155(options: {
   const metadata = await getContractMetadata({
     contract,
   });
-  const merkleData: Record<string, string> = metadata.merkle || {};
+
+  const merkleData = isRecord(metadata.merkle) ? metadata.merkle : {};
   const snapshotUri = merkleData[merkleRoot];
 
   if (!snapshotUri) {

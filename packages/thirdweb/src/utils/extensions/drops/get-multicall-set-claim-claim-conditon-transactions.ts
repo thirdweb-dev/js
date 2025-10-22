@@ -5,6 +5,7 @@ import type { SetClaimConditionsParams as GeneratedParams } from "../../../exten
 import { upload } from "../../../storage/upload.js";
 import { dateToSeconds } from "../../date.js";
 import { type Hex, toHex } from "../../encoding/hex.js";
+import { isRecord } from "../../type-guards.js";
 import { convertErc20Amount } from "../convert-erc20-amount.js";
 import { processOverrideList } from "./process-override-list.js";
 import type { ClaimConditionsInput } from "./types.js";
@@ -74,7 +75,12 @@ export async function getMulticallSetClaimConditionTransactions(options: {
     });
     // keep the old merkle roots from other tokenIds
     for (const key of Object.keys(metadata.merkle || {})) {
-      merkleInfos[key] = metadata.merkle[key];
+      const merkleInfo = isRecord(metadata.merkle)
+        ? metadata.merkle[key]
+        : undefined;
+      if (merkleInfo) {
+        merkleInfos[key] = merkleInfo;
+      }
     }
     const mergedMetadata = {
       ...metadata,

@@ -21,7 +21,7 @@ export async function getUniversalBridgeTokens(props: {
     headers: {
       "Content-Type": "application/json",
       "x-client-id": NEXT_PUBLIC_DASHBOARD_CLIENT_ID,
-    } as Record<string, string>,
+    },
     method: "GET",
   });
 

@@ -37,7 +37,7 @@ export function TokenViewerSheet(
     clientContract: ThirdwebContract;
     chainMetadata: ChainMetadata;
     collectionMetadata: {
-      name: string;
+      name: string | null;
       image?: string;
     };
     type: "erc1155" | "erc721";
@@ -56,6 +56,11 @@ export function TokenViewerSheet(
   ),
 ) {
   const tokenId = props.variant === "fetch-data" ? props.tokenId : props.nft.id;
+
+  const collectionMetadataWithNameFallback = {
+    ...props.collectionMetadata,
+    name: props.collectionMetadata.name || props.clientContract.address,
+  };
 
   return (
     <Dialog
@@ -78,7 +83,7 @@ export function TokenViewerSheet(
           <FetchAndRenderTokenInfo
             chainMetadata={props.chainMetadata}
             clientContract={props.clientContract}
-            collectionMetadata={props.collectionMetadata}
+            collectionMetadata={collectionMetadataWithNameFallback}
             tokenByIndexSupported={props.tokenByIndexSupported}
             tokenId={props.tokenId}
             type={props.type}
@@ -86,7 +91,7 @@ export function TokenViewerSheet(
         ) : (
           <TokenInfoUI
             chainMetadata={props.chainMetadata}
-            collectionMetadata={props.collectionMetadata}
+            collectionMetadata={collectionMetadataWithNameFallback}
             contract={props.clientContract}
             data={props.nft}
             tokenId={tokenId}

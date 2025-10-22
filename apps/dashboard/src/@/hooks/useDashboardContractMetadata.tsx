@@ -59,7 +59,10 @@ export async function fetchDashboardContractMetadata(
 
   return {
     contractType: compilerMetadata?.name || "",
-    image: contractMetadata.image || "",
+    image:
+      contractMetadata.image && typeof contractMetadata.image === "string"
+        ? contractMetadata.image
+        : "",
     name: contractName,
     symbol: contractSymbol,
   };
