@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "@noble/ciphers": "^1.2.1",
-    "@noble/curves": "1.8.2",
+    "@noble/curves": "2.0.1",
     "@noble/hashes": "1.7.2",
     "@solana/addresses": "^3.0.0",
     "@solana/keys": "^3.0.0",
