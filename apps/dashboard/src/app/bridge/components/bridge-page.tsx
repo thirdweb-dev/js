@@ -20,7 +20,7 @@ export function BridgePageUI(props: {
     <div className="grow flex flex-col">
       <BridgePageHeader />
 
-      <div className="flex grow items-center justify-center px-4 relative pt-12 pb-20 lg:py-28 min-h-[calc(100dvh-60px)]">
+      <div className="flex grow items-center justify-center px-4 relative pt-12 pb-20 lg:py-28 min-h-[calc(100dvh-60px)] overflow-hidden">
         <DotsBackgroundPattern />
         <UniversalBridgeEmbed buyTab={props.buyTab} swapTab={props.swapTab} />
       </div>
