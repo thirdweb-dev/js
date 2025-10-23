@@ -52,7 +52,7 @@ export function ReceiveFunds(props: {
             )
           }
           qrCodeUri={address}
-          size={310}
+          size={350}
         />
       </Container>
       <Spacer y="xl" />
@@ -62,7 +62,7 @@ export function ReceiveFunds(props: {
         className="tw-copy-address-button"
       >
         <Text color="primaryText" size="md">
-          {shortenString(address || "")}
+          {shortenString(address || "", false)}
         </Text>
         <CopyIcon
           hasCopied={hasCopied}
@@ -76,6 +76,7 @@ export function ReceiveFunds(props: {
       <Text
         balance
         center
+        size="sm"
         className="receive_fund_screen_instruction"
         multiline
       >

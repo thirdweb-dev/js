@@ -74,7 +74,7 @@ export const ConnectingScreen: React.FC<{
             center
             color="primaryText"
             size="lg"
-            weight={600}
+            weight={500}
             className="tw-screen-title"
             data-status={props.errorConnecting ? "failed" : "in-progress"}
           >

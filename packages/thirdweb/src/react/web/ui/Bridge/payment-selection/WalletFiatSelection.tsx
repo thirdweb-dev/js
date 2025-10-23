@@ -1,5 +1,5 @@
 "use client";
-import { ChevronRightIcon, PlusIcon } from "@radix-ui/react-icons";
+import { PlusIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -12,7 +12,6 @@ import { CreditCardIcon } from "../../ConnectWallet/icons/CreditCardIcon.js";
 import { WalletRow } from "../../ConnectWallet/screens/Buy/swap/WalletRow.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 
 interface WalletFiatSelectionProps {
@@ -35,56 +34,39 @@ export function WalletFiatSelection({
   const theme = useCustomTheme();
 
   return (
-    <>
+    <Container flex="column" gap="xs">
       {paymentMethods.includes("crypto") && (
         <>
-          {paymentMethods.length > 1 && (
-            <>
-              <Text color="primaryText" size="sm" weight={500}>
-                Pay with Crypto
-              </Text>
-              <Spacer y="sm" />
-            </>
-          )}
-
           {/* Connected Wallets */}
           {connectedWallets.length > 0 && (
-            <>
-              <Container flex="column" gap="sm">
-                {connectedWallets.map((wallet) => {
-                  const account = wallet.getAccount();
-                  if (!account?.address) {
-                    return null;
-                  }
-                  return (
-                    <Button
-                      fullWidth
-                      key={wallet.id}
-                      onClick={() => onWalletSelected(wallet)}
-                      style={{
-                        backgroundColor: theme.colors.tertiaryBg,
-                        border: `1px solid ${theme.colors.borderColor}`,
-                        borderRadius: radius.md,
-                        justifyContent: "space-between",
-                        padding: `${spacing.sm} ${spacing.md}`,
-                      }}
-                      variant="secondary"
-                    >
-                      <WalletRow
-                        address={account?.address}
-                        client={client}
-                        iconSize="lg"
-                        textSize="sm"
-                      />
-                      <ChevronRightIcon
-                        style={{ height: iconSize.md, width: iconSize.md }}
-                      />
-                    </Button>
-                  );
-                })}
-              </Container>
-              <Spacer y="sm" />
-            </>
+            <Container flex="column" gap="sm">
+              {connectedWallets.map((wallet) => {
+                const account = wallet.getAccount();
+                if (!account?.address) {
+                  return null;
+                }
+                return (
+                  <Button
+                    fullWidth
+                    key={`${wallet.id}-${account.address}`}
+                    onClick={() => onWalletSelected(wallet)}
+                    style={{
+                      borderRadius: radius.md,
+                      justifyContent: "space-between",
+                      padding: `${spacing.md} ${spacing.md}`,
+                    }}
+                    variant="secondary"
+                  >
+                    <WalletRow
+                      address={account?.address}
+                      client={client}
+                      iconSize="lg"
+                      textSize="sm"
+                    />
+                  </Button>
+                );
+              })}
+            </Container>
           )}
 
           {/* Connect Another Wallet */}
@@ -92,11 +74,9 @@ export function WalletFiatSelection({
             fullWidth
             onClick={onConnectWallet}
             style={{
-              backgroundColor: theme.colors.tertiaryBg,
-              border: `1px solid ${theme.colors.borderColor}`,
               borderRadius: radius.md,
               height: "auto",
-              padding: `${spacing.sm} ${spacing.md}`,
+              padding: `${spacing.md} ${spacing.md}`,
               textAlign: "left",
             }}
             variant="secondary"
@@ -109,23 +89,22 @@ export function WalletFiatSelection({
               <Container
                 style={{
                   alignItems: "center",
-                  border: `1px dashed ${theme.colors.secondaryIconColor}`,
-                  borderRadius: radius.sm,
+                  border: `1px dashed ${theme.colors.secondaryText}`,
+                  borderRadius: radius.full,
                   display: "flex",
-                  height: iconSize.lg,
+                  height: `${iconSize.lg}px`,
                   justifyContent: "center",
-                  padding: spacing["4xs"],
-                  width: iconSize.lg,
+                  width: `${iconSize.lg}px`,
                 }}
               >
                 <PlusIcon
                   color={theme.colors.secondaryText}
-                  height={iconSize.md}
-                  width={iconSize.md}
+                  height={iconSize["sm+"]}
+                  width={iconSize["sm+"]}
                 />
               </Container>
               <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+                <Text color="primaryText" size="sm">
                   Connect a Wallet
                 </Text>
                 <Text color="secondaryText" size="xs">
@@ -138,49 +117,37 @@ export function WalletFiatSelection({
       )}
 
       {paymentMethods.includes("card") && (
-        <>
-          <Spacer y="lg" />
-
-          <Text color="primaryText" size="sm" weight={500}>
-            Pay with Card
-          </Text>
-
-          <Spacer y="sm" />
-
-          <Button
-            fullWidth
-            onClick={onFiatSelected}
-            style={{
-              backgroundColor: theme.colors.tertiaryBg,
-              border: `1px solid ${theme.colors.borderColor}`,
-              borderRadius: radius.md,
-              height: "auto",
-              padding: `${spacing.sm} ${spacing.md}`,
-              textAlign: "left",
-            }}
-            variant="secondary"
+        <Button
+          fullWidth
+          onClick={onFiatSelected}
+          style={{
+            borderRadius: radius.md,
+            height: "auto",
+            padding: `${spacing.md} ${spacing.md}`,
+            textAlign: "left",
+          }}
+          variant="secondary"
+        >
+          <Container
+            flex="row"
+            gap="md"
+            style={{ alignItems: "center", width: "100%" }}
           >
-            <Container
-              flex="row"
-              gap="md"
-              style={{ alignItems: "center", width: "100%" }}
-            >
-              <CreditCardIcon
-                color={theme.colors.secondaryIconColor}
-                size={iconSize.lg}
-              />
-              <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
-                  Pay with Card
-                </Text>
-                <Text color="secondaryText" size="xs">
-                  Onramp and pay in one step
-                </Text>
-              </Container>
+            <CreditCardIcon
+              color={theme.colors.secondaryText}
+              size={iconSize.lg}
+            />
+            <Container flex="column" gap="3xs" style={{ flex: 1 }}>
+              <Text color="primaryText" size="sm">
+                Pay with Card
+              </Text>
+              <Text color="secondaryText" size="xs">
+                Onramp and pay in one step
+              </Text>
             </Container>
-          </Button>
-        </>
+          </Container>
+        </Button>
       )}
-    </>
+    </Container>
   );
 }

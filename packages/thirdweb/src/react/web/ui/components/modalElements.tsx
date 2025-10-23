@@ -10,9 +10,10 @@ export const ModalTitle = /* @__PURE__ */ StyledH2((_) => {
   return {
     color: theme.colors.primaryText,
     fontSize: fontSize.lg,
-    fontWeight: 600,
+    fontWeight: 500,
     lineHeight: 1.3,
     margin: 0,
+    letterSpacing: "-0.025em",
     textAlign: "left",
   };
 });

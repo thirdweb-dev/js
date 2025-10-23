@@ -1,48 +1,3 @@
-type ThemeColors = {
-  base1: string;
-  base2: string;
-  base3: string;
-  base4: string;
-  primaryText: string;
-  secondaryText: string;
-  danger: string;
-  success: string;
-  overlay: string;
-  accentText: string;
-  accentBg: string;
-  textOnAccent: string;
-};
-
-const darkColors = {
-  accentBg: "hsl(216 100% 50%)",
-  accentText: "#3385FF",
-  base1: "hsl(230 11.63% 8.43%)",
-  base2: "hsl(230 11.63% 12%)",
-  base3: "hsl(230 11.63% 15%)",
-  base4: "hsl(230 11.63% 17%)",
-  danger: "#e5484D",
-  overlay: "rgba(0, 0, 0, 0.7)",
-  primaryText: "#eeeef0",
-  secondaryText: "#7c7a85",
-  success: "#30A46C",
-  textOnAccent: "#eeeef0",
-} as const satisfies ThemeColors;
-
-const lightColors = {
-  accentBg: "hsl(216 100% 50%)",
-  accentText: "#3385FF",
-  base1: "#fdfcfd",
-  base2: "#f2eff3",
-  base3: "#e3dfe6",
-  base4: "#dbd8e0",
-  danger: "#e5484D",
-  overlay: "rgba(0, 0, 0, 0.7)",
-  primaryText: "#211f26",
-  secondaryText: "#6f6d78",
-  success: "#30A46C",
-  textOnAccent: "#fdfcfd",
-} as const satisfies ThemeColors;
-
 /**
  * @theme
  */
@@ -95,64 +50,77 @@ export type Theme = {
   fontFamily: string;
 };
 
-/**
- * @internal
- */
-function createThemeObj(type: "dark" | "light", colors: ThemeColors): Theme {
-  return {
-    colors: {
-      accentButtonBg: colors.accentBg,
-      accentButtonText: colors.textOnAccent,
-      accentText: colors.accentText,
+export const darkThemeObj: Theme = {
+  type: "dark",
+  colors: {
+    accentButtonBg: "hsl(221 83% 54%)",
+    accentButtonText: "hsl(0 0% 100%)",
+    accentText: "hsl(209.61deg 100% 65.31%)",
+    borderColor: "hsl(0 0% 15%)",
+    connectedButtonBg: "hsl(0 0% 3.92%)",
+    connectedButtonBgHover: "hsl(0 0% 11%)",
+    danger: "hsl(360 72% 55%)",
+    inputAutofillBg: "hsl(0 0% 11%)",
+    modalBg: "hsl(0 0% 3.92%)",
+    primaryButtonBg: "hsl(0 0% 100%)",
+    primaryButtonText: "hsl(0 0% 0%)",
+    primaryText: "hsl(0 0% 98%)",
+    scrollbarBg: "hsl(0 0% 11%)",
+    secondaryButtonBg: "hsl(0 0% 9%)",
+    modalOverlayBg: "rgba(0, 0, 0, 0.7)",
+    secondaryButtonHoverBg: "hsl(0 0% 9%/80%)",
+    secondaryButtonText: "hsl(0 0% 98%)",
+    secondaryIconColor: "hsl(0 0% 63%)",
+    secondaryIconHoverBg: "hsl(0 0% 11%)",
+    secondaryIconHoverColor: "hsl(0 0% 98%)",
+    secondaryText: "hsl(0 0% 63%)",
+    selectedTextBg: "hsl(0 0% 100%)",
+    selectedTextColor: "hsl(0 0% 0%)",
+    separatorLine: "hsl(0 0% 15%)",
+    skeletonBg: "hsl(0 0% 12%)",
+    success: "hsl(142 75% 50%)",
+    tertiaryBg: "hsl(0 0% 11%/50%)",
+    tooltipBg: "hsl(0 0% 11%)",
+    tooltipText: "hsl(0 0% 98%)",
+  },
+  fontFamily: "inherit",
+};
 
-      borderColor: colors.base4,
-
-      connectedButtonBg: colors.base1,
-      connectedButtonBgHover: colors.base2,
-
-      danger: colors.danger,
-
-      inputAutofillBg: colors.base1,
-
-      modalBg: colors.base1,
-
-      modalOverlayBg: colors.overlay,
-
-      primaryButtonBg: colors.primaryText,
-      primaryButtonText: colors.base1,
-      primaryText: colors.primaryText,
-      scrollbarBg: colors.base2,
-
-      secondaryButtonBg: colors.base3,
-      secondaryButtonHoverBg: colors.base4,
-      secondaryButtonText: colors.primaryText,
-
-      secondaryIconColor: colors.secondaryText,
-      secondaryIconHoverBg: colors.base3,
-      secondaryIconHoverColor: colors.primaryText,
-      secondaryText: colors.secondaryText,
-      selectedTextBg: colors.primaryText,
-
-      selectedTextColor: colors.base1,
-
-      separatorLine: colors.base4,
-      skeletonBg: colors.base4,
-      success: colors.success,
-      tertiaryBg: colors.base2,
-
-      tooltipBg: colors.primaryText,
-      tooltipText: colors.base1,
-    },
-    fontFamily: "inherit",
-    type,
-  };
-}
-
-export const darkThemeObj = /* @__PURE__ */ createThemeObj("dark", darkColors);
-export const lightThemeObj = /* @__PURE__ */ createThemeObj(
-  "light",
-  lightColors,
-);
+export const lightThemeObj: Theme = {
+  type: "light",
+  colors: {
+    accentButtonBg: "hsl(221 83% 54%)",
+    accentButtonText: "hsl(0 0% 100%)",
+    accentText: "hsl(211.23deg 100% 44.47%)",
+    borderColor: "hsl(0 0% 85%)",
+    connectedButtonBg: "hsl(0 0% 100%)",
+    connectedButtonBgHover: "hsl(0 0% 93%)",
+    danger: "hsl(360 72% 60%)",
+    inputAutofillBg: "hsl(0 0% 93%)",
+    modalBg: "hsl(0 0% 100%)",
+    primaryButtonBg: "hsl(0 0% 4%)",
+    primaryButtonText: "hsl(0 0% 100%)",
+    primaryText: "hsl(0 0% 4%)",
+    scrollbarBg: "hsl(0 0% 93%)",
+    secondaryButtonBg: "hsl(0 0% 93%)",
+    modalOverlayBg: "rgba(0, 0, 0, 0.7)",
+    secondaryButtonHoverBg: "hsl(0 0% 93%/80%)",
+    secondaryButtonText: "hsl(0 0% 4%)",
+    secondaryIconColor: "hsl(0 0% 40%)",
+    secondaryIconHoverBg: "hsl(0 0% 93%)",
+    secondaryIconHoverColor: "hsl(0 0% 4%)",
+    secondaryText: "hsl(0 0% 40%)",
+    selectedTextBg: "hsl(0 0% 4%)",
+    selectedTextColor: "hsl(0 0% 100%)",
+    separatorLine: "hsl(0 0% 85%)",
+    skeletonBg: "hsl(0 0% 85%)",
+    success: "hsl(142.09 70.56% 35.29%)",
+    tertiaryBg: "hsl(0 0% 93%/70%)",
+    tooltipBg: "hsl(0 0% 100%)",
+    tooltipText: "hsl(0 0% 4%)",
+  },
+  fontFamily: "inherit",
+};
 
 /**
  * @theme

@@ -61,10 +61,8 @@ function PaymentMethodTokenRow({
       onClick={() => onPaymentMethodSelected(paymentMethod)}
       style={{
         backgroundColor: theme.colors.tertiaryBg,
-        border: `1px solid ${theme.colors.borderColor}`,
-        borderRadius: radius.md,
-        opacity: hasEnoughBalance ? 1 : 0.5,
-        padding: `${spacing.sm} ${spacing.md}`,
+        borderRadius: radius.lg,
+        padding: `${spacing.md} ${spacing.md}`,
         textAlign: "left",
       }}
       variant="secondary"
@@ -134,71 +132,74 @@ export function TokenSelection({
 
   if (paymentMethodsLoading) {
     return (
-      <>
-        <Text color="primaryText" size="md">
-          Loading your tokens
-        </Text>
-        <Spacer y="sm" />
-        <Container flex="column" gap="sm">
-          {/* Skeleton rows matching PaymentMethodTokenRow structure */}
-          {[1, 2, 3].map((i) => (
+      <Container
+        flex="column"
+        gap="xs"
+        pb="lg"
+        style={{
+          maxHeight: "400px",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+        }}
+      >
+        {/* Skeleton rows matching PaymentMethodTokenRow structure */}
+        {new Array(10).fill(0).map((_, i) => (
+          <Container
+            // biome-ignore lint/suspicious/noArrayIndexKey: ok
+            key={i}
+            style={{
+              backgroundColor: theme.colors.tertiaryBg,
+              borderRadius: radius.lg,
+              padding: `${spacing.md} ${spacing.md}`,
+            }}
+          >
             <Container
-              key={i}
-              style={{
-                backgroundColor: theme.colors.tertiaryBg,
-                border: `1px solid ${theme.colors.borderColor}`,
-                borderRadius: radius.md,
-                padding: `${spacing.sm} ${spacing.md}`,
-              }}
+              flex="row"
+              gap="md"
+              style={{ alignItems: "center", width: "100%" }}
             >
+              {/* Left side: Token icon and name skeleton */}
               <Container
+                center="y"
                 flex="row"
-                gap="md"
-                style={{ alignItems: "center", width: "100%" }}
+                gap="sm"
+                style={{ maxWidth: "50%" }}
               >
-                {/* Left side: Token icon and name skeleton */}
-                <Container
-                  center="y"
-                  flex="row"
-                  gap="sm"
-                  style={{ maxWidth: "50%" }}
-                >
-                  {/* Token icon skeleton */}
-                  <div
-                    style={{
-                      backgroundColor: theme.colors.skeletonBg,
-                      borderRadius: "50%",
-                      height: "32px",
-                      width: "32px",
-                    }}
-                  />
-                  <Container flex="column" gap="3xs">
-                    {/* Token name skeleton */}
-                    <Skeleton height="14px" width="60px" />
-                    {/* Chain name skeleton */}
-                    <Skeleton height="12px" width="40px" />
-                  </Container>
+                {/* Token icon skeleton */}
+                <div
+                  style={{
+                    backgroundColor: theme.colors.skeletonBg,
+                    borderRadius: "50%",
+                    height: "32px",
+                    width: "32px",
+                  }}
+                />
+                <Container flex="column" gap="3xs">
+                  {/* Token name skeleton */}
+                  <Skeleton height="14px" width="60px" />
+                  {/* Chain name skeleton */}
+                  <Skeleton height="12px" width="40px" />
                 </Container>
+              </Container>
 
-                {/* Right side: Price and balance skeleton */}
-                <Container
-                  flex="column"
-                  gap="3xs"
-                  style={{ alignItems: "flex-end", flex: 1 }}
-                >
-                  {/* Price amount skeleton */}
-                  <Skeleton height="16px" width="80px" />
-                  {/* Balance skeleton */}
-                  <Container flex="row" gap="3xs">
-                    <Skeleton height="12px" width="50px" />
-                    <Skeleton height="12px" width="40px" />
-                  </Container>
+              {/* Right side: Price and balance skeleton */}
+              <Container
+                flex="column"
+                gap="3xs"
+                style={{ alignItems: "flex-end", flex: 1 }}
+              >
+                {/* Price amount skeleton */}
+                <Skeleton height="16px" width="80px" />
+                {/* Balance skeleton */}
+                <Container flex="row" gap="3xs">
+                  <Skeleton height="12px" width="50px" />
+                  <Skeleton height="12px" width="40px" />
                 </Container>
               </Container>
             </Container>
-          ))}
-        </Container>
-      </>
+          </Container>
+        ))}
+      </Container>
     );
   }
 
@@ -221,35 +222,30 @@ export function TokenSelection({
   }
 
   return (
-    <>
-      <Text color="primaryText" size="md">
-        Your token balances
-      </Text>
-      <Spacer y="sm" />
-      <Container
-        flex="column"
-        gap="sm"
-        style={{
-          maxHeight: "400px",
-          overflowY: "auto",
-          scrollbarWidth: "none",
-        }}
-      >
-        {paymentMethods
-          .filter((method) => method.type === "wallet")
-          .map((method) => (
-            <PaymentMethodTokenRow
-              client={client}
-              destinationAmount={destinationAmount}
-              destinationToken={destinationToken}
-              feePayer={feePayer}
-              key={`${method.originToken.address}-${method.originToken.chainId}`}
-              onPaymentMethodSelected={onPaymentMethodSelected}
-              paymentMethod={method}
-              currency={currency}
-            />
-          ))}
-      </Container>
-    </>
+    <Container
+      flex="column"
+      gap="xs"
+      pb="lg"
+      style={{
+        maxHeight: "400px",
+        overflowY: "auto",
+        scrollbarWidth: "none",
+      }}
+    >
+      {paymentMethods
+        .filter((method) => method.type === "wallet")
+        .map((method) => (
+          <PaymentMethodTokenRow
+            client={client}
+            destinationAmount={destinationAmount}
+            destinationToken={destinationToken}
+            feePayer={feePayer}
+            key={`${method.originToken.address}-${method.originToken.chainId}`}
+            onPaymentMethodSelected={onPaymentMethodSelected}
+            paymentMethod={method}
+            currency={currency}
+          />
+        ))}
+    </Container>
   );
 }

@@ -76,7 +76,7 @@ export function WalletEntryButton(props: {
 
       <Container expand flex="column" gap="xxs">
         {nameOverride ? (
-          <Text color="primaryText" weight={600}>
+          <Text color="primaryText" weight={500}>
             {nameOverride}
           </Text>
         ) : (

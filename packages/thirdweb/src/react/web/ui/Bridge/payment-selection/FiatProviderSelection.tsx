@@ -5,7 +5,6 @@ import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { checksumAddress } from "../../../../../utils/address.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../utils/units.js";
-import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   iconSize,
   radius,
@@ -62,8 +61,6 @@ export function FiatProviderSelection({
   currency,
   country,
 }: FiatProviderSelectionProps) {
-  const theme = useCustomTheme();
-
   // Fetch quotes for all providers
   const quoteQueries = useBuyWithFiatQuotesForProviders({
     amount: toAmount || "0",
@@ -122,9 +119,9 @@ export function FiatProviderSelection({
                 fullWidth
                 onClick={() => onProviderSelected(provider.id)}
                 style={{
-                  border: `1px solid ${theme.colors.borderColor}`,
-                  borderRadius: radius.md,
+                  borderRadius: radius.lg,
                   textAlign: "left",
+                  padding: `${spacing.md}`,
                 }}
                 variant="secondary"
               >

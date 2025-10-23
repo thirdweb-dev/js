@@ -320,7 +320,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       bottomSection = (
         <>
           <Line />
-          <Container flex="column" gap="md" p="md">
+          <Container flex="column" gap="md" px="lg" py="md+">
             {newToWallets}
             {continueAsGuest}
           </Container>
@@ -705,7 +705,7 @@ const ShowAllWalletsIcon = /* @__PURE__ */ StyledDiv(() => {
     },
     alignItems: "center",
     backgroundColor: theme.colors.tertiaryBg,
-    border: `2px solid ${theme.colors.borderColor}`,
+    border: `1px solid ${theme.colors.borderColor}`,
     borderRadius: radius.md,
     display: "grid",
     gap: spacing["4xs"],
