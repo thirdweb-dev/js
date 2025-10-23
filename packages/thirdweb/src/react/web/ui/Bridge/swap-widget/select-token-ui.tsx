@@ -45,11 +45,11 @@ type SelectTokenUIProps = {
   activeWalletInfo: ActiveWalletInfo | undefined;
 };
 
-function getDefaultSelectedChain(
-  chains: BridgeChain[],
-  activeChainId: number | undefined,
-) {
-  return chains.find((chain) => chain.chainId === (activeChainId || 1));
+function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
+  if (!activeChainId) {
+    return undefined;
+  }
+  return chains.find((chain) => chain.chainId === activeChainId);
 }
 
 /**
@@ -67,11 +67,9 @@ export function SelectToken(props: SelectTokenUIProps) {
   const selectedChain =
     _selectedChain ||
     (chainQuery.data
-      ? getDefaultSelectedChain(
-          chainQuery.data,
-          props.selectedToken?.chainId ||
-            props.activeWalletInfo?.activeChain.id,
-        )
+      ? findChain(chainQuery.data, props.selectedToken?.chainId) ||
+        findChain(chainQuery.data, props.activeWalletInfo?.activeChain.id) ||
+        findChain(chainQuery.data, 1)
       : undefined);
 
   // all tokens
