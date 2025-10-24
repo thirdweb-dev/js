@@ -18,8 +18,7 @@ export async function GET(request: NextRequest) {
   // const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_SMART_WALLET as string;
   const ENGINE_VAULT_ACCESS_TOKEN = process.env
     .ENGINE_VAULT_ACCESS_TOKEN as string;
-  // const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-  const API_URL = "http://localhost:3030";
+  const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
 
   const twFacilitator = facilitator({
     baseUrl: `${API_URL}/v1/payments/x402`,
