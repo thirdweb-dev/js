@@ -71,12 +71,18 @@ export async function getNFTs(
   const { useIndexer = true } = options;
   if (useIndexer) {
     try {
-      return await getNFTsFromInsight(options);
+      return await getNFTsFromInsight(options).then((nfts) =>
+        nfts.filter((nft) => nft?.id !== undefined && nft?.id !== null),
+      );
     } catch {
-      return await getNFTsFromRPC(options);
+      return await getNFTsFromRPC(options).then((nfts) =>
+        nfts.filter((nft) => nft?.id !== undefined && nft?.id !== null),
+      );
     }
   }
-  return await getNFTsFromRPC(options);
+  return await getNFTsFromRPC(options).then((nfts) =>
+    nfts.filter((nft) => nft?.id !== undefined && nft?.id !== null),
+  );
 }
 
 /**
