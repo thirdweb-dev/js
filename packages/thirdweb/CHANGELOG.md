@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.110.3
+
+### Patch Changes
+
+- [#8314](https://github.com/thirdweb-dev/js/pull/8314) [`bf46520`](https://github.com/thirdweb-dev/js/commit/bf46520a6b183c4beb873de5e63853cd3a23e685) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enhance compatiblity with third party x402 libs
+
 ## 5.110.2
 
 ### Patch Changes
