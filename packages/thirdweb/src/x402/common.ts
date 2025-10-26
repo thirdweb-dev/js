@@ -162,7 +162,8 @@ export async function decodePaymentRequest(
   const selectedPaymentRequirements = paymentRequirements.find(
     (value) =>
       value.scheme === decodedPayment.scheme &&
-      value.network === decodedPayment.network,
+      networkToChainId(value.network) ===
+        networkToChainId(decodedPayment.network),
   );
   if (!selectedPaymentRequirements) {
     return {
