@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.110.2
+
+### Patch Changes
+
+- [#8304](https://github.com/thirdweb-dev/js/pull/8304) [`3e9eb49`](https://github.com/thirdweb-dev/js/commit/3e9eb49787e00c09c3286aeb4ad73826a2856e65) Thanks [@MananTank](https://github.com/MananTank)! - Fix Select Token UI stuck in loading state if wallet is connected to a chain that is not supported by thirdweb Bridge in BuyWidget, SwapWidget and BridgeWidget
+
+- [#8311](https://github.com/thirdweb-dev/js/pull/8311) [`bfd3be7`](https://github.com/thirdweb-dev/js/commit/bfd3be764c461c420f1f8520fe4d5d2cc83e42f7) Thanks [@jnsdls](https://github.com/jnsdls)! - filter out null-ish values from `ERC721.getNFTs()` and `ERC1155.getNFTs()` arrays
+
+- [#8313](https://github.com/thirdweb-dev/js/pull/8313) [`ae3a122`](https://github.com/thirdweb-dev/js/commit/ae3a122cf1628f0fc997dd240d4b23842ac30f66) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix network comparison when using diff libraries
+
+- [#8301](https://github.com/thirdweb-dev/js/pull/8301) [`d5d5939`](https://github.com/thirdweb-dev/js/commit/d5d593956e12b2a15393ed32d1d742bc43575bdd) Thanks [@kumaryash90](https://github.com/kumaryash90)! - create2 factory for neura testnet
+
+- [#8305](https://github.com/thirdweb-dev/js/pull/8305) [`f757e60`](https://github.com/thirdweb-dev/js/commit/f757e6084648b6b6e5879abeab30954753a1020d) Thanks [@MananTank](https://github.com/MananTank)! - Update theme colors and minor UI tweaks in React Components
+
 ## 5.110.1
 
 ### Patch Changes
