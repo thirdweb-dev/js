@@ -1,6 +1,6 @@
 import type { Abi } from "abitype";
 import { toFunctionSelector } from "viem/utils";
-import { type Money, moneySchema } from "x402/types";
+import { ChainIdToNetwork, type Money, moneySchema } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
@@ -98,9 +98,10 @@ export async function decodePaymentRequest(
 
   const paymentRequirements: RequestedPaymentRequirements[] = [];
 
+  const mappedNetwork = ChainIdToNetwork[chainId];
   paymentRequirements.push({
     scheme: "exact",
-    network: `eip155:${chainId}`,
+    network: mappedNetwork ? mappedNetwork : `eip155:${chainId}`,
     maxAmountRequired,
     resource: resourceUrl,
     description: description ?? "",
@@ -263,7 +264,7 @@ async function getDefaultAsset(
 ): Promise<DefaultAsset | undefined> {
   const supportedAssets = await facilitator.supported();
   const matchingAsset = supportedAssets.kinds.find(
-    (supported) => supported.network === `eip155:${chainId}`,
+    (supported) => networkToChainId(supported.network) === chainId,
   );
   const assetConfig = matchingAsset?.extra?.defaultAsset as DefaultAsset;
   return assetConfig;
