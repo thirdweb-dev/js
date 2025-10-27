@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.110.4
+
+### Patch Changes
+
+- [#8310](https://github.com/thirdweb-dev/js/pull/8310) [`23cb3bd`](https://github.com/thirdweb-dev/js/commit/23cb3bd98c5390e64f45da5a222042cdc76bd7f4) Thanks [@MananTank](https://github.com/MananTank)! - Minor UI adjustments in CheckoutWidget
+
+- [#8317](https://github.com/thirdweb-dev/js/pull/8317) [`abf0bba`](https://github.com/thirdweb-dev/js/commit/abf0bbaf359c8de5b0ed0d481e3791c4b7cbf92b) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - updates default x402 transfer with authorization timeout
+
+- [#8319](https://github.com/thirdweb-dev/js/pull/8319) [`e0abf2b`](https://github.com/thirdweb-dev/js/commit/e0abf2b2738661fda3c69551d78231cfac4b0767) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update x402 types
+
 ## 5.110.3
 
 ### Patch Changes
