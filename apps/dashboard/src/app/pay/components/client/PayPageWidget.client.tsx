@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@workspace/ui/lib/utils";
 import { payAppThirdwebClient } from "app/pay/constants";
 import { useTheme } from "next-themes";
 import { createThirdwebClient, NATIVE_TOKEN_ADDRESS, toTokens } from "thirdweb";
@@ -63,7 +64,12 @@ export function PayPageWidget({
         client={
           clientId ? createThirdwebClient({ clientId }) : payAppThirdwebClient
         }
-        image={image}
+        className={cn(
+          "shadow-xl",
+          !image &&
+            "[&_.tw-header-image]:invert dark:[&_.tw-header-image]:invert-0",
+        )}
+        image={image || "/assets/pay/general-pay.png"}
         name={name}
         onSuccess={() => {
           reportPaymentLinkBuySuccessful();

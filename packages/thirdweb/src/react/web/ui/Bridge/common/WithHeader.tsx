@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { resolveScheme } from "../../../../../utils/ipfs.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import { radius } from "../../../../core/design-system/index.js";
+import { radius, spacing } from "../../../../core/design-system/index.js";
 import { Container } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
@@ -20,6 +20,7 @@ export function WithHeader(props: {
       {/* image */}
       {props.image && (
         <div
+          className="tw-header-image"
           style={{
             aspectRatio: "16/9",
             backgroundColor: theme.colors.tertiaryBg,
@@ -27,6 +28,7 @@ export function WithHeader(props: {
             backgroundPosition: "center",
             backgroundSize: "cover",
             borderRadius: `${radius.md} ${radius.md} 0 0`,
+            marginBottom: spacing.xxs,
             overflow: "hidden",
             width: "100%",
           }}
@@ -40,7 +42,7 @@ export function WithHeader(props: {
           <>
             {/* title */}
             {props.title && (
-              <Text color="primaryText" size="lg" weight={600}>
+              <Text color="primaryText" size="lg" weight={500} trackingTight>
                 {props.title}
               </Text>
             )}

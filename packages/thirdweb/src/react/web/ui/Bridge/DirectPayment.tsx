@@ -93,11 +93,11 @@ export function DirectPayment({
     >
       {/* Price section */}
       <Container
-        center="y"
         flex="row"
         gap="3xs"
         style={{
           justifyContent: "space-between",
+          alignItems: "end",
         }}
       >
         <FiatValue
@@ -108,7 +108,7 @@ export function DirectPayment({
           size="xl"
           token={paymentInfo.token}
           tokenAmount={paymentInfo.amount}
-          weight={600}
+          weight={500}
         />
         <Container flex="row" gap="3xs">
           <Text
@@ -118,6 +118,9 @@ export function DirectPayment({
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
+              textTransform: "uppercase",
+              letterSpacing: "0.07em",
+              opacity: 0.7,
             }}
           >
             One-time payment
@@ -125,11 +128,11 @@ export function DirectPayment({
         </Container>
       </Container>
 
-      <Spacer y="md" />
+      <Spacer y="md+" />
 
-      <Line />
+      <Line dashed />
 
-      <Spacer y="md" />
+      <Spacer y="md+" />
 
       <Container
         flex="row"
@@ -141,18 +144,12 @@ export function DirectPayment({
         <Text color="secondaryText" size="sm">
           Price
         </Text>
-        <Text
-          color="primaryText"
-          size="sm"
-          style={{
-            fontFamily: "monospace",
-          }}
-        >
+        <Text color="primaryText" size="sm">
           {`${paymentInfo.amount} ${paymentInfo.token.symbol}`}
         </Text>
       </Container>
 
-      <Spacer y="xs" />
+      <Spacer y="sm" />
 
       {/* Network section */}
       <Container
@@ -173,18 +170,15 @@ export function DirectPayment({
             color="primaryText"
             short
             size="sm"
-            style={{
-              fontFamily: "monospace",
-            }}
           />
         </Container>
       </Container>
 
-      <Spacer y="md" />
+      <Spacer y="md+" />
 
-      <Line />
+      <Line dashed />
 
-      <Spacer y="lg" />
+      <Spacer y="md+" />
 
       {/* Action button */}
       <Container flex="column">
@@ -194,11 +188,11 @@ export function DirectPayment({
 
         {showThirdwebBranding ? (
           <div>
-            <Spacer y="md" />
+            <Spacer y="md+" />
             <PoweredByThirdweb />
           </div>
         ) : null}
-        <Spacer y="md" />
+        <Spacer y="md+" />
       </Container>
     </WithHeader>
   );
