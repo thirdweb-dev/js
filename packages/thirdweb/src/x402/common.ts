@@ -107,7 +107,7 @@ export async function decodePaymentRequest(
     description: description ?? "",
     mimeType: mimeType ?? "application/json",
     payTo: getAddress(facilitator.address), // always pay to the facilitator address first
-    maxTimeoutSeconds: maxTimeoutSeconds ?? 300,
+    maxTimeoutSeconds: maxTimeoutSeconds ?? 86400,
     asset: getAddress(asset.address),
     outputSchema: {
       input: {

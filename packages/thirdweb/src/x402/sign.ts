@@ -32,7 +32,7 @@ function preparePaymentHeader(
   nonce: Hex,
 ): UnsignedPaymentPayload {
   const validAfter = BigInt(
-    Math.floor(Date.now() / 1000) - 600, // 10 minutes before
+    Math.floor(Date.now() / 1000) - 86400, // 24h before in case weird block timestamp behavior
   ).toString();
   const validBefore = BigInt(
     Math.floor(Date.now() / 1000 + paymentRequirements.maxTimeoutSeconds),
