@@ -19,7 +19,7 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
-    "@radix-ui/react-tooltip": "1.2.7",
+    "@radix-ui/react-tooltip": "1.2.8",
     "@sentry/nextjs": "9.34.0",
     "@shazow/whatsabi": "0.22.2",
     "@stripe/react-stripe-js": "4.0.2",

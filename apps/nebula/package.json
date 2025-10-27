@@ -11,7 +11,7 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
-    "@radix-ui/react-tooltip": "1.2.7",
+    "@radix-ui/react-tooltip": "1.2.8",
     "@tanstack/react-query": "5.81.5",
     "@vercel/functions": "2.2.2",
     "class-variance-authority": "^0.7.1",
