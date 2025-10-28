@@ -59,7 +59,6 @@ export function ErrorRate({ datapoints }: { datapoints: ResultItem[] }) {
           key={tag}
           stackId="a"
           stroke={`var(--color-${tag})`}
-          type="natural"
         />,
       );
     }
