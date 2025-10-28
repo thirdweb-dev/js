@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   const amount = queryParams.get("amount") || "0.01";
   const payTo = queryParams.get("payTo") ?? undefined;
-  const tokenAddress = queryParams.get("tokenAddress") || token.address;
+  const tokenAddress = queryParams.get("tokenAddress");
   const decimals = queryParams.get("decimals") || token.decimals.toString();
   const waitUntil =
     (queryParams.get("waitUntil") as "simulated" | "submitted" | "confirmed") ||
@@ -53,13 +53,15 @@ export async function GET(request: NextRequest) {
     paymentData,
     network: defineChain(Number(chainId)),
     payTo,
-    price: {
-      amount: toUnits(amount, parseInt(decimals)).toString(),
-      asset: {
-        address: tokenAddress as `0x${string}`,
-        decimals: decimals ? parseInt(decimals) : token.decimals,
-      },
-    },
+    price: tokenAddress
+      ? {
+          amount: toUnits(amount, parseInt(decimals)).toString(),
+          asset: {
+            address: tokenAddress as `0x${string}`,
+            decimals: decimals ? parseInt(decimals) : token.decimals,
+          },
+        }
+      : amount,
     routeConfig: {
       description: "Access to paid content",
     },
