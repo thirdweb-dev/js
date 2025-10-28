@@ -10,6 +10,7 @@ export { anvil } from "../chains/chain-definitions/anvil.js";
 export { arbitrum } from "../chains/chain-definitions/arbitrum.js";
 export { arbitrumNova } from "../chains/chain-definitions/arbitrum-nova.js";
 export { arbitrumSepolia } from "../chains/chain-definitions/arbitrum-sepolia.js";
+export { arcTestnet } from "../chains/chain-definitions/arc-testnet.js";
 export { assetChainTestnet } from "../chains/chain-definitions/assetchain-testnet.js";
 export { astriaEvmDusknet } from "../chains/chain-definitions/astria-evm-dusknet.js";
 export { avalanche } from "../chains/chain-definitions/avalanche.js";
