@@ -70,8 +70,8 @@ export function CreateSolanaWallet(props: {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="default"
-          className="gap-2 rounded-full bg-foreground hover:bg-foreground/90"
+          variant="outline"
+          className="gap-1.5 rounded-full bg-background text-foreground"
           disabled={props.disabled}
         >
           <PlusIcon className="size-4" />

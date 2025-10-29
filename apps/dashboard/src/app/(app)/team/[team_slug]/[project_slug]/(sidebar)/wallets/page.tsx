@@ -202,6 +202,7 @@ export default async function Page(props: {
                 solanaWallets={solanaAccounts.data.items}
                 teamSlug={params.team_slug}
                 solanaPermissionError={isSolanaPermissionError || false}
+                authToken={authToken}
               />
             )}
           </div>
