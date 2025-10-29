@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.110.5
+
+### Patch Changes
+
+- [#8327](https://github.com/thirdweb-dev/js/pull/8327) [`c08fb13`](https://github.com/thirdweb-dev/js/commit/c08fb1356e77be9eeb0569905fcb2ab76a516dc3) Thanks [@MananTank](https://github.com/MananTank)! - Fix Safe wallet connection issues with WalletConnect
+
+- [#8331](https://github.com/thirdweb-dev/js/pull/8331) [`bcbb3f5`](https://github.com/thirdweb-dev/js/commit/bcbb3f540a8eab2b02f9261b779bd2aad3464598) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Loosen network schema
+
+- [#8325](https://github.com/thirdweb-dev/js/pull/8325) [`e0c8312`](https://github.com/thirdweb-dev/js/commit/e0c83121c201eb2dbdfa6a6b1bbb637f5ad2a21d) Thanks [@Yash094](https://github.com/Yash094)! - Add Arc testnet to chains package
+
 ## 5.110.4
 
 ### Patch Changes
