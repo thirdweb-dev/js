@@ -40,6 +40,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -102,6 +109,9 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
 
   const [activeChain, setActiveChain] = useState<WalletChain>("evm");
   const [selectedChainId, setSelectedChainId] = useState<number>(1);
+  const [selectedSolanaChain, setSelectedSolanaChain] = useState<
+    "solana:mainnet" | "solana:devnet"
+  >("solana:mainnet");
   const [showSmartAccount, setShowSmartAccount] = useState(false);
   const queryClient = useQueryClient();
 
@@ -148,11 +158,33 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
                 </>
               )}
               {activeChain === "solana" && (
-                <CreateSolanaWallet
-                  project={project}
-                  teamSlug={teamSlug}
-                  disabled={solanaPermissionError}
-                />
+                <>
+                  <CreateSolanaWallet
+                    project={project}
+                    teamSlug={teamSlug}
+                    disabled={solanaPermissionError}
+                  />
+                  <Select
+                    value={selectedSolanaChain}
+                    onValueChange={(value) =>
+                      setSelectedSolanaChain(
+                        value as "solana:mainnet" | "solana:devnet",
+                      )
+                    }
+                  >
+                    <SelectTrigger className="w-fit min-w-[180px] rounded-full bg-background hover:bg-accent/50">
+                      <SelectValue placeholder="Select network" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="solana:mainnet" className="rounded-lg">
+                        Solana Mainnet
+                      </SelectItem>
+                      <SelectItem value="solana:devnet" className="rounded-lg">
+                        Solana Devnet
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
               )}
             </div>
 
@@ -282,6 +314,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
                         teamSlug={teamSlug}
                         client={client}
                         authToken={authToken}
+                        chainId={selectedSolanaChain}
                       />
                     ))}
                 </TableBody>
@@ -512,12 +545,14 @@ function SolanaWalletRow({
   teamSlug,
   client,
   authToken,
+  chainId,
 }: {
   wallet: SolanaWallet;
   project: Project;
   teamSlug: string;
   client: ThirdwebClient;
   authToken: string;
+  chainId: "solana:mainnet" | "solana:devnet";
 }) {
   const engineService = project.services.find(
     (s) => s.name === "engineCloud",
@@ -557,6 +592,7 @@ function SolanaWalletRow({
           publicKey={wallet.publicKey}
           authToken={authToken}
           clientId={project.publishableKey}
+          chainId={chainId}
         />
       </TableCell>
 
@@ -753,10 +789,12 @@ function SolanaWalletBalance({
   publicKey,
   authToken,
   clientId,
+  chainId,
 }: {
   publicKey: string;
   authToken: string;
   clientId: string;
+  chainId: "solana:mainnet" | "solana:devnet";
 }) {
   const balance = useQuery({
     queryFn: async () => {
@@ -764,9 +802,10 @@ function SolanaWalletBalance({
         publicKey,
         authToken,
         clientId,
+        chainId,
       });
     },
-    queryKey: ["solanaWalletBalance", publicKey],
+    queryKey: ["solanaWalletBalance", publicKey, chainId],
   });
 
   if (balance.isFetching) {
