@@ -172,7 +172,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                     key={key}
                     stackId={props.variant !== "stacked" ? undefined : "a"}
                     stroke={`var(--color-${key})`}
-                    type="natural"
+                    type="monotone"
                   />
                 ),
               )}

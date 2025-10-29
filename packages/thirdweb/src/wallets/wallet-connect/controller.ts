@@ -157,7 +157,7 @@ export async function connectWC(
   );
   const currentChainId = chainsToRequest[0]?.split(":")[1] || 1;
   const providerChainId = normalizeChainId(currentChainId);
-  const account = firstAccountOn(provider.session, `eip155:1`); // grab the address from mainnet
+  const account = firstAccountOn(provider.session, `eip155:1`); // grab the address from mainnet if available
   const address = account;
   if (!address) {
     throw new Error("No accounts found on provider.");
@@ -291,7 +291,8 @@ function hasChainEnabled(session: WCSession, caip: string) {
 }
 function firstAccountOn(session: WCSession, caip: string): string | null {
   const ns = getNS(session);
-  const hit = ns?.accounts?.find((a) => a.startsWith(`${caip}:`));
+  const hit =
+    ns?.accounts?.find((a) => a.startsWith(`${caip}:`)) || ns?.accounts[0];
   return hit ? (hit.split(":")[2] ?? null) : null;
 }
 function anyRoutableChain(session: WCSession): string | null {

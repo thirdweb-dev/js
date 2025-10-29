@@ -95,7 +95,7 @@ function SkeletonBarChart(props: {
             fill={`url(#${fillAreaSkeletonId})`}
             radius={8}
             stroke="hsl(var(--muted-foreground))"
-            type="natural"
+            type="monotone"
           />
         </AreaChart>
       )}

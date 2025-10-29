@@ -18,8 +18,7 @@ export async function GET(request: NextRequest) {
   // const BACKEND_WALLET_ADDRESS = process.env.ENGINE_BACKEND_SMART_WALLET as string;
   const ENGINE_VAULT_ACCESS_TOKEN = process.env
     .ENGINE_VAULT_ACCESS_TOKEN as string;
-  // const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
-  const API_URL = "http://localhost:3030";
+  const API_URL = `https://${process.env.NEXT_PUBLIC_API_URL || "api.thirdweb.com"}`;
 
   const twFacilitator = facilitator({
     baseUrl: `${API_URL}/v1/payments/x402`,
@@ -42,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   const amount = queryParams.get("amount") || "0.01";
   const payTo = queryParams.get("payTo") ?? undefined;
-  const tokenAddress = queryParams.get("tokenAddress") || token.address;
+  const tokenAddress = queryParams.get("tokenAddress");
   const decimals = queryParams.get("decimals") || token.decimals.toString();
   const waitUntil =
     (queryParams.get("waitUntil") as "simulated" | "submitted" | "confirmed") ||
@@ -54,13 +53,15 @@ export async function GET(request: NextRequest) {
     paymentData,
     network: defineChain(Number(chainId)),
     payTo,
-    price: {
-      amount: toUnits(amount, parseInt(decimals)).toString(),
-      asset: {
-        address: tokenAddress as `0x${string}`,
-        decimals: decimals ? parseInt(decimals) : token.decimals,
-      },
-    },
+    price: tokenAddress
+      ? {
+          amount: toUnits(amount, parseInt(decimals)).toString(),
+          asset: {
+            address: tokenAddress as `0x${string}`,
+            decimals: decimals ? parseInt(decimals) : token.decimals,
+          },
+        }
+      : amount,
     routeConfig: {
       description: "Access to paid content",
     },

@@ -49,5 +49,7 @@ function formatMoney(
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currencyCode,
+    maximumFractionDigits: 5,
+    minimumFractionDigits: 0,
   }).format(value);
 }

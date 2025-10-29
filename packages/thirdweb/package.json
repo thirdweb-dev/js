@@ -39,7 +39,7 @@
     "toml": "3.0.0",
     "uqr": "0.1.2",
     "viem": "2.37.9",
-    "x402": "0.6.1",
+    "x402": "0.7.0",
     "zod": "3.25.75"
   },
   "devDependencies": {
@@ -430,5 +430,5 @@
     }
   },
   "typings": "./dist/types/exports/thirdweb.d.ts",
-  "version": "5.110.1"
+  "version": "5.110.5"
 }

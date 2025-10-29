@@ -1,4 +1,3 @@
-import { ChainIdToNetwork } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
@@ -149,10 +148,9 @@ function defaultPaymentRequirementsSelector(
       `No valid payment requirements found in server 402 response. ${error}`,
     );
   }
-  const currentWalletNetwork = ChainIdToNetwork[chainId] || `eip155:${chainId}`;
   // find the payment requirements matching the connected wallet chain
   const matchingPaymentRequirements = paymentRequirements.find(
-    (x) => x.network === currentWalletNetwork && x.scheme === scheme,
+    (x) => networkToChainId(x.network) === chainId && x.scheme === scheme,
   );
 
   if (matchingPaymentRequirements) {

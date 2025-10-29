@@ -139,11 +139,23 @@ async function getNFTFromRPC(
       client: options.contract.client,
       tokenId,
       tokenUri: uri,
-    }).catch(() => ({
-      id: tokenId,
-      type: "ERC721",
-      uri,
-    })),
+    })
+      .then((metadata) => {
+        // if the metadata is null-ish, return a default metadata object
+        if (!metadata) {
+          return {
+            id: tokenId,
+            type: "ERC721",
+            uri,
+          };
+        }
+        return metadata;
+      })
+      .catch(() => ({
+        id: tokenId,
+        type: "ERC721",
+        uri,
+      })),
     {
       chainId: options.contract.chain.id,
       owner,
