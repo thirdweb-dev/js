@@ -1,5 +1,11 @@
 # @thirdweb-dev/api
 
+## 0.1.2
+
+### Patch Changes
+
+- [#8338](https://github.com/thirdweb-dev/js/pull/8338) [`90b7791`](https://github.com/thirdweb-dev/js/commit/90b779107d3cb726adeca6a3f885129c12599c6a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - added solana token balances endpoint
+
 ## 0.1.1
 
 ### Patch Changes
