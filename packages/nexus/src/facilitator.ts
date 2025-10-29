@@ -1,5 +1,3 @@
-import type { ThirdwebClient } from "thirdweb";
-import { stringify } from "thirdweb/utils";
 import type { VerifyResponse } from "x402/types";
 import type {
   FacilitatorSettleResponse,
@@ -8,14 +6,14 @@ import type {
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
 } from "./schemas.js";
+import { stringify } from "./utils.js";
 
 export type WaitUntil = "simulated" | "submitted" | "confirmed";
 
 export type ThirdwebX402FacilitatorConfig = {
-  client: ThirdwebClient;
-  serverWalletAddress: string;
+  walletSecret: string;
+  walletAddress: string;
   waitUntil?: WaitUntil;
-  vaultAccessToken?: string;
   baseUrl?: string;
 };
 
@@ -47,7 +45,7 @@ export type ThirdwebX402Facilitator = {
   }) => Promise<FacilitatorSupportedResponse>;
 };
 
-const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
+const DEFAULT_BASE_URL = "https://nexus-api.thirdweb.com";
 
 /**
  * Creates a facilitator for the x402 payment protocol.
@@ -58,21 +56,17 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  *
  * @example
  * ```ts
- * import { facilitator } from "thirdweb/x402";
- * import { createThirdwebClient } from "thirdweb";
+ * import { createFacilitator } from "@thirdweb-dev/nexus";
  * import { paymentMiddleware } from 'x402-hono'
  *
- * const client = createThirdwebClient({
- *   secretKey: "your-secret-key",
- * });
- * const thirdwebX402Facilitator = facilitator({
- *   client: client,
- *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ * const facilitator = createFacilitator({
+ *   walletSecret: <your-wallet-secret>,
+ *   walletAddress: <your-wallet-address>,
  * });
  *
  * // add the facilitator to any x402 payment middleware
  * const middleware = paymentMiddleware(
- *   "0x1234567890123456789012345678901234567890",
+ *   facilitator.address,
  *   {
  *     "/api/paywall": {
  *       price: "$0.01",
@@ -82,16 +76,16 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
  *       },
  *     },
  *   },
- *   thirdwebX402Facilitator,
+ *   facilitator,
  * );
  * ```
  * 
  * #### Configuration Options
  * 
  * ```ts
- * const thirdwebX402Facilitator = facilitator({
- *   client: client,
- *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ * const thirdwebX402Facilitator = createFacilitator({
+ *   walletSecret: <your-wallet-secret>,
+ *   walletAddress: <your-wallet-address>,
  *   // Optional: Wait behavior for settlements
  *   // - "simulated": Only simulate the transaction (fastest)
  *   // - "submitted": Wait until transaction is submitted
@@ -101,43 +95,39 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
 
  * ```
  *
- * @bridge x402
  */
-export function facilitator(
+export function createFacilitator(
   config: ThirdwebX402FacilitatorConfig,
 ): ThirdwebX402Facilitator {
-  const secretKey = config.client.secretKey;
-  if (!secretKey) {
-    throw new Error("Client secret key is required for the x402 facilitator");
+  if (!config.walletSecret) {
+    throw new Error("Wallet secret is required for the x402 facilitator");
   }
-  const serverWalletAddress = config.serverWalletAddress;
-  if (!serverWalletAddress) {
-    throw new Error(
-      "Server wallet address is required for the x402 facilitator",
-    );
+
+  if (!config.walletAddress) {
+    throw new Error("Wallet address is required for the x402 facilitator");
   }
-  const facilitator = {
-    url: (config.baseUrl ?? DEFAULT_BASE_URL) as `${string}://${string}`,
-    address: serverWalletAddress,
-    createAuthHeaders: async () => {
-      return {
-        verify: {
-          "x-secret-key": secretKey,
-        },
-        settle: {
-          "x-secret-key": secretKey,
-          ...(config.vaultAccessToken
-            ? { "x-vault-access-token": config.vaultAccessToken }
-            : {}),
-        },
-        supported: {
-          "x-secret-key": secretKey,
-        },
-        list: {
-          "x-secret-key": secretKey,
-        },
-      };
+
+  const BASE_URL = config.baseUrl ?? DEFAULT_BASE_URL;
+
+  const AUTH_HEADERS = {
+    verify: {
+      authorization: `Bearer ${config.walletSecret}`,
     },
+    settle: {
+      authorization: `Bearer ${config.walletSecret}`,
+    },
+    supported: {
+      authorization: `Bearer ${config.walletSecret}`,
+    },
+    list: {
+      authorization: `Bearer ${config.walletSecret}`,
+    },
+  } as const;
+
+  return {
+    url: BASE_URL as `${string}://${string}`,
+    address: config.walletAddress,
+    createAuthHeaders: async () => AUTH_HEADERS,
     /**
      * Verifies a payment payload with the facilitator service
      *
@@ -149,13 +139,11 @@ export function facilitator(
       payload: RequestedPaymentPayload,
       paymentRequirements: RequestedPaymentRequirements,
     ): Promise<FacilitatorVerifyResponse> {
-      const url = config.baseUrl ?? DEFAULT_BASE_URL;
-
       let headers = { "Content-Type": "application/json" };
-      const authHeaders = await facilitator.createAuthHeaders();
-      headers = { ...headers, ...authHeaders.verify };
 
-      const res = await fetch(`${url}/verify`, {
+      headers = { ...headers, ...AUTH_HEADERS.verify };
+
+      const res = await fetch(new URL("/verify", BASE_URL), {
         method: "POST",
         headers,
         body: stringify({
@@ -186,14 +174,11 @@ export function facilitator(
       paymentRequirements: RequestedPaymentRequirements,
       waitUntil?: WaitUntil,
     ): Promise<FacilitatorSettleResponse> {
-      const url = config.baseUrl ?? DEFAULT_BASE_URL;
-
       let headers = { "Content-Type": "application/json" };
-      const authHeaders = await facilitator.createAuthHeaders();
-      headers = { ...headers, ...authHeaders.settle };
+      headers = { ...headers, ...AUTH_HEADERS.settle };
       const waitUntilParam = waitUntil || config.waitUntil;
 
-      const res = await fetch(`${url}/settle`, {
+      const res = await fetch(new URL("/settle", BASE_URL), {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -222,22 +207,18 @@ export function facilitator(
       chainId: number;
       tokenAddress?: string;
     }): Promise<FacilitatorSupportedResponse> {
-      const url = config.baseUrl ?? DEFAULT_BASE_URL;
-
-      // TODO: re-add caching? (see thirdweb/x402/facilitator.ts)
-      const authHeaders = await facilitator.createAuthHeaders();
       const headers = {
         "Content-Type": "application/json",
-        ...authHeaders.supported,
+        ...AUTH_HEADERS.supported,
       };
-      const supportedUrl = new URL(`${url}/supported`);
+      const supportedUrl = new URL("/supported", BASE_URL);
       if (filters?.chainId) {
         supportedUrl.searchParams.set("chainId", filters.chainId.toString());
       }
       if (filters?.tokenAddress) {
         supportedUrl.searchParams.set("tokenAddress", filters.tokenAddress);
       }
-      const res = await fetch(supportedUrl.toString(), { headers });
+      const res = await fetch(supportedUrl, { headers });
 
       if (res.status !== 200) {
         throw new Error(
@@ -248,7 +229,5 @@ export function facilitator(
       const data = await res.json();
       return data as FacilitatorSupportedResponse;
     },
-  };
-
-  return facilitator;
+  } as const satisfies ThirdwebX402Facilitator;
 }

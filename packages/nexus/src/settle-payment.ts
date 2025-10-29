@@ -1,4 +1,3 @@
-import { stringify } from "thirdweb/utils";
 import { decodePaymentRequest } from "./common.js";
 import { safeBase64Encode } from "./encode.js";
 import {
@@ -6,6 +5,7 @@ import {
   type SettlePaymentResult,
   x402Version,
 } from "./types.js";
+import { stringify } from "./utils.js";
 
 /**
  * Verifies and processes X402 payments for protected resources.
@@ -23,17 +23,12 @@ import {
  *
  * ```ts
  * // Usage in a Next.js API route
- * import { settlePayment, facilitator } from "thirdweb/x402";
- * import { createThirdwebClient } from "thirdweb";
+ * import { settlePayment, createFacilitator } from "@thirdweb-dev/nexus";
  * import { arbitrumSepolia } from "thirdweb/chains";
  *
- * const client = createThirdwebClient({
- *   secretKey: process.env.THIRDWEB_SECRET_KEY,
- * });
- *
- * const thirdwebFacilitator = facilitator({
- *   client,
- *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ * const facilitator = createFacilitator({
+ *   walletSecret: <your-wallet-secret>,
+ *   walletAddress: <your-wallet-address>,
  * });
  *
  * export async function GET(request: Request) {
@@ -44,10 +39,9 @@ import {
  *     resourceUrl: "https://api.example.com/premium-content",
  *     method: "GET",
  *     paymentData,
- *     payTo: "0x1234567890123456789012345678901234567890",
  *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.10", // or { amount: "100000", asset: { address: "0x...", decimals: 6 } }
- *     facilitator: thirdwebFacilitator,
+ *     facilitator,
  *     routeConfig: {
  *       description: "Access to premium API content",
  *       mimeType: "application/json",
@@ -73,17 +67,12 @@ import {
  * ```ts
  * // Usage in Express middleware
  * import express from "express";
- * import { settlePayment, facilitator } from "thirdweb/x402";
- * import { createThirdwebClient } from "thirdweb";
+ * import { settlePayment, createFacilitator } from "@thirdweb-dev/nexus";
  * import { arbitrumSepolia } from "thirdweb/chains";
  *
- * const client = createThirdwebClient({
- *   secretKey: process.env.THIRDWEB_SECRET_KEY,
- * });
- *
- * const thirdwebFacilitator = facilitator({
- *   client,
- *   serverWalletAddress: "0x1234567890123456789012345678901234567890",
+ * const facilitator = createFacilitator({
+ *   walletSecret: <your-wallet-secret>,
+ *   walletAddress: <your-wallet-address>,
  * });
  *
  * const app = express();
@@ -94,11 +83,10 @@ import {
  *     resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
  *     method: req.method,
  *     paymentData: req.headers["x-payment"],
- *     payTo: "0x1234567890123456789012345678901234567890",
  *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.05",
  *     waitUntil: "submitted",
- *     facilitator: thirdwebFacilitator,
+ *     facilitator,
  *   });
  *
  *   if (result.status === 200) {
@@ -122,7 +110,6 @@ import {
  *
  * @public
  * @beta
- * @bridge x402
  */
 export async function settlePayment(
   args: SettlePaymentArgs,

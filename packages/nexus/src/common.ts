@@ -1,12 +1,4 @@
-import type { ThirdwebClient } from "thirdweb";
-import { type Abi, getContract, resolveContractAbi } from "thirdweb/contract";
-import {
-  isPermitSupported,
-  isTransferWithAuthorizationSupported,
-} from "thirdweb/extensions/erc20";
-import { getAddress, toFunctionSelector, toUnits } from "thirdweb/utils";
 import { ChainIdToNetwork, type Money, moneySchema } from "x402/types";
-import { getCachedChain } from "../../thirdweb/dist/types/chains/utils.js";
 import { decodePayment } from "./encode.js";
 import type { ThirdwebX402Facilitator } from "./facilitator.js";
 import {
@@ -22,6 +14,7 @@ import {
   type SupportedSignatureType,
   x402Version,
 } from "./types.js";
+import { toUnits } from "./utils.js";
 
 type GetPaymentRequirementsResult = {
   status: 200;
@@ -104,9 +97,9 @@ export async function decodePaymentRequest(
     resource: resourceUrl,
     description: description ?? "",
     mimeType: mimeType ?? "application/json",
-    payTo: getAddress(facilitator.address), // always pay to the facilitator address first
+    payTo: facilitator.address as `0x${string}`, // always pay to the facilitator address first
     maxTimeoutSeconds: maxTimeoutSeconds ?? 86400,
-    asset: getAddress(asset.address),
+    asset: asset.address as `0x${string}`,
     outputSchema: {
       input: {
         type: "http",
@@ -266,46 +259,6 @@ async function getDefaultAsset(
   );
   const assetConfig = matchingAsset?.extra?.defaultAsset as DefaultAsset;
   return assetConfig;
-}
-
-export async function getSupportedSignatureType(args: {
-  client: ThirdwebClient;
-  asset: string;
-  chainId: number;
-  eip712Extras: ERC20TokenAmount["asset"]["eip712"] | undefined;
-}): Promise<SupportedSignatureType | undefined> {
-  const primaryType = args.eip712Extras?.primaryType;
-
-  if (primaryType === "Permit" || primaryType === "TransferWithAuthorization") {
-    return primaryType;
-  }
-
-  // not specified, so we need to detect it
-  const abi: Abi = await resolveContractAbi(
-    getContract({
-      client: args.client,
-      address: args.asset,
-      chain: getCachedChain(args.chainId),
-    }),
-  ).catch((error) => {
-    console.error("Error resolving contract ABI", error);
-    return [];
-  });
-  const selectors = abi
-    .filter((f) => f.type === "function")
-    .map((f) => toFunctionSelector(f));
-  const hasPermit = isPermitSupported(selectors);
-  const hasTransferWithAuthorization =
-    isTransferWithAuthorizationSupported(selectors);
-
-  // prefer transferWithAuthorization over permit
-  if (hasTransferWithAuthorization) {
-    return "TransferWithAuthorization";
-  }
-  if (hasPermit) {
-    return "Permit";
-  }
-  return undefined;
 }
 
 async function getOrDetectTokenExtras(args: {

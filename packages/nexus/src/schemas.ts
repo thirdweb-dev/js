@@ -1,7 +1,5 @@
-import type { Chain } from "thirdweb";
 import {
   EvmNetworkToChainId,
-  type ExactEvmPayload,
   type Network,
   PaymentPayloadSchema,
   PaymentRequirementsSchema,
@@ -22,17 +20,10 @@ export const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
 export type RequestedPaymentPayload = z.infer<
   typeof RequestedPaymentPayloadSchema
 >;
-export type UnsignedPaymentPayload = Omit<
-  RequestedPaymentPayload,
-  "payload"
-> & {
-  payload: Omit<ExactEvmPayload, "signature"> & { signature: undefined };
-};
 
-export const RequestedPaymentRequirementsSchema =
-  PaymentRequirementsSchema.extend({
-    network: FacilitatorNetworkSchema,
-  });
+const RequestedPaymentRequirementsSchema = PaymentRequirementsSchema.extend({
+  network: FacilitatorNetworkSchema,
+});
 
 export type RequestedPaymentRequirements = z.infer<
   typeof RequestedPaymentRequirementsSchema
@@ -92,10 +83,7 @@ export type FacilitatorSupportedResponse = z.infer<
   typeof FacilitatorSupportedResponseSchema
 >;
 
-export function networkToChainId(network: string | Chain): number {
-  if (typeof network === "object") {
-    return network.id;
-  }
+export function networkToChainId(network: string): number {
   if (network.startsWith("eip155:")) {
     const chainId = parseInt(network.split(":")[1] ?? "0");
     if (!Number.isNaN(chainId) && chainId > 0) {
@@ -103,6 +91,11 @@ export function networkToChainId(network: string | Chain): number {
     } else {
       throw new Error(`Invalid network: ${network}`);
     }
+  }
+  // attempt to parse it as just an integer
+  const maybeChainId = parseInt(network);
+  if (!Number.isNaN(maybeChainId) && maybeChainId > 0) {
+    return maybeChainId;
   }
   const mappedChainId = EvmNetworkToChainId.get(network as Network);
   if (!mappedChainId) {

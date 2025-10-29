@@ -1,4 +1,3 @@
-import type { Chain } from "thirdweb";
 import type { Money, PaymentMiddlewareConfig } from "x402/types";
 import type z from "zod";
 import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
@@ -26,7 +25,7 @@ export type PaymentArgs = {
   /** The payment data/proof provided by the client, typically from the X-PAYMENT header */
   paymentData?: string | null;
   /** The blockchain network where the payment should be processed */
-  network: FacilitatorNetwork | Chain;
+  network: FacilitatorNetwork;
   /** The price for accessing the resource - either a USD amount (e.g., "$0.10") or a specific token amount */
   price: Money | ERC20TokenAmount;
   /** The payment facilitator instance used to verify and settle payments */

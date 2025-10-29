@@ -7,7 +7,6 @@
 		"url": "https://github.com/thirdweb-dev/js/issues"
 	},
 	"dependencies": {
-		"thirdweb": "workspace:*",
 		"x402": "0.7.0",
 		"zod": "3.25.75"
 	},
