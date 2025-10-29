@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.110.6
+
+### Patch Changes
+
+- [#8334](https://github.com/thirdweb-dev/js/pull/8334) [`6c318f8`](https://github.com/thirdweb-dev/js/commit/6c318f83d63aa8acce46da666e43638e410f799c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations
+
+- [#8306](https://github.com/thirdweb-dev/js/pull/8306) [`759b93b`](https://github.com/thirdweb-dev/js/commit/759b93beff7ab10a3a2fa3b9dd25ca628efb9267) Thanks [@alecananian](https://github.com/alecananian)! - Moved `@storybook/react` package to be a dev dependency
+
+- [#8332](https://github.com/thirdweb-dev/js/pull/8332) [`8e357b3`](https://github.com/thirdweb-dev/js/commit/8e357b3cb39dcc7a8595a83224098a9c44585389) Thanks [@jnsdls](https://github.com/jnsdls)! - expose some useful erc20 extensions
+
 ## 5.110.5
 
 ### Patch Changes
