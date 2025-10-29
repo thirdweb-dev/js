@@ -6,13 +6,17 @@
 	"bugs": {
 		"url": "https://github.com/thirdweb-dev/js/issues"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"thirdweb": "workspace:*",
+		"x402": "0.7.0",
+		"zod": "3.25.75"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "2.0.6",
 		"knip": "5.60.2",
+		"rimraf": "6.0.1",
 		"size-limit": "11.2.0",
-		"typescript": "5.8.3",
-		"rimraf": "6.0.1"
+		"typescript": "5.8.3"
 	},
 	"engines": {
 		"node": ">=22"
@@ -65,12 +69,11 @@
 		"knip": "knip",
 		"lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
 		"size": "size-limit",
-		"typecheck": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
-		"update-version": "node scripts/version.mjs"
+		"typecheck": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit"
 	},
 	"sideEffects": false,
 	"type": "module",
 	"types": "./dist/types/exports/nexus.d.ts",
 	"typings": "./dist/types/exports/nexus.d.ts",
-	"version": "0.1.0"
+	"version": "0.0.0"
 }

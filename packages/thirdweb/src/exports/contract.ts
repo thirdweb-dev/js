@@ -1,3 +1,5 @@
+export type { Abi } from "abitype";
+
 export { formatCompilerMetadata } from "../contract/actions/compiler-metadata.js";
 export { getBytecode } from "../contract/actions/get-bytecode.js";
 export { getCompilerMetadata } from "../contract/actions/get-compiler-metadata.js";
