@@ -75,5 +75,5 @@
 	"type": "module",
 	"types": "./dist/types/exports/nexus.d.ts",
 	"typings": "./dist/types/exports/nexus.d.ts",
-	"version": "0.0.0"
+	"version": "0.1.0"
 }
