@@ -11,20 +11,7 @@ import {
 import { z } from "zod";
 import type { Chain } from "../chains/types.js";
 
-const FacilitatorNetworkSchema = z.union([
-  z.literal("base-sepolia"),
-  z.literal("base"),
-  z.literal("avalanche-fuji"),
-  z.literal("avalanche"),
-  z.literal("iotex"),
-  z.literal("solana-devnet"),
-  z.literal("solana"),
-  z.literal("sei"),
-  z.literal("sei-testnet"),
-  z.string().refine((value) => value.startsWith("eip155:"), {
-    message: "Invalid network",
-  }),
-]);
+const FacilitatorNetworkSchema = z.string();
 
 export type FacilitatorNetwork = z.infer<typeof FacilitatorNetworkSchema>;
 
