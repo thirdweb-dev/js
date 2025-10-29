@@ -1,0 +1,12 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"entry": ["src/exports/**"],
+	"ignore": ["src/**/__generated__/**", "**/*.bench.ts"],
+	"ignoreBinaries": ["printf"],
+	"ignoreDependencies": ["tslib"],
+	"project": ["src/**/*.{ts,tsx}"],
+	"rules": {
+		"enumMembers": "off",
+		"optionalPeerDependencies": "off"
+	}
+}
