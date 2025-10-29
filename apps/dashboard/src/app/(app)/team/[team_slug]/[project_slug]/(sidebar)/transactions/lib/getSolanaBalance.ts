@@ -12,10 +12,12 @@ export async function fetchSolanaBalance({
   publicKey,
   authToken,
   clientId,
+  chainId = "solana:mainnet",
 }: {
   publicKey: string;
   authToken: string;
   clientId: string;
+  chainId?: "solana:mainnet" | "solana:devnet";
 }): Promise<{
   displayValue: string;
   symbol: string;
@@ -28,7 +30,7 @@ export async function fetchSolanaBalance({
         address: publicKey,
       },
       query: {
-        chainId: "solana:mainnet",
+        chainId,
       },
       headers: {
         Authorization: `Bearer ${authToken}`,
