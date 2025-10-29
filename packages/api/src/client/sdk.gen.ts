@@ -66,6 +66,9 @@ import type {
 	GetSolanaTransactionData,
 	GetSolanaTransactionErrors,
 	GetSolanaTransactionResponses,
+	GetSolanaWalletBalanceData,
+	GetSolanaWalletBalanceErrors,
+	GetSolanaWalletBalanceResponses,
 	GetTokenOwnersData,
 	GetTokenOwnersErrors,
 	GetTokenOwnersResponses,
@@ -1587,6 +1590,31 @@ export const createSolanaWallet = <ThrowOnError extends boolean = false>(
 			"Content-Type": "application/json",
 			...options?.headers,
 		},
+	});
+};
+
+/**
+ * Get Solana Wallet Balance
+ * Get the SOL or SPL token balance for a Solana wallet on a specific Solana network.
+ *
+ * **Authentication**: Pass `x-client-id` for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const getSolanaWalletBalance = <ThrowOnError extends boolean = false>(
+	options: Options<GetSolanaWalletBalanceData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetSolanaWalletBalanceResponses,
+		GetSolanaWalletBalanceErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/wallets/{address}/balance",
+		...options,
 	});
 };
 

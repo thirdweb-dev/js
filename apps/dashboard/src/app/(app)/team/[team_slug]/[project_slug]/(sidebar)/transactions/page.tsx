@@ -215,6 +215,7 @@ export default async function TransactionsAnalyticsPage(props: {
             solanaWallets={solanaAccounts.data.items}
             teamSlug={params.team_slug}
             solanaPermissionError={isSolanaPermissionError}
+            authToken={authToken}
           />
         )}
       </div>

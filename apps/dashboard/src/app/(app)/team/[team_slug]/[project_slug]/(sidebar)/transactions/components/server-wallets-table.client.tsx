@@ -57,6 +57,7 @@ import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
+import { fetchSolanaBalance } from "../lib/getSolanaBalance";
 import { updateDefaultProjectWallet } from "../lib/vault.client";
 import { CreateServerWallet } from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet as EVMWallet } from "../server-wallets/wallet-table/types";
@@ -79,6 +80,7 @@ interface ServerWalletsTableProps {
   teamSlug: string;
   client: ThirdwebClient;
   solanaPermissionError?: boolean;
+  authToken: string;
 }
 
 export function ServerWalletsTable(props: ServerWalletsTableProps) {
@@ -95,6 +97,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
     solanaTotalPages,
     client,
     solanaPermissionError,
+    authToken,
   } = props;
 
   const [activeChain, setActiveChain] = useState<WalletChain>("evm");
@@ -278,6 +281,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
                         project={project}
                         teamSlug={teamSlug}
                         client={client}
+                        authToken={authToken}
                       />
                     ))}
                 </TableBody>
@@ -507,11 +511,13 @@ function SolanaWalletRow({
   project,
   teamSlug,
   client,
+  authToken,
 }: {
   wallet: SolanaWallet;
   project: Project;
   teamSlug: string;
   client: ThirdwebClient;
+  authToken: string;
 }) {
   const engineService = project.services.find(
     (s) => s.name === "engineCloud",
@@ -547,7 +553,11 @@ function SolanaWalletRow({
       </TableCell>
 
       <TableCell>
-        <SolanaWalletBalance publicKey={wallet.publicKey} />
+        <SolanaWalletBalance
+          publicKey={wallet.publicKey}
+          authToken={authToken}
+          clientId={project.publishableKey}
+        />
       </TableCell>
 
       <TableCell>
@@ -739,14 +749,22 @@ function WalletBalance({
   );
 }
 
-function SolanaWalletBalance({ publicKey }: { publicKey: string }) {
+function SolanaWalletBalance({
+  publicKey,
+  authToken,
+  clientId,
+}: {
+  publicKey: string;
+  authToken: string;
+  clientId: string;
+}) {
   const balance = useQuery({
     queryFn: async () => {
-      // TODO: Implement actual Solana balance fetching
-      return {
-        displayValue: "0",
-        symbol: "SOL",
-      };
+      return await fetchSolanaBalance({
+        publicKey,
+        authToken,
+        clientId,
+      });
     },
     queryKey: ["solanaWalletBalance", publicKey],
   });

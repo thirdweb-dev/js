@@ -2136,6 +2136,10 @@ export type GetWalletTransactionsData = {
 	};
 	query: {
 		/**
+		 * Chain ID(s) to request transaction data for. You can specify multiple chain IDs by repeating the parameter, up to a maximum of 50. Example: ?chainId=1&chainId=137
+		 */
+		chainId: Array<number>;
+		/**
 		 * Filter by block timestamp (Unix timestamp) greater than or equal to this value
 		 */
 		filterBlockTimestampGte?: number;
@@ -2171,10 +2175,6 @@ export type GetWalletTransactionsData = {
 		 * Sort order: 'asc' for ascending, 'desc' for descending
 		 */
 		sortOrder?: "asc" | "desc";
-		/**
-		 * Chain ID(s) to request transaction data for. You can specify multiple chain IDs by repeating the parameter, up to a maximum of 50. Example: ?chainId=1&chainId=137
-		 */
-		chainId: Array<number>;
 	};
 	url: "/v1/wallets/{address}/transactions";
 };
@@ -3234,11 +3234,11 @@ export type WriteContractErrors = {
 			/**
 			 * Payment ID
 			 */
-			id: string;
+			id?: string;
 			/**
 			 * Bridge quote for completing the payment
 			 */
-			quote: {
+			quote?: {
 				/**
 				 * Block number when quote was generated
 				 */
@@ -4314,11 +4314,11 @@ export type SendTransactionsErrors = {
 			/**
 			 * Payment ID
 			 */
-			id: string;
+			id?: string;
 			/**
 			 * Bridge quote for completing the payment
 			 */
-			quote: {
+			quote?: {
 				/**
 				 * Block number when quote was generated
 				 */
@@ -4725,11 +4725,11 @@ export type PaymentsPurchaseErrors = {
 			/**
 			 * Payment ID
 			 */
-			id: string;
+			id?: string;
 			/**
 			 * Bridge quote for completing the payment
 			 */
-			quote: {
+			quote?: {
 				/**
 				 * Block number when quote was generated
 				 */
@@ -4914,17 +4914,7 @@ export type VerifyX402PaymentData = {
 		paymentPayload: {
 			x402Version: number;
 			scheme: "exact";
-			network:
-				| "base-sepolia"
-				| "base"
-				| "avalanche-fuji"
-				| "avalanche"
-				| "iotex"
-				| "solana-devnet"
-				| "solana"
-				| "sei"
-				| "sei-testnet"
-				| string;
+			network: string;
 			payload:
 				| {
 						signature: string;
@@ -4943,17 +4933,7 @@ export type VerifyX402PaymentData = {
 		};
 		paymentRequirements: {
 			scheme: "exact";
-			network:
-				| "base-sepolia"
-				| "base"
-				| "avalanche-fuji"
-				| "avalanche"
-				| "iotex"
-				| "solana-devnet"
-				| "solana"
-				| "sei"
-				| "sei-testnet"
-				| string;
+			network: string;
 			maxAmountRequired: string;
 			resource: string;
 			description: string;
@@ -5015,7 +4995,6 @@ export type VerifyX402PaymentResponses = {
 			| "invalid_exact_svm_payload_transaction_instruction_not_spl_token_transfer_checked"
 			| "invalid_exact_svm_payload_transaction_instruction_not_token_2022_transfer_checked"
 			| "invalid_exact_svm_payload_transaction_not_a_transfer_instruction"
-			| "invalid_exact_svm_payload_transaction_cannot_derive_receiver_ata"
 			| "invalid_exact_svm_payload_transaction_receiver_ata_not_found"
 			| "invalid_exact_svm_payload_transaction_sender_ata_not_found"
 			| "invalid_exact_svm_payload_transaction_simulation_failed"
@@ -5049,17 +5028,7 @@ export type SettleX402PaymentData = {
 		paymentPayload: {
 			x402Version: number;
 			scheme: "exact";
-			network:
-				| "base-sepolia"
-				| "base"
-				| "avalanche-fuji"
-				| "avalanche"
-				| "iotex"
-				| "solana-devnet"
-				| "solana"
-				| "sei"
-				| "sei-testnet"
-				| string;
+			network: string;
 			payload:
 				| {
 						signature: string;
@@ -5078,17 +5047,7 @@ export type SettleX402PaymentData = {
 		};
 		paymentRequirements: {
 			scheme: "exact";
-			network:
-				| "base-sepolia"
-				| "base"
-				| "avalanche-fuji"
-				| "avalanche"
-				| "iotex"
-				| "solana-devnet"
-				| "solana"
-				| "sei"
-				| "sei-testnet"
-				| string;
+			network: string;
 			maxAmountRequired: string;
 			resource: string;
 			description: string;
@@ -5154,7 +5113,6 @@ export type SettleX402PaymentResponses = {
 			| "invalid_exact_svm_payload_transaction_instruction_not_spl_token_transfer_checked"
 			| "invalid_exact_svm_payload_transaction_instruction_not_token_2022_transfer_checked"
 			| "invalid_exact_svm_payload_transaction_not_a_transfer_instruction"
-			| "invalid_exact_svm_payload_transaction_cannot_derive_receiver_ata"
 			| "invalid_exact_svm_payload_transaction_receiver_ata_not_found"
 			| "invalid_exact_svm_payload_transaction_sender_ata_not_found"
 			| "invalid_exact_svm_payload_transaction_simulation_failed"
@@ -5183,7 +5141,10 @@ export type SettleX402PaymentResponses = {
 			| "solana-devnet"
 			| "solana"
 			| "sei"
-			| "sei-testnet";
+			| "sei-testnet"
+			| "polygon"
+			| "polygon-amoy"
+			| "peaq";
 		errorMessage?: string;
 	};
 };
@@ -5226,17 +5187,7 @@ export type SupportedX402PaymentsResponses = {
 		kinds: Array<{
 			x402Version: 1;
 			scheme: "exact";
-			network:
-				| "base-sepolia"
-				| "base"
-				| "avalanche-fuji"
-				| "avalanche"
-				| "iotex"
-				| "solana-devnet"
-				| "solana"
-				| "sei"
-				| "sei-testnet"
-				| string;
+			network: string;
 			extra?: {
 				defaultAsset?: {
 					/**
@@ -5340,11 +5291,11 @@ export type FetchWithPaymentErrors = {
 			/**
 			 * Payment ID
 			 */
-			id: string;
+			id?: string;
 			/**
 			 * Bridge quote for completing the payment
 			 */
-			quote: {
+			quote?: {
 				/**
 				 * Block number when quote was generated
 				 */
@@ -5552,17 +5503,7 @@ export type ListPayableServicesResponses = {
 			x402Version: number;
 			accepts: Array<{
 				scheme: "exact";
-				network:
-					| "base-sepolia"
-					| "base"
-					| "avalanche-fuji"
-					| "avalanche"
-					| "iotex"
-					| "solana-devnet"
-					| "solana"
-					| "sei"
-					| "sei-testnet"
-					| string;
+				network: string;
 				maxAmountRequired: string;
 				resource: string;
 				description: string;
@@ -6298,11 +6239,11 @@ export type BridgeSwapErrors = {
 			/**
 			 * Payment ID
 			 */
-			id: string;
+			id?: string;
 			/**
 			 * Bridge quote for completing the payment
 			 */
-			quote: {
+			quote?: {
 				/**
 				 * Block number when quote was generated
 				 */
@@ -6639,6 +6580,74 @@ export type CreateSolanaWalletResponses = {
 
 export type CreateSolanaWalletResponse =
 	CreateSolanaWalletResponses[keyof CreateSolanaWalletResponses];
+
+export type GetSolanaWalletBalanceData = {
+	body?: never;
+	path: {
+		/**
+		 * Public key of the Solana wallet.
+		 */
+		address: string;
+	};
+	query: {
+		/**
+		 * Solana network to query. Choose either solana:mainnet or solana:devnet.
+		 */
+		chainId: "solana:mainnet" | "solana:devnet";
+		/**
+		 * SPL token mint address. Omit to retrieve native SOL balance.
+		 */
+		tokenAddress?: string;
+	};
+	url: "/v1/solana/wallets/{address}/balance";
+};
+
+export type GetSolanaWalletBalanceErrors = {
+	/**
+	 * Invalid request parameters. This occurs when the wallet address or token mint is invalid, or the request mixes a token mint with multiple networks.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include `x-client-id` or `x-secret-key` headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error. This may occur due to RPC connectivity issues or unexpected failures.
+	 */
+	500: unknown;
+};
+
+export type GetSolanaWalletBalanceResponses = {
+	/**
+	 * Wallet balance retrieved successfully for the requested Solana network.
+	 */
+	200: {
+		/**
+		 * Balance data for the requested Solana network.
+		 */
+		result: {
+			/**
+			 * Requested Solana network.
+			 */
+			chainId: "solana:mainnet" | "solana:devnet";
+			/**
+			 * Number of decimals used by the token.
+			 */
+			decimals: number;
+			/**
+			 * Human-readable balance formatted using token decimals.
+			 */
+			displayValue: string;
+			/**
+			 * Raw balance value expressed in base units (lamports).
+			 */
+			value: string;
+		};
+	};
+};
+
+export type GetSolanaWalletBalanceResponse =
+	GetSolanaWalletBalanceResponses[keyof GetSolanaWalletBalanceResponses];
 
 export type SignSolanaMessageData = {
 	/**
