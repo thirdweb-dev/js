@@ -6,7 +6,7 @@
     "path": "./dist/esm/exports/thirdweb.js"
   },
   {
-    "limit": "375 kB",
+    "limit": "380 kB",
     "name": "thirdweb (cjs)",
     "path": "./dist/cjs/exports/thirdweb.js"
   },

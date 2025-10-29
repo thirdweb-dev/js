@@ -96,7 +96,7 @@
     "thirdweb-dashboard#dev": {
       "dependsOn": ["^build"]
     },
-    "thirdweb#update-version": {
+    "update-version": {
       "inputs": ["$TURBO_DEFAULT$", "package.json"],
       "outputs": ["src/version.ts"]
     },

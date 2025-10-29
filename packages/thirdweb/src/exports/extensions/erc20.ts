@@ -17,10 +17,6 @@ export {
   getActiveClaimConditionId,
   isGetActiveClaimConditionIdSupported,
 } from "../../extensions/erc20/__generated__/IDropERC20/read/getActiveClaimConditionId.js";
-/**
- * DROPS extension for ERC20
- */
-// READ
 export {
   getClaimConditionById,
   isGetClaimConditionByIdSupported,
@@ -43,6 +39,15 @@ export {
   balanceOf,
 } from "../../extensions/erc20/__generated__/IERC20/read/balanceOf.js";
 export { totalSupply } from "../../extensions/erc20/__generated__/IERC20/read/totalSupply.js";
+/**
+ * PERMIT extension for ERC20
+ */
+export { nonces } from "../../extensions/erc20/__generated__/IERC20Permit/read/nonces.js";
+export { isPermitSupported } from "../../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
+/**
+ * DROPS extension for ERC20
+ */
+// READ
 export {
   type TokensMintedEventFilters,
   tokensMintedEvent,
@@ -63,6 +68,7 @@ export {
   type WithdrawParams,
   withdraw,
 } from "../../extensions/erc20/__generated__/IWETH/write/withdraw.js";
+export { isTransferWithAuthorizationSupported } from "../../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
 export {
   type CanClaimParams,
   type CanClaimResult,
