@@ -1,0 +1,76 @@
+{
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "browser": {
+    "crypto": false
+  },
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@size-limit/preset-small-lib": "11.2.0",
+    "knip": "5.60.2",
+    "rimraf": "6.0.1",
+    "size-limit": "11.2.0",
+    "typescript": "5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/exports/nexus-fetch.d.ts",
+      "import": "./dist/esm/exports/nexus-fetch.js",
+      "default": "./dist/cjs/exports/nexus-fetch.js"
+    }
+  },
+  "files": [
+    "dist/*",
+    "src/*",
+    "!**/*.tsbuildinfo",
+    "!**/*.test.ts",
+    "!**/*.test.tsx",
+    "!**/*.test.ts.snap",
+    "!**/*.test-d.ts",
+    "!**/*.bench.ts",
+    "!tsconfig.build.json"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/cjs/exports/nexus-fetch.js",
+  "module": "./dist/esm/exports/nexus-fetch.js",
+  "name": "@thirdweb-dev/fetch",
+  "peerDependencies": {
+    "typescript": ">=5.0.4"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thirdweb-dev/js.git#main"
+  },
+  "scripts": {
+    "build": "pnpm clean && pnpm build:types && pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
+    "build:esm": "tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",
+    "build:types": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap",
+    "clean": "rimraf dist",
+    "dev": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --outDir ./dist/esm --watch",
+    "dev:cjs": "printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json && tsc --noCheck --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false --watch",
+    "dev:esm": "printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc --noCheck --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm --watch",
+    "fix": "biome check ./src --fix",
+    "format": "biome format ./src --write",
+    "knip": "knip",
+    "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
+    "size": "size-limit",
+    "typecheck": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
+    "test:ui": "bun ./testing/test.html --watch"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "types": "./dist/types/exports/nexus-fetch.d.ts",
+  "typings": "./dist/types/exports/nexus-fetch.d.ts",
+  "version": "0.0.0"
+}

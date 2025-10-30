@@ -1,0 +1,13 @@
+[
+	{
+		"import": "*",
+		"limit": "1 kB",
+		"name": "@thirdweb-dev/nexus (esm)",
+		"path": "./dist/esm/exports/nexus.js"
+	},
+	{
+		"limit": "1 kB",
+		"name": "@thirdweb-dev/nexus (cjs)",
+		"path": "./dist/cjs/exports/nexus.js"
+	}
+]

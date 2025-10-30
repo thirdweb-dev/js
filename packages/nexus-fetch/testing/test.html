@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Nexus Fetch Testing</title>
+    <script src="../src/exports/nexus-fetch.ts"></script>
+  </head>
+  <body>
+    <button id="test-button">Test</button>
+    <script>
+      const testButton = document.getElementById("test-button");
+      testButton.addEventListener("click", () => {
+        fetch("https://q1qkkomp.nx.link/kindle", {
+          method: "POST",
+          body: JSON.stringify({
+            recipient: "0x0890C23024089675D072E984f28A93bb391a35Ab",
+          })
+        });
+      });
+      testButton.click();
+    </script>
+  </body>
+</html>

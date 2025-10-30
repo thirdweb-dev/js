@@ -21,19 +21,44 @@ type SearchParams = {
   [key: string]: string | string[] | undefined;
 };
 
+const onlyAddress = (v: string) => (isAddress(v) ? v : undefined);
+const onlyNumber = (v: string) =>
+  Number.isNaN(Number(v)) ? undefined : Number(v);
+
+/**
+ * Validates and normalizes a URL string.
+ * Only allows http: and https: protocols with a valid hostname.
+ * @returns normalized URL string on success, undefined on failure
+ */
+const onlyUrl = (v: string): string | undefined => {
+  try {
+    const url = new URL(v);
+    // Only allow http or https protocols
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return undefined;
+    }
+    // Ensure hostname is non-empty
+    if (!url.hostname) {
+      return undefined;
+    }
+    // Return normalized URL
+    return url.toString();
+  } catch {
+    // Invalid URL format
+    return undefined;
+  }
+};
+
 export default async function PayPage(props: {
   searchParams: Promise<SearchParams>;
 }) {
   const searchParams = await props.searchParams;
 
-  const onlyAddress = (v: string) => (isAddress(v) ? v : undefined);
-  const onlyNumber = (v: string) =>
-    Number.isNaN(Number(v)) ? undefined : Number(v);
-
   const receiver = parse(searchParams.receiver, onlyAddress);
   const token = parse(searchParams.token, onlyAddress);
   const chain = parse(searchParams.chain, onlyNumber);
   const amount = parse(searchParams.amount, onlyNumber);
+  const successUrl = parse(searchParams.successUrl, onlyUrl);
 
   return (
     <ThemeProvider
@@ -51,6 +76,22 @@ export default async function PayPage(props: {
             tokenAddress={token}
             receiverAddress={receiver}
             amount={amount ? amount.toString() : undefined}
+            onSuccess={() => {
+              if (successUrl) {
+                try {
+                  const url = new URL(successUrl);
+                  url.searchParams.set("success", "true");
+                  window.location.href = url.toString();
+                } catch (error) {
+                  // Log URL construction error for debugging
+                  console.error(
+                    "Failed to construct redirect URL:",
+                    successUrl,
+                    error,
+                  );
+                }
+              }
+            }}
           />
         </div>
       </div>
