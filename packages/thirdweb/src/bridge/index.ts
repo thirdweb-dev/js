@@ -1,7 +1,6 @@
 export * as Buy from "./Buy.js";
 export { chains } from "./Chains.js";
 export * as Onramp from "./Onramp.js";
-export { routes } from "./Routes.js";
 export * as Sell from "./Sell.js";
 export { status } from "./Status.js";
 export { tokens } from "./Token.js";

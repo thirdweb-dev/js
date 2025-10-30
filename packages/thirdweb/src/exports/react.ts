@@ -74,10 +74,6 @@ export type {
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export type { BridgePrepareResult } from "../react/core/hooks/useBridgePrepare.js";
-export {
-  type UseBridgeRoutesParams,
-  useBridgeRoutes,
-} from "../react/core/hooks/useBridgeRoutes.js";
 export type { CompletedStatusResult } from "../react/core/hooks/useStepExecutor.js";
 export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
 // wallet hooks

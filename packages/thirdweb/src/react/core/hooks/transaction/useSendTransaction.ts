@@ -253,10 +253,10 @@ export function useSendTransactionCore(args: {
               (nativeCost > 0n && nativeBalance.value < nativeCost);
 
             if (shouldShowModal) {
-              const supportedDestinations = await Bridge.routes({
+              const tokens = await Bridge.tokens({
                 client: tx.client,
-                destinationChainId: tx.chain.id,
-                destinationTokenAddress: _erc20Value?.tokenAddress,
+                chainId: tx.chain.id,
+                tokenAddress: _erc20Value?.tokenAddress,
               }).catch((err) => {
                 trackPayEvent({
                   client: tx.client,
@@ -269,11 +269,8 @@ export function useSendTransactionCore(args: {
                 return null;
               });
 
-              if (
-                !supportedDestinations ||
-                supportedDestinations.length === 0
-              ) {
-                // not a supported destination -> show deposit screen
+              if (!tokens || tokens.length === 0) {
+                // not a supported token -> show deposit screen
                 trackPayEvent({
                   client: tx.client,
                   error: JSON.stringify({

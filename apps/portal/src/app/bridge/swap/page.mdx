@@ -255,23 +255,6 @@ export class SwapManager {
 
     throw new Error("Transaction timeout - please check status manually");
   }
-
-  async getAvailableRoutes(params: {
-    originChainId?: number;
-    originTokenAddress?: string;
-    destinationChainId?: number;
-    destinationTokenAddress?: string;
-    limit?: number;
-  }) {
-    try {
-      return await Bridge.routes({
-        ...params,
-        client: this.client,
-      });
-    } catch (error) {
-      throw new Error(`Failed to get routes: ${error.message}`);
-    }
-  }
 }
 ```
 
@@ -319,92 +302,6 @@ async function swapEthToMatic(amount: string, userAccount: Account) {
 }
 ```
 
-### Advanced Price Comparison
-
-Compare prices across multiple routes to find the best deal:
-
-```typescript
-interface RouteComparison {
-  route: any;
-  quote: SwapQuote;
-  priceImpact: number;
-  gasEstimate: bigint;
-}
-
-export class PriceComparator {
-  private swapManager: SwapManager;
-
-  constructor(swapManager: SwapManager) {
-    this.swapManager = swapManager;
-  }
-
-  async compareRoutes(
-    fromToken: { chainId: number; address: string },
-    amount: bigint,
-    userAddress: string
-  ): Promise<RouteComparison[]> {
-    // Get available routes
-    const routes = await this.swapManager.getAvailableRoutes({
-      originChainId: fromToken.chainId,
-      originTokenAddress: fromToken.address,
-      limit: 10,
-    });
-
-    // Get quotes for each route
-    const comparisons: RouteComparison[] = [];
-
-    for (const route of routes) {
-      try {
-        const quote = await this.swapManager.getQuote({
-          fromChainId: route.originToken.chainId,
-          fromTokenAddress: route.originToken.address,
-          toChainId: route.destinationToken.chainId,
-          toTokenAddress: route.destinationToken.address,
-          amount,
-          userAddress,
-          client: this.swapManager.client,
-        });
-
-        const priceImpact = this.calculatePriceImpact(quote, amount);
-        const gasEstimate = this.estimateGasCosts(quote);
-
-        comparisons.push({
-          route,
-          quote,
-          priceImpact,
-          gasEstimate,
-        });
-      } catch (error) {
-        console.warn(`Failed to get quote for route ${route.originToken.symbol} -> ${route.destinationToken.symbol}:`, error);
-      }
-    }
-
-    // Sort by best output amount
-    return comparisons.sort((a, b) =>
-      Number(b.quote.destinationAmount) - Number(a.quote.destinationAmount)
-    );
-  }
-
-  private calculatePriceImpact(quote: SwapQuote, inputAmount: bigint): number {
-    // Simplified price impact calculation
-    const ratio = Number(quote.destinationAmount) / Number(quote.originAmount);
-    return Math.abs(1 - ratio) * 100; // Percentage
-  }
-
-  private estimateGasCosts(quote: SwapQuote): bigint {
-    // Sum up gas estimates from all transactions
-    return quote.steps.reduce((total, step) => {
-      return total + step.transactions.reduce((stepTotal: bigint, tx: any) => {
-        return stepTotal + (tx.gasLimit || 200000n); // Default estimate
-      }, 0n);
-    }, 0n);
-  }
-}
-```
-
-<Callout variant="info">
-**Gas Optimization Tip:** For frequently traded pairs, consider caching route data to reduce API calls and improve UI responsiveness.
-</Callout>
 
 </TabsContent>
 </Tabs>
@@ -415,20 +312,16 @@ export class PriceComparator {
 - **Cross-chain swaps** - Exchange tokens across 50+ supported chains
 - **Real-time quotes** - Get up-to-date pricing and execution estimates
 - **Route optimization** - Find the best path for any token pair
-- **Price comparison** - Compare multiple routes to maximize output
 - **Status tracking** - Monitor cross-chain transaction progress
-
 
 
 ## Going Further
 
 - [Send a Payment](/payments/send) - Learn about peer-to-peer transfers
-- [Get Routes](/payments/routes) - Explore route discovery APIs
-- [Token Prices](/payments/tokens) - Access real-time token pricing
+- [Token Prices](/bridge/tokens) - Access real-time token pricing
 - [Webhooks](/payments/webhooks) - Get notified when swaps complete
 
 ## API Reference
 
 - [Bridge.Buy.prepare](/references/typescript/v5/buy/prepare)
-- [Bridge.routes](/references/typescript/v5/routes)
 - [Bridge.status](/references/typescript/v5/status)

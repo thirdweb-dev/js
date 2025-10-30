@@ -50,10 +50,6 @@ export const sidebar: SideBar = {
           name: "Get Token Prices",
         },
         {
-          href: `/bridge/routes`,
-          name: "Get Routes",
-        },
-        {
           href: `${paymentsSlug}/webhooks`,
           name: "Webhooks",
         },

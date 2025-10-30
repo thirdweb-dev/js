@@ -29,10 +29,6 @@ export const sidebar: SideBar = {
           name: "Get Token Prices",
         },
         {
-          href: `${bridgeSlug}/routes`,
-          name: "Get Routes",
-        },
-        {
           href: `${bridgeSlug}/bridge-widget-script`,
           name: "BridgeWidget Script",
         },
