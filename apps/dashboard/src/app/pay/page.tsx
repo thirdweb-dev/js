@@ -76,22 +76,7 @@ export default async function PayPage(props: {
             tokenAddress={token}
             receiverAddress={receiver}
             amount={amount ? amount.toString() : undefined}
-            onSuccess={() => {
-              if (successUrl) {
-                try {
-                  const url = new URL(successUrl);
-                  url.searchParams.set("success", "true");
-                  window.location.href = url.toString();
-                } catch (error) {
-                  // Log URL construction error for debugging
-                  console.error(
-                    "Failed to construct redirect URL:",
-                    successUrl,
-                    error,
-                  );
-                }
-              }
-            }}
+            successUrl={successUrl}
           />
         </div>
       </div>

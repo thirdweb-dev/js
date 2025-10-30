@@ -9,7 +9,12 @@ import { payLandingWallets } from "./wallets";
 const client = getClientThirdwebClient();
 
 export function StyledBuyWidget(
-  props: Omit<BuyWidgetProps, "client" | "theme">,
+  props: Omit<
+    BuyWidgetProps,
+    "client" | "theme" | "onSuccess" | "onError" | "onCancel"
+  > & {
+    successUrl?: string;
+  },
 ) {
   const { theme } = useTheme();
 
@@ -21,6 +26,22 @@ export function StyledBuyWidget(
       className="shadow-xl"
       connectOptions={{
         wallets: payLandingWallets,
+      }}
+      onSuccess={() => {
+        if (props.successUrl) {
+          try {
+            const url = new URL(props.successUrl);
+            url.searchParams.set("success", "true");
+            window.location.href = url.toString();
+          } catch (error) {
+            // Log URL construction error for debugging
+            console.error(
+              "Failed to construct redirect URL:",
+              props.successUrl,
+              error,
+            );
+          }
+        }
       }}
     />
   );
