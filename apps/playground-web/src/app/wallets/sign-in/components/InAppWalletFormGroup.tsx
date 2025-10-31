@@ -20,6 +20,7 @@ const allInAppWalletLoginMethods: InAppWalletAuth[] = [
   "line",
   "x",
   "tiktok",
+  "epic",
   "facebook",
   "apple",
   "coinbase",

@@ -55,6 +55,10 @@ describe("walletIcon", () => {
     expect(getSocialIcon("tiktok")).toBe(socialIcons.tiktok);
   });
 
+  it("should return epic icon", () => {
+    expect(getSocialIcon("epic")).toBe(socialIcons.epic);
+  });
+
   it("should return farcaster icon", () => {
     expect(getSocialIcon("farcaster")).toBe(socialIcons.farcaster);
   });
