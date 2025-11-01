@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.111.0
+
+### Minor Changes
+
+- [#8335](https://github.com/thirdweb-dev/js/pull/8335) [`c83f1c6`](https://github.com/thirdweb-dev/js/commit/c83f1c6f7a38c8a9f424798e6e726e1d037ed042) Thanks [@MananTank](https://github.com/MananTank)! - Remove `Bridge.routes` and `useBridgeRoutes`
+
+### Patch Changes
+
+- [#8345](https://github.com/thirdweb-dev/js/pull/8345) [`219fc69`](https://github.com/thirdweb-dev/js/commit/219fc69d72b1ca861bf0228589039788008ea0c0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update x402 flows to use remote /accepts endpoint
+
 ## 5.110.6
 
 ### Patch Changes
