@@ -10,7 +10,8 @@ import type { Account } from "../wallets/interfaces/wallet.js";
 import { getSupportedSignatureType } from "./common.js";
 import { encodePayment } from "./encode.js";
 import {
-  networkToChainId,
+  extractEvmChainId,
+  networkToCaip2ChainId,
   type RequestedPaymentPayload,
   type RequestedPaymentRequirements,
   type UnsignedPaymentPayload,
@@ -71,7 +72,14 @@ async function signPaymentHeader(
   x402Version: number,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
-  const chainId = networkToChainId(paymentRequirements.network);
+  const caip2ChainId = networkToCaip2ChainId(paymentRequirements.network);
+  const chainId = extractEvmChainId(caip2ChainId);
+
+  // TODO (402): support solana
+  if (chainId === null) {
+    throw new Error(`Unsupported chain ID: ${paymentRequirements.network}`);
+  }
+
   const supportedSignatureType = await getSupportedSignatureType({
     client,
     asset: paymentRequirements.asset,
@@ -191,7 +199,10 @@ async function signERC3009Authorization(
   }: ExactEvmPayloadAuthorization,
   { asset, network, extra }: RequestedPaymentRequirements,
 ): Promise<{ signature: Hex }> {
-  const chainId = networkToChainId(network);
+  const chainId = extractEvmChainId(networkToCaip2ChainId(network));
+  if (chainId === null) {
+    throw new Error(`Unsupported chain ID: ${network}`);
+  }
   const name = extra?.name;
   const version = extra?.version;
 
@@ -233,7 +244,10 @@ async function signERC2612Permit(
   { from, to, value, validBefore, nonce }: ExactEvmPayloadAuthorization,
   { asset, network, extra }: RequestedPaymentRequirements,
 ): Promise<{ signature: Hex }> {
-  const chainId = networkToChainId(network);
+  const chainId = extractEvmChainId(networkToCaip2ChainId(network));
+  if (chainId === null) {
+    throw new Error(`Unsupported chain ID: ${network}`);
+  }
   const name = extra?.name;
   const version = extra?.version;
 

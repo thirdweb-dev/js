@@ -6,7 +6,6 @@ import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
 import type {
   FacilitatorNetwork,
   FacilitatorSettleResponse,
-  FacilitatorSupportedAssetSchema,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
   SupportedSignatureTypeSchema,
@@ -110,5 +109,3 @@ export type ERC20TokenAmount = {
     };
   };
 };
-
-export type DefaultAsset = z.infer<typeof FacilitatorSupportedAssetSchema>;
