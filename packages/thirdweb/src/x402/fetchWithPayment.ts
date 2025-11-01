@@ -2,7 +2,8 @@ import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
 import {
-  networkToChainId,
+  extractEvmChainId,
+  networkToCaip2ChainId,
   type RequestedPaymentRequirements,
   RequestedPaymentRequirementsSchema,
 } from "./schemas.js";
@@ -96,9 +97,16 @@ export function wrapFetchWithPayment(
       );
     }
 
-    const paymentChainId = networkToChainId(
+    const caip2ChainId = networkToCaip2ChainId(
       selectedPaymentRequirements.network,
     );
+    const paymentChainId = extractEvmChainId(caip2ChainId);
+    // TODO (402): support solana
+    if (paymentChainId === null) {
+      throw new Error(
+        `Unsupported chain ID: ${selectedPaymentRequirements.network}`,
+      );
+    }
 
     // switch to the payment chain if it's not the current chain
     if (paymentChainId !== chain.id) {
@@ -150,7 +158,9 @@ function defaultPaymentRequirementsSelector(
   }
   // find the payment requirements matching the connected wallet chain
   const matchingPaymentRequirements = paymentRequirements.find(
-    (x) => networkToChainId(x.network) === chainId && x.scheme === scheme,
+    (x) =>
+      extractEvmChainId(networkToCaip2ChainId(x.network)) === chainId &&
+      x.scheme === scheme,
   );
 
   if (matchingPaymentRequirements) {
