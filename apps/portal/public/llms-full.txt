@@ -51703,7 +51703,7 @@ const transaction = prepareContractCall({
 
 For transactions that transfer ERC20 tokens, you can specify the value as the amount of tokens to transfer.
 
-You can use this in conjuction with the [getApprovalForTransaction](https://portal.thirdweb.com/references/typescript/v5/getApprovalForTransaction) function to easily create approval transactions for ERC20 tokens.
+You can use this in conjunction with the [getApprovalForTransaction](https://portal.thirdweb.com/references/typescript/v5/getApprovalForTransaction) function to easily create approval transactions for ERC20 tokens.
 
 This value will also be read by the react hooks and UI components to present to total cost to the user.
 

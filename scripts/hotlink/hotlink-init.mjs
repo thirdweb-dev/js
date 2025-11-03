@@ -39,7 +39,7 @@ async function script() {
   // how to use hot-linked packages
   console.log(
     "\x1b[33m%s\x1b[0m",
-    "Run Below Commands to use Hotlinked pacakges in your project:\n",
+    "Run Below Commands to use Hotlinked packages in your project:\n",
   );
   console.log("\x1b[33m%s\x1b[0m", "pnpm link @thirdweb-dev/react");
   console.log("\x1b[33m%s\x1b[0m", "pnpm --force");

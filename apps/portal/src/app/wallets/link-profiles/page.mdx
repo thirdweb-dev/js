@@ -232,7 +232,7 @@ import { getProfiles } from "thirdweb/wallets";
 
 const profiles = await getProfiles({
   client,
-  // optionally sepcify the ecosystem for ecosystem wallets
+  // optionally specify the ecosystem for ecosystem wallets
 });
 
 console.log(profiles[0].type); // will be "email", "phone", "google", "discord", etc
