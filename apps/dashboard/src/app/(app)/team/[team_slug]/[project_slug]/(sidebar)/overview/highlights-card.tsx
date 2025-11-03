@@ -14,6 +14,7 @@ type AggregatedMetrics = {
 
 export function ProjectHighlightsCard(props: {
   selectedChart: string | undefined;
+  aggregatedUserStats: InAppWalletStats[];
   userStats: InAppWalletStats[];
   volumeStats: UniversalBridgeStats[];
   teamSlug: string;
@@ -22,6 +23,7 @@ export function ProjectHighlightsCard(props: {
 }) {
   const {
     selectedChart,
+    aggregatedUserStats,
     userStats,
     volumeStats,
     teamSlug,
@@ -70,6 +72,12 @@ export function ProjectHighlightsCard(props: {
           : "activeUsers"
       }
       aggregateFn={(_data, key) => {
+        if (key === "activeUsers") {
+          return aggregatedUserStats.reduce(
+            (acc, curr) => acc + curr.uniqueWalletsConnected,
+            0,
+          );
+        }
         return timeSeriesData.reduce((acc, curr) => acc + curr[key], 0);
       }}
       chartConfig={chartConfig}
