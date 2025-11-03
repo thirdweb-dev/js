@@ -378,8 +378,18 @@ async function AsyncAppHighlightsCard(props: {
   params: PageParams;
   authToken: string;
 }) {
-  const [walletUserStatsTimeSeries, universalBridgeUsage] =
+  const [aggregatedUserStats, walletUserStatsTimeSeries, universalBridgeUsage] =
     await Promise.allSettled([
+      getInAppWalletUsage(
+        {
+          from: props.range.from,
+          period: "all",
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+          to: props.range.to,
+        },
+        props.authToken,
+      ),
       getInAppWalletUsage(
         {
           from: props.range.from,
@@ -408,6 +418,11 @@ async function AsyncAppHighlightsCard(props: {
   ) {
     return (
       <ProjectHighlightsCard
+        aggregatedUserStats={
+          aggregatedUserStats.status === "fulfilled"
+            ? aggregatedUserStats.value
+            : []
+        }
         selectedChart={props.selectedChart}
         selectedChartQueryParam={props.selectedChartQueryParam}
         teamSlug={props.params.team_slug}
