@@ -171,7 +171,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     expect(events.length).toBe(14);
   });
 
-  it("should get individual events with extension no filter using indexer", async () => {
+  // TODO: re-enable this test once indexer is fixed
+  it.skip("should get individual events with extension no filter using indexer", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
       events: [transferEvent()],
@@ -182,7 +183,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     expect(events.length).toBe(38);
   });
 
-  it("should get events for signature using indexer", async () => {
+  // TODO: re-enable this test once indexer is fixed
+  it.skip("should get events for signature using indexer", async () => {
     const events = await getContractEvents({
       contract: DOODLES_CONTRACT,
       events: [
@@ -198,7 +200,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("getEvents", () => {
     expect(events.length).toBe(2);
   });
 
-  it("should get specified events using indexer", async () => {
+  // TODO: re-enable this test once indexer is fixed
+  it.skip("should get specified events using indexer", async () => {
     const events = await getContractEvents({
       contract: USDT_CONTRACT,
       events: [
