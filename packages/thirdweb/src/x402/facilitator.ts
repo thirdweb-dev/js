@@ -281,6 +281,7 @@ export function facilitator(
           routeConfig: args.routeConfig,
           serverWalletAddress: facilitator.address,
           recipientAddress: args.payTo,
+          extraMetadata: args.extraMetadata,
         }),
       });
       if (res.status !== 402) {
