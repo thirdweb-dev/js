@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.111.1
+
+### Patch Changes
+
+- [#8354](https://github.com/thirdweb-dev/js/pull/8354) [`ccdce49`](https://github.com/thirdweb-dev/js/commit/ccdce496e09bc9420b0e15854328651c01f36279) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix hiddenWallets prop not applying to all wallets screen
+
 ## 5.111.0
 
 ### Minor Changes
