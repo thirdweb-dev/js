@@ -35,6 +35,8 @@ export type PaymentArgs = {
   routeConfig?: PaymentMiddlewareConfig;
   /** Optional recipient address to receive the payment if different from your facilitator address */
   payTo?: string;
+  /** Optional extra data to be included in the payment request */
+  extraMetadata?: Record<string, unknown>;
 };
 
 export type SettlePaymentArgs = PaymentArgs & {

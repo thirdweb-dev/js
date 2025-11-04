@@ -44,6 +44,7 @@ export async function decodePaymentRequest(
     routeConfig = {},
     method,
     paymentData,
+    extraMetadata,
   } = args;
   const { errorMessages } = routeConfig;
 
@@ -54,6 +55,7 @@ export async function decodePaymentRequest(
     price,
     routeConfig,
     payTo,
+    extraMetadata,
   });
 
   // Check for payment header, if none, return the payment requirements
