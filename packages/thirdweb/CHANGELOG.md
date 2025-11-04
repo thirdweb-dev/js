@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.111.2
+
+### Patch Changes
+
+- [#8358](https://github.com/thirdweb-dev/js/pull/8358) [`1d54cff`](https://github.com/thirdweb-dev/js/commit/1d54cff7b442b8667ddd54bd783502c367ffc83e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for extraMetadata in x402 payment requirements
+
+- [#8356](https://github.com/thirdweb-dev/js/pull/8356) [`fd04eef`](https://github.com/thirdweb-dev/js/commit/fd04eefea9a2a99eee3740d6746040c9f81cd43f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations, fix deployment
+
 ## 5.111.1
 
 ### Patch Changes
