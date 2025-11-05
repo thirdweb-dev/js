@@ -186,6 +186,7 @@ export class InAppNativeConnector implements InAppConnector {
           client: this.client,
           ecosystem: params.ecosystem,
           wallet: params.wallet,
+          chain: params.chain,
         });
       }
       case "github":

@@ -574,8 +574,8 @@ importers:
   apps/playground-web:
     dependencies:
       '@abstract-foundation/agw-react':
-        specifier: ^1.6.4
-        version: 1.6.4(cp5zk5cv43kemeeoylvueylari)
+        specifier: ^1.10.0
+        version: 1.10.0(e4yhxgmiqbrp6q7xc7oorwzzpy)
       '@ai-sdk/react':
         specifier: ^2.0.25
         version: 2.0.25(react@19.1.0)(zod@3.25.75)
@@ -1827,42 +1827,29 @@ packages:
       graphql:
         optional: true
 
-  '@abstract-foundation/agw-client@1.6.2':
-    resolution: {integrity: sha512-NaXMfRFdujZNWeFn89p1gzxt17bWW9QTW3kIcmiaDSjPxifT9sKa+Qa1v33Rz3kpBM/PJVQkaFUgA7Jff3bidw==}
+  '@abstract-foundation/agw-client@1.10.0':
+    resolution: {integrity: sha512-OGI8V8/MWbcJSw3st+pSxBUHEWkfS1ikBAr4ylSAsuyn+VpvV+G/lto0LZR7uAZnH3uK/cTv5e6YKYGodb1KIw==}
     peerDependencies:
       abitype: ^1.0.0
       typescript: '>=5.0.4'
-      viem: ^2.22.23
+      viem: ^2.33.3
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  '@abstract-foundation/agw-client@1.8.5':
-    resolution: {integrity: sha512-DhGsLT6xei/asqnJeql2bSVdsWv9pgegWHbETSlK22JZwOhKivC5mxdR97XEg9jK680ymBFKIrFwxEMmcjog5Q==}
+  '@abstract-foundation/agw-react@1.10.0':
+    resolution: {integrity: sha512-QWsCSZFCTkuOuqt+lL2Eguez7BK2tNyie6OtVzxwvwEZa7uk1mPicAQWjy1WUBQIPucVP2gJxnozGFLo9liTtA==}
     peerDependencies:
-      abitype: ^1.0.0
-      typescript: '>=5.0.4'
-      viem: ^2.22.23
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@abstract-foundation/agw-react@1.6.4':
-    resolution: {integrity: sha512-8ZOuQOACWuYf9T13AfejlJeS/Ai2zfem3etvrIzrDUurYmy3smA/3bXzRA0ydjgYsu2yvMwE8nBMggiit+OGew==}
-    peerDependencies:
-      '@privy-io/cross-app-connect': ^0.2.0
-      '@privy-io/react-auth': ^2.8.2
-      '@rainbow-me/rainbowkit': '*'
+      '@privy-io/cross-app-connect': ^0.2.2
+      '@privy-io/react-auth': ^2.21.2
       '@tanstack/react-query': ^5
       react: '>=18'
       secp256k1: '>=5.0.1'
       thirdweb: ^5.68.0
       typescript: '>=5.0.4'
-      viem: ^2.22.23
+      viem: ^2.33.3
       wagmi: ^2.14.11
     peerDependenciesMeta:
-      '@rainbow-me/rainbowkit':
-        optional: true
       thirdweb:
         optional: true
       typescript:
@@ -8254,7 +8241,6 @@ packages:
 
   '@walletconnect/sign-client@2.19.2':
     resolution: {integrity: sha512-a/K5PRIFPCjfHq5xx3WYKHAAF8Ft2I1LtxloyibqiQOoUtNLfKgFB1r8sdMvXM7/PADNPe4iAw4uSE6PrARrfg==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/sign-client@2.21.0':
     resolution: {integrity: sha512-z7h+PeLa5Au2R591d/8ZlziE0stJvdzP9jNFzFolf2RG/OiXulgFKum8PrIyXy+Rg2q95U9nRVUF9fWcn78yBA==}
@@ -8266,7 +8252,6 @@ packages:
 
   '@walletconnect/sign-client@2.21.5':
     resolution: {integrity: sha512-IAs/IqmE1HVL9EsvqkNRU4NeAYe//h9NwqKi7ToKYZv4jhcC3BBemUD1r8iQJSTHMhO41EKn1G9/DiBln3ZiwQ==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/sign-client@2.21.8':
     resolution: {integrity: sha512-lTcUbMjQ0YUZ5wzCLhpBeS9OkWYgLLly6BddEp2+pm4QxiwCCU2Nao0nBJXgzKbZYQOgrEGqtdm/7ze67gjzRA==}
@@ -8292,7 +8277,6 @@ packages:
 
   '@walletconnect/universal-provider@2.19.2':
     resolution: {integrity: sha512-LkKg+EjcSUpPUhhvRANgkjPL38wJPIWumAYD8OK/g4OFuJ4W3lS/XTCKthABQfFqmiNbNbVllmywiyE44KdpQg==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/universal-provider@2.21.0':
     resolution: {integrity: sha512-mtUQvewt+X0VBQay/xOJBvxsB3Xsm1lTwFjZ6WUwSOTR1X+FNb71hSApnV5kbsdDIpYPXeQUbGt2se1n5E5UBg==}
@@ -8304,7 +8288,6 @@ packages:
 
   '@walletconnect/universal-provider@2.21.5':
     resolution: {integrity: sha512-SMXGGXyj78c8Ru2f665ZFZU24phn0yZyCP5Ej7goxVQxABwqWKM/odj3j/IxZv+hxA8yU13yxaubgVefnereqw==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/universal-provider@2.21.8':
     resolution: {integrity: sha512-Nc1Z6VXnya152yucNDPnlTkrhG289tCUfcjiWqDmwNYzFSfdT5oJQHlnffQXlvoks90kn5Ru8Rnwag2CH1YOVQ==}
@@ -16664,26 +16647,18 @@ snapshots:
     optionalDependencies:
       graphql: 16.11.0
 
-  '@abstract-foundation/agw-client@1.6.2(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))':
+  '@abstract-foundation/agw-client@1.10.0(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))':
     dependencies:
       abitype: 1.1.1(typescript@5.8.3)(zod@3.25.75)
       viem: 2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)
     optionalDependencies:
       typescript: 5.8.3
 
-  '@abstract-foundation/agw-client@1.8.5(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))':
+  '@abstract-foundation/agw-react@1.10.0(e4yhxgmiqbrp6q7xc7oorwzzpy)':
     dependencies:
-      abitype: 1.1.1(typescript@5.8.3)(zod@3.25.75)
-      viem: 2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)
-    optionalDependencies:
-      typescript: 5.8.3
-    optional: true
-
-  '@abstract-foundation/agw-react@1.6.4(cp5zk5cv43kemeeoylvueylari)':
-    dependencies:
-      '@abstract-foundation/agw-client': 1.6.2(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
+      '@abstract-foundation/agw-client': 1.10.0(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
       '@privy-io/cross-app-connect': 0.2.2(@wagmi/core@2.21.2(@tanstack/query-core@5.90.2)(@types/react@19.1.8)(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
-      '@privy-io/react-auth': 2.17.3(@abstract-foundation/agw-client@1.8.5(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(@solana/spl-token@0.4.14(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@19.1.8)(aws4fetch@1.0.20)(bs58@6.0.0)(bufferutil@4.0.9)(ioredis@5.6.1)(lit@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)(zod@3.25.75)
+      '@privy-io/react-auth': 2.17.3(@abstract-foundation/agw-client@1.10.0(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(@solana/spl-token@0.4.14(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@19.1.8)(aws4fetch@1.0.20)(bs58@6.0.0)(bufferutil@4.0.9)(ioredis@5.6.1)(lit@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)(zod@3.25.75)
       '@tanstack/react-query': 5.81.5(react@19.1.0)
       react: 19.1.0
       secp256k1: 5.0.1
@@ -21480,7 +21455,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@privy-io/react-auth@2.17.3(@abstract-foundation/agw-client@1.8.5(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(@solana/spl-token@0.4.14(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@19.1.8)(aws4fetch@1.0.20)(bs58@6.0.0)(bufferutil@4.0.9)(ioredis@5.6.1)(lit@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)(zod@3.25.75)':
+  '@privy-io/react-auth@2.17.3(@abstract-foundation/agw-client@1.10.0(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)))(@solana/spl-token@0.4.14(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@19.1.8)(aws4fetch@1.0.20)(bs58@6.0.0)(bufferutil@4.0.9)(ioredis@5.6.1)(lit@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)(zod@3.25.75)':
     dependencies:
       '@coinbase/wallet-sdk': 4.3.2
       '@floating-ui/react': 0.26.28(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -21526,7 +21501,7 @@ snapshots:
       viem: 2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75)
       zustand: 5.0.7(@types/react@19.1.8)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
     optionalDependencies:
-      '@abstract-foundation/agw-client': 1.8.5(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
+      '@abstract-foundation/agw-client': 1.10.0(abitype@1.1.1(typescript@5.8.3)(zod@3.25.75))(typescript@5.8.3)(viem@2.37.9(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.75))
       '@solana/spl-token': 0.4.14(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
     transitivePeerDependencies:

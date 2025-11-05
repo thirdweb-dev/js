@@ -107,6 +107,7 @@ describe("InAppWebConnector.connect", () => {
       client: TEST_CLIENT,
       ecosystem: undefined,
       wallet: mockWallet,
+      chain: ethereum,
     });
   });
 
