@@ -479,6 +479,11 @@ async function redirects() {
       destination: "/tokens",
       permanent: false,
     },
+    {
+      source: "/payments/x402",
+      destination: "/x402",
+      permanent: false,
+    },
   ];
 }
 
