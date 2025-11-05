@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.111.3
+
+### Patch Changes
+
+- [#8361](https://github.com/thirdweb-dev/js/pull/8361) [`207cb9d`](https://github.com/thirdweb-dev/js/commit/207cb9dbeb82411809bafa2a8e833b1f10414b92) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add extra mobile detection for isMobile() function
+
 ## 5.111.2
 
 ### Patch Changes
