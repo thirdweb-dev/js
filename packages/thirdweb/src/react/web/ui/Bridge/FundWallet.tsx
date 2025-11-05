@@ -298,6 +298,7 @@ export function FundWallet(props: FundWalletProps) {
           }}
           theme={theme}
           {...props.connectOptions}
+          autoConnect={false}
         />
       ) : (
         <Button

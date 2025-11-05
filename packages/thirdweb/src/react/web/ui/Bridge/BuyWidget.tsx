@@ -25,6 +25,7 @@ import type {
 import type { CompletedStatusResult } from "../../../core/hooks/useStepExecutor.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { webWindowAdapter } from "../../adapters/WindowAdapter.js";
+import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import connectLocaleEn from "../ConnectWallet/locale/en.js";
 import { EmbedContainer } from "../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../components/DynamicHeight.js";
@@ -359,6 +360,21 @@ export function BuyWidget(props: BuyWidgetProps) {
       className={props.className}
       style={props.style}
     >
+      {props.connectOptions?.autoConnect !== false && (
+        <AutoConnect
+          client={props.client}
+          wallets={props.connectOptions?.wallets}
+          timeout={
+            typeof props.connectOptions?.autoConnect === "object"
+              ? props.connectOptions?.autoConnect?.timeout
+              : undefined
+          }
+          appMetadata={props.connectOptions?.appMetadata}
+          accountAbstraction={props.connectOptions?.accountAbstraction}
+          chain={props.connectOptions?.chain}
+        />
+      )}
+
       <BridgeWidgetContent
         {...props}
         theme={props.theme || "dark"}

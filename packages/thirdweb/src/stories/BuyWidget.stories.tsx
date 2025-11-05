@@ -138,6 +138,20 @@ export function LargeAmount() {
   );
 }
 
+export function NoAutoConnect() {
+  return (
+    <Variant
+      client={storyClient}
+      chain={ethereum}
+      tokenAddress="0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+      amount="150000"
+      connectOptions={{
+        autoConnect: false,
+      }}
+    />
+  );
+}
+
 function Variant(props: BuyWidgetProps) {
   return (
     <div
