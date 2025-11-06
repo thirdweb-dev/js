@@ -332,6 +332,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
       if (args.simulate) {
         serializedTransaction = await toSerializableTransaction({
           transaction: args.transaction,
+          from: address,
         });
       } else {
         const [to, data, value] = await Promise.all([
