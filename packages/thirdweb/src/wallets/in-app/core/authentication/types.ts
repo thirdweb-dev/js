@@ -69,7 +69,7 @@ export type SingleStepAuthArgsType =
   | {
       strategy: "wallet";
       wallet: Wallet;
-      chain: Chain;
+      chain?: Chain;
     }
   | {
       strategy: "guest";

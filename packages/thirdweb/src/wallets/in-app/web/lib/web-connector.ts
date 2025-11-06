@@ -369,6 +369,7 @@ export class InAppWebConnector implements InAppConnector {
           client: this.client,
           ecosystem: this.ecosystem,
           wallet: args.wallet,
+          chain: args.chain,
         });
       }
     }

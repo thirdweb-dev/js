@@ -172,6 +172,7 @@ export const ConnectModalContent = (props: {
         onBack={handleBack}
         onSelect={setScreen}
         recommendedWallets={props.recommendedWallets}
+        walletIdsToHide={props.walletIdsToHide}
         size={props.size}
       />
     </Suspense>

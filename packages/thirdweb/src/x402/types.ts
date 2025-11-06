@@ -6,7 +6,6 @@ import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
 import type {
   FacilitatorNetwork,
   FacilitatorSettleResponse,
-  FacilitatorSupportedAssetSchema,
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
   SupportedSignatureTypeSchema,
@@ -36,6 +35,8 @@ export type PaymentArgs = {
   routeConfig?: PaymentMiddlewareConfig;
   /** Optional recipient address to receive the payment if different from your facilitator address */
   payTo?: string;
+  /** Optional extra data to be included in the payment request */
+  extraMetadata?: Record<string, unknown>;
 };
 
 export type SettlePaymentArgs = PaymentArgs & {
@@ -110,5 +111,3 @@ export type ERC20TokenAmount = {
     };
   };
 };
-
-export type DefaultAsset = z.infer<typeof FacilitatorSupportedAssetSchema>;

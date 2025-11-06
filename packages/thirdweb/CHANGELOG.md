@@ -1,5 +1,49 @@
 # thirdweb
 
+## 5.111.5
+
+### Patch Changes
+
+- [#8369](https://github.com/thirdweb-dev/js/pull/8369) [`7da16cf`](https://github.com/thirdweb-dev/js/commit/7da16cff2ff3aaa80c7fe5614639d950d88b5bf2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make maxAmount optional in wrapFetchWithPayment and loosen schema validation for payment payloads
+
+## 5.111.4
+
+### Patch Changes
+
+- [#8363](https://github.com/thirdweb-dev/js/pull/8363) [`d907017`](https://github.com/thirdweb-dev/js/commit/d907017217a0927e7f69eab0470b1fe120b4d1a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix BuyWidget autoconnect not working when receiverAddress prop is set
+
+- [#8365](https://github.com/thirdweb-dev/js/pull/8365) [`40781b8`](https://github.com/thirdweb-dev/js/commit/40781b8170a1014ef76e438ba3c8244137dba7ea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect passed chain when doing SIWE for in-app/ecosystem wallet
+
+## 5.111.3
+
+### Patch Changes
+
+- [#8361](https://github.com/thirdweb-dev/js/pull/8361) [`207cb9d`](https://github.com/thirdweb-dev/js/commit/207cb9dbeb82411809bafa2a8e833b1f10414b92) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add extra mobile detection for isMobile() function
+
+## 5.111.2
+
+### Patch Changes
+
+- [#8358](https://github.com/thirdweb-dev/js/pull/8358) [`1d54cff`](https://github.com/thirdweb-dev/js/commit/1d54cff7b442b8667ddd54bd783502c367ffc83e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for extraMetadata in x402 payment requirements
+
+- [#8356](https://github.com/thirdweb-dev/js/pull/8356) [`fd04eef`](https://github.com/thirdweb-dev/js/commit/fd04eefea9a2a99eee3740d6746040c9f81cd43f) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update implementations, fix deployment
+
+## 5.111.1
+
+### Patch Changes
+
+- [#8354](https://github.com/thirdweb-dev/js/pull/8354) [`ccdce49`](https://github.com/thirdweb-dev/js/commit/ccdce496e09bc9420b0e15854328651c01f36279) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix hiddenWallets prop not applying to all wallets screen
+
+## 5.111.0
+
+### Minor Changes
+
+- [#8335](https://github.com/thirdweb-dev/js/pull/8335) [`c83f1c6`](https://github.com/thirdweb-dev/js/commit/c83f1c6f7a38c8a9f424798e6e726e1d037ed042) Thanks [@MananTank](https://github.com/MananTank)! - Remove `Bridge.routes` and `useBridgeRoutes`
+
+### Patch Changes
+
+- [#8345](https://github.com/thirdweb-dev/js/pull/8345) [`219fc69`](https://github.com/thirdweb-dev/js/commit/219fc69d72b1ca861bf0228589039788008ea0c0) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update x402 flows to use remote /accepts endpoint
+
 ## 5.110.6
 
 ### Patch Changes

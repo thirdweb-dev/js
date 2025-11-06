@@ -16,6 +16,7 @@ import {
   fetchBytecodeFromCompilerMetadata,
 } from "../../utils/any-evm/deploy-metadata.js";
 import { encodeExtraDataWithUri } from "../../utils/any-evm/encode-extra-data-with-uri.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import { getAllDefaultConstructorParamsForImplementation } from "./get-required-transactions.js";
@@ -213,7 +214,8 @@ export async function deployContractfromDeployMetadata(
 
       if (
         deployMetadata.routerType === "dynamic" &&
-        deployMetadata.defaultExtensions
+        deployMetadata.defaultExtensions &&
+        !isZkSyncChain(chain)
       ) {
         for (const e of deployMetadata.defaultExtensions) {
           await getOrDeployInfraForPublishedContract({

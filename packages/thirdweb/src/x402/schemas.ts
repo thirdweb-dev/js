@@ -15,7 +15,7 @@ const FacilitatorNetworkSchema = z.string();
 
 export type FacilitatorNetwork = z.infer<typeof FacilitatorNetworkSchema>;
 
-export const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
+const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
   network: FacilitatorNetworkSchema,
 });
 
@@ -59,7 +59,7 @@ export const SupportedSignatureTypeSchema = z.enum([
   "Permit",
 ]);
 
-export const FacilitatorSupportedAssetSchema = z.object({
+const FacilitatorSupportedAssetSchema = z.object({
   address: z.string(),
   decimals: z.number(),
   eip712: z.object({
@@ -92,25 +92,95 @@ export type FacilitatorSupportedResponse = z.infer<
   typeof FacilitatorSupportedResponseSchema
 >;
 
-export function networkToChainId(network: string | Chain): number {
-  if (typeof network === "object") {
-    return network.id;
+function isEvmChain(caip2ChainId: Caip2ChainId): boolean {
+  return caip2ChainId.startsWith("eip155:");
+}
+
+/**
+ * Extract numeric chain ID from CAIP-2 EVM chain (e.g., "eip155:1" -> 1)
+ */
+export function extractEvmChainId(caip2ChainId: Caip2ChainId): number | null {
+  if (!isEvmChain(caip2ChainId)) {
+    return null;
   }
-  if (network.startsWith("eip155:")) {
-    const chainId = parseInt(network.split(":")[1] ?? "0");
-    if (!Number.isNaN(chainId) && chainId > 0) {
-      return chainId;
-    } else {
-      throw new Error(`Invalid network: ${network}`);
+  const parts = caip2ChainId.split(":");
+  const chainId = Number(parts[1]);
+  return Number.isNaN(chainId) ? null : chainId;
+}
+
+/**
+ * CAIP-2 compliant blockchain identifier
+ * @see https://chainagnostic.org/CAIPs/caip-2
+ */
+const Caip2ChainIdSchema = z
+  .union([z.string(), z.number().int().positive()])
+  .transform((value, ctx) => {
+    // Handle proper CAIP-2 format (already valid)
+    if (typeof value === "string" && value.includes(":")) {
+      const [namespace, reference] = value.split(":");
+
+      // Solana mainnet/devnet aliases
+      if (namespace === "solana" && reference === "mainnet") {
+        return "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ" as const;
+      }
+      if (namespace === "solana" && reference === "devnet") {
+        return "solana:8E9rvCKLFQia2Y35HXjjpWzj8weVo44K" as const;
+      }
+
+      // Validate CAIP-2 format
+      const namespaceRegex = /^[-a-z0-9]{3,8}$/;
+      const referenceRegex = /^[-_a-zA-Z0-9]{1,32}$/;
+
+      if (!namespaceRegex.test(namespace ?? "")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Invalid CAIP-2 namespace: ${namespace}. Must match [-a-z0-9]{3,8}`,
+        });
+        return z.NEVER;
+      }
+
+      if (!referenceRegex.test(reference ?? "")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Invalid CAIP-2 reference: ${reference}. Must match [-_a-zA-Z0-9]{1,32}`,
+        });
+        return z.NEVER;
+      }
+
+      return value as `${string}:${string}`;
     }
+
+    // Handle number (EVM chain ID fallback)
+    if (typeof value === "number") {
+      return `eip155:${value}` as const;
+    }
+
+    // Handle string number (EVM chain ID fallback)
+    const numValue = Number(value);
+    if (!Number.isNaN(numValue) && Number.isInteger(numValue) && numValue > 0) {
+      return `eip155:${numValue}` as const;
+    }
+
+    const mappedChainId = EvmNetworkToChainId.get(value as Network);
+    if (mappedChainId) {
+      return `eip155:${mappedChainId}` as const;
+    }
+
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Invalid chain ID: ${value}. Must be a CAIP-2 identifier (e.g., "eip155:1", "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ"), a numeric chain ID for EVM, or "solana:mainnet"/"solana:devnet"`,
+    });
+    return z.NEVER;
+  })
+  .describe(
+    "CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.",
+  );
+
+type Caip2ChainId = z.output<typeof Caip2ChainIdSchema>;
+
+export function networkToCaip2ChainId(network: string | Chain): Caip2ChainId {
+  if (typeof network === "object") {
+    return `eip155:${network.id}` as const;
   }
-  const mappedChainId = EvmNetworkToChainId.get(network as Network);
-  if (!mappedChainId) {
-    throw new Error(`Invalid network: ${network}`);
-  }
-  // TODO (402): support solana networks
-  if (mappedChainId === 101 || mappedChainId === 103) {
-    throw new Error("Solana networks not supported yet.");
-  }
-  return mappedChainId;
+  return Caip2ChainIdSchema.parse(network);
 }

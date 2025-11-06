@@ -275,6 +275,33 @@ export const sendSolanaTransaction = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Sign Solana Transaction
+ * Sign a Solana transaction without broadcasting it
+ */
+export const signSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options: Options<SignSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		SignSolanaTransactionResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/sign/transaction",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
+		},
+	});
+};
+
+/**
  * Cancel Transaction
  * Attempt to cancel a queued transaction. Transactions that have been sent and are waiting for mine cannot be cancelled.
  */
@@ -416,33 +443,6 @@ export const signSolanaMessage = <ThrowOnError extends boolean = false>(
 			},
 		],
 		url: "/v1/solana/sign-message",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
-	});
-};
-
-/**
- * Sign Solana Transaction
- * Sign a serialized Solana transaction.
- */
-export const signSolanaTransaction = <ThrowOnError extends boolean = false>(
-	options?: Options<SignSolanaTransactionData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).post<
-		SignSolanaTransactionResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/solana/sign-transaction",
 		...options,
 		headers: {
 			"Content-Type": "application/json",

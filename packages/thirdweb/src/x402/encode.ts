@@ -1,8 +1,5 @@
 import type { ExactEvmPayload } from "x402/types";
-import {
-  type RequestedPaymentPayload,
-  RequestedPaymentPayloadSchema,
-} from "./schemas.js";
+import type { RequestedPaymentPayload } from "./schemas.js";
 
 /**
  * Encodes a payment payload into a base64 string, ensuring bigint values are properly stringified
@@ -44,8 +41,7 @@ export function decodePayment(payment: string): RequestedPaymentPayload {
     ...parsed,
     payload: parsed.payload as ExactEvmPayload,
   };
-  const validated = RequestedPaymentPayloadSchema.parse(obj);
-  return validated;
+  return obj;
 }
 
 /**

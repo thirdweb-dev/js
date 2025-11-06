@@ -142,7 +142,9 @@ export function ConnectModal(
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
     | Wallet<"inApp">
     | undefined;
-  const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  const externalWallets = wallets
+    .filter((wallet) => wallet.id !== "inApp")
+    .filter((wallet) => !props.hiddenWallets?.includes(wallet.id));
   const showBranding = props.connectModal?.showThirdwebBranding !== false;
   const connectionManager = useConnectionManager();
 

@@ -2,13 +2,15 @@ import type { VerifyResponse } from "x402/types";
 import type { ThirdwebClient } from "../client/client.js";
 import { stringify } from "../utils/json.js";
 import { withCache } from "../utils/promise/withCache.js";
-import type {
-  FacilitatorSettleResponse,
-  FacilitatorSupportedResponse,
-  FacilitatorVerifyResponse,
-  RequestedPaymentPayload,
-  RequestedPaymentRequirements,
+import {
+  type FacilitatorSettleResponse,
+  type FacilitatorSupportedResponse,
+  type FacilitatorVerifyResponse,
+  networkToCaip2ChainId,
+  type RequestedPaymentPayload,
+  type RequestedPaymentRequirements,
 } from "./schemas.js";
+import type { PaymentArgs, PaymentRequiredResult } from "./types.js";
 
 export type WaitUntil = "simulated" | "submitted" | "confirmed";
 
@@ -46,6 +48,9 @@ export type ThirdwebX402Facilitator = {
     chainId: number;
     tokenAddress?: string;
   }) => Promise<FacilitatorSupportedResponse>;
+  accepts: (
+    args: Omit<PaymentArgs, "facilitator">,
+  ) => Promise<PaymentRequiredResult>;
 };
 
 const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
@@ -255,6 +260,43 @@ export function facilitator(
           cacheTime: 1000 * 60 * 60 * 1, // 1 hour
         },
       );
+    },
+
+    async accepts(
+      args: Omit<PaymentArgs, "facilitator">,
+    ): Promise<PaymentRequiredResult> {
+      const url = config.baseUrl ?? DEFAULT_BASE_URL;
+      let headers = { "Content-Type": "application/json" };
+      const authHeaders = await facilitator.createAuthHeaders();
+      headers = { ...headers, ...authHeaders.verify }; // same as verify
+      const caip2ChainId = networkToCaip2ChainId(args.network);
+      const res = await fetch(`${url}/accepts`, {
+        method: "POST",
+        headers,
+        body: stringify({
+          resourceUrl: args.resourceUrl,
+          method: args.method,
+          network: caip2ChainId,
+          price: args.price,
+          routeConfig: args.routeConfig,
+          serverWalletAddress: facilitator.address,
+          recipientAddress: args.payTo,
+          extraMetadata: args.extraMetadata,
+        }),
+      });
+      if (res.status !== 402) {
+        throw new Error(
+          `Failed to construct payment requirements: ${res.statusText} - ${await res.text()}`,
+        );
+      }
+      return {
+        status: res.status as 402,
+        responseBody:
+          (await res.json()) as PaymentRequiredResult["responseBody"],
+        responseHeaders: {
+          "Content-Type": "application/json",
+        },
+      };
     },
   };
 
