@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.111.4
+
+### Patch Changes
+
+- [#8363](https://github.com/thirdweb-dev/js/pull/8363) [`d907017`](https://github.com/thirdweb-dev/js/commit/d907017217a0927e7f69eab0470b1fe120b4d1a1) Thanks [@MananTank](https://github.com/MananTank)! - Fix BuyWidget autoconnect not working when receiverAddress prop is set
+
+- [#8365](https://github.com/thirdweb-dev/js/pull/8365) [`40781b8`](https://github.com/thirdweb-dev/js/commit/40781b8170a1014ef76e438ba3c8244137dba7ea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect passed chain when doing SIWE for in-app/ecosystem wallet
+
 ## 5.111.3
 
 ### Patch Changes
