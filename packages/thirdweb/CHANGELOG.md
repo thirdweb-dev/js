@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.111.5
+
+### Patch Changes
+
+- [#8369](https://github.com/thirdweb-dev/js/pull/8369) [`7da16cf`](https://github.com/thirdweb-dev/js/commit/7da16cff2ff3aaa80c7fe5614639d950d88b5bf2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make maxAmount optional in wrapFetchWithPayment and loosen schema validation for payment payloads
+
 ## 5.111.4
 
 ### Patch Changes
