@@ -2,4 +2,5 @@
 "@thirdweb-dev/engine": minor
 ---
 
-Reworked Solana SIgn Transaction API that accepts more flexible inputs
+Reworked Solana Sign Transaction API that accepts more flexible inputs
+
