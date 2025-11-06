@@ -556,6 +556,10 @@ export type Eip7702OwnerExecution = {
 	 * The delegated EOA address
 	 */
 	from: AddressDef;
+	/**
+	 * Optional fleet ID to route the transaction to a specific bundler fleet
+	 */
+	fleetId?: string | null;
 };
 
 /**
@@ -570,6 +574,10 @@ export type Eip7702SessionKeyExecution = {
 	 * The account address is the address of a delegated account you want to execute the transaction on. This account has granted a session key to the `session_key_address`
 	 */
 	accountAddress: AddressDef;
+	/**
+	 * Optional fleet ID to route the transaction to a specific bundler fleet
+	 */
+	fleetId?: string | null;
 };
 
 export type EmptyIdempotencySetResponse = {
@@ -1000,15 +1008,11 @@ export type RpcErrorResponse = {
 /**
  * Request to send a Solana transaction
  */
-export type SendSolanaTransactionRequest = {
+export type SendSolanaTransactionRequest = SolanaTransactionInput & {
 	/**
 	 * Idempotency key for this transaction (defaults to random UUID)
 	 */
 	idempotencyKey?: string;
-	/**
-	 * List of Solana instructions to execute
-	 */
-	instructions: Array<SolanaInstructionData>;
 	/**
 	 * Solana execution options
 	 */
@@ -1186,6 +1190,30 @@ export type SignResultData = {
 	 * The data that was signed (stringified typed data)
 	 */
 	signedData: string;
+};
+
+/**
+ * Request to sign a Solana transaction
+ */
+export type SignSolanaTransactionRequest = SolanaTransactionInput & {
+	/**
+	 * Solana execution options
+	 */
+	executionOptions: SolanaExecutionOptions;
+};
+
+/**
+ * Data returned from successful signing
+ */
+export type SignSolanaTransactionResponse = {
+	/**
+	 * The signature (base58-encoded)
+	 */
+	signature: string;
+	/**
+	 * The signed serialized transaction (base64-encoded)
+	 */
+	signedTransaction: string;
 };
 
 /**
@@ -1453,6 +1481,21 @@ export type SolanaRpcResponseErrorData =
 	  };
 
 /**
+ * Input for Solana transaction - either build from instructions or use pre-built
+ */
+export type SolanaTransactionInput =
+	| SolanaTransactionInputInstructions
+	| SolanaTransactionInputSerialized;
+
+export type SolanaTransactionInputInstructions = {
+	instructions: Array<SolanaInstructionData>;
+};
+
+export type SolanaTransactionInputSerialized = {
+	transaction: string;
+};
+
+/**
  * Execution Option Variants
  * All supported specific execution options are contained here
  */
@@ -1500,6 +1543,22 @@ export type SuccessResponseQueuedSolanaTransactionResponse = {
 export type SuccessResponseQueuedTransactionsResponse = {
 	result: {
 		transactions: Array<QueuedTransaction>;
+	};
+};
+
+export type SuccessResponseSignSolanaTransactionResponse = {
+	/**
+	 * Data returned from successful signing
+	 */
+	result: {
+		/**
+		 * The signature (base58-encoded)
+		 */
+		signature: string;
+		/**
+		 * The signed serialized transaction (base64-encoded)
+		 */
+		signedTransaction: string;
 	};
 };
 
@@ -1847,6 +1906,32 @@ export type SendSolanaTransactionResponses = {
 export type SendSolanaTransactionResponse =
 	SendSolanaTransactionResponses[keyof SendSolanaTransactionResponses];
 
+export type SignSolanaTransactionData = {
+	/**
+	 * Sign Solana transaction request
+	 */
+	body: SignSolanaTransactionRequest;
+	headers?: {
+		/**
+		 * Vault access token
+		 */
+		"x-vault-access-token"?: string | null;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/sign/transaction";
+};
+
+export type SignSolanaTransactionResponses = {
+	/**
+	 * Successfully signed Solana transaction
+	 */
+	200: SuccessResponseSignSolanaTransactionResponse;
+};
+
+export type SignSolanaTransactionResponse2 =
+	SignSolanaTransactionResponses[keyof SignSolanaTransactionResponses];
+
 export type CancelTransactionData = {
 	body?: never;
 	path: {
@@ -2075,49 +2160,6 @@ export type SignSolanaMessageResponses = {
 
 export type SignSolanaMessageResponse =
 	SignSolanaMessageResponses[keyof SignSolanaMessageResponses];
-
-export type SignSolanaTransactionData = {
-	body?: {
-		/**
-		 * Base58 encoded Solana public key
-		 */
-		from: string;
-		/**
-		 * Base64 encoded Solana transaction
-		 */
-		transaction: string;
-	};
-	headers?: {
-		/**
-		 * Vault Access Token used to access your EOA
-		 */
-		"x-vault-access-token"?: string;
-	};
-	path?: never;
-	query?: never;
-	url: "/v1/solana/sign-transaction";
-};
-
-export type SignSolanaTransactionResponses = {
-	/**
-	 * Transaction signed
-	 */
-	200: {
-		result: {
-			/**
-			 * Base58 encoded signature
-			 */
-			signature: string;
-			/**
-			 * Base58 encoded Solana public key
-			 */
-			signerPublicKey: string;
-		};
-	};
-};
-
-export type SignSolanaTransactionResponse =
-	SignSolanaTransactionResponses[keyof SignSolanaTransactionResponses];
 
 export type GetTransactionsData = {
 	body?: never;
