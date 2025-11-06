@@ -15,7 +15,7 @@ const FacilitatorNetworkSchema = z.string();
 
 export type FacilitatorNetwork = z.infer<typeof FacilitatorNetworkSchema>;
 
-export const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
+const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
   network: FacilitatorNetworkSchema,
 });
 

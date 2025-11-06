@@ -52,7 +52,7 @@ export function wrapFetchWithPayment(
   fetch: typeof globalThis.fetch,
   client: ThirdwebClient,
   wallet: Wallet,
-  maxValue: bigint = BigInt(1 * 10 ** 6), // Default to 1 USDC
+  maxValue?: bigint,
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
     const response = await fetch(input, init);
@@ -91,7 +91,10 @@ export function wrapFetchWithPayment(
       );
     }
 
-    if (BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue) {
+    if (
+      maxValue &&
+      BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue
+    ) {
       throw new Error(
         `Payment amount exceeds maximum allowed (currently set to ${maxValue} in base units)`,
       );
