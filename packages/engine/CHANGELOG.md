@@ -1,5 +1,11 @@
 # @thirdweb-dev/engine
 
+## 3.4.0
+
+### Minor Changes
+
+- [#8371](https://github.com/thirdweb-dev/js/pull/8371) [`ad68969`](https://github.com/thirdweb-dev/js/commit/ad68969559a80a5f188a647ef0e1c04f0003a0ad) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Reworked Solana Sign Transaction API that accepts more flexible inputs
+
 ## 3.3.0
 
 ### Minor Changes
