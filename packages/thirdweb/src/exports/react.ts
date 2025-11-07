@@ -29,6 +29,7 @@ export { useReadContract } from "../react/core/hooks/contract/useReadContract.js
 export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
 // chain hooks
 export { useChainMetadata } from "../react/core/hooks/others/useChainQuery.js";
+export { useInvalidateBalances } from "../react/core/hooks/others/useInvalidateBalances.js";
 export { useInvalidateContractQuery } from "../react/core/hooks/others/useInvalidateQueries.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 export {
