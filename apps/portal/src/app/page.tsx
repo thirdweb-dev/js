@@ -41,14 +41,14 @@ export default function Page() {
 
 function Hero() {
   return (
-    <section className="grid gap-4 py-14 lg:grid-cols-[1fr_420px] lg:py-0">
+    <section className="grid gap-4 pt-14 pb-6 lg:grid-cols-[1fr_420px] lg:py-0">
       {/* Left */}
       <div className="flex flex-col justify-center">
         <div>
           <h1 className="mb-3 font-bold text-4xl tracking-tighter lg:text-6xl">
             thirdweb Documentation
           </h1>
-          <p className="mb-8 max-w-lg text-lg text-muted-foreground leading-normal text-pretty">
+          <p className="mb-6 max-w-lg text-base lg:text-lg text-muted-foreground leading-normal text-pretty">
             Platform for building the next generation of internet products
           </p>
           <div className="flex gap-3">
