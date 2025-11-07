@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.111.8
+
+### Patch Changes
+
+- [#8343](https://github.com/thirdweb-dev/js/pull/8343) [`1f440d0`](https://github.com/thirdweb-dev/js/commit/1f440d0c97adf14d26d55666257b57541b2ef01a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Added Epic Games Authentication
+
 ## 5.111.7
 
 ### Patch Changes
