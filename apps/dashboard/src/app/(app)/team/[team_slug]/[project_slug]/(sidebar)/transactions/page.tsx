@@ -7,10 +7,7 @@ import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TransactionsAnalyticsPageContent } from "./analytics/analytics-page";
-import { EngineChecklist } from "./analytics/ftux.client";
-import { TransactionAnalyticsSummary } from "./analytics/summary";
 import { ServerWalletsTable } from "./components/server-wallets-table.client";
-import { getTransactionAnalyticsSummary } from "./lib/analytics";
 import type { Wallet } from "./server-wallets/wallet-table/types";
 import { listSolanaAccounts } from "./solana-wallets/lib/vault.client";
 import type { SolanaWallet } from "./solana-wallets/wallet-table/types";
@@ -110,12 +107,6 @@ export default async function TransactionsAnalyticsPage(props: {
   const isSolanaPermissionError =
     solanaAccounts.error?.message.includes("AUTH_INSUFFICIENT_SCOPE") ?? false;
 
-  const initialData = await getTransactionAnalyticsSummary({
-    clientId: project.publishableKey,
-    teamId: project.teamId,
-  }).catch(() => undefined);
-  const hasTransactions = initialData ? initialData.totalCount > 0 : false;
-
   const client = getClientThirdwebClient({
     jwt: authToken,
     teamId: project.teamId,
@@ -152,41 +143,30 @@ export default async function TransactionsAnalyticsPage(props: {
       }}
     >
       <div className="flex flex-col gap-10">
-        <EngineChecklist
-          isManagedVault={isManagedVault}
-          client={client}
-          hasTransactions={hasTransactions}
-          project={project}
-          teamSlug={params.team_slug}
-          testTxWithWallet={searchParams.testTxWithWallet as string | undefined}
-          testSolanaTxWithWallet={
-            searchParams.testSolanaTxWithWallet as string | undefined
-          }
-          wallets={wallets ?? []}
-          solanaWallets={solanaAccounts.data.items}
-        />
-        {hasTransactions &&
-          !searchParams.testTxWithWallet &&
-          !searchParams.testSolanaTxWithWallet && (
-            <TransactionAnalyticsSummary
-              clientId={project.publishableKey}
-              initialData={initialData}
-              teamId={project.teamId}
-            />
-          )}
-
         {/* transactions */}
         <TransactionsAnalyticsPageContent
           client={client}
+          authToken={authToken}
           project={project}
-          searchParams={searchParams}
           showAnalytics={
-            hasTransactions &&
             !searchParams.testTxWithWallet &&
             !searchParams.testSolanaTxWithWallet
           }
           teamSlug={params.team_slug}
-          wallets={wallets}
+          wallets={wallets ?? []}
+          solanaWallets={solanaAccounts.data.items}
+          teamId={project.teamId}
+          isManagedVault={isManagedVault}
+          testTxWithWallet={
+            typeof searchParams.testTxWithWallet === "string"
+              ? searchParams.testTxWithWallet
+              : undefined
+          }
+          testSolanaTxWithWallet={
+            typeof searchParams.testSolanaTxWithWallet === "string"
+              ? searchParams.testSolanaTxWithWallet
+              : undefined
+          }
         />
 
         {/* Server Wallets (EVM + Solana) */}

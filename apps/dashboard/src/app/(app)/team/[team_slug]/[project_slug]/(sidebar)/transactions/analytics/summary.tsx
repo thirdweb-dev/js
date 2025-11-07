@@ -1,7 +1,7 @@
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 import { toEther } from "thirdweb/utils";
 import { StatCard } from "@/components/analytics/stat"; // Assuming correct path
-import type { TransactionSummaryData } from "../lib/analytics";
+import type { TransactionSummaryData } from "../lib/analytics-summary.client";
 
 // Renders the UI based on fetched data or pending state
 function TransactionAnalyticsSummaryUI(props: {
