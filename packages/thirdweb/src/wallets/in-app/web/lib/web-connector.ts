@@ -338,6 +338,7 @@ export class InAppWebConnector implements InAppConnector {
       case "line":
       case "x":
       case "tiktok":
+      case "epic":
       case "steam":
       case "coinbase":
       case "discord": {
@@ -412,6 +413,7 @@ export class InAppWebConnector implements InAppConnector {
       case "line":
       case "x":
       case "tiktok":
+      case "epic":
       case "guest":
       case "coinbase":
       case "twitch":

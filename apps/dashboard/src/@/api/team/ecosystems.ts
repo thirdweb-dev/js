@@ -21,7 +21,8 @@ export type AuthOption =
   | "steam"
   | "apple"
   | "coinbase"
-  | "line";
+  | "line"
+  | "epic";
 
 export type Ecosystem = {
   name: string;

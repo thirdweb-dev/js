@@ -32,6 +32,7 @@ import {
   APPLE_ICON,
   COINBASE_ICON,
   DISCORD_ICON,
+  EPIC_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GITHUB_ICON,
@@ -69,6 +70,7 @@ const socialIcons = {
   twitch: TWITCH_ICON,
   x: X_ICON,
   tiktok: TIKTOK_ICON,
+  epic: EPIC_ICON,
 };
 
 type InAppWalletFormUIProps = {

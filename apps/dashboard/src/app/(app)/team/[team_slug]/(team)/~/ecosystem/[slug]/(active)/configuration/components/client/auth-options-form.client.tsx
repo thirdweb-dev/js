@@ -58,6 +58,7 @@ const authOptions = [
   "apple",
   "coinbase",
   "line",
+  "epic",
 ] as const satisfies AuthOption[];
 
 type AuthOptionsFormData = {

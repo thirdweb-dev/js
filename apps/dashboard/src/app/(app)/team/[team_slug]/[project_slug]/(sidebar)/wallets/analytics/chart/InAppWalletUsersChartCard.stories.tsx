@@ -87,6 +87,7 @@ const authMethodsToPickFrom: InAppWalletAuth[] = [
   "line",
   "x",
   "tiktok",
+  "epic",
   "coinbase",
   "farcaster",
   "telegram",

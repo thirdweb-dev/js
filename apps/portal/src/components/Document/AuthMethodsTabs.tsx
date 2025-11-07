@@ -29,6 +29,9 @@ type AuthMethod =
   | "telegram"
   | "farcaster"
   | "github"
+  | "line"
+  | "tiktok"
+  | "epic"
   | "passkey"
   | "wallet"
   | "guest"
@@ -55,6 +58,9 @@ const authMethods: { id: AuthMethod; label: string; description: string }[] = [
   { id: "telegram", label: "Telegram", description: "Telegram OAuth" },
   { id: "farcaster", label: "Farcaster", description: "Farcaster OAuth" },
   { id: "github", label: "GitHub", description: "GitHub OAuth" },
+  { id: "line", label: "Line", description: "Line OAuth" },
+  { id: "tiktok", label: "TikTok", description: "TikTok OAuth" },
+  { id: "epic", label: "Epic Games", description: "Epic Games OAuth" },
   { id: "passkey", label: "Passkey", description: "WebAuthn passkey" },
   {
     id: "wallet",
@@ -244,6 +250,9 @@ const account = await wallet.connect({
     case "telegram":
     case "farcaster":
     case "github":
+    case "line":
+    case "tiktok":
+    case "epic":
       return (
         baseSetup +
         `// ${authMethod.charAt(0).toUpperCase() + authMethod.slice(1)} OAuth
@@ -561,6 +570,9 @@ function PrebuiltUIExample() {
     case "telegram":
     case "farcaster":
     case "github":
+    case "line":
+    case "tiktok":
+    case "epic":
       return (
         baseSetup +
         `      await wallet.connect({\n        client,\n        strategy: "${authMethod}",\n      });\n` +
@@ -639,7 +651,10 @@ var address = await wallet.LoginWithOtp("123456");`
     case "x":
     case "telegram":
     case "farcaster":
-    case "github": {
+    case "github":
+    case "line":
+    case "tiktok":
+    case "epic": {
       const providerMap: Record<string, string> = {
         google: "Google",
         apple: "Apple",
@@ -649,6 +664,9 @@ var address = await wallet.LoginWithOtp("123456");`
         telegram: "Telegram",
         farcaster: "Farcaster",
         github: "Github",
+        line: "Line",
+        tiktok: "TikTok",
+        epic: "Epic",
       };
       return (
         baseSetup +
@@ -746,7 +764,10 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
     case "x":
     case "telegram":
     case "farcaster":
-    case "github": {
+    case "github":
+    case "line":
+    case "tiktok":
+    case "epic": {
       const providerMap: Record<string, string> = {
         google: "Google",
         apple: "Apple",
@@ -756,6 +777,9 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);`
         telegram: "Telegram",
         farcaster: "Farcaster",
         github: "Github",
+        line: "Line",
+        tiktok: "TikTok",
+        epic: "Epic",
       };
       return (
         baseSetup +

@@ -200,6 +200,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "line":
       case "x":
       case "tiktok":
+      case "epic":
       case "apple": {
         const { socialAuth } = await import("./auth/native-auth.js");
         const ExpoLinking = require("expo-linking");

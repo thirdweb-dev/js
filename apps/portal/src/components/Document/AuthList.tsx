@@ -15,6 +15,7 @@ const authOptions: InAppWalletAuth[] = [
   "facebook",
   "x",
   "tiktok",
+  "epic",
   "discord",
   "telegram",
   "twitch",

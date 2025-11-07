@@ -89,6 +89,7 @@ export function AllInAppWalletAuthMethods() {
               "discord",
               "x",
               "tiktok",
+              "epic",
               "coinbase",
               "farcaster",
               "telegram",
