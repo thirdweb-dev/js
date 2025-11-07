@@ -43,7 +43,6 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
         fetch,
         THIRDWEB_CLIENT,
         activeWallet,
-        BigInt(1 * 10 ** 18),
       );
       const searchParams = new URLSearchParams();
       searchParams.set("chainId", props.options.chain.id.toString());
