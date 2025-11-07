@@ -8,7 +8,7 @@ import {
   Clock4Icon,
   InfoIcon,
 } from "lucide-react";
-import { toTokens } from "thirdweb";
+import { getAddress, toTokens } from "thirdweb";
 import { status } from "thirdweb/bridge";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
@@ -153,6 +153,9 @@ function GeneericTxDetails(props: {
 
   const timestamp = getDatefromTimestamp(block.timestamp);
 
+  const fromAddress = getAddress(transaction.from);
+  const toAddress = transaction.to ? getAddress(transaction.to) : undefined;
+
   return (
     <div className="border  rounded-xl p-4 lg:p-6 bg-card">
       {/* section 1 */}
@@ -216,8 +219,8 @@ function GeneericTxDetails(props: {
       <section className="border-b py-6 space-y-5 lg:space-y-3">
         <GridItem label="From" tooltip="The sending party of the transaction.">
           <CopyTextButton
-            textToCopy={transaction.from}
-            textToShow={transaction.from}
+            textToCopy={fromAddress}
+            textToShow={fromAddress}
             tooltip="Copy from address"
             variant="ghost"
             copyIconPosition="right"
@@ -225,14 +228,14 @@ function GeneericTxDetails(props: {
           />
         </GridItem>
 
-        {transaction.to && (
+        {toAddress && (
           <GridItem
             label="Interacted with (To)"
             tooltip="The receiving party of the transaction (could be a contract address)."
           >
             <CopyTextButton
-              textToCopy={transaction.to}
-              textToShow={transaction.to}
+              textToCopy={toAddress}
+              textToShow={toAddress}
               tooltip="Copy to address"
               variant="ghost"
               copyIconPosition="right"

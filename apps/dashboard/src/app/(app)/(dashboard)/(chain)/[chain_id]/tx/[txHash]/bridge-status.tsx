@@ -10,7 +10,11 @@ import {
   CircleXIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { NATIVE_TOKEN_ADDRESS, type ThirdwebClient } from "thirdweb";
+import {
+  getAddress,
+  NATIVE_TOKEN_ADDRESS,
+  type ThirdwebClient,
+} from "thirdweb";
 import type { Status, Token } from "thirdweb/bridge";
 import { status } from "thirdweb/bridge";
 import { toTokens } from "thirdweb/utils";
@@ -123,6 +127,8 @@ function TokenInfo(props: {
   const isNativeToken =
     props.token.address.toLowerCase() === NATIVE_TOKEN_ADDRESS.toLowerCase();
 
+  const tokenAddress = getAddress(props.token.address);
+
   return (
     <div className="flex-1 pt-10 pb-9 px-6 lg:px-8">
       <div className="flex justify-between items-center">
@@ -206,7 +212,7 @@ function TokenInfo(props: {
         <div className="space-y-1">
           <p className="text-sm text-foreground ">{props.addressLabel}</p>
           <WalletAddress
-            address={props.walletAddress}
+            address={getAddress(props.walletAddress)}
             client={props.client}
             className="py-0.5 h-auto text-sm [&>*]:!font-sans tabular-nums [&>*]:font-normal text-muted-foreground hover:text-foreground"
             iconClassName="size-3"
@@ -222,8 +228,8 @@ function TokenInfo(props: {
                 ? `/${chainQuery.data?.slug || props.token.chainId}`
                 : `/${chainQuery.data?.slug || props.token.chainId}/${props.token.address}`
             }
-            textToShow={props.token.address}
-            textToCopy={props.token.address}
+            textToShow={tokenAddress}
+            textToCopy={tokenAddress}
             copyTooltip="Copy Token Address"
             className="-translate-x-1"
           />
