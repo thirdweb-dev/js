@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.111.7
+
+### Patch Changes
+
+- [#8373](https://github.com/thirdweb-dev/js/pull/8373) [`7f08161`](https://github.com/thirdweb-dev/js/commit/7f081618e16e7d5754a09780421e35b244186ce8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect from address when simulating with Engine.serverWallet
+
+- [#8373](https://github.com/thirdweb-dev/js/pull/8373) [`7f08161`](https://github.com/thirdweb-dev/js/commit/7f081618e16e7d5754a09780421e35b244186ce8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose useInvalidateBalances() react hook
+
 ## 5.111.6
 
 ### Patch Changes
