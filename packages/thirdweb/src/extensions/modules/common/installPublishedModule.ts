@@ -1,6 +1,7 @@
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getOrDeployInfraForPublishedContract } from "../../../contract/deployment/utils/bootstrap.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
 import { installModule } from "../__generated__/IModularCore/write/installModule.js";
 
 /**
@@ -49,17 +50,35 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
 
   return installModule({
     asyncParams: async () => {
-      const deployedModule = await getOrDeployInfraForPublishedContract({
-        account,
-        chain: contract.chain,
-        client: contract.client,
-        constructorParams,
-        contractId: moduleName,
-        publisher,
-      });
+      let implementationAddress: string;
+
+      if (moduleName.toLowerCase().includes("stylus")) {
+        // TODO: switch to deterministic / create2 when available
+
+        implementationAddress = await deployPublishedContract({
+          account,
+          chain: contract.chain,
+          client: contract.client,
+          contractParams: constructorParams,
+          contractId: moduleName,
+          publisher,
+        });
+      } else {
+        const deployedModule = await getOrDeployInfraForPublishedContract({
+          account,
+          chain: contract.chain,
+          client: contract.client,
+          constructorParams,
+          contractId: moduleName,
+          publisher,
+        });
+
+        implementationAddress = deployedModule.implementationContract
+          .address as string;
+      }
       return {
         data: moduleData || "0x",
-        moduleContract: deployedModule.implementationContract.address as string,
+        moduleContract: implementationAddress,
       };
     },
     contract,
