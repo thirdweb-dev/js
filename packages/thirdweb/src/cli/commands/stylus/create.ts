@@ -60,6 +60,12 @@ export async function createStylusProject() {
       { title: "Airdrop ERC1155", value: "airdrop1155" },
       { title: "ZK ERC721", value: "zk-erc721" },
       { title: "ZK ERC20", value: "zk-erc20" },
+      { title: "Mint module - ERC20", value: "mintable20" },
+      { title: "Transfer module - ERC20", value: "transferable20" },
+      { title: "Mint module - ERC721", value: "mintable721" },
+      { title: "Transfer module - ERC721", value: "transferable721" },
+      { title: "Mint module - ERC1155", value: "mintable1155" },
+      { title: "Transfer module - ERC1155", value: "transferable1155" },
     ],
     message: "Select a template:",
     name: "projectType",
@@ -130,6 +136,49 @@ export async function createStylusProject() {
   } else if (projectType === "zk-erc20") {
     const repoUrl = "git@github.com:thirdweb-example/stylus-zk-erc20.git";
     spinner.start(`Creating new ZK ERC20 Stylus project: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "mintable20") {
+    const repoUrl = "git@github.com:thirdweb-example/stylus-mintable-erc20.git";
+    spinner.start(`Creating new ERC20 Mintable module: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "transferable20") {
+    const repoUrl =
+      "git@github.com:thirdweb-example/stylus-transferable-erc20.git";
+    spinner.start(`Creating new ERC20 Transferable module: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "mintable721") {
+    const repoUrl =
+      "git@github.com:thirdweb-example/stylus-mintable-erc721.git";
+    spinner.start(`Creating new ERC721 Mintable module: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "transferable721") {
+    const repoUrl =
+      "git@github.com:thirdweb-example/stylus-transferable-erc721.git";
+    spinner.start(`Creating new ERC721 Transferable module: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "mintable1155") {
+    const repoUrl =
+      "git@github.com:thirdweb-example/stylus-mintable-erc1155.git";
+    spinner.start(`Creating new ERC1155 Mintable module: ${projectName}...`);
+    newProject = spawnSync("git", ["clone", repoUrl, projectName], {
+      stdio: "inherit",
+    });
+  } else if (projectType === "transferable1155") {
+    const repoUrl =
+      "git@github.com:thirdweb-example/stylus-transferable-erc1155.git";
+    spinner.start(
+      `Creating new ERC1155 Transferable module: ${projectName}...`,
+    );
     newProject = spawnSync("git", ["clone", repoUrl, projectName], {
       stdio: "inherit",
     });
