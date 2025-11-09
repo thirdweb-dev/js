@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.111.9
+
+### Patch Changes
+
+- [#8384](https://github.com/thirdweb-dev/js/pull/8384) [`673e51b`](https://github.com/thirdweb-dev/js/commit/673e51b11cf2d06f00ab92bd4cbb45c51d95ec1f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Replace celo alfajores with celoSepoliaTestnet
+
 ## 5.111.8
 
 ### Patch Changes
