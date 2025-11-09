@@ -183,11 +183,60 @@ const STYLUS = {
   ],
   description:
     "Airdrop your NFTs or tokens to a large number of recipients. Built with Arbitrum Stylus.",
-  displayName: "Arbitrum Stylus Contracts",
+  displayName: "Airdrop - Arbitrum Stylus",
   id: "stylus",
   name: "Stylus",
   showInExplore: true,
   isBeta: true,
+} satisfies ExploreCategory;
+
+const MODULAR_CONTRACTS_STYLUS = {
+  contracts: [
+    // erc721 token
+    [
+      "thirdweb.eth/ERC721CoreInitializable",
+      [
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusMintableERC721",
+        "deployer.thirdweb.eth/BatchMetadataERC721",
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusTransferableERC721",
+      ],
+      {
+        description: "ERC721 NFTs that only owners can mint.",
+        title: "Modular NFT Collection",
+      },
+    ],
+    // erc1155 token
+    [
+      "thirdweb.eth/ERC1155CoreInitializable",
+      [
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusMintableERC1155",
+        "deployer.thirdweb.eth/BatchMetadataERC1155",
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusTransferableERC1155",
+        "deployer.thirdweb.eth/SequentialTokenIdERC1155",
+      ],
+      {
+        description: "ERC1155 NFTs that only owners can mint.",
+        title: "Modular Edition",
+      },
+    ],
+    // erc20 token
+    [
+      "thirdweb.eth/ERC20CoreInitializable",
+      [
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusMintableERC20",
+        "0x6453a486d52e0eb6e79ec4491038e2522a926936/StylusTransferableERC20",
+      ],
+      {
+        description: "ERC20 Tokens that only owners can mint.",
+        title: "Modular Token",
+      },
+    ],
+  ],
+  description:
+    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
+  displayName: "Modular Contracts - Arbitrum Stylus",
+  id: "modular-contracts",
+  name: "modular",
 } satisfies ExploreCategory;
 
 const CATEGORIES: Record<string, ExploreCategory> = {
@@ -203,6 +252,7 @@ const CATEGORIES: Record<string, ExploreCategory> = {
   [COMMERCE.id]: COMMERCE,
   [STAKING.id]: STAKING,
   [GOVERNANCE.id]: GOVERNANCE,
+  [MODULAR_CONTRACTS_STYLUS.id]: MODULAR_CONTRACTS_STYLUS,
 };
 
 export function getCategory(id: string) {
