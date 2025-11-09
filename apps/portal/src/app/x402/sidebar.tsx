@@ -3,17 +3,17 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 import { EngineIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 
-const paymentsSlug = "/payments";
+const x402Slug = "/x402";
 
 export const sidebar: SideBar = {
   links: [
     {
-      href: paymentsSlug,
+      href: x402Slug,
       name: "Get Started",
       icon: <ZapIcon />,
     },
     {
-      href: "https://playground.thirdweb.com/payments",
+      href: "https://playground.thirdweb.com/payments/x402",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },
@@ -22,40 +22,20 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `${paymentsSlug}/fund`,
-          name: "Fund Wallets",
+          href: `${x402Slug}/client`,
+          name: "Client Side",
         },
         {
-          href: `${paymentsSlug}/products`,
-          name: "Sell a Product",
+          href: `${x402Slug}/server`,
+          name: "Server Side",
         },
         {
-          href: `${paymentsSlug}/transactions`,
-          name: "Pay for Transactions",
+          href: `${x402Slug}/agents`,
+          name: "Agents",
         },
         {
-          href: `${paymentsSlug}/send`,
-          name: "Send a Payment",
-        },
-        {
-          href: `/bridge/sell`,
-          name: "Sell Tokens",
-        },
-        {
-          href: `/bridge/swap`,
-          name: "Swap Tokens",
-        },
-        {
-          href: `/bridge/tokens`,
-          name: "Get Token Prices",
-        },
-        {
-          href: `${paymentsSlug}/webhooks`,
-          name: "Webhooks",
-        },
-        {
-          href: `${paymentsSlug}/custom-data`,
-          name: "Custom Data",
+          href: `${x402Slug}/facilitator`,
+          name: "Facilitator",
         },
       ],
       name: "Guides",
@@ -92,25 +72,6 @@ export const sidebar: SideBar = {
       ],
       name: "API References",
     },
-    { separator: true },
-    {
-      isCollapsible: false,
-      name: "Resources",
-      links: [
-        {
-          href: `${paymentsSlug}/fees`,
-          name: "Understanding Fees",
-        },
-        {
-          href: `${paymentsSlug}/onramp-providers`,
-          name: "Onramp Providers",
-        },
-        {
-          href: `${paymentsSlug}/faq`,
-          name: "FAQ",
-        },
-      ],
-    },
   ],
-  name: "Payments",
+  name: "x402",
 };

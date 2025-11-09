@@ -12,9 +12,8 @@ export const metadata = createMetadata({
 
 # x402 Payments
 
-x402 is an open-source protocol that turns the dormant HTTP 402 Payment Required status code into a fully-featured, on-chain payment layer for APIs, websites, and autonomous agents.
+[x402](https://x402.org) is an open-source protocol that turns the dormant HTTP 402 Payment Required status code into a fully-featured, on-chain payment layer for APIs, websites, and autonomous agents.
 
-Learn more about the protocol at [x402.org](https://x402.org).
 
 <ArticleIconCard
   title="x402 Playground"
@@ -22,6 +21,15 @@ Learn more about the protocol at [x402.org](https://x402.org).
   icon={ReactIcon}
   href="https://playground.thirdweb.com/payments/x402"
 />
+
+## Chain and token support
+
+The thirdweb x402 client/server stack supports payments on [170+ EVM chains](https://thirdweb.com/chainlist?service=account-abstraction).
+
+The payment token must support either:
+
+- ERC-2612 permit (most ERC20 tokens)
+- ERC-3009 sign with authorization (USDC on all chains)
 
 ## Client Side
 
@@ -42,7 +50,7 @@ const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
 const response = await fetchWithPay('https://api.example.com/paid-endpoint');
 ```
 
-You can also use the thirdweb API to fetch any x402 compatible endpoint and pay for it with the authenticated wallet. See the [client side docs](/payments/x402/client) for more details.
+You can also use the thirdweb API to fetch any x402 compatible endpoint and pay for it with the authenticated wallet. See the [client side docs](/x402/client) for more details.
 
 ## Server Side
 
@@ -88,7 +96,7 @@ export async function GET(request: Request) {
 }
 ```
 
-You can also create middlewares to handle payment for multiple endpoints, see the [server side docs](/payments/x402/server) for more details. The [facilitator](/payments/x402/facilitator) handles settling the payment onchain using your own server wallet.
+You can also create middlewares to handle payment for multiple endpoints, see the [server side docs](/x402/server) for more details. The [facilitator](/x402/facilitator) handles settling the payment onchain using your own server wallet.
 
 ## Going Further
 
@@ -97,18 +105,18 @@ You can also create middlewares to handle payment for multiple endpoints, see th
     title="Client Side"
     description="Learn how to interact with x402-compatible APIs from your client applications"
     icon={TypeScriptIcon}
-    href="/payments/x402/client"
+    href="/x402/client"
   />
   <ArticleIconCard
     title="Server Side"
     description="Accept x402 payments in your APIs with middleware or dedicated endpoints"
     icon={EngineIcon}
-    href="/payments/x402/server"
+    href="/x402/server"
   />
   <ArticleIconCard
     title="Facilitator API"
     description="Configure the facilitator service to verify and settle payments"
     icon={EngineIcon}
-    href="/payments/x402/facilitator"
+    href="/x402/facilitator"
   />
 </div>

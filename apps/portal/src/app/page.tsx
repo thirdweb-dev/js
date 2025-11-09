@@ -178,10 +178,10 @@ function LearningResourcesSection() {
           title="Wallets"
         />
         <ArticleCardIndex
-          description="Create onchain payments and sell products"
-          href="/payments"
-          icon={PaymentsIcon}
-          title="Payments"
+          description="Instant payments for APIs, websites, and agents"
+          href="/x402"
+          icon={ZapIcon}
+          title="x402"
         />
         <ArticleCardIndex
           description="Bridge, swap, and onramp tokens on any chain"
