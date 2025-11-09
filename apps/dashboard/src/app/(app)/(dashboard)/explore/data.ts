@@ -237,6 +237,8 @@ const MODULAR_CONTRACTS_STYLUS = {
   displayName: "Modular Contracts - Arbitrum Stylus",
   id: "modular-contracts",
   name: "modular",
+  showInExplore: true,
+  isBeta: true,
 } satisfies ExploreCategory;
 
 const CATEGORIES: Record<string, ExploreCategory> = {
