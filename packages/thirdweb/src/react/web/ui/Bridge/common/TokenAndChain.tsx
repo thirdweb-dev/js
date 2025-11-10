@@ -82,7 +82,7 @@ export function TokenAndChain({
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
           }}
-          weight={600}
+          weight={500}
           trackingTight
         >
           {token.name}

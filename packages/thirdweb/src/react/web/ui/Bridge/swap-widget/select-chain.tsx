@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Chain as BridgeChain } from "../../../../../bridge/index.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
@@ -170,6 +171,8 @@ function ChainButton(props: {
   isSelected: boolean;
   isMobile: boolean;
 }) {
+  const theme = useCustomTheme();
+  const iconSizeValue = props.isMobile ? iconSize.lg : iconSize.md;
   return (
     <Button
       variant={props.isSelected ? "secondary" : "ghost-solid"}
@@ -185,13 +188,25 @@ function ChainButton(props: {
       gap="sm"
     >
       <Img
-        src={props.chain.icon}
+        src={props.chain.icon || ""}
         client={props.client}
-        width={props.isMobile ? iconSize.lg : iconSize.md}
-        height={props.isMobile ? iconSize.lg : iconSize.md}
+        width={iconSizeValue}
+        height={iconSizeValue}
         style={{
           borderRadius: radius.full,
         }}
+        fallback={
+          <Container color="secondaryText">
+            <Container
+              style={{
+                background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                borderRadius: radius.full,
+                width: `${iconSizeValue}px`,
+                height: `${iconSizeValue}px`,
+              }}
+            />
+          </Container>
+        }
       />
       {cleanedChainName(props.chain.name)}
     </Button>

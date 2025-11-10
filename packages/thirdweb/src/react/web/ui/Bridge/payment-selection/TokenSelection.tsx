@@ -89,7 +89,7 @@ function PaymentMethodTokenRow({
             <Text
               color="primaryText"
               size="sm"
-              style={{ fontWeight: 600, textWrap: "nowrap" }}
+              style={{ fontWeight: 500, textWrap: "nowrap" }}
             >
               {formatCurrencyAmount(
                 currency || "USD",

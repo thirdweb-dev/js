@@ -68,18 +68,9 @@ export function TokenBalanceRow({
             overflow: "hidden",
           }}
         >
-          <FiatValue
-            currency={currency}
-            chain={chain}
-            client={client}
+          <Text
             color="primaryText"
             size="sm"
-            token={token}
-            tokenAmount={amount}
-          />
-          <Text
-            color="secondaryText"
-            size="xs"
             style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -91,6 +82,16 @@ export function TokenBalanceRow({
               minimumFractionDigits: 0,
             })} ${token.symbol}`}
           </Text>
+
+          <FiatValue
+            currency={currency}
+            chain={chain}
+            client={client}
+            color="secondaryText"
+            size="sm"
+            token={token}
+            tokenAmount={amount}
+          />
         </Container>
       </Container>
     </StyledButton>

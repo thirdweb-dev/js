@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Token } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -10,8 +10,6 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
-import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
 import { Container, noScrollBar } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
@@ -52,14 +50,18 @@ function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
   return chains.find((chain) => chain.chainId === activeChainId);
 }
 
+const ALL_TOKENS_LIMIT = 100;
+const OWNED_TOKENS_LIMIT = 50;
+
 /**
  * @internal
  */
 export function SelectToken(props: SelectTokenUIProps) {
   const chainQuery = useBridgeChains(props.client);
-  const [search, setSearch] = useState("");
+  const [search, _setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 500);
-  const [limit, setLimit] = useState(1000);
+  const [allTokensLimit, setAllTokensLimit] = useState(ALL_TOKENS_LIMIT);
+  const [ownedTokensLimit, setOwnedTokensLimit] = useState(OWNED_TOKENS_LIMIT);
 
   const [_selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
     undefined,
@@ -77,7 +79,7 @@ export function SelectToken(props: SelectTokenUIProps) {
     client: props.client,
     chainId: selectedChain?.chainId,
     search: debouncedSearch,
-    limit,
+    limit: allTokensLimit,
     offset: 0,
   });
 
@@ -85,7 +87,7 @@ export function SelectToken(props: SelectTokenUIProps) {
   const ownedTokensQuery = useTokenBalances({
     clientId: props.client.clientId,
     chainId: selectedChain?.chainId,
-    limit,
+    limit: ownedTokensLimit,
     page: 1,
     walletAddress: props.activeWalletInfo?.activeAccount.address,
   });
@@ -102,43 +104,62 @@ export function SelectToken(props: SelectTokenUIProps) {
     });
   }, [ownedTokensQuery.data?.tokens, debouncedSearch]);
 
-  const isFetching = tokensQuery.isFetching || ownedTokensQuery.isFetching;
+  const setSearch = useCallback((search: string) => {
+    _setSearch(search);
+    setAllTokensLimit(ALL_TOKENS_LIMIT);
+    setOwnedTokensLimit(OWNED_TOKENS_LIMIT);
+  }, []);
 
   return (
     <SelectTokenUI
       {...props}
-      ownedTokens={filteredOwnedTokens || []}
-      allTokens={tokensQuery.data || []}
-      isFetching={isFetching}
+      ownedTokens={{
+        data: filteredOwnedTokens || [],
+        isFetching: ownedTokensQuery.isFetching,
+        showMore: ownedTokensQuery.data?.pagination.hasMore
+          ? () => {
+              setOwnedTokensLimit(ownedTokensLimit + OWNED_TOKENS_LIMIT);
+            }
+          : undefined,
+      }}
+      allTokens={{
+        data: tokensQuery.data || [],
+        isFetching: tokensQuery.isFetching,
+        showMore:
+          tokensQuery.data?.length === allTokensLimit
+            ? () => {
+                setAllTokensLimit(allTokensLimit + ALL_TOKENS_LIMIT);
+              }
+            : undefined,
+      }}
       selectedChain={selectedChain}
       setSelectedChain={setSelectedChain}
       search={search}
       setSearch={setSearch}
       selectedToken={props.selectedToken}
       setSelectedToken={props.setSelectedToken}
-      showMore={
-        tokensQuery.data?.length === limit
-          ? () => {
-              setLimit(limit * 2);
-            }
-          : undefined
-      }
     />
   );
 }
 
 function SelectTokenUI(
   props: SelectTokenUIProps & {
-    ownedTokens: TokenBalance[];
-    allTokens: Token[];
-    isFetching: boolean;
+    allTokens: {
+      data: Token[];
+      isFetching: boolean;
+      showMore: (() => void) | undefined;
+    };
+    ownedTokens: {
+      data: TokenBalance[];
+      isFetching: boolean;
+      showMore: (() => void) | undefined;
+    };
     selectedChain: BridgeChain | undefined;
     setSelectedChain: (chain: BridgeChain) => void;
     search: string;
     setSearch: (search: string) => void;
     selectedToken: TokenSelection | undefined;
     setSelectedToken: (token: TokenSelection) => void;
-    showMore: (() => void) | undefined;
   },
 ) {
   const isMobile = useIsMobile();
@@ -148,7 +169,7 @@ function SelectTokenUI(
 
   // show tokens with icons first
   const sortedOwnedTokens = useMemo(() => {
-    return props.ownedTokens.sort((a, b) => {
+    return props.ownedTokens.data.sort((a, b) => {
       if (a.icon_uri && !b.icon_uri) {
         return -1;
       }
@@ -157,23 +178,11 @@ function SelectTokenUI(
       }
       return 0;
     });
-  }, [props.ownedTokens]);
-
-  const otherTokens = useMemo(() => {
-    const ownedTokenSet = new Set(
-      sortedOwnedTokens.map((t) =>
-        `${t.token_address}-${t.chain_id}`.toLowerCase(),
-      ),
-    );
-    return props.allTokens.filter(
-      (token) =>
-        !ownedTokenSet.has(`${token.address}-${token.chainId}`.toLowerCase()),
-    );
-  }, [props.allTokens, sortedOwnedTokens]);
+  }, [props.ownedTokens.data]);
 
   // show tokens with icons first
-  const sortedOtherTokens = useMemo(() => {
-    return otherTokens.sort((a, b) => {
+  const sortedAllTokens = useMemo(() => {
+    return props.allTokens.data.sort((a, b) => {
       if (a.iconUri && !b.iconUri) {
         return -1;
       }
@@ -182,7 +191,7 @@ function SelectTokenUI(
       }
       return 0;
     });
-  }, [otherTokens]);
+  }, [props.allTokens.data]);
 
   // desktop
   if (!isMobile) {
@@ -214,15 +223,20 @@ function SelectTokenUI(
             }}
             isMobile={false}
             selectedToken={props.selectedToken}
-            isFetching={props.isFetching}
-            ownedTokens={props.ownedTokens}
-            otherTokens={sortedOtherTokens}
-            showMore={props.showMore}
+            ownedTokens={{
+              ...props.ownedTokens,
+              data: sortedOwnedTokens,
+            }}
+            allTokens={{
+              ...props.allTokens,
+              data: sortedAllTokens,
+            }}
             selectedChain={props.selectedChain}
             onSelectChain={() => setScreen("select-chain")}
             client={props.client}
             search={props.search}
             setSearch={props.setSearch}
+            isWalletConnected={props.activeWalletInfo !== undefined}
           />
         </Container>
       </Container>
@@ -232,15 +246,20 @@ function SelectTokenUI(
   if (screen === "select-token") {
     return (
       <TokenSelectionScreen
+        isWalletConnected={props.activeWalletInfo !== undefined}
         onSelectToken={(token) => {
           props.setSelectedToken(token);
           props.onClose();
         }}
         selectedToken={props.selectedToken}
-        isFetching={props.isFetching}
-        ownedTokens={props.ownedTokens}
-        otherTokens={sortedOtherTokens}
-        showMore={props.showMore}
+        ownedTokens={{
+          ...props.ownedTokens,
+          data: sortedOwnedTokens,
+        }}
+        allTokens={{
+          ...props.allTokens,
+          data: sortedAllTokens,
+        }}
         selectedChain={props.selectedChain}
         isMobile={true}
         onSelectChain={() => setScreen("select-chain")}
@@ -428,17 +447,36 @@ function TokenSelectionScreen(props: {
   client: ThirdwebClient;
   search: string;
   setSearch: (search: string) => void;
-  isFetching: boolean;
-  ownedTokens: TokenBalance[];
-  otherTokens: Token[];
-  showMore: (() => void) | undefined;
   selectedToken: TokenSelection | undefined;
   onSelectToken: (token: TokenSelection) => void;
+  isWalletConnected: boolean;
+  allTokens: {
+    data: Token[];
+    isFetching: boolean;
+    showMore: (() => void) | undefined;
+  };
+  ownedTokens: {
+    data: TokenBalance[];
+    isFetching: boolean;
+    showMore: (() => void) | undefined;
+  };
 }) {
-  const noTokensFound =
-    !props.isFetching &&
-    props.otherTokens.length === 0 &&
-    props.ownedTokens.length === 0;
+  const noAllTokensFound =
+    !props.allTokens.isFetching && props.allTokens.data.length === 0;
+
+  const noOwnedTokensFound =
+    !props.ownedTokens.isFetching && props.ownedTokens.data.length === 0;
+
+  const [activeTab, setActiveTab] = useState<"owned" | "all">("all");
+  const showSkeletons =
+    (props.allTokens.isFetching && activeTab === "all") ||
+    (props.ownedTokens.isFetching && activeTab === "owned");
+
+  const showNoTokensFound =
+    (activeTab === "all" && noAllTokensFound) ||
+    (activeTab === "owned" && noOwnedTokensFound);
+
+  const theme = useCustomTheme();
 
   return (
     <Container fullHeight flex="column">
@@ -448,16 +486,14 @@ function TokenSelectionScreen(props: {
         </Text>
         <Spacer y="3xs" />
         <Text
-          size="xs"
+          size="sm"
           color="secondaryText"
           multiline
           style={{
             textWrap: "pretty",
-            maxWidth: "70%",
           }}
         >
-          Select a token from the list or search for a token by symbol or
-          address
+          Select a token from the list or use the search
         </Text>
       </Container>
 
@@ -467,7 +503,7 @@ function TokenSelectionScreen(props: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "400px",
+            minHeight: "300px",
           }}
         >
           <Spinner color="secondaryText" size="xl" />
@@ -498,7 +534,28 @@ function TokenSelectionScreen(props: {
             />
           </Container>
 
-          <Spacer y="xs" />
+          <Spacer y="sm" />
+
+          {/* tabs */}
+          {props.isWalletConnected && (
+            <Container
+              flex="row"
+              gap="xs"
+              px="md"
+              style={{ borderBottom: `1px solid ${theme.colors.borderColor}` }}
+            >
+              <TabButton
+                isSelected={activeTab === "all"}
+                onSelect={() => setActiveTab("all")}
+                label="All Tokens"
+              />
+              <TabButton
+                isSelected={activeTab === "owned"}
+                onSelect={() => setActiveTab("owned")}
+                label="Your Tokens"
+              />
+            </Container>
+          )}
 
           <Container
             pb="md"
@@ -507,43 +564,24 @@ function TokenSelectionScreen(props: {
             gap="xxs"
             flex="column"
             style={{
-              minHeight: "400px",
+              minHeight: "300px",
               maxHeight: props.isMobile ? "450px" : "none",
               overflowY: "auto",
               scrollbarWidth: "none",
               paddingBottom: spacing.md,
             }}
           >
-            {props.isFetching &&
+            {props.isWalletConnected && <Spacer y="xxs" />}
+
+            {showSkeletons &&
               new Array(20).fill(0).map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok
                 <TokenButtonSkeleton key={i} />
               ))}
 
-            {!props.isFetching && props.ownedTokens.length > 0 && (
-              <Container
-                px="xs"
-                py="xs"
-                flex="row"
-                gap="xs"
-                center="y"
-                color="secondaryText"
-              >
-                <WalletDotIcon size={iconSize.xs} />
-                <Text
-                  size="sm"
-                  color="secondaryText"
-                  style={{
-                    overflow: "unset",
-                  }}
-                >
-                  Your Tokens
-                </Text>
-              </Container>
-            )}
-
-            {!props.isFetching &&
-              props.ownedTokens.map((token) => (
+            {activeTab === "owned" &&
+              !props.ownedTokens.isFetching &&
+              props.ownedTokens.data.map((token) => (
                 <TokenButton
                   key={token.token_address}
                   token={token}
@@ -558,33 +596,9 @@ function TokenSelectionScreen(props: {
                 />
               ))}
 
-            {!props.isFetching && props.ownedTokens.length > 0 && (
-              <Container
-                px="xs"
-                py="xs"
-                flex="row"
-                gap="xs"
-                center="y"
-                color="secondaryText"
-                style={{
-                  marginTop: spacing.sm,
-                }}
-              >
-                <CoinsIcon size={iconSize.xs} />
-                <Text
-                  size="sm"
-                  color="secondaryText"
-                  style={{
-                    overflow: "unset",
-                  }}
-                >
-                  Other Tokens
-                </Text>
-              </Container>
-            )}
-
-            {!props.isFetching &&
-              props.otherTokens.map((token) => (
+            {activeTab === "all" &&
+              !props.allTokens.isFetching &&
+              props.allTokens.data.map((token) => (
                 <TokenButton
                   key={token.address}
                   token={token}
@@ -599,19 +613,31 @@ function TokenSelectionScreen(props: {
                 />
               ))}
 
-            {props.showMore && (
+            {activeTab === "all" && props.allTokens.showMore && (
               <Button
                 variant="secondary"
                 fullWidth
                 onClick={() => {
-                  props.showMore?.();
+                  props.allTokens.showMore?.();
                 }}
               >
                 Load More
               </Button>
             )}
 
-            {noTokensFound && (
+            {activeTab === "owned" && props.ownedTokens.showMore && (
+              <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => {
+                  props.ownedTokens.showMore?.();
+                }}
+              >
+                Load More
+              </Button>
+            )}
+
+            {showNoTokensFound && (
               <div
                 style={{
                   flex: 1,
@@ -620,7 +646,7 @@ function TokenSelectionScreen(props: {
                   justifyContent: "center",
                 }}
               >
-                <Text size="md" color="secondaryText">
+                <Text size="sm" color="secondaryText">
                   No Tokens Found
                 </Text>
               </div>
@@ -643,3 +669,45 @@ const LeftContainer = /* @__PURE__ */ StyledDiv((_) => {
     position: "relative",
   };
 });
+
+function TabButton(props: {
+  isSelected: boolean;
+  onSelect: () => void;
+  label: string;
+}) {
+  const theme = useCustomTheme();
+  return (
+    <div
+      style={{
+        paddingBottom: "4px",
+        position: "relative",
+      }}
+    >
+      <Button
+        variant="ghost-solid"
+        onClick={props.onSelect}
+        style={{
+          fontSize: fontSize.sm,
+          padding: `10px ${spacing.xs}`,
+          color: props.isSelected
+            ? theme.colors.primaryText
+            : theme.colors.secondaryText,
+        }}
+      >
+        {props.label}
+      </Button>
+
+      {props.isSelected && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: "-1.5px",
+            borderBottom: `2px solid ${theme.colors.primaryText}`,
+          }}
+        ></div>
+      )}
+    </div>
+  );
+}

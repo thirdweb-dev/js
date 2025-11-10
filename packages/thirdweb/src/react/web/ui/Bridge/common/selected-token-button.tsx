@@ -100,13 +100,23 @@ export function SelectedTokenButton(props: {
               }}
             >
               <Img
-                src={props.chain?.icon}
+                src={props.chain?.icon || ""}
                 client={props.client}
                 width={iconSize.sm}
                 height={iconSize.sm}
                 style={{
                   borderRadius: radius.full,
                 }}
+                fallback={
+                  <Container
+                    style={{
+                      background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                      borderRadius: radius.full,
+                      width: `${iconSize.sm}px`,
+                      height: `${iconSize.sm}px`,
+                    }}
+                  />
+                }
               />
             </Container>
           )}

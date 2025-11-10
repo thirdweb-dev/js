@@ -9,7 +9,7 @@ import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvid
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
-import { Container, ModalHeader } from "../../components/basic.js";
+import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
@@ -91,9 +91,7 @@ export function SuccessScreen({
 
   return (
     <Container flex="column" fullHeight px="md" pb="md" pt="md+">
-      <ModalHeader title="Payment Complete" />
-
-      <Spacer y="xxl" />
+      <Spacer y="3xl" />
 
       <Container center="x" flex="column" gap="md">
         {/* Success Icon with Animation */}
@@ -130,7 +128,7 @@ export function SuccessScreen({
               marginBottom: spacing.xxs,
             }}
           >
-            Payment Successful!
+            Payment Successful
           </Text>
 
           <Text center color="secondaryText" size="sm">
@@ -143,7 +141,7 @@ export function SuccessScreen({
         </div>
       </Container>
 
-      <Spacer y="xxl" />
+      <Spacer y="3xl" />
 
       {/* Action Buttons */}
       <Container flex="column" gap="sm" style={{ width: "100%" }}>

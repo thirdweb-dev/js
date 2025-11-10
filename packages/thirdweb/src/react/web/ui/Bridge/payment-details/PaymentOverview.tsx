@@ -63,7 +63,7 @@ export function PaymentOverview(props: {
             <WalletRow
               address={sender}
               client={props.client}
-              iconSize="md"
+              iconSize="lg"
               textSize="sm"
             />
           </Container>
@@ -91,13 +91,14 @@ export function PaymentOverview(props: {
             py="sm"
             style={{ justifyContent: "space-between" }}
           >
+            {/* left */}
             <Container center="y" flex="row" gap="sm">
               {getFiatCurrencyIcon({
                 currency: props.paymentMethod.currency,
                 size: "lg",
               })}
               <Container center="y" flex="column" gap="3xs">
-                <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+                <Text color="primaryText" size="sm" weight={500}>
                   {props.paymentMethod.currency}
                 </Text>
                 <Text color="secondaryText" size="xs">
@@ -106,7 +107,8 @@ export function PaymentOverview(props: {
                 </Text>
               </Container>
             </Container>
-            <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+            {/* right */}
+            <Text color="primaryText" size="sm">
               {props.fromAmount}
             </Text>
           </Container>
@@ -136,11 +138,12 @@ export function PaymentOverview(props: {
             <WalletRow
               address={props.receiver}
               client={props.client}
-              iconSize="md"
+              iconSize="lg"
               textSize="sm"
             />
           </Container>
         )}
+
         {props.modeInfo.mode === "direct_payment" && (
           <Container
             center="y"
@@ -150,7 +153,7 @@ export function PaymentOverview(props: {
             style={{ justifyContent: "space-between" }}
           >
             <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
-              <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+              <Text color="primaryText" size="sm" weight={500}>
                 {props.metadata.title || "Payment"}
               </Text>
               {props.metadata.description && (
@@ -173,7 +176,6 @@ export function PaymentOverview(props: {
                 size="sm"
                 token={props.toToken}
                 tokenAmount={props.modeInfo.paymentInfo.amount}
-                weight={600}
               />
               <Text color="secondaryText" size="xs">
                 {props.modeInfo.paymentInfo.amount} {props.toToken.symbol}
@@ -285,7 +287,7 @@ const TransactionOverViewCompact = (props: {
       style={{ justifyContent: "space-between" }}
     >
       <Container center="y" flex="column" gap="3xs" style={{ flex: 1 }}>
-        <Text color="primaryText" size="sm" style={{ fontWeight: 600 }}>
+        <Text color="primaryText" size="sm" weight={500}>
           {props.metadata.title || "Transaction"}
         </Text>
         {props.metadata.description && (

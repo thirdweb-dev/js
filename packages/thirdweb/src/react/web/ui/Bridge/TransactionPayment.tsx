@@ -219,7 +219,7 @@ export function TransactionPayment({
         }}
       >
         {/* USD Value */}
-        <Text color="primaryText" size="xl" weight={600}>
+        <Text color="primaryText" size="xl" weight={500}>
           {costToDisplay}
         </Text>
 

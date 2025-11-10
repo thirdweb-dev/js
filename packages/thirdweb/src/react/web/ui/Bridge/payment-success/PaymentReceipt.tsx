@@ -1,7 +1,5 @@
 "use client";
-import { CopyIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
 import type { Token } from "../../../../../bridge/types/Token.js";
 import type { ChainMetadata } from "../../../../../chains/types.js";
 import {
@@ -10,22 +8,18 @@ import {
   getChainMetadata,
 } from "../../../../../chains/utils.js";
 import { shortenHex } from "../../../../../utils/address.js";
-import { formatExplorerTxUrl } from "../../../../../utils/url.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import {
-  iconSize,
-  radius,
-  spacing,
-} from "../../../../core/design-system/index.js";
+import { radius, spacing } from "../../../../core/design-system/index.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
 import { formatTokenAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
-import { Container, ModalHeader } from "../../components/basic.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { shorterChainName } from "../../components/ChainName.js";
+import { CopyIcon } from "../../components/CopyIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
-import { Text } from "../../components/text.js";
+import { Link, Text } from "../../components/text.js";
 
 interface TransactionInfo {
   type: "paymentId" | "transactionHash";
@@ -128,7 +122,6 @@ interface CompletedStepDetailCardProps {
   status: CompletedStatusResult;
   preparedQuote: BridgePrepareResult;
   windowAdapter: WindowAdapter;
-  onCopyToClipboard: (text: string) => Promise<void>;
 }
 
 /**
@@ -137,29 +130,12 @@ interface CompletedStepDetailCardProps {
 function CompletedStepDetailCard({
   status,
   preparedQuote,
-  windowAdapter,
-  onCopyToClipboard,
 }: CompletedStepDetailCardProps) {
   const theme = useCustomTheme();
-  const { data: txInfo, isLoading } = useTransactionInfo(status, preparedQuote);
+  const { data: txInfo, isPending } = useTransactionInfo(status, preparedQuote);
 
-  if (isLoading) {
-    return (
-      <Container
-        flex="column"
-        gap="sm"
-        style={{
-          backgroundColor: theme.colors.tertiaryBg,
-          border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.sm,
-          padding: spacing.md,
-        }}
-      >
-        <Skeleton height="30px" />
-        <Skeleton height="30px" />
-        <Skeleton height="30px" />
-      </Container>
-    );
+  if (isPending) {
+    return <Skeleton height="200px" style={{ borderRadius: radius.lg }} />;
   }
 
   if (!txInfo) {
@@ -174,7 +150,7 @@ function CompletedStepDetailCard({
       style={{
         backgroundColor: theme.colors.tertiaryBg,
         border: `1px solid ${theme.colors.borderColor}`,
-        borderRadius: radius.sm,
+        borderRadius: radius.lg,
         padding: spacing.md,
       }}
     >
@@ -182,26 +158,36 @@ function CompletedStepDetailCard({
       <Container
         flex="row"
         gap="sm"
+        py="4xs"
         style={{
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
-        <Text color="primaryText" size="sm">
+        <Text color="primaryText" size="sm" weight={500}>
           {txInfo.label}
         </Text>
         <Container
           style={{
-            backgroundColor: theme.colors.success,
-            borderRadius: radius.sm,
+            backgroundColor: theme.colors.modalBg,
+            borderRadius: radius.full,
+            border: `1px solid ${theme.colors.borderColor}`,
             padding: `${spacing["3xs"]} ${spacing.xs}`,
           }}
         >
-          <Text size="xs" style={{ color: theme.colors.primaryButtonText }}>
+          <Text
+            style={{
+              color: theme.colors.success,
+              fontSize: 10,
+              letterSpacing: "0.025em",
+            }}
+          >
             COMPLETED
           </Text>
         </Container>
       </Container>
+
+      <Line />
 
       {/* Amount Paid */}
       {txInfo.amountPaid && (
@@ -215,22 +201,6 @@ function CompletedStepDetailCard({
           </Text>
           <Text color="primaryText" size="sm">
             {txInfo.amountPaid}
-          </Text>
-        </Container>
-      )}
-
-      {/* Origin Chain */}
-      {txInfo.originChain && (
-        <Container
-          center="y"
-          flex="row"
-          style={{ justifyContent: "space-between" }}
-        >
-          <Text color="secondaryText" size="sm">
-            Origin Chain
-          </Text>
-          <Text color="primaryText" size="sm">
-            {shorterChainName(txInfo.originChain.name)}
           </Text>
         </Container>
       )}
@@ -251,14 +221,30 @@ function CompletedStepDetailCard({
         </Container>
       )}
 
-      {/* Chain */}
+      {/* Origin Chain */}
+      {txInfo.originChain && (
+        <Container
+          center="y"
+          flex="row"
+          style={{ justifyContent: "space-between" }}
+        >
+          <Text color="secondaryText" size="sm">
+            Origin Chain
+          </Text>
+          <Text color="primaryText" size="sm">
+            {shorterChainName(txInfo.originChain.name)}
+          </Text>
+        </Container>
+      )}
+
+      {/* Destination Chain */}
       <Container
         center="y"
         flex="row"
         style={{ justifyContent: "space-between" }}
       >
         <Text color="secondaryText" size="sm">
-          Chain
+          Destination Chain
         </Text>
         <Text color="primaryText" size="sm">
           {shorterChainName(txInfo.chain.name)}
@@ -266,58 +252,59 @@ function CompletedStepDetailCard({
       </Container>
 
       {/* Transaction Info */}
-      <Container
-        center="y"
-        flex="row"
-        style={{ justifyContent: "space-between" }}
-      >
-        <Text color="secondaryText" size="sm">
-          {txInfo.type === "paymentId" ? "Payment ID" : "Transaction Hash"}
-        </Text>
-        <Container flex="row" gap="sm" style={{ alignItems: "center" }}>
-          <Text
-            color="accentText"
-            onClick={
-              txInfo.type === "paymentId"
-                ? () => onCopyToClipboard(txInfo.id)
-                : () => {
-                    const explorer = txInfo.chain.explorers?.[0];
-                    if (explorer) {
-                      windowAdapter.open(
-                        formatExplorerTxUrl(explorer.url, txInfo.id),
-                      );
-                    }
-                  }
-            }
-            size="sm"
-            style={{
-              cursor: "pointer",
-              fontFamily: "monospace",
-            }}
-          >
-            {shortenHex(txInfo.id)}
+      {txInfo.type === "paymentId" && (
+        <Container
+          center="y"
+          flex="row"
+          style={{ justifyContent: "space-between" }}
+        >
+          <Text color="secondaryText" size="sm">
+            Payment ID
           </Text>
+          <Container flex="row" gap="3xs" center="y">
+            <CopyIcon text={txInfo.id} iconSize={12} tip="Copy Payment ID" />
 
-          {txInfo.type === "paymentId" ? (
-            <button
-              onClick={() => onCopyToClipboard(txInfo.id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-              }}
-              type="button"
-            >
-              <CopyIcon
-                color={theme.colors.primaryText}
-                height={iconSize.sm}
-                width={iconSize.sm}
-              />
-            </button>
-          ) : null}
+            <Text color="primaryText" weight={400} size="sm">
+              {shortenHex(txInfo.id)}
+            </Text>
+          </Container>
         </Container>
-      </Container>
+      )}
+
+      {status.transactions.map((tx) => {
+        const explorerLink = `https://thirdweb.com/${tx.chainId}/tx/${tx.transactionHash}`;
+        return (
+          <Container
+            key={tx.transactionHash}
+            center="y"
+            flex="row"
+            style={{ justifyContent: "space-between" }}
+          >
+            <Text color="secondaryText" size="sm">
+              Transaction Hash
+            </Text>
+            <Container flex="row" gap="3xs" center="y">
+              <CopyIcon
+                text={tx.transactionHash}
+                iconSize={12}
+                tip="Copy Transaction Hash"
+              />
+
+              <Link
+                href={explorerLink}
+                target="_blank"
+                rel="noreferrer"
+                color="primaryText"
+                hoverColor="accentText"
+                weight={400}
+                size="sm"
+              >
+                {shortenHex(tx.transactionHash)}
+              </Link>
+            </Container>
+          </Container>
+        );
+      })}
     </Container>
   );
 }
@@ -350,34 +337,23 @@ export function PaymentReceipt({
   onBack,
   windowAdapter,
 }: PaymentReceitProps) {
-  // Copy to clipboard
-  const copyToClipboard = useCallback(async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      // Could add a toast notification here
-    } catch (error) {
-      console.warn("Failed to copy to clipboard:", error);
-    }
-  }, []);
-
   return (
-    <Container
-      flex="column"
-      fullHeight
-      p="md"
-      style={{ maxHeight: "500px", minHeight: "250px", overflowY: "auto" }}
-    >
+    <Container flex="column" fullHeight px="md">
+      <Spacer y="md+" />
       <ModalHeader onBack={onBack} title="Payment Receipt" />
+      <Spacer y="md+" />
 
-      <Spacer y="lg" />
-
-      <Container flex="column" gap="lg">
+      <Container
+        flex="column"
+        gap="lg"
+        scrollY
+        style={{ maxHeight: "500px", minHeight: "400px" }}
+      >
         {/* Status Results */}
-        <Container flex="column" gap="md">
+        <Container flex="column" gap="sm">
           {completedStatuses.map((status, index) => (
             <CompletedStepDetailCard
               key={`${status.type}-${index}`}
-              onCopyToClipboard={copyToClipboard}
               preparedQuote={preparedQuote}
               status={status}
               windowAdapter={windowAdapter}
@@ -385,6 +361,7 @@ export function PaymentReceipt({
           ))}
         </Container>
       </Container>
+      <Spacer y="md+" />
     </Container>
   );
 }

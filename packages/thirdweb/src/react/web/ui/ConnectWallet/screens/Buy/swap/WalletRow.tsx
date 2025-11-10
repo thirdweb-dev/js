@@ -46,17 +46,19 @@ export function WalletRow(props: {
   const addressOrENS = address
     ? ensNameQuery.data || shortenAddress(address)
     : "";
+
+  const iconSizeValue = iconSize[props.iconSize || "md"];
   return (
     <Container flex="row" style={{ justifyContent: "space-between" }}>
-      <Container center="y" color="secondaryText" flex="row" gap="md">
+      <Container center="y" color="secondaryText" flex="row" gap="sm">
         {wallet ? (
           <WalletImage
             client={props.client}
             id={wallet.id}
-            size={iconSize[props.iconSize || "md"]}
+            size={iconSizeValue}
           />
         ) : (
-          <OutlineWalletIcon size={iconSize[props.iconSize || "md"]} />
+          <OutlineWalletIcon size={iconSizeValue} />
         )}
         <Container flex="column" gap="3xs">
           {props.label ? (

@@ -8,6 +8,7 @@ export const Spacer: React.FC<{ y: keyof typeof spacing }> = ({ y }) => {
     <div
       style={{
         height: spacing[y],
+        flexShrink: 0,
       }}
     />
   );
