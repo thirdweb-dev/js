@@ -421,23 +421,31 @@ Protect multiple endpoints with a shared middleware:
   </TabsContent>
 </Tabs>
 
-## Price Configuration
+## Price and Token Configuration
 
 You can specify prices in multiple ways:
 
 ### USD String
 
+This will default to using USDC on the specified network.
+
 ```typescript
-price: "$0.10" // 10 cents in USD
+network: polygon, // or any other EVM chain
+price: "$0.10" // 10 cents in USDC
 ```
 
 ### ERC20 Token
 
+You can use any ERC20 token that supports the ERC-2612 permit or ERC-3009 sign with authorization.
+
+Simply pass the amount in base units and the token address.
+
 ```typescript
+network: arbitrum,
 price: {
-  amount: "100000", // Amount in base units (100000 = 0.1 USDC with 6 decimals)
+  amount: "1000000000000000", // Amount in base units (0.001 tokens with 18 decimals)
   asset: {
-    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // Token address
+    address: "0xf01E52B0BAC3E147f6CAf956a64586865A0aA928", // Token address
   }
 }
 ```
