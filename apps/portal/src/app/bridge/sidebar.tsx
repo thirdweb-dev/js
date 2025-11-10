@@ -17,20 +17,44 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `${bridgeSlug}/sell`,
-          name: "Sell Tokens",
-        },
-        {
           href: `${bridgeSlug}/swap`,
           name: "Swap Tokens",
+        },
+        {
+          href: `${bridgeSlug}/bridge-widget-script`,
+          name: "BridgeWidget Script",
+        },
+        {
+          href: `${bridgeSlug}/fund`,
+          name: "Fund Wallets",
+        },
+        {
+          href: `${bridgeSlug}/products`,
+          name: "Sell a Product",
+        },
+        {
+          href: `${bridgeSlug}/transactions`,
+          name: "Pay for Transactions",
+        },
+        {
+          href: `${bridgeSlug}/send`,
+          name: "Send a Payment",
+        },
+        {
+          href: `${bridgeSlug}/sell`,
+          name: "Sell Tokens",
         },
         {
           href: `${bridgeSlug}/tokens`,
           name: "Get Token Prices",
         },
         {
-          href: `${bridgeSlug}/bridge-widget-script`,
-          name: "BridgeWidget Script",
+          href: `${bridgeSlug}/webhooks`,
+          name: "Webhooks",
+        },
+        {
+          href: `${bridgeSlug}/custom-data`,
+          name: "Custom Data",
         },
       ],
       name: "Guides",

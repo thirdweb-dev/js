@@ -24,7 +24,7 @@ export { blastSepolia } from "../chains/chain-definitions/blast-sepolia.js";
 export { bsc } from "../chains/chain-definitions/bsc.js";
 export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
 export { celo } from "../chains/chain-definitions/celo.js";
-export { celoAlfajoresTestnet } from "../chains/chain-definitions/celo-alfajores-testnet.js";
+export { celoSepoliaTestnet } from "../chains/chain-definitions/celo-sepolia-testnet.js";
 export { coreMainnet } from "../chains/chain-definitions/core-mainnet.js";
 export { coreTestnet } from "../chains/chain-definitions/core-testnet.js";
 export { cronos } from "../chains/chain-definitions/cronos.js";

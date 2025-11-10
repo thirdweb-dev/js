@@ -59,7 +59,17 @@ This returns token information with current price:
     symbol: "USDC",
     name: "USD Coin",
     iconUri: "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
-    priceUsd: 1.00
+    prices: {
+      USD: 1.00,
+      EUR: 0.86,
+      GBP: 0.74,
+      JPY: 148.85,
+      KRW: 1393.14,
+      CNY: 7.18,
+      INR: 86.20,
+      NOK: 10.18,
+      SEK: 9.68,
+    }
   }
 ]
 ```
@@ -118,7 +128,7 @@ const nextTokens = await Bridge.tokens({
 
 To connect with other auth strategies, use external wallets, or sponsor gas for users, check out the following guides:
 
-- [Send a Payment](/payments/send)
+- [Send a Payment](/bridge/send)
 
 ## Explore Full API References
 
