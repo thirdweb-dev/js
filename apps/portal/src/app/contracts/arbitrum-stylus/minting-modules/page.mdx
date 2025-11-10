@@ -1,0 +1,160 @@
+import { Step, Steps, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Stylus Minting Modules | thirdweb Documentation",
+	description:
+		"Customizable rust modules written for thirdweb's modular contracts",
+	image: {
+		title: "Stylus Minting Modules",
+		icon: "contracts",
+	},
+});
+
+# Stylus Minting Modules
+
+You can now install rust based modules into a solidity based [modular contract](https://github.com/thirdweb-dev/modular-contracts/blob/dev/design-document.md).
+
+This plug-n-play model also allows users to write their own custom minting logic in rust, taking advantage of Stylus' interoperability and gas savings. These modules  work with existing router contracts and modules written in solidity.
+
+## Deploy through dashboard
+
+Deploying a Modular Contract and installing modules is easy through the thirdweb dashboard and ideal when you don't want to modify any code on the contract.
+
+<Steps>
+<Step title="Select Modular Contract for Stylus">
+
+Navigate to the Modular Contracts section on Explore and select any token contract for your project.
+</Step>
+
+<Step title="Deploy Contract">
+Select Arbitrum Sepolia or any other Stylus-supported network, then select Deploy. Once you have deployed one of these contracts, the modules come pre-installed, both solidity and rust ones.
+</Step>
+
+<Step title="Edit Modules">
+If you wish to install a custom module, navigate to modules tab on your contract page. Enter the publisher address and select module from the dropdown, and click install.
+
+You can uninstall a module from the same page.
+
+Here's a list of prebuilt Rust / Stylus specific modules provided by thirdweb:
+- [Mintable ERC20](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusMintableERC20)
+- [Transferable ERC20](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusTransferableERC20)
+- [Mintable ERC721](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusMintableERC721)
+- [Transferable ERC721](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusTransferableERC721)
+- [Mintable ERC1155](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusMintableERC1155)
+- [Transferable ERC1155](https://thirdweb.com/0x6453a486d52e0EB6E79Ec4491038E2522a926936/StylusTransferableERC1155)
+
+You can customize these modules via thirdweb CLI as described below.
+
+</Step>
+
+</Steps>
+
+## Build with CLI
+
+If you want to modify the contract code or publish a custom module, you can use the thirdweb CLI.
+
+<Steps>
+<Step title="Create a new Stylus module">
+
+In your CLI, run the following command to create a new directory with an template module. Select the module template from the list shown.
+
+```bash
+npx thirdweb create-stylus
+```
+</Step>
+
+<Step title="Modify logic">
+In the `src/lib.rs` file you can modify the contract logic such as adding fees, gating logic, analytics events, and more.
+</Step>
+
+<Step title="Build & Test">
+
+To build your project, run the following command:
+
+```bash
+cargo stylus build
+```
+
+</Step>
+
+<Step title="Deploy or Publish Your Module">
+You can publish your module and install it to your modular contract. Publishing stores your module metadata in thirdweb’s on-chain registry so anyone (including you) can use that exact version later with a few clicks.
+
+To publish your module, ensure you have your thirdweb secret key from your created project, then run the following command:
+
+```bash
+npx thirdweb publish-stylus -k YOUR_TW_SECRET_KEY
+```
+
+Once published, the module is now available to install via thirdweb dashboard from the modules tab of your contract.
+</Step>
+
+</Steps>
+
+## Interacting with the Contract
+
+Using the thirdweb SDKs, you can interact with your Stylus Modular contracts / modules to mint tokens, transfer ownership, and more.
+
+The following describes how to interact with a ERC721 modular contract using thirdweb SDK. (Swap for ERC20 or ERC1155 variants as needed.)
+
+### Upload metadata
+
+```ts
+ import { BatchMetadataERC721 } from "thirdweb/modules";
+
+ const transaction = BatchMetadataERC721.uploadMetadata({
+   contract,
+   metadatas: [
+     { name: "My NFT", description: "This is my NFT" },
+   ],
+ });
+
+ await sendTransaction({
+   transaction,
+   account,
+ });
+ ```
+
+### Mint with role
+
+```typescript
+import { MintableERC721 } from "thirdweb/modules";
+
+const transaction = MintableERC721.mintWithRole({
+  contract,
+  to: "0x...", // Address to mint tokens to
+  nfts: [
+    {
+      name: "My NFT",
+      description: "This is my NFT",
+      image: "ipfs://...",
+    },
+  ],
+});
+
+// Send the transaction
+await sendTransaction({ transaction, account });
+```
+
+### Set transfer rules
+
+```ts
+import { sendTransaction } from "thirdweb";
+import { TransferableERC20 } from "thirdweb/modules";
+
+const transaction = TransferableERC20.setTransferable({
+  contract,
+  enableTransfer: ...,
+  overrides: {
+    ...
+  }
+});
+
+// Send the transaction
+await sendTransaction({ transaction, account });
+```
+
+### Resources
+
+- [Modular Contracts Design Doc](https://github.com/thirdweb-dev/modular-contracts/blob/dev/design-document.md)
+

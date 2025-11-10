@@ -9,48 +9,44 @@ import { getContract } from "../contract.js";
 import { deployCloneFactory } from "./utils/bootstrap.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy dynamic", () => {
-  // TODO: Fix this test
-  it.skip.sequential(
-    "should deploy dynamic contract with extensions",
-    async () => {
-      await deployCloneFactory({
-        account: TEST_ACCOUNT_A,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-      });
+  it.sequential("should deploy dynamic contract with extensions", async () => {
+    await deployCloneFactory({
+      account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+    });
 
-      const deployed = await deployPublishedContract({
-        account: TEST_ACCOUNT_A,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-        contractId: "EvolvingNFT",
-        contractParams: {
-          contractURI: "",
-          defaultAdmin: TEST_ACCOUNT_A.address,
-          name: "Evolving nft",
-          royaltyBps: 0n,
-          royaltyRecipient: TEST_ACCOUNT_A.address,
-          saleRecipient: TEST_ACCOUNT_A.address,
-          symbol: "ENFT",
-          trustedForwarders: [],
-        },
-      });
+    const deployed = await deployPublishedContract({
+      account: TEST_ACCOUNT_A,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      contractId: "EvolvingNFT",
+      contractParams: {
+        contractURI: "",
+        defaultAdmin: TEST_ACCOUNT_A.address,
+        name: "Evolving nft",
+        royaltyBps: 0n,
+        royaltyRecipient: TEST_ACCOUNT_A.address,
+        saleRecipient: TEST_ACCOUNT_A.address,
+        symbol: "ENFT",
+        trustedForwarders: [],
+      },
+    });
 
-      expect(deployed).toBeDefined();
+    expect(deployed).toBeDefined();
 
-      const contract = getContract({
-        address: deployed,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
-      });
+    const contract = getContract({
+      address: deployed,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+    });
 
-      const extensions = await readContract({
-        contract,
-        method: resolveMethod("getAllExtensions"),
-        params: [],
-      });
+    const extensions = await readContract({
+      contract,
+      method: resolveMethod("getAllExtensions"),
+      params: [],
+    });
 
-      expect(extensions.length).toEqual(3);
-    },
-  );
+    expect(extensions.length).toEqual(3);
+  });
 });

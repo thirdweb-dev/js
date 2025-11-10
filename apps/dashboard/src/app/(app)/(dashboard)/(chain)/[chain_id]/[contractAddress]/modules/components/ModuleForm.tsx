@@ -225,6 +225,10 @@ export const InstallModuleForm = (props: InstallModuleFormProps) => {
         moduleInfo: {
           bytecodeUri: selectedModule.metadata.bytecodeUri,
         },
+        isStylus:
+          (selectedModule.metadata.compilers?.stylus &&
+            selectedModule.metadata.compilers?.stylus?.length > 0) ||
+          false,
       });
     },
     queryKey: [
@@ -432,6 +436,7 @@ async function isModuleCompatible(options: {
   moduleInfo: {
     bytecodeUri: string;
   };
+  isStylus: boolean;
   client: ThirdwebClient;
 }) {
   // 1. get module's bytecode
@@ -444,15 +449,17 @@ async function isModuleCompatible(options: {
 
   // 2. check compatibility with core and installed modules
   try {
-    const isCompatible = await checkModulesCompatibility({
-      chain: options.contractInfo.chain,
-      client: options.client,
-      coreBytecode: options.contractInfo.bytecode,
-      moduleBytecodes: [
-        moduleBytecode,
-        ...options.contractInfo.installedModuleBytecodes,
-      ],
-    });
+    const isCompatible =
+      options.isStylus ||
+      (await checkModulesCompatibility({
+        chain: options.contractInfo.chain,
+        client: options.client,
+        coreBytecode: options.contractInfo.bytecode,
+        moduleBytecodes: [
+          moduleBytecode,
+          ...options.contractInfo.installedModuleBytecodes,
+        ],
+      }));
 
     return isCompatible;
   } catch (e) {
