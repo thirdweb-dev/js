@@ -11,8 +11,7 @@ import { sendTransaction } from "../../../transaction/actions/send-transaction.j
 import { installPublishedExtension } from "./installPublishedExtension.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("install extension", () => {
-  // TODO: Fix this test
-  it.skip.sequential(
+  it.sequential(
     "should install extension to a dynamic contract",
     async () => {
       await deployCloneFactory({

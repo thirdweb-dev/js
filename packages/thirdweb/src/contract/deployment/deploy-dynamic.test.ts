@@ -9,8 +9,7 @@ import { getContract } from "../contract.js";
 import { deployCloneFactory } from "./utils/bootstrap.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("deploy dynamic", () => {
-  // TODO: Fix this test
-  it.skip.sequential(
+  it.sequential(
     "should deploy dynamic contract with extensions",
     async () => {
       await deployCloneFactory({

@@ -215,7 +215,7 @@ export async function deployContractfromDeployMetadata(
       if (
         deployMetadata.routerType === "dynamic" &&
         deployMetadata.defaultExtensions &&
-        !isZkSyncChain(chain)
+        !(await isZkSyncChain(chain))
       ) {
         for (const e of deployMetadata.defaultExtensions) {
           await getOrDeployInfraForPublishedContract({
