@@ -1,3 +1,4 @@
+import { UnderlineLink } from "@workspace/ui/components/UnderlineLink";
 import { InfoIcon } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
@@ -53,15 +54,20 @@ export function KeyManagement({
       {isManagedVault && (
         <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
           <div className="flex flex-col p-6">
-            <h2 className="font-semibold text-xl tracking-tight">
+            <h2 className="font-semibold text-xl tracking-tight mb-1">
               Managed Vault
             </h2>
-            <p className="text-muted-foreground text-sm">
-              Your vault is currently managed by Thirdweb so you can access it
-              via you project secret key. You can eject and manage your own
-              vault keys at any time. Doing so means you'll need to pass your
-              own vault access token to the transactions API additionally to
-              your project secret key.
+            <p className="text-muted-foreground text-sm max-w-3xl">
+              If you choose to eject and manage your own vault keys, you'll need
+              to provide your vault access token alongside your project secret
+              key when using the Transactions API.{" "}
+              <UnderlineLink
+                href="https://portal.thirdweb.com/vault"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Learn more about Vault
+              </UnderlineLink>
             </p>
             <div className="h-4" />
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center">

@@ -19,7 +19,7 @@ export const Variants: Story = {
 function Component() {
   const title = "This is Title";
   const description =
-    "This is an example of a description about in-app wallet usage chart";
+    "This is an example of a description about user wallet usage chart";
   return (
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
       <BadgeContainer label="30 days">

@@ -10,6 +10,7 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
@@ -21,6 +22,7 @@ import {
 import type { Project } from "@/api/project/projects";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { SolanaAddress } from "@/components/blocks/solana-address";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
@@ -32,14 +34,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -88,6 +82,7 @@ interface ServerWalletsTableProps {
   client: ThirdwebClient;
   solanaPermissionError?: boolean;
   authToken: string;
+  pageSize: number;
 }
 
 export function ServerWalletsTable(props: ServerWalletsTableProps) {
@@ -105,6 +100,7 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
     client,
     solanaPermissionError,
     authToken,
+    pageSize,
   } = props;
 
   const [activeChain, setActiveChain] = useState<WalletChain>("evm");
@@ -333,13 +329,13 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
             </TableContainer>
 
             {totalPages > 1 && (
-              <WalletsPagination
+              <ServerWalletsPagination
                 activeChain={activeChain}
                 currentPage={currentPage}
+                currentCount={wallets.length}
+                pageSize={pageSize}
                 totalPages={totalPages}
                 totalRecords={totalRecords}
-                teamSlug={teamSlug}
-                projectSlug={project.slug}
               />
             )}
           </>
@@ -349,78 +345,69 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
   );
 }
 
-// Wallets Pagination Component
-function WalletsPagination({
+function ServerWalletsPagination({
   activeChain,
   currentPage,
+  currentCount,
+  pageSize,
   totalPages,
   totalRecords,
-  teamSlug,
-  projectSlug,
 }: {
   activeChain: WalletChain;
   currentPage: number;
+  currentCount: number;
+  pageSize: number;
   totalPages: number;
   totalRecords: number;
-  teamSlug: string;
-  projectSlug: string;
 }) {
+  const router = useDashboardRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const pageParam = activeChain === "evm" ? "page" : "solana_page";
 
+  const effectivePageSize = pageSize > 0 ? pageSize : currentCount;
+  const rangeStart =
+    totalRecords && effectivePageSize
+      ? Math.min((currentPage - 1) * effectivePageSize + 1, totalRecords)
+      : 0;
+  const computedCount = currentCount
+    ? currentCount
+    : totalRecords && effectivePageSize
+      ? Math.min(effectivePageSize, totalRecords - rangeStart + 1)
+      : 0;
+  const rangeEnd = totalRecords
+    ? Math.min(rangeStart + Math.max(computedCount - 1, 0), totalRecords)
+    : 0;
+
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+    if (page <= 1) {
+      params.delete(pageParam);
+    } else {
+      params.set(pageParam, page.toString());
+    }
+
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+  };
+
   return (
-    <div className="flex flex-col items-center border-t p-6">
-      <div className="mb-4 text-muted-foreground text-sm">
-        Found {totalRecords} {activeChain === "evm" ? "EVM" : "Solana"} wallets
+    <div className="border-t px-6 py-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <span className="text-sm text-muted-foreground">
+          {totalRecords
+            ? `Showing ${rangeStart.toLocaleString()}-${rangeEnd.toLocaleString()} of ${totalRecords.toLocaleString()} ` +
+              (activeChain === "evm" ? "EVM" : "Solana") +
+              " wallets"
+            : `No ${activeChain === "evm" ? "EVM" : "Solana"} wallets found`}
+        </span>
+        <PaginationButtons
+          activePage={currentPage}
+          className="justify-start lg:justify-end"
+          onPageClick={handlePageChange}
+          totalPages={totalPages}
+        />
       </div>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <Link
-              href={`/team/${teamSlug}/${projectSlug}/transactions?${pageParam}=${
-                currentPage > 1 ? currentPage - 1 : 1
-              }`}
-              legacyBehavior
-              passHref
-            >
-              <PaginationPrevious
-                className={
-                  currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-                }
-              />
-            </Link>
-          </PaginationItem>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-            (pageNumber) => (
-              <PaginationItem key={`page-${pageNumber}`}>
-                <Link
-                  href={`/team/${teamSlug}/${projectSlug}/transactions?${pageParam}=${pageNumber}`}
-                  passHref
-                >
-                  <PaginationLink isActive={currentPage === pageNumber}>
-                    {pageNumber}
-                  </PaginationLink>
-                </Link>
-              </PaginationItem>
-            ),
-          )}
-          <PaginationItem>
-            <Link
-              href={`/team/${teamSlug}/${projectSlug}/transactions?${pageParam}=${
-                currentPage < totalPages ? currentPage + 1 : totalPages
-              }`}
-              passHref
-            >
-              <PaginationNext
-                className={
-                  currentPage >= totalPages
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
-              />
-            </Link>
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </div>
   );
 }

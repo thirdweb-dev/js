@@ -220,9 +220,9 @@ export function ProjectGeneralSettingsPageUI(props: {
   const projectLayout = `/team/${props.teamSlug}/${props.project.slug}`;
 
   const paths = {
-    aaConfig: `${projectLayout}/settings/account-abstraction`,
+    aaConfig: `${projectLayout}/wallets/sponsored-gas/configuration`,
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
-    inAppConfig: `${projectLayout}/settings/wallets`,
+    inAppConfig: `${projectLayout}/wallets/user-wallets/configuration`,
     payConfig: `${projectLayout}/settings/payments`,
   };
 

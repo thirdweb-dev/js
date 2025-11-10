@@ -42,7 +42,7 @@ export function TransactionsAnalytics(props: {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <div className="no-scrollbar flex items-center gap-3 max-sm:overflow-auto">
           <DateRangeSelector
             popoverAlign="end"

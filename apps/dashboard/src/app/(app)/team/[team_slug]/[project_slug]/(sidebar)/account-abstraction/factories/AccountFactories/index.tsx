@@ -14,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { UnderlineLink } from "@/components/ui/UnderlineLink";
 
 export function DefaultFactoriesSection() {
   const data = [
@@ -38,13 +37,6 @@ export function DefaultFactoriesSection() {
         </h3>
         <p className="text-muted-foreground text-sm">
           Ready to use account factories that are pre-deployed on each chain.{" "}
-          <UnderlineLink
-            href="https://playground.thirdweb.com/connect/account-abstraction/connect"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn how to use these in your apps
-          </UnderlineLink>
         </p>
       </div>
 

@@ -21,7 +21,7 @@ function InAppWalletAnalyticsUI({
   return (
     <InAppWalletUsersChartCardUI
       title="Unique Users"
-      description="The total number of active in-app wallet users on your project."
+      description="The total number of active user wallet users on your project."
       inAppWalletStats={stats || []}
       isPending={isPending}
     />

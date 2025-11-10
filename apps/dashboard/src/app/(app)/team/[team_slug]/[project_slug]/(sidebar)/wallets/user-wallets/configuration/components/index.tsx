@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import type { ProjectEmbeddedWalletsService } from "@thirdweb-dev/service-utils";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { CircleAlertIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
@@ -13,6 +13,7 @@ import type { Project } from "@/api/project/projects";
 import type { Team } from "@/api/team/get-team";
 import { FileInput } from "@/components/blocks/FileInput";
 import { GatedSwitch } from "@/components/blocks/GatedSwitch";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import {
@@ -30,6 +31,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { UnderlineLink } from "@/components/ui/UnderlineLink";
 import { planToTierRecordForGating } from "@/constants/planToTierRecord";
+import { updateProjectClient } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import {
   type ApiKeyEmbeddedWalletsValidationSchema,
@@ -38,7 +40,7 @@ import {
 import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { toArrFromList } from "@/utils/string";
 import type { SMSCountryTiers } from "../api/sms";
-import CountrySelector from "./sms-country-select/country-selector";
+import { CountrySelector } from "./sms-country-select";
 
 type InAppWalletSettingsPageProps = {
   project: Project;
@@ -55,7 +57,83 @@ type UpdateAPIKeyTrackingData = {
   hasCustomAuthEndpoint: boolean;
 };
 
-export const InAppWalletSettingsUI: React.FC<
+export function InAppWalletSettingsPage(props: InAppWalletSettingsPageProps) {
+  const updateProject = useMutation({
+    mutationFn: async (projectValues: Partial<Project>) => {
+      await updateProjectClient(
+        {
+          projectId: props.project.id,
+          teamId: props.teamId,
+        },
+        projectValues,
+      );
+    },
+  });
+
+  function handleUpdateProject(projectValues: Partial<Project>) {
+    updateProject.mutate(projectValues, {
+      onError: (err) => {
+        toast.error("Failed to update an API Key");
+        console.error(err);
+      },
+      onSuccess: () => {
+        toast.success("Configuration updated successfully");
+      },
+    });
+  }
+
+  return (
+    <InAppWalletSettingsPageUI
+      {...props}
+      isUpdating={updateProject.isPending}
+      smsCountryTiers={props.smsCountryTiers}
+      updateApiKey={handleUpdateProject}
+    />
+  );
+}
+
+const InAppWalletSettingsPageUI: React.FC<
+  InAppWalletSettingsPageProps & {
+    updateApiKey: (
+      projectValues: Partial<Project>,
+      trackingData: UpdateAPIKeyTrackingData,
+    ) => void;
+    isUpdating: boolean;
+    smsCountryTiers: SMSCountryTiers;
+  }
+> = (props) => {
+  const embeddedWalletService = props.project.services.find(
+    (service) => service.name === "embeddedWallets",
+  );
+
+  if (!embeddedWalletService) {
+    return (
+      <Alert variant="warning">
+        <CircleAlertIcon className="size-5" />
+        <AlertTitle>Wallets service is disabled</AlertTitle>
+        <AlertDescription>
+          Enable Wallets service in the{" "}
+          <UnderlineLink
+            href={`/team/${props.teamSlug}/${props.project.slug}/settings`}
+          >
+            project settings
+          </UnderlineLink>{" "}
+          to configure settings
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <InAppWalletSettingsUI
+      {...props}
+      client={props.client}
+      embeddedWalletService={embeddedWalletService}
+    />
+  );
+};
+
+const InAppWalletSettingsUI: React.FC<
   InAppWalletSettingsPageProps & {
     updateApiKey: (
       projectValues: Partial<Project>,
@@ -113,7 +191,7 @@ export const InAppWalletSettingsUI: React.FC<
     ) {
       return toast.error("Custom JSON Web Token configuration is invalid", {
         description:
-          "To use User Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
+          "To use user wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
         dismissible: true,
         duration: 9000,
       });
@@ -124,7 +202,7 @@ export const InAppWalletSettingsUI: React.FC<
         "Custom Authentication Endpoint configuration is invalid",
         {
           description:
-            "To use User Wallets with Custom Authentication Endpoint, provide a valid URL.",
+            "To use user wallets with Custom Authentication Endpoint, provide a valid URL.",
           dismissible: true,
           duration: 9000,
         },
@@ -408,10 +486,7 @@ function SMSCountryFields(props: {
             onCheckedChange: (checked) =>
               props.form.setValue(
                 "smsEnabledCountryISOs",
-                checked
-                  ? // by default, enable US and CA only
-                    ["US", "CA"]
-                  : [],
+                checked ? ["US", "CA"] : [],
               ),
           }}
           teamSlug={props.teamSlug}

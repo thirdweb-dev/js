@@ -184,7 +184,7 @@ const cached_getInAppWalletUsage = unstable_cache(
     if (res?.status !== 200) {
       const reason = await res?.text();
       console.error(
-        `Failed to fetch in-app wallet usage, ${res?.status} - ${res.statusText} - ${reason}`,
+        `Failed to fetch user wallets usage, ${res?.status} - ${res.statusText} - ${reason}`,
       );
       return [];
     }

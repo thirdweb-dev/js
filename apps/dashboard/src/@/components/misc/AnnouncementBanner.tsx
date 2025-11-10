@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-// biome-ignore lint/correctness/noUnusedVariables: banner is toggled on-demand via API content changes
 function AnnouncementBannerUI(props: {
   href: string;
   label: string;
@@ -45,12 +44,11 @@ function AnnouncementBannerUI(props: {
 }
 
 export function AnnouncementBanner() {
-  // return (
-  //   <AnnouncementBannerUI
-  //     href="https://blog.thirdweb.com/the-fastest-way-to-build-web3-applications/"
-  //     label="We have re-branded our Engine, Payments, and Connect products. Please read the full blog post for details on changes"
-  //     trackingLabel="product-rebrand"
-  //   />
-  // );
-  return null;
+  return (
+    <AnnouncementBannerUI
+      href="https://blog.thirdweb.com/changelog/project-view-update-wallets/"
+      label="Project View Update - Wallets"
+      trackingLabel="project-view-update-wallets"
+    />
+  );
 }

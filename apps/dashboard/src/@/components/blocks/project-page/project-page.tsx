@@ -12,10 +12,6 @@ import {
 type ProjectPageProps = {
   header: ProjectPageHeaderProps;
   footer?: ProjectPageFooterProps;
-  /**
-   * @deprecated only for legacy pages where we still need internal tabs for the moment, currently:
-   * - /webhooks
-   */
   tabs?: TabPathLink[];
 };
 

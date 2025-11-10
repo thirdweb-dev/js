@@ -337,7 +337,7 @@ export function InAppWalletUsersPageContent(
                 isFetched={walletsQuery.isFetched}
                 isPending={walletsQuery.isPending}
                 tableContainerClassName="rounded-none border-x-0 border-b-0"
-                title="in-app wallets"
+                title="User wallets"
               />
 
               <div className="flex justify-center gap-3 border-t bg-card p-6">

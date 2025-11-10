@@ -5,7 +5,6 @@ import { getTeamBySlug } from "@/api/team/get-team";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { loginRedirect } from "@/utils/redirects";
-import { ProjectSettingsBreadcrumb } from "../_components/project-settings-breadcrumb";
 import { getSMSCountryTiers } from "./api/sms";
 import { InAppWalletSettingsPage } from "./components";
 
@@ -22,7 +21,9 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(`/team/${team_slug}/settings/wallets`);
+    loginRedirect(
+      `/team/${team_slug}/${project_slug}/wallets/user-wallets/configuration`,
+    );
   }
 
   if (!team) {
@@ -40,12 +41,6 @@ export default async function Page(props: {
 
   return (
     <div className="flex flex-col gap-6">
-      <ProjectSettingsBreadcrumb
-        teamSlug={team_slug}
-        projectSlug={project_slug}
-        page="Wallets"
-      />
-
       <InAppWalletSettingsPage
         client={client}
         project={project}

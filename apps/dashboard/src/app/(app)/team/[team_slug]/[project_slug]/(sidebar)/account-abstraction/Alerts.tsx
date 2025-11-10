@@ -6,9 +6,9 @@ export const SmartWalletsBillingAlert = (props: { teamSlug: string }) => {
   return (
     <Alert variant="warning">
       <CircleAlertIcon className="size-5" />
-      <AlertTitle>Account Abstraction on Mainnet</AlertTitle>
+      <AlertTitle>Gas Sponsorship on Mainnet</AlertTitle>
       <AlertDescription>
-        To enable AA on mainnet chains,{" "}
+        To enable Gas Sponsorship on mainnet chains,{" "}
         <UnderlineLink href={`/team/${props.teamSlug}/~/billing`}>
           subscribe to a billing plan.
         </UnderlineLink>

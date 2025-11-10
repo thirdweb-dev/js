@@ -184,7 +184,7 @@ function EmptyChartContent(props: {
             <Button
               onClick={() => {
                 router.push(
-                  `/team/${props.teamSlug}/${props.project.slug}/vault`,
+                  `/team/${props.teamSlug}/${props.project.slug}/wallets/server-wallets/configuration`,
                 );
               }}
               variant="primary"

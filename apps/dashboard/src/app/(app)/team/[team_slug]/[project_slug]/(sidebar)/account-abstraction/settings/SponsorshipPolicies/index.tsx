@@ -371,7 +371,7 @@ export function AccountAbstractionSettingsPage(
                         of the{" "}
                         <UnderlineLink
                           className="text-primary-500"
-                          href="https://portal.thirdweb.com/wallets/smart-wallet/infrastructure#supported-chains"
+                          href="https://thirdweb.com/chainlist?service=account-abstraction"
                           rel="noopener noreferrer"
                           target="_blank"
                         >
