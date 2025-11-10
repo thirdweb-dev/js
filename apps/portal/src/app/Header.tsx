@@ -40,8 +40,8 @@ const links = [
     name: "Contracts",
   },
   {
-    href: "/payments",
-    name: "Payments",
+    href: "/x402",
+    name: "x402",
   },
   {
     href: "/bridge",
