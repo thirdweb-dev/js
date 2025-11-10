@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.111.10
+
+### Patch Changes
+
+- [#8390](https://github.com/thirdweb-dev/js/pull/8390) [`f964b8a`](https://github.com/thirdweb-dev/js/commit/f964b8aaff22d4078ff4c4c5e09c6ebb5fcb182c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Loosen peer dependency requirements for RN
+
+- [#8383](https://github.com/thirdweb-dev/js/pull/8383) [`424e6b8`](https://github.com/thirdweb-dev/js/commit/424e6b8f9b071d3629ff0291ae6875fa4e4c882e) Thanks [@kumaryash90](https://github.com/kumaryash90)! - deploy and install stylus modules
+
+- [#8388](https://github.com/thirdweb-dev/js/pull/8388) [`763d3de`](https://github.com/thirdweb-dev/js/commit/763d3de5a8db19a8022b2eda420f13a6787de100) Thanks [@MananTank](https://github.com/MananTank)! - - Various UI/UX Improvements in Bridge components
+
 ## 5.111.9
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.5.5
+
+### Patch Changes
+
+- [#8390](https://github.com/thirdweb-dev/js/pull/8390) [`f964b8a`](https://github.com/thirdweb-dev/js/commit/f964b8aaff22d4078ff4c4c5e09c6ebb5fcb182c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Loosen peer dependency requirements for RN
+
 ## 1.5.4
 
 ### Patch Changes
