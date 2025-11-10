@@ -1,0 +1,240 @@
+import { Step, Steps, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Stylus Zk Mint Contract | thirdweb Documentation",
+	description:
+		"Stylus Zk Minting contract and app template",
+	image: {
+		title: "Stylus Zk Mint",
+		icon: "contracts",
+	},
+});
+
+# ZK Minting with Stylus
+
+You can now create and deploy ZK Proof based token contracts with Stylus. The templates provide you with Stylus contracts, ZK circuit files, and a ready-to-deploy Next.js app + API for proof generation and minting.
+
+Follow the steps below to learn how to build a privacy-preserving ERC721 token system using Zero-Knowledge proofs on Arbitrum Stylus. Users can mint tokens by proving they own a minimum amount of ETH without revealing their exact balance. However, you can customize the circuits and the contracts to add your own checks for minting.
+
+## What you'll build
+
+- ZK Circuit: Proves token ownership without revealing exact balances
+- Stylus Contract: Rust-based ERC721 contract that verifies ZK proofs
+- Frontend: Next.js app for generating proofs and minting tokens
+- Oracle System: Secure balance verification mechanism
+
+## Prerequisites
+
+- [Create a project on your thirdweb account](https://thirdweb.com/dashboard)
+- Install thirdweb CLI by running `npm install -g thirdweb`
+- Install Rust tool chain by running `curl https://sh.rustup.rs -sSf | sh` or visit rust-lang.org
+- Install solc by running `npm install -g solc` or visit soliditylang.org
+- Install Node version 18 or higher
+
+<Steps>
+<Step title="Project Setup">
+
+In your CLI, run the following command to create a new directory with an template module. Select the module template from the list shown.
+
+```bash
+npx thirdweb create-stylus
+```
+
+Select **"Stylus ZK ERC721"** from the dropdown menu. This will:
+- Clone the repository to your machine
+- Set up the project structure
+- Install basic dependencies
+</Step>
+
+<Step title="Install Dependencies">
+Install dependencies for all components:
+
+```bash
+# Install root dependencies
+pnpm install
+
+# Install circuit dependencies
+cd circuits
+pnpm install
+cd ..
+
+# Install frontend dependencies
+cd app
+pnpm install
+cd ..
+```
+</Step>
+
+<Step title="Generate Cryptographic Keys">
+Run the setup script to generate oracle keys and build the ZK circuit:
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+This script will:
+- Generate a random oracle secret key
+- Inject the secret into the ZK circuit
+- Compile the circuit with circom
+- Generate proving and verification keys
+- Create the trusted setup for Groth16
+
+**⚠️ Important**: The oracle secret is critical for security. Keep it private!
+
+</Step>
+
+<Step title="Deploy the Contract">
+### Using thirdweb CLI
+
+
+```bash
+cd contracts
+npx thirdweb@latest deploy-stylus -k <THIRDWEB_SECRET_KEY>
+```
+
+### Using Stylus CLI (Alternative)
+
+```bash
+cd contracts
+cargo stylus deploy --endpoint arbitrum-sepolia
+```
+
+Copy the deployed contract address - you'll need it for the frontend.
+</Step>
+
+<Step title="Configure the Frontend">
+Update the contract address in your frontend:
+
+```bash
+cd app
+# Edit pages/index.tsx or lib/config.ts
+# Update ZK_MINT_CONTRACT_ADDRESS with your deployed address
+```
+
+Create environment file:
+
+```bash
+# app/.env.local
+RPC_URL=https://sepolia-rollup.arbitrum.io/rpc
+ORACLE_SECRET_KEY=<your_oracle_secret_from_setup>
+```
+</Step>
+
+<Step title="Run the Application">
+```bash
+cd app
+pnpm dev
+# Visit http://localhost:3000
+```
+</Step>
+
+<Step title="Test the System">
+1. **Connect Wallet**: Connect to Arbitrum Sepolia testnet
+2. **Generate Proof**: Click "Generate ZK Proof" - this proves you have sufficient balance
+3. **Mint Tokens**: Use the proof to mint ERC721 tokens
+</Step>
+
+</Steps>
+
+## Customizing the ZK Logic
+
+The above described logic for ZK verification of user balance is provided as a template. You can modify the logic and write your own custom ZK verification code and circuits as described below.
+
+### Understanding the Circuit
+
+The core circuit (`circuits/token_ownership.circom`) has these components:
+
+```txt
+template TokenOwnership(oracle_secret) {
+    // Private inputs (hidden from public)
+    signal input actual_balance;        // Real balance from oracle
+    signal input salt;                  // Randomness for uniqueness
+    
+    // Public inputs (visible on-chain)
+    signal input min_required_balance;  // Minimum threshold
+    signal input token_contract_hash;   // Which token to check
+    signal input user_address_hash;     // User's address hash
+    signal input timestamp;             // When oracle signed data
+    signal input oracle_commitment;    // Oracle's commitment
+    
+    // Output
+    signal output nullifier;            // Prevents replay attacks
+}
+```
+
+### Customization Examples
+
+#### 1. Change Balance Threshold Logic
+
+Replace the balance check with custom logic:
+
+```txt
+// Original: Simple greater-than check
+component gte = GreaterEqThan(64);
+gte.in[0] <== actual_balance;
+gte.in[1] <== min_required_balance;
+gte.out === 1;
+
+// Custom: Logarithmic scaling
+component log_check = LogarithmicCheck();
+log_check.balance <== actual_balance;
+log_check.threshold <== min_required_balance;
+log_check.out === 1;
+```
+
+#### 2. Add Multiple Token Support
+
+Extend the circuit to verify multiple token balances:
+
+```txt
+template MultiTokenOwnership(oracle_secret, num_tokens) {
+    signal input actual_balances[num_tokens];
+    signal input min_required_balances[num_tokens];
+    signal input token_addresses[num_tokens];
+    
+    // Verify each token separately
+    component checks[num_tokens];
+    for (var i = 0; i < num_tokens; i++) {
+        checks[i] = GreaterEqThan(64);
+        checks[i].in[0] <== actual_balances[i];
+        checks[i].in[1] <== min_required_balances[i];
+        checks[i].out === 1;
+    }
+}
+```
+
+#### 3. Add Time-Based Constraints
+
+Add expiration logic to proofs:
+
+```txt
+// Add time validation
+component time_check = LessThan(64);
+time_check.in[0] <== timestamp;
+time_check.in[1] <== max_timestamp;  // New public input
+time_check.out === 1;
+```
+
+### Rebuilding After Changes
+
+After modifying the circuit:
+
+```bash
+cd circuits
+pnpm run build
+
+# Re-inject verification keys
+cd ..
+node scripts/inject-vk.js
+
+# Recompile contract
+cd contracts
+cargo build
+```
+
+### Resources
+
+- [thirdweb Arbitrum Documentation](https://portal.thirdweb.com/contracts/arbitrum-stylus/stylus-contract)
+- [Arbitrum Stylus Documentation](https://docs.arbitrum.io/stylus/concepts/how-it-works)
+
