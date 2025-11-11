@@ -1,4 +1,5 @@
 "use client";
+import { Badge } from "@workspace/ui/components/badge";
 import {
   BookTextIcon,
   BoxIcon,
@@ -76,9 +77,13 @@ export function ProjectSidebarLayout(props: {
       group: "Monetize",
       links: [
         {
-          href: `${props.layoutPath}/payments`,
+          href: `${props.layoutPath}/x402`,
           icon: PayIcon,
-          label: "Payments",
+          label: (
+            <span className="flex items-center gap-2">
+              x402 <Badge>New</Badge>
+            </span>
+          ),
         },
         {
           href: `${props.layoutPath}/bridge`,

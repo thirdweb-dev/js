@@ -1,6 +1,6 @@
 const usdCurrencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
-  maximumFractionDigits: 2, // prefix with $
+  maximumFractionDigits: 6, // prefix with $
   minimumFractionDigits: 0, // don't show decimal places if value is a whole number
   notation: "compact", // at max 2 decimal places
   roundingMode: "halfEven", // round to nearest even number, standard practice for financial calculations

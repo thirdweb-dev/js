@@ -94,3 +94,62 @@ export interface AnalyticsQueryParams {
   period?: "day" | "week" | "month" | "year" | "all";
   limit?: number;
 }
+
+export interface X402SettlementsOverall {
+  date: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+interface X402SettlementsByChainId {
+  date: string;
+  chainId: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+export interface X402SettlementsByPayer {
+  date: string;
+  payer: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+interface X402SettlementsByReceiver {
+  date: string;
+  receiver: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+export interface X402SettlementsByResource {
+  date: string;
+  resource: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+interface X402SettlementsByAsset {
+  date: string;
+  asset: string;
+  totalRequests: number;
+  totalValue: number;
+  totalValueUSD: number;
+}
+
+export type X402SettlementStats =
+  | X402SettlementsOverall
+  | X402SettlementsByChainId
+  | X402SettlementsByPayer
+  | X402SettlementsByReceiver
+  | X402SettlementsByResource
+  | X402SettlementsByAsset;
+
+export interface X402QueryParams extends AnalyticsQueryParams {
+  groupBy?: "overall" | "chainId" | "payer" | "resource" | "asset";
+}

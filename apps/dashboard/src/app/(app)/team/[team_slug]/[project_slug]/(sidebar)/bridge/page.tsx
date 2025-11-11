@@ -69,6 +69,9 @@ export default async function Page(props: {
             icon: <WebhookIcon className="size-3.5 text-muted-foreground" />,
           },
         },
+        settings: {
+          href: `/team/${params.team_slug}/${params.project_slug}/settings/payments`,
+        },
         links: [
           {
             type: "docs",
