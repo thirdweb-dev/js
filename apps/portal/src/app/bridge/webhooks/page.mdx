@@ -32,15 +32,14 @@ export const metadata = createMetadata({
 
 Create webhooks to be notified each time a payment is completed in your app.
 
-### Create a Webhook
+## Create a Webhook
 
-You can create a webhook in your project dashboard under the Payments tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
+You can create a webhook in your project dashboard under the Webhooks > Bridge tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
 
-## Parse Webhook Payloads
 
-### Parse Webhook Payloads with the thirdweb SDK
+## Parse Webhook Payload with thirdweb SDK
 
-The thirdweb SDK has a built-in function for parsing payment webhooks:
+The thirdweb SDK has a built-in function for parsing bridge webhook payloads
 
 ```typescript
 import { Bridge } from "thirdweb";
@@ -51,7 +50,7 @@ export async function POST(request: Request) {
   const headers = Object.fromEntries(request.headers.entries());
 
   try {
-    const webhook = await Bridge.Webhook.parse(
+    const payload = await Bridge.Webhook.parse(
       body,
       headers,
       process.env.WEBHOOK_SECRET // Your webhook secret
@@ -68,7 +67,44 @@ export async function POST(request: Request) {
 }
 ```
 
-### Example Payloads
+
+## Verify Payload
+
+<Callout variant="warning" title="Verify payload before processing">
+
+Make sure to verify receiver, destination chain, token address and token amount in the payload before processing it further in your backend to ensure that payload represents expected state of the transaction.
+
+</Callout>
+
+
+You can verify certain fields in the payload by setting the `verify` parameter in the `Bridge.Webhook.parse` function.
+By setting this, the `Bridge.Webhook.parse` function will throw an error if the payload does not match the expected values.
+
+Apart from this you can add custom verification logic on the returned `payload` as per your needs.
+
+```typescript
+const payload = await Bridge.Webhook.parse(
+  body,
+  headers,
+  process.env.WEBHOOK_SECRET,
+  tolerance,
+  // You can set one or more of below shown example parameters
+  {
+    // if receiver address is not this, error will be thrown
+    receiverAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+    // if destination token address is not this, error will be thrown
+    destinationTokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+    // if destination chain id is not this, error will be thrown
+    destinationChainId: 8453,
+    // if destination token amount is less than this, error will be thrown
+    minDestinationAmount: 1000000000000000000n,
+  }
+);
+
+```
+
+
+## Example Payloads
 
 <Tabs defaultValue="bridge">
   <TabsList>
@@ -156,7 +192,7 @@ export async function POST(request: Request) {
   </TabsContent>
 </Tabs>
 
-### Manual Verification
+## Manually Parse Payload
 
 If you prefer to handle verification manually, you can verify webhooks using the Web Crypto API (same method as the SDK):
 

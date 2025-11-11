@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UnderlineLink } from "@workspace/ui/components/UnderlineLink";
 import { formatDistanceToNow } from "date-fns";
 import {
   DotIcon,
+  InfoIcon,
   MoreVerticalIcon,
   PencilIcon,
   PlusIcon,
@@ -25,6 +27,7 @@ import {
   updateWebhook,
 } from "@/api/universal-bridge/developer";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
@@ -435,28 +438,30 @@ function BridgeWebhookModalContent(
           )}
         />
 
-        <FormField
-          name="version"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Version</FormLabel>
-              <Select {...field} onValueChange={field.onChange}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="v2" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2">v2</SelectItem>
-                  <SelectItem value="1">v1</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Select the data format of the webhook payload (v2 recommended,
-                v1 for legacy users).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {props.type === "edit" && props.webhook.version === 1 && (
+          <FormField
+            name="version"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Version</FormLabel>
+                <Select {...field} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="v2" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2">v2</SelectItem>
+                    <SelectItem value="1">v1</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  Select the data format of the webhook payload (v2 recommended,
+                  v1 for legacy users).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {props.type === "create" && (
           <section>
@@ -485,6 +490,22 @@ function BridgeWebhookModalContent(
             </CheckboxWithLabel>
           </section>
         )}
+
+        <Alert variant="warning">
+          <InfoIcon className="size-4" />
+          <AlertTitle> Verify payload before processing </AlertTitle>
+          <AlertDescription>
+            Make sure to verify receiver, destination chain, token address and
+            amount to ensure that it represents the expected state of the
+            transaction before processing it in your backend.{" "}
+            <UnderlineLink
+              href="https://portal.thirdweb.com/bridge/webhooks#verify-payload"
+              target="_blank"
+            >
+              Learn more
+            </UnderlineLink>
+          </AlertDescription>
+        </Alert>
 
         <DialogFooter>
           <Button
