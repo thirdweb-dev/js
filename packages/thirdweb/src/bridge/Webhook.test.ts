@@ -619,4 +619,161 @@ describe("parseIncomingWebhook", () => {
       "$ZodError",
     );
   });
+
+  describe("verify", () => {
+    type VerifyOptions = Parameters<typeof parse>[4];
+
+    async function stringifyAndParse(
+      payload: unknown,
+      verify?: VerifyOptions,
+    ): Promise<WebhookPayload> {
+      const timestamp = Math.floor(Date.now() / 1000).toString();
+      const payloadString =
+        typeof payload === "string" ? payload : JSON.stringify(payload);
+      const signature = await generateSignature(timestamp, payloadString);
+      const headers = {
+        "x-payload-signature": signature,
+        "x-timestamp": timestamp,
+      };
+      return parse(payloadString, headers, secret, 300, verify);
+    }
+
+    async function expectVerifyFailure(
+      payload: unknown,
+      verify: VerifyOptions,
+      message: string,
+    ): Promise<void> {
+      await expect(stringifyAndParse(payload, verify)).rejects.toThrow(message);
+    }
+
+    describe("onchain tx", () => {
+      it("should pass when all verification values match", async () => {
+        const result = await stringifyAndParse(validPayload, {
+          receiverAddress: validWebhook.data.receiver,
+          destinationTokenAddress: validWebhook.data.destinationToken.address,
+          destinationChainId: validWebhook.data.destinationToken.chainId,
+          minDestinationAmount: validWebhook.data.destinationAmount,
+        });
+        expect(result).toEqual(validWebhook);
+      });
+
+      it("should fail if receiverAddress does not match", async () => {
+        const expected = "0x0000000000000000000000000000000000000000";
+        await expectVerifyFailure(
+          validPayload,
+          { receiverAddress: expected },
+          `Verification Failed: receiverAddress mismatch, Expected: ${expected}, Received: ${validWebhook.data.receiver}`,
+        );
+      });
+
+      it("should fail if destinationTokenAddress does not match", async () => {
+        const expected = "0x0000000000000000000000000000000000000001";
+        await expectVerifyFailure(
+          validPayload,
+          { destinationTokenAddress: expected },
+          `Verification Failed: destinationTokenAddress mismatch, Expected: ${expected}, Received: ${validWebhook.data.destinationToken.address}`,
+        );
+      });
+
+      it("should fail if destinationChainId does not match", async () => {
+        const expected = 137;
+        await expectVerifyFailure(
+          validPayload,
+          { destinationChainId: expected },
+          `Verification Failed: destinationChainId mismatch, Expected: ${expected}, Received: ${validWebhook.data.destinationToken.chainId}`,
+        );
+      });
+
+      it("should fail if minDestinationAmount is greater than actual", async () => {
+        const expectedMin = validWebhook.data.destinationAmount + 1n;
+        await expectVerifyFailure(
+          validPayload,
+          { minDestinationAmount: expectedMin },
+          `Verification Failed: minDestinationAmount, Expected minimum amount to be ${expectedMin}, Received: ${validWebhook.data.destinationAmount}`,
+        );
+      });
+    });
+
+    describe("onramp tx", () => {
+      const onrampWebhook: WebhookPayload = {
+        data: {
+          amount: 100n,
+          currency: "USD",
+          currencyAmount: 100,
+          id: "onramp123",
+          onramp: "moonpay",
+          paymentLinkId: "plink_123",
+          purchaseData: {},
+          receiver: "0x1234567890123456789012345678901234567890",
+          sender: "0x1234567890123456789012345678901234567890",
+          status: "COMPLETED",
+          token: {
+            address: "0x1234567890123456789012345678901234567890",
+            chainId: 1,
+            decimals: 18,
+            iconUri: "https://example.com/icon.png",
+            name: "Token",
+            priceUsd: 1.0,
+            symbol: "TKN",
+          },
+          transactionHash: "0x1234567890123456789012345678901234567890",
+        },
+        type: "pay.onramp-transaction",
+        version: 2,
+      };
+      const onrampPayload = {
+        ...onrampWebhook,
+        data: {
+          ...onrampWebhook.data,
+          amount: onrampWebhook.data.amount.toString(),
+        },
+      };
+
+      it("should pass when all verification values match ", async () => {
+        const result = await stringifyAndParse(onrampPayload, {
+          receiverAddress: onrampWebhook.data.receiver,
+          destinationTokenAddress: onrampWebhook.data.token.address,
+          destinationChainId: onrampWebhook.data.token.chainId,
+          minDestinationAmount: onrampWebhook.data.amount,
+        });
+        expect(result).toEqual(onrampWebhook);
+      });
+
+      it("should fail if destinationTokenAddress does not match ", async () => {
+        const expected = "0x0000000000000000000000000000000000000002";
+        await expectVerifyFailure(
+          onrampPayload,
+          { destinationTokenAddress: expected },
+          `Verification Failed: destinationTokenAddress mismatch, Expected: ${expected}, Received: ${onrampWebhook.data.token.address}`,
+        );
+      });
+
+      it("should fail if destinationChainId does not match ", async () => {
+        const expected = 8453;
+        await expectVerifyFailure(
+          onrampPayload,
+          { destinationChainId: expected },
+          `Verification Failed: destinationChainId mismatch, Expected: ${expected}, Received: ${onrampWebhook.data.token.chainId}`,
+        );
+      });
+
+      it("should fail if minDestinationAmount is greater than actual ", async () => {
+        const expectedMin = onrampWebhook.data.amount + 1n;
+        await expectVerifyFailure(
+          onrampPayload,
+          { minDestinationAmount: expectedMin },
+          `Verification Failed: minDestinationAmount, Expected minimum amount to be ${expectedMin}, Received: ${onrampWebhook.data.amount}`,
+        );
+      });
+
+      it("should fail if receiverAddress does not match", async () => {
+        const expected = "0x0000000000000000000000000000000000000003";
+        await expectVerifyFailure(
+          onrampPayload,
+          { receiverAddress: expected },
+          `Verification Failed: receiverAddress mismatch, Expected: ${expected}, Received: ${onrampWebhook.data.receiver}`,
+        );
+      });
+    });
+  });
 });

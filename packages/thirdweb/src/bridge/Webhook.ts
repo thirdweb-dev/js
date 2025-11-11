@@ -118,6 +118,28 @@ export async function parse(
    * The tolerance in seconds for the timestamp verification.
    */
   tolerance = 300, // Default to 5 minutes if not specified
+
+  /**
+   * Add various validations to the parsed payload to ensure it matches the expected values. Throws error if any validation fails.
+   */
+  verify?: {
+    /**
+     * Verify that the payload's the destination token amount (in wei) is greater than `minDestinationAmount` value
+     */
+    minDestinationAmount?: bigint;
+    /**
+     * Verify that the payload's destination token address is the same as `destinationTokenAddress` value
+     */
+    destinationTokenAddress?: string;
+    /**
+     * Verify that the payload's destination chain id is the same as `destinationChainId` value
+     */
+    destinationChainId?: number;
+    /**
+     * Verify that the payload's receiver address is the same as `receiverAddress` value.
+     */
+    receiverAddress?: string;
+  },
 ): Promise<WebhookPayload> {
   // Get the signature and timestamp from headers
   const receivedSignature =
@@ -181,6 +203,91 @@ export async function parse(
     throw new Error(
       "Invalid webhook payload: version 1 is no longer supported, please upgrade to webhook version 2.",
     );
+  }
+
+  if (verify) {
+    // verify receiver address
+    if (verify.receiverAddress) {
+      if (
+        parsedPayload.data.receiver.toLowerCase() !==
+        verify.receiverAddress.toLowerCase()
+      ) {
+        throw new Error(
+          `Verification Failed: receiverAddress mismatch, Expected: ${verify.receiverAddress}, Received: ${parsedPayload.data.receiver}`,
+        );
+      }
+    }
+
+    // verify destination token address
+    if (verify.destinationTokenAddress) {
+      // onchain transaction
+      if ("destinationToken" in parsedPayload.data) {
+        if (
+          parsedPayload.data.destinationToken.address.toLowerCase() !==
+          verify.destinationTokenAddress.toLowerCase()
+        ) {
+          throw new Error(
+            `Verification Failed: destinationTokenAddress mismatch, Expected: ${verify.destinationTokenAddress}, Received: ${parsedPayload.data.destinationToken.address}`,
+          );
+        }
+      }
+      // onramp transaction
+      else if ("onramp" in parsedPayload.data) {
+        if (
+          parsedPayload.data.token.address.toLowerCase() !==
+          verify.destinationTokenAddress.toLowerCase()
+        ) {
+          throw new Error(
+            `Verification Failed: destinationTokenAddress mismatch, Expected: ${verify.destinationTokenAddress}, Received: ${parsedPayload.data.token.address}`,
+          );
+        }
+      }
+    }
+
+    // verify destination chain id
+    if (verify.destinationChainId) {
+      // onchain tx
+      if ("destinationToken" in parsedPayload.data) {
+        if (
+          parsedPayload.data.destinationToken.chainId !==
+          verify.destinationChainId
+        ) {
+          throw new Error(
+            `Verification Failed: destinationChainId mismatch, Expected: ${verify.destinationChainId}, Received: ${parsedPayload.data.destinationToken.chainId}`,
+          );
+        }
+      }
+      // onramp tx
+      else if ("onramp" in parsedPayload.data) {
+        if (parsedPayload.data.token.chainId !== verify.destinationChainId) {
+          throw new Error(
+            `Verification Failed: destinationChainId mismatch, Expected: ${verify.destinationChainId}, Received: ${parsedPayload.data.token.chainId}`,
+          );
+        }
+      }
+    }
+
+    // verify amount
+    if (verify.minDestinationAmount) {
+      // onchain tx
+      if ("destinationAmount" in parsedPayload.data) {
+        if (
+          parsedPayload.data.destinationAmount < verify.minDestinationAmount
+        ) {
+          throw new Error(
+            `Verification Failed: minDestinationAmount, Expected minimum amount to be ${verify.minDestinationAmount}, Received: ${parsedPayload.data.destinationAmount}`,
+          );
+        }
+      }
+      // onramp tx
+      else if ("onramp" in parsedPayload.data) {
+        if (parsedPayload.data.amount < verify.minDestinationAmount) {
+          throw new Error(
+            `Verification Failed: minDestinationAmount, Expected minimum amount to be ${verify.minDestinationAmount}, Received: ${parsedPayload.data.amount}`,
+          );
+        }
+      }
+    }
   }
 
   return parsedPayload satisfies WebhookPayload;
