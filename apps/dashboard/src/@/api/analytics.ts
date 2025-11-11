@@ -16,6 +16,8 @@ import type {
   WalletStats,
   WebhookLatencyStats,
   WebhookSummaryStats,
+  X402QueryParams,
+  X402SettlementStats,
 } from "@/types/analytics";
 import { getChains } from "./chain";
 
@@ -905,4 +907,44 @@ export function getInsightUsage(
   authToken: string,
 ) {
   return cached_getInsightUsage(normalizedParams(params), authToken);
+}
+
+const cached_getX402Settlements = unstable_cache(
+  async (
+    params: X402QueryParams,
+    authToken: string,
+  ): Promise<X402SettlementStats[]> => {
+    const searchParams = buildSearchParams(params);
+
+    if (params.groupBy) {
+      searchParams.append("groupBy", params.groupBy);
+    }
+
+    const res = await fetchAnalytics({
+      authToken,
+      url: `v2/x402/settlements?${searchParams.toString()}`,
+      init: {
+        method: "GET",
+      },
+    });
+
+    if (res?.status !== 200) {
+      const reason = await res?.text();
+      console.error(
+        `Failed to fetch x402 settlements: ${res?.status} - ${res.statusText} - ${reason}`,
+      );
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data as X402SettlementStats[];
+  },
+  ["getX402Settlements"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export function getX402Settlements(params: X402QueryParams, authToken: string) {
+  return cached_getX402Settlements(normalizedParams(params), authToken);
 }
