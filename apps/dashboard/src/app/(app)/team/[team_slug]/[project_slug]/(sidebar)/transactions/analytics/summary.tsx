@@ -1,7 +1,12 @@
+"use client";
+import { useQuery } from "@tanstack/react-query";
 import { ActivityIcon, CoinsIcon } from "lucide-react";
 import { toEther } from "thirdweb/utils";
 import { StatCard } from "@/components/analytics/stat"; // Assuming correct path
-import type { TransactionSummaryData } from "../lib/analytics-summary.client";
+import {
+  getTransactionAnalyticsSummary,
+  type TransactionSummaryData,
+} from "../lib/analytics-summary.client";
 
 // Renders the UI based on fetched data or pending state
 function TransactionAnalyticsSummaryUI(props: {
@@ -88,9 +93,37 @@ function TransactionAnalyticsSummaryUI(props: {
 export function TransactionAnalyticsSummary(props: {
   teamId: string;
   clientId: string;
-  initialData: TransactionSummaryData | undefined;
+  authToken: string;
+  startDate?: string;
+  endDate?: string;
 }) {
+  const engineTxSummaryQuery = useQuery({
+    queryKey: [
+      "engine-tx-analytics-summary",
+      props.teamId,
+      props.clientId,
+      props.authToken,
+      props.startDate,
+      props.endDate,
+    ],
+    queryFn: async () => {
+      const data = await getTransactionAnalyticsSummary({
+        clientId: props.clientId,
+        teamId: props.teamId,
+        authToken: props.authToken,
+        startDate: props.startDate,
+        endDate: props.endDate,
+      });
+      return data;
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
   return (
-    <TransactionAnalyticsSummaryUI data={props.initialData} isPending={false} />
+    <TransactionAnalyticsSummaryUI
+      data={engineTxSummaryQuery.data}
+      isPending={engineTxSummaryQuery.isPending}
+    />
   );
 }
