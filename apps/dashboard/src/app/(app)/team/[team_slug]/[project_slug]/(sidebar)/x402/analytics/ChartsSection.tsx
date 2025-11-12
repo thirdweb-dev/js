@@ -11,7 +11,7 @@ export function ChartMetricSwitcher() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const metric = (searchParams.get("metric") as Metric) || "volume";
+  const metric = (searchParams.get("metric") as Metric) || "payments";
 
   const handleMetricChange = useCallback(
     (newMetric: Metric) => {
