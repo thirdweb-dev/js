@@ -5,9 +5,11 @@ import {
   type Range,
 } from "@/components/analytics/date-range-selector";
 import type {
+  X402SettlementsByChainId,
   X402SettlementsByPayer,
   X402SettlementsByResource,
 } from "@/types/analytics";
+import { X402SettlementsByChainChartCard } from "./X402SettlementsByChainChartCard";
 import { X402SettlementsByPayerChartCard } from "./X402SettlementsByPayerChartCard";
 import { X402SettlementsByResourceChartCard } from "./X402SettlementsByResourceChartCard";
 
@@ -165,6 +167,83 @@ export function X402SettlementsByPayerChart(
       searchParamsUsed={["from", "to", "interval", "metric"]}
     >
       <AsyncX402SettlementsByPayerChart {...props} />
+    </ResponsiveSuspense>
+  );
+}
+
+// Payments by Chain Chart
+type X402SettlementsByChainChartProps = {
+  interval: "day" | "week";
+  range: Range;
+  stats: X402SettlementsByChainId[];
+  isPending: boolean;
+  metric?: "payments" | "volume";
+};
+
+function X402SettlementsByChainChartUI({
+  stats,
+  isPending,
+  metric = "payments",
+}: X402SettlementsByChainChartProps) {
+  return (
+    <X402SettlementsByChainChartCard
+      rawData={stats}
+      isPending={isPending}
+      metric={metric}
+    />
+  );
+}
+
+type AsyncX402SettlementsByChainChartProps = Omit<
+  X402SettlementsByChainChartProps,
+  "stats" | "isPending"
+> & {
+  teamId: string;
+  projectId: string;
+  authToken: string;
+};
+
+async function AsyncX402SettlementsByChainChart(
+  props: AsyncX402SettlementsByChainChartProps,
+) {
+  const range = props.range ?? getLastNDaysRange("last-30");
+
+  const stats = await getX402Settlements(
+    {
+      from: range.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: range.to,
+      groupBy: "chainId",
+    },
+    props.authToken,
+  ).catch((error) => {
+    console.error(error);
+    return [];
+  });
+
+  return (
+    <X402SettlementsByChainChartUI
+      {...props}
+      isPending={false}
+      range={range}
+      stats={stats as X402SettlementsByChainId[]}
+    />
+  );
+}
+
+export function X402SettlementsByChainChart(
+  props: AsyncX402SettlementsByChainChartProps,
+) {
+  return (
+    <ResponsiveSuspense
+      fallback={
+        <X402SettlementsByChainChartUI {...props} isPending={true} stats={[]} />
+      }
+      searchParamsUsed={["from", "to", "interval", "metric"]}
+    >
+      <AsyncX402SettlementsByChainChart {...props} />
     </ResponsiveSuspense>
   );
 }

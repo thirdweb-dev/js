@@ -102,7 +102,7 @@ export interface X402SettlementsOverall {
   totalValueUSD: number;
 }
 
-interface X402SettlementsByChainId {
+export interface X402SettlementsByChainId {
   date: string;
   chainId: string;
   totalRequests: number;
@@ -151,5 +151,5 @@ export type X402SettlementStats =
   | X402SettlementsByAsset;
 
 export interface X402QueryParams extends AnalyticsQueryParams {
-  groupBy?: "overall" | "chainId" | "payer" | "resource" | "asset";
+  groupBy?: "overall" | "chainId" | "payer" | "resource" | "asset" | "receiver";
 }
