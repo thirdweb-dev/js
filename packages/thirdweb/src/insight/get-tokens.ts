@@ -59,6 +59,7 @@ export async function getOwnedTokens(args: {
     owner_address: [ownerAddress],
     token_address: tokenAddresses ? tokenAddresses : undefined,
     sort_by: "balance",
+    sort_order: "desc",
   };
 
   const result = await getV1Tokens({
