@@ -18,7 +18,7 @@ Welcome, AI copilots! This guide captures the coding standards, architectural de
 2. Formatting & Linting
 
 - Biome governs formatting and linting; its rules live in biome.json.
-- Run pnpm biome check --apply before committing.
+- Run `pnpm fix` & `pnpm lint` before committing, make sure there are no linting errors.
 - Avoid editor‑specific configs; rely on the shared settings.
 - make sure everything builds after each file change by running `pnpm build`
 
@@ -136,7 +136,7 @@ export function reportContractDeployed(properties: {
 }
 ```
 
-- **Client-side only**: never import `posthog-js` in server components.  
+- **Client-side only**: never import `posthog-js` in server components.
 - **Housekeeping**: Inform **#eng-core-services** before renaming or removing an existing event.
 
 ⸻
