@@ -47,7 +47,7 @@ export function AnnouncementBanner() {
   return (
     <AnnouncementBannerUI
       href="https://blog.thirdweb.com/changelog/project-view-update-wallets/"
-      label="Project View Update - Wallets"
+      label="Transactions, Vault, and Account Abstraction are now part of Wallets in Project Dashboard. View changes"
       trackingLabel="project-view-update-wallets"
     />
   );
