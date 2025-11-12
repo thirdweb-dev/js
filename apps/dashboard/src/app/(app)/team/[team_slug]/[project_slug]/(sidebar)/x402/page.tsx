@@ -75,7 +75,7 @@ export default async function Page(props: {
   // Get project wallet for prefilling the code snippet
   const projectWallet = await getProjectWallet(project);
 
-  const metric = (searchParams.metric as "payments" | "volume") || "volume";
+  const metric = (searchParams.metric as "payments" | "volume") || "payments";
 
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
