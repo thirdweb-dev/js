@@ -101,13 +101,14 @@ export type AutoConnectProps = {
    *
    * ```tsx
    * <AutoConnect
-   *  onConnect={(wallet) => {
-   *    console.log("auto connected to", wallet)
+   *  onConnect={(activeWallet, otherWallets) => {
+   *    console.log("auto connected to", activeWallet)
+   *    console.log("other wallets that were also connected", otherWallets)
    *  }}
    * />
    * ```
    */
-  onConnect?: (wallet: Wallet) => void;
+  onConnect?: (activeWallet: Wallet, otherWallets: Wallet[]) => void;
 
   /**
    * Optional chain to autoconnect to

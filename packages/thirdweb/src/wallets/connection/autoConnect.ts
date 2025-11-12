@@ -17,8 +17,9 @@ import type { AutoConnectProps } from "./types.js";
  *
  * const autoConnected = await autoConnect({
  *  client,
- *  onConnect: (wallet) => {
- *    console.log("wallet", wallet);
+ *  onConnect: (activeWallet, allConnectedWallets) => {
+ *    console.log("active wallet", activeWallet);
+ *    console.log("all connected wallets", allConnectedWallets);
  *  },
  * });
  * ```

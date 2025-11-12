@@ -16,6 +16,7 @@ import {
   useSiweAuth,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectEmbedProps } from "../../../../core/hooks/connection/ConnectEmbedProps.js";
+import type { OnConnectCallback } from "../../../../core/hooks/connection/types.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../../core/hooks/wallets/useIsAutoConnecting.js";
@@ -354,7 +355,7 @@ const ConnectEmbedContent = (props: {
     | true
     | undefined;
   localeId: LocaleId;
-  onConnect: ((wallet: Wallet) => void) | undefined;
+  onConnect: OnConnectCallback | undefined;
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
   hiddenWallets: WalletId[] | undefined;

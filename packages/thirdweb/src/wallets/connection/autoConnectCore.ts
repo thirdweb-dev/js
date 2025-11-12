@@ -152,22 +152,12 @@ const _autoConnectCore = async ({
 
     try {
       // connected wallet could be activeWallet or smart wallet
-      const connectedWallet = await (connectOverride
+      await (connectOverride
         ? connectOverride(activeWallet)
         : manager.connect(activeWallet, {
             accountAbstraction: props.accountAbstraction,
             client: props.client,
           }));
-      if (connectedWallet) {
-        autoConnected = true;
-        try {
-          onConnect?.(connectedWallet);
-        } catch {
-          // ignore
-        }
-      } else {
-        manager.activeWalletConnectionStatusStore.setValue("disconnected");
-      }
     } catch (e) {
       if (e instanceof Error) {
         console.warn("Error auto connecting wallet:", e.message);
@@ -216,6 +206,20 @@ const _autoConnectCore = async ({
     });
   }
   manager.isAutoConnecting.setValue(false);
+
+  const connectedActiveWallet = manager.activeWalletStore.getValue();
+  const allConnectedWallets = manager.connectedWallets.getValue();
+  if (connectedActiveWallet) {
+    autoConnected = true;
+    try {
+      onConnect?.(connectedActiveWallet, allConnectedWallets);
+    } catch (e) {
+      console.error("Error calling onConnect callback:", e);
+    }
+  } else {
+    manager.activeWalletConnectionStatusStore.setValue("disconnected");
+  }
+
   return autoConnected; // useQuery needs a return value
 };
 

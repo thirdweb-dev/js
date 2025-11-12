@@ -19,5 +19,17 @@ const getEcosystemWallet = () => {
 export function EcosystemConnectEmbed(
   props?: Omit<ConnectButtonProps, "client" | "theme">,
 ) {
-  return <StyledConnectEmbed {...props} wallets={[getEcosystemWallet()]} />;
+  return (
+    <StyledConnectEmbed
+      {...props}
+      wallets={[getEcosystemWallet()]}
+      onConnect={(activeWallet, allConnectedWallets) => {
+        console.log("active wallet", activeWallet.id);
+        console.log(
+          "all connected wallets",
+          allConnectedWallets.map((wallet) => wallet.id),
+        );
+      }}
+    />
+  );
 }

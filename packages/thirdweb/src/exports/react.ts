@@ -23,6 +23,7 @@ export type {
   TransactionOptions,
 } from "../react/core/hooks/connection/ConnectButtonProps.js";
 export type { ConnectEmbedProps } from "../react/core/hooks/connection/ConnectEmbedProps.js";
+export type { OnConnectCallback } from "../react/core/hooks/connection/types.js";
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
 // contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
