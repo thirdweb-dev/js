@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 
 type FeatureCardProps = {
   title: string;
-  description: string;
+  description: string | undefined;
   badge?: { label: string; variant?: "outline" | "success" | "default" };
   id: string;
   icon: React.FC<{ className?: string }>;
@@ -49,14 +49,18 @@ export function FeatureCard(props: FeatureCardProps) {
         </div>
 
         {/* title and description */}
-        <h3 className="font-semibold text-lg text-foreground mb-1">
-          {props.title}
-        </h3>
-        <p className="text-muted-foreground text-sm font-medium text-pretty">
-          {props.description}
-        </p>
+        <div className="flex flex-col gap-1">
+          <h3 className="font-semibold text-lg text-foreground">
+            {props.title}
+          </h3>
+          {props.description && (
+            <p className="text-muted-foreground text-sm font-medium text-pretty">
+              {props.description}
+            </p>
+          )}
+        </div>
 
-        <div className="h-5" />
+        <div className="h-3" />
 
         <div className="space-y-3">
           {props.setupTime && (

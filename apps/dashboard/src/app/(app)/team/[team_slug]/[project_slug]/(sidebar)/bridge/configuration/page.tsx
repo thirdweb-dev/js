@@ -3,9 +3,10 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
 import { getFees } from "@/api/universal-bridge/developer";
+import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getProjectWallet } from "@/lib/server/project-wallet";
 import { loginRedirect } from "@/utils/redirects";
-import { ProjectSettingsBreadcrumb } from "../_components/project-settings-breadcrumb";
+import { RouteDiscovery } from "../RouteDiscovery";
 import { PayConfig } from "./PayConfig";
 
 export default async function Page(props: {
@@ -21,7 +22,7 @@ export default async function Page(props: {
   ]);
 
   if (!authToken) {
-    loginRedirect(`/team/${team_slug}/${project_slug}/settings/payments`);
+    loginRedirect(`/team/${team_slug}/${project_slug}/bridge/configuration`);
   }
 
   if (!team) {
@@ -56,14 +57,13 @@ export default async function Page(props: {
     };
   }
 
-  return (
-    <div className="flex flex-col gap-5">
-      <ProjectSettingsBreadcrumb
-        teamSlug={team_slug}
-        projectSlug={project_slug}
-        page="Payments"
-      />
+  const client = getClientThirdwebClient({
+    jwt: authToken,
+    teamId: project.teamId,
+  });
 
+  return (
+    <div className="flex flex-col gap-6">
       <PayConfig
         fees={fees}
         project={project}
@@ -72,6 +72,8 @@ export default async function Page(props: {
         teamSlug={team_slug}
         authToken={authToken}
       />
+
+      <RouteDiscovery client={client} project={project} />
     </div>
   );
 }

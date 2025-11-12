@@ -72,7 +72,7 @@ export default async function Page(props: {
           },
         },
         settings: {
-          href: `/team/${params.team_slug}/${params.project_slug}/settings/payments`,
+          href: `/team/${params.team_slug}/${params.project_slug}/bridge/configuration`,
         },
         links: [
           {

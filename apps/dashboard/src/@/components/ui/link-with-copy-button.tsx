@@ -12,6 +12,7 @@ export function LinkWithCopyButton(props: {
   textToCopy: string;
   copyTooltip: string;
   className?: string;
+  linkIconClassName?: string;
 }) {
   const [isCopied, setIsCopied] = useState(false);
   const Icon = isCopied ? CheckIcon : CopyIcon;
@@ -37,8 +38,15 @@ export function LinkWithCopyButton(props: {
         target="_blank"
         className="text-sm text-muted-foreground hover:underline flex items-center gap-1 tabular-nums flex-1 truncate hover:text-foreground group"
       >
-        <span className="max-w-full truncate">{props.textToShow}</span>
-        <ArrowUpRightIcon className="size-3.5 opacity-70 shrink-0 group-hover:opacity-100" />
+        <span className="max-w-full truncate tabular-nums">
+          {props.textToShow}
+        </span>
+        <ArrowUpRightIcon
+          className={cn(
+            "size-3.5 opacity-70 shrink-0 group-hover:opacity-100",
+            props.linkIconClassName,
+          )}
+        />
       </Link>
     </div>
   );

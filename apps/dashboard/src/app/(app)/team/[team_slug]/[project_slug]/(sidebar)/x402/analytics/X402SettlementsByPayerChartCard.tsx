@@ -22,7 +22,7 @@ export function X402SettlementsByPayerChartCard({
   const maxPayersToDisplay = 10;
   const isVolumeMetric = metric === "volume";
 
-  const { data, payersToDisplay, chartConfig, isAllEmpty } = useMemo(() => {
+  const { data, chartConfig } = useMemo(() => {
     const dateToValueMap: Map<string, ChartData> = new Map();
     const payerToCountMap: Map<string, number> = new Map();
 

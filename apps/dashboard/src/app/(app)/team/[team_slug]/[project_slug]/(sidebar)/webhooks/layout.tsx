@@ -46,7 +46,7 @@ export default async function Layout(props: {
           path: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
         },
         {
-          name: "Payments & Bridge",
+          name: "Bridge",
           path: `/team/${params.team_slug}/${params.project_slug}/webhooks/payments`,
         },
       ]}
