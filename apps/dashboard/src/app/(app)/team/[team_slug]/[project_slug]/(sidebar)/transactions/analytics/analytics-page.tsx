@@ -1,14 +1,16 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "@workspace/ui/components/spinner";
+import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/project/projects";
+import { getLastNDaysRange } from "@/components/analytics/date-range-selector";
+import { normalizeTimeISOString } from "@/lib/time";
 import { UnifiedTransactionsTable } from "../components/transactions-table.client";
 import { getTransactionAnalyticsSummary } from "../lib/analytics-summary.client";
 import type { Wallet } from "../server-wallets/wallet-table/types";
 import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
 import { EngineChecklist } from "./ftux.client";
-import { TransactionAnalyticsSummary } from "./summary";
 import { TransactionsAnalytics } from "./tx-chart/tx-chart";
 
 export function TransactionsAnalyticsPageContent(props: {
@@ -24,18 +26,30 @@ export function TransactionsAnalyticsPageContent(props: {
   testSolanaTxWithWallet: string | undefined;
   solanaWallets: SolanaWallet[];
 }) {
+  const defaultRange = useMemo(() => {
+    const range = getLastNDaysRange("last-30");
+    return {
+      from: normalizeTimeISOString(range.from),
+      to: normalizeTimeISOString(range.to),
+    };
+  }, []);
+
   const engineTxSummaryQuery = useQuery({
     queryKey: [
       "engine-tx-analytics-summary",
       props.teamId,
       props.project.publishableKey,
       props.authToken,
+      defaultRange.from,
+      defaultRange.to,
     ],
     queryFn: async () => {
       const data = await getTransactionAnalyticsSummary({
         clientId: props.project.publishableKey,
         teamId: props.teamId,
         authToken: props.authToken,
+        startDate: defaultRange.from,
+        endDate: defaultRange.to,
       });
       return data;
     },
@@ -70,19 +84,12 @@ export function TransactionsAnalyticsPageContent(props: {
       />
 
       {props.showAnalytics && hasTransactions && (
-        <div className="flex flex-col gap-6">
-          <TransactionAnalyticsSummary
-            clientId={props.project.publishableKey}
-            teamId={props.project.teamId}
-            initialData={engineTxSummaryQuery.data}
-          />
-          <TransactionsAnalytics
-            project={props.project}
-            authToken={props.authToken}
-            teamSlug={props.teamSlug}
-            wallets={props.wallets ?? []}
-          />
-        </div>
+        <TransactionsAnalytics
+          project={props.project}
+          authToken={props.authToken}
+          teamSlug={props.teamSlug}
+          wallets={props.wallets ?? []}
+        />
       )}
 
       <UnifiedTransactionsTable

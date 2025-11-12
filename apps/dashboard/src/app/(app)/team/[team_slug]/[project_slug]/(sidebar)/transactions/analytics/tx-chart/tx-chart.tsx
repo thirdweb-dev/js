@@ -9,6 +9,7 @@ import {
 import { IntervalSelector } from "@/components/analytics/interval-selector";
 import { normalizeTimeISOString } from "@/lib/time";
 import type { Wallet } from "../../server-wallets/wallet-table/types";
+import { TransactionAnalyticsSummary } from "../summary";
 import { getTransactionsChartData } from "./data";
 import { TransactionsChartCardUI } from "./tx-chart-ui";
 
@@ -21,12 +22,15 @@ export function TransactionsAnalytics(props: {
   const [range, setRange] = useState(() => getLastNDaysRange("last-30"));
   const [interval, setInterval] = useState<"day" | "week">("day");
 
+  const normalizedFrom = normalizeTimeISOString(range.from);
+  const normalizedTo = normalizeTimeISOString(range.to);
+
   const params = {
     clientId: props.project.publishableKey,
-    from: normalizeTimeISOString(range.from),
+    from: normalizedFrom,
     interval: interval,
     teamId: props.project.teamId,
-    to: normalizeTimeISOString(range.to),
+    to: normalizedTo,
     authToken: props.authToken,
   };
 
@@ -56,6 +60,13 @@ export function TransactionsAnalytics(props: {
           />
         </div>
       </div>
+      <TransactionAnalyticsSummary
+        authToken={props.authToken}
+        clientId={props.project.publishableKey}
+        teamId={props.project.teamId}
+        startDate={normalizedFrom}
+        endDate={normalizedTo}
+      />
       <TransactionsChartCardUI
         isPending={engineTxAnalytics.isPending}
         project={props.project}

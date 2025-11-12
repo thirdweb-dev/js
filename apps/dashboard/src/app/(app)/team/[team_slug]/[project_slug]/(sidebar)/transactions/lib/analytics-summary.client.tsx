@@ -27,8 +27,21 @@ export async function getTransactionAnalyticsSummary(props: {
   teamId: string;
   clientId: string;
   authToken: string;
+  startDate?: string;
+  endDate?: string;
 }): Promise<TransactionSummaryData> {
-  const body = {};
+  const body: {
+    startDate?: string;
+    endDate?: string;
+  } = {};
+
+  if (props.startDate) {
+    body.startDate = props.startDate;
+  }
+
+  if (props.endDate) {
+    body.endDate = props.endDate;
+  }
   const defaultData: TransactionSummaryData = {
     totalCount: 0,
     totalGasCostWei: "0",
