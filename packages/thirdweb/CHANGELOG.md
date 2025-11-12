@@ -1,5 +1,34 @@
 # thirdweb
 
+## 5.112.0
+
+### Minor Changes
+
+- [#8403](https://github.com/thirdweb-dev/js/pull/8403) [`d0bbbfd`](https://github.com/thirdweb-dev/js/commit/d0bbbfd39d2c55554e8fe9c7d2d25d0fc645eeaf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add all connected wallets in all onConnect callbacks
+
+### Patch Changes
+
+- [#8402](https://github.com/thirdweb-dev/js/pull/8402) [`e26d81c`](https://github.com/thirdweb-dev/js/commit/e26d81ce1d92e96de2ae23b5b53f5278c9ec772f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update useAuthToken() to find the auth token for any connected wallet instead of just the active one
+
+- [#8395](https://github.com/thirdweb-dev/js/pull/8395) [`a54c1ab`](https://github.com/thirdweb-dev/js/commit/a54c1aba350bf1672b2c3fc1ffc702cf2e36bb49) Thanks [@MananTank](https://github.com/MananTank)! - Add `verify` parameter to `Bridge.Webhook.parse` function to validate the payload
+
+  ### Example
+
+  ```ts
+  import { Bridge } from "thirdweb";
+
+  const payload = await Bridge.Webhook.parse(
+    body,
+    headers,
+    process.env.WEBHOOK_SECRET,
+    tolerance,
+    {
+      // throw an error if the `payload` doesn't have this receiver address set
+      receiverAddress: "0x1234567890123456789012345678901234567890",
+    },
+  );
+  ```
+
 ## 5.111.10
 
 ### Patch Changes
