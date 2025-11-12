@@ -1,14 +1,12 @@
 import { FeatureCard } from "@/components/blocks/FeatureCard";
 import { ThirdwebIcon } from "../icons/ThirdwebMiniLogo";
 import {
-  accountAbstractionsFeatureCards,
   aiFeatureCards,
   bridgeFeatureCards,
-  contractsFeatureCards,
   type FeatureCardMetadata,
-  paymentsFeatureCards,
-  transactionsFeatureCards,
+  tokensFeatureCards,
   walletsFeatureCards,
+  x402FeatureCards,
 } from "./data/pages-metadata";
 
 export default function Page() {
@@ -37,22 +35,11 @@ export default function Page() {
       </section>
 
       <div className="container max-w-5xl space-y-12">
-        <FeatureSection featureCards={aiFeatureCards} title="AI" />
-        <FeatureSection featureCards={walletsFeatureCards} title="Wallets" />
-        <FeatureSection
-          featureCards={transactionsFeatureCards}
-          title="Transactions"
-        />
-        <FeatureSection
-          featureCards={contractsFeatureCards}
-          title="Contracts"
-        />
-        <FeatureSection featureCards={paymentsFeatureCards} title="Payments" />
-        <FeatureSection featureCards={bridgeFeatureCards} title="Bridge" />
-        <FeatureSection
-          featureCards={accountAbstractionsFeatureCards}
-          title="Account Abstraction"
-        />
+        <FeatureSection title="AI" featureCards={aiFeatureCards} />
+        <FeatureSection title="Wallets" featureCards={walletsFeatureCards} />
+        <FeatureSection title="Bridge" featureCards={bridgeFeatureCards} />
+        <FeatureSection title="Tokens" featureCards={tokensFeatureCards} />
+        <FeatureSection title="x402" featureCards={x402FeatureCards} />
       </div>
     </main>
   );
@@ -68,7 +55,7 @@ function FeatureSection(props: {
         {props.title}
       </h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {props.featureCards.slice(0, 6).map((card) => (
+        {props.featureCards.map((card) => (
           <FeatureCard
             key={card.title}
             description={card.description}

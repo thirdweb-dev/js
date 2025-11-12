@@ -1,7 +1,7 @@
 import { CircleDollarSignIcon } from "lucide-react";
 import ThirdwebProvider from "@/components/thirdweb-provider";
-import { PageLayout } from "../../../components/blocks/APIHeader";
-import { createMetadata } from "../../../lib/metadata";
+import { PageLayout } from "../../components/blocks/APIHeader";
+import { createMetadata } from "../../lib/metadata";
 import { X402Playground } from "./components/X402Playground";
 
 const title = "x402 Payments";
@@ -26,7 +26,7 @@ export default function Page() {
         icon={CircleDollarSignIcon}
         title={title}
         description={description}
-        docsLink="https://portal.thirdweb.com/payments/x402?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/x402?utm_source=playground"
       >
         <X402Playground />
       </PageLayout>

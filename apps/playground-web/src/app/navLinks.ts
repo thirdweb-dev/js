@@ -1,15 +1,12 @@
 "use client";
 
 import {
-  ArrowLeftRightIcon,
   BotIcon,
   BringToFrontIcon,
   Code2Icon,
+  DollarSignIcon,
 } from "lucide-react";
 import type { ShadcnSidebarLink } from "@/components/blocks/full-width-sidebar-layout";
-import { ContractIcon } from "../icons/ContractIcon";
-import { PayIcon } from "../icons/PayIcon";
-import { SmartAccountIcon } from "../icons/SmartAccountIcon";
 import { TokenIcon } from "../icons/TokenIcon";
 import { WalletProductIcon } from "../icons/WalletProductIcon";
 
@@ -98,35 +95,61 @@ const wallets: ShadcnSidebarLink = {
         },
       ],
     },
-  ],
-};
-
-const contracts: ShadcnSidebarLink = {
-  subMenu: {
-    label: "Contracts",
-    icon: ContractIcon,
-  },
-  links: [
     {
-      label: "Overview",
-      href: "/contracts",
-      exactMatch: true,
+      subMenu: {
+        label: "Transactions",
+      },
+      links: [
+        {
+          label: "Overview",
+          href: "/transactions",
+          exactMatch: true,
+        },
+        {
+          href: "/transactions/users",
+          label: "From User Wallets",
+        },
+        {
+          href: "/transactions/airdrop-tokens",
+          label: "Airdrop Tokens",
+        },
+        {
+          href: "/transactions/mint-tokens",
+          label: "Mint NFTs",
+        },
+        {
+          href: "/transactions/webhooks",
+          label: "Webhooks",
+        },
+      ],
     },
     {
-      href: "/contracts/read",
-      label: "Read Contract",
-    },
-    {
-      href: "/contracts/write",
-      label: "Write Contract",
-    },
-    {
-      href: "/contracts/extensions",
-      label: "Pre-built Extensions",
-    },
-    {
-      href: "/contracts/events",
-      label: "Listen Contract Events",
+      subMenu: {
+        label: "Account Abstraction",
+      },
+      links: [
+        {
+          label: "Overview",
+          href: "/account-abstraction",
+          exactMatch: true,
+        },
+        {
+          href: "/account-abstraction/eip-4337",
+          label: "EIP-4337",
+        },
+        {
+          href: "/account-abstraction/eip-7702",
+          label: "EIP-7702",
+        },
+        {
+          href: "/account-abstraction/eip-5792",
+          label: "EIP-5792",
+        },
+        {
+          href: "/account-abstraction/native-aa",
+          label: "Native AA (zkSync)",
+        },
+      ],
     },
   ],
 };
@@ -153,66 +176,6 @@ const tokens: ShadcnSidebarLink = {
   ],
 };
 
-const accountAbstractions: ShadcnSidebarLink = {
-  subMenu: {
-    label: "Account Abstraction",
-    icon: SmartAccountIcon,
-  },
-  links: [
-    {
-      label: "Overview",
-      href: "/account-abstraction",
-      exactMatch: true,
-    },
-    {
-      href: "/account-abstraction/eip-4337",
-      label: "EIP-4337",
-    },
-    {
-      href: "/account-abstraction/eip-7702",
-      label: "EIP-7702",
-    },
-    {
-      href: "/account-abstraction/eip-5792",
-      label: "EIP-5792",
-    },
-    {
-      href: "/account-abstraction/native-aa",
-      label: "Native AA (zkSync)",
-    },
-  ],
-};
-
-const payments: ShadcnSidebarLink = {
-  subMenu: {
-    label: "Payments",
-    icon: PayIcon,
-  },
-  links: [
-    {
-      label: "Overview",
-      href: "/payments",
-      exactMatch: true,
-    },
-    {
-      href: "/payments/fund-wallet",
-      label: "Buy Crypto",
-    },
-    {
-      href: "/payments/commerce",
-      label: "Checkout",
-    },
-    {
-      href: "/payments/transactions",
-      label: "Onchain Transaction",
-    },
-    {
-      href: "/payments/x402",
-      label: "x402",
-    },
-  ],
-};
-
 const bridge: ShadcnSidebarLink = {
   subMenu: {
     label: "Bridge",
@@ -220,38 +183,29 @@ const bridge: ShadcnSidebarLink = {
   },
   links: [
     {
-      href: "/bridge/swap-widget",
-      label: "Swap Widget",
-    },
-  ],
-};
-
-const transactions: ShadcnSidebarLink = {
-  subMenu: {
-    label: "Transactions",
-    icon: ArrowLeftRightIcon,
-  },
-  links: [
-    {
       label: "Overview",
-      href: "/transactions",
+      href: "/bridge",
       exactMatch: true,
     },
     {
-      href: "/transactions/users",
-      label: "From User Wallets",
+      href: "/bridge/swap-widget",
+      label: "Swap Widget",
     },
     {
-      href: "/transactions/airdrop-tokens",
-      label: "Airdrop Tokens",
+      href: "/bridge/buy-widget",
+      label: "Buy Widget",
     },
     {
-      href: "/transactions/mint-tokens",
-      label: "Mint NFTs",
+      href: "/bridge/checkout-widget",
+      label: "Checkout Widget",
     },
     {
-      href: "/transactions/webhooks",
-      label: "Webhooks",
+      href: "/bridge/transaction-widget",
+      label: "Transaction Widget",
+    },
+    {
+      href: "/bridge/transaction-button",
+      label: "Transaction Button",
     },
   ],
 };
@@ -259,12 +213,13 @@ const transactions: ShadcnSidebarLink = {
 export const sidebarLinks: ShadcnSidebarLink[] = [
   ai,
   wallets,
-  transactions,
-  contracts,
-  payments,
   bridge,
   tokens,
-  accountAbstractions,
+  {
+    label: "x402",
+    href: "/x402",
+    icon: DollarSignIcon,
+  },
   {
     href: "/reference",
     label: "API Reference",

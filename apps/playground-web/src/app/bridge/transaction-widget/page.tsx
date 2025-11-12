@@ -1,14 +1,14 @@
-import { ShoppingBagIcon } from "lucide-react";
+import { ArrowLeftRightIcon } from "lucide-react";
 import { PageLayout } from "@/components/blocks/APIHeader";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { createMetadata } from "@/lib/metadata";
-import { BuyPlayground } from "./BuyPlayground";
+import { TransactionPlayground } from "./TransactionPlayground";
 
-const title = "Buy Crypto Component";
+const title = "Transaction Widget";
 const description =
-  "Embeddable component for users to purchase any cryptocurrency for top-ups and more with fiat or crypto-to-crypto swaps";
+  "Enable seamless onchain transactions for any contract with fiat or crypto with amounts calculated and automatic execution after funds are confirmed.";
 const ogDescription =
-  "Configure a component to buy cryptocurrency with specified amounts, customization, and more. This interactive playground shows how to customize the component.";
+  "Power onchain transactions with fiat or crypto payments. Automatically calculate costs and run the transaction post onramp or token swap.";
 
 export const metadata = createMetadata({
   description: ogDescription,
@@ -23,12 +23,13 @@ export default function Page() {
   return (
     <ThirdwebProvider>
       <PageLayout
-        icon={ShoppingBagIcon}
-        title={title}
+        icon={ArrowLeftRightIcon}
+        containerClassName="space-y-12"
         description={description}
         docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
+        title={title}
       >
-        <BuyPlayground />
+        <TransactionPlayground />
       </PageLayout>
     </ThirdwebProvider>
   );

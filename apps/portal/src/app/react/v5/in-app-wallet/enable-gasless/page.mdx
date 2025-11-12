@@ -31,14 +31,14 @@ All transactions performed with the smart account will then be sponsored by your
 
 ## Live Playground
 
-Try out the demo for yourself in the [sponsored transactions playground](https://playground.thirdweb.com/connect/account-abstraction/sponsor)
+Try out the demo for yourself in the [sponsored transactions playground](https://playground.thirdweb.com/account-abstraction/eip-4337)
 
 <Stack>
 
 <ArticleIconCard
 	title="Try the demo"
 	icon={ExternalLink}
-	href="https://playground.thirdweb.com/connect/account-abstraction/sponsor"
+	href="https://playground.thirdweb.com/account-abstraction/eip-4337"
 	description="See the SDK in action on the live playground"
 />
 </Stack>
@@ -82,11 +82,11 @@ To sponsor transactions for all connected wallets, you can use the `sponsorGas` 
 ```jsx
 import { createThirdwebClient } from "thirdweb";
 import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
- 
+
 const client = createThirdwebClient({
   clientId: "YOUR_CLIENT_ID",
 });
- 
+
 export default function App() {
   return (
     <ThirdwebProvider>
@@ -108,7 +108,7 @@ or with the `useConnect` hook:
 import { useConnect } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets";
 import { sepolia } from "thirdweb/chains";
- 
+
 function App() {
   // 1. set the `accountAbstraction` configuration to convert wallets to smart accounts
   const { connect } = useConnect({
@@ -118,7 +118,7 @@ function App() {
       sponsorGas: true, // enable or disable sponsored transactions
     },
   });
- 
+
   const connectToSmartAccount = async () => {
     // 2. connect with the admin wallet of the smart account
     connect(async () => {
@@ -130,7 +130,7 @@ function App() {
       return wallet;
     });
   };
- 
+
   return (
     <button onClick={() => connectToSmartAccount()}>Connect</button>
   );

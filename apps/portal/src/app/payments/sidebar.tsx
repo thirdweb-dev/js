@@ -13,7 +13,7 @@ export const sidebar: SideBar = {
       icon: <ZapIcon />,
     },
     {
-      href: "https://playground.thirdweb.com/payments",
+      href: "https://playground.thirdweb.com/bridge",
       icon: <ExternalLinkIcon />,
       name: "Playground",
     },

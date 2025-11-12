@@ -40,14 +40,14 @@ All transactions performed with the smart account will then be sponsored by your
 
 ## Live Playground
 
-Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/connect/account-abstraction/connect)
+Try out in-app wallets for yourself in the [in-app wallet live playground](https://playground.thirdweb.com/account-abstraction)
 
 <Stack>
 
 <ArticleIconCard
 	title="Try the demo"
 	icon={ExternalLink}
-	href="https://playground.thirdweb.com/connect/account-abstraction/connect"
+	href="https://playground.thirdweb.com/account-abstraction"
 	description="See the SDK in action on the live playground"
 />
 
@@ -100,9 +100,9 @@ const wallets = [inAppWallet({
 		chain: sepolia,
         sponsorGas: true
 	}
-}), 
+}),
 // other external wallets will not become smart accounts
-createWallet("io.metamask"), 
+createWallet("io.metamask"),
 createWallet("rainbow.me"),
 ];
 
@@ -155,7 +155,7 @@ function App() {
 ```
 
 <Callout title="Auto connection of smart accounts" variant="info">
-When building your own UI, remember to also pass the `accountAbstraction` prop to `useAutoConnect` to always reconnect to the smart account on page reload. 
+When building your own UI, remember to also pass the `accountAbstraction` prop to `useAutoConnect` to always reconnect to the smart account on page reload.
 </Callout>
 
 Refer to the [Smart Wallet API reference](/references/typescript/v5/smartWallet) for more advanced configuration of your smart accounts.

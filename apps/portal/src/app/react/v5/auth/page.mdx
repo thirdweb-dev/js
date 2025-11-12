@@ -18,14 +18,14 @@ This allows developers to create a familiar, secure authentication flow that wor
 
 ## Live Playground
 
-Try out SIWE auth for yourself in the [auth live playground](https://playground.thirdweb.com/connect/auth)
+Try out SIWE auth for yourself in the [auth live playground](https://playground.thirdweb.com/wallets/auth)
 
 <Stack>
 
 <ArticleIconCard
 	title="Try the demo"
 	icon={ExternalLink}
-	href="https://playground.thirdweb.com/connect/connect/auth"
+	href="https://playground.thirdweb.com/wallets/auth"
 	description="See the SDK in action on the live playground"
 />
 
@@ -38,11 +38,11 @@ In your backend, configure the auth object with the `createAuth` function.
 ```tsx
 import { createThirdwebClient } from "thirdweb";
 import { createAuth } from "thirdweb/auth";
- 
+
 const client = createThirdwebClient({
   secretKey, // always use secret key for backend code
 });
- 
+
 const thirdwebAuth = createAuth({
   domain: "localhost:3000", // your domain
   client,

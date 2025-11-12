@@ -4,7 +4,7 @@ import ThirdwebProvider from "@/components/thirdweb-provider";
 import { createMetadata } from "@/lib/metadata";
 import { CheckoutPlayground } from "./CheckoutPlayground";
 
-const title = "Checkout Component";
+const title = "Checkout Widget";
 const description =
   "Enable purchase of any service or goods with fiat or cryptocurrency and setup notifications on every sale to ship goods, activate services, and more";
 const ogDescription =

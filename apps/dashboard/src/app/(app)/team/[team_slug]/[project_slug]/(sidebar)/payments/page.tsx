@@ -81,7 +81,7 @@ export default async function Page(props: {
           },
           {
             type: "playground",
-            href: "https://playground.thirdweb.com/payments/ui-components",
+            href: "https://playground.thirdweb.com/bridge",
           },
           {
             type: "api",
@@ -93,20 +93,20 @@ export default async function Page(props: {
         center: {
           links: [
             {
-              href: "https://playground.thirdweb.com/payments/ui-components",
-              label: "UI Component",
+              href: "https://playground.thirdweb.com/bridge/buy-widget",
+              label: "Buy Widget",
             },
             {
-              href: "https://playground.thirdweb.com/connect/payments/fund-wallet",
-              label: "Buy Crypto",
+              href: "https://playground.thirdweb.com/bridge/checkout-widget",
+              label: "Checkout Widget",
             },
             {
-              href: "https://playground.thirdweb.com/connect/payments/commerce",
-              label: "Checkout",
+              href: "https://playground.thirdweb.com/bridge/transaction-widget",
+              label: "Transaction Widget",
             },
             {
-              href: "https://playground.thirdweb.com/connect/payments/transactions",
-              label: "Transactions",
+              href: "https://playground.thirdweb.com/bridge/swap-widget",
+              label: "Swap Widget",
             },
           ],
           title: "Demos",

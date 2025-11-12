@@ -54,7 +54,7 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
 
       const url =
         "/api/paywall" +
-        (searchParams.size > 0 ? "?" + searchParams.toString() : "");
+        (searchParams.size > 0 ? `?${searchParams.toString()}` : "");
       const response = await fetchWithPay(url.toString());
       return response.json();
     },

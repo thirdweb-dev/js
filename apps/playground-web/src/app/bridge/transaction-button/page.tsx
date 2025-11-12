@@ -4,16 +4,13 @@ import { CodeExample } from "@/components/code/code-example";
 import { PayTransactionButtonPreview } from "@/components/pay/transaction-button";
 import ThirdwebProvider from "@/components/thirdweb-provider";
 import { createMetadata } from "@/lib/metadata";
-import { TransactionPlayground } from "./TransactionPlayground";
 
-const title = "Onchain Transaction Components";
+const title = "Transaction Button";
 const description =
-  "Enable seamless onchain transactions for any contract with fiat or crypto with amounts calculated and automatic execution after funds are confirmed.";
-const ogDescription =
-  "Power onchain transactions with fiat or crypto payments. Automatically calculate costs and run the transaction post onramp or token swap.";
+  "Transaction Button component allows users to perform onchain transaction and prompts the user to fund the wallet if required from fiat or swap";
 
 export const metadata = createMetadata({
-  description: ogDescription,
+  description: description,
   title,
   image: {
     icon: "payments",
@@ -28,27 +25,16 @@ export default function Page() {
         icon={ArrowLeftRightIcon}
         containerClassName="space-y-12"
         description={description}
-        docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/references/typescript/v5/TransactionButton"
         title={title}
       >
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight mb-1">
-            Transaction Widget
-          </h2>
-          <p className="text-base text-muted-foreground mb-6">
-            Render a prebuilt UI for performing transactions using any token or
-            fiat. <br /> It handles the complete payment flow, supporting both
-            crypto and fiat payments across 50+ chains.
-          </p>
-          <TransactionPlayground />
-        </div>
-        <NoFundsPopup />
+        <Example />
       </PageLayout>
     </ThirdwebProvider>
   );
 }
 
-function NoFundsPopup() {
+function Example() {
   return (
     <CodeExample
       code={`
@@ -111,15 +97,6 @@ return (
   </div>
 );
 };`}
-      header={{
-        description: (
-          <>
-            Any transaction with value will automatically trigger onramp to fund
-            the wallet if needed before executing the transaction.
-          </>
-        ),
-        title: "Transaction Button",
-      }}
       lang="tsx"
       preview={<PayTransactionButtonPreview />}
     />

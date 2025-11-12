@@ -4,7 +4,7 @@ import ThirdwebProvider from "@/components/thirdweb-provider";
 import { createMetadata } from "@/lib/metadata";
 import { SwapWidgetPlayground } from "./components/swap-widget-playground";
 
-const title = "Swap Widget Component";
+const title = "Swap Widget";
 const description =
   "Embeddable component for users to swap any cryptocurrency with cross-chain support";
 const ogDescription =

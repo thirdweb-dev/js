@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createThirdwebClient, defineChain } from "thirdweb";
 import { toUnits } from "thirdweb/utils";
 import { facilitator, settlePayment } from "thirdweb/x402";
-import { token } from "../../payments/x402/components/constants";
+import { token } from "../../x402/components/constants";
 
 // Allow streaming responses up to 5 minutes
 export const maxDuration = 300;

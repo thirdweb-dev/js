@@ -92,7 +92,7 @@ export function TeamSidebarLayout(props: {
           label: "Documentation",
         },
         {
-          href: "https://playground.thirdweb.com/connect/sign-in/button",
+          href: "https://playground.thirdweb.com/wallets/sign-in/button",
           icon: BoxIcon,
           label: "Playground",
         },

@@ -15,8 +15,8 @@ import {
 import { Button } from "../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { cn } from "../../../lib/utils";
-import { CodeGen } from "../components/CodeGen";
-import type { BridgeComponentsPlaygroundOptions } from "../components/types";
+import { CodeGen } from "./CodeGen";
+import type { BridgeComponentsPlaygroundOptions } from "./types";
 
 const nftContract = getContract({
   address: "0xf0d0CBf84005Dd4eC81364D1f5D7d896Bd53D1B8",

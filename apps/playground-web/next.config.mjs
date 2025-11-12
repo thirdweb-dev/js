@@ -59,12 +59,12 @@ const nextConfig = {
     return [
       {
         source: "/connect/pay",
-        destination: "/payments/ui-components",
+        destination: "/bridge",
         permanent: false,
       },
       {
         source: "/connect/pay/:path*",
-        destination: "/payments/:path*",
+        destination: "/bridge",
         permanent: false,
       },
       {
@@ -159,7 +159,32 @@ const nextConfig = {
       },
       {
         source: "/payments/ui-components",
-        destination: "/payments",
+        destination: "/bridge",
+        permanent: false,
+      },
+      {
+        source: "/payments",
+        destination: "/bridge",
+        permanent: false,
+      },
+      {
+        source: "/payments/x402",
+        destination: "/x402",
+        permanent: false,
+      },
+      {
+        source: "/payments/fund-wallet",
+        destination: "/bridge/buy-widget",
+        permanent: false,
+      },
+      {
+        source: "/payments/commerce",
+        destination: "/bridge/checkout-widget",
+        permanent: false,
+      },
+      {
+        source: "/payments/transactions",
+        destination: "/bridge/transaction-widget",
         permanent: false,
       },
     ];
