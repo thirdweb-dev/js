@@ -1,5 +1,6 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { OnConnectCallback } from "../../react/core/hooks/connection/types.js";
 import type { Wallet } from "../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../wallets/smart/types.js";
 import type { AppMetadata } from "../../wallets/types.js";
@@ -108,7 +109,7 @@ export type AutoConnectProps = {
    * />
    * ```
    */
-  onConnect?: (activeWallet: Wallet, allConnectedWallets: Wallet[]) => void;
+  onConnect?: OnConnectCallback;
 
   /**
    * Optional chain to autoconnect to
