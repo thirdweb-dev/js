@@ -8,6 +8,7 @@ import type { AppMetadata } from "../../../../wallets/types.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
+import type { OnConnectCallback } from "../../../core/hooks/connection/types.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
@@ -90,7 +91,7 @@ export function useConnectModal() {
 
 function Modal(
   props: UseConnectModalOptions & {
-    onConnect: (wallet: Wallet) => void;
+    onConnect: OnConnectCallback;
     onClose: () => void;
     connectLocale: ConnectLocale;
   },

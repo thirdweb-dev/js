@@ -19,6 +19,23 @@ describe("useAutoConnectCore", () => {
   const mockStorage = new MockStorage();
   const manager = createConnectionManager(mockStorage);
 
+  const wallet1 = createWalletAdapter({
+    adaptedAccount: TEST_ACCOUNT_A,
+    chain: ethereum,
+    client: TEST_CLIENT,
+    onDisconnect: () => {},
+    switchChain: () => {},
+  });
+
+  const wallet2 = createWalletAdapter({
+    adaptedAccount: { ...TEST_ACCOUNT_A, address: "0x123" },
+    chain: ethereum,
+    client: TEST_CLIENT,
+    onDisconnect: () => {},
+    switchChain: () => {},
+  });
+  wallet2.id = "io.metamask" as unknown as "adapter";
+
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -161,23 +178,6 @@ describe("useAutoConnectCore", () => {
   });
 
   it("should connect multiple wallets correctly", async () => {
-    const wallet1 = createWalletAdapter({
-      adaptedAccount: TEST_ACCOUNT_A,
-      chain: ethereum,
-      client: TEST_CLIENT,
-      onDisconnect: () => {},
-      switchChain: () => {},
-    });
-
-    const wallet2 = createWalletAdapter({
-      adaptedAccount: { ...TEST_ACCOUNT_A, address: "0x123" },
-      chain: ethereum,
-      client: TEST_CLIENT,
-      onDisconnect: () => {},
-      switchChain: () => {},
-    });
-    wallet2.id = "io.metamask" as unknown as "adapter";
-
     mockStorage.setItem("thirdweb:active-wallet-id", wallet1.id);
     mockStorage.setItem(
       "thirdweb:connected-wallet-ids",
@@ -228,7 +228,10 @@ describe("useAutoConnectCore", () => {
       storage: mockStorage,
     });
 
-    expect(mockOnConnect).toHaveBeenCalledWith(wallet);
+    expect(mockOnConnect).toHaveBeenCalledWith(
+      wallet,
+      manager.connectedWallets.getValue(),
+    );
   });
 
   it("should continue even if onConnect callback throws", async () => {
@@ -262,7 +265,10 @@ describe("useAutoConnectCore", () => {
       storage: mockStorage,
     });
 
-    expect(mockOnConnect).toHaveBeenCalledWith(wallet);
+    expect(mockOnConnect).toHaveBeenCalledWith(
+      wallet,
+      manager.connectedWallets.getValue(),
+    );
   });
 
   it("should call setLastAuthProvider if authProvider is present", async () => {
@@ -300,6 +306,7 @@ describe("useAutoConnectCore", () => {
   });
 
   it("should set connection status to disconnect if no connectedWallet is returned", async () => {
+    manager.activeWalletStore.setValue(undefined);
     const wallet = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,
       chain: ethereum,

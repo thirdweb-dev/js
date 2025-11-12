@@ -25,6 +25,7 @@ import type {
   TokenInfo,
 } from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
+import type { OnConnectCallback } from "./types.js";
 
 export type PaymentInfo = Prettify<
   {
@@ -937,13 +938,14 @@ export type ConnectButtonProps = {
    *
    * ```tsx
    * <ConnectButton
-   *  onConnect={(wallet) => {
-   *    console.log("connected to", wallet)
+   *  onConnect={(activeWallet, allConnectedWallets) => {
+   *    console.log("connected to", activeWallet)
+   *    console.log("all connected wallets", allConnectedWallets)
    *  }}
    * />
    * ```
    */
-  onConnect?: (wallet: Wallet) => void;
+  onConnect?: OnConnectCallback;
 
   /**
    * Called when the user disconnects the wallet by clicking on the "Disconnect Wallet" button in the `ConnectButton`'s Details Modal.
