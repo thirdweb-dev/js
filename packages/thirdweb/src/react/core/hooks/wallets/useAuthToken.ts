@@ -1,5 +1,8 @@
-import { useActiveAccount } from "./useActiveAccount.js";
-import { useActiveWallet } from "./useActiveWallet.js";
+import type {
+  EcosystemWallet,
+  InAppWallet,
+} from "../../../../wallets/in-app/core/wallet/types.js";
+import { useConnectedWallets } from "./useConnectedWallets.js";
 
 /**
  * A hook that returns the authentication token (JWT) for the currently active wallet.
@@ -26,16 +29,20 @@ import { useActiveWallet } from "./useActiveWallet.js";
  * @wallet
  */
 export function useAuthToken() {
-  const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-  // if the active wallet is an in-app wallet and the active account is the same as the active wallet's account, return the auth token for the in-app wallet
-  if (
-    activeWallet?.getAuthToken &&
-    activeAccount &&
-    activeAccount.address === activeWallet.getAccount()?.address
-  ) {
-    return activeWallet.getAuthToken();
+  const walletWithAuthToken = useWalletWithAuthToken();
+  // if any connected wallet has an auth token, return it
+  if (walletWithAuthToken) {
+    return walletWithAuthToken.getAuthToken();
   }
-  // all other wallets don't expose an auth token for now
+  // no wallet with an auth token found
   return null;
+}
+
+function useWalletWithAuthToken(): InAppWallet | EcosystemWallet | undefined {
+  const wallets = useConnectedWallets();
+  const wallet = wallets.find((w) => !!w.getAuthToken) as
+    | InAppWallet
+    | EcosystemWallet
+    | undefined;
+  return wallet ?? undefined;
 }
