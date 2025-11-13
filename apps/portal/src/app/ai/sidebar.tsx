@@ -4,14 +4,20 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 export const sidebar: SideBar = {
   links: [
     {
-      name: "AI",
+      name: "Get Started",
+      href: "/ai/chat",
+      icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com",
+      name: "Playground",
+      icon: <ExternalLinkIcon />,
+    },
+    { separator: true },
+    {
+      name: "Guides",
       isCollapsible: false,
       links: [
-        {
-          name: "Get Started",
-          href: "/ai/chat",
-          icon: <ZapIcon />,
-        },
         {
           name: "Transaction Execution",
           href: "/ai/chat/execution",
@@ -61,11 +67,6 @@ export const sidebar: SideBar = {
       name: "Resources",
       isCollapsible: false,
       links: [
-        {
-          href: "https://playground.thirdweb.com/ai/chat",
-          icon: <ExternalLinkIcon />,
-          name: "Playground",
-        },
         {
           href: "/ai/faq",
           name: "FAQ",

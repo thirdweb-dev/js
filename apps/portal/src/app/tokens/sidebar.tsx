@@ -1,4 +1,4 @@
-import { ZapIcon } from "lucide-react";
+import { ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 
 const slug = "/tokens";
@@ -9,6 +9,11 @@ export const sidebar: SideBar = {
       href: slug,
       name: "Get Started",
       icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com",
+      name: "Playground",
+      icon: <ExternalLinkIcon />,
     },
     { separator: true },
     {

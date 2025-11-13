@@ -12,6 +12,11 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
+    {
+      href: "https://playground.thirdweb.com/wallets",
+      name: "Playground",
+      icon: <ExternalLinkIcon />,
+    },
     { separator: true },
     {
       isCollapsible: false,
@@ -122,11 +127,6 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       name: "Resources",
       links: [
-        {
-          href: "https://playground.com/wallets",
-          icon: <ExternalLinkIcon />,
-          name: "Playground",
-        },
         {
           href: `${walletSlug}/wallet-types`,
           name: "Wallet Types",

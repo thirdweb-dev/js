@@ -1,4 +1,4 @@
-import { ZapIcon } from "lucide-react";
+import { ExternalLinkIcon, ZapIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { EngineIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
@@ -11,6 +11,11 @@ export const sidebar: SideBar = {
       href: bridgeSlug,
       name: "Get Started",
       icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com",
+      name: "Playground",
+      icon: <ExternalLinkIcon />,
     },
     { separator: true },
     {
@@ -64,9 +69,9 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `https://payments.thirdweb.com/reference`,
+          href: `/reference`,
           icon: <EngineIcon />,
-          name: "REST API",
+          name: "HTTP API",
         },
         {
           href: "/references/typescript/v5",
