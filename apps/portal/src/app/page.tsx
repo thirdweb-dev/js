@@ -1,10 +1,4 @@
-import {
-  ArrowUpRightIcon,
-  BrainIcon,
-  CoinsIcon,
-  WebhookIcon,
-  ZapIcon,
-} from "lucide-react";
+import { ArrowUpRightIcon, BrainIcon, CoinsIcon, ZapIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
@@ -19,13 +13,15 @@ import {
   UnrealEngineIcon,
 } from "../icons";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
-import { EngineIcon } from "../icons/products/EngineIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
 
 export default function Page() {
   return (
-    <main className="container max-w-5xl grow pb-20" data-noindex>
+    <main
+      className="container max-w-5xl grow pb-[4.75rem] scale-y-[0.95] origin-top"
+      data-noindex
+    >
       <Hero />
       <div className="space-y-8">
         <LearningResourcesSection />
@@ -74,49 +70,33 @@ function Hero() {
 
 function ReferenceSection() {
   return (
-    <>
-      <section>
-        <SectionTitle anchorId="client" title="Client libraries" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={TypeScriptIcon}
-            title="TypeScript"
-          />
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={ReactIcon}
-            title="React"
-          />
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={ReactIcon}
-            title="React Native"
-          />
-          <SDKCard href="/dotnet" icon={DotNetIcon} title="DotNet" />
-          <SDKCard href="/unity" icon={UnityIcon} title="Unity" />
-          <SDKCard
-            href="/unreal-engine"
-            icon={UnrealEngineIcon}
-            title="Unreal Engine"
-          />
-        </div>
-      </section>
-
-      <section>
-        <SectionTitle anchorId="backend" title="Backend APIs" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SDKCard href="/reference" icon={ConnectIcon} title="HTTP API" />
-          <SDKCard
-            href="https://engine.thirdweb.com/reference"
-            icon={EngineIcon}
-            title="Engine"
-          />
-          <SDKCard href="/bundler" icon={ConnectIcon} title="Bundler" />
-          <SDKCard href="/webhooks" icon={WebhookIcon} title="Webhooks" />
-        </div>
-      </section>
-    </>
+    <section>
+      <SectionTitle anchorId="client" title="Client libraries" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={TypeScriptIcon}
+          title="TypeScript"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React Native"
+        />
+        <SDKCard href="/dotnet" icon={DotNetIcon} title="DotNet" />
+        <SDKCard href="/unity" icon={UnityIcon} title="Unity" />
+        <SDKCard
+          href="/unreal-engine"
+          icon={UnrealEngineIcon}
+          title="Unreal Engine"
+        />
+      </div>
+    </section>
   );
 }
 
@@ -154,6 +134,12 @@ function LearningResourcesSection() {
           href="/ai/chat"
           icon={BrainIcon}
           title="AI"
+        />
+        <ArticleCardIndex
+          description="Build products with our HTTP API"
+          href="/reference"
+          icon={ConnectIcon}
+          title="HTTP API"
         />
       </div>
     </section>

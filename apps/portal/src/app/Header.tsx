@@ -95,17 +95,6 @@ export const connectLinks: Array<{
   },
 ] as const;
 
-const apisLinks = [
-  {
-    href: "https://api.thirdweb.com/reference",
-    name: "HTTP API",
-  },
-  {
-    href: "/bundler",
-    name: "Bundler",
-  },
-];
-
 const sdkLinks = [
   {
     href: "/references/typescript/v5",
@@ -252,11 +241,6 @@ export function Header() {
               onLinkClick={() => setShowBurgerMenu(false)}
             />
             <DropdownLinks
-              category="APIs"
-              links={apisLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-            <DropdownLinks
               category="Support"
               links={supportLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
@@ -297,18 +281,6 @@ export function Header() {
                   href={link.href}
                   key={link.name}
                   icon={link.icon}
-                  name={link.name}
-                  onClick={() => setShowBurgerMenu(false)}
-                />
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <h3 className="font-semibold text-lg">APIs</h3>
-              {apisLinks.map((link) => (
-                <NavLink
-                  href={link.href}
-                  key={link.name}
                   name={link.name}
                   onClick={() => setShowBurgerMenu(false)}
                 />

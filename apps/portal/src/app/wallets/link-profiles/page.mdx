@@ -1,11 +1,12 @@
-import { createMetadata, ArticleIconCard, Callout, Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
+import { createMetadata, ArticleIconCard, Callout, Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
 import {
 	ReactIcon,
 	TypeScriptIcon,
 	UnityIcon,
 	DotNetIcon,
 	ExternalLinkIcon,
-	UnrealEngineIcon
+	UnrealEngineIcon,
+	EngineIcon
 } from "@/icons"
 
 export const metadata = createMetadata({
@@ -22,8 +23,12 @@ export const metadata = createMetadata({
 
 thirdweb Wallets allow users to tie the same wallet address to multiple social identities. Developers can programmatically link additional identities at any point in their user journey.
 
-<Tabs defaultValue="typescript">
+<Tabs defaultValue="http">
 <TabsList>
+	<TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+		<EngineIcon className="w-4 h-4" />
+		HTTP
+	</TabsTrigger>
 	<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
 		<TypeScriptIcon className="w-4 h-4" />
 		TypeScript
@@ -45,6 +50,22 @@ thirdweb Wallets allow users to tie the same wallet address to multiple social i
 		Unity
 	</TabsTrigger>
 </TabsList>
+
+<TabsContent value="http">
+
+### Link Profile
+
+Link an additional authentication method to an existing wallet.
+
+<OpenApiEndpoint path="/v1/auth/link" method="POST" />
+
+### Unlink Profile
+
+Remove a linked authentication method from a wallet.
+
+<OpenApiEndpoint path="/v1/auth/unlink" method="POST" />
+
+</TabsContent>
 
 <TabsContent value="typescript">
 **OAuth Authentication (Discord, Google, Apple, etc.)**
@@ -210,8 +231,12 @@ var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet,
 
 Once linked, you can retrieve the user profiles via either identity.
 
-<Tabs defaultValue="typescript">
+<Tabs defaultValue="http">
 <TabsList>
+	<TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+		<EngineIcon className="w-4 h-4 mr-2" />
+		HTTP
+	</TabsTrigger>
 	<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
 		<TypeScriptIcon className="w-4 h-4 mr-2" />
 		TypeScript
@@ -225,6 +250,12 @@ Once linked, you can retrieve the user profiles via either identity.
 		.NET
 	</TabsTrigger>
 </TabsList>
+
+<TabsContent value="http">
+
+Retrieve linked profiles using the [Fetch Users API](/wallets/get-users#http-api).
+
+</TabsContent>
 
 <TabsContent value="typescript">
 ```typescript
