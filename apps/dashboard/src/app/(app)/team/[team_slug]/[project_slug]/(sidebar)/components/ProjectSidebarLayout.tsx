@@ -14,6 +14,7 @@ import {
   type ShadcnSidebarLink,
 } from "@/components/blocks/full-width-sidebar-layout";
 import { BridgeIcon } from "@/icons/BridgeIcon";
+import { ContractIcon } from "@/icons/ContractIcon";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { TokenIcon } from "@/icons/TokenIcon";
@@ -55,6 +56,11 @@ export function ProjectSidebarLayout(props: {
       ],
     },
     {
+      href: `${props.layoutPath}/contracts`,
+      icon: ContractIcon,
+      label: "Contracts",
+    },
+    {
       href: `${props.layoutPath}/x402`,
       icon: PayIcon,
       label: (
@@ -91,10 +97,6 @@ export function ProjectSidebarLayout(props: {
         {
           href: `${props.layoutPath}/gateway/indexer`,
           label: "Indexer",
-        },
-        {
-          href: `${props.layoutPath}/contracts`,
-          label: "Contracts",
         },
       ],
     },
