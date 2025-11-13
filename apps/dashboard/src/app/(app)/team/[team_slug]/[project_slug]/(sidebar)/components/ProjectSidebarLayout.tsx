@@ -56,6 +56,11 @@ export function ProjectSidebarLayout(props: {
       ],
     },
     {
+      href: `${props.layoutPath}/contracts`,
+      icon: ContractIcon,
+      label: "Contracts",
+    },
+    {
       href: `${props.layoutPath}/x402`,
       icon: PayIcon,
       label: (
@@ -78,11 +83,6 @@ export function ProjectSidebarLayout(props: {
       href: `${props.layoutPath}/ai`,
       icon: NebulaIcon,
       label: "AI",
-    },
-    {
-      href: `${props.layoutPath}/contracts`,
-      icon: ContractIcon,
-      label: "Contracts",
     },
     {
       subMenu: {
