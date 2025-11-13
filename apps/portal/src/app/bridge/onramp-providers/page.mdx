@@ -2,39 +2,32 @@ import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Payments - Onramp Providers",
+		title: "thirdweb Bridge - Onramp Providers",
 		icon: "thirdweb",
 	},
-	title: "thirdweb Payments - Onramp Providers | thirdweb",
+	title: "thirdweb Bridge - Onramp Providers | thirdweb",
 	description:
 		"Integrate onramp providers for any onchain transaction and set preferred providers",
 });
 
 # Onramp Providers
 
-**Onramp Providers** are services that allow users to buy crypto with fiat. Payments supports the following onramp providers:
+**Onramp Providers** are services that allow users to buy crypto with fiat.
 
-- **Coinbase**
-- **Transak**
-- **Stripe**
+Bridge integrates the following onramp providers:
 
-## Provider Fees
+- [**Coinbase**](https://docs.cdp.coinbase.com/onramp-&-offramp/introduction/welcome)
+- [**Transak**](https://transak.com/)
+- [**Stripe**](https://docs.stripe.com/crypto/onramp)
 
-Each provider has different fees associated with their services which often depend on various factors. Onramp provider fees are set by the provider and are not controlled by thirdweb.
+## Provider Fees & Regions
 
-| Provider | Fees |
-| -------- | ---- |
-| Coinbase | [Learn more about Coinbase Fees](https://help.coinbase.com/en/coinbase/trading-and-funding/pricing-and-fees/fees) |
-| Transak  |  [Learn more about Transak Fees](https://support.transak.com/en/articles/7845942-how-does-transak-calculate-prices-and-fees)|
-| Stripe | [Learn more about Stripe Fees](https://stripe.com/legal/crypto-onramp). |
+Each provider sets its own fees, which may vary based on several factors. These fees are determined solely by the onramp provider and are not controlled or influenced by thirdweb.
 
+Each provider also has different regions and currencies they support.
 
-## Provider Regions
-
-Each provider has different regions they support. You can learn more about the supported regions for each provider in the links below.
-
-| Provider | Regions |
-| -------- | ------- |
-| Coinbase | [View Regions](https://docs.cdp.coinbase.com/onramp/docs/api-configurations) |
-| Transak  | [View Regions](https://transak.com/global-coverage) |
-| Stripe  | [View Regions](https://support.stripe.com/questions/crypto-supportability-and-availability-by-region) |
+|          | Fees                                                                                                                 | Regions                                                                                                                                   |
+| -------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Coinbase | [View Fees](https://docs.cdp.coinbase.com/onramp-&-offramp/developer-guidance/faq#what-fees-do-you-charge%3F)        | [View Regions](https://docs.cdp.coinbase.com/onramp-&-offramp/developer-guidance/faq#which-countries-are-supported-by-coinbase-onramp%3F) |
+| Stripe   | N/A                                                                                                                  | [View Regions](https://support.stripe.com/questions/crypto-supportability-and-availability-by-region)                                     |
+| Transak  | [View Fees](https://transak.notion.site/On-Ramp-Payment-Methods-Fees-Other-Details-b0761634feed4b338a69f4f186d906a5) | [View Regions](https://transak.com/global-coverage)                                                                                       |

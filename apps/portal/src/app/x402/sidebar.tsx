@@ -72,6 +72,22 @@ export const sidebar: SideBar = {
       ],
       name: "API References",
     },
+    { separator: true },
+    {
+      isCollapsible: false,
+      links: [
+        {
+          href: "https://playground.com/x402",
+          icon: <ExternalLinkIcon />,
+          name: "Playground",
+        },
+        {
+          href: `${x402Slug}/faq`,
+          name: "FAQ",
+        },
+      ],
+      name: "Resources",
+    },
   ],
   name: "x402",
 };

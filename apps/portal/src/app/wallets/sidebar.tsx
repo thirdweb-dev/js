@@ -6,137 +6,137 @@ import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
 const walletSlug = "/wallets";
 
 export const sidebar: SideBar = {
-  links: [
-    {
-      href: walletSlug,
-      name: "Get Started",
-      icon: <ZapIcon />,
-    },
-    {
-      href: "https://playground.thirdweb.com/",
-      icon: <ExternalLinkIcon />,
-      name: "Playground",
-    },
-    { separator: true },
-    {
-      isCollapsible: false,
-      links: [
-        {
-          href: `${walletSlug}/users`,
-          name: "User Wallets",
-        },
-        {
-          href: `${walletSlug}/server`,
-          name: "Server Wallets",
-        },
-        {
-          href: `${walletSlug}/external-wallets`,
-          name: "External Wallets",
-        },
-        {
-          href: `${walletSlug}/ecosystem/set-up`,
-          name: "Ecosystem Wallets",
-        },
-        {
-          href: `/transactions/sponsor`,
-          name: "Sponsor Gas",
-        },
-        {
-          href: `${walletSlug}/get-users`,
-          name: "Fetch Users",
-        },
-        {
-          href: `${walletSlug}/pregenerate-wallets`,
-          name: "Pregenerate Wallets",
-        },
-        {
-          href: `${walletSlug}/custom-auth`,
-          name: "Bring your own Auth",
-        },
-        {
-          href: `${walletSlug}/auth`,
-          name: "Sign in with Ethereum",
-        },
-        {
-          href: `${walletSlug}/link-profiles`,
-          name: "Link Profiles",
-        },
-        {
-          href: `${walletSlug}/export-private-key`,
-          name: "Export Private Keys",
-        },
-        {
-          href: `${walletSlug}/session-keys`,
-          name: "Session Keys",
-        },
-        {
-          href: `${walletSlug}/adapters`,
-          name: "Usage with other libraries",
-        },
-      ],
-      name: "Guides",
-    },
-    { separator: true },
-    {
-      isCollapsible: false,
-      links: [
-        {
-          href: "/reference#tag/wallets",
-          icon: <CodeIcon />,
-          name: "HTTP API",
-        },
-        {
-          href: "/references/typescript/v5",
-          icon: <TypeScriptIcon />,
-          name: "TypeScript",
-        },
-        {
-          href: "/references/typescript/v5",
-          icon: <ReactIcon />,
-          name: "React",
-        },
-        {
-          href: "/references/typescript/v5",
-          icon: <ReactIcon />,
-          name: "React Native",
-        },
-        {
-          href: "/dotnet",
-          icon: <DotNetIcon />,
-          name: "Dotnet",
-        },
-        {
-          href: "/unity",
-          icon: <UnityIcon />,
-          name: "Unity",
-        },
-        {
-          href: "/unreal-engine",
-          icon: <UnrealEngineIcon />,
-          name: "Unreal Engine",
-        },
-      ],
-      name: "API References",
-    },
-    { separator: true },
-    {
-      isCollapsible: false,
-      name: "Resources",
-      links: [
-        {
-          href: `${walletSlug}/security`,
-          name: "Security",
-        },
-        {
-          href: "/vault",
-          name: "Vault",
-        },
-        {
-          href: `${walletSlug}/faq`,
-          name: "FAQ",
-        },
-      ],
-    },
-  ],
-  name: "Wallets",
+	links: [
+		{
+			href: walletSlug,
+			name: "Get Started",
+			icon: <ZapIcon />,
+		},
+		{ separator: true },
+		{
+			isCollapsible: false,
+			links: [
+				{
+					href: `${walletSlug}/users`,
+					name: "User Wallets",
+				},
+				{
+					href: `${walletSlug}/server`,
+					name: "Server Wallets",
+				},
+				{
+					href: `${walletSlug}/external-wallets`,
+					name: "External Wallets",
+				},
+				{
+					href: `${walletSlug}/ecosystem/set-up`,
+					name: "Ecosystem Wallets",
+				},
+				{
+					href: `/transactions/sponsor`,
+					name: "Sponsor Gas",
+				},
+				{
+					href: `${walletSlug}/get-users`,
+					name: "Fetch Users",
+				},
+				{
+					href: `${walletSlug}/pregenerate-wallets`,
+					name: "Pregenerate Wallets",
+				},
+				{
+					href: `${walletSlug}/custom-auth`,
+					name: "Bring your own Auth",
+				},
+				{
+					href: `${walletSlug}/auth`,
+					name: "Sign in with Ethereum",
+				},
+				{
+					href: `${walletSlug}/link-profiles`,
+					name: "Link Profiles",
+				},
+				{
+					href: `${walletSlug}/export-private-key`,
+					name: "Export Private Keys",
+				},
+				{
+					href: `${walletSlug}/session-keys`,
+					name: "Session Keys",
+				},
+				{
+					href: `${walletSlug}/adapters`,
+					name: "Usage with other libraries",
+				},
+			],
+			name: "Guides",
+		},
+		{ separator: true },
+		{
+			isCollapsible: false,
+			links: [
+				{
+					href: "/reference#tag/wallets",
+					icon: <CodeIcon />,
+					name: "HTTP API",
+				},
+				{
+					href: "/references/typescript/v5",
+					icon: <TypeScriptIcon />,
+					name: "TypeScript",
+				},
+				{
+					href: "/references/typescript/v5",
+					icon: <ReactIcon />,
+					name: "React",
+				},
+				{
+					href: "/references/typescript/v5",
+					icon: <ReactIcon />,
+					name: "React Native",
+				},
+				{
+					href: "/dotnet",
+					icon: <DotNetIcon />,
+					name: "Dotnet",
+				},
+				{
+					href: "/unity",
+					icon: <UnityIcon />,
+					name: "Unity",
+				},
+				{
+					href: "/unreal-engine",
+					icon: <UnrealEngineIcon />,
+					name: "Unreal Engine",
+				},
+			],
+			name: "API References",
+		},
+		{ separator: true },
+		{
+			isCollapsible: false,
+			name: "Resources",
+			links: [
+				{
+					href: "https://playground.com/wallets",
+					icon: <ExternalLinkIcon />,
+					name: "Playground",
+				},
+				{
+					href: `${walletSlug}/wallet-types`,
+					name: "Wallet Types",
+				},
+				{
+					href: `${walletSlug}/security`,
+					name: "Security",
+				},
+				{
+					href: `${walletSlug}/faq`,
+					name: "FAQ",
+				},
+			],
+		},
+	],
+	name: "Wallets",
 };

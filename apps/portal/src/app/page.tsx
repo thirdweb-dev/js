@@ -1,15 +1,13 @@
 import {
   ArrowUpRightIcon,
-  BotIcon,
+  BrainIcon,
   CoinsIcon,
-  MessageCircleIcon,
   WebhookIcon,
   ZapIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
-import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 import { ChatButton } from "../components/AI/chat-button";
 import { Button } from "../components/ui/button";
 import {
@@ -22,7 +20,6 @@ import {
 } from "../icons";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
 import { EngineIcon } from "../icons/products/EngineIcon";
-import { InsightIcon } from "../icons/products/InsightIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
 
@@ -31,7 +28,6 @@ export default function Page() {
     <main className="container max-w-5xl grow pb-20" data-noindex>
       <Hero />
       <div className="space-y-8">
-        <AISection />
         <LearningResourcesSection />
         <ReferenceSection />
       </div>
@@ -71,34 +67,6 @@ function Hero() {
       <div className="hidden justify-center lg:flex">
         <Image alt="" className="dark-only w-full" src={DocsHeroDark} />
         <Image alt="" className="light-only w-full" src={DocsHeroLight} />
-      </div>
-    </section>
-  );
-}
-
-function AISection() {
-  return (
-    <section>
-      <SectionTitle anchorId="ai" title="AI" />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <ArticleCardIndex
-          description="Integrate the most advanced blockchain model into your applications"
-          href="/ai/chat"
-          icon={MessageCircleIcon}
-          title="Blockchain LLM"
-        />
-        <ArticleCardIndex
-          description="For agents and humans. Use the thirdweb API with natural language"
-          href="/ai/mcp"
-          icon={BotIcon}
-          title="MCP"
-        />
-        <ArticleCardIndex
-          description="Inject the thirdweb API reference in your prompts"
-          href="/ai/llm-txt"
-          icon={ZapIcon}
-          title="LLMs.txt"
-        />
       </div>
     </section>
   );
@@ -144,21 +112,7 @@ function ReferenceSection() {
             icon={EngineIcon}
             title="Engine"
           />
-          <SDKCard
-            href="https://insight.thirdweb.com/reference"
-            icon={InsightIcon}
-            title="Insight"
-          />
-          <SDKCard
-            href="https://bridge.thirdweb.com/reference"
-            icon={PaymentsIcon}
-            title="Payments & Bridge"
-          />
-          <SDKCard
-            href="/bundler"
-            icon={ConnectIcon} // TODO: actual openAPI docs
-            title="Bundler"
-          />
+          <SDKCard href="/bundler" icon={ConnectIcon} title="Bundler" />
           <SDKCard href="/webhooks" icon={WebhookIcon} title="Webhooks" />
         </div>
       </section>
@@ -172,46 +126,34 @@ function LearningResourcesSection() {
       <SectionTitle anchorId="learning" title="Documentation" />
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
         <ArticleCardIndex
-          description="Create and manage crypto wallets"
+          description="Create wallets to read and transact."
           href="/wallets"
           icon={ConnectIcon}
           title="Wallets"
         />
         <ArticleCardIndex
-          description="Instant payments for APIs, websites, and agents"
+          description="Create internet native payments with x402"
           href="/x402"
           icon={ZapIcon}
           title="x402"
         />
         <ArticleCardIndex
-          description="Bridge, swap, and onramp tokens on any chain"
+          description="Swap and bridge tokens across chains"
           href="/bridge"
           icon={CoinsIcon}
           title="Bridge"
         />
         <ArticleCardIndex
-          description="Reliable transactions and monitoring"
-          href="/transactions"
-          icon={EngineIcon}
-          title="Transactions"
+          description="Launch tokens and markets"
+          href="/tokens"
+          icon={CoinsIcon}
+          title="Tokens"
         />
         <ArticleCardIndex
-          description="Create, deploy, and manage smart contracts"
-          href="/contracts"
-          icon={EngineIcon}
-          title="Contracts"
-        />
-        <ArticleCardIndex
-          description="Blockchain data queries and transformations"
-          href="/insight"
-          icon={InsightIcon}
-          title="Insight"
-        />
-        <ArticleCardIndex
-          description="Non-custodial key management service"
-          href="/vault"
-          icon={ConnectIcon}
-          title="Vault"
+          description="Read and write onchain via natural language"
+          href="/ai/chat"
+          icon={BrainIcon}
+          title="AI"
         />
       </div>
     </section>
