@@ -1,7 +1,6 @@
 import { ConnectSDKIcon } from "@/icons/ConnectSDKIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { EngineIcon } from "@/icons/EngineIcon";
-import { InsightIcon } from "@/icons/InsightIcon";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { RPCIcon } from "@/icons/RPCIcon";
@@ -50,13 +49,6 @@ export const products = [
     id: "pay",
     link: "https://portal.thirdweb.com/payments",
     name: "Payments",
-  },
-  {
-    description: "Query and analyze blockchain data",
-    icon: InsightIcon,
-    id: "insight",
-    link: "https://thirdweb.com/insight",
-    name: "Insight",
   },
   {
     description: "The most powerful AI for interacting with the blockchain",

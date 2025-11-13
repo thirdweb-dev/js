@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ArrowRightLeftIcon,
-  BadgeDollarSignIcon,
-  WebhookIcon,
-} from "lucide-react";
+import { CodeIcon, WebhookIcon } from "lucide-react";
 import { FeatureCard } from "../payments/components/FeatureCard.client";
 
 export function QuickStartSection(props: {
@@ -24,32 +20,36 @@ export function QuickStartSection(props: {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <FeatureCard
-          title="Cross-chain Swap Tokens"
-          icon={ArrowRightLeftIcon}
-          setupTime={5}
+          title="Buy Widget Component"
+          icon={CodeIcon}
           id="swap_tokens"
-          features={["Swap any token", "Cross-chain swap"]}
-          description="Swap tokens cross-chain with dedicated swapping endpoints."
+          features={[
+            "React component",
+            "Cross-chain token swaps across 85+ blockchains",
+            "Fiat onramp support to buy tokens with credit/debit cards",
+            "Customizable UI",
+          ]}
+          description={undefined}
           link={{
             href: `https://portal.thirdweb.com/bridge/swap`,
-            label: "Setup Swap",
+            label: "Get Started",
           }}
         />
 
         <FeatureCard
-          title="Earn Fees"
-          description="Setup fees to earn any time a user swaps or bridges funds."
-          icon={BadgeDollarSignIcon}
+          title="Bridge Widget Script"
+          description={undefined}
+          icon={CodeIcon}
           id="fees"
-          setupTime={1}
           features={[
-            "Fees on every purchase",
-            "Custom percentage",
-            "Directly to your wallet",
+            "Integrate with a script tag",
+            "Cross-chain token swaps across 85+ blockchains",
+            "Fiat onramp support to buy tokens with credit/debit cards",
+            "Customizable UI",
           ]}
           link={{
-            href: `/team/${props.teamSlug}/${props.projectSlug}/settings/payments`,
-            label: "Configure Fees",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/bridge/configuration`,
+            label: "Get Started",
           }}
         />
 
@@ -57,7 +57,6 @@ export function QuickStartSection(props: {
           title="Webhooks"
           description="Create Webhooks to get notified on each purchase or transaction."
           icon={WebhookIcon}
-          setupTime={5}
           id="webhooks"
           features={["Instant events", "Transaction verification"]}
           link={{

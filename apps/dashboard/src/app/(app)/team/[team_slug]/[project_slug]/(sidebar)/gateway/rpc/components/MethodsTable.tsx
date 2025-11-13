@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardHeading } from "../../payments/components/common";
+import { CardHeading } from "../../../payments/components/common";
 
 export function TopRPCMethodsTable(props: {
   data: RpcMethodStats[];

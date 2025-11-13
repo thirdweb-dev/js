@@ -115,6 +115,16 @@ const projectPageRedirects = [
     permanent: false,
     source: `${projectRoute}/connect/analytics`,
   },
+  {
+    destination: `${projectRoute}/gateway/indexer/:path*`,
+    permanent: false,
+    source: `${projectRoute}/insight/:path*`,
+  },
+  {
+    destination: `${projectRoute}/gateway/rpc/:path*`,
+    permanent: false,
+    source: `${projectRoute}/rpc/:path*`,
+  },
 ];
 
 const teamPageRedirects = [

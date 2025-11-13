@@ -9,6 +9,7 @@ import {
   type SiweAuthOptions,
   useSiweAuth,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
+import type { OnConnectCallback } from "../../../../core/hooks/connection/types.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useSetActiveWallet } from "../../../../core/hooks/wallets/useSetActiveWallet.js";
@@ -43,7 +44,7 @@ export const ConnectModalContent = (props: {
   wallets: Wallet[];
   accountAbstraction: SmartWalletOptions | undefined;
   auth: SiweAuthOptions | undefined;
-  onConnect: ((wallet: Wallet) => void) | undefined;
+  onConnect: OnConnectCallback | undefined;
   size: "compact" | "wide";
   meta: {
     title?: string;
@@ -93,7 +94,7 @@ export const ConnectModalContent = (props: {
       }
 
       if (props.onConnect) {
-        props.onConnect(wallet);
+        props.onConnect(wallet, connectionManager.connectedWallets.getValue());
       }
 
       onModalUnmount(() => {

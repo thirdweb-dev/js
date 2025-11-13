@@ -15,7 +15,6 @@ import {
 } from "@/components/blocks/full-width-sidebar-layout";
 import { BridgeIcon } from "@/icons/BridgeIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
-import { InsightIcon } from "@/icons/InsightIcon";
 import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { TokenIcon } from "@/icons/TokenIcon";
@@ -24,6 +23,7 @@ import { WalletProductIcon } from "@/icons/WalletProductIcon";
 export function ProjectSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
+  hasEngines: boolean;
 }) {
   const contentSidebarLinks = [
     {
@@ -36,91 +36,80 @@ export function ProjectSidebarLayout(props: {
       separator: true,
     },
     {
-      group: "Build",
+      subMenu: {
+        icon: WalletProductIcon,
+        label: "Wallets",
+      },
       links: [
         {
-          subMenu: {
-            icon: WalletProductIcon,
-            label: "Wallets",
-          },
-          links: [
-            {
-              href: `${props.layoutPath}/wallets/user-wallets`,
-              label: "User Wallets",
-            },
-            {
-              href: `${props.layoutPath}/wallets/server-wallets`,
-              label: "Server Wallets",
-            },
-            {
-              href: `${props.layoutPath}/wallets/sponsored-gas`,
-              label: "Gas Sponsorship",
-            },
-          ],
+          href: `${props.layoutPath}/wallets/user-wallets`,
+          label: "User Wallets",
         },
         {
-          href: `${props.layoutPath}/contracts`,
-          icon: ContractIcon,
-          label: "Contracts",
+          href: `${props.layoutPath}/wallets/server-wallets`,
+          label: "Server Wallets",
         },
         {
-          href: `${props.layoutPath}/ai`,
-          icon: NebulaIcon,
-          label: "AI",
+          href: `${props.layoutPath}/wallets/sponsored-gas`,
+          label: "Gas Sponsorship",
         },
       ],
     },
     {
-      separator: true,
+      href: `${props.layoutPath}/contracts`,
+      icon: ContractIcon,
+      label: "Contracts",
     },
     {
-      group: "Monetize",
+      href: `${props.layoutPath}/x402`,
+      icon: PayIcon,
+      label: (
+        <span className="flex items-center gap-2">
+          x402 <Badge>New</Badge>
+        </span>
+      ),
+    },
+    {
+      href: `${props.layoutPath}/bridge`,
+      icon: BridgeIcon,
+      label: "Bridge",
+    },
+    {
+      href: `${props.layoutPath}/tokens`,
+      icon: TokenIcon,
+      label: "Tokens",
+    },
+    {
+      href: `${props.layoutPath}/ai`,
+      icon: NebulaIcon,
+      label: "AI",
+    },
+    {
+      subMenu: {
+        icon: RssIcon,
+        label: "Gateway",
+      },
       links: [
         {
-          href: `${props.layoutPath}/x402`,
-          icon: PayIcon,
-          label: (
-            <span className="flex items-center gap-2">
-              x402 <Badge>New</Badge>
-            </span>
-          ),
-        },
-        {
-          href: `${props.layoutPath}/bridge`,
-          icon: BridgeIcon,
-          label: "Bridge",
-        },
-        {
-          href: `${props.layoutPath}/tokens`,
-          icon: TokenIcon,
-          label: "Tokens",
-        },
-      ],
-    },
-    {
-      separator: true,
-    },
-    {
-      group: "Scale",
-      links: [
-        {
-          href: `${props.layoutPath}/insight`,
-          icon: InsightIcon,
-          label: "Insight",
-        },
-        {
-          href: `${props.layoutPath}/rpc`,
-          icon: RssIcon,
+          href: `${props.layoutPath}/gateway/rpc`,
           label: "RPC",
         },
-        // linkely want to move this to `team` level eventually
         {
-          href: `${props.layoutPath}/engine`,
-          icon: DatabaseIcon,
-          label: "Engine",
+          href: `${props.layoutPath}/gateway/indexer`,
+          label: "Indexer",
         },
       ],
     },
+    // only show engine link if there the user already has an engine instance
+    ...(props.hasEngines
+      ? [
+          {
+            href: `${props.layoutPath}/engine`,
+            icon: DatabaseIcon,
+            label: "Engine",
+          },
+        ]
+      : []),
   ] satisfies ShadcnSidebarLink[];
 
   const footerSidebarLinks = [

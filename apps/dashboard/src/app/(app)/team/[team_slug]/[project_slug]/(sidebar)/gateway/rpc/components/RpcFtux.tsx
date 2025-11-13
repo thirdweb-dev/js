@@ -1,7 +1,7 @@
 import { CodeServer } from "@/components/ui/code/code.server";
 import { isProd } from "@/constants/env-utils";
-import { ClientIDSection } from "../../components/ProjectFTUX/ClientIDSection";
-import { WaitingForIntegrationCard } from "../../components/WaitingForIntegrationCard/WaitingForIntegrationCard";
+import { ClientIDSection } from "../../../components/ProjectFTUX/ClientIDSection";
+import { WaitingForIntegrationCard } from "../../../components/WaitingForIntegrationCard/WaitingForIntegrationCard";
 
 export function RpcFTUX(props: { clientId: string }) {
   return (

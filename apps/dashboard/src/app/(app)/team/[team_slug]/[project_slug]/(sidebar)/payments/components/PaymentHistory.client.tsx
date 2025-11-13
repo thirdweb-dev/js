@@ -15,14 +15,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
+  TableCell,
   TableContainer,
+  TableHead,
   TableHeader,
+  TableRow as TableRowComponent,
 } from "@/components/ui/table";
-import { TableData, TableHeading, TableHeadingRow } from "./common";
 import { formatTokenAmount } from "./format";
-import { TableRow } from "./PaymentsTableRow";
+import { PurchaseTableRow } from "./PaymentsTableRow";
 
-const pageSize = 20;
+const pageSize = 10;
 
 export function PaymentHistory(props: {
   client: ThirdwebClient;
@@ -79,14 +81,15 @@ export function PaymentHistory(props: {
       <TableContainer>
         <Table>
           <TableHeader>
-            <TableHeadingRow>
-              <TableHeading> Sent </TableHeading>
-              <TableHeading> Received </TableHeading>
-              <TableHeading>Type</TableHeading>
-              <TableHeading>Status</TableHeading>
-              <TableHeading>Recipient</TableHeading>
-              <TableHeading>Date</TableHeading>
-            </TableHeadingRow>
+            <TableRowComponent>
+              <TableHead> Sent </TableHead>
+              <TableHead> Received </TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Recipient</TableHead>
+              <TableHead>Timestamp</TableHead>
+              <TableHead>Transactions</TableHead>
+            </TableRowComponent>
           </TableHeader>
           <TableBody>
             {(!isEmpty || isLoading) &&
@@ -95,7 +98,7 @@ export function PaymentHistory(props: {
                     .filter(isBridgePayment)
                     .map((purchase) => {
                       return (
-                        <TableRow
+                        <PurchaseTableRow
                           client={props.client}
                           key={purchase.id}
                           purchase={purchase}
@@ -174,25 +177,31 @@ function getCSVData(data: BridgePayment[]) {
 
 function SkeletonTableRow() {
   return (
-    <tr className="border-border border-b">
-      <TableData>
+    <TableRowComponent className="h-[73px]">
+      <TableCell>
         <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-7 w-20" />
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-7 w-20 rounded-2xl" />
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-7 w-[140px]" />
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-7 w-[200px]" />
-      </TableData>
-    </tr>
+      </TableCell>
+      <TableCell>
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-5 w-[100px]" />
+          <Skeleton className="h-5 w-[100px]" />
+        </div>
+      </TableCell>
+    </TableRowComponent>
   );
 }

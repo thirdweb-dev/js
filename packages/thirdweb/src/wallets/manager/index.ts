@@ -1,6 +1,7 @@
 import type { Chain } from "../../chains/types.js";
 import { cacheChains } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { OnConnectCallback } from "../../react/core/hooks/connection/types.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
@@ -29,7 +30,7 @@ export type ConnectManagerOptions = {
   client: ThirdwebClient;
   accountAbstraction?: SmartWalletOptions;
   setWalletAsActive?: boolean;
-  onConnect?: (wallet: Wallet) => void;
+  onConnect?: OnConnectCallback;
 };
 
 /**
@@ -158,7 +159,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     wallet.subscribe("accountChanged", async () => {
       // We reimplement connect here to prevent memory leaks
       const newWallet = await handleConnection(wallet, options);
-      options?.onConnect?.(newWallet);
+      options?.onConnect?.(newWallet, connectedWallets.getValue());
     });
 
     return activeWallet;
@@ -167,7 +168,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
     // connectedWallet can be either wallet or smartWallet
     const connectedWallet = await handleConnection(wallet, options);
-    options?.onConnect?.(connectedWallet);
+    options?.onConnect?.(connectedWallet, connectedWallets.getValue());
     return connectedWallet;
   };
 

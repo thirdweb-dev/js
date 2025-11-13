@@ -24,7 +24,7 @@ export function X402SettlementsByChainChartCard({
   const isVolumeMetric = metric === "volume";
   const chainsStore = useAllChainsData();
 
-  const { data, chainsToDisplay, chartConfig, isAllEmpty } = useMemo(() => {
+  const { data, chartConfig } = useMemo(() => {
     const dateToValueMap: Map<string, ChartData> = new Map();
     const chainToCountMap: Map<string, number> = new Map();
 

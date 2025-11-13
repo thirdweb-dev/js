@@ -22,7 +22,7 @@ export function X402SettlementsByResourceChartCard({
   const maxResourcesToDisplay = 10;
   const isVolumeMetric = metric === "volume";
 
-  const { data, resourcesToDisplay, chartConfig, isAllEmpty } = useMemo(() => {
+  const { data, chartConfig } = useMemo(() => {
     const dateToValueMap: Map<string, ChartData> = new Map();
     const resourceToCountMap: Map<string, number> = new Map();
 

@@ -6,15 +6,10 @@ import {
   ArrowRightIcon,
   CheckIcon,
   CircleAlertIcon,
-  DatabaseIcon,
-  InfinityIcon,
   InfoIcon,
   MoreHorizontalIcon,
   PencilIcon,
-  PlusIcon,
-  ShieldCheckIcon,
   Trash2Icon,
-  WalletIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,7 +17,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import type { Team } from "@/api/team/get-team";
-import { CheckoutButton } from "@/components/billing/billing";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,20 +25,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,7 +56,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   type DeleteCloudHostedEngineParams,
   deleteCloudHostedEngine,
@@ -84,7 +67,6 @@ import {
 } from "@/hooks/useEngine";
 import { EngineIcon } from "@/icons/EngineIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { cn } from "@/lib/utils";
 
 type DeletedCloudHostedEngine = (
   params: DeleteCloudHostedEngineParams,
@@ -123,96 +105,6 @@ export function EngineInstancesTable(props: {
       }}
       team={props.team}
     />
-  );
-}
-
-export function DedicatedEngineSubscriptionButton(props: { team: Team }) {
-  const [open, setOpen] = useState(false);
-  const isMobile = useIsMobile();
-
-  const trigger = (
-    <Button className="gap-2 rounded-full" size="sm">
-      <PlusIcon className="size-3.5" />
-      Deploy Dedicated Engine
-    </Button>
-  );
-
-  const title = (
-    <div className="flex flex-row items-center gap-2">
-      <div className="grid size-8 place-items-center rounded-full bg-warning-text">
-        <DatabaseIcon className="size-4 text-white" />
-      </div>
-      <span className="font-semibold text-lg">Dedicated Engine</span>
-    </div>
-  );
-
-  const content = (
-    <div className="flex flex-col items-start justify-center gap-4 px-4 md:px-0">
-      <ul className="flex flex-col gap-1 self-start text-muted-foreground text-sm">
-        <li className="flex items-center gap-2">
-          <ShieldCheckIcon className="size-4 text-foreground" />
-          Isolated environment
-        </li>
-        <li className="flex items-center gap-2">
-          <WalletIcon className="size-4 text-foreground" />
-          EOA or Smart Wallets
-        </li>
-        <li className="flex items-center gap-2">
-          <InfinityIcon className="size-4 text-foreground" />
-          No transaction usage limits or charges
-        </li>
-      </ul>
-    </div>
-  );
-
-  if (isMobile) {
-    return (
-      <Drawer onOpenChange={setOpen} open={open}>
-        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-        <DrawerContent className="max-h-[90vh]">
-          <DrawerHeader>
-            <DrawerTitle>{title}</DrawerTitle>
-            <DrawerDescription>
-              Instantly deploy a dedicated engine instance for your team.
-            </DrawerDescription>
-          </DrawerHeader>
-          {content}
-          <DrawerFooter>
-            <CheckoutButton
-              billingStatus={props.team.billingStatus}
-              sku="product:engine_standard"
-              teamSlug={props.team.slug}
-            >
-              Deploy Now · $299 / month
-            </CheckoutButton>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
-
-  return (
-    <Dialog onOpenChange={setOpen} open={open}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            Instantly deploy a dedicated engine instance for your team.
-          </DialogDescription>
-        </DialogHeader>
-        {content}
-        <DialogFooter>
-          <CheckoutButton
-            billingStatus={props.team.billingStatus}
-            sku="product:engine_standard"
-            teamSlug={props.team.slug}
-          >
-            Deploy Now · $299 / month
-          </CheckoutButton>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }
 
@@ -896,10 +788,6 @@ function DeleteEngineSubscriptionModalContent(props: {
 }
 
 function EmptyEngineState(props: { team: Team; projectSlug: string }) {
-  const [selectedTab, setSelectedTab] = useState<
-    "self-hosted" | "cloud-hosted"
-  >("cloud-hosted");
-
   return (
     <div className="flex flex-col items-center justify-center rounded-lg border bg-card px-4 py-12 lg:px-6">
       <div className="mb-4 rounded-full border bg-card p-2">
@@ -908,75 +796,34 @@ function EmptyEngineState(props: { team: Team; projectSlug: string }) {
 
       <h2 className="mb-1 font-semibold text-xl">No Engine instances found</h2>
       <p className="mb-6 max-w-lg text-center text-muted-foreground text-sm">
-        Get started with one of the options below to add your first engine
-        instance.
+        Import an Engine instance running on your own infrastructure.
       </p>
 
       <div className="w-full max-w-md">
-        <div className="mx-auto max-w-sm">
-          <div className="grid grid-cols-2 gap-1 rounded-lg border p-1">
-            <Button
-              className={cn(selectedTab === "cloud-hosted" && "bg-accent")}
-              onClick={() => setSelectedTab("cloud-hosted")}
-              size="sm"
-              variant="ghost"
-            >
-              Managed
-            </Button>
+        <div className="h-5" />
 
+        <div className="flex flex-col text-center">
+          <h3 className="mb-0.5 font-semibold text-base">Self-Hosted Engine</h3>
+          <p className="text-muted-foreground text-sm">
+            Add engine instance running on your own infrastructure.
+          </p>
+          <div className="h-4" />
+          <div className="mt-auto">
             <Button
-              className={cn(selectedTab === "self-hosted" && "bg-accent")}
-              onClick={() => setSelectedTab("self-hosted")}
+              asChild
+              className="w-full gap-2"
               size="sm"
-              variant="ghost"
+              variant="default"
             >
-              Self-hosted
+              <Link
+                href={`/team/${props.team.slug}/${props.projectSlug}/engine`}
+              >
+                Import self-hosted Engine
+                <ArrowRightIcon size={16} />
+              </Link>
             </Button>
           </div>
         </div>
-
-        <div className="h-5" />
-
-        {selectedTab === "self-hosted" && (
-          <div className="flex flex-col text-center">
-            <h3 className="mb-0.5 font-semibold text-base">
-              Self-Hosted Engine
-            </h3>
-            <p className="text-muted-foreground text-sm">
-              Add engine instance running on your own infrastructure.
-            </p>
-            <div className="h-4" />
-            <div className="mt-auto">
-              <Button
-                asChild
-                className="w-full gap-2"
-                size="sm"
-                variant="default"
-              >
-                <Link
-                  href={`/team/${props.team.slug}/${props.projectSlug}/engine`}
-                >
-                  Import self-hosted Engine
-                  <ArrowRightIcon size={16} />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {selectedTab === "cloud-hosted" && (
-          <div className="flex flex-col text-center">
-            <h3 className="mb-0.5 font-semibold text-base">Managed Engine</h3>
-            <p className="text-muted-foreground text-sm">
-              Deploy a managed engine instance to your team. <br /> We recommend
-              using Engine Cloud in most cases.
-            </p>
-            <div className="h-4" />
-            <div className="mt-auto">
-              <DedicatedEngineSubscriptionButton team={props.team} />
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="mt-4 text-center text-muted-foreground text-sm">

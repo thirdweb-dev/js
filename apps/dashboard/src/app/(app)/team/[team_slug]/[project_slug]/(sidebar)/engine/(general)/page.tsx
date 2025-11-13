@@ -7,7 +7,6 @@ import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { getEngineInstances } from "../_utils/getEngineInstances";
 import { ImportEngineButton } from "./import/import-engine-dialog";
-import { DedicatedEngineSubscriptionButton } from "./overview/engine-instances-table";
 import { EngineInstancesList } from "./overview/engine-list";
 
 export default async function Page(props: {
@@ -61,9 +60,6 @@ export default async function Page(props: {
         title: "Engine",
         description: "Manage your deployed Engine instances.",
         actions: {
-          primary: {
-            component: <DedicatedEngineSubscriptionButton team={team} />,
-          },
           secondary: {
             component: (
               <ImportEngineButton

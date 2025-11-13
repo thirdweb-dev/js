@@ -1,13 +1,13 @@
-import { RssIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
+import { InsightIcon } from "@/icons/InsightIcon";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
-import { RPCAnalytics } from "./components/RpcAnalytics";
+import { InsightAnalytics } from "./components/InsightAnalytics";
 
 export default async function Page(props: {
   params: Promise<{
@@ -25,7 +25,9 @@ export default async function Page(props: {
   const project = await getProject(params.team_slug, params.project_slug);
 
   if (!authToken) {
-    loginRedirect(`/team/${params.team_slug}/${params.project_slug}/rpc`);
+    loginRedirect(
+      `/team/${params.team_slug}/${params.project_slug}/gateway/indexer`,
+    );
   }
 
   if (!project) {
@@ -48,38 +50,34 @@ export default async function Page(props: {
   return (
     <ProjectPage
       header={{
-        icon: RssIcon,
         client,
-        title: "RPC",
-        description: (
-          <>
-            Remote Procedure Call (RPC) provides reliable access to{" "}
-            <br className="max-sm:hidden" /> querying data and interacting with
-            the blockchain through global edge RPCs
-          </>
-        ),
+        icon: InsightIcon,
+        title: "Indexer",
+        description:
+          "Indexed data for EVM chains, available automatically via the thirdweb SDKs and API.",
         actions: null,
         links: [
           {
             type: "docs",
-            href: "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
+            href: "https://portal.thirdweb.com/contracts/events",
+          },
+          {
+            type: "api",
+            href: "https://portal.thirdweb.com/reference",
           },
         ],
       }}
     >
       <ResponsiveSearchParamsProvider value={searchParams}>
-        <div>
-          <RPCAnalytics
-            client={client}
-            interval={interval}
-            projectClientId={project.publishableKey}
-            projectId={project.id}
-            range={range}
-            authToken={authToken}
-            teamId={project.teamId}
-          />
-          <div className="h-10" />
-        </div>
+        <InsightAnalytics
+          client={client}
+          interval={interval}
+          projectClientId={project.publishableKey}
+          projectId={project.id}
+          range={range}
+          teamId={project.teamId}
+          authToken={authToken}
+        />
       </ResponsiveSearchParamsProvider>
     </ProjectPage>
   );

@@ -49,7 +49,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("Connection Manager", () => {
 
     await manager.connect(wallet, { client, onConnect });
 
-    expect(onConnect).toHaveBeenCalledWith(wallet);
+    expect(onConnect).toHaveBeenCalledWith(wallet, [wallet]);
     expect(storage.setItem).toHaveBeenCalled();
   });
 

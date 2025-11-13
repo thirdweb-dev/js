@@ -71,7 +71,7 @@ export function QuickStartSection(props: {
             "Directly to your wallet",
           ]}
           link={{
-            href: `/team/${props.teamSlug}/${props.projectSlug}/settings/payments`,
+            href: `/team/${props.teamSlug}/${props.projectSlug}/bridge/configuration`,
             label: "Configure Fees",
           }}
         />

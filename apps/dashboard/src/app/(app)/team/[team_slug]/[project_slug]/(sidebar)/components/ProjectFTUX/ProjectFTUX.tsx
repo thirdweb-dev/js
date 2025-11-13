@@ -13,7 +13,6 @@ import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
-import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { ClientIDSection } from "./ClientIDSection";
 import { SecretKeySection } from "./SecretKeySection";
@@ -110,13 +109,6 @@ function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
       href: `/team/${props.teamSlug}/${props.projectSlug}/contracts`,
       icon: ContractIcon,
       title: "Contracts",
-    },
-    {
-      description:
-        "Add indexing capabilities to retrieve real-time onchain data",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/insight`,
-      icon: InsightIcon,
-      title: "Insight",
     },
     {
       description:
