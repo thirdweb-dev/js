@@ -12,6 +12,7 @@ import { TeamHeaderLoggedIn } from "../../../components/TeamHeader/team-header-l
 import { StaffModeNotice } from "../../(team)/_components/StaffModeNotice";
 import { ProjectSidebarLayout } from "./components/ProjectSidebarLayout";
 import { SaveLastUsedProject } from "./components/SaveLastUsedProject";
+import { getEngineInstances } from "./engine/_utils/getEngineInstances";
 
 export default async function ProjectLayout(props: {
   children: React.ReactNode;
@@ -20,15 +21,34 @@ export default async function ProjectLayout(props: {
 }) {
   const params = await props.params;
 
-  const [accountAddress, teams, account, authToken, team, project] =
-    await Promise.all([
-      getAuthTokenWalletAddress(),
-      getTeams(),
-      getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
-      getAuthToken(),
-      getTeamBySlug(params.team_slug),
-      getProject(params.team_slug, params.project_slug),
-    ]);
+  const [
+    accountAddress,
+    teams,
+    account,
+    authToken,
+    team,
+    project,
+    hasLegacyDedicatedEngines,
+  ] = await Promise.all([
+    getAuthTokenWalletAddress(),
+    getTeams(),
+    getValidAccount(`/team/${params.team_slug}/${params.project_slug}`),
+    getAuthToken(),
+    getTeamBySlug(params.team_slug),
+    getProject(params.team_slug, params.project_slug),
+    (async () => {
+      const authToken = await getAuthToken();
+      if (!authToken) {
+        return false;
+      }
+      const instances = await getEngineInstances({
+        authToken,
+        teamIdOrSlug: params.team_slug,
+      });
+      // if there are any engine instances, return true, otherwise false
+      return !!instances?.data?.length;
+    })(),
+  ]);
 
   if (!teams || !accountAddress || !authToken) {
     redirect("/login");
@@ -73,7 +93,10 @@ export default async function ProjectLayout(props: {
             teamsAndProjects={teamsAndProjects}
           />
         </div>
-        <ProjectSidebarLayout layoutPath={layoutPath}>
+        <ProjectSidebarLayout
+          layoutPath={layoutPath}
+          hasEngines={hasLegacyDedicatedEngines}
+        >
           {props.children}
         </ProjectSidebarLayout>
       </div>

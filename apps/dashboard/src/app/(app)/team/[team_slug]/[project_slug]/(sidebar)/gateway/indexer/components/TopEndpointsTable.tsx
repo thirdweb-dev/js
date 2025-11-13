@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { shortenLargeNumber } from "thirdweb/utils";
-import type { InsightChainStats } from "@/api/analytics";
+import type { InsightEndpointStats } from "@/api/analytics";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
   Table,
@@ -13,14 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardHeading } from "../../payments/components/common";
+import { CardHeading } from "../../../payments/components/common";
 
-export function TopInsightChainsTable(props: {
-  data: InsightChainStats[];
+export function TopInsightEndpointsTable(props: {
+  data: InsightEndpointStats[];
   client: ThirdwebClient;
 }) {
   const tableData = useMemo(() => {
-    return props.data.sort((a, b) => b.totalRequests - a.totalRequests);
+    return props.data?.sort((a, b) => b.totalRequests - a.totalRequests);
   }, [props.data]);
   const isEmpty = useMemo(() => tableData.length === 0, [tableData]);
 
@@ -28,7 +28,7 @@ export function TopInsightChainsTable(props: {
     <div className="flex flex-col">
       {/* header */}
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <CardHeading>Top Chains</CardHeading>
+        <CardHeading>Top Endpoints</CardHeading>
       </div>
 
       <div className="h-5" />
@@ -36,17 +36,17 @@ export function TopInsightChainsTable(props: {
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
-              <TableHead>Chain ID</TableHead>
+              <TableHead>Endpoint</TableHead>
               <TableHead>Requests</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {tableData.map((chain, i) => {
+            {tableData.map((endpoint, i) => {
               return (
-                <ChainTableRow
-                  chain={chain}
+                <EndpointTableRow
                   client={props.client}
-                  key={chain.chainId}
+                  endpoint={endpoint}
+                  key={endpoint.endpoint}
                   rowIndex={i}
                 />
               );
@@ -63,9 +63,9 @@ export function TopInsightChainsTable(props: {
   );
 }
 
-function ChainTableRow(props: {
-  chain?: {
-    chainId: string;
+function EndpointTableRow(props: {
+  endpoint?: {
+    endpoint: string;
     totalRequests: number;
   };
   client: ThirdwebClient;
@@ -80,10 +80,10 @@ function ChainTableRow(props: {
       <TableCell>
         <SkeletonContainer
           className="inline-flex"
-          loadedData={props.chain?.chainId}
+          loadedData={props.endpoint?.endpoint}
           render={(v) => (
             <p className={"truncate max-w-[280px]"} title={v}>
-              {v === "0" ? "Multichain" : v}
+              {v}
             </p>
           )}
           skeletonData="..."
@@ -93,7 +93,7 @@ function ChainTableRow(props: {
       <TableCell>
         <SkeletonContainer
           className="inline-flex"
-          loadedData={props.chain?.totalRequests}
+          loadedData={props.endpoint?.totalRequests}
           render={(v) => {
             return <p>{shortenLargeNumber(v)}</p>;
           }}
