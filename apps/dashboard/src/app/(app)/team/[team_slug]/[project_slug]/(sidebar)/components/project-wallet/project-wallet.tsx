@@ -2,7 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UnderlineLink } from "@workspace/ui/components/UnderlineLink";
-import { ChevronDownIcon, XIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
@@ -29,6 +30,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectWalletSummary } from "@/lib/server/project-wallet";
+import { cn } from "@/lib/utils";
 import { updateDefaultProjectWallet } from "../../transactions/lib/vault.client";
 import { CreateServerWallet } from "../../transactions/server-wallets/components/create-server-wallet.client";
 import { ProjectWalletDetailsSection } from "./project-wallet-details";
@@ -131,11 +133,11 @@ function CreateProjectWalletSection(props: {
     Boolean(managementAccessToken) && serverWallets.length > 0;
 
   return (
-    <div className="rounded-xl border p-4 bg-card">
+    <div className="rounded-xl border p-5 bg-card">
       <div className="rounded-full p-2 border bg-background inline-flex mb-4">
-        <XIcon className="size-3.5 text-muted-foreground" />
+        <XIcon className="size-4 text-muted-foreground" />
       </div>
-      <h2 className="text-sm font-medium text-foreground mb-0.5">
+      <h2 className="text-base font-medium text-foreground mb-0.5">
         No Project Wallet set
       </h2>
       <p className="text-sm text-muted-foreground">
@@ -276,10 +278,17 @@ export function ProjectWalletSectionUI(props: {
   projectWallet: ProjectWalletSummary | undefined;
   getProjectServerWallets: GetProjectServerWallets;
   client: ThirdwebClient;
+  layout: "row" | "column";
 }) {
   return (
-    <div>
-      <div className="mb-3">
+    <div
+      className={cn(
+        props.layout === "row"
+          ? "grid grid-cols-1 gap-4 lg:grid-cols-2"
+          : "flex flex-col gap-4",
+      )}
+    >
+      <div>
         <h2 className="mb-1 font-semibold text-xl tracking-tight">
           Project Wallet
         </h2>
@@ -292,6 +301,24 @@ export function ProjectWalletSectionUI(props: {
             thirdweb API
           </UnderlineLink>
         </p>
+        {props.layout === "row" && (
+          <div className="mt-4 hidden lg:block">
+            <Button
+              variant="outline"
+              asChild
+              className="rounded-lg gap-2 bg-card"
+              size="sm"
+            >
+              <Link
+                href="https://portal.thirdweb.com/reference"
+                target="_blank"
+              >
+                View API Reference
+                <ArrowUpRightIcon className="size-4" />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
 
       {props.projectWallet ? (
@@ -318,6 +345,7 @@ export function ProjectWalletSection(props: {
   teamSlug: string;
   projectWallet: ProjectWalletSummary | undefined;
   client: ThirdwebClient;
+  layout: "row" | "column";
 }) {
   return (
     <ProjectWalletSectionUI
@@ -326,6 +354,7 @@ export function ProjectWalletSection(props: {
       client={props.client}
       projectWallet={props.projectWallet}
       getProjectServerWallets={listProjectServerWallets}
+      layout={props.layout}
     />
   );
 }

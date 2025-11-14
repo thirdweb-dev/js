@@ -1,7 +1,7 @@
+import { BotIcon } from "lucide-react";
 import { ConnectSDKIcon } from "@/icons/ConnectSDKIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
 import { EngineIcon } from "@/icons/EngineIcon";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { RPCIcon } from "@/icons/RPCIcon";
 import { SmartAccountIcon } from "@/icons/SmartAccountIcon";
@@ -52,7 +52,7 @@ export const products = [
   },
   {
     description: "The most powerful AI for interacting with the blockchain",
-    icon: NebulaIcon,
+    icon: BotIcon,
     id: "nebula",
     link: "https://thirdweb.com/ai",
     name: "thirdweb AI",

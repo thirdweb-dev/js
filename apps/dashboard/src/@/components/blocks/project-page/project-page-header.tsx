@@ -66,13 +66,16 @@ export type ProjectPageHeaderProps = {
     href: string;
   };
 
+  className?: string;
   // TODO: add task card component
   task?: never;
 };
 
 export function ProjectPageHeader(props: ProjectPageHeaderProps) {
   return (
-    <header className="container max-w-7xl py-6 relative">
+    <header
+      className={cn("container max-w-7xl py-6 relative", props.className)}
+    >
       {/* top row */}
       <div className="flex justify-between items-start mb-4">
         {/* left - icon */}

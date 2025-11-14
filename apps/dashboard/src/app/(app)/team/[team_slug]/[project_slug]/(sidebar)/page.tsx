@@ -119,7 +119,7 @@ export default async function ProjectOverviewPage(props: PageProps) {
           isProjectIcon: true,
           icon: () => (
             <ProjectAvatar
-              className="size-12"
+              className="size-11"
               client={client}
               src={project.image ?? ""}
             />
@@ -130,30 +130,44 @@ export default async function ProjectOverviewPage(props: PageProps) {
           actions: null,
         }}
       >
-        <ProjectWalletSection
-          project={project}
-          teamSlug={params.team_slug}
-          projectWallet={projectWallet}
-          client={client}
-        />
-
-        <div className="h-10" />
-
         {isActive ? (
-          <div className="flex flex-col gap-4 md:gap-6">
-            <ResponsiveTimeFilters defaultRange={defaultRange} />
-            <ProjectAnalytics
-              authToken={authToken}
-              client={client}
-              interval={interval}
-              params={params}
+          <div className="flex flex-col gap-4 md:gap-10">
+            <ProjectWalletSection
               project={project}
-              range={range}
-              searchParams={searchParams}
+              teamSlug={params.team_slug}
+              projectWallet={projectWallet}
+              client={client}
+              layout="column"
             />
+            <div className="flex flex-col gap-4">
+              <ResponsiveTimeFilters defaultRange={defaultRange} />
+              <ProjectAnalytics
+                authToken={authToken}
+                client={client}
+                interval={interval}
+                params={params}
+                project={project}
+                range={range}
+                searchParams={searchParams}
+              />
+            </div>
           </div>
         ) : (
-          <ProjectFTUX project={project} teamSlug={params.team_slug} />
+          <div className="pt-6">
+            <ProjectFTUX
+              project={project}
+              teamSlug={params.team_slug}
+              projectWalletSection={
+                <ProjectWalletSection
+                  project={project}
+                  teamSlug={params.team_slug}
+                  projectWallet={projectWallet}
+                  client={client}
+                  layout="row"
+                />
+              }
+            />
+          </div>
         )}
       </ProjectPage>
     </ResponsiveSearchParamsProvider>

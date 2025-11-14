@@ -3,8 +3,8 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 export function ClientIDSection(props: { clientId: string }) {
   return (
     <div>
-      <h3>Client ID</h3>
-      <p className="mb-2 text-muted-foreground text-sm">
+      <h3 className="mb-1 text-base text-foreground font-medium">Client ID</h3>
+      <p className="mb-3 text-muted-foreground text-sm">
         Identifies your application
       </p>
 

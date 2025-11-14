@@ -49,6 +49,7 @@ const projectWallet2: ProjectWalletSummary = {
 
 export const NoProjectWalletSetNoManagedAccessToken: Story = {
   args: {
+    layout: "column",
     project: projectWithoutManagedAccessToken,
     client: storybookThirdwebClient,
     teamSlug: "bar",
@@ -62,6 +63,7 @@ export const NoProjectWalletSetNoManagedAccessToken: Story = {
 
 export const NoProjectWalletSetWithManagedAccessToken: Story = {
   args: {
+    layout: "column",
     project: projectWithManagedAccessToken,
     client: storybookThirdwebClient,
     teamSlug: "bar",
@@ -75,6 +77,7 @@ export const NoProjectWalletSetWithManagedAccessToken: Story = {
 
 export const NoProjectWalletSetWithManagedAccessTokenAndServerWallets: Story = {
   args: {
+    layout: "column",
     project: projectWithManagedAccessToken,
     teamSlug: "bar",
     client: storybookThirdwebClient,
@@ -88,6 +91,7 @@ export const NoProjectWalletSetWithManagedAccessTokenAndServerWallets: Story = {
 
 export const NoProjectWalletSetLoading: Story = {
   args: {
+    layout: "column",
     project: projectWithManagedAccessToken,
     teamSlug: "bar",
     client: storybookThirdwebClient,
@@ -101,6 +105,7 @@ export const NoProjectWalletSetLoading: Story = {
 
 export const ProjectWalletSetMultipleServerWallets: Story = {
   args: {
+    layout: "column",
     project: projectWithManagedAccessToken,
     teamSlug: "bar",
     client: storybookThirdwebClient,
@@ -114,6 +119,7 @@ export const ProjectWalletSetMultipleServerWallets: Story = {
 
 export const ProjectWalletSetSingleServerWallet: Story = {
   args: {
+    layout: "column",
     project: projectWithManagedAccessToken,
     teamSlug: "bar",
     projectWallet: projectWallet1,

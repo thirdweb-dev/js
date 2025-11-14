@@ -67,7 +67,7 @@ export function FullWidthSidebarLayout(props: {
       )}
     >
       {/* left - sidebar */}
-      <Sidebar className="pt-2" collapsible="icon" side="left">
+      <Sidebar collapsible="icon" side="left">
         <SidebarContent className="p-2">
           <RenderSidebarMenu links={contentSidebarLinks} />
         </SidebarContent>

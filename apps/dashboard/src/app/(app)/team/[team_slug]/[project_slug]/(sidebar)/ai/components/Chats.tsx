@@ -1,10 +1,9 @@
 import { MarkdownRenderer } from "@workspace/ui/components/markdown-renderer";
 import { ScrollShadow } from "@workspace/ui/components/scroll-shadow";
-import { AlertCircleIcon } from "lucide-react";
+import { AlertCircleIcon, BotIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Project } from "@/api/project/projects";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { cn } from "@/lib/utils";
 import type {
   NebulaSwapData,
@@ -238,11 +237,11 @@ function RenderMessage(props: {
           )}
         >
           {message.type === "presence" && (
-            <NebulaIcon className="size-5 text-muted-foreground" />
+            <BotIcon className="size-5 text-muted-foreground" />
           )}
 
           {message.type === "assistant" && (
-            <NebulaIcon className="size-5 text-muted-foreground" />
+            <BotIcon className="size-5 text-muted-foreground" />
           )}
 
           {message.type === "error" && (
