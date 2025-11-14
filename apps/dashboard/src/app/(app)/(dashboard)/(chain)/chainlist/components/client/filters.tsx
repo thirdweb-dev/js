@@ -15,7 +15,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { products } from "../../../components/server/products";
+import { services } from "../../../components/server/products";
 
 function cleanUrl(url: string) {
   if (url.endsWith("?")) {
@@ -345,7 +345,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
 
   const section = (
     <FilterSection title="Services">
-      {products.map((product) => (
+      {services.map((product) => (
         <div className="group flex items-center gap-2" key={product.id}>
           <Checkbox
             checked={isServiceActive(mutableSearchParams, product.id)}
@@ -393,7 +393,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
     }
 
     const firstFilter = allFilters[0];
-    const name = products.find((p) => p.id === firstFilter)?.name;
+    const name = services.find((p) => p.id === firstFilter)?.name;
     const plus = allFilters.length > 1 ? ` +${allFilters.length - 1}` : "";
 
     return [`${name}${plus}`, true];

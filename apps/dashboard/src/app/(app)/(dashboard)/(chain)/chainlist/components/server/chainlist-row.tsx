@@ -12,7 +12,7 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { ChainSupportedService } from "@/types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
-import { products } from "../../../components/server/products";
+import { services } from "../../../components/server/products";
 import { getCustomChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {
@@ -83,7 +83,7 @@ export function ChainListRow({
       <TableCell>
         <div className="flex w-[520px] flex-row items-center gap-14 ">
           <div className="z-10 flex items-center gap-4">
-            {products.map((p) => {
+            {services.map((p) => {
               return (
                 <ProductIcon
                   href={p.link}
