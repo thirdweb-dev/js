@@ -102,13 +102,6 @@ function ArchiveSection() {
 					external
 				/>
 				<ArticleCardIndex
-					description="Transactions knowledge base and guides"
-					href="/transactions"
-					icon={ArchiveIcon}
-					title="Transactions"
-					external
-				/>
-				<ArticleCardIndex
 					description="Contracts knowledge base and guides"
 					href="/contracts"
 					icon={ArchiveIcon}
