@@ -47,8 +47,6 @@ export async function resolveImplementation(
   }
 
   // check other proxy types
-  let implementationAddress: string | undefined;
-
   if (beacon && beacon !== AddressZero) {
     // In case of a BeaconProxy, it is setup as BeaconProxy --> Beacon --> Implementation
     // Hence we replace the proxy address with Beacon address, and continue further resolving below
@@ -56,33 +54,36 @@ export async function resolveImplementation(
       ...contract,
       address: beacon,
     });
-
-    implementationAddress = await getImplementationFromContractCall(contract);
-  } else {
-    implementationAddress = await getImplementationFromStorageSlot(contract);
   }
 
-  if (
-    implementationAddress &&
-    isAddress(implementationAddress) &&
-    implementationAddress !== AddressZero
-  ) {
-    const implementationBytecode = await getBytecode({
-      ...contract,
-      address: implementationAddress,
-    });
-    // return the original contract bytecode if the implementation bytecode is empty
-    if (implementationBytecode === "0x") {
+  const implementations = await Promise.all([
+    getImplementationFromStorageSlot(contract),
+    getImplementationFromContractCall(contract),
+  ]);
+
+  for (const implementationAddress of implementations) {
+    if (
+      implementationAddress &&
+      isAddress(implementationAddress) &&
+      implementationAddress !== AddressZero
+    ) {
+      const implementationBytecode = await getBytecode({
+        ...contract,
+        address: implementationAddress,
+      });
+      // return the original contract bytecode if the implementation bytecode is empty
+      if (implementationBytecode === "0x") {
+        return {
+          address: contract.address,
+          bytecode: originalBytecode,
+        };
+      }
+
       return {
-        address: contract.address,
-        bytecode: originalBytecode,
+        address: implementationAddress,
+        bytecode: implementationBytecode,
       };
     }
-
-    return {
-      address: implementationAddress,
-      bytecode: implementationBytecode,
-    };
   }
 
   return { address: contract.address, bytecode: originalBytecode };
