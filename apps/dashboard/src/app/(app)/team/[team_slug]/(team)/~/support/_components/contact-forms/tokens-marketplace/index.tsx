@@ -8,10 +8,10 @@ export function TokensMarketplaceSupportForm() {
   return (
     <>
       <SupportForm_TextInput
-        formLabel="Address"
-        formValue="extraInfo_TokensMarketplace_Address"
+        formLabel="Token address or symbol"
+        formValue="extraInfo_Token_Address_Symbol"
         inputType="text"
-        placeholder="Enter the relevant address"
+        placeholder="Enter token address or symbol (e.g. 0x... or ETH)"
         required={true}
       />
       <SupportForm_TextInput
@@ -20,6 +20,13 @@ export function TokensMarketplaceSupportForm() {
         inputType="text"
         placeholder="e.g. Ethereum, Polygon, etc."
         required={true}
+      />
+      <SupportForm_TextInput
+        formLabel="Support ID in logs"
+        formValue="extraInfo_Support_ID_Logs"
+        inputType="text"
+        placeholder="Enter support ID from logs"
+        required={false}
       />
       <DescriptionInput value={description} onChange={setDescription} />
     </>

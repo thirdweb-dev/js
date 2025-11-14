@@ -1,116 +1,91 @@
+"use client";
+
 import { type ReactElement, useState } from "react";
 import { DescriptionInput } from "../../shared/SupportForm_DescriptionInput";
 import { SupportForm_SelectInput } from "../../shared/SupportForm_SelectInput";
 import { SupportForm_TextInput } from "../../shared/SupportForm_TextInput";
-import { UnitySupportForm } from "../../shared/SupportForm_UnityInput";
-import { AffectedAreaInput } from "./AffectedAreaInput";
 
 type ProblemAreaItem = {
   label: string;
   component: ReactElement;
 };
 
-const SDKVersionInput = () => (
-  <SupportForm_TextInput
-    formLabel="SDK Version"
-    formValue="extraInfo_SDK_Version"
-    inputType="text"
-    required={true}
-  />
-);
-
-const OSSelect = () => {
-  const [selectedOS, setSelectedOS] = useState<string>("");
+const SocialEmailLoginIssuesComponent = () => {
+  const [description, setDescription] = useState<string>("");
   return (
-    <SupportForm_SelectInput
-      formLabel="OS"
-      name="extraInfo_OS"
-      onValueChange={setSelectedOS}
-      options={["Windows", "MacOS", "Linux", "Other"]}
-      promptText="Select an operating system"
-      required={true}
-      value={selectedOS}
-    />
+    <>
+      <SupportForm_TextInput
+        formLabel="User ID/Email with issue"
+        formValue="extraInfo_User_ID_Email"
+        inputType="text"
+        placeholder="Enter user ID or email"
+        required={true}
+      />
+      <DescriptionInput value={description} onChange={setDescription} />
+    </>
   );
 };
 
-const DescriptionInputWrapper = () => {
+const UserWalletCustomAuthComponent = () => {
+  const [description, setDescription] = useState<string>("");
+  return (
+    <>
+      <SupportForm_TextInput
+        formLabel="Custom auth endpoint"
+        formValue="extraInfo_Custom_Auth_Endpoint"
+        inputType="text"
+        placeholder="Enter custom auth endpoint"
+        required={true}
+      />
+      <SupportForm_TextInput
+        formLabel="Support ID"
+        formValue="extraInfo_Support_ID"
+        inputType="text"
+        placeholder="Enter support ID (optional)"
+        required={false}
+      />
+      <DescriptionInput value={description} onChange={setDescription} />
+    </>
+  );
+};
+
+const AccountAbstractionComponent = () => {
+  const [description, setDescription] = useState<string>("");
+  return (
+    <>
+      <SupportForm_TextInput
+        formLabel="Support ID"
+        formValue="extraInfo_Support_ID"
+        inputType="text"
+        placeholder="Enter support ID (optional)"
+        required={false}
+      />
+      <DescriptionInput value={description} onChange={setDescription} />
+    </>
+  );
+};
+
+const ThirdPartyEOAWalletsComponent = () => {
   const [description, setDescription] = useState<string>("");
   return <DescriptionInput value={description} onChange={setDescription} />;
 };
 
 const PROBLEM_AREAS: ProblemAreaItem[] = [
   {
-    component: <AffectedAreaInput />,
-    label: "In-app wallet login issues",
+    component: <SocialEmailLoginIssuesComponent />,
+    label: "Social/Email login issues",
   },
   {
-    component: <AffectedAreaInput />,
-    label: "In-app wallet transaction issues",
+    component: <UserWalletCustomAuthComponent />,
+    label: "User wallet with custom auth",
   },
   {
-    component: <AffectedAreaInput />,
-    label: "In-app wallet Custom Auth",
-  },
-  {
-    component: <AffectedAreaInput />,
+    component: <AccountAbstractionComponent />,
     label: "Account Abstraction",
   },
   {
-    component: (
-      <>
-        <SDKVersionInput />
-        <SupportForm_TextInput
-          formLabel="Application URL"
-          formValue="extraInfo_Application_URL"
-          inputType="url"
-          required={false}
-        />
-        <DescriptionInputWrapper />
-      </>
-    ),
-    label: "thirdweb SDKs",
-  },
-  {
-    component: (
-      <>
-        <UnitySupportForm />
-        <SDKVersionInput />
-        <DescriptionInputWrapper />
-      </>
-    ),
-    label: "Unity SDK",
-  },
-  {
-    component: (
-      <>
-        <SDKVersionInput />
-        <OSSelect />
-        <SupportForm_TextInput
-          formLabel="Framework"
-          formValue="extraInfo_dotNET_Framework"
-          inputType="text"
-          placeholder="MAUI | Blazor | Godot, etc"
-          required={false}
-        />
-        <SupportForm_TextInput
-          formLabel="Target OS"
-          formValue="extraInfo_dotNET_Target_OS"
-          inputType="text"
-          required={false}
-        />
-        <DescriptionInputWrapper />
-      </>
-    ),
-    label: ".NET SDK",
-  },
-  {
-    component: <AffectedAreaInput />,
-    label: "Pay",
-  },
-  {
-    component: <AffectedAreaInput />,
-    label: "Auth",
+    component: <ThirdPartyEOAWalletsComponent />,
+    label: "Third party/EOA wallets",
   },
 ];
 
