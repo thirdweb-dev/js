@@ -46,6 +46,10 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
+          href: `${slug}/liquidity-options`,
+          name: "Liquidity Options",
+        },
+        {
           href: `${slug}/security`,
           name: "Security",
         },
