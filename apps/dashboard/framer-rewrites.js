@@ -21,6 +21,7 @@ module.exports = [
   "/rpc",
   "/insight",
   "/storage",
+  "/gateway",
   // -- end scale category
 
   // -- ai
