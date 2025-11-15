@@ -65,9 +65,9 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `https://payments.thirdweb.com/reference`,
+          href: `/reference`,
           icon: <EngineIcon />,
-          name: "REST API",
+          name: "HTTP API",
         },
         {
           href: "/references/typescript/v5",

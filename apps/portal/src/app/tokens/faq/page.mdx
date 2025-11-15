@@ -20,3 +20,22 @@ Tokens has:
 - Ability to create liquidity pools for your token (coming soon)
 - An included listing page to share your token to users for purchasing
 </Details>
+
+<Details summary="Are the token contracts audited?">
+Yes, please see the [security](/tokens/security) section for a link to the audit reports.
+</Details>
+
+<Details summary="What is the difference between an ERC-721 and ERC-1155 token?">
+ERC-721 tokens represent unique, one-of-a-kind assets where each token has its own ID and metadata (like an NFT artwork). ERC-1155 tokens are more flexible, allowing both unique (non-fungible) and identical (fungible) assets to exist under one smart contract. This is ideal for gaming items or collections with multiple editions.
+</Details>
+
+<Details summary="How do I renounce ownership of my token contract?">
+You can call the `renounceOwnership` function on your asset contract (e.g., via a block explorer).
+
+- _Native token value to enter:_ `0`
+- _Note:_ Renouncing ownership is irreversible and means you will no longer be able to update the contract or its metadata.
+</Details>
+
+<Details summary="What are the implications of renouncing ownership?">
+After renouncing ownership, you lose all admin privileges, including the ability to update token metadata or manage contract settings.
+</Details>

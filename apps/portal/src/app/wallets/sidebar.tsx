@@ -12,34 +12,13 @@ export const sidebar: SideBar = {
       name: "Get Started",
       icon: <ZapIcon />,
     },
-    {
-      href: "https://playground.thirdweb.com/",
-      icon: <ExternalLinkIcon />,
-      name: "Playground",
-    },
     { separator: true },
     {
       isCollapsible: false,
       links: [
         {
           href: `${walletSlug}/users`,
-          name: "User Wallets",
-        },
-        {
-          href: `${walletSlug}/server`,
-          name: "Server Wallets",
-        },
-        {
-          href: `${walletSlug}/external-wallets`,
-          name: "External Wallets",
-        },
-        {
-          href: `${walletSlug}/ecosystem/set-up`,
-          name: "Ecosystem Wallets",
-        },
-        {
-          href: `/transactions/sponsor`,
-          name: "Sponsor Gas",
+          name: "QuickStart",
         },
         {
           href: `${walletSlug}/get-users`,
@@ -51,7 +30,11 @@ export const sidebar: SideBar = {
         },
         {
           href: `${walletSlug}/custom-auth`,
-          name: "Bring your own Auth",
+          name: "Custom Authentication",
+        },
+        {
+          href: `${walletSlug}/external-wallets`,
+          name: "External Wallets",
         },
         {
           href: `${walletSlug}/auth`,
@@ -62,19 +45,59 @@ export const sidebar: SideBar = {
           name: "Link Profiles",
         },
         {
-          href: `${walletSlug}/export-private-key`,
-          name: "Export Private Keys",
+          href: `${walletSlug}/adapters`,
+          name: "Adapters",
+        },
+      ],
+      name: "User Wallets",
+    },
+    {
+      isCollapsible: false,
+      name: "Ecosystem Wallets",
+      links: [
+        {
+          href: `${walletSlug}/ecosystem/set-up`,
+          name: "QuickStart",
+        },
+        {
+          href: `${walletSlug}/ecosystem/reown`,
+          name: "Add to Reown",
+        },
+      ],
+    },
+    { separator: true },
+    {
+      isCollapsible: false,
+      name: "Server Wallets",
+      links: [
+        {
+          href: `${walletSlug}/server`,
+          name: "QuickStart",
+        },
+        {
+          href: `${walletSlug}/monitor`,
+          name: "Monitor Transactions",
+        },
+      ],
+    },
+    { separator: true },
+    {
+      isCollapsible: false,
+      name: "Gas Sponsorship",
+      links: [
+        {
+          href: `${walletSlug}/sponsor-gas`,
+          name: "QuickStart",
+        },
+        {
+          href: `${walletSlug}/sponsorship-policies`,
+          name: "Sponsorship Policies",
         },
         {
           href: `${walletSlug}/session-keys`,
           name: "Session Keys",
         },
-        {
-          href: `${walletSlug}/adapters`,
-          name: "Usage with other libraries",
-        },
       ],
-      name: "Guides",
     },
     { separator: true },
     {
@@ -124,12 +147,17 @@ export const sidebar: SideBar = {
       name: "Resources",
       links: [
         {
-          href: `${walletSlug}/security`,
-          name: "Security",
+          href: "https://playground.thirdweb.com/wallets",
+          name: "Playground",
+          icon: <ExternalLinkIcon />,
         },
         {
-          href: "/vault",
-          name: "Vault",
+          href: `${walletSlug}/wallet-types`,
+          name: "Wallet Types",
+        },
+        {
+          href: `${walletSlug}/security`,
+          name: "Security",
         },
         {
           href: `${walletSlug}/faq`,

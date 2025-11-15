@@ -1,0 +1,63 @@
+import { ArticleIconCard, AuthList, Callout, DocImage, Grid, Stack, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Wallet Types | thirdweb Documentation",
+	description:
+		"Understand the different types of wallets supported by thirdweb, including user wallets, server wallets, external wallets (EOAs), and ecosystem wallets. Learn which wallet type is best suited for your application needs.",
+	image: {
+		title: "Wallet Types",
+		icon: "wallets",
+	},
+});
+
+# Understand Different Wallet Types
+
+## User Wallets
+
+User wallets (also called _Embedded Wallets_) are automatically generated for users when they sign in through supported authentication methods like email, social login, or custom auth.
+
+They’re stored securely in a trusted environment (such as a secure enclave or MPC) and give users a seamless, traditional onboarding experience without needing to handle seed phrases.
+
+**Best for:**
+
+- Apps that want a frictionless login + wallet experience
+- Users new to crypto
+- Applications managing authentication and wallet creation together
+
+## Server Wallets
+
+**Server wallets** (also known as **developer wallets** or **backend wallets**) are controlled by the backend and used for performing programmatic actions such as minting tokens, settling payments, or automating on-chain operations.
+
+**Best for:**
+
+- Server-side scripts and backend operations
+- API payment facilitation and settlement flows
+- Secure automation of transactions
+
+## External Wallets (EOAs)
+
+External wallets are self-custodial wallets owned and managed directly by users. Examples include MetaMask, Coinbase Wallet, Phantom, and more.
+
+**Best for:**
+
+- Web3-native users comfortable managing their keys
+- Dapps requiring wallet signatures or on-chain transactions
+- Direct blockchain interaction via the browser
+
+## Ecosystem Wallet
+
+Ecosystem Wallets are embedded wallets that support brand-customization and provide a single identity across multiple applications or games.
+
+**Best for:**
+
+- Platforms or ecosystems that include multiple apps, games, or partner integrations
+- Managing access controls, permissions, and partner integrations programmatically
+
+## Summary
+
+|                           | **Custody**   | **Security**             | **Export Private Keys** | **App-Scoped** | Managed By |
+| ------------------------- | ------------- | ------------------------ | ----------------------- | -------------- | ---------- |
+| **User Wallet**           | Non-custodial | Enclaves                 | ✅                       |       ✅         | User       |
+| **Server Wallet**         | Non-custodial | Vault (KMS)              | ✅                       |       ❌        | Developer  |
+| **External Wallet (EOA)** | Non-custodial | User Managed Private Key | ✅                       |       ❌        | User       |
+| **Ecosystem Wallet**      | Non-custodial | Enclaves                 | ❌                       |       ⚠️        | User       |
