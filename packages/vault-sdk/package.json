@@ -12,7 +12,7 @@
     "@solana/kit": "^4.0.0",
     "@solana/rpc": "^3.0.0",
     "@solana/transactions": "^3.0.0",
-    "abitype": "1.0.8",
+    "abitype": "1.1.1",
     "jose": "6.0.11"
   },
   "devDependencies": {

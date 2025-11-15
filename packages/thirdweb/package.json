@@ -26,7 +26,7 @@
     "@thirdweb-dev/insight": "workspace:*",
     "@walletconnect/sign-client": "2.21.8",
     "@walletconnect/universal-provider": "2.21.8",
-    "abitype": "1.0.8",
+    "abitype": "1.1.1",
     "cross-spawn": "7.0.6",
     "fuse.js": "7.1.0",
     "input-otp": "^1.4.1",
