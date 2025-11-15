@@ -6,6 +6,7 @@ import {
   type SidebarLink,
 } from "../others/Sidebar";
 import { TableOfContentsSideBar } from "../others/TableOfContents";
+import { CopyPageButton } from "../others/CopyPageButton";
 
 export type SideBar = {
   name: string;
@@ -58,9 +59,12 @@ export function DocLayout(props: DocLayoutProps) {
         data-noindex={props.noIndex}
       >
         <div className="grow xl:mt-6">
-          <h5 className="mb-2 text-sm text-muted-foreground">
-            {props.sideBar.name}
-          </h5>
+          <div className="flex items-center justify-between mb-2">
+            <h5 className="text-sm text-muted-foreground">
+              {props.sideBar.name}
+            </h5>
+            <CopyPageButton />
+          </div>
           {props.children}
         </div>
         <div className="mt-16 xl:mt-20">
