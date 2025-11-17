@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.112.2
+
+### Patch Changes
+
+- [#8425](https://github.com/thirdweb-dev/js/pull/8425) [`419fb31`](https://github.com/thirdweb-dev/js/commit/419fb3160188c435a89d65caf36bdd845dd239fe) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better handling of erc5792 getCapabilities
+
 ## 5.112.1
 
 ### Patch Changes
