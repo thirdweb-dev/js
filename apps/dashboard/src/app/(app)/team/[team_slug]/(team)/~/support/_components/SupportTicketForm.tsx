@@ -26,14 +26,6 @@ const EngineSupportForm = dynamic(
     ssr: false,
   },
 );
-const ContractSupportForm = dynamic(
-  () =>
-    import("./contact-forms/contracts").then((mod) => mod.ContractSupportForm),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
 const AccountSupportForm = dynamic(
   () => import("./contact-forms/account").then((mod) => mod.AccountSupportForm),
   {
@@ -43,14 +35,6 @@ const AccountSupportForm = dynamic(
 );
 const OtherSupportForm = dynamic(
   () => import("./contact-forms/other").then((mod) => mod.OtherSupportForm),
-  {
-    loading: () => <Skeleton className="h-12" />,
-    ssr: false,
-  },
-);
-const PaymentsSupportForm = dynamic(
-  () =>
-    import("./contact-forms/payments").then((mod) => mod.PaymentsSupportForm),
   {
     loading: () => <Skeleton className="h-12" />,
     ssr: false,
@@ -68,13 +52,14 @@ const TokensMarketplaceSupportForm = dynamic(
 );
 
 const productOptions = [
-  { component: <ConnectSupportForm />, label: "Wallets" },
-  { component: <EngineSupportForm />, label: "Transactions" },
-  { component: <PaymentsSupportForm />, label: "Payments" },
-  { component: <ContractSupportForm />, label: "Contracts" },
+  { component: <ConnectSupportForm />, label: "Working with User Wallets" },
+  {
+    component: <EngineSupportForm />,
+    label: "Using API/SDK’s, errored transactions",
+  },
   {
     component: <TokensMarketplaceSupportForm />,
-    label: "Tokens / Marketplace",
+    label: "Creating, Bridging and swapping tokens",
   },
   { component: <AccountSupportForm />, label: "Account" },
   { component: <OtherSupportForm />, label: "Other" },

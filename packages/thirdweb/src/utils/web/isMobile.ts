@@ -57,6 +57,7 @@ function hasMobileAPIs(): boolean {
  */
 export function isMobile(): boolean {
   // Primary signal: OS detection via user agent
+
   const isMobileOS = isAndroid() || isIOS();
 
   if (isMobileOS) {
@@ -67,6 +68,13 @@ export function isMobile(): boolean {
   // Both touch capability AND mobile-specific APIs must be present to avoid
   // false positives on touch-enabled desktops
   if (hasTouchScreen() && hasMobileAPIs()) {
+    return true;
+  }
+
+  const isMobileViewport =
+    typeof window !== "undefined" && window.innerWidth < 640;
+
+  if (isMobileViewport) {
     return true;
   }
 

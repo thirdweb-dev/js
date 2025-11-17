@@ -1,11 +1,10 @@
 "use client";
 import { Badge } from "@workspace/ui/components/badge";
 import {
-  BookTextIcon,
-  BoxIcon,
+  BotIcon,
   DatabaseIcon,
+  DoorOpenIcon,
   HomeIcon,
-  RssIcon,
   Settings2Icon,
   WebhookIcon,
 } from "lucide-react";
@@ -15,7 +14,6 @@ import {
 } from "@/components/blocks/full-width-sidebar-layout";
 import { BridgeIcon } from "@/icons/BridgeIcon";
 import { ContractIcon } from "@/icons/ContractIcon";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { TokenIcon } from "@/icons/TokenIcon";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
@@ -81,12 +79,12 @@ export function ProjectSidebarLayout(props: {
     },
     {
       href: `${props.layoutPath}/ai`,
-      icon: NebulaIcon,
+      icon: BotIcon,
       label: "AI",
     },
     {
       subMenu: {
-        icon: RssIcon,
+        icon: DoorOpenIcon,
         label: "Gateway",
       },
       links: [
@@ -128,19 +126,6 @@ export function ProjectSidebarLayout(props: {
       href: `${props.layoutPath}/settings`,
       icon: Settings2Icon,
       label: "Project Settings",
-    },
-    {
-      separator: true,
-    },
-    {
-      href: "https://portal.thirdweb.com",
-      icon: BookTextIcon,
-      label: "Documentation",
-    },
-    {
-      href: "https://playground.thirdweb.com/wallets/sign-in/button",
-      icon: BoxIcon,
-      label: "Playground",
     },
   ] satisfies ShadcnSidebarLink[];
 

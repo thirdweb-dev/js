@@ -4,7 +4,7 @@ export const SERVICE_DEFINITIONS = {
     actions: [],
     description: "Bundler & Paymaster services",
     name: "bundler",
-    title: "Account Abstraction",
+    title: "Gas Sponsorship",
   },
   chainsaw: {
     // all actions allowed
@@ -18,7 +18,7 @@ export const SERVICE_DEFINITIONS = {
     actions: [],
     description: "E-mail and social login wallets for easy web3 onboarding",
     name: "embeddedWallets",
-    title: "Wallets",
+    title: "User Wallets",
   },
 
   engineCloud: {
@@ -27,14 +27,14 @@ export const SERVICE_DEFINITIONS = {
     description:
       "Transaction API and Server wallets with high transaction throughput and low latency",
     name: "engineCloud",
-    title: "Transactions",
+    title: "Server Wallets",
   },
   insight: {
     // all actions allowed
     actions: [],
     description: "Indexed data for any EVM chain",
     name: "insight",
-    title: "Insight",
+    title: "Indexer",
   },
   nebula: {
     // all actions allowed
@@ -42,7 +42,7 @@ export const SERVICE_DEFINITIONS = {
     description:
       "Advanced blockchain reasoning and execution capabilities with AI",
     name: "nebula",
-    title: "thirdweb AI",
+    title: "AI",
   },
   pay: {
     // all actions allowed
@@ -50,7 +50,7 @@ export const SERVICE_DEFINITIONS = {
     description:
       "Bridge, swap, and purchase cryptocurrencies and execute transactions with any fiat or tokens via cross-chain routing",
     name: "pay",
-    title: "Payments",
+    title: "Bridge",
   },
   relayer: {
     // all actions allowed

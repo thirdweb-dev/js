@@ -1,5 +1,6 @@
 "use client";
 import {
+  BotIcon,
   ChartLineIcon,
   ChevronDownIcon,
   ChevronRightIcon,
@@ -25,7 +26,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DynamicHeight } from "@/components/ui/DynamicHeight";
 import { TabButtons } from "@/components/ui/tabs";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import type { TruncatedSessionInfo } from "../api/types";
@@ -52,7 +52,7 @@ export function ChatSidebar(props: {
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-start gap-3 p-4 lg:justify-between">
         <div className="flex items-center gap-2">
-          <NebulaIcon aria-label="AI" className="size-6 text-foreground" />
+          <BotIcon aria-label="AI" className="size-6 text-foreground" />
           <span className="font-medium text-lg">thirdweb AI</span>
         </div>
 

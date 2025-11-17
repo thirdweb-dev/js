@@ -2,56 +2,62 @@ import { useState } from "react";
 import { DescriptionInput } from "../../shared/SupportForm_DescriptionInput";
 import { SupportForm_SelectInput } from "../../shared/SupportForm_SelectInput";
 import { SupportForm_TextInput } from "../../shared/SupportForm_TextInput";
+import { UnitySupportForm } from "../../shared/SupportForm_UnityInput";
 
-const ENGINE_TYPES = ["Cloud (V3)", "Dedicated (V2)"];
-const ENGINE_PROBLEM_AREAS = [
-  "SSL Issues",
-  "Transaction queueing issues",
-  "401 - Unauthorized",
-  "404 - Endpoint Not Found",
-  "Other",
+const API_SDK_OPTIONS = [
+  "API endpoint",
+  "React/TypeScript",
+  "Unity/.NET",
+  "React Native",
 ];
 
 export function EngineSupportForm() {
-  const [selectedEngineType, setSelectedEngineType] = useState<string>("");
-  const [problemArea, setProblemArea] = useState<string>("");
+  const [selectedSDK, setSelectedSDK] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
   return (
     <>
       <SupportForm_SelectInput
-        formLabel="Type"
-        name="extraInfo_Engine_Type"
-        onValueChange={setSelectedEngineType}
-        options={ENGINE_TYPES}
-        promptText="Select Engine type"
+        formLabel="Which API/SDK are you using?"
+        name="extraInfo_API_SDK"
+        onValueChange={setSelectedSDK}
+        options={API_SDK_OPTIONS}
+        promptText="Select a problem area"
         required={true}
-        value={selectedEngineType}
-      />{" "}
-      {selectedEngineType && (
+        value={selectedSDK}
+      />
+      {selectedSDK && (
         <>
-          <SupportForm_SelectInput
-            formLabel="Problem area"
-            name="extraInfo_Problem_Area"
-            onValueChange={setProblemArea}
-            options={ENGINE_PROBLEM_AREAS}
-            promptText="Select a problem area"
-            required={true}
-            value={problemArea}
-          />
-
-          {problemArea && (
-            <>
+          {selectedSDK === "Unity/.NET" ? (
+            <UnitySupportForm />
+          ) : (
+            selectedSDK !== "API endpoint" && (
               <SupportForm_TextInput
-                formLabel="Engine URL"
-                formValue="extraInfo_Engine_URL"
-                inputType="url"
-                placeholder="https://your-engine-url.com"
+                formLabel="Version of SDK"
+                formValue="extraInfo_SDK_Version"
+                inputType="text"
+                placeholder="e.g. 3.12.0"
                 required={true}
               />
-              <DescriptionInput value={description} onChange={setDescription} />
-            </>
+            )
           )}
+          <SupportForm_TextInput
+            formLabel="Queue/Support ID in logs"
+            formValue="extraInfo_Queue_Support_ID"
+            inputType="text"
+            placeholder="Enter support ID from logs"
+            required={false}
+          />
+          {selectedSDK === "API endpoint" && (
+            <SupportForm_TextInput
+              formLabel="API endpoint URL with parameters"
+              formValue="extraInfo_API_Endpoint_URL"
+              inputType="url"
+              placeholder="https://api.example.com/endpoint?param=value"
+              required={false}
+            />
+          )}
+          <DescriptionInput value={description} onChange={setDescription} />
         </>
       )}
     </>

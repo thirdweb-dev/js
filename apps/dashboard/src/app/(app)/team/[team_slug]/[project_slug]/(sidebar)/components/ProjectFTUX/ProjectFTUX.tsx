@@ -1,26 +1,40 @@
+import { Button } from "@workspace/ui/components/button";
+import { CodeServer } from "@workspace/ui/components/code/code.server";
 import {
-  ArrowLeftRightIcon,
+  ArrowUpRightIcon,
+  BotIcon,
   ChevronRightIcon,
-  ExternalLinkIcon,
+  CoinsIcon,
+  DoorOpenIcon,
 } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/api/project/projects";
-import { CodeServer } from "@/components/ui/code/code.server";
+import { BridgeIcon } from "@/icons/BridgeIcon";
 import { DotNetIcon } from "@/icons/brand-icons/DotNetIcon";
-import { GithubIcon } from "@/icons/brand-icons/GithubIcon";
+import { ExpoIcon } from "@/icons/brand-icons/ExpoIcon";
+import { NextjsIcon } from "@/icons/brand-icons/NextjsIcon";
+import { NodeJSIcon } from "@/icons/brand-icons/NodeJSIcon";
 import { ReactIcon } from "@/icons/brand-icons/ReactIcon";
 import { TypeScriptIcon } from "@/icons/brand-icons/TypeScriptIcon";
 import { UnityIcon } from "@/icons/brand-icons/UnityIcon";
 import { UnrealIcon } from "@/icons/brand-icons/UnrealIcon";
-import { ContractIcon } from "@/icons/ContractIcon";
+import { ViteIcon } from "@/icons/brand-icons/ViteIcon";
 import { PayIcon } from "@/icons/PayIcon";
+import { WalletProductIcon } from "@/icons/WalletProductIcon";
 import { ClientIDSection } from "./ClientIDSection";
+import { CodeShowcase } from "./CodeSelector";
 import { SecretKeySection } from "./SecretKeySection";
 
-export function ProjectFTUX(props: { project: Project; teamSlug: string }) {
+export function ProjectFTUX(props: {
+  project: Project;
+  teamSlug: string;
+  projectWalletSection: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-14">
       <IntegrateAPIKeySection project={props.project} />
+      {props.projectWalletSection}
+      <GetStartedSection project={props.project} />
       <ProductsSection
         projectSlug={props.project.slug}
         teamSlug={props.teamSlug}
@@ -38,12 +52,29 @@ function IntegrateAPIKeySection({ project }: { project: Project }) {
   const clientId = project.publishableKey;
 
   return (
-    <section>
-      <h2 className="mb-3 font-semibold text-xl tracking-tight">
-        Integrate API key
-      </h2>
+    <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div>
+        <h2 className="mb-1 font-semibold text-xl tracking-tight">API Keys</h2>
+        <p className="text-muted-foreground text-sm mb-4">
+          Your API key is used to authenticate and integrate your application.
+        </p>
+        <Button
+          variant="outline"
+          className="bg-card rounded-lg gap-2"
+          size="sm"
+          asChild
+        >
+          <Link
+            href="https://portal.thirdweb.com/account/api-keys"
+            target="_blank"
+          >
+            Learn more about API keys
+            <ArrowUpRightIcon className="size-4" />
+          </Link>
+        </Button>
+      </div>
 
-      <div className="rounded-lg border border-border bg-card p-4">
+      <div className="rounded-xl border bg-card p-5">
         <div className="flex flex-col gap-6 ">
           <ClientIDSection clientId={clientId} />
           {secretKeyMasked && (
@@ -53,23 +84,74 @@ function IntegrateAPIKeySection({ project }: { project: Project }) {
             />
           )}
         </div>
-
-        <div className="h-5" />
-        <div className="flex flex-col gap-3">
-          <p className="text-muted-foreground text-sm">
-            Run this command in your terminal to send a test transaction using
-            your Project Wallet.
-          </p>
-          <CodeServer
-            className="bg-background"
-            code={curlCodeExample(project)}
-            lang="bash"
-          />
-        </div>
       </div>
     </section>
   );
 }
+
+function GetStartedSection({ project }: { project: Project }) {
+  return (
+    <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div>
+        <h2 className="mb-1 font-semibold text-xl tracking-tight">
+          Get Started
+        </h2>
+        <p className="text-muted-foreground text-sm mb-4">
+          Send a test transaction using your project wallet
+        </p>
+
+        <Button
+          variant="outline"
+          className="bg-card rounded-lg gap-2"
+          size="sm"
+          asChild
+        >
+          <Link href="https://portal.thirdweb.com/reference" target="_blank">
+            View API Reference
+            <ArrowUpRightIcon className="size-4" />
+          </Link>
+        </Button>
+      </div>
+
+      <CodeShowcase
+        title="POST /v1/auth/initiate"
+        tabs={[
+          {
+            label: "Curl",
+            code: (
+              <CodeServer
+                code={curlCodeExample(project)}
+                lang="bash"
+                className="border-t-0 rounded-t-none"
+              />
+            ),
+          },
+          {
+            label: "JavaScript",
+            code: (
+              <CodeServer
+                code={fetchJSCodeExample(project)}
+                lang="js"
+                className="border-t-0 rounded-t-none"
+              />
+            ),
+          },
+          {
+            label: "Python",
+            code: (
+              <CodeServer
+                code={pythonCodeExample(project)}
+                lang="python"
+                className="border-t-0 rounded-t-none"
+              />
+            ),
+          },
+        ]}
+      />
+    </section>
+  );
+}
+
 const curlCodeExample = (project: Project): string => `\
 curl https://api.thirdweb.com/v1/transactions \\
   --request POST \\
@@ -87,6 +169,40 @@ curl https://api.thirdweb.com/v1/transactions \\
 }'
 `;
 
+const fetchJSCodeExample = (project: Project): string => `\
+fetch("https://api.thirdweb.com/v1/transactions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-secret-key": "${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}",
+  },
+  body: JSON.stringify({
+    chainId: 421614,
+    transactions: [
+      { data: "0x", to: "vitalik.eth", value: "0" },
+    ],
+  }),
+});
+`;
+
+const pythonCodeExample = (project: Project): string => `\
+import requests
+
+url = "https://api.thirdweb.com/v1/transactions"
+headers = {
+  "Content-Type": "application/json",
+  "x-secret-key": "${project.secretKeys[0]?.masked ?? "<YOUR_SECRET_KEY>"}",
+}
+payload = {
+  "chainId": 421614,
+  "transactions": [
+    { "data": "0x", "to": "vitalik.eth", "value": "0" },
+  ],
+}
+response = requests.post(url, headers=headers, json=payload)
+result = response.json()
+`;
+
 // products section ------------------------------------------------------------
 
 function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
@@ -97,49 +213,60 @@ function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
     icon: React.FC<{ className?: string }>;
   }> = [
     {
-      description:
-        "Scale your application with a backend server to read, write, and deploy contracts at production-grade.",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/transactions`,
-      icon: ArrowLeftRightIcon,
-      title: "Transactions",
+      icon: WalletProductIcon,
+      title: "Wallets",
+      description: "Wallets to read, write and transact",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/wallets/user-wallets`,
     },
     {
-      description:
-        "Deploy your own contracts or leverage existing solutions for onchain implementation",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/contracts`,
-      icon: ContractIcon,
-      title: "Contracts",
+      icon: BridgeIcon,
+      title: "Bridge",
+      description: "Swap and bridge tokens",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/bridge`,
     },
     {
-      description:
-        "Bridge, swap, and purchase cryptocurrencies with any fiat options or tokens via cross-chain routing",
-      href: `/team/${props.teamSlug}/${props.projectSlug}/payments`,
       icon: PayIcon,
-      title: "Payments",
+      title: "x402",
+      description: "Native internet payments",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/x402`,
+    },
+    {
+      icon: DoorOpenIcon,
+      title: "Gateway",
+      description: "Blockchain connectivity and data access",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`,
+    },
+    {
+      icon: CoinsIcon,
+      title: "Tokens",
+      description: "Launch tokens and markets",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/tokens`,
+    },
+    {
+      icon: BotIcon,
+      title: "AI",
+      description: "Read and write onchain via AI agents",
+      href: `/team/${props.teamSlug}/${props.projectSlug}/ai`,
     },
   ];
 
   return (
     <div className="">
-      <h2 className="mb-0.5 font-semibold text-xl tracking-tight">
-        Complete your full-stack application
-      </h2>
-      <p className="text-muted-foreground">
-        Tools to build frontend, backend, and onchain with built-in
-        infrastructure and analytics.
+      <h2 className="mb-1 font-semibold text-xl tracking-tight">Products</h2>
+      <p className="text-muted-foreground text-sm">
+        Everything you need to build full-stack applications, games, and agents.
       </p>
 
       <div className="h-4" />
 
-      {/* Feature Cards */}
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
-          <ProductCard
+          <IconCard
             description={product.description}
             href={product.href}
             icon={product.icon}
             key={product.title}
-            title={product.title}
+            name={product.title}
           />
         ))}
       </section>
@@ -147,72 +274,51 @@ function ProductsSection(props: { teamSlug: string; projectSlug: string }) {
   );
 }
 
-function ProductCard(props: {
-  title: string;
-  description: string;
-  href: string;
-  icon: React.FC<{ className?: string }>;
-}) {
-  return (
-    <div className="relative flex flex-col rounded-lg border bg-card p-4 hover:border-active-border">
-      <div className="mb-3 flex size-9 items-center justify-center rounded-full border p-1">
-        <props.icon className="size-5 text-muted-foreground" />
-      </div>
-      <h3 className="mb-0.5 font-semibold text-lg tracking-tight">
-        <Link className="before:absolute before:inset-0" href={props.href}>
-          {props.title}
-        </Link>
-      </h3>
-      <p className="text-muted-foreground text-sm">{props.description}</p>
-    </div>
-  );
-}
-
 // sdk section ------------------------------------------------------------
 
-type SDKCardProps = {
+type IconCardProps = {
   name: string;
+  description: string | undefined;
   href: string;
   icon: React.FC<{ className?: string }>;
-  trackingLabel: string;
 };
 
-const sdks: SDKCardProps[] = [
+const sdks: IconCardProps[] = [
   {
     href: "https://portal.thirdweb.com/sdk/typescript",
     icon: TypeScriptIcon,
     name: "TypeScript",
-    trackingLabel: "typescript",
+    description: undefined,
   },
   {
     href: "https://portal.thirdweb.com/react/v5",
     icon: ReactIcon,
     name: "React",
-    trackingLabel: "react",
+    description: undefined,
   },
   {
     href: "https://portal.thirdweb.com/react-native/v5",
     icon: ReactIcon,
     name: "React Native",
-    trackingLabel: "react_native",
+    description: undefined,
   },
   {
     href: "https://portal.thirdweb.com/unity/v5",
     icon: UnityIcon,
     name: "Unity",
-    trackingLabel: "unity",
+    description: undefined,
   },
   {
     href: "https://portal.thirdweb.com/unreal-engine",
     icon: UnrealIcon,
     name: "Unreal Engine",
-    trackingLabel: "unreal",
+    description: undefined,
   },
   {
     href: "https://portal.thirdweb.com/dotnet",
     icon: DotNetIcon,
     name: ".NET",
-    trackingLabel: "dotnet",
+    description: undefined,
   },
 ];
 
@@ -220,14 +326,14 @@ function SDKSection() {
   return (
     <section>
       <h2 className="mb-3 font-semibold text-xl tracking-tight">Client SDKs</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {sdks.map((sdk) => (
-          <SDKCard
+          <IconCard
             href={sdk.href}
             icon={sdk.icon}
             key={sdk.name}
             name={sdk.name}
-            trackingLabel={sdk.trackingLabel}
+            description={sdk.description}
           />
         ))}
       </div>
@@ -235,10 +341,10 @@ function SDKSection() {
   );
 }
 
-function SDKCard(props: SDKCardProps) {
+function IconCard(props: IconCardProps) {
   return (
-    <div className="relative flex items-center gap-3 rounded-lg border bg-card p-4 hover:border-active-border">
-      <div className="flex size-9 items-center justify-center rounded-full border">
+    <div className="relative flex items-center gap-3 rounded-xl border bg-card p-4 hover:border-active-border">
+      <div className="flex items-center justify-center rounded-full border p-2 bg-background">
         <props.icon className="size-4 text-muted-foreground" />
       </div>
       <div className="flex flex-col gap-0.5">
@@ -246,16 +352,14 @@ function SDKCard(props: SDKCardProps) {
           <Link
             className="before:absolute before:inset-0"
             href={props.href}
-            rel="noopener noreferrer"
-            target="_blank"
+            target={props.href.startsWith("http") ? "_blank" : undefined}
           >
             {props.name}
           </Link>
         </p>
-        <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
-          View Docs
-          <ExternalLinkIcon className="size-3" />
-        </p>
+        {props.description && (
+          <p className="text-muted-foreground text-sm">{props.description}</p>
+        )}
       </div>
     </div>
   );
@@ -263,42 +367,47 @@ function SDKCard(props: SDKCardProps) {
 
 // starter kits section ------------------------------------------------------------
 
-type StartedKitCardProps = {
-  name: string;
-  href: string;
-  trackingLabel: string;
-};
-
-const startedKits: StartedKitCardProps[] = [
+const startedKits: IconCardProps[] = [
   {
     href: "https://github.com/thirdweb-example/next-starter",
     name: "Next Starter",
-    trackingLabel: "next_starter",
+    icon: NextjsIcon,
+    description: undefined,
   },
   {
     href: "https://github.com/thirdweb-example/vite-starter",
     name: "Vite Starter",
-    trackingLabel: "vite_starter",
+    icon: ViteIcon,
+    description: undefined,
   },
   {
     href: "https://github.com/thirdweb-example/expo-starter",
     name: "Expo Starter",
-    trackingLabel: "expo_starter",
+    icon: ExpoIcon,
+    description: undefined,
   },
   {
     href: "https://github.com/thirdweb-example/node-starter",
     name: "Node Starter",
-    trackingLabel: "node_starter",
+    icon: NodeJSIcon,
+    description: undefined,
   },
 ];
 
 function StarterKitsSection() {
   return (
     <section>
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="font-semibold text-xl tracking-tight">Starter Kits</h2>
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div>
+          <h2 className="font-semibold text-xl tracking-tight mb-1">
+            Starters
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Kickstart your development process with ready-to-ship repositories.
+          </p>
+        </div>
         <Link
-          className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
+          className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground shrink-0"
           href="https://github.com/thirdweb-example"
           rel="noopener noreferrer"
           target="_blank"
@@ -307,41 +416,17 @@ function StarterKitsSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {startedKits.map((kit) => (
-          <StarterKitCard
+          <IconCard
             href={kit.href}
+            icon={kit.icon}
             key={kit.name}
             name={kit.name}
-            trackingLabel={kit.trackingLabel}
+            description={kit.description}
           />
         ))}
       </div>
     </section>
-  );
-}
-
-function StarterKitCard(props: StartedKitCardProps) {
-  return (
-    <div className="relative flex items-center gap-3 rounded-lg border bg-card p-4 hover:border-active-border">
-      <div className="flex size-9 items-center justify-center rounded-full border">
-        <GithubIcon className="size-4 text-muted-foreground" />
-      </div>
-
-      <div className="flex flex-col gap-0.5">
-        <Link
-          className="before:absolute before:inset-0"
-          href={props.href}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {props.name}
-        </Link>
-        <p className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
-          View Repo
-          <ExternalLinkIcon className="size-3" />
-        </p>
-      </div>
-    </div>
   );
 }

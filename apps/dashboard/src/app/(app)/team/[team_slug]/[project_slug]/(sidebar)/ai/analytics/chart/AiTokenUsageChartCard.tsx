@@ -1,11 +1,11 @@
 "use client";
 import { format } from "date-fns";
+import { BotIcon } from "lucide-react";
 import { useMemo } from "react";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import { DocLink } from "@/components/blocks/DocLink";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import type { ChartConfig } from "@/components/ui/chart";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import type { AIUsageStats } from "@/types/analytics";
 
 type ChartData = Record<string, number> & {
@@ -106,7 +106,7 @@ function AiTokenUsageEmptyChartState() {
       </span>
       <div className="flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-4">
         <DocLink
-          icon={NebulaIcon}
+          icon={BotIcon}
           label="Get Started"
           link="https://portal.thirdweb.com/ai/chat"
         />

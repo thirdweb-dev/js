@@ -177,7 +177,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="p-4 relative flex flex-col gap-5">
+        <div className="p-5 relative flex flex-col gap-5">
           <div>
             <p className="text-sm text-foreground mb-1">Wallet Address</p>
             <CopyTextButton
@@ -200,7 +200,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
           </div>
         </div>
 
-        <div className="p-4 border-t border-dashed flex justify-between items-center">
+        <div className="p-5 border-t border-dashed flex justify-between items-center">
           <div>
             <p className="text-sm text-foreground mb-1">Balance</p>
             <div className="flex items-center gap-1">

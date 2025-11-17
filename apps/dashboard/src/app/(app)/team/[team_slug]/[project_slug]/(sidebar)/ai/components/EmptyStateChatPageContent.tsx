@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowUpRightIcon, InfoIcon } from "lucide-react";
+import { ArrowUpRightIcon, BotIcon, InfoIcon } from "lucide-react";
 import type { ThirdwebClient } from "thirdweb";
 import { Button } from "@/components/ui/button";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { cn } from "@/lib/utils";
 import type { NebulaContext, NebulaUserMessage } from "../api/types";
 import { examplePrompts } from "../data/examplePrompts";
@@ -33,7 +32,7 @@ export function EmptyStateChatPageContent(props: {
         <div className="flex justify-center">
           <div className="rounded-full border-[1.5px] border-primary-foreground/20 bg-[hsl(var(--primary-foreground)/5%)] p-1">
             <div className="rounded-full border-[1.5px] border-primary-foreground/40 bg-[hsl(var(--primary-foreground)/5%)] p-2">
-              <NebulaIcon className="size-7 text-primary-foreground" />
+              <BotIcon className="size-7 text-primary-foreground" />
             </div>
           </div>
         </div>

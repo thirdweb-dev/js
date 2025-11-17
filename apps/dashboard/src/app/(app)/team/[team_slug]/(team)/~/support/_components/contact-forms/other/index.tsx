@@ -14,6 +14,7 @@ const OTHER_PROBLEM_AREAS = [
   "Bug report",
   "Documentation",
   "Integration help",
+  "Agents/x402 and AI",
   "Other",
 ];
 export function OtherSupportForm() {

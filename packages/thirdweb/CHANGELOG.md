@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.112.1
+
+### Patch Changes
+
+- [#8413](https://github.com/thirdweb-dev/js/pull/8413) [`6cd681c`](https://github.com/thirdweb-dev/js/commit/6cd681c9cee4641c67bc341e03231d886ec7501a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Resolve implementation from contract call
+
+- [#8408](https://github.com/thirdweb-dev/js/pull/8408) [`f07b4b5`](https://github.com/thirdweb-dev/js/commit/f07b4b56c5ff82ae69b8a0edb578e4d75a582334) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Rename otherWallet to allConnectedWallets in autoConnect onConnect callback
+
 ## 5.112.0
 
 ### Minor Changes

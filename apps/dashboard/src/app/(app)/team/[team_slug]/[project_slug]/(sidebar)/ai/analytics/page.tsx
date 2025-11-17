@@ -1,3 +1,4 @@
+import { BotIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ResponsiveSearchParamsProvider } from "responsive-rsc";
 import { getAuthToken } from "@/api/auth-token";
@@ -6,7 +7,6 @@ import type { DurationId } from "@/components/analytics/date-range-selector";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { NebulaIcon } from "@/icons/NebulaIcon";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
 import { AiAnalytics } from "./chart";
@@ -58,7 +58,7 @@ export default async function Page(props: {
     <ResponsiveSearchParamsProvider value={searchParams}>
       <ProjectPage
         header={{
-          icon: NebulaIcon,
+          icon: BotIcon,
           client,
           title: "AI Analytics",
           description: "Track your AI app usage and performance",

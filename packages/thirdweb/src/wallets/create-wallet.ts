@@ -341,34 +341,35 @@ export function createWallet<const ID extends WalletId>(
                             }
                             return;
                           }
+                          // on desktop, create a QR overlay
+                          else {
+                            try {
+                              const { createQROverlay } = await import(
+                                "./wallet-connect/qr-overlay.js"
+                              );
 
-                          try {
-                            // on desktop, create a QR overlay
-                            const { createQROverlay } = await import(
-                              "./wallet-connect/qr-overlay.js"
-                            );
+                              // Clean up any existing overlay
+                              if (qrOverlay) {
+                                qrOverlay.destroy();
+                              }
 
-                            // Clean up any existing overlay
-                            if (qrOverlay) {
-                              qrOverlay.destroy();
+                              // Create new QR overlay
+                              qrOverlay = createQROverlay(uri, {
+                                theme:
+                                  wcOptions.walletConnect?.qrModalOptions
+                                    ?.themeMode ?? "dark",
+                                qrSize: 280,
+                                showCloseButton: true,
+                                onCancel: () => {
+                                  wcOptions.walletConnect?.onCancel?.();
+                                },
+                              });
+                            } catch (error) {
+                              console.error(
+                                "Failed to create QR overlay:",
+                                error,
+                              );
                             }
-
-                            // Create new QR overlay
-                            qrOverlay = createQROverlay(uri, {
-                              theme:
-                                wcOptions.walletConnect?.qrModalOptions
-                                  ?.themeMode ?? "dark",
-                              qrSize: 280,
-                              showCloseButton: true,
-                              onCancel: () => {
-                                wcOptions.walletConnect?.onCancel?.();
-                              },
-                            });
-                          } catch (error) {
-                            console.error(
-                              "Failed to create QR overlay:",
-                              error,
-                            );
                           }
                         }
                       }),
