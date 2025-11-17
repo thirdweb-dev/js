@@ -164,7 +164,17 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
           if (!account.getCapabilities) {
             throw new Error("Wallet does not support EIP-5792");
           }
-          return account.getCapabilities({ chainId: chain.id });
+          const chains = request.params[1];
+          if (chains && Array.isArray(chains)) {
+            const firstChainStr = chains[0];
+            const firstChainId = isHex(firstChainStr)
+              ? hexToNumber(firstChainStr)
+              : Number(firstChainStr);
+            return account.getCapabilities(
+              firstChainId ? { chainId: firstChainId } : {},
+            );
+          }
+          return account.getCapabilities({});
         }
         case "wallet_sendCalls": {
           const account = wallet.getAccount();

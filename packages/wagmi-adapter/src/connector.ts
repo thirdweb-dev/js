@@ -1,6 +1,11 @@
 import { type CreateConnectorFn, createConnector } from "@wagmi/core";
 import type { Prettify } from "@wagmi/core/chains";
-import { defineChain, getAddress, type ThirdwebClient } from "thirdweb";
+import {
+  type Chain,
+  defineChain,
+  getAddress,
+  type ThirdwebClient,
+} from "thirdweb";
 import {
   EIP1193,
   ecosystemWallet,
@@ -53,6 +58,7 @@ type StorageItem = {
 
 const activeWalletIdKey = "thirdweb:active-wallet-id";
 const connectedWalletIdsKey = "thirdweb:connected-wallet-ids";
+const activeChainIdKey = "thirdweb:active-chain";
 
 /**
  * Connect to an in-app wallet using the auth strategy of your choice.
@@ -112,13 +118,14 @@ export function inAppWalletConnector(
       ? window.localStorage
       : undefined;
   return createConnector((config) => ({
-    connect: async (params?: ConnectionOptions<false>) => {
+    connect: async (params) => {
       wallet =
         params && "wallet" in params ? (params.wallet as Wallet) : wallet;
-      const lastChainIdStr = await config.storage?.getItem(
-        "thirdweb:lastChainId",
-      );
-      const lastChainId = lastChainIdStr ? Number(lastChainIdStr) : undefined;
+      const lastChainIdStr = rawStorage?.getItem(activeChainIdKey);
+      const lastChain = lastChainIdStr
+        ? (JSON.parse(lastChainIdStr) as Chain)
+        : undefined;
+      const lastChainId = lastChain ? lastChain.id : undefined;
       if (params?.isReconnecting) {
         const { autoConnect } = await import("thirdweb/wallets");
         const chainId = lastChainId || args.smartAccount?.chain?.id || 1;
@@ -133,7 +140,6 @@ export function inAppWalletConnector(
         if (!account) {
           throw new Error("Wallet failed to reconnect");
         }
-
         return {
           accounts: [getAddress(account.address)] as any,
           chainId: chainId,
@@ -144,7 +150,7 @@ export function inAppWalletConnector(
       const alreadyConnectedAccount = wallet.getAccount();
       if (alreadyConnectedAccount) {
         return {
-          accounts: [getAddress(alreadyConnectedAccount.address)],
+          accounts: [getAddress(alreadyConnectedAccount.address)] as any,
           chainId: wallet.getChain()?.id || 1,
         };
       }
@@ -191,9 +197,11 @@ export function inAppWalletConnector(
         }
         rawStorage.setItem(activeWalletIdKey, wallet.id);
       }
-      await config.storage?.setItem("thirdweb:lastChainId", chain.id);
       args.onConnect?.(wallet);
-      return { accounts: [getAddress(account.address)], chainId: chain.id };
+      return {
+        accounts: [getAddress(account.address)] as any,
+        chainId: chain.id,
+      };
     },
     disconnect: async () => {
       await wallet.disconnect();
@@ -209,9 +217,7 @@ export function inAppWalletConnector(
       return wallet.getChain()?.id || 1;
     },
     getProvider: async (params) => {
-      const lastChainIdStr = await config.storage?.getItem(
-        "thirdweb:lastChainId",
-      );
+      const lastChainIdStr = await rawStorage?.getItem(activeChainIdKey);
       const lastChainId = lastChainIdStr ? Number(lastChainIdStr) : undefined;
       const chain = defineChain(
         params?.chainId || args.smartAccount?.chain?.id || lastChainId || 1,
@@ -262,7 +268,10 @@ export function inAppWalletConnector(
       config.emitter.emit("change", {
         chainId: chain.id,
       });
-      await config.storage?.setItem("thirdweb:lastChainId", chain.id);
+      rawStorage?.setItem(
+        activeChainIdKey,
+        JSON.stringify(defineChain(chain.id)),
+      );
       return chain;
     },
     type: "in-app",

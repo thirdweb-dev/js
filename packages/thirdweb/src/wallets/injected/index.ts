@@ -374,13 +374,13 @@ function createAccount({
       }
     },
     async getCapabilities(options) {
-      const chainId = options.chainId;
+      const chainIdFilter = options.chainId;
       try {
         const result = await provider.request({
           method: "wallet_getCapabilities",
           params: [getAddress(account.address)],
         });
-        return toGetCapabilitiesResult(result, chainId);
+        return toGetCapabilitiesResult(result, chainIdFilter);
       } catch (error: unknown) {
         if (
           /unsupport|not support|not available/i.test((error as Error).message)
