@@ -1,5 +1,6 @@
 import type { ConnectionOptions } from "@thirdweb-dev/wagmi-adapter";
 import { ConnectButton } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
 import {
   useAccount,
   useCallsStatus,
@@ -58,7 +59,12 @@ function App() {
         <ConnectButton
           client={client}
           chain={thirdwebChainForWallet}
-          wallets={[wallet]}
+          wallets={[
+            wallet,
+            createWallet("io.metamask"),
+            createWallet("com.coinbase.wallet"),
+            createWallet("me.rainbow"),
+          ]}
           onConnect={(wallet) => {
             // auto connect to wagmi on tw connect
             const twConnector = connectors.find(

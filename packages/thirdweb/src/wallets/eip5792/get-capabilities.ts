@@ -54,7 +54,7 @@ export async function getCapabilities<const ID extends WalletId = WalletId>({
 
 export function toGetCapabilitiesResult(
   result: Record<string, WalletCapabilities>,
-  chainId?: number,
+  chainIdFilter?: number,
 ): GetCapabilitiesResult {
   const capabilities = {} as WalletCapabilitiesRecord<
     WalletCapabilities,
@@ -69,6 +69,8 @@ export function toGetCapabilitiesResult(
     capabilities[Number(chainId)] = capabilitiesCopy;
   }
   return (
-    typeof chainId === "number" ? capabilities[chainId] : capabilities
+    typeof chainIdFilter === "number"
+      ? { [chainIdFilter]: capabilities[chainIdFilter] }
+      : capabilities
   ) as never;
 }
