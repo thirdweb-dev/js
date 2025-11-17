@@ -1,0 +1,30 @@
+import { createMetadata, Details } from "@doc";
+
+export const metadata = createMetadata({
+	title: "x402 FAQs | thirdweb documentation",
+	description: "Get answers to common questions about thirdweb x402, including internet native payments, API payments, and integration details.",
+	image: {
+		title: "x402 FAQs",
+		icon: "wallets",
+	},
+});
+
+# x402 FAQ
+
+## General
+
+<Details summary="When do I use a client or server side integration?">
+Use client-side integration when end users are paying directly from their own wallets. For example, in applications or AI agents where users sign transactions themselves.
+
+Use server-side integration when your backend or service handles payments such as when sponsoring user payments, automating paid API calls, or keeping API keys and logic secure.
+</Details>
+
+<Details summary="What is the benefit of using thirdweb's facilitator ?">
+Using thirdweb's facilitator you are able to support more tokens and chains than any other facilitator in the ecosystem.
+
+You also have a built-in faciltator wallet to easily use and manage gas funds without worrying about topping up funds. 
+</Details>
+
+<Details summary="If I use thirdweb facilitator, is my endpoint automatically picked up by Nexus?">
+Yes, if you use the thirdweb facilitator your endpoint will auto-register to [Nexus](https://nexus.thirdweb.com) for discovery by AI agents. 
+</Details>

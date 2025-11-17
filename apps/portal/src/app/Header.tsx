@@ -32,14 +32,6 @@ const links = [
     name: "Wallets",
   },
   {
-    href: "/transactions",
-    name: "Transactions",
-  },
-  {
-    href: "/contracts",
-    name: "Contracts",
-  },
-  {
     href: "/x402",
     name: "x402",
   },
@@ -52,31 +44,12 @@ const links = [
     name: "Tokens",
   },
   {
+    href: "/ai/chat",
+    name: "AI",
+  },
+  {
     href: "/reference",
     name: "API Reference",
-  },
-];
-
-const toolLinks = [
-  {
-    href: "https://thirdweb.com/chainlist",
-    name: "Chain List",
-  },
-  {
-    href: "https://thirdweb.com/tools/wei-converter",
-    name: "Wei Converter",
-  },
-  {
-    href: "https://thirdweb.com/tools/hex-converter",
-    name: "Hex Converter",
-  },
-  {
-    href: "/account/api-keys",
-    name: "API Keys",
-  },
-  {
-    href: "/cli",
-    name: "CLI",
   },
 ];
 
@@ -121,44 +94,6 @@ export const connectLinks: Array<{
     name: "Unreal Engine",
   },
 ] as const;
-
-const apisLinks = [
-  {
-    href: "https://api.thirdweb.com/reference",
-    name: "HTTP API",
-  },
-  {
-    href: "/insight",
-    name: "Insight",
-  },
-  {
-    href: "https://engine.thirdweb.com/reference#tag/write",
-    name: "Transactions",
-  },
-  {
-    href: "https://bridge.thirdweb.com/reference",
-    name: "Payments",
-  },
-  {
-    href: "/bundler",
-    name: "Bundler",
-  },
-];
-
-const aiLinks = [
-  {
-    href: "/ai/chat",
-    name: "Blockchain LLM",
-  },
-  {
-    href: "/ai/mcp",
-    name: "MCP",
-  },
-  {
-    href: "/ai/llm-txt",
-    name: "LLMs.txt",
-  },
-];
 
 const sdkLinks = [
   {
@@ -301,24 +236,8 @@ export function Header() {
 
           <div className="flex items-center">
             <DropdownLinks
-              category="AI"
-              links={aiLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-            <DropdownLinks
               category="SDKs"
               links={sdkLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-            <DropdownLinks
-              category="APIs"
-              links={apisLinks}
-              onLinkClick={() => setShowBurgerMenu(false)}
-            />
-
-            <DropdownLinks
-              category="Tools"
-              links={toolLinks}
               onLinkClick={() => setShowBurgerMenu(false)}
             />
             <DropdownLinks
@@ -356,36 +275,12 @@ export function Header() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h3 className="font-semibold text-lg">AI</h3>
-              {aiLinks.map((link) => (
-                <NavLink
-                  href={link.href}
-                  key={link.name}
-                  name={link.name}
-                  onClick={() => setShowBurgerMenu(false)}
-                />
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4">
               <h3 className="font-semibold text-lg">SDKs</h3>
               {sdkLinks.map((link) => (
                 <NavLink
                   href={link.href}
                   key={link.name}
                   icon={link.icon}
-                  name={link.name}
-                  onClick={() => setShowBurgerMenu(false)}
-                />
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <h3 className="font-semibold text-lg">APIs</h3>
-              {apisLinks.map((link) => (
-                <NavLink
-                  href={link.href}
-                  key={link.name}
                   name={link.name}
                   onClick={() => setShowBurgerMenu(false)}
                 />
@@ -409,18 +304,6 @@ export function Header() {
               name="Changelog"
               onClick={() => setShowBurgerMenu(false)}
             />
-
-            <div className="flex flex-col gap-4">
-              <h3 className="font-semibold text-lg">Tools</h3>
-              {toolLinks.map((link) => (
-                <NavLink
-                  href={link.href}
-                  key={link.name}
-                  name={link.name}
-                  onClick={() => setShowBurgerMenu(false)}
-                />
-              ))}
-            </div>
           </div>
         </div>
       )}

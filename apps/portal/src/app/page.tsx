@@ -1,15 +1,13 @@
 import {
+  ArchiveIcon,
   ArrowUpRightIcon,
-  BotIcon,
+  BrainIcon,
   CoinsIcon,
-  MessageCircleIcon,
-  WebhookIcon,
   ZapIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heading } from "@/components/Document";
-import { PaymentsIcon } from "@/icons/products/PaymentsIcon";
 import { ChatButton } from "../components/AI/chat-button";
 import { Button } from "../components/ui/button";
 import {
@@ -21,19 +19,20 @@ import {
   UnrealEngineIcon,
 } from "../icons";
 import { ConnectIcon } from "../icons/products/ConnectIcon";
-import { EngineIcon } from "../icons/products/EngineIcon";
-import { InsightIcon } from "../icons/products/InsightIcon";
 import DocsHeroDark from "./_images/docs-hero-dark.png";
 import DocsHeroLight from "./_images/docs-hero-light.png";
 
 export default function Page() {
   return (
-    <main className="container max-w-5xl grow pb-20" data-noindex>
+    <main
+      className="container max-w-5xl grow pb-[4.75rem] scale-y-[0.95] origin-top"
+      data-noindex
+    >
       <Hero />
       <div className="space-y-8">
-        <AISection />
         <LearningResourcesSection />
         <ReferenceSection />
+        <ArchiveSection />
       </div>
     </main>
   );
@@ -76,28 +75,38 @@ function Hero() {
   );
 }
 
-function AISection() {
+function ArchiveSection() {
   return (
     <section>
-      <SectionTitle anchorId="ai" title="AI" />
+      <SectionTitle anchorId="client" title="Archived Documentation" />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <ArticleCardIndex
-          description="Integrate the most advanced blockchain model into your applications"
-          href="/ai/chat"
-          icon={MessageCircleIcon}
-          title="Blockchain LLM"
+          description="Insight API Documentation"
+          href="https://insight.thirdweb.com/reference"
+          icon={ArchiveIcon}
+          title="Insight API"
+          external
         />
         <ArticleCardIndex
-          description="For agents and humans. Use the thirdweb API with natural language"
-          href="/ai/mcp"
-          icon={BotIcon}
-          title="MCP"
+          description="Payments API Documentation"
+          href="https://bridge.thirdweb.com/reference"
+          icon={ArchiveIcon}
+          title="Payments API"
+          external
         />
         <ArticleCardIndex
-          description="Inject the thirdweb API reference in your prompts"
-          href="/ai/llm-txt"
-          icon={ZapIcon}
-          title="LLMs.txt"
+          description="Transactions knowledge base and guides"
+          href="/transactions"
+          icon={ArchiveIcon}
+          title="Transactions"
+          external
+        />
+        <ArticleCardIndex
+          description="Contracts knowledge base and guides"
+          href="/contracts"
+          icon={ArchiveIcon}
+          title="Contracts"
+          external
         />
       </div>
     </section>
@@ -106,63 +115,33 @@ function AISection() {
 
 function ReferenceSection() {
   return (
-    <>
-      <section>
-        <SectionTitle anchorId="client" title="Client libraries" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={TypeScriptIcon}
-            title="TypeScript"
-          />
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={ReactIcon}
-            title="React"
-          />
-          <SDKCard
-            href="/references/typescript/v5"
-            icon={ReactIcon}
-            title="React Native"
-          />
-          <SDKCard href="/dotnet" icon={DotNetIcon} title="DotNet" />
-          <SDKCard href="/unity" icon={UnityIcon} title="Unity" />
-          <SDKCard
-            href="/unreal-engine"
-            icon={UnrealEngineIcon}
-            title="Unreal Engine"
-          />
-        </div>
-      </section>
-
-      <section>
-        <SectionTitle anchorId="backend" title="Backend APIs" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <SDKCard href="/reference" icon={ConnectIcon} title="HTTP API" />
-          <SDKCard
-            href="https://engine.thirdweb.com/reference"
-            icon={EngineIcon}
-            title="Engine"
-          />
-          <SDKCard
-            href="https://insight.thirdweb.com/reference"
-            icon={InsightIcon}
-            title="Insight"
-          />
-          <SDKCard
-            href="https://bridge.thirdweb.com/reference"
-            icon={PaymentsIcon}
-            title="Payments & Bridge"
-          />
-          <SDKCard
-            href="/bundler"
-            icon={ConnectIcon} // TODO: actual openAPI docs
-            title="Bundler"
-          />
-          <SDKCard href="/webhooks" icon={WebhookIcon} title="Webhooks" />
-        </div>
-      </section>
-    </>
+    <section>
+      <SectionTitle anchorId="client" title="Client libraries" />
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={TypeScriptIcon}
+          title="TypeScript"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React"
+        />
+        <SDKCard
+          href="/references/typescript/v5"
+          icon={ReactIcon}
+          title="React Native"
+        />
+        <SDKCard href="/dotnet" icon={DotNetIcon} title="DotNet" />
+        <SDKCard href="/unity" icon={UnityIcon} title="Unity" />
+        <SDKCard
+          href="/unreal-engine"
+          icon={UnrealEngineIcon}
+          title="Unreal Engine"
+        />
+      </div>
+    </section>
   );
 }
 
@@ -172,46 +151,40 @@ function LearningResourcesSection() {
       <SectionTitle anchorId="learning" title="Documentation" />
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
         <ArticleCardIndex
-          description="Create and manage crypto wallets"
+          description="Create wallets to read and transact."
           href="/wallets"
           icon={ConnectIcon}
           title="Wallets"
         />
         <ArticleCardIndex
-          description="Instant payments for APIs, websites, and agents"
+          description="Create internet native payments with x402"
           href="/x402"
           icon={ZapIcon}
           title="x402"
         />
         <ArticleCardIndex
-          description="Bridge, swap, and onramp tokens on any chain"
+          description="Swap and bridge tokens across chains"
           href="/bridge"
           icon={CoinsIcon}
           title="Bridge"
         />
         <ArticleCardIndex
-          description="Reliable transactions and monitoring"
-          href="/transactions"
-          icon={EngineIcon}
-          title="Transactions"
+          description="Launch tokens and markets"
+          href="/tokens"
+          icon={CoinsIcon}
+          title="Tokens"
         />
         <ArticleCardIndex
-          description="Create, deploy, and manage smart contracts"
-          href="/contracts"
-          icon={EngineIcon}
-          title="Contracts"
+          description="Read and write onchain via natural language"
+          href="/ai/chat"
+          icon={BrainIcon}
+          title="AI"
         />
         <ArticleCardIndex
-          description="Blockchain data queries and transformations"
-          href="/insight"
-          icon={InsightIcon}
-          title="Insight"
-        />
-        <ArticleCardIndex
-          description="Non-custodial key management service"
-          href="/vault"
+          description="Build products with our HTTP API"
+          href="/reference"
           icon={ConnectIcon}
-          title="Vault"
+          title="HTTP API"
         />
       </div>
     </section>

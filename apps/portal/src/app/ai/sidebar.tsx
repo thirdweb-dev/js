@@ -4,19 +4,20 @@ import type { SideBar } from "@/components/Layouts/DocLayout";
 export const sidebar: SideBar = {
   links: [
     {
-      name: "Blockchain LLM",
+      name: "Get Started",
+      href: "/ai/chat",
+      icon: <ZapIcon />,
+    },
+    {
+      href: "https://playground.thirdweb.com",
+      name: "Playground",
+      icon: <ExternalLinkIcon />,
+    },
+    { separator: true },
+    {
+      name: "Guides",
       isCollapsible: false,
       links: [
-        {
-          name: "Get Started",
-          href: "/ai/chat",
-          icon: <ZapIcon />,
-        },
-        {
-          name: "Playground",
-          href: "https://playground.thirdweb.com/ai/chat",
-          icon: <ExternalLinkIcon />,
-        },
         {
           name: "Transaction Execution",
           href: "/ai/chat/execution",
@@ -26,12 +27,17 @@ export const sidebar: SideBar = {
           href: "/ai/chat/streaming",
         },
         {
-          name: "Vercel AI SDK",
-          href: "/ai/chat/ai-sdk",
-        },
-        {
-          name: "OpenAI SDK",
-          href: "/ai/chat/openai-sdk",
+          name: "Integrations",
+          links: [
+            {
+              name: "Vercel AI SDK",
+              href: "/ai/chat/ai-sdk",
+            },
+            {
+              name: "OpenAI SDK",
+              href: "/ai/chat/openai-sdk",
+            },
+          ],
         },
         {
           name: "API Reference",
@@ -41,14 +47,31 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
-      name: "MCP Server",
-      icon: <ZapIcon />,
-      href: "/ai/mcp",
+      name: "Agent Tools",
+      isCollapsible: false,
+      links: [
+        {
+          name: "MCP Server",
+          icon: <ZapIcon />,
+          href: "/ai/mcp",
+        },
+        {
+          name: "llms.txt",
+          icon: <BookIcon />,
+          href: "/ai/llm-txt",
+        },
+      ],
     },
+    { separator: true },
     {
-      name: "llms.txt",
-      icon: <BookIcon />,
-      href: "/ai/llm-txt",
+      name: "Resources",
+      isCollapsible: false,
+      links: [
+        {
+          href: "/ai/faq",
+          name: "FAQ",
+        },
+      ],
     },
   ],
   name: "AI",

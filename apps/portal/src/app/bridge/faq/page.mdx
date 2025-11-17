@@ -13,49 +13,49 @@ export const metadata = createMetadata({
 
 ### General
 
-<Details summary="What does Bridge use to operate under the hood?"> 
-Bridge is an asset router that combines thirdweb's own onchain infrastructure with existing bridging and swapping protocols to find the optimal route for any given transaction. 
-This can include intents, native bridges, third party bridges, cross-chain messaging protocols, thirdweb's custom bridges, and more. All routes are monitored and planned continuously for 
-health, price, and speed to guarantee the best path every time. 
+<Details summary="What does Bridge use to operate under the hood?">
+Bridge is an asset router that combines thirdweb's own onchain infrastructure with existing bridging and swapping protocols to find the optimal route for any given transaction. This can include intents, native bridges, third party bridges, cross-chain messaging protocols, thirdweb's custom bridges, and more. All routes are monitored and planned continuously for health, price, and speed to guarantee the best path every time.
 </Details>
 
-<Details summary="Am I able to use Bridge with other wallet infrastructure providers?"> 
-Yes, Bridge is designed to be agnostic to wallet infrastructure. You can use it with any wallet service. 
+<Details summary="Am I able to use Bridge with other wallet infrastructure providers?">
+Yes, Bridge is designed to be agnostic to wallet infrastructure. You can use it with any wallet service.
 </Details>
 
 ### Fees
 
-<Details summary="What are the fees for Buy With Fiat?"> 
-thirdweb does not charge any fees for buy with fiat. Any fees on onramping are based on the onramp provider. 
+<Details summary="What are the fees for onramping?">
+Fees for onramping are based on the onramp provider. thirdweb does not determine nor take a cut from onramp provider fees.
+
+[Learn more about onramp fees](/bridge/resources/fee-breakdown).
 </Details>
 
-<Details summary="What are the fees for Buy With Crypto?"> 
-For buying with crypto or swap fees, thirdweb charges a 0.3% protocol fee. Developers may monetize their application by charging additional fees on swap transactions. To set a fee in your project page, navigate to Payments > Settings to set this fee. 
+<Details summary="What are the fees for crypto-to-crypto transactions?">
+For buying with crypto or swap fees, thirdweb charges a 0.3% protocol fee. Developers may monetize their application by charging additional fees on swap transactions. To set a fee in your project page, navigate to Bridge > Configuration to set the fee.
 </Details>
 
-<Details summary="What does the term “network fees” refer to?"> 
+<Details summary="What are network fees?">
 Network fees, also referred to as miner fees, are paid to the miner for processing crypto transactions and securing the respective network. These fees do not go to thirdweb.
 </Details>
 
-<Details summary="Does thirdweb offer fiat payouts?"> 
+<Details summary="Does thirdweb offer fiat payouts?">
 Fiat payouts are not currently available.
 </Details>
 
 ### Token & Region Support
 
-<Details summary="How can I support a token?"> 
+<Details summary="How can I support a token?">
 We're able to support most tokens that meet the following criteria:
 
 - The token must have sufficient liquidity
-- The token must be on a [supported Payments Chain](https://thirdweb.com/chainlist?service=pay).
+- The token must be on a supported chain.
 
-To request support for a token, please visit the Payments tab in your project dashboard > Settings > "Don't see your token listed?" component and fill out the chain and token address information.
+To request support for a token, please visit the Bridge tab in your project dashboard > Settings > "Don't see your token listed?" component and fill out the chain and token address information.
 
-The service will automatically kick off the token route discovery process. Please check back the Payments modal after 20-40 minutes for the requested token. 
+The service will automatically kick off the token route discovery process. Please check back the modal after 20-40 minutes for the requested token.
 </Details>
 
-<Details summary="What countries does Buy With Fiat support?"> 
-**Buy With Fiat** is available 160+ countries. The following countries are _UNSUPPORTED_:
+<Details summary="What countries are supported through onramp?">
+Buy With Fiat is available 160+ countries. The following countries are UNSUPPORTED:
 
 - Afghanistan
 - Africa (All Countries)
@@ -82,21 +82,21 @@ The service will automatically kick off the token route discovery process. Pleas
 All United States are supported, excluding Hawaii.
 </Details>
 
-<Details summary="What cryptocurrencies does Bridge support?"> 
-Bridge can support any currency on our [supported chains](https://thirdweb.com/chainlist?service=pay).
+<Details summary="Which cryptocurrencies and tokens are supported?">
+[View the full list](https://thirdweb.com/tokens) of supported tokens on Bridge.
 </Details>
 
-<Details summary="Does Bridge support Apple Pay or Google Pay?"> 
+<Details summary="Does Bridge support Apple Pay or Google Pay?">
 Apple Pay and Google Pay are supported through the onramp providers depending on region. Coinbase, Stripe, and Transak currently support Apple Pay. Transak supports Google Pay.
 </Details>
 
-<Details summary="What are your transaction limits for Buy With Fiat?"> 
-We currently require a $1 minimum purchase for both stablecoin and non-stablecoin purchases through Buy With Fiat.
+<Details summary="What are the transaction limits for onramp?">
+We currently require a $1 minimum purchase for both stablecoin and non-stablecoin purchases through onramp.
 
 Our transaction maximum starts from $1500 per week for new users and can increase over time to $10,000 per week.
 </Details>
 
-<Details summary="Does thirdweb offer direct onramping to tokens through Buy With Fiat?"> 
+<Details summary="Does thirdweb offer direct onramping to tokens through onramp?">
 We offer direct onramping **internationally** to the following tokens:
 
 - Mainnet (Ethereum)
@@ -105,30 +105,29 @@ We offer direct onramping **internationally** to the following tokens:
 
 We offer direct onramping to the following tokens in the **US only**:
 
-- ETH (Base)\*
+- ETH (Base)*
 - USDC (Ethereum)
-- USDC (Polygon)\*
-- USDC (Avalanche)\*
-- USDC (Base)\*
+- USDC (Polygon)*
+- USDC (Avalanche)*
+- USDC (Base)*
 
 All other tokens will require an additional Buy With Crypto step.
 
-\* Not available in New York or the EU.
+* Not available in New York or the EU.
 </Details>
 
-<Details summary="How are cryptocurrency prices set in thirdweb Payments?"> 
+<Details summary="How are prices set through thirdweb Bridge?">
 Prices are set depending on the liquidity provider used to route your transaction.
 </Details>
 
 ### KYC & Compliance
 
 <Details summary="What are the KYC requirements?">
-Onramp options all require minimal KYC. This is done to comply with local regulations and to ensure the safety of our users.
-Please note: onramping with Coinbase does not require KYC for a purchase below $500 with debit card. 
+Onramp options all require minimal KYC. This is done to comply with local regulations and to ensure the safety of our users. Please note: onramping with Coinbase does not require KYC for a purchase below $500 with debit card.
 </Details>
 
-<Details summary="How does KYC work with Buy With Fiat"> 
-Users will be required to complete KYC verification for their first purchase using 'Buy with Fiat.' After that, no further KYC will be needed for future purchases on the same platform.
+<Details summary="How does KYC work for buying cryptocurrency with Fiat?">
+Users will be required to complete KYC verification for their first purchase using onramp. After that, no further KYC will be needed for future purchases on the same platform.
 </Details>
 
 

@@ -45,9 +45,9 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: `https://payments.thirdweb.com/reference`,
+          href: `/reference`,
           icon: <EngineIcon />,
-          name: "REST API",
+          name: "HTTP API",
         },
         {
           href: "/references/typescript/v5",
@@ -71,6 +71,17 @@ export const sidebar: SideBar = {
         },
       ],
       name: "API References",
+    },
+    { separator: true },
+    {
+      isCollapsible: false,
+      links: [
+        {
+          href: `${x402Slug}/faq`,
+          name: "FAQ",
+        },
+      ],
+      name: "Resources",
     },
   ],
   name: "x402",

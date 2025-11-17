@@ -6,24 +6,25 @@ import {
 	createMetadata,
 	Steps,
 	Step,
+	OpenApiEndpoint,
 } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WalletsSmartIcon } from "@/icons";
-import { TypeScriptIcon, DotNetIcon } from "@/icons";
+import { TypeScriptIcon, DotNetIcon, EngineIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
-		title: "Sponsor Gas",
+		title: "Gas Sponsorship",
 		icon: "wallets",
 	},
-	title: "Sponsor Gas | thirdweb Documentation",
+	title: "Gas Sponsorship | thirdweb Documentation",
 	description:
 		"Enable gasless transactions using EIP-7702 or ERC-4337. thirdweb lets you sponsor gas fees so users can sign and send transactions with zero friction.",
 });
 
-# Sponsor gas
+# Gas Sponsorship
 
-Sponsor gas fees for your users by configuring `executionMode` in the in-app wallet options.
+Sponsor gas fees for transactions using EIP-7702 or ERC-4337. Thirdweb will handle the gas fees for you.
 
 <Tabs defaultValue="eip7702">
 	<TabsList>
@@ -35,10 +36,14 @@ Sponsor gas fees for your users by configuring `executionMode` in the in-app wal
 
 ## EIP-7702 (recommended)
 
-Sponsor gas fees for your users' in-app wallets using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enabling gasless transactions and improving user experience.
+Sponsor gas fees using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enabling gasless transactions and improving user experience.
 
-<Tabs defaultValue="typescript">
+<Tabs defaultValue="http">
 	<TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
 		<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
 			<TypeScriptIcon className="size-4" />
 			TypeScript / React
@@ -49,7 +54,20 @@ Sponsor gas fees for your users' in-app wallets using [EIP-7702](https://eips.et
 		</TabsTrigger>
 	</TabsList>
 
+  <TabsContent value="http">
+
+  EIP-7702 is the default execution mode in the [thirdweb API](/reference) for your user and server wallets.
+
+Example sponsored contract write request:
+
+<OpenApiEndpoint path="/v1/contracts/write" method="POST" />
+
+  </TabsContent>
+
 	<TabsContent value="typescript">
+
+	You can enable EIP-7702 execution for in-app wallets by passing the `executionMode` option to the `inAppWallet` function.
+
 		```typescript
 		const wallet = inAppWallet({
 		  // enable gasless transactions for the wallet
@@ -59,9 +77,22 @@ Sponsor gas fees for your users' in-app wallets using [EIP-7702](https://eips.et
 		  },
 		});
 		```
+
+	For server wallets, EIP-7702 execution is the default execution mode when initializing a server wallet with a signer (EOA) address.
+
+		```typescript
+		const wallet = await Engine.serverWallet({
+		  client,
+		  address: "0x...", // your server wallet signer (EOA) address
+		});
+		```
+
 	</TabsContent>
 
 	<TabsContent value="dotnet">
+
+	You can enable EIP-7702 execution for in-app wallets by passing the `executionMode` option.
+
 		```csharp
 		var smartEoa = await InAppWallet.Create(
 		    client: thirdwebClient,
@@ -72,29 +103,66 @@ Sponsor gas fees for your users' in-app wallets using [EIP-7702](https://eips.et
 	</TabsContent>
 </Tabs>
 
+<div className='h-6' />
+
 That's it! All transactions executed by the user will be sponsored via the thirdweb infrastructure.
 
 </TabsContent>
 
 <TabsContent value="eip4337">
 
-## EIP-4337
+## ERC-4337
 
-For chains that don't support EIP-7702, you can use EIP-4337 smart contract wallets to sponsor gas fees. Note that with EIP-4337, you need to create a smart contract wallet for the user with a different address than the admin wallet (EOA) that controls it.
+For chains that don't support EIP-7702, you can use EIP-4337 smart contract wallets to sponsor gas fees. Note that with EIP-4337, it will create a smart contract wallet with a different address than the admin wallet (EOA) that controls it.
 
-<Tabs defaultValue="typescript">
-	<TabsList>
-		<TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
-			<TypeScriptIcon className="size-4" />
-			TypeScript / React
-		</TabsTrigger>
-		<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
-			<DotNetIcon className="size-4" />
-			.NET / Unity
-		</TabsTrigger>
-	</TabsList>
+<Tabs defaultValue="http">
+  <TabsList>
+    <TabsTrigger value="http" className="flex items-center gap-2 [&>p]:mb-0">
+      <EngineIcon className="w-4 h-4 mr-2" />
+      HTTP
+    </TabsTrigger>
+    <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
+        <TypeScriptIcon className="size-4" />
+        TypeScript / React
+    </TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+        <DotNetIcon className="size-4" />
+        .NET / Unity
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="http">
+
+ERC4337 execution is not supported in the high level thirdweb API, but you can use the lower level [Engine transactions API](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract) with specific execution options:
+
+```http
+POST https://engine.thirdweb.com/v1/write/contract
+Content-Type: application/json
+x-secret-key: <your-project-secret-key>
+
+{
+  "executionOptions": {
+    "type": "ERC4337",
+    "signerAddress": "0x...", // the EOA that has sign permissions on the smart wallet
+    "smartAccountAddress": "0x...", // optional, the address of the smart wallet to act on behalf of
+    "chainId": "1", // your chain id
+  },
+  "params": [{
+    "contractAddress": "0x...",
+    "method": "function transfer(address to, uint256 amount)",
+    "params": ["0x...", "1000000000000000000"],
+  }],
+}
+```
+
+View all the available execution options in the [transactions API reference](https://engine.thirdweb.com/reference#tag/write/post/v1/write/contract).
+
+  </TabsContent>
 
 	<TabsContent value="typescript">
+
+  For user wallets, you can enable ERC-4337 execution by passing the `smartAccount` option to the `inAppWallet` function.
+
 		```typescript
 		const wallet = inAppWallet({
 		  // will create a smart contract wallet for the user
@@ -110,6 +178,9 @@ For chains that don't support EIP-7702, you can use EIP-4337 smart contract wall
 	</TabsContent>
 
 	<TabsContent value="dotnet">
+
+	You can enable ERC-4337 execution for any wallet by creating a smart wallet with the `SmartWallet.Create` function.
+
 		```csharp
 		var adminWallet = await InAppWallet.Create(
 		    client: thirdwebClient,
