@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.112.3
+
+### Patch Changes
+
+- [#8432](https://github.com/thirdweb-dev/js/pull/8432) [`9983e6c`](https://github.com/thirdweb-dev/js/commit/9983e6ccfdfe09404db64cf182e614f432f9f27b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better SIWE chain management for all external wallets
+
 ## 5.112.2
 
 ### Patch Changes
