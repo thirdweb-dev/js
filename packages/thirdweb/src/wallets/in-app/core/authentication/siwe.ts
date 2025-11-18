@@ -10,6 +10,9 @@ import type { Ecosystem } from "../wallet/types.js";
 import { getLoginCallbackUrl, getLoginUrl } from "./getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
 
+// wallets that cannot sign with ethereum mainnet, require a specific chain always
+const NON_ETHEREUM_WALLETS = ["xyz.abs"];
+
 /**
  * @internal
  */
@@ -20,8 +23,10 @@ export async function siweAuthenticate(args: {
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   const { wallet, client, ecosystem, chain } = args;
-  const siweChain = chain || getCachedChain(1); // fallback to mainnet for SIWE for wide wallet compatibility
-  // only connect if the wallet doesn't already have an account
+  const siweChain = NON_ETHEREUM_WALLETS.includes(wallet.id)
+    ? chain || getCachedChain(1)
+    : getCachedChain(1); // fallback to mainnet for SIWE for wide wallet compatibility
+  // only connect if the wallet doesn't alnready have an account
   const account =
     wallet.getAccount() || (await wallet.connect({ chain: siweChain, client }));
   const clientFetch = getClientFetch(client, ecosystem);
