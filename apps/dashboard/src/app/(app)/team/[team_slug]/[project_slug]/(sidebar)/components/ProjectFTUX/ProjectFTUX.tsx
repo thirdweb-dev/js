@@ -114,7 +114,7 @@ function GetStartedSection({ project }: { project: Project }) {
       </div>
 
       <CodeShowcase
-        title="POST /v1/auth/initiate"
+        title="POST /v1/transactions"
         tabs={[
           {
             label: "Curl",

@@ -16,7 +16,7 @@ export function SecretKeySection(props: {
       <h3 className="mb-1 text-base text-foreground font-medium">Secret Key</h3>
       <p className="mb-3 text-muted-foreground text-sm">
         Identifies and authenticates your application from a backend. <br />{" "}
-        This is not the full secret key, Refer to your saved secret key at the
+        This is not the full secret key. Refer to your saved secret key at the
         time of creation for the full secret key.
       </p>
 
