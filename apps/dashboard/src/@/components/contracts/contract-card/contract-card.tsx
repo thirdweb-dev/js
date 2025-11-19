@@ -178,7 +178,7 @@ export async function ContractCard({
           {auditLink && !isBeta && (
             <>
               <Link
-                className="relative z-1 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
+                className="relative z-10 flex items-center gap-1 font-medium text-sm text-success-text hover:underline"
                 href={auditLink}
                 rel="noopener noreferrer"
                 target="_blank"

@@ -1,4 +1,3 @@
-import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -7,48 +6,45 @@ import {
 } from "@/components/contracts/contract-card/contract-card";
 import type { ExploreCategory } from "../../data";
 
-export function ContractRow({ category }: { category: ExploreCategory }) {
+export function ContractRow({
+  category,
+  prefixCard,
+}: {
+  category: ExploreCategory;
+  prefixCard?: React.ReactNode;
+}) {
   return (
     <section>
       {/* Title, Description + View all link */}
       <div className="flex items-center justify-between gap-4">
-        <header className="flex flex-col gap-1.5">
-          <Link href={`/explore/${category.id}`}>
-            <h2 className="font-semibold text-2xl tracking-tight">
-              {category.displayName || category.name}
-            </h2>
-          </Link>
+        <header className="flex flex-col gap-1">
+          <h2 className="font-semibold text-2xl tracking-tight">
+            {category.displayName || category.name}
+          </h2>
 
-          <p className="text-muted-foreground">
-            {category.description}{" "}
-            {category.learnMore && (
-              <Link
-                className="inline text-link-foreground"
-                href={category.learnMore}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </Link>
-            )}
-          </p>
+          {(category.description || category.learnMore) && (
+            <p className="text-muted-foreground">
+              {category.description}{" "}
+              {category.learnMore && (
+                <Link
+                  className="inline text-link-foreground"
+                  href={category.learnMore}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </Link>
+              )}
+            </p>
+          )}
         </header>
-
-        {category.contracts.length > 6 && (
-          <Link
-            className="flex shrink-0 items-center gap-1 text-base text-link-foreground hover:text-foreground"
-            href={`/explore/${category.id}`}
-          >
-            View all
-            <ArrowRightIcon className="size-4" />
-          </Link>
-        )}
       </div>
 
       <div className="h-5" />
 
       <div className="relative z-0 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {category.contracts.slice(0, 6).map((publishedContractId) => {
+        {prefixCard}
+        {category.contracts.map((publishedContractId) => {
           const publisher: string | undefined = Array.isArray(
             publishedContractId,
           )
