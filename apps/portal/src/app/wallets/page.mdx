@@ -469,81 +469,12 @@ Retrieve authenticated user's wallet details:
   </TabsContent>
 
   <TabsContent value="unreal">
-    ### Installation
-
-    1. Download the thirdweb Unreal Engine plugin from the [Unreal Engine Marketplace](https://www.unrealengine.com/marketplace/en-US/product/thirdweb)
-    2. Add the plugin to your Unreal project
-    3. Enable the plugin in your project settings
-
-    ### Configure Client ID
-
-    1. Go to Edit > Project Settings > Thirdweb
-    2. Enter your Client ID from the thirdweb dashboard
-    3. Enter your Bundle ID (must match what was allowlisted on the thirdweb dashboard)
-
-    ### Initialize the SDK (C++)
-
-    Create a new class to manage wallet connections:
-
-    ```cpp
-    #include "ThirdwebManager.h"
-    #include "WalletConnection.h"
-
-    // In your game class or controller
-    void AMyGameController::InitializeThirdweb()
-    {
-        // Get the Thirdweb subsystem
-        UThirdwebSubsystem* ThirdwebSubsystem = GEngine->GetEngineSubsystem<UThirdwebSubsystem>();
-
-        // Initialize with your client ID (configured in project settings)
-        ThirdwebSubsystem->Initialize("ethereum");
-    }
-
-    void AMyGameController::ConnectWallet()
-    {
-        UThirdwebSubsystem* ThirdwebSubsystem = GEngine->GetEngineSubsystem<UThirdwebSubsystem>();
-
-        // Configure wallet connection
-        FWalletConnection WalletOptions;
-        WalletOptions.Provider = EWalletProvider::EmbeddedWallet;
-        WalletOptions.Email = "user@example.com";
-        WalletOptions.ChainId = 1; // Ethereum Mainnet
-
-        // Connect wallet asynchronously
-        ThirdwebSubsystem->ConnectWallet(WalletOptions, FOnWalletConnected::CreateUObject(this, &AMyGameController::OnWalletConnected));
-    }
-
-    void AMyGameController::OnWalletConnected(const FString& Address, const FString& Error)
-    {
-        if (Error.IsEmpty())
-        {
-            UE_LOG(LogTemp, Display, TEXT("Wallet connected: %s"), *Address);
-
-            // Get balance
-            UThirdwebSubsystem* ThirdwebSubsystem = GEngine->GetEngineSubsystem<UThirdwebSubsystem>();
-            ThirdwebSubsystem->GetWalletBalance(FOnWalletBalanceReceived::CreateUObject(this, &AMyGameController::OnBalanceReceived));
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Failed to connect wallet: %s"), *Error);
-        }
-    }
-
-    void AMyGameController::OnBalanceReceived(const FString& Balance, const FString& Symbol)
-    {
-        UE_LOG(LogTemp, Display, TEXT("Balance: %s %s"), *Balance, *Symbol);
-    }
-    ```
-
-    ### Using Blueprints
-
-    Alternatively, use Blueprint nodes provided by the Thirdweb plugin:
-
-    1. Create a new Blueprint class
-    2. Add a component for user interface (like widget blueprint)
-    3. Use the Thirdweb nodes found in the node palette
-    4. Connect nodes for wallet login, balance checking, etc.
-
+    <ArticleIconCard
+      href="/unreal-engine"
+      icon={UnrealEngineIcon}
+      title="Unreal Engine SDK"
+      description="Learn more about the Unreal Engine SDK"
+    />
   </TabsContent>
 </Tabs>
 

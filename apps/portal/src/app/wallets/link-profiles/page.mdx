@@ -49,6 +49,10 @@ thirdweb Wallets allow users to tie the same wallet address to multiple social i
 		<UnityIcon className="w-4 h-4" />
 		Unity
 	</TabsTrigger>
+	<TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
+		<UnrealEngineIcon className="w-4 h-4" />
+		Unreal Engine
+	</TabsTrigger>
 </TabsList>
 
 <TabsContent value="http">
@@ -225,6 +229,17 @@ var linkedAccounts = await mainInAppWallet.LinkAccount(walletToLink: walletToLin
 var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet, walletToLink);
 ```
 </TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
+
+</TabsContent>
 </Tabs>
 
 ## Retrieve Linked Profiles
@@ -248,6 +263,14 @@ Once linked, you can retrieve the user profiles via either identity.
 	<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
 		<DotNetIcon className="w-4 h-4 mr-2" />
 		.NET
+	</TabsTrigger>
+	<TabsTrigger value="unity" className="flex items-center gap-2 [&>p]:mb-0">
+		<UnityIcon className="w-4 h-4 mr-2" />
+		Unity
+	</TabsTrigger>
+	<TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
+		<UnrealEngineIcon className="w-4 h-4 mr-2" />
+		Unreal Engine
 	</TabsTrigger>
 </TabsList>
 
@@ -289,6 +312,24 @@ console.log("Email:", profiles[0].details.email); // "john.doe@example.com"
 ```csharp
 List<LinkedAccount> linkedAccounts = await inAppWallet.GetLinkedAccounts();
 ```
+</TabsContent>
+
+<TabsContent value="unity">
+```csharp
+var wallet = ThirdwebManager.Instance.ActiveWallet;
+List<LinkedAccount> linkedAccounts = await wallet.GetLinkedAccounts();
+```
+</TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
+
 </TabsContent>
 </Tabs>
 

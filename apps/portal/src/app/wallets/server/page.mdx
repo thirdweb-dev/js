@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint } from "@doc";
-import { TypeScriptIcon, EngineIcon } from "@/icons";
+import { TypeScriptIcon, EngineIcon, DotNetIcon } from "@/icons";
 import { createMetadata } from "@doc";
 
 export const metadata = createMetadata({
@@ -24,6 +24,10 @@ Server wallets are wallets that are managed by your own application, like a trea
     <TabsTrigger value="typescript" className="flex items-center gap-2 [&>p]:mb-0">
       <TypeScriptIcon className="w-4 h-4" />
       TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+      <DotNetIcon className="w-4 h-4" />
+      .NET
     </TabsTrigger>
   </TabsList>
 
@@ -113,5 +117,86 @@ You can also list all server wallets for your project to get their addresses and
             client,
         });
     ```
+  </TabsContent>
+
+  <TabsContent value="dotnet">
+
+    ### Create a Server Wallet
+
+    Before using a server wallet in code, create it in the [thirdweb dashboard](https://thirdweb.com/dashboard/connect/account-abstraction) (Transactions → Server wallets) and note the label you assign.
+
+    ```csharp
+    using Thirdweb;
+
+    var client = ThirdwebClient.Create(secretKey: "YOUR_SECRET_KEY");
+
+    var wallet = await ServerWallet.Create(
+        client: client,
+        label: "production-deployer" // The label from your dashboard
+    );
+
+    Console.WriteLine($"Server wallet address: {await wallet.GetAddress()}");
+    ```
+
+    ### Use with Transactions
+
+    Server wallets implement `IThirdwebWallet`, so you can use them anywhere you need a wallet:
+
+    ```csharp
+    // Get a contract instance
+    var contract = await ThirdwebContract.Create(
+        client,
+        "0x...", // contract address
+        chainId: 1
+    );
+
+    // Write to the contract using the server wallet
+    var receipt = await contract.Write(
+        wallet,
+        "transfer",
+        weiValue: 0,
+        "0x...", // to address
+        1000000000000000000 // amount
+    );
+
+    Console.WriteLine($"Transaction hash: {receipt.TransactionHash}");
+    ```
+
+    ### Advanced Execution Options
+
+    Control how the wallet submits transactions with execution options:
+
+    ```csharp
+    // EIP-7702 sponsored execution (recommended)
+    var wallet = await ServerWallet.Create(
+        client: client,
+        label: "production-deployer",
+        executionOptions: new EIP7702ExecutionOptions()
+    );
+
+    // ERC-4337 smart account execution
+    var smartWallet = await ServerWallet.Create(
+        client: client,
+        label: "production-deployer",
+        executionOptions: new ERC4337ExecutionOptions(
+            chainId: new BigInteger(8453),
+            signerAddress: "0x..." // your server wallet signer address
+        )
+    );
+    ```
+
+    ### List Server Wallets
+
+    Retrieve all server wallets for your project:
+
+    ```csharp
+    var wallets = await ServerWallet.GetAll(client);
+
+    foreach (var walletInfo in wallets)
+    {
+        Console.WriteLine($"Label: {walletInfo.Label}, Address: {walletInfo.Address}");
+    }
+    ```
+
   </TabsContent>
 </Tabs>

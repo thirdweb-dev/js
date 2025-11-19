@@ -6,7 +6,9 @@ import {
 	DocImage,
 	createMetadata,
 	OpenApiEndpoint,
+	ArticleIconCard,
 } from "@doc";
+import { UnrealEngineIcon, UnityIcon, DotNetIcon } from "@/icons";
 import EWCustomAuth from "./images/customauth.png";
 import EWCustomAuthdb from "./images/customauthdb.png";
 import EWCustomAuthdb2 from "./images/customauthdb2.png";
@@ -64,6 +66,8 @@ You will be asked to enter the following values
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
 	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="dotnet">.NET</TabsTrigger>
+	<TabsTrigger value="unity">Unity</TabsTrigger>
+	<TabsTrigger value="unreal">Unreal Engine</TabsTrigger>
 </TabsList>
 
 <TabsContent value="http">
@@ -138,6 +142,36 @@ var address = await wallet.LoginWithCustomAuth(jwt: "<your-jwt>");
 
 </TabsContent>
 
+<TabsContent value="unity">
+
+```csharp
+using Thirdweb;
+
+// Reference to your ThirdwebManager prefab
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
+    inAppWalletOptions: new InAppWalletOptions(
+        authProvider: AuthProvider.JWT,
+        jwt: "<your-jwt>"
+    )
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+</TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
+
+</TabsContent>
+
 </Tabs>
 
 </TabsContent>
@@ -187,6 +221,8 @@ Once you've logged in with your own auth, you can pass the user's JWT to the in-
 	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
 	<TabsTrigger value="react">React</TabsTrigger>
 	<TabsTrigger value="dotnet">.NET</TabsTrigger>
+	<TabsTrigger value="unity">Unity</TabsTrigger>
+	<TabsTrigger value="unreal">Unreal Engine</TabsTrigger>
 </TabsList>
 
 <TabsContent value="http">
@@ -263,6 +299,36 @@ var client = ThirdwebClient.Create(clientId: "your-client-id");
 var wallet = await InAppWallet.Create(client: client, authProvider: AuthProvider.AuthEndpoint);
 var address = await wallet.LoginWithAuthEndpoint(payload: "<your-auth-payload>");
 ```
+
+</TabsContent>
+
+<TabsContent value="unity">
+
+```csharp
+using Thirdweb;
+
+// Reference to your ThirdwebManager prefab
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet,
+    chainId: 1,
+    inAppWalletOptions: new InAppWalletOptions(
+        authProvider: AuthProvider.AuthEndpoint,
+        authEndpointPayload: "<your-auth-payload>"
+    )
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+</TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
 
 </TabsContent>
 
