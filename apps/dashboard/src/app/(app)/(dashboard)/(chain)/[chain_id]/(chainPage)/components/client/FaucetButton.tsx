@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/(app)/api/testnet-faucet/can-claim/CanClaimResponseType";
+import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -192,6 +193,20 @@ export function FaucetButton({
 
   // Can not claim
   if (canClaimFaucetQuery.data && canClaimFaucetQuery.data.canClaim === false) {
+    if (canClaimFaucetQuery.data.type === "paid-plan-required") {
+      return (
+        <Button
+          asChild
+          className="w-full gap-2 whitespace-pre-wrap h-auto min-h-10 text-center bg-background"
+          variant="outline"
+        >
+          <Link href="/team/~/~/billing">
+            Faucet is not available on Free plan. Upgrade your plan to continue
+            <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground" />
+          </Link>
+        </Button>
+      );
+    }
     return (
       <Button className="!opacity-100 w-full " disabled variant="outline">
         {canClaimFaucetQuery.data.type === "throttle" && (
@@ -203,10 +218,6 @@ export function FaucetButton({
 
         {canClaimFaucetQuery.data.type === "unsupported-chain" &&
           "Faucet is empty right now"}
-
-        {/* TODO: add an upsell path here to subscribe to one of these plans */}
-        {canClaimFaucetQuery.data.type === "paid-plan-required" &&
-          "Faucet is only available on Starter, Growth, Scale and Pro plans."}
       </Button>
     );
   }
