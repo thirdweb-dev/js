@@ -242,6 +242,8 @@ export type ProjectService =
       encryptedAdminKey?: string | null;
       encryptedWalletAccessToken?: string | null;
       projectWalletAddress?: string | null;
+      x402FeeBPS?: number | null;
+      x402FeeRecipient?: string | null;
     }
   | ProjectBundlerService
   | ProjectEmbeddedWalletsService;
