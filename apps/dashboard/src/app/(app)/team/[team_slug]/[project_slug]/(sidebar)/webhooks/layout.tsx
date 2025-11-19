@@ -36,7 +36,7 @@ export default async function Layout(props: {
         links: [
           {
             type: "docs",
-            href: "https://portal.thirdweb.com/payments/webhooks",
+            href: "https://portal.thirdweb.com/bridge/webhooks",
           },
         ],
       }}

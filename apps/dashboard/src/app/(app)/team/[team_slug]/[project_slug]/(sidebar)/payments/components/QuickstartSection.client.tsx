@@ -87,7 +87,7 @@ export function QuickStartSection(props: {
             "Transactions, products, and direct payments",
           ]}
           link={{
-            href: "https://portal.thirdweb.com/payments/products",
+            href: "https://portal.thirdweb.com/bridge/products",
             label: "Get Started",
           }}
         />

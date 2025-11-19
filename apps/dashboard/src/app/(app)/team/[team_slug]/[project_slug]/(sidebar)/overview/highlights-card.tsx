@@ -54,12 +54,12 @@ export function ProjectHighlightsCard(props: {
       emptyContent: (
         <EmptyStateContent
           description="Your app hasn't collected any fees yet."
-          link={`/team/${teamSlug}/${projectSlug}/payments/settings`}
+          link={`/team/${teamSlug}/${projectSlug}/bridge/configuration`}
           metric="Fees"
         />
       ),
       isCurrency: true,
-      label: "Fee Revenue",
+      label: "Bridge Fee Revenue",
     },
   } as const;
 
