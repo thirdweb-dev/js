@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getValidAccount } from "@/api/account/get-account";
 import { getAuthToken, getAuthTokenWalletAddress } from "@/api/auth-token";
+import { getFilteredProjectContracts } from "@/api/project/getSortedDeployedContracts";
 import { getProject, getProjects } from "@/api/project/projects";
 import { getTeamBySlug, getTeams } from "@/api/team/get-team";
 import { CustomChatButton } from "@/components/chat/CustomChatButton";
@@ -78,6 +79,15 @@ export default async function ProjectLayout(props: {
 
   const isStaffMode = !teams.some((t) => t.slug === team.slug);
 
+  const nonTokenContracts = await getFilteredProjectContracts({
+    authToken,
+    projectId: project.id,
+    teamId: team.id,
+    type: "non-token-contracts",
+  }).catch(() => []);
+
+  const showContracts = nonTokenContracts.length > 0;
+
   return (
     <SidebarProvider>
       <div className="flex h-dvh min-w-0 grow flex-col">
@@ -96,6 +106,7 @@ export default async function ProjectLayout(props: {
         <ProjectSidebarLayout
           layoutPath={layoutPath}
           hasEngines={hasLegacyDedicatedEngines}
+          showContracts={showContracts}
         >
           {props.children}
         </ProjectSidebarLayout>

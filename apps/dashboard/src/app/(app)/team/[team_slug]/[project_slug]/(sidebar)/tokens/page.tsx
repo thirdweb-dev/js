@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { getAuthToken } from "@/api/auth-token";
-import { getSortedDeployedContracts } from "@/api/project/getSortedDeployedContracts";
+import { getFilteredProjectContracts } from "@/api/project/getSortedDeployedContracts";
 import { getProject } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
 import { ClientOnly } from "@/components/blocks/client-only";
@@ -133,9 +133,9 @@ async function AssetsPageAsync(props: {
   teamSlug: string;
   projectSlug: string;
 }) {
-  const deployedContracts = await getSortedDeployedContracts({
+  const deployedContracts = await getFilteredProjectContracts({
     authToken: props.authToken,
-    deploymentType: "asset",
+    type: "token-contracts",
     projectId: props.projectId,
     teamId: props.teamId,
   });

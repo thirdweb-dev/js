@@ -1,4 +1,5 @@
 import { ArrowUpFromLineIcon } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -39,111 +40,129 @@ export default async function Page(props: {
   });
 
   return (
-    <ProjectPage
-      header={{
-        client,
-        title: "Contracts",
-        icon: ContractIcon,
-        description: (
-          <>
-            Read, write, and deploy smart contracts on any EVM compatible
-            blockchain. <br className="max-sm:hidden" /> Deploy contracts from
-            templates, or build your own from scratch
-          </>
-        ),
-        actions: {
-          primary: {
-            label: "Deploy Contract",
-            href: "/explore",
-            icon: <ArrowUpFromLineIcon className="size-3.5" />,
+    <div className="flex flex-col grow">
+      {/* banner */}
+      <div className="py-5 bg-blue-700 text-white font-medium">
+        <div className="container max-w-7xl">
+          <div>
+            <p>
+              ERC20, ERC721, ERC1155 token contracts are moved to the{" "}
+              <Link
+                href={`/team/${params.team_slug}/${params.project_slug}/tokens`}
+                className="underline underline-offset-4 decoration-dotted hover:decoration-solid"
+              >
+                Tokens
+              </Link>{" "}
+              section.
+            </p>
+
+            <p>Go to the Tokens section to view and deploy token contracts.</p>
+          </div>
+        </div>
+      </div>
+
+      <ProjectPage
+        header={{
+          client,
+          title: "Contracts",
+          icon: ContractIcon,
+          description: (
+            <>
+              Read, write, and deploy smart contracts on any EVM compatible
+              blockchain. <br className="max-sm:hidden" /> Deploy contracts from
+              templates, or build your own from scratch
+            </>
+          ),
+          actions: {
+            primary: {
+              label: "Deploy Contract",
+              href: "/explore",
+              icon: <ArrowUpFromLineIcon className="size-3.5" />,
+            },
+            secondary: {
+              component: (
+                <ImportContractButton
+                  teamId={team.id}
+                  projectId={project.id}
+                  projectSlug={params.project_slug}
+                  teamSlug={params.team_slug}
+                  client={client}
+                />
+              ),
+            },
           },
-          secondary: {
-            component: (
-              <ImportContractButton
-                teamId={team.id}
-                projectId={project.id}
-                projectSlug={params.project_slug}
-                teamSlug={params.team_slug}
-                client={client}
-              />
-            ),
-          },
-        },
-        links: [
-          {
-            type: "docs",
-            href: "https://portal.thirdweb.com/contracts",
-          },
-          {
-            type: "playground",
-            href: "https://playground.thirdweb.com/contracts/read",
-          },
-          {
-            type: "api",
-            href: "https://api.thirdweb.com/reference#tag/contracts",
-          },
-          {
-            type: "webhooks",
-            href: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
-          },
-        ],
-      }}
-      footer={{
-        left: {
           links: [
             {
-              href: "https://portal.thirdweb.com/contracts/deploy/overview",
-              label: "Deployment Tools",
+              type: "docs",
+              href: "https://portal.thirdweb.com/contracts",
             },
             {
-              href: "https://portal.thirdweb.com/contracts/modular-contracts/overview",
-              label: "Modular Contracts",
+              type: "api",
+              href: "https://api.thirdweb.com/reference#tag/contracts",
             },
             {
-              href: "https://portal.thirdweb.com/contracts/explore/overview",
-              label: "Pre-built Contracts",
+              type: "webhooks",
+              href: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
             },
           ],
-          title: "Documentation",
-        },
-        center: {
-          links: [
-            {
-              href: "https://thirdweb.com/templates/hardhat-starter",
-              label: "Hardhat Starter",
-            },
-            {
-              href: "https://thirdweb.com/templates/forge-starter",
-              label: "Forge Starter",
-            },
-          ],
-          title: "Templates",
-        },
-        right: {
-          links: [
-            {
-              href: "https://www.youtube.com/watch?v=cZt-CkzxrNM",
-              label:
-                "Everything you need to know about upgradeable smart contracts",
-            },
-            {
-              href: "https://www.youtube.com/watch?v=ZoOk41y4f_k",
-              label:
-                "Modular Contracts SDK: Build Core & Modules from Scratch (Advanced Guide)",
-            },
-          ],
-          title: "Tutorials",
-        },
-      }}
-    >
-      <DeployedContractsPage
-        authToken={authToken}
-        client={client}
-        projectId={project.id}
-        projectSlug={params.project_slug}
-        teamId={team.id}
-        teamSlug={params.team_slug}
-      />
-    </ProjectPage>
+        }}
+        footer={{
+          left: {
+            links: [
+              {
+                href: "https://portal.thirdweb.com/contracts/deploy/overview",
+                label: "Deployment Tools",
+              },
+              {
+                href: "https://portal.thirdweb.com/contracts/modular-contracts/overview",
+                label: "Modular Contracts",
+              },
+              {
+                href: "https://portal.thirdweb.com/contracts/explore/overview",
+                label: "Pre-built Contracts",
+              },
+            ],
+            title: "Documentation",
+          },
+          center: {
+            links: [
+              {
+                href: "https://thirdweb.com/templates/hardhat-starter",
+                label: "Hardhat Starter",
+              },
+              {
+                href: "https://thirdweb.com/templates/forge-starter",
+                label: "Forge Starter",
+              },
+            ],
+            title: "Templates",
+          },
+          right: {
+            links: [
+              {
+                href: "https://www.youtube.com/watch?v=cZt-CkzxrNM",
+                label:
+                  "Everything you need to know about upgradeable smart contracts",
+              },
+              {
+                href: "https://www.youtube.com/watch?v=ZoOk41y4f_k",
+                label:
+                  "Modular Contracts SDK: Build Core & Modules from Scratch (Advanced Guide)",
+              },
+            ],
+            title: "Tutorials",
+          },
+        }}
+      >
+        <DeployedContractsPage
+          authToken={authToken}
+          client={client}
+          projectId={project.id}
+          projectSlug={params.project_slug}
+          teamId={team.id}
+          teamSlug={params.team_slug}
+        />
+      </ProjectPage>
+    </div>
   );
 }

@@ -22,6 +22,7 @@ export function ProjectSidebarLayout(props: {
   layoutPath: string;
   children: React.ReactNode;
   hasEngines: boolean;
+  showContracts: boolean;
 }) {
   const contentSidebarLinks = [
     {
@@ -53,11 +54,15 @@ export function ProjectSidebarLayout(props: {
         },
       ],
     },
-    {
-      href: `${props.layoutPath}/contracts`,
-      icon: ContractIcon,
-      label: "Contracts",
-    },
+    ...(props.showContracts
+      ? [
+          {
+            href: `${props.layoutPath}/contracts`,
+            icon: ContractIcon,
+            label: "Contracts",
+          },
+        ]
+      : []),
     {
       href: `${props.layoutPath}/x402`,
       icon: PayIcon,

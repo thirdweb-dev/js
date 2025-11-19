@@ -18,6 +18,7 @@ export function ImportContractButton(props: {
   return (
     <>
       <ImportModal
+        allowedContractType="non-token"
         client={props.client}
         isOpen={importModalOpen}
         onClose={() => {

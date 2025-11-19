@@ -2,7 +2,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { isGetNFTsSupported as ERC721_isGetNFTsSupported } from "thirdweb/extensions/erc721";
 import { isGetNFTsSupported as ERC1155_isGetNFTsSupported } from "thirdweb/extensions/erc1155";
 import { resolveFunctionSelectors } from "@/lib/selectors";
-import { supportedERCs } from "./detectedFeatures/supportedERCs";
+import { supportedERCs } from "@/utils/supportedERCs";
 
 export type NewPublicPageType = "erc20" | "erc1155" | "erc721";
 

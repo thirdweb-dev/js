@@ -1,11 +1,23 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowDownToLineIcon, ExternalLinkIcon } from "lucide-react";
+import { UnderlineLink } from "@workspace/ui/components/UnderlineLink";
+import {
+  ArrowDownToLineIcon,
+  CircleAlertIcon,
+  ExternalLinkIcon,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { getAddress, isAddress, type ThirdwebClient } from "thirdweb";
+import {
+  getAddress,
+  getContract,
+  isAddress,
+  type ThirdwebClient,
+} from "thirdweb";
+import { defineChain } from "thirdweb/chains";
 import { useActiveWalletChain } from "thirdweb/react";
 import { z } from "zod";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
@@ -31,6 +43,11 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useChainSlug } from "@/hooks/chains/chainSlug";
 import { useAddContractToProject } from "@/hooks/project-contracts";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { revalidateCacheTagAction } from "../../../actions/revalidate";
+import { projectContractsCacheTag } from "../../../api/project/cache-tag";
+import { resolveFunctionSelectors } from "../../../lib/selectors";
+import { supportedERCs } from "../../../utils/supportedERCs";
+import { Alert, AlertDescription, AlertTitle } from "../../ui/alert";
 
 type ImportModalProps = {
   isOpen: boolean;
@@ -42,6 +59,7 @@ type ImportModalProps = {
   client: ThirdwebClient;
   type: "contract" | "asset";
   onSuccess?: () => void;
+  allowedContractType: "token" | "non-token";
 };
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
@@ -75,6 +93,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
           teamId={props.teamId}
           teamSlug={props.teamSlug}
           type={props.type}
+          allowedContractType={props.allowedContractType}
         />
       </DialogContent>
     </Dialog>
@@ -105,6 +124,7 @@ function ImportForm(props: {
   client: ThirdwebClient;
   type: "contract" | "asset";
   onSuccess?: () => void;
+  allowedContractType: "token" | "non-token";
 }) {
   const router = useDashboardRouter();
   const activeChainId = useActiveWalletChain()?.id;
@@ -119,9 +139,14 @@ function ImportForm(props: {
   const chainSlug = useChainSlug(form.watch("chainId"));
   const addContractToProject = useAddContractToProject();
 
+  const [notAllowedError, setNotAllowedError] = useState(false);
+
   return (
     <Form {...form}>
       <form
+        onChange={() => {
+          setNotAllowedError(false);
+        }}
         onSubmit={form.handleSubmit(async (data) => {
           const { chainId } = data;
           let contractAddress: string;
@@ -158,6 +183,27 @@ function ImportForm(props: {
               return;
             }
 
+            // check if the contract matches the requirement
+            const contract = getContract({
+              address: contractAddress,
+              // eslint-disable-next-line no-restricted-syntax
+              chain: defineChain(chainId),
+              client: props.client,
+            });
+
+            const functionSelectors = await resolveFunctionSelectors(contract);
+            const ercs = supportedERCs(functionSelectors);
+
+            const isToken = ercs.isERC20 || ercs.isERC721 || ercs.isERC1155;
+
+            if (
+              (props.allowedContractType === "token" && !isToken) ||
+              (props.allowedContractType === "non-token" && isToken)
+            ) {
+              setNotAllowedError(true);
+              return;
+            }
+
             addContractToProject.mutate(
               {
                 chainId: chainId.toString(),
@@ -177,6 +223,12 @@ function ImportForm(props: {
                   }
                 },
                 onSuccess: () => {
+                  revalidateCacheTagAction(
+                    projectContractsCacheTag({
+                      teamId: props.teamId,
+                      projectId: props.projectId,
+                    }),
+                  );
                   router.refresh();
                   toast.success("Contract imported successfully");
                   props.onSuccess?.();
@@ -216,6 +268,34 @@ function ImportForm(props: {
             />
           </div>
         </div>
+
+        {notAllowedError && (
+          <div className="px-6 pt-6 text-sm text-destructive-text">
+            <Alert variant="destructive">
+              <CircleAlertIcon className="size-5" />
+              <AlertTitle> Invalid Contract </AlertTitle>
+              <AlertDescription>
+                {props.allowedContractType === "token" && (
+                  <span>
+                    This contract is not a token contract. <br /> Only ERC20,
+                    ERC721 and ERC1155 contracts can be imported as tokens.
+                  </span>
+                )}
+                {props.allowedContractType === "non-token" && (
+                  <span>
+                    This contract is a token contract. <br /> Go to the{" "}
+                    <UnderlineLink
+                      href={`/team/${props.teamSlug}/${props.projectSlug}/tokens`}
+                    >
+                      Tokens
+                    </UnderlineLink>{" "}
+                    page to import in dashboard.
+                  </span>
+                )}
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
 
         <div className="mt-8 flex justify-end border-t bg-card p-6">
           {addContractToProject.isSuccess &&

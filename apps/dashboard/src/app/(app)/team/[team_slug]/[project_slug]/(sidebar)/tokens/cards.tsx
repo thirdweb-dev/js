@@ -36,6 +36,7 @@ export function ImportTokenButton(props: {
       </Button>
 
       <ImportModal
+        allowedContractType="token"
         client={props.client}
         isOpen={importModalOpen}
         onClose={() => {

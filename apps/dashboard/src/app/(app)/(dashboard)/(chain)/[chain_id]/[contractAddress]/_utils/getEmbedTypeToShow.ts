@@ -1,9 +1,9 @@
+import { supportedERCs } from "@/utils/supportedERCs";
 import { isClaimConditionsSupported } from "./detectedFeatures/claimConditions";
 import {
   isDirectListingSupported,
   isEnglishAuctionSupported,
 } from "./detectedFeatures/marketplace";
-import { supportedERCs } from "./detectedFeatures/supportedERCs";
 
 export type EmbedTypeToShow =
   | "marketplace-v3"

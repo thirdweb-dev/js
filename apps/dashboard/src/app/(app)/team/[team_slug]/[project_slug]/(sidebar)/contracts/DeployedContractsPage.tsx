@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { getSortedDeployedContracts } from "@/api/project/getSortedDeployedContracts";
+import { getFilteredProjectContracts } from "@/api/project/getSortedDeployedContracts";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { ContractTable } from "@/components/contract-components/tables/contract-table";
 import { Spinner } from "@/components/ui/Spinner";
-import { DeployViaCLIOrImportCard } from "../../../../../account/contracts/_components/DeployViaCLIOrImportCard";
+import { DeployViaCLIOrImportCard } from "./DeployViaCLIOrImportCard";
 
 export function DeployedContractsPage(props: {
   teamId: string;
@@ -39,9 +39,9 @@ async function DeployedContractsPageAsync(props: {
   teamSlug: string;
   projectSlug: string;
 }) {
-  const deployedContracts = await getSortedDeployedContracts({
+  const deployedContracts = await getFilteredProjectContracts({
     authToken: props.authToken,
-    deploymentType: undefined,
+    type: "non-token-contracts",
     projectId: props.projectId,
     teamId: props.teamId,
   });

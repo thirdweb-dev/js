@@ -2,6 +2,7 @@ import type { ThirdwebContract } from "thirdweb";
 import { contractType as getContractType } from "thirdweb/extensions/thirdweb";
 import { getDeployedEntrypointERC20 } from "thirdweb/tokens";
 import { resolveFunctionSelectors } from "@/lib/selectors";
+import { supportedERCs } from "@/utils/supportedERCs";
 import { getValidReward } from "../../../../../team/[team_slug]/[project_slug]/contract/[chainIdOrSlug]/[contractAddress]/rewards/utils/rewards";
 import {
   isERC20ClaimConditionsSupported,
@@ -21,7 +22,6 @@ import {
   isPermissionsEnumerableSupported,
   isPermissionsSupported,
 } from "./detectedFeatures/permissions";
-import { supportedERCs } from "./detectedFeatures/supportedERCs";
 import { type EmbedTypeToShow, getEmbedTypeToShow } from "./getEmbedTypeToShow";
 
 type ContractPageMetadata = {

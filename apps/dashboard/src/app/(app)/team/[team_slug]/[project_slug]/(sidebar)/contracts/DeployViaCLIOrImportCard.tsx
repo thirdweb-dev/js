@@ -26,6 +26,7 @@ export function DeployViaCLIOrImportCard(props: {
         </div>
       </div>
       <ImportModal
+        allowedContractType="non-token"
         client={props.client}
         isOpen={importModalOpen}
         onClose={() => {

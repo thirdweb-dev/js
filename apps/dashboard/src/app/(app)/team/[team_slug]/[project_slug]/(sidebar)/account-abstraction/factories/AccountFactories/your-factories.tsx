@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { defineChain, getContract, type ThirdwebClient } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
-import { getSortedDeployedContracts } from "@/api/project/getSortedDeployedContracts";
+import { getFilteredProjectContracts } from "@/api/project/getSortedDeployedContracts";
 import { ClientOnly } from "@/components/blocks/client-only";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
 import { Button } from "@/components/ui/button";
@@ -60,9 +60,9 @@ async function AsyncYourFactories(props: {
   projectSlug: string;
   clientThirdwebClient: ThirdwebClient;
 }) {
-  const deployedContracts = await getSortedDeployedContracts({
+  const deployedContracts = await getFilteredProjectContracts({
     authToken: props.authToken,
-    deploymentType: undefined,
+    type: "non-token-contracts",
     projectId: props.projectId,
     teamId: props.teamId,
   });

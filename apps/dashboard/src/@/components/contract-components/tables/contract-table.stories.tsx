@@ -62,6 +62,8 @@ function Story() {
             client={storybookThirdwebClient}
             contracts={[]}
             pageSize={10}
+            projectId="project-id"
+            teamId="team-id"
             projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
@@ -74,6 +76,8 @@ function Story() {
             client={storybookThirdwebClient}
             contracts={[popularPolygonNFTs[0] as ProjectContract]}
             pageSize={10}
+            projectId="project-id"
+            teamId="team-id"
             projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
@@ -86,6 +90,8 @@ function Story() {
             client={storybookThirdwebClient}
             contracts={popularPolygonNFTs}
             pageSize={10}
+            projectId="project-id"
+            teamId="team-id"
             projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
@@ -95,6 +101,8 @@ function Story() {
 
         <BadgeContainer label="10 Contracts, 2 chains">
           <ContractTableUI
+            projectId="project-id"
+            teamId="team-id"
             client={storybookThirdwebClient}
             contracts={[...popularPolygonNFTs, ...EthereumPopularNFTs]}
             pageSize={10}
@@ -114,6 +122,8 @@ function Story() {
               ...basePopularTokens,
             ]}
             pageSize={10}
+            projectId="project-id"
+            teamId="team-id"
             projectSlug={projectSlug}
             removeContractFromProject={removeContractStub}
             teamSlug={teamSlug}
