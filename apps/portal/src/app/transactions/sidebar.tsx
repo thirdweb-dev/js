@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, ZapIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import type { SideBar } from "@/components/Layouts/DocLayout";
 import { DotNetIcon, ReactIcon, TypeScriptIcon, UnityIcon } from "@/icons";
 import { UnrealEngineIcon } from "../../icons/sdks/UnrealEngineIcon";
@@ -7,11 +7,6 @@ const transactionsSlug = "/transactions";
 
 export const sidebar: SideBar = {
   links: [
-    {
-      href: transactionsSlug,
-      name: "Get Started",
-      icon: <ZapIcon />,
-    },
     {
       href: "https://playground.thirdweb.com/transactions/airdrop-tokens",
       icon: <ExternalLinkIcon />,

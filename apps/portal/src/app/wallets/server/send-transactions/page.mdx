@@ -31,7 +31,7 @@ export const metadata = createMetadata({
   description: "Send, monitor, and manage transactions.",
 });
 
-# Get Started
+# Send Transactions
 
 Send, monitor, and manage transactions. Send transactions from user or server wallets, sponsor gas, monitor transaction status, and more.
 
@@ -71,6 +71,16 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
     - For user wallets in TypeScript applications, you can get it by calling `wallet.getAuthToken()` on a connected [`inAppWallet()`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet()`](/references/typescript/v5/ecosystemWallet).
 
 <OpenApiEndpoint path="/v1/transactions" method="POST" />
+
+    ### Send contract calls
+
+    Send a transaction to a contract from a [user wallet](/wallets/users) from the frontend, or [server wallet](/wallets/server) from the backend using the [thirdweb API](/reference#tag/contracts/post/v1/contracts/{chainId}/{address}/write).
+
+    - For server wallets, you can execute transactions with just your project secret key.
+    - For user wallets in React applications that use the SDK, you can obtain the user wallet auth token (JWT) with the [`useAuthToken()`](/references/typescript/v5/useAuthToken) hook.
+    - For user wallets in TypeScript applications, you can get it by calling `wallet.getAuthToken()` on a connected [`inAppWallet()`](/references/typescript/v5/inAppWallet) or [`ecosystemWallet()`](/references/typescript/v5/ecosystemWallet).
+
+<OpenApiEndpoint path="/v1/contracts/{chainId}/{address}/write" method="POST" />
 
 </TabsContent>
 
@@ -156,7 +166,7 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
       </TabsContent>
 
       <TabsContent value="backend">
-        On the backend, you can use the server wallet to enqueue a transaction. Enqueued transactions is recommended to not block your server. You can then monitor the transaction status using the [transaction monitor](/transactions/monitor) API.
+        On the backend, you can use the server wallet to enqueue a transaction. Enqueued transactions is recommended to not block your server. You can then monitor the transaction status using the [transaction monitor](/wallets/monitor) API.
 
         ```typescript
         import { Engine } from "thirdweb";
@@ -414,15 +424,15 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
   <TabsContent value="unity">
     ### Installation
 
-    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity-sdk/releases) (.unitypackage file)
+    1. Download the latest [thirdweb Unity SDK](https://github.com/thirdweb-dev/unity/releases) (.unitypackage file)
     2. Import the package into your Unity project via Assets > Import Package > Custom Package
 
     ### Configure Client ID
 
     After importing the SDK:
 
-    1. Go to Project Settings > Thirdweb
-    2. Enter your Client ID from the thirdweb dashboard
+    1. Drag the `ThirdwebManager` prefab into your scene from `Thirdweb > Runtime > Unity > Prefabs`
+    2. Enter your Client ID in the Inspector
     3. Allowlist your game's Bundle ID on the thirdweb dashboard for security
 
   ### Send a Transaction
@@ -432,36 +442,37 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
   ```csharp
   using Thirdweb;
   using UnityEngine;
-  using UnityEngine.UI;
+  using System.Numerics;
 
   public class TransactionManager : MonoBehaviour
   {
-      private ThirdwebSDK sdk;
-      public Text walletAddressText;
-      public Button sendButton;
-
-      void Start()
-      {
-          // Client ID is set in Project Settings > Thirdweb
-          sdk = new ThirdwebSDK("ethereum"); // Or any supported chain
-          sendButton.onClick.AddListener(SendTransaction);
-      }
-
       public async void SendTransaction()
       {
-          try {
+          try
+          {
               var contract = await ThirdwebManager.Instance.GetContract(
-                  address: "contract-address",
+                  address: "0x...",
                   chainId: 1,
-                  abi: "optional-abi"
+                  abi: "..." // optional
               );
 
-              // Send a transaction
-              var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
-              Debug.Log($"Transaction receipt: {receipt}");
+              // The wallet that signs and sends the transaction
+              var wallet = ThirdwebManager.Instance.ActiveWallet;
+
+              // Assuming transfer takes an address and an amount as parameters
+              string toAddress = "0x...";
+              BigInteger amount = 1000;
+
+              // No ether is being sent in this non-payable transaction, so weiValue is 0
+              BigInteger weiValue = 0;
+
+              // Executing the transfer
+              var receipt = await contract.Write(wallet, "transfer", weiValue, toAddress, amount);
+              Debug.Log($"Transaction receipt: {receipt.TransactionHash}");
           }
-          catch (System.Exception e) {
-              Debug.LogError("Error sending transaction: " + e.Message);
+          catch (System.Exception e)
+          {
+              Debug.LogError($"Error sending transaction: {e.Message}");
           }
       }
   }
@@ -486,16 +497,10 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
     using Thirdweb;
 
     // For client-side applications:
-    var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
-    {
-        ClientId = "YOUR_CLIENT_ID" // From thirdweb dashboard
-    });
+    var client = ThirdwebClient.Create(clientId: "YOUR_CLIENT_ID");
 
     // For server-side applications:
-    // var sdk = new ThirdwebSDK("ethereum", new ThirdwebSDK.Options
-    // {
-    //     SecretKey = Environment.GetEnvironmentVariable("THIRDWEB_SECRET_KEY")
-    // });
+    // var client = ThirdwebClient.Create(secretKey: "YOUR_SECRET_KEY");
     ```
 
     ### Send a Transaction
@@ -505,47 +510,34 @@ Send, monitor, and manage transactions. Send transactions from user or server wa
     string contractAddress = "0x..."; // Your contract address
     var contract = await ThirdwebContract.Create(client, contractAddress, chainId);
 
-    // The wallet that signs and sends the transaction
-    var wallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
-
     // Assuming transfer takes an address and an amount as parameters
     string toAddress = "0x...";
-    BigInteger amount = new BigInteger(1000); // The amount to transfer
+    BigInteger amount = 1000; // The amount to transfer
 
     // No ether is being sent in this non-payable transaction, so weiValue is 0
-    BigInteger weiValue = BigInteger.Zero;
+    BigInteger weiValue = 0;
 
     // Executing the transfer
-    var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
-    Console.WriteLine($"Transaction receipt: {receipt}");
+    var receipt = await contract.Write(wallet, "transfer", weiValue, toAddress, amount);
+    Console.WriteLine($"Transaction receipt: {receipt.TransactionHash}");
     ```
 
   </TabsContent>
 
   <TabsContent value="unreal">
-    ### Installation
-
-    1. Download the thirdweb Unreal Engine plugin from the [Unreal Engine Marketplace](https://www.unrealengine.com/marketplace/en-US/product/thirdweb)
-    2. Add the plugin to your Unreal project
-    3. Enable the plugin in your project settings
-
-    ### Configure Client ID
-
-    1. Go to Edit > Project Settings > Thirdweb
-    2. Enter your Client ID from the thirdweb dashboard
-    3. Enter your Bundle ID (must match what was allowlisted on the thirdweb dashboard)
-
-    ### Send a Transaction
-
-    Use the [Engine Blueprint](/unreal-engine/blueprints/engine) to send a transaction.
-
+    <ArticleIconCard
+      href="/unreal-engine"
+      icon={UnrealEngineIcon}
+      title="Unreal Engine SDK"
+      description="Learn more about the Unreal Engine SDK"
+    />
   </TabsContent>
 </Tabs>
 
 ## Going further
 
-- [Sponsor Gas](/transactions/sponsor)
-- [Monitor Transactions](/transactions/monitor)
+- [Sponsor Gas](/wallets/sponsor-gas)
+- [Monitor Transactions](/wallets/monitor)
 
 ## Explore Full API References
 

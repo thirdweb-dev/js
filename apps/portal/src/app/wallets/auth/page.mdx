@@ -14,6 +14,7 @@ import next from "@/icons/frameworks/nextjs.png";
 import express from "@/icons/frameworks/javascript.png";
 import react from "@/icons/frameworks/react.png";
 import { GraduationCap } from "lucide-react";
+import { UnrealEngineIcon, UnityIcon, DotNetIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
@@ -39,6 +40,16 @@ This allows developers to create a familiar, secure authentication flow that wor
 </TabsList>
 
 <TabsContent value="client">
+
+<Tabs defaultValue="react">
+<TabsList>
+	<TabsTrigger value="react">React</TabsTrigger>
+	<TabsTrigger value="dotnet">.NET</TabsTrigger>
+	<TabsTrigger value="unity">Unity</TabsTrigger>
+	<TabsTrigger value="unreal">Unreal Engine</TabsTrigger>
+</TabsList>
+
+<TabsContent value="react">
 
 At the root of your React application:
 
@@ -79,6 +90,53 @@ export default function Connect() {
 	/>;
 }
 ```
+
+</TabsContent>
+
+<TabsContent value="dotnet">
+
+```csharp
+using Thirdweb;
+
+// ... connect your wallet first ...
+
+// Authenticate with your backend
+var authResult = await wallet.Authenticate<string>(
+    domain: "https://your-backend.com",
+    chainId: 1
+);
+```
+
+</TabsContent>
+
+<TabsContent value="unity">
+
+```csharp
+using Thirdweb;
+
+var wallet = ThirdwebManager.Instance.ActiveWallet;
+
+// Authenticate with your backend
+var authResult = await wallet.Authenticate<string>(
+    domain: "https://your-backend.com",
+    chainId: 1
+);
+```
+
+</TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
+
+</TabsContent>
+
+</Tabs>
 
 </TabsContent>
 

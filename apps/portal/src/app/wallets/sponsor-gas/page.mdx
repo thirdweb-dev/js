@@ -10,7 +10,7 @@ import {
 } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WalletsSmartIcon } from "@/icons";
-import { TypeScriptIcon, DotNetIcon, EngineIcon } from "@/icons";
+import { TypeScriptIcon, DotNetIcon, EngineIcon, UnrealEngineIcon } from "@/icons";
 
 export const metadata = createMetadata({
 	image: {
@@ -51,6 +51,10 @@ Sponsor gas fees using [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702), enab
 		<TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
 			<DotNetIcon className="size-4" />
 			.NET / Unity
+		</TabsTrigger>
+		<TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
+			<UnrealEngineIcon className="size-4" />
+			Unreal Engine
 		</TabsTrigger>
 	</TabsList>
 
@@ -101,6 +105,17 @@ Example sponsored contract write request:
 		);
 		```
 	</TabsContent>
+
+	<TabsContent value="unreal">
+
+	<ArticleIconCard
+		href="/unreal-engine"
+		icon={UnrealEngineIcon}
+		title="Unreal Engine SDK"
+		description="Learn more about the Unreal Engine SDK"
+	/>
+
+	</TabsContent>
 </Tabs>
 
 <div className='h-6' />
@@ -128,6 +143,10 @@ For chains that don't support EIP-7702, you can use EIP-4337 smart contract wall
     <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
         <DotNetIcon className="size-4" />
         .NET / Unity
+    </TabsTrigger>
+    <TabsTrigger value="unreal" className="flex items-center gap-2 [&>p]:mb-0">
+        <UnrealEngineIcon className="size-4" />
+        Unreal Engine
     </TabsTrigger>
   </TabsList>
 
@@ -188,6 +207,17 @@ View all the available execution options in the [transactions API reference](htt
 		);
 		var smartWallet = await SmartWallet.Create(adminWallet, chainId, gasless: true);
 		```
+	</TabsContent>
+
+	<TabsContent value="unreal">
+
+	<ArticleIconCard
+		href="/unreal-engine"
+		icon={UnrealEngineIcon}
+		title="Unreal Engine SDK"
+		description="Learn more about the Unreal Engine SDK"
+	/>
+
 	</TabsContent>
 </Tabs>
 

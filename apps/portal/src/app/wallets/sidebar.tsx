@@ -75,6 +75,10 @@ export const sidebar: SideBar = {
           name: "QuickStart",
         },
         {
+          href: `${walletSlug}/server/send-transactions`,
+          name: "Send Transactions",
+        },
+        {
           href: `${walletSlug}/monitor`,
           name: "Monitor Transactions",
         },

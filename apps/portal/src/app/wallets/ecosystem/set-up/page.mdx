@@ -1,4 +1,5 @@
-import { Callout, DocImage, createMetadata, Steps, Step } from "@doc";
+import { Callout, DocImage, createMetadata, Steps, Step, Tabs, TabsList, TabsTrigger, TabsContent, ArticleIconCard } from "@doc";
+import { UnrealEngineIcon } from "@/icons";
 import CreateEcosystemWallet from "./assets/ecosystem-info.png";
 import EcosystemWalletPermissions from "./assets/ecosystem-wallet-permissions.png";
 import AddAPartner from "./assets/add-partner.png";
@@ -64,6 +65,15 @@ For each application on your allowlist, you'll need to specify a name, a list of
 
 Once you've set up your ecosystem wallet, you can specify it using your **Ecosystem ID**.
 
+<Tabs defaultValue="typescript">
+<TabsList>
+	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+	<TabsTrigger value="dotnet">.NET / Unity</TabsTrigger>
+	<TabsTrigger value="unreal">Unreal Engine</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
+
 ```ts
 import { ecosystemWallet } from "thirdweb/wallets";
 
@@ -91,6 +101,56 @@ Once you've instantiated your ecosystem wallet, you can add it to your Sign In f
 	{...props}
 />
 ```
+
+</TabsContent>
+
+<TabsContent value="dotnet">
+
+```csharp
+using Thirdweb;
+
+// Create a wallet for a non-gated "Anyone" ecosystem
+var wallet = await EcosystemWallet.Create(
+    client: client,
+    ecosystemId: "ecosystem.your-ecosystem-id",
+    authProvider: AuthProvider.Google // or any other provider
+);
+
+// OR for "Allowlist" ecosystems restricted to partners
+var wallet = await EcosystemWallet.Create(
+    client: client,
+    ecosystemId: "ecosystem.your-ecosystem-id",
+    ecosystemPartnerId: "...",
+    authProvider: AuthProvider.Google // or any other provider
+);
+
+// Then login
+var address = await wallet.LoginWithOauth(
+    isMobile: false,
+    browserOpenAction: (url) =>
+    {
+        // Open url in browser
+    },
+    browserCloseAction: () =>
+    {
+        // Close browser
+    }
+);
+```
+
+</TabsContent>
+
+<TabsContent value="unreal">
+
+<ArticleIconCard
+	href="/unreal-engine"
+	icon={UnrealEngineIcon}
+	title="Unreal Engine SDK"
+	description="Learn more about the Unreal Engine SDK"
+/>
+
+</TabsContent>
+</Tabs>
 
 You and your partners can integrate your ecosystem wallet either as a full login system or as a single login option. You can read more in our [integrating partners guide](/wallets/ecosystem/integrating-partners).
 

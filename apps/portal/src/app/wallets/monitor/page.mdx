@@ -35,6 +35,10 @@ Monitor and get notified about transactions in your application, both on your pr
 			<TypeScriptIcon className="size-4" />
 			TypeScript / React
 		</TabsTrigger>
+    <TabsTrigger value="dotnet" className="flex items-center gap-2 [&>p]:mb-0">
+      <DotNetIcon className="size-4" />
+      .NET / Unity
+    </TabsTrigger>
 	</TabsList>
 
   <TabsContent value="http">
@@ -79,4 +83,29 @@ Monitor and get notified about transactions in your application, both on your pr
 
   </TabsContent>
 
+  <TabsContent value="dotnet">
+
+    You can wait for a transaction receipt to be available using `ThirdwebTransaction.WaitForTransactionReceipt`.
+
+    ```csharp
+    using Thirdweb;
+
+    // ...
+
+    try
+    {
+        var receipt = await ThirdwebTransaction.WaitForTransactionReceipt(
+            client: client, // Use ThirdwebManager.Instance.Client in Unity
+            chainId: 1,
+            txHash: "0xTransactionHash"
+        );
+        Console.WriteLine($"Transaction mined in block {receipt.BlockNumber}");
+    }
+    catch (System.Exception e)
+    {
+        Console.WriteLine($"Error waiting for transaction: {e.Message}");
+    }
+    ```
+
+  </TabsContent>
 </Tabs>
