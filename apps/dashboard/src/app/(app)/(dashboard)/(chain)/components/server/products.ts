@@ -1,5 +1,6 @@
 import { BotIcon, CoinsIcon, FuelIcon, HardDriveIcon } from "lucide-react";
 import { BridgeIcon } from "@/icons/BridgeIcon";
+import { InsightIcon } from "@/icons/InsightIcon";
 import { PayIcon } from "@/icons/PayIcon";
 import { RPCIcon } from "@/icons/RPCIcon";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
@@ -53,6 +54,12 @@ export const services = [
     id: "account-abstraction",
     link: "https://thirdweb.com/x402",
     name: "x402",
+  },
+  {
+    icon: InsightIcon,
+    id: "insight",
+    link: "https://thirdweb.com/gateway",
+    name: "Indexer",
   },
 ] satisfies Array<{
   name: string;
