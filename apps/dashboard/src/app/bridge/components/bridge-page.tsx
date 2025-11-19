@@ -6,7 +6,7 @@ import { FaqAccordion } from "@/components/blocks/faq-section";
 import ChainsImage from "../assets/chains.png";
 import RoutesImage from "../assets/routes.png";
 import TokensImage from "../assets/tokens.png";
-import { bridgeStats } from "../data";
+import { bridgeStats, bridgeStatsNumbers } from "../data";
 import { AnimatedNumbers } from "./client/animated-numbers";
 import { UniversalBridgeEmbed } from "./client/UniversalBridgeEmbed";
 import { BridgePageHeader } from "./header";
@@ -47,15 +47,19 @@ function HeadingSection(props: { title: React.ReactNode }) {
       </p>
 
       <div className="flex gap-3 items-center lg:justify-center flex-wrap">
-        <DataSquare data={90} label="Chains Supported" src={ChainsImage} />
         <DataSquare
-          data={6700}
+          data={bridgeStatsNumbers.supportedChains}
+          label="Chains Supported"
+          src={ChainsImage}
+        />
+        <DataSquare
+          data={bridgeStatsNumbers.supportedTokens}
           label="Tokens Supported"
           src={TokensImage}
           format={{ notation: "compact" }}
         />
         <DataSquare
-          data={14000000}
+          data={bridgeStatsNumbers.supportedRoutes}
           format={{ notation: "compact" }}
           label="Routes Available"
           src={RoutesImage}
