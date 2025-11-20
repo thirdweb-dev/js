@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.112.4
+
+### Patch Changes
+
+- [#8443](https://github.com/thirdweb-dev/js/pull/8443) [`f5f6848`](https://github.com/thirdweb-dev/js/commit/f5f6848ead0d070114eae587c7620cfce60f5977) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add fundWalletLink prop to x402 responses
+
 ## 5.112.3
 
 ### Patch Changes

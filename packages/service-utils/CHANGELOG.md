@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.9
+
+### Patch Changes
+
+- [#8434](https://github.com/thirdweb-dev/js/pull/8434) [`c11fe95`](https://github.com/thirdweb-dev/js/commit/c11fe954160a544069a9518bd2364a1d7b60cc94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update engineCloud service config
+
 ## 0.10.8
 
 ### Patch Changes
