@@ -58,6 +58,8 @@ export type PaymentRequiredResult = {
     accepts: RequestedPaymentRequirements[];
     /** Optional payer address if verification partially succeeded */
     payer?: string;
+    /** Optional link to a wallet to fund the wallet of the payer */
+    fundWalletLink?: string;
   };
   /** Response headers for the error response */
   responseHeaders: Record<string, string>;

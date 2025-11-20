@@ -112,6 +112,7 @@ export async function verifyPayment(
           error: error,
           errorMessage:
             errorMessages?.verificationFailed || verification.errorMessage,
+          fundWalletLink: verification.fundWalletLink,
           accepts: paymentRequirements,
         },
       };

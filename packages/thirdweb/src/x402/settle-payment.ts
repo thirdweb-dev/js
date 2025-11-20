@@ -167,6 +167,7 @@ export async function settlePayment(
           error,
           errorMessage:
             errorMessages?.settlementFailed || settlement.errorMessage,
+          fundWalletLink: settlement.fundWalletLink,
           accepts: paymentRequirements,
         },
       };
