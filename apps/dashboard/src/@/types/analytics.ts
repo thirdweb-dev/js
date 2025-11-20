@@ -23,6 +23,8 @@ export interface UserOpStats {
   successful: number;
   failed: number;
   sponsoredUsd: number;
+  gasUnits: number;
+  avgGasPrice: number;
   chainId?: string;
 }
 

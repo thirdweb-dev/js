@@ -291,8 +291,11 @@ const cached_getAggregateUserOpUsage = unstable_cache(
     ]);
 
     // Aggregate stats across wallet types
-    return userOpStats.reduce(
-      (acc, curr) => {
+    const aggregated = userOpStats.reduce(
+      (
+        acc: UserOpStats & { gasPriceSum: number; gasPriceCount: number },
+        curr,
+      ) => {
         // Skip testnets from the aggregated stats
         if (curr.chainId) {
           const chain = chains.data.find(
@@ -306,6 +309,10 @@ const cached_getAggregateUserOpUsage = unstable_cache(
         acc.successful += curr.successful;
         acc.failed += curr.failed;
         acc.sponsoredUsd += curr.sponsoredUsd;
+        acc.gasUnits += curr.gasUnits;
+        // For avgGasPrice, we'll track sum and count for proper averaging
+        acc.gasPriceSum += curr.avgGasPrice * curr.successful;
+        acc.gasPriceCount += curr.successful;
         return acc;
       },
       {
@@ -313,8 +320,28 @@ const cached_getAggregateUserOpUsage = unstable_cache(
         failed: 0,
         sponsoredUsd: 0,
         successful: 0,
+        gasUnits: 0,
+        avgGasPrice: 0,
+        gasPriceSum: 0,
+        gasPriceCount: 0,
       },
     );
+
+    // Calculate the proper average gas price
+    aggregated.avgGasPrice =
+      aggregated.gasPriceCount > 0
+        ? aggregated.gasPriceSum / aggregated.gasPriceCount
+        : 0;
+
+    // Return only the UserOpStats fields
+    return {
+      date: aggregated.date,
+      failed: aggregated.failed,
+      sponsoredUsd: aggregated.sponsoredUsd,
+      successful: aggregated.successful,
+      gasUnits: aggregated.gasUnits,
+      avgGasPrice: aggregated.avgGasPrice,
+    };
   },
   ["getAggregateUserOpUsage"],
   {

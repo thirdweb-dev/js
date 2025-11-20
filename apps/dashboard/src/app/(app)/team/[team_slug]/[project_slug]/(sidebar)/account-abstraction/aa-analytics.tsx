@@ -11,7 +11,7 @@ import {
 import { IntervalSelector } from "@/components/analytics/interval-selector";
 import { SponsoredTransactionsTable } from "@/components/sponsored-transactions-table/SponsoredTransactionsTable";
 import type { UserOpStats } from "@/types/analytics";
-import { SponsoredTransactionsChartCard } from "./AccountAbstractionAnalytics/SponsoredTransactionsChartCard";
+import { GasMetricsChartCard } from "./AccountAbstractionAnalytics/GasMetricsChartCard";
 import { TotalSponsoredChartCard } from "./AccountAbstractionAnalytics/TotalSponsoredChartCard";
 import { searchParams } from "./search-params";
 
@@ -100,7 +100,7 @@ export function AccountAbstractionAnalytics(props: {
           userOpStats={props.userOpStats}
         />
 
-        <SponsoredTransactionsChartCard
+        <GasMetricsChartCard
           isPending={isLoading}
           userOpStats={props.userOpStats}
         />
