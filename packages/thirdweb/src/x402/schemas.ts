@@ -41,6 +41,7 @@ export type RequestedPaymentRequirements = z.infer<
 const FacilitatorSettleResponseSchema = SettleResponseSchema.extend({
   network: FacilitatorNetworkSchema,
   errorMessage: z.string().optional(),
+  fundWalletLink: z.string().optional(),
 });
 export type FacilitatorSettleResponse = z.infer<
   typeof FacilitatorSettleResponseSchema
@@ -48,6 +49,7 @@ export type FacilitatorSettleResponse = z.infer<
 
 const FacilitatorVerifyResponseSchema = VerifyResponseSchema.extend({
   errorMessage: z.string().optional(),
+  fundWalletLink: z.string().optional(),
 });
 
 export type FacilitatorVerifyResponse = z.infer<
