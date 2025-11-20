@@ -9,6 +9,8 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
     const successful = Math.random() * 100;
     const failed = Math.random() * 100;
     const sponsoredUsd = Math.random() * 100;
+    const gasUnits = Math.random() * 1000000; // Random gas units between 0-1M
+    const avgGasPrice = Math.random() * 100000000000; // Random gas price in wei (0-100 Gwei)
 
     stubbedData.push({
       chainId: Math.floor(Math.random() * 100).toString(),
@@ -16,6 +18,8 @@ export function createUserOpStatsStub(days: number): UserOpStats[] {
       failed,
       sponsoredUsd,
       successful,
+      gasUnits,
+      avgGasPrice,
     });
 
     if (Math.random() > 0.7) {
