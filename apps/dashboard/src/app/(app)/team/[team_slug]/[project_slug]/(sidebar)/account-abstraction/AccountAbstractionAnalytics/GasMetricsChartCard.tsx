@@ -20,7 +20,11 @@ type ChartData = Record<string, number> & {
   time: string;
 };
 
-type MetricType = "gasUnits" | "avgGasPrice" | "costPerGasUnit";
+type MetricType =
+  | "sponsoredTransactions"
+  | "gasUnits"
+  | "avgGasPrice"
+  | "costPerGasUnit";
 
 export function GasMetricsChartCard(props: {
   userOpStats: UserOpStats[];
@@ -29,7 +33,9 @@ export function GasMetricsChartCard(props: {
   const { userOpStats } = props;
   const topChainsToShow = 10;
   const chainsStore = useAllChainsData();
-  const [metricType, setMetricType] = useState<MetricType>("gasUnits");
+  const [metricType, setMetricType] = useState<MetricType>(
+    "sponsoredTransactions",
+  );
 
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
@@ -44,7 +50,9 @@ export function GasMetricsChartCard(props: {
       const chainName = chain?.name || chainId || "Unknown";
 
       let value: number;
-      if (metricType === "gasUnits") {
+      if (metricType === "sponsoredTransactions") {
+        value = stat.successful;
+      } else if (metricType === "gasUnits") {
         value = stat.gasUnits;
       } else if (metricType === "avgGasPrice") {
         value = stat.avgGasPrice;
@@ -121,6 +129,12 @@ export function GasMetricsChartCard(props: {
     });
 
   const metricConfig = {
+    sponsoredTransactions: {
+      title: "Sponsored Transactions",
+      description: "Total number of sponsored transactions",
+      fileName: "Sponsored Transactions",
+      formatter: (value: number) => formatTickerNumber(value),
+    },
     gasUnits: {
       title: "Gas Units Consumed",
       description: "Total gas units consumed by sponsored transactions",
@@ -149,7 +163,9 @@ export function GasMetricsChartCard(props: {
     },
   };
 
-  const config = metricConfig[metricType];
+  const config =
+    metricConfig[metricType as keyof typeof metricConfig] ||
+    metricConfig.sponsoredTransactions;
 
   return (
     <ThirdwebBarChart
@@ -167,6 +183,15 @@ export function GasMetricsChartCard(props: {
               </p>
             </div>
             <div className="flex gap-2 flex-wrap">
+              <Button
+                onClick={() => setMetricType("sponsoredTransactions")}
+                size="sm"
+                variant={
+                  metricType === "sponsoredTransactions" ? "default" : "outline"
+                }
+              >
+                Transactions
+              </Button>
               <Button
                 onClick={() => setMetricType("gasUnits")}
                 size="sm"
