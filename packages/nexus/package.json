@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.0.6",
 		"@size-limit/preset-small-lib": "11.2.0",
-		"knip": "5.60.2",
+		"knip": "5.70.2",
 		"rimraf": "6.0.1",
 		"size-limit": "11.2.0",
 		"typescript": "5.8.3"
