@@ -99,10 +99,13 @@ export default async function Page(props: {
           projectId={project.id}
           teamId={project.teamId}
           authToken={authToken}
+          from={range.from}
+          to={range.to}
         />
 
         <AccountAbstractionAnalytics
           client={client}
+          variant="project"
           projectId={project.id}
           teamId={project.teamId}
           teamSlug={params.team_slug}

@@ -15,13 +15,30 @@ import { GasMetricsChartCard } from "./AccountAbstractionAnalytics/GasMetricsCha
 import { TotalSponsoredChartCard } from "./AccountAbstractionAnalytics/TotalSponsoredChartCard";
 import { searchParams } from "./search-params";
 
-export function AccountAbstractionAnalytics(props: {
+type AccountAbstractionAnalyticsProps = {
   userOpStats: UserOpStats[];
   teamId: string;
   teamSlug: string;
   client: ThirdwebClient;
-  projectId: string;
-}) {
+} & (
+  | {
+      variant: "project";
+      projectId: string;
+    }
+  | {
+      variant: "team";
+      projects: {
+        id: string;
+        name: string;
+        image: string | null;
+        slug: string;
+      }[];
+    }
+);
+
+export function AccountAbstractionAnalytics(
+  props: AccountAbstractionAnalyticsProps,
+) {
   const [isLoading, startTransition] = useTransition();
 
   const [rangeType, setRangeType] = useQueryState(
@@ -62,6 +79,8 @@ export function AccountAbstractionAnalytics(props: {
     to: rangeType === "custom" ? to : getLastNDaysRange(rangeType).to,
     type: rangeType,
   };
+  const resolvedFrom = range.from;
+  const resolvedTo = range.to;
 
   return (
     <div>
@@ -105,15 +124,18 @@ export function AccountAbstractionAnalytics(props: {
           userOpStats={props.userOpStats}
         />
 
-        <SponsoredTransactionsTable
-          client={props.client}
-          from={from.toISOString()}
-          projectId={props.projectId}
-          teamId={props.teamId}
-          teamSlug={props.teamSlug}
-          to={to.toISOString()}
-          variant="project"
-        />
+        {resolvedFrom && resolvedTo && (
+          <SponsoredTransactionsTable
+            client={props.client}
+            from={resolvedFrom.toISOString()}
+            teamId={props.teamId}
+            teamSlug={props.teamSlug}
+            to={resolvedTo.toISOString()}
+            {...(props.variant === "project"
+              ? { projectId: props.projectId, variant: "project" as const }
+              : { projects: props.projects, variant: "team" as const })}
+          />
+        )}
       </div>
     </div>
   );
