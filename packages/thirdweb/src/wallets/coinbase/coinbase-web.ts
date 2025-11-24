@@ -474,6 +474,16 @@ async function switchChainCoinbaseWalletSDK(
   provider: ProviderInterface,
   chain: Chain,
 ) {
+  // check if chain is already connected
+  const connectedChainId = (await provider.request({
+    method: "eth_chainId",
+  })) as string | number;
+  const connectedChain = getCachedChain(normalizeChainId(connectedChainId));
+  if (connectedChain?.id === chain.id) {
+    // chain is already connected, no need to switch
+    return;
+  }
+
   const chainIdHex = numberToHex(chain.id);
 
   try {
