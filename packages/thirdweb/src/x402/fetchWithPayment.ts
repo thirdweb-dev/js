@@ -23,7 +23,7 @@ import { createPaymentHeader } from "./sign.js";
  * @param fetch - The fetch function to wrap (typically globalThis.fetch)
  * @param client - The thirdweb client used to access RPC infrastructure
  * @param wallet - The wallet used to sign payment messages
- * @param maxValue - The maximum allowed payment amount in base units (defaults to 1 USDC)
+ * @param maxValue - The maximum allowed payment amount in base units
  * @returns A wrapped fetch function that handles 402 responses automatically
  *
  * @example
@@ -46,13 +46,18 @@ import { createPaymentHeader } from "./sign.js";
  * @throws {Error} If a payment has already been attempted for this request
  * @throws {Error} If there's an error creating the payment header
  *
- * @bridge x402
+ * @x402
  */
 export function wrapFetchWithPayment(
   fetch: typeof globalThis.fetch,
   client: ThirdwebClient,
   wallet: Wallet,
-  maxValue?: bigint,
+  options?: {
+    maxValue?: bigint;
+    paymentRequirementsSelector?: (
+      paymentRequirements: RequestedPaymentRequirements[],
+    ) => RequestedPaymentRequirements | undefined;
+  },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
     const response = await fetch(input, init);
@@ -78,12 +83,14 @@ export function wrapFetchWithPayment(
         "Wallet not connected. Please connect your wallet to continue.",
       );
     }
-    const selectedPaymentRequirements = defaultPaymentRequirementsSelector(
-      parsedPaymentRequirements,
-      chain.id,
-      "exact",
-      error,
-    );
+    const selectedPaymentRequirements = options?.paymentRequirementsSelector
+      ? options.paymentRequirementsSelector(parsedPaymentRequirements)
+      : defaultPaymentRequirementsSelector(
+          parsedPaymentRequirements,
+          chain.id,
+          "exact",
+          error,
+        );
 
     if (!selectedPaymentRequirements) {
       throw new Error(
@@ -92,11 +99,11 @@ export function wrapFetchWithPayment(
     }
 
     if (
-      maxValue &&
-      BigInt(selectedPaymentRequirements.maxAmountRequired) > maxValue
+      options?.maxValue &&
+      BigInt(selectedPaymentRequirements.maxAmountRequired) > options.maxValue
     ) {
       throw new Error(
-        `Payment amount exceeds maximum allowed (currently set to ${maxValue} in base units)`,
+        `Payment amount exceeds maximum allowed (currently set to ${options.maxValue} in base units)`,
       );
     }
 

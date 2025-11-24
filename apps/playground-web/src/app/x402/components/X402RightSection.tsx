@@ -1,17 +1,11 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { CodeIcon, LockIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import {
-  ConnectButton,
-  useActiveAccount,
-  useActiveWallet,
-} from "thirdweb/react";
-import { wrapFetchWithPayment } from "thirdweb/x402";
+import { ConnectButton, useFetchWithPayment } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { THIRDWEB_CLIENT } from "@/lib/client";
@@ -31,55 +25,42 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
     window.history.replaceState({}, "", `${pathname}?tab=${tab}`);
   }
 
-  const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-
-  const paidApiCall = useMutation({
-    mutationFn: async () => {
-      if (!activeWallet) {
-        throw new Error("No active wallet");
-      }
-      const fetchWithPay = wrapFetchWithPayment(
-        fetch,
-        THIRDWEB_CLIENT,
-        activeWallet,
-      );
-      const searchParams = new URLSearchParams();
-      searchParams.set("chainId", props.options.chain.id.toString());
-      searchParams.set("payTo", props.options.payTo);
-      searchParams.set("amount", props.options.amount);
-      searchParams.set("tokenAddress", props.options.tokenAddress);
-      searchParams.set("decimals", props.options.tokenDecimals.toString());
-      searchParams.set("waitUntil", props.options.waitUntil);
-
-      const url =
-        "/api/paywall" +
-        (searchParams.size > 0 ? `?${searchParams.toString()}` : "");
-      const response = await fetchWithPay(url.toString());
-      return response.json();
-    },
-  });
+  const { fetchWithPayment, isPending, data, error, isError } =
+    useFetchWithPayment(THIRDWEB_CLIENT);
 
   const handlePayClick = async () => {
-    paidApiCall.mutate();
+    const searchParams = new URLSearchParams();
+    searchParams.set("chainId", props.options.chain.id.toString());
+    searchParams.set("payTo", props.options.payTo);
+    searchParams.set("amount", props.options.amount);
+    searchParams.set("tokenAddress", props.options.tokenAddress);
+    searchParams.set("decimals", props.options.tokenDecimals.toString());
+    searchParams.set("waitUntil", props.options.waitUntil);
+
+    const url =
+      "/api/paywall" +
+      (searchParams.size > 0 ? `?${searchParams.toString()}` : "");
+
+    await fetchWithPayment(url);
   };
 
   const clientCode = `import { createThirdwebClient } from "thirdweb";
-import { wrapFetchWithPayment } from "thirdweb/x402";
-import { useActiveWallet } from "thirdweb/react";
+import { useFetchWithPayment } from "thirdweb/react";
 
 const client = createThirdwebClient({ clientId: "your-client-id" });
 
 export default function Page() {
-  const wallet = useActiveWallet();
+  const { fetchWithPayment, isPending } = useFetchWithPayment(client);
 
   const onClick = async () => {
-    const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
-    const response = await fetchWithPay('/api/paid-endpoint');
+    const data = await fetchWithPayment('/api/paid-endpoint');
+    console.log(data);
   }
 
   return (
-        <Button onClick={onClick}>Pay Now</Button>
+    <Button onClick={onClick} disabled={isPending}>
+      {isPending ? "Processing..." : "Pay Now"}
+    </Button>
   );
 }`;
 
@@ -204,7 +185,7 @@ export async function POST(request: Request) {
                 onClick={handlePayClick}
                 className="w-full mb-4"
                 size="lg"
-                disabled={paidApiCall.isPending || !activeAccount}
+                disabled={isPending}
               >
                 Access Premium Content
               </Button>
@@ -218,19 +199,12 @@ export async function POST(request: Request) {
                 <CodeIcon className="w-5 h-5 text-muted-foreground" />
                 <span className="text-lg font-medium">API Call Response</span>
               </div>
-              {paidApiCall.isPending && (
-                <div className="text-center">Loading...</div>
+              {isPending && <div className="text-center">Loading...</div>}
+              {isError && (
+                <div className="text-center">Error: {error?.message}</div>
               )}
-              {paidApiCall.isError && (
-                <div className="text-center">
-                  Error: {paidApiCall.error.message}
-                </div>
-              )}
-              {paidApiCall.data && (
-                <CodeClient
-                  code={JSON.stringify(paidApiCall.data, null, 2)}
-                  lang="json"
-                />
+              {!!data && (
+                <CodeClient code={JSON.stringify(data, null, 2)} lang="json" />
               )}
             </Card>
           </div>
