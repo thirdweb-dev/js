@@ -131,6 +131,11 @@ export { useAutoConnect } from "../react/web/hooks/wallets/useAutoConnect.js";
 export { useLinkProfile } from "../react/web/hooks/wallets/useLinkProfile.js";
 export { useProfiles } from "../react/web/hooks/wallets/useProfiles.js";
 export { useUnlinkProfile } from "../react/web/hooks/wallets/useUnlinkProfile.js";
+// x402
+export {
+  type UseFetchWithPaymentOptions,
+  useFetchWithPayment,
+} from "../react/web/hooks/x402/useFetchWithPayment.js";
 export { ThirdwebProvider } from "../react/web/providers/thirdweb-provider.js";
 export { AutoConnect } from "../react/web/ui/AutoConnect/AutoConnect.js";
 export type { BuyOrOnrampPrepareResult } from "../react/web/ui/Bridge/BuyWidget.js";

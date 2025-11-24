@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent, OpenApiEndpoint, createMetadata } from "@doc";
-import { TypeScriptIcon, EngineIcon } from "@/icons";
+import { TypeScriptIcon, ReactIcon, EngineIcon } from "@/icons";
 
 export const metadata = createMetadata({
   image: {
@@ -27,6 +27,10 @@ The client library wraps the native `fetch` API and handles:
       <TypeScriptIcon className="size-4 mr-1.5" />
       TypeScript
     </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center [&>p]:mb-0">
+      <ReactIcon className="size-4 mr-1.5" />
+      React
+    </TabsTrigger>
     <TabsTrigger value="http" className="flex items-center [&>p]:mb-0">
       <EngineIcon className="size-4 mr-1.5" />
       HTTP API
@@ -48,12 +52,10 @@ The client library wraps the native `fetch` API and handles:
     await wallet.connect({ client })
 
     // Wrap fetch with payment handling
-    // maxValue is the maximum payment amount in base units (defaults to 1 USDC = 1_000_000)
     const fetchWithPay = wrapFetchWithPayment(
       fetch, 
       client, 
       wallet, 
-      BigInt(1 * 10 ** 6) // max 1 USDC
     );
 
     // Make a request that may require payment
@@ -66,11 +68,67 @@ The client library wraps the native `fetch` API and handles:
     - `fetch` - The fetch function to wrap (typically `globalThis.fetch`)
     - `client` - The thirdweb client used to access RPC infrastructure
     - `wallet` - The wallet used to sign payment messages
-    - `maxValue` - (Optional) The maximum allowed payment amount in base units (defaults to 1 USDC = 1,000,000)
+    - `options` - (Optional) Configuration object:
+      - `maxValue` - Maximum allowed payment amount in base units
+      - `paymentRequirementsSelector` - Custom function to select payment requirements from available options
 
     ### Reference
 
     For full API documentation, see the [TypeScript Reference](/references/typescript/v5/x402/wrapFetchWithPayment).
+
+  </TabsContent>
+
+  <TabsContent value="react">
+    ## Using `useFetchWithPayment`
+
+    The `useFetchWithPayment` hook is a React-specific wrapper that automatically handles 402 Payment Required responses with built-in UI for payment errors, insufficient funds, and wallet connection.
+
+    ```tsx
+    import { useFetchWithPayment } from "thirdweb/react";
+    import { createThirdwebClient } from "thirdweb";
+
+    const client = createThirdwebClient({ clientId: "your-client-id" });
+
+    function MyComponent() {
+      const { fetchWithPayment, isPending } = useFetchWithPayment(client);
+
+      const handleApiCall = async () => {
+        // Handle wallet connection, funding, and payment errors automatically
+        // Response is parsed as JSON by default
+        const data = await fetchWithPayment('https://api.example.com/paid-endpoint');
+        console.log(data);
+      };
+
+      return (
+        <button onClick={handleApiCall} disabled={isPending}>
+          {isPending ? 'Loading...' : 'Make Paid API Call'}
+        </button>
+      );
+    }
+    ```
+
+    ### Features
+
+    - **Automatic Payment Handling**: Detects 402 responses and creates payment headers automatically
+    - **Wallet Connection**: Prompts users to connect their wallet if not connected
+    - **Funding**: Integrates BuyWidget to help users top up their wallet directly when needed
+    - **Built-in error handling UI**: Shows error modals with retry and fund wallet options
+    - **Response Parsing**: Automatically parses responses as JSON by default
+
+    ### Parameters
+
+    - `client` - The thirdweb client used to access RPC infrastructure
+    - `options` - (Optional) Configuration object:
+      - `maxValue` - Maximum allowed payment amount in base units
+      - `parseAs` - How to parse the response: "json" (default), "text", or "raw"
+      - `theme` - Theme for the payment error modal: "dark" (default) or "light"
+      - `uiEnabled` - Whether to show the UI for connection, funding or payment retries (defaults to true)
+      - `fundWalletOptions` - Customize the BuyWidget for topping up
+      - `connectOptions` - Customize the ConnectModal for wallet connection
+
+    ### Reference
+
+    For full API documentation, see the [TypeScript Reference](/references/typescript/v5/useFetchWithPayment).
 
   </TabsContent>
 

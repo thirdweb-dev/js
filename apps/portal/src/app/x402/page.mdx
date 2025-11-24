@@ -1,4 +1,4 @@
-import { ArticleIconCard, createMetadata } from "@doc";
+import { ArticleIconCard, createMetadata, Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
 import { ReactIcon, TypeScriptIcon, EngineIcon } from "@/icons";
 
 export const metadata = createMetadata({
@@ -33,24 +33,69 @@ The payment token must support either:
 
 ## Client Side
 
-`wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses from any x402-compatible API:
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript" className="flex items-center [&>p]:mb-0">
+      <TypeScriptIcon className="size-4 mr-1.5" />
+      TypeScript
+    </TabsTrigger>
+    <TabsTrigger value="react" className="flex items-center [&>p]:mb-0">
+      <ReactIcon className="size-4 mr-1.5" />
+      React
+    </TabsTrigger>
+  </TabsList>
 
-```typescript
-import { wrapFetchWithPayment } from "thirdweb/x402";
-import { createThirdwebClient } from "thirdweb";
-import { createWallet } from "thirdweb/wallets";
+  <TabsContent value="typescript">
+    `wrapFetchWithPayment` wraps the native fetch API to automatically handle `402 Payment Required` responses from any x402-compatible API:
 
-const client = createThirdwebClient({ clientId: "your-client-id" });
-const wallet = createWallet("io.metamask");
-await wallet.connect({ client })
+    ```typescript
+    import { wrapFetchWithPayment } from "thirdweb/x402";
+    import { createThirdwebClient } from "thirdweb";
+    import { createWallet } from "thirdweb/wallets";
 
-const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
+    const client = createThirdwebClient({ clientId: "your-client-id" });
+    const wallet = createWallet("io.metamask");
+    await wallet.connect({ client })
 
-// Make a request that may require payment
-const response = await fetchWithPay('https://api.example.com/paid-endpoint');
-```
+    const fetchWithPay = wrapFetchWithPayment(fetch, client, wallet);
 
-You can also use the thirdweb API to fetch any x402 compatible endpoint and pay for it with the authenticated wallet. See the [client side docs](/x402/client) for more details.
+    // Make a request that may require payment
+    const response = await fetchWithPay('https://api.example.com/paid-endpoint');
+    ```
+
+    You can also use the thirdweb API to fetch any x402 compatible endpoint and pay for it with the authenticated wallet. See the [client side docs](/x402/client) for more details.
+  </TabsContent>
+
+  <TabsContent value="react">
+    `useFetchWithPayment` is a React hook that automatically handles `402 Payment Required` responses with built-in UI for payment errors and wallet connection:
+
+    ```tsx
+    import { useFetchWithPayment } from "thirdweb/react";
+    import { createThirdwebClient } from "thirdweb";
+
+    const client = createThirdwebClient({ clientId: "your-client-id" });
+
+    function MyComponent() {
+      const { fetchWithPayment, isPending } = useFetchWithPayment(client);
+
+      const handleApiCall = async () => {
+        // Handle wallet connection, funding, and payment errors automatically
+        // Response is parsed as JSON by default
+        const data = await fetchWithPayment('https://api.example.com/paid-endpoint');
+        console.log(data);
+      };
+
+      return (
+        <button onClick={handleApiCall} disabled={isPending}>
+          {isPending ? 'Loading...' : 'Make Paid API Call'}
+        </button>
+      );
+    }
+    ```
+
+    The hook automatically shows modals for wallet connection, funding and payment errors. See the [client side docs](/x402/client) for more details.
+  </TabsContent>
+</Tabs>
 
 ## Server Side
 

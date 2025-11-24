@@ -122,7 +122,7 @@ import {
  *
  * @public
  * @beta
- * @bridge x402
+ * @x402
  */
 export async function settlePayment(
   args: SettlePaymentArgs,

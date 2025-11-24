@@ -5,6 +5,7 @@
     "@auth": true,
     "@beta": true,
     "@bridge": true,
+    "@x402": true,
     "@chain": true,
     "@client": true,
     "@component": true,
@@ -132,6 +133,10 @@
     {
       "syntaxKind": "block",
       "tagName": "@engine"
+    },
+    {
+      "syntaxKind": "block",
+      "tagName": "@x402"
     }
   ]
 }

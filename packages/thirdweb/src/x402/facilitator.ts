@@ -107,7 +107,7 @@ const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
 
  * ```
  *
- * @bridge x402
+ * @x402
  */
 export function facilitator(
   config: ThirdwebX402FacilitatorConfig,

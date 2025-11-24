@@ -114,6 +114,11 @@ export { useAutoConnect } from "../react/native/hooks/wallets/useAutoConnect.js"
 export { useLinkProfile } from "../react/native/hooks/wallets/useLinkProfile.js";
 export { useProfiles } from "../react/native/hooks/wallets/useProfiles.js";
 export { useUnlinkProfile } from "../react/native/hooks/wallets/useUnlinkProfile.js";
+// x402
+export {
+  type UseFetchWithPaymentOptions,
+  useFetchWithPayment,
+} from "../react/native/hooks/x402/useFetchWithPayment.js";
 export { ThirdwebProvider } from "../react/native/providers/thirdweb-provider.js";
 // Components
 export { AutoConnect } from "../react/native/ui/AutoConnect/AutoConnect.js";

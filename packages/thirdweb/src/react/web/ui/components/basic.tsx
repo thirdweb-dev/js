@@ -17,7 +17,7 @@ export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv((_) => {
     borderTop: `1px solid ${theme.colors.separatorLine}`,
     display: "flex",
     flexDirection: "column",
-    gap: spacing.lg,
+    gap: spacing.md,
     padding: spacing.lg,
   };
 });
