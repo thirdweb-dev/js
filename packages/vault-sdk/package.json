@@ -11,7 +11,7 @@
     "@solana/keys": "^3.0.0",
     "@solana/kit": "^4.0.0",
     "@solana/rpc": "^3.0.0",
-    "@solana/transactions": "^3.0.0",
+    "@solana/transactions": "^5.0.0",
     "abitype": "1.0.8",
     "jose": "6.0.11"
   },
