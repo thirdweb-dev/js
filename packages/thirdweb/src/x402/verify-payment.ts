@@ -42,7 +42,6 @@ import {
  *     routeConfig: {
  *       description: "Access to premium API content",
  *       mimeType: "application/json",
- *       maxTimeoutSeconds: 300,
  *     },
  *   };
  *
@@ -68,6 +67,17 @@ import {
  * }
  * ```
  *
+ * ### Upto Payment Scheme
+ *
+ * You can also use the `upto` payment scheme to verify a payment where the final price is dynamically calculated based on the usage.
+ *
+ * ```ts
+ * const result = await verifyPayment({
+ *   ...paymentArgs,
+ *   scheme: "upto",
+ *   price: "$0.10", // max payable amount
+ * });
+ * ```
  * @public
  * @beta
  * @x402

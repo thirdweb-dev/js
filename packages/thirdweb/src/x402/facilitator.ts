@@ -278,6 +278,7 @@ export function facilitator(
           method: args.method,
           network: caip2ChainId,
           price: args.price,
+          scheme: args.scheme,
           routeConfig: args.routeConfig,
           serverWalletAddress: facilitator.address,
           recipientAddress: args.payTo,

@@ -1,5 +1,5 @@
 import type { Money, PaymentMiddlewareConfig } from "x402/types";
-import type z from "zod";
+import z from "zod";
 import type { Chain } from "../chains/types.js";
 import type { Prettify } from "../utils/type-utils.js";
 import type { ThirdwebX402Facilitator, WaitUntil } from "./facilitator.js";
@@ -31,6 +31,8 @@ export type PaymentArgs = {
   price: Money | ERC20TokenAmount;
   /** The payment facilitator instance used to verify and settle payments */
   facilitator: ThirdwebX402Facilitator;
+  /** The scheme of the payment, either "exact" or "upto", defaults to "exact" */
+  scheme?: PaymentScheme;
   /** Optional configuration for the payment middleware route */
   routeConfig?: PaymentMiddlewareConfig;
   /** Optional recipient address to receive the payment if different from your facilitator address */
@@ -91,7 +93,9 @@ export type VerifyPaymentResult = Prettify<
   | {
       /** HTTP 200 - Payment was successfully verified */
       status: 200;
+      /** The decoded payment payload */
       decodedPayment: RequestedPaymentPayload;
+      /** The selected payment requirements */
       selectedPaymentRequirements: RequestedPaymentRequirements;
     }
   | PaymentRequiredResult
@@ -101,8 +105,19 @@ export type SupportedSignatureType = z.infer<
   typeof SupportedSignatureTypeSchema
 >;
 
+export const PaymentSchemeSchema = z.union([
+  z.literal("exact"),
+  z.literal("upto"),
+]);
+type PaymentScheme = z.infer<typeof PaymentSchemeSchema>;
+
+/**
+ * The asset, scheme and amount for the payment in base units
+ */
 export type ERC20TokenAmount = {
+  /** The amount of the payment in base units */
   amount: string;
+  /** The asset of the payment, decimals and eip712 data are optional and will be inferred from the address if not provided */
   asset: {
     address: `0x${string}`;
     decimals?: number;

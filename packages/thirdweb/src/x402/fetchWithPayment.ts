@@ -71,9 +71,9 @@ export function wrapFetchWithPayment(
       accepts: unknown[];
       error?: string;
     };
-    const parsedPaymentRequirements = accepts
-      .map((x) => RequestedPaymentRequirementsSchema.parse(x))
-      .filter((x) => x.scheme === "exact"); // TODO (402): accept other schemes
+    const parsedPaymentRequirements = accepts.map((x) =>
+      RequestedPaymentRequirementsSchema.parse(x),
+    );
 
     const account = wallet.getAccount();
     let chain = wallet.getChain();
@@ -88,7 +88,6 @@ export function wrapFetchWithPayment(
       : defaultPaymentRequirementsSelector(
           parsedPaymentRequirements,
           chain.id,
-          "exact",
           error,
         );
 
@@ -158,7 +157,6 @@ export function wrapFetchWithPayment(
 function defaultPaymentRequirementsSelector(
   paymentRequirements: RequestedPaymentRequirements[],
   chainId: number,
-  scheme: "exact",
   error?: string,
 ) {
   if (!paymentRequirements.length) {
@@ -168,9 +166,7 @@ function defaultPaymentRequirementsSelector(
   }
   // find the payment requirements matching the connected wallet chain
   const matchingPaymentRequirements = paymentRequirements.find(
-    (x) =>
-      extractEvmChainId(networkToCaip2ChainId(x.network)) === chainId &&
-      x.scheme === scheme,
+    (x) => extractEvmChainId(networkToCaip2ChainId(x.network)) === chainId,
   );
 
   if (matchingPaymentRequirements) {
@@ -178,9 +174,7 @@ function defaultPaymentRequirementsSelector(
   } else {
     // if no matching payment requirements, use the first payment requirement
     // and switch the wallet to that chain
-    const firstPaymentRequirement = paymentRequirements.find(
-      (x) => x.scheme === scheme,
-    );
+    const firstPaymentRequirement = paymentRequirements[0];
     return firstPaymentRequirement;
   }
 }

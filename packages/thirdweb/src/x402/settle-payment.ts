@@ -51,7 +51,6 @@ import {
  *     routeConfig: {
  *       description: "Access to premium API content",
  *       mimeType: "application/json",
- *       maxTimeoutSeconds: 300,
  *     },
  *   });
  *
@@ -66,6 +65,18 @@ import {
  *     });
  *   }
  * }
+ * ```
+ *
+ * ### Upto Payment Scheme
+ *
+ * You can also use the `upto` payment scheme to settle the payment dynamically based on the usage.
+ *
+ * ```ts
+ * const result = await settlePayment({
+ *   ...paymentArgs,
+ *   scheme: "upto",
+ *   price: "$0.10", // max payable amount
+ * });
  * ```
  *
  * ### Express middleware example
