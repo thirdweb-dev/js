@@ -28,3 +28,5 @@ export default async function Page(props: PageProps) {
 
   notFound();
 }
+
+export const revalidate = 86400; // revalidate every day

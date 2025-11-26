@@ -77,3 +77,5 @@ export default async function ExtensionPage() {
     </>
   );
 }
+
+export const revalidate = 86400; // revalidate every day
