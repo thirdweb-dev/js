@@ -4,8 +4,6 @@ import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import type { DurationId } from "@/components/analytics/date-range-selector";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
-import { InAppWalletUsersPageContent } from "@/components/in-app-wallet-users-content/in-app-wallet-users-content";
-import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
 import { InAppWalletAnalytics } from "../analytics/chart";
@@ -47,11 +45,6 @@ export default async function Page(props: {
     redirect(`/team/${params.team_slug}`);
   }
 
-  const client = getClientThirdwebClient({
-    jwt: authToken,
-    teamId: project.teamId,
-  });
-
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <div className="flex flex-col gap-4 md:gap-6">
@@ -67,12 +60,6 @@ export default async function Page(props: {
           interval={interval}
           projectId={project.id}
           range={range}
-          teamId={project.teamId}
-        />
-        <InAppWalletUsersPageContent
-          authToken={authToken}
-          client={client}
-          projectClientId={project.publishableKey}
           teamId={project.teamId}
         />
       </div>

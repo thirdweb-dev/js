@@ -57,6 +57,10 @@ export default async function Layout(props: {
           name: "Configuration",
           path: `${basePath}/configuration`,
         },
+        {
+          name: "Users",
+          path: `${basePath}/users`,
+        },
       ]}
     >
       {props.children}
