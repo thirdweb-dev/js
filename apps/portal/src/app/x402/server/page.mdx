@@ -1,14 +1,24 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent, DocImage, createMetadata } from "@doc";
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+	DocImage,
+	createMetadata,
+  Stack,
+  GithubTemplateCard
+} from "@doc";
 import { Steps, Step } from "@doc";
 import PaymentFlow from "./x402-protocol-flow.png";
 
 export const metadata = createMetadata({
-  image: {
-    title: "x402 Server",
-    icon: "payments",
-  },
-  title: "x402 Server",
-  description: "Accept x402 payments in your APIs from any x402-compatible client.",
+	image: {
+		title: "x402 Server",
+		icon: "payments",
+	},
+	title: "x402 Server",
+	description:
+		"Accept x402 payments in your APIs from any x402-compatible client.",
 });
 
 # Server Side
@@ -28,52 +38,122 @@ The x402 protocol follows this flow:
 5. **Verify & Settle** - Server verifies and settles the payment
 6. **Success** - Server returns the protected content
 
-## Verify vs Settle
+## Exact vs Upto Payment Schemes
 
-You have two options for handling payments:
+The thirdweb x402 client/server stack supports two payment schemes: `exact` and `upto`.
 
-### Option 1: Settle Payment Directly
+- `exact` - The client pays the exact amount specified in the payment requirements.
+- `upto` - The client pays any amount up to the specified maximum amount.
 
-Use `settlePayment()` to verify and settle the payment in one step. This is the simplest approach:
+By default, the payment scheme is `exact`. You can specify the payment scheme in the `settlePayment()` or `verifyPayment()` arguments.
+
+### Exact Payment Scheme
+
+Use `settlePayment()` to verify and settle the payment in one step. This is the default and simplest approach:
 
 ```typescript
-const result = await settlePayment(paymentArgs);
+const result = await settlePayment({
+	resourceUrl: "https://api.example.com/premium-content",
+	method: "GET",
+	paymentData,
+	payTo: "0x1234567890123456789012345678901234567890",
+	network: arbitrum,
+	price: "$0.10",
+	facilitator: thirdwebFacilitator,
+});
 
 if (result.status === 200) {
-  // Payment settled, do the paid work
-  return Response.json({ data: "premium content" });
+	// Payment settled, do the paid work
+	return Response.json({ data: "premium content" });
 }
 ```
 
-### Option 2: Verify First, Then Settle
+### Upto Payment Scheme
 
-Use `verifyPayment()` first, do the work, then `settlePayment()`. This is useful when:
-- The final price might be dynamic based on the work performed
-- You want to ensure the payment is valid before doing expensive work
-- You need to calculate resource usage before charging
+For dynamic pricing, use `verifyPayment()` first, do the work, then `settlePayment()`:
+
+- The final price can be dynamic based on the work performed
+- Ensures the payment is valid before doing the expensive work
+
+This is great for AI apis that need to charge based on the token usage for example. Check out a fully working example check out [this x402 ai inference example](https://github.com/thirdweb-example/x402-ai-inference).
+
+<Stack>
+<GithubTemplateCard
+  title="x402 AI Inference Example"
+  description="A fully working example of charging an for AI inference with x402"
+  href="https://github.com/thirdweb-example/x402-ai-inference"
+/>
+</Stack>
+
+Here's a high level example of how to use the `upto` payment scheme with a dynamic price based on the token usage. First we verify the payment is valid for the max payable amount and then settle the payment based on the actual usage.
 
 ```typescript
-// First verify the payment is valid
+const paymentArgs = {
+	resourceUrl: "https://api.example.com/premium-content",
+	method: "GET",
+	paymentData,
+	payTo: "0x1234567890123456789012345678901234567890",
+	network: arbitrum,
+	scheme: "upto", // enables dynamic pricing
+	price: "$0.10", // max payable amount
+	facilitator: thirdwebFacilitator,
+};
+
+// First verify the payment is valid for the max amount
 const verifyResult = await verifyPayment(paymentArgs);
 
 if (verifyResult.status !== 200) {
-  return Response.json(verifyResult.responseBody, {
-    status: verifyResult.status,
-    headers: verifyResult.responseHeaders,
-  });
+	return Response.json(verifyResult.responseBody, {
+		status: verifyResult.status,
+		headers: verifyResult.responseHeaders,
+	});
 }
 
 // Do the expensive work that requires payment
-const result = await doExpensiveWork();
+const { tokensUsed } = await callExpensiveAIModel();
 
 // Now settle the payment based on actual usage
+const pricePerTokenUsed = 0.00001; // ex: $0.00001 per AI model token used
 const settleResult = await settlePayment({
-  ...paymentArgs,
-  price: calculateDynamicPrice(result), // adjust price based on usage
+	...paymentArgs,
+	price: tokensUsed * pricePerTokenUsed, // adjust final price based on usage
 });
 
 return Response.json(result);
 ```
+
+## Price and Token Configuration
+
+You can specify prices in multiple ways:
+
+### USD String
+
+This will default to using USDC on the specified network.
+
+```typescript
+network: polygon, // or any other EVM chain
+price: "$0.10" // 10 cents in USDC
+```
+
+### ERC20 Token
+
+You can use any ERC20 token that supports the ERC-2612 permit or ERC-3009 sign with authorization.
+
+Simply pass the amount in base units and the token address.
+
+```typescript
+network: arbitrum,
+price: {
+  amount: "1000000000000000", // Amount in base units (0.001 tokens with 18 decimals)
+  asset: {
+    address: "0xf01E52B0BAC3E147f6CAf956a64586865A0aA928", // Token address
+  }
+}
+```
+
+### Native Token
+
+Payments in native tokens are not currently supported.
 
 ## Dedicated Endpoint Examples
 
@@ -117,7 +197,6 @@ Protect individual API endpoints with x402 payments:
         routeConfig: {
           description: "Access to premium API content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
         },
       });
 
@@ -133,6 +212,7 @@ Protect individual API endpoints with x402 payments:
       }
     }
     ```
+
   </TabsContent>
 
   <TabsContent value="express">
@@ -185,6 +265,7 @@ Protect individual API endpoints with x402 payments:
 
     app.listen(3000);
     ```
+
   </TabsContent>
 
   <TabsContent value="hono">
@@ -237,6 +318,7 @@ Protect individual API endpoints with x402 payments:
 
     export default app;
     ```
+
   </TabsContent>
 </Tabs>
 
@@ -311,6 +393,7 @@ Protect multiple endpoints with a shared middleware:
       matcher: ["/api/paid/:path*"],
     };
     ```
+
   </TabsContent>
 
   <TabsContent value="express">
@@ -364,6 +447,7 @@ Protect multiple endpoints with a shared middleware:
       res.json({ message: "This is premium content!" });
     });
     ```
+
   </TabsContent>
 
   <TabsContent value="hono">
@@ -418,38 +502,7 @@ Protect multiple endpoints with a shared middleware:
       return c.json({ message: "This is premium content!" });
     });
     ```
+
   </TabsContent>
 </Tabs>
 
-## Price and Token Configuration
-
-You can specify prices in multiple ways:
-
-### USD String
-
-This will default to using USDC on the specified network.
-
-```typescript
-network: polygon, // or any other EVM chain
-price: "$0.10" // 10 cents in USDC
-```
-
-### ERC20 Token
-
-You can use any ERC20 token that supports the ERC-2612 permit or ERC-3009 sign with authorization.
-
-Simply pass the amount in base units and the token address.
-
-```typescript
-network: arbitrum,
-price: {
-  amount: "1000000000000000", // Amount in base units (0.001 tokens with 18 decimals)
-  asset: {
-    address: "0xf01E52B0BAC3E147f6CAf956a64586865A0aA928", // Token address
-  }
-}
-```
-
-### Native Token
-
-Payments in native tokens are not currently supported. 

@@ -123,11 +123,6 @@ export async function GET(request: Request) {
     network: arbitrumSepolia,
     price: "$0.01",
     facilitator: thirdwebX402Facilitator,
-    routeConfig: {
-      description: "Access to premium API content",
-      mimeType: "application/json",
-      maxTimeoutSeconds: 300,
-    },
   });
 
   if (result.status === 200) {

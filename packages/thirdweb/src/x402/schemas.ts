@@ -10,6 +10,7 @@ import {
 } from "x402/types";
 import { z } from "zod";
 import type { Chain } from "../chains/types.js";
+import { PaymentSchemeSchema } from "./types.js";
 
 const FacilitatorNetworkSchema = z.string();
 
@@ -17,6 +18,7 @@ export type FacilitatorNetwork = z.infer<typeof FacilitatorNetworkSchema>;
 
 const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
   network: FacilitatorNetworkSchema,
+  scheme: PaymentSchemeSchema,
 });
 
 export type RequestedPaymentPayload = z.infer<
@@ -32,6 +34,7 @@ export type UnsignedPaymentPayload = Omit<
 export const RequestedPaymentRequirementsSchema =
   PaymentRequirementsSchema.extend({
     network: FacilitatorNetworkSchema,
+    scheme: PaymentSchemeSchema,
   });
 
 export type RequestedPaymentRequirements = z.infer<
@@ -76,7 +79,7 @@ const FacilitatorSupportedResponseSchema =
     kinds: z.array(
       z.object({
         x402Version: z.literal(1),
-        scheme: z.literal("exact"),
+        scheme: PaymentSchemeSchema,
         network: FacilitatorNetworkSchema,
         extra: z
           .object({

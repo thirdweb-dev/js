@@ -35,28 +35,10 @@ type GetPaymentRequirementsResult = {
 export async function decodePaymentRequest(
   args: PaymentArgs,
 ): Promise<GetPaymentRequirementsResult | PaymentRequiredResult> {
-  const {
-    price,
-    network,
-    facilitator,
-    payTo,
-    resourceUrl,
-    routeConfig = {},
-    method,
-    paymentData,
-    extraMetadata,
-  } = args;
+  const { facilitator, routeConfig = {}, paymentData } = args;
   const { errorMessages } = routeConfig;
 
-  const paymentRequirementsResult = await facilitator.accepts({
-    resourceUrl,
-    method,
-    network,
-    price,
-    routeConfig,
-    payTo,
-    extraMetadata,
-  });
+  const paymentRequirementsResult = await facilitator.accepts(args);
 
   // Check for payment header, if none, return the payment requirements
   if (!paymentData) {
