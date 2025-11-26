@@ -4,7 +4,6 @@ import type { ThirdwebClient } from "thirdweb";
 import { shortenLargeNumber } from "thirdweb/utils";
 import type { RpcMethodStats } from "@/api/analytics";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
-import { Card } from "@/components/ui/card";
 import { SkeletonContainer } from "@/components/ui/skeleton";
 import {
   Table,
@@ -15,7 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardHeading } from "../../../payments/components/common";
 
 export function TopRPCMethodsTable(props: {
   data: RpcMethodStats[];
@@ -41,18 +39,22 @@ export function TopRPCMethodsTable(props: {
   const isEmpty = useMemo(() => sortedData.length === 0, [sortedData]);
 
   return (
-    <Card className="relative flex flex-col rounded-xl border border-border bg-card p-4">
+    <div className="rounded-lg border bg-card">
       {/* header */}
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <CardHeading>Top EVM Methods Called </CardHeading>
+      <div className="p-6 border-b">
+        <h2 className="tracking-tight font-semibold text-lg">
+          Top EVM Methods Called
+        </h2>
       </div>
 
-      <div className="h-5" />
-      <TableContainer scrollableContainerClassName="h-[280px]">
+      <TableContainer
+        scrollableContainerClassName="max-h-[380px] min-h-[200px]"
+        className="border-none"
+      >
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
-              <TableHead>Method</TableHead>
+              <TableHead className="lg:w-[320px]">Method</TableHead>
               <TableHead>Requests</TableHead>
             </TableRow>
           </TableHeader>
@@ -85,7 +87,7 @@ export function TopRPCMethodsTable(props: {
           />
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 

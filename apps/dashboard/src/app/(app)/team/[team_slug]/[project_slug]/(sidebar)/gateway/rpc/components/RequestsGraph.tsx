@@ -33,12 +33,11 @@ export function RequestsGraph(props: { data: RpcUsageTypeStats[] }) {
           [] as { requests: number; time: string }[],
         )}
       header={{
-        description: "Requests over time.",
         title: "RPC Requests",
+        titleClassName: "tracking-tight font-semibold text-lg",
       }}
       hideLabel={false}
       isPending={false}
-      showLegend
       toolTipLabelFormatter={(label) => {
         return format(label, "MMM dd, HH:mm");
       }}
@@ -48,7 +47,6 @@ export function RequestsGraph(props: { data: RpcUsageTypeStats[] }) {
       xAxis={{
         sameDay: true,
       }}
-      yAxis
     />
   );
 }

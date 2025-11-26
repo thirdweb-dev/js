@@ -109,8 +109,8 @@ export function RpcMethodBarChartCardUI({
 
   return (
     <Card>
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0">
-        <div className="flex flex-1 flex-col justify-center gap-1 p-6">
+      <CardHeader className="flex flex-col items-stretch space-y-0 p-0">
+        <div className="flex flex-1 flex-col justify-center gap-1 p-6 pb-0">
           <CardTitle className="font-semibold text-lg">RPC Methods</CardTitle>
         </div>
       </CardHeader>

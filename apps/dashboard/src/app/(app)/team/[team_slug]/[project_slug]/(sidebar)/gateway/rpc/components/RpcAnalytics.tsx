@@ -3,8 +3,10 @@ import { ResponsiveSuspense } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
 import { getRpcMethodUsage, getRpcUsageByType } from "@/api/analytics";
 import type { Range } from "@/components/analytics/date-range-selector";
+import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { StatCard } from "@/components/analytics/stat";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RpcMethodBarChartCardAsync } from "../../../components/RpcMethodBarChartCard";
 import { TopRPCMethodsTable } from "./MethodsTable";
 import { RequestsGraph } from "./RequestsGraph";
 import { RpcAnalyticsFilter } from "./RpcAnalyticsFilter";
@@ -102,6 +104,24 @@ export async function RPCAnalytics(props: {
             data={evmMethodsData || []}
           />
         </div>
+      </ResponsiveSuspense>
+
+      <div className="h-6" />
+
+      <ResponsiveSuspense
+        fallback={<LoadingChartState className="h-[377px] border" />}
+        searchParamsUsed={["from", "to", "interval"]}
+      >
+        <RpcMethodBarChartCardAsync
+          params={{
+            from: range.from,
+            period: interval,
+            projectId: projectId,
+            teamId: teamId,
+            to: range.to,
+          }}
+          authToken={authToken}
+        />
       </ResponsiveSuspense>
     </div>
   );

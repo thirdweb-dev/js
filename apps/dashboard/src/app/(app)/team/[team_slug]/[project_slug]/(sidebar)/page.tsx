@@ -41,7 +41,6 @@ import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
-import { RpcMethodBarChartCardAsync } from "./components/RpcMethodBarChartCard";
 import { TransactionsChartCardAsync } from "./components/Transactions";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
 import { TotalSponsoredCardUI } from "./overview/total-sponsored";
@@ -269,22 +268,6 @@ async function ProjectAnalytics(props: {
               : undefined
           }
           selectedChartQueryParam="totalSponsored"
-          authToken={authToken}
-        />
-      </ResponsiveSuspense>
-
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[377px] border" />}
-        searchParamsUsed={["from", "to", "interval"]}
-      >
-        <RpcMethodBarChartCardAsync
-          params={{
-            from: range.from,
-            period: interval,
-            projectId: project.id,
-            teamId: project.teamId,
-            to: range.to,
-          }}
           authToken={authToken}
         />
       </ResponsiveSuspense>
