@@ -110,7 +110,7 @@ if (verifyResult.status !== 200) {
 }
 
 // Do the expensive work that requires payment
-const { tokensUsed } = await callExpensiveAIModel();
+const { answer, tokensUsed } = await callExpensiveAIModel();
 
 // Now settle the payment based on actual usage
 const pricePerTokenUsed = 0.00001; // ex: $0.00001 per AI model token used
@@ -119,7 +119,7 @@ const settleResult = await settlePayment({
 	price: tokensUsed * pricePerTokenUsed, // adjust final price based on usage
 });
 
-return Response.json(result);
+return Response.json(answer);
 ```
 
 ## Price and Token Configuration
