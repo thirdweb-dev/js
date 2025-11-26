@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.114.1
+
+### Patch Changes
+
+- [#8465](https://github.com/thirdweb-dev/js/pull/8465) [`629efc1`](https://github.com/thirdweb-dev/js/commit/629efc13b62cd56beeefedc964440b3d66fc1dbb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add customization options for the signIn modal shown from useFetchWithPayment
+
+- [#8465](https://github.com/thirdweb-dev/js/pull/8465) [`629efc1`](https://github.com/thirdweb-dev/js/commit/629efc13b62cd56beeefedc964440b3d66fc1dbb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add monad chain definition
+
 ## 5.114.0
 
 ### Minor Changes
