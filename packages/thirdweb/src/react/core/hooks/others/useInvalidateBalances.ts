@@ -12,7 +12,7 @@ import { invalidateWalletBalance } from "../../providers/invalidateWalletBalance
 export function useInvalidateBalances() {
   const queryClient = useQueryClient();
 
-  return ({ chainId }: { chainId?: number }) => {
+  return ({ chainId }: { chainId?: number } = {}) => {
     invalidateWalletBalance(queryClient, chainId);
   };
 }

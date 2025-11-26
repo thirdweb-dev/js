@@ -52,6 +52,7 @@ export { mantaPacificTestnet } from "../chains/chain-definitions/manta-pacific-t
 export { metalL2Testnet } from "../chains/chain-definitions/metal-l2-testnet.js";
 export { mode } from "../chains/chain-definitions/mode.js";
 export { modeTestnet } from "../chains/chain-definitions/mode-testnet.js";
+export { monad } from "../chains/chain-definitions/monad.js";
 export { monadTestnet } from "../chains/chain-definitions/monad-testnet.js";
 export { moonbeam } from "../chains/chain-definitions/moonbeam.js";
 export { optimism } from "../chains/chain-definitions/optimism.js";
