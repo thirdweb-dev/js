@@ -8,7 +8,7 @@ import { StatCard } from "@/components/analytics/stat";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RpcMethodBarChartCardAsync } from "../../../components/RpcMethodBarChartCard";
 import { TopRPCMethodsTable } from "./MethodsTable";
-import { RequestsGraph } from "./RequestsGraph";
+import { RPCRequestsChartUI } from "./RequestsGraph";
 import { RpcAnalyticsFilter } from "./RpcAnalyticsFilter";
 import { RpcFTUX } from "./RpcFtux";
 
@@ -23,7 +23,7 @@ export async function RPCAnalytics(props: {
 }) {
   const { projectId, teamId, range, interval, authToken } = props;
 
-  // TODO: add requests by status code, but currently not performant enough
+  // TODO: add requests by status code filter, but currently not performant enough
   const allRequestsByUsageTypePromise = getRpcUsageByType(
     {
       from: range.from,
@@ -98,7 +98,7 @@ export async function RPCAnalytics(props: {
               value={totalRequests}
             />
           </div>
-          <RequestsGraph data={usageData} />
+          <RPCRequestsChartUI data={usageData} viewMoreLink={undefined} />
           <TopRPCMethodsTable
             client={props.client}
             data={evmMethodsData || []}

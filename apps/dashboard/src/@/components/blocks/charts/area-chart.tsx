@@ -1,12 +1,15 @@
 "use client";
 
 import { format } from "date-fns";
+import { ArrowUpRightIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   EmptyChartState,
   LoadingChartState,
 } from "@/components/analytics/empty-chart-state";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -23,6 +26,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
+import { SkeletonContainer } from "../../ui/skeleton";
 
 type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
   header?: {
@@ -40,7 +44,7 @@ type ThirdwebAreaChartProps<TConfig extends ChartConfig> = {
 
   yAxis?: boolean;
   xAxis?: {
-    sameDay?: boolean;
+    showHour?: boolean;
   };
 
   variant?: "stacked" | "individual";
@@ -112,7 +116,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
                 tickFormatter={(value) =>
                   format(
                     new Date(value),
-                    props.xAxis?.sameDay ? "MMM dd, HH:mm" : "MMM dd",
+                    props.xAxis?.showHour ? "MMM dd, HH:mm" : "MMM dd",
                   )
                 }
                 tickLine={false}
@@ -189,3 +193,49 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
     </Card>
   );
 }
+
+export function TotalValueChartHeader(props: {
+  total: number;
+  title: string;
+  isPending: boolean;
+  viewMoreLink: string | undefined;
+}) {
+  return (
+    <div className="space-y-1 p-6 flex justify-between items-start gap-3">
+      <div>
+        <SkeletonContainer
+          loadedData={!props.isPending ? props.total : undefined}
+          skeletonData={100}
+          render={(value) => {
+            return (
+              <p className="text-3xl font-semibold tracking-tight">
+                {compactNumberFormatter.format(value)}
+              </p>
+            );
+          }}
+        />
+
+        <h3 className="text-muted-foreground">{props.title}</h3>
+      </div>
+
+      {props.viewMoreLink && (
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className="gap-2 rounded-full text-muted-foreground hover:text-foreground"
+        >
+          <Link href={props.viewMoreLink}>
+            <span>View More</span>
+            <ArrowUpRightIcon className="size-4" />
+          </Link>
+        </Button>
+      )}
+    </div>
+  );
+}
+
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});

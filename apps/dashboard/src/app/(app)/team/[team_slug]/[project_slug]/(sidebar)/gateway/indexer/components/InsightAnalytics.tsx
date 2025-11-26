@@ -183,9 +183,8 @@ export async function InsightAnalytics(props: {
           ) : (
             <RequestsByStatusGraph
               data={"data" in statusCodesData ? statusCodesData.data : []}
-              description="The number of requests by status code over time."
               isPending={false}
-              title="Requests by Status Code"
+              viewMoreLink={undefined}
             />
           )}
 

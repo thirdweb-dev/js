@@ -57,7 +57,7 @@ export function CountGraph(props: {
         return format(label, "MMM dd, HH:mm");
       }}
       xAxis={{
-        sameDay: true,
+        showHour: true,
       }}
       yAxis
     />

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { shortenLargeNumber } from "thirdweb/utils";
 import type { InsightStatusCodeStats } from "@/api/analytics";
 import { EmptyChartState } from "@/components/analytics/empty-chart-state";
+import { TotalValueChartHeader } from "@/components/blocks/charts/area-chart";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
 import type { ChartConfig } from "@/components/ui/chart";
 
@@ -15,10 +16,13 @@ const defaultLabel = 200;
 export function RequestsByStatusGraph(props: {
   data: InsightStatusCodeStats[];
   isPending: boolean;
-  title: string;
-  description: string;
+  viewMoreLink: string | undefined;
 }) {
   const topStatusCodesToShow = 10;
+
+  const total = useMemo(() => {
+    return props.data.reduce((acc, curr) => acc + curr.totalRequests, 0);
+  }, [props.data]);
 
   const { chartConfig, chartData } = useMemo(() => {
     const _chartConfig: ChartConfig = {};
@@ -90,17 +94,15 @@ export function RequestsByStatusGraph(props: {
 
   return (
     <ThirdwebBarChart
-      chartClassName="aspect-[1.5] lg:aspect-[3.5]"
+      chartClassName="aspect-auto h-[275px]"
       config={chartConfig}
       customHeader={
-        <div className="relative px-6 pt-6">
-          <h3 className="mb-0.5 font-semibold text-xl tracking-tight">
-            {props.title}
-          </h3>
-          <p className="mb-3 text-muted-foreground text-sm">
-            {props.description}
-          </p>
-        </div>
+        <TotalValueChartHeader
+          isPending={props.isPending}
+          total={total}
+          title="Indexer Requests"
+          viewMoreLink={props.viewMoreLink}
+        />
       }
       data={chartData}
       emptyChartState={<EmptyChartState type="bar" />}

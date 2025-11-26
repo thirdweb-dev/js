@@ -44,6 +44,7 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   toolTipValueFormatter?: (value: unknown) => React.ReactNode;
   hideLabel?: boolean;
   emptyChartState?: React.ReactElement;
+  className?: string;
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -55,7 +56,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
     props.variant || configKeys.length > 4 ? "stacked" : "grouped";
 
   return (
-    <Card>
+    <Card className={props.className}>
       {props.header && (
         <CardHeader>
           <CardTitle className={cn("mb-2", props.header.titleClassName)}>

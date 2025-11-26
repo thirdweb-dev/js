@@ -8,6 +8,8 @@ import type { ThirdwebClient } from "thirdweb";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getInAppWalletUsage,
+  getInsightStatusCodeUsage,
+  getRpcUsageByType,
   getUniversalBridgeUsage,
   getWalletConnections,
   isProjectActive,
@@ -32,6 +34,8 @@ import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
 import { TransactionsChartCardAsync } from "./components/Transactions";
+import { RequestsByStatusGraph } from "./gateway/indexer/components/RequestsByStatusGraph";
+import { RPCRequestsChartUI } from "./gateway/rpc/components/RequestsGraph";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
 
 type PageParams = {
@@ -243,6 +247,46 @@ async function ProjectAnalytics(props: {
         />
       </ResponsiveSuspense>
 
+      <div className="grid gap-6 md:grid-cols-2">
+        <ResponsiveSuspense
+          fallback={
+            <RequestsByStatusGraph
+              data={[]}
+              isPending={true}
+              viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/gateway/indexer`}
+            />
+          }
+          searchParamsUsed={["from", "to", "interval"]}
+        >
+          <AsyncIndexerRequestsChartCard
+            teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
+            from={range.from}
+            to={range.to}
+            interval={interval}
+            projectId={project.id}
+            teamId={project.teamId}
+            authToken={authToken}
+          />
+        </ResponsiveSuspense>
+
+        <ResponsiveSuspense
+          fallback={<LoadingChartState className="h-[275px] border" />}
+          searchParamsUsed={["from", "to", "interval"]}
+        >
+          <AsyncRPCRequestsChartCard
+            teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
+            from={range.from}
+            to={range.to}
+            interval={interval}
+            projectId={project.id}
+            teamId={project.teamId}
+            authToken={authToken}
+          />
+        </ResponsiveSuspense>
+      </div>
+
       <ResponsiveSuspense
         fallback={<LoadingChartState className="h-[377px] border" />}
         searchParamsUsed={["from", "to", "interval"]}
@@ -259,6 +303,65 @@ async function ProjectAnalytics(props: {
         />
       </ResponsiveSuspense>
     </div>
+  );
+}
+
+async function AsyncIndexerRequestsChartCard(props: {
+  from: Date;
+  to: Date;
+  interval: "day" | "week";
+  projectId: string;
+  teamId: string;
+  authToken: string;
+  teamSlug: string;
+  projectSlug: string;
+}) {
+  const requestsData = await getInsightStatusCodeUsage(
+    {
+      from: props.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: props.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
+
+  return (
+    <RequestsByStatusGraph
+      data={requestsData && "data" in requestsData ? requestsData.data : []}
+      isPending={false}
+      viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/indexer`}
+    />
+  );
+}
+
+async function AsyncRPCRequestsChartCard(props: {
+  from: Date;
+  to: Date;
+  interval: "day" | "week";
+  projectId: string;
+  teamId: string;
+  authToken: string;
+  teamSlug: string;
+  projectSlug: string;
+}) {
+  const requestsData = await getRpcUsageByType(
+    {
+      from: props.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: props.to,
+    },
+    props.authToken,
+  ).catch(() => undefined);
+
+  return (
+    <RPCRequestsChartUI
+      data={requestsData || []}
+      viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`}
+    />
   );
 }
 

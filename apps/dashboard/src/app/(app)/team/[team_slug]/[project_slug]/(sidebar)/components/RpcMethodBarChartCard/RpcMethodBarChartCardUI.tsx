@@ -116,7 +116,7 @@ export function RpcMethodBarChartCardUI({
       </CardHeader>
       <CardContent className="px-2 sm:p-6 sm:pl-0">
         <ChartContainer
-          className="aspect-auto h-[250px] w-full pt-6"
+          className="aspect-auto h-[275px] w-full pt-6"
           config={chartConfig}
         >
           <RechartsBarChart

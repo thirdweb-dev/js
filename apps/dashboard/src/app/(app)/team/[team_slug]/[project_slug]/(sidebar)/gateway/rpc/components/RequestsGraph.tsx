@@ -1,14 +1,34 @@
 "use client";
 
-import { format } from "date-fns";
-import { shortenLargeNumber } from "thirdweb/utils";
+import { differenceInCalendarDays, format } from "date-fns";
+import { useMemo } from "react";
 import type { RpcUsageTypeStats } from "@/api/analytics";
-import { ThirdwebAreaChart } from "@/components/blocks/charts/area-chart";
+import {
+  ThirdwebAreaChart,
+  TotalValueChartHeader,
+} from "@/components/blocks/charts/area-chart";
 
-export function RequestsGraph(props: { data: RpcUsageTypeStats[] }) {
+export function RPCRequestsChartUI(props: {
+  data: RpcUsageTypeStats[];
+  viewMoreLink: string | undefined;
+}) {
+  const total = useMemo(() => {
+    return props.data.reduce((acc, curr) => acc + curr.count, 0);
+  }, [props.data]);
+
+  const showBreakdownByHour = useMemo(() => {
+    if (props.data.length === 0) return true;
+    const firstData = props.data[0];
+    const lastData = props.data[props.data.length - 1];
+    if (!firstData || !lastData) return true;
+    const firstDate = new Date(firstData.date);
+    const lastDate = new Date(lastData.date);
+    return Math.abs(differenceInCalendarDays(lastDate, firstDate)) < 2;
+  }, [props.data]);
+
   return (
     <ThirdwebAreaChart
-      chartClassName="aspect-[1.5] lg:aspect-[4]"
+      chartClassName="aspect-auto h-[275px]"
       config={{
         requests: {
           color: "hsl(var(--chart-1))",
@@ -32,21 +52,33 @@ export function RequestsGraph(props: { data: RpcUsageTypeStats[] }) {
           },
           [] as { requests: number; time: string }[],
         )}
-      header={{
-        title: "RPC Requests",
-        titleClassName: "tracking-tight font-semibold text-lg",
-      }}
+      customHeader={
+        <TotalValueChartHeader
+          total={total}
+          isPending={false}
+          title="RPC Requests"
+          viewMoreLink={props.viewMoreLink}
+        />
+      }
       hideLabel={false}
       isPending={false}
       toolTipLabelFormatter={(label) => {
-        return format(label, "MMM dd, HH:mm");
+        if (showBreakdownByHour) {
+          return format(label, "MMM dd, HH:mm");
+        }
+        return format(label, "MMM dd");
       }}
       toolTipValueFormatter={(value) => {
-        return shortenLargeNumber(value as number);
+        return compactNumberFormatter.format(value as number);
       }}
       xAxis={{
-        sameDay: true,
+        showHour: showBreakdownByHour,
       }}
     />
   );
 }
+
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});
