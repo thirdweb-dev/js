@@ -19,3 +19,5 @@ export const metadata = createMetadata({
   },
   title: "Contracts",
 });
+
+export const revalidate = 86400; // revalidate every day

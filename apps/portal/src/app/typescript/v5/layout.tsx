@@ -20,3 +20,5 @@ export const metadata = createMetadata({
     "A type-safe library to interact with any EVM-compatible blockchain in Node, web and native applications.",
   title: "thirdweb TypeScript SDK",
 });
+
+export const revalidate = 86400; // revalidate every day
