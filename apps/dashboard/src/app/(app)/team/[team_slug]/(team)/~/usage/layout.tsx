@@ -13,7 +13,7 @@ export default async function Layout(props: {
 
   return (
     <div className="flex grow flex-col">
-      <div className="border-border pt-10 pb-4">
+      <div className="border-border pt-10 pb-6">
         <div className="container max-w-7xl flex flex-col gap-4 lg:flex-row lg:justify-between">
           <h1 className="font-semibold text-3xl tracking-tight">Usage</h1>
           <div className="items-center gap-3 hidden lg:flex">
@@ -47,7 +47,7 @@ export default async function Layout(props: {
             path: `${usagePath}/storage`,
           },
           {
-            name: "Account Abstraction",
+            name: "Gas Sponsorship",
             path: `${usagePath}/account-abstraction`,
           },
         ]}

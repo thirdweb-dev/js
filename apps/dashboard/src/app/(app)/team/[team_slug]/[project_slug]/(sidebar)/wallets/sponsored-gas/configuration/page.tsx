@@ -49,9 +49,9 @@ export default async function Page(props: {
       {!bundlerService ? (
         <Alert variant="warning">
           <CircleAlertIcon className="size-5" />
-          <AlertTitle>Account Abstraction service is disabled</AlertTitle>
+          <AlertTitle>Gas Sponsorship is disabled</AlertTitle>
           <AlertDescription>
-            Enable Account Abstraction service in{" "}
+            Enable Gas Sponsorship in{" "}
             <UnderlineLink href={`/team/${team_slug}/${project_slug}/settings`}>
               project settings
             </UnderlineLink>{" "}

@@ -5,16 +5,10 @@ import {
   ResponsiveSuspense,
 } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
-import {
-  type ChainMetadata,
-  defineChain,
-  getChainMetadata,
-} from "thirdweb/chains";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getInAppWalletUsage,
   getUniversalBridgeUsage,
-  getUserOpUsage,
   getWalletConnections,
   isProjectActive,
 } from "@/api/analytics";
@@ -31,11 +25,7 @@ import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getProjectWallet } from "@/lib/server/project-wallet";
 import { getFiltersFromSearchParams } from "@/lib/time";
-import type {
-  InAppWalletStats,
-  UserOpStats,
-  WalletStats,
-} from "@/types/analytics";
+import type { InAppWalletStats, WalletStats } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
@@ -43,7 +33,6 @@ import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
 import { TransactionsChartCardAsync } from "./components/Transactions";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
-import { TotalSponsoredCardUI } from "./overview/total-sponsored";
 
 type PageParams = {
   team_slug: string;
@@ -255,24 +244,6 @@ async function ProjectAnalytics(props: {
       </ResponsiveSuspense>
 
       <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[458px] border" />}
-        searchParamsUsed={["from", "to", "interval", "totalSponsored"]}
-      >
-        <AsyncTotalSponsoredCard
-          interval={interval}
-          project={project}
-          range={range}
-          selectedChart={
-            typeof searchParams.totalSponsored === "string"
-              ? searchParams.totalSponsored
-              : undefined
-          }
-          selectedChartQueryParam="totalSponsored"
-          authToken={authToken}
-        />
-      </ResponsiveSuspense>
-
-      <ResponsiveSuspense
         fallback={<LoadingChartState className="h-[377px] border" />}
         searchParamsUsed={["from", "to", "interval"]}
       >
@@ -288,54 +259,6 @@ async function ProjectAnalytics(props: {
         />
       </ResponsiveSuspense>
     </div>
-  );
-}
-
-export async function AsyncTotalSponsoredCard(props: {
-  project: Project;
-  range: Range;
-  interval: "day" | "week";
-  selectedChart: string | undefined;
-  selectedChartQueryParam: string;
-  authToken: string;
-}) {
-  const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
-    getUserOpUsage(
-      {
-        from: props.range.from,
-        period: props.interval,
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-        to: props.range.to,
-      },
-      props.authToken,
-    ),
-    getUserOpUsage(
-      {
-        from: props.range.from,
-        period: "all",
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-        to: props.range.to,
-      },
-      props.authToken,
-    ),
-  ]);
-
-  return userOpUsageTimeSeries.status === "fulfilled" &&
-    userOpUsage.status === "fulfilled" &&
-    userOpUsage.value.length > 0 ? (
-    <TotalSponsoredCard
-      aggregatedData={userOpUsage.value}
-      data={userOpUsageTimeSeries.value}
-      selectedChart={props.selectedChart}
-      selectedChartQueryParam={props.selectedChartQueryParam}
-    />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-      metric="Account Abstraction"
-    />
   );
 }
 
@@ -508,73 +431,6 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
         value: uniqueWalletsConnected,
       }))}
       title="Social Authentication"
-    />
-  );
-}
-
-async function TotalSponsoredCard({
-  data,
-  aggregatedData,
-  selectedChart,
-  selectedChartQueryParam,
-}: {
-  data: UserOpStats[];
-  aggregatedData: UserOpStats[];
-  selectedChart: string | undefined;
-  selectedChartQueryParam: string;
-}) {
-  const chains = await Promise.all(
-    data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  // Process data to combine by date and chain type
-  const dateMap = new Map<string, { mainnet: number; testnet: number }>();
-  for (const item of data) {
-    const chain = chains.find((c) => c.chainId === Number(item.chainId));
-
-    const existing = dateMap.get(item.date) || { mainnet: 0, testnet: 0 };
-    if (chain?.testnet) {
-      existing.testnet += item.sponsoredUsd;
-    } else {
-      existing.mainnet += item.sponsoredUsd;
-    }
-    dateMap.set(item.date, existing);
-  }
-
-  // Convert to array and sort by date
-  const timeSeriesData = Array.from(dateMap.entries())
-    .map(([date, values]) => ({
-      date,
-      mainnet: values.mainnet,
-      testnet: values.testnet,
-      total: values.mainnet + values.testnet,
-    }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  const processedAggregatedData = {
-    mainnet: aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    testnet: aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: aggregatedData.reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-  };
-
-  return (
-    <TotalSponsoredCardUI
-      processedAggregatedData={processedAggregatedData}
-      selectedChart={selectedChart}
-      selectedChartQueryParam={selectedChartQueryParam}
-      timeSeriesData={timeSeriesData}
     />
   );
 }

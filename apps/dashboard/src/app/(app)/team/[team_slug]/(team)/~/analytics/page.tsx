@@ -373,7 +373,7 @@ async function AsyncTotalSponsoredCard(props: {
   ) : (
     <EmptyStateCard
       link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-      metric="Account Abstraction"
+      metric="Gas Sponsorship"
     />
   );
 }
