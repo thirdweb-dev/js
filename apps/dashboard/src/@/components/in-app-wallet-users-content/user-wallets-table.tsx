@@ -64,7 +64,7 @@ const truncateIdentifier = (value: string) => {
   return `${value.slice(0, 8)}...${value.slice(-4)}`;
 };
 
-export function InAppWalletUsersPageContent(
+export function UserWalletsTable(
   props: {
     authToken: string;
     client: ThirdwebClient;
@@ -288,83 +288,81 @@ export function InAppWalletUsersPageContent(
   ]);
 
   return (
-    <div>
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <div className="flex flex-col lg:flex-row lg:justify-between p-4 lg:px-6 py-5 lg:items-center gap-5">
-          <div>
-            <div className="flex mb-3">
-              <div className="p-2 rounded-full bg-background border border-border">
-                <UserIcon className="size-5 text-muted-foreground" />
-              </div>
-            </div>
-            <h2 className="font-semibold text-2xl tracking-tight">
-              User Wallets
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              View and manage your project's users
-            </p>
-          </div>
-
-          <div className="flex flex-col items-start lg:items-end gap-2.5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">
-            <div className="w-full lg:w-auto lg:min-w-[320px]">
-              <AdvancedSearchInput
-                onSearch={handleSearch}
-                onClear={handleClearSearch}
-                isLoading={isSearching}
-                hasResults={hasSearchResults}
-              />
-            </div>
-            <Button
-              className="gap-2 bg-background rounded-full"
-              disabled={wallets.length === 0 || isPending}
-              onClick={downloadCSV}
-              variant="outline"
-            >
-              {isPending && <Spinner className="size-4" />}
-              Download as .csv
-            </Button>
-          </div>
-        </div>
-
+    <div className="overflow-hidden rounded-xl border border-border bg-card">
+      <div className="flex flex-col lg:flex-row lg:justify-between p-4 lg:px-6 py-5 lg:items-center gap-5">
         <div>
-          {hasSearchResults ? (
-            <SearchResults results={searchResults} client={props.client} />
-          ) : (
-            <>
-              <TWTable
-                columns={columns}
-                data={wallets}
-                isFetched={walletsQuery.isFetched}
-                isPending={walletsQuery.isPending}
-                tableContainerClassName="rounded-none border-x-0 border-b-0"
-                title="User wallets"
-              />
-
-              <div className="flex justify-center gap-3 border-t bg-card p-6">
-                <Button
-                  className="gap-2 bg-background"
-                  disabled={activePage === 1 || walletsQuery.isPending}
-                  onClick={() => setActivePage((p) => Math.max(1, p - 1))}
-                  size="sm"
-                  variant="outline"
-                >
-                  <ArrowLeftIcon className="size-4" />
-                  Previous
-                </Button>
-                <Button
-                  className="gap-2 bg-background"
-                  disabled={wallets.length === 0 || walletsQuery.isPending}
-                  onClick={() => setActivePage((p) => p + 1)}
-                  size="sm"
-                  variant="outline"
-                >
-                  Next
-                  <ArrowRightIcon className="size-4" />
-                </Button>
-              </div>
-            </>
-          )}
+          <div className="flex mb-3">
+            <div className="p-2 rounded-full bg-background border border-border">
+              <UserIcon className="size-5 text-muted-foreground" />
+            </div>
+          </div>
+          <h2 className="font-semibold text-2xl tracking-tight">
+            User Wallets
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            View and manage your project's users
+          </p>
         </div>
+
+        <div className="flex flex-col items-start lg:items-end gap-2.5 border-t lg:border-t-0 pt-5 lg:pt-0 border-dashed">
+          <div className="w-full lg:w-auto lg:min-w-[320px]">
+            <AdvancedSearchInput
+              onSearch={handleSearch}
+              onClear={handleClearSearch}
+              isLoading={isSearching}
+              hasResults={hasSearchResults}
+            />
+          </div>
+          <Button
+            className="gap-2 bg-background rounded-full"
+            disabled={wallets.length === 0 || isPending}
+            onClick={downloadCSV}
+            variant="outline"
+          >
+            {isPending && <Spinner className="size-4" />}
+            Download as .csv
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        {hasSearchResults ? (
+          <SearchResults results={searchResults} client={props.client} />
+        ) : (
+          <>
+            <TWTable
+              columns={columns}
+              data={wallets}
+              isFetched={walletsQuery.isFetched}
+              isPending={walletsQuery.isPending}
+              tableContainerClassName="rounded-none border-x-0 border-b-0"
+              title="User wallets"
+            />
+
+            <div className="flex justify-center gap-3 border-t bg-card p-6">
+              <Button
+                className="gap-2 bg-background"
+                disabled={activePage === 1 || walletsQuery.isPending}
+                onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+                size="sm"
+                variant="outline"
+              >
+                <ArrowLeftIcon className="size-4" />
+                Previous
+              </Button>
+              <Button
+                className="gap-2 bg-background"
+                disabled={wallets.length === 0 || walletsQuery.isPending}
+                onClick={() => setActivePage((p) => p + 1)}
+                size="sm"
+                variant="outline"
+              >
+                Next
+                <ArrowRightIcon className="size-4" />
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

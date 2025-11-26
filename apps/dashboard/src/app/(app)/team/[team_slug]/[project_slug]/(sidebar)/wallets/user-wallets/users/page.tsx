@@ -1,40 +1,40 @@
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
-import { fetchEcosystem } from "@/api/team/ecosystems";
-import { getTeamBySlug } from "@/api/team/get-team";
+import { getProject } from "@/api/project/projects";
 import { UserWalletsTable } from "@/components/in-app-wallet-users-content/user-wallets-table";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 
-export default async function EcosystemUsersPage(props: {
-  params: Promise<{ team_slug: string; slug: string }>;
+export const dynamic = "force-dynamic";
+
+export default async function Page(props: {
+  params: Promise<{ team_slug: string; project_slug: string }>;
 }) {
   const params = await props.params;
-  const [authToken, ecosystem, team] = await Promise.all([
-    getAuthToken(),
-    fetchEcosystem(params.slug, params.team_slug),
-    getTeamBySlug(params.team_slug),
-  ]);
+  const authToken = await getAuthToken();
 
   if (!authToken) {
-    loginRedirect(`/team/${params.team_slug}/~/ecosystem/${params.slug}/users`);
+    loginRedirect(
+      `/team/${params.team_slug}/${params.project_slug}/wallets/user-wallets/users`,
+    );
   }
 
-  if (!ecosystem || !team) {
+  const project = await getProject(params.team_slug, params.project_slug);
+  if (!project) {
     redirect(`/team/${params.team_slug}`);
   }
 
   const client = getClientThirdwebClient({
     jwt: authToken,
-    teamId: team.id,
+    teamId: project.teamId,
   });
 
   return (
     <UserWalletsTable
       authToken={authToken}
       client={client}
-      ecosystemSlug={ecosystem.slug}
-      teamId={team.id}
+      projectClientId={project.publishableKey}
+      teamId={project.teamId}
     />
   );
 }
