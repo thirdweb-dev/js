@@ -46,6 +46,17 @@ type UseFetchWithPaymentConfig = UseFetchWithPaymentOptions & {
    * These options will be merged with the client, theme, and chain from the hook.
    */
   connectOptions?: Omit<UseConnectModalOptions, "client" | "theme">;
+  /**
+   * Options to customize the SignInRequiredModal that appears when the user needs to sign in.
+   */
+  signInRequiredModal?: {
+    /** Custom title for the modal header */
+    title?: string;
+    /** Custom description text */
+    description?: string;
+    /** Custom label for the sign in button */
+    buttonLabel?: string;
+  };
 };
 
 /**
@@ -73,6 +84,7 @@ type UseFetchWithPaymentConfig = UseFetchWithPaymentOptions & {
  * @param options.theme - Theme for the payment error modal (defaults to "dark")
  * @param options.fundWalletOptions - Customize the BuyWidget shown when user needs to fund their wallet
  * @param options.connectOptions - Customize the ConnectModal shown when user needs to sign in
+ * @param options.signInRequiredModal - Customize the SignInRequiredModal shown when user needs to sign in (title, description, buttonLabel)
  * @returns An object containing:
  * - `fetchWithPayment`: Function to make fetch requests with automatic payment handling (returns parsed data)
  * - `isPending`: Boolean indicating if a request is in progress
@@ -146,6 +158,17 @@ type UseFetchWithPaymentConfig = UseFetchWithPaymentOptions & {
  * });
  * ```
  *
+ * ### Customize the sign in required modal
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   signInRequiredModal: {
+ *     title: "Authentication Required",
+ *     description: "Please sign in to access this paid content.",
+ *     buttonLabel: "Connect Wallet",
+ *   }
+ * });
+ * ```
+ *
  * ### Disable the UI and handle errors yourself
  * ```tsx
  * const { fetchWithPayment, error } = useFetchWithPayment(client, {
@@ -201,6 +224,9 @@ export function useFetchWithPayment(
         setRootEl(
           <SignInRequiredModal
             theme={theme}
+            title={options?.signInRequiredModal?.title}
+            description={options?.signInRequiredModal?.description}
+            buttonLabel={options?.signInRequiredModal?.buttonLabel}
             onSignIn={async () => {
               // Close the SignInRequiredModal
               setRootEl(null);

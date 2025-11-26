@@ -99,8 +99,9 @@ export function useFetchWithPaymentCore(
                   errorData: errorBody,
                   onRetry: async () => {
                     // Retry the entire fetch+error handling logic recursively
+                    // Pass currentWallet to avoid re-showing connect modal with stale wallet state
                     try {
-                      const result = await executeFetch();
+                      const result = await executeFetch(currentWallet);
                       resolve(result);
                     } catch (error) {
                       reject(error);

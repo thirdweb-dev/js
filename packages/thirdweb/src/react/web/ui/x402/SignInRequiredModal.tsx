@@ -15,13 +15,23 @@ type SignInRequiredModalProps = {
   theme: Theme | "light" | "dark";
   onSignIn: () => void;
   onCancel: () => void;
+  title?: string;
+  description?: string;
+  buttonLabel?: string;
 };
 
 /**
  * @internal
  */
 export function SignInRequiredModal(props: SignInRequiredModalProps) {
-  const { theme, onSignIn, onCancel } = props;
+  const {
+    theme,
+    onSignIn,
+    onCancel,
+    title = "Sign in required",
+    description = "Account required to complete payment, please sign in to continue.",
+    buttonLabel = "Sign in",
+  } = props;
 
   return (
     <CustomThemeProvider theme={theme}>
@@ -35,10 +45,10 @@ export function SignInRequiredModal(props: SignInRequiredModalProps) {
           }
         }}
         size="compact"
-        title="Sign in required"
+        title={title}
       >
         <Container p="lg">
-          <ModalHeader title="Sign in required" />
+          <ModalHeader title={title} />
 
           <Container
             flex="column"
@@ -55,7 +65,7 @@ export function SignInRequiredModal(props: SignInRequiredModalProps) {
                 lineHeight: 1.5,
               }}
             >
-              Account required to complete payment, please sign in to continue.
+              {description}
             </Text>
           </Container>
         </Container>
@@ -63,7 +73,7 @@ export function SignInRequiredModal(props: SignInRequiredModalProps) {
         {/* Action Buttons */}
         <ScreenBottomContainer>
           <Button fullWidth gap="xs" onClick={onSignIn} variant="accent">
-            Sign in
+            {buttonLabel}
           </Button>
           <Button fullWidth gap="xs" onClick={onCancel} variant="secondary">
             Cancel
