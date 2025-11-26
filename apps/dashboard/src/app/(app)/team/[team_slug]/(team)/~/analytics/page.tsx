@@ -4,14 +4,11 @@ import {
   ResponsiveSearchParamsProvider,
   ResponsiveSuspense,
 } from "responsive-rsc";
-import { defineChain } from "thirdweb";
-import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getClientTransactions,
   getInAppWalletUsage,
   getUniversalBridgeUsage,
-  getUserOpUsage,
   getWalletConnections,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
@@ -23,14 +20,9 @@ import type {
 import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
 import { getFiltersFromSearchParams } from "@/lib/time";
-import type {
-  InAppWalletStats,
-  UserOpStats,
-  WalletStats,
-} from "@/types/analytics";
+import type { InAppWalletStats, WalletStats } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
-import { TotalSponsoredChartCardUI } from "../../_components/TotalSponsoredCard";
 import { TransactionsChartCardWithChainMapping } from "../../_components/transaction-card-with-chain-mapping";
 import { TeamHighlightsCard } from "./highlights-card";
 
@@ -152,24 +144,6 @@ export default async function TeamOverviewPage(props: {
                 selectedChart={
                   typeof searchParams.client_transactions === "string"
                     ? searchParams.client_transactions
-                    : undefined
-                }
-                teamId={team.id}
-              />
-            </ResponsiveSuspense>
-
-            <ResponsiveSuspense
-              fallback={<LoadingChartState className="h-[458px] border" />}
-              searchParamsUsed={["from", "to", "interval", "userOpUsage"]}
-            >
-              <AsyncTotalSponsoredCard
-                authToken={authToken}
-                selectedChartQueryParam="userOpUsage"
-                interval={interval}
-                range={range}
-                selectedChart={
-                  typeof searchParams.userOpUsage === "string"
-                    ? searchParams.userOpUsage
                     : undefined
                 }
                 teamId={team.id}
@@ -332,52 +306,6 @@ async function AsyncTransactionsChartCard(props: {
   );
 }
 
-async function AsyncTotalSponsoredCard(props: {
-  teamId: string;
-  range: Range;
-  interval: "day" | "week";
-  selectedChart: string | undefined;
-  selectedChartQueryParam: string;
-  authToken: string;
-}) {
-  const [userOpUsageTimeSeries, userOpUsage] = await Promise.allSettled([
-    getUserOpUsage(
-      {
-        from: props.range.from,
-        period: props.interval,
-        teamId: props.teamId,
-        to: props.range.to,
-      },
-      props.authToken,
-    ),
-    getUserOpUsage(
-      {
-        from: props.range.from,
-        period: "all",
-        teamId: props.teamId,
-        to: props.range.to,
-      },
-      props.authToken,
-    ),
-  ]);
-
-  return userOpUsageTimeSeries.status === "fulfilled" &&
-    userOpUsage.status === "fulfilled" &&
-    userOpUsage.value.length > 0 ? (
-    <AsyncTotalSponsoredChartCard
-      aggregatedData={userOpUsage.value}
-      data={userOpUsageTimeSeries.value}
-      selectedChart={props.selectedChart}
-      selectedChartQueryParam={props.selectedChartQueryParam}
-    />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/typescript/v5/account-abstraction/get-started"
-      metric="Account Abstraction"
-    />
-  );
-}
-
 async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
   const formattedData = await Promise.all(
     data.map(async (w) => {
@@ -414,52 +342,6 @@ function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
         value: uniqueWalletsConnected,
       }))}
       title="Social Authentication"
-    />
-  );
-}
-
-async function AsyncTotalSponsoredChartCard(props: {
-  data: UserOpStats[];
-  aggregatedData: UserOpStats[];
-  selectedChart: string | undefined;
-  className?: string;
-  onlyMainnet?: boolean;
-  title?: string;
-  selectedChartQueryParam: string;
-  description?: string;
-}) {
-  const chains = await Promise.all(
-    props.data.map(
-      (item) =>
-        // eslint-disable-next-line no-restricted-syntax
-        item.chainId && getChainMetadata(defineChain(Number(item.chainId))),
-    ),
-  ).then((chains) => chains.filter((c) => c) as ChainMetadata[]);
-
-  const processedAggregatedData = {
-    mainnet: props.aggregatedData
-      .filter(
-        (d) => !chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    testnet: props.aggregatedData
-      .filter(
-        (d) => chains.find((c) => c.chainId === Number(d.chainId))?.testnet,
-      )
-      .reduce((acc, curr) => acc + curr.sponsoredUsd, 0),
-    total: props.aggregatedData.reduce(
-      (acc, curr) => acc + curr.sponsoredUsd,
-      0,
-    ),
-  };
-
-  return (
-    <TotalSponsoredChartCardUI
-      chains={chains}
-      processedAggregatedData={processedAggregatedData}
-      selectedChart={props.selectedChart}
-      selectedChartQueryParam={props.selectedChartQueryParam}
-      data={props.data}
     />
   );
 }
