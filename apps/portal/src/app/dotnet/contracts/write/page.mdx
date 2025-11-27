@@ -12,7 +12,11 @@ The `ThirdwebContract.Write` method allows you to execute transactions that alte
 ## Usage
 
 ```csharp
-var transactionReceipt = await contract.Write(wallet, contract, "methodName", weiValue, parameters);
+// Static
+var receipt = await ThirdwebContract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+
+// Extension
+var transactionReceipt = await contract.Write(wallet, "methodName", weiValue, parameters);
 ```
 
 <Details summary="Parameters">
@@ -20,10 +24,6 @@ var transactionReceipt = await contract.Write(wallet, contract, "methodName", we
 ### wallet (required)
 
 An instance of `IThirdwebWallet`. This represents the signer of the transaction, which can be any type of wallet provider.
-
-### contract (required)
-
-An instance of `ThirdwebContract`. Represents the smart contract you wish to interact with.
 
 ### methodName (required)
 
@@ -57,9 +57,6 @@ string contractAddress = "0x..."; // Your contract address
 var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
 var contract = await ThirdwebContract.Create(client, contractAddress, chainId);
 
-// The wallet that signs and sends the transaction
-var wallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
-
 // Assuming transfer takes an address and an amount as parameters
 string toAddress = "0x...";
 BigInteger amount = new BigInteger(1000); // The amount to transfer
@@ -68,7 +65,7 @@ BigInteger amount = new BigInteger(1000); // The amount to transfer
 BigInteger weiValue = BigInteger.Zero;
 
 // Executing the transfer
-var receipt = await contract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+var receipt = await contract.Write(wallet, "transfer", weiValue, toAddress, amount);
 Console.WriteLine($"Transaction receipt: {receipt}");
 ```
 

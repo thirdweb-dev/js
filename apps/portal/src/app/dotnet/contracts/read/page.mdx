@@ -12,14 +12,14 @@ Use `ThirdwebContract.Read` to fetch data from a smart contract without making a
 ## Usage
 
 ```csharp
-var result = await contract.Read<T>(contract, "methodName", parameters);
+// Static
+var result = await ThirdwebContract.Read<T>(contract, "methodName", parameters);
+
+// Extension
+var result = await contract.Read<T>("methodName", parameters);
 ```
 
 <Details summary="Parameters">
-
-### contract (required)
-
-An instance of `ThirdwebContract`. Represents the smart contract you want to interact with.
 
 ### methodName (required)
 

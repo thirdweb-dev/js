@@ -23,9 +23,18 @@ Looking for the contract APIs themselves? Check out the [Contracts guides](/dotn
 ## Usage
 
 ```csharp
-ThirdwebTransaction transaction = await contract.Prepare(
+// Static
+ThirdwebTransaction transaction = await ThirdwebContract.Prepare(
     wallet,
     contract,
+    "methodName",
+    weiValue,
+    parameters
+);
+
+// Extension
+ThirdwebTransaction transaction = await contract.Prepare(
+    wallet,
     "methodName",
     weiValue,
     parameters
