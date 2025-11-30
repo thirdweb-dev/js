@@ -10,17 +10,24 @@ import {
   ShuffleIcon,
   WalletIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type ThirdwebClient, toWei } from "thirdweb";
+import {
+  getContract,
+  readContract,
+  type ThirdwebClient,
+  toUnits,
+} from "thirdweb";
 import { useWalletBalance } from "thirdweb/react";
-import { isAddress } from "thirdweb/utils";
+import { isAddress, shortenAddress } from "thirdweb/utils";
 import { z } from "zod";
 import { sendProjectWalletTokens } from "@/actions/project-wallet/send-tokens";
 import type { Project } from "@/api/project/projects";
+import type { TokenMetadata } from "@/api/universal-bridge/types";
 import { FundWalletModal } from "@/components/blocks/fund-wallets-modal";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { TokenSelector } from "@/components/blocks/TokenSelector";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -78,14 +85,95 @@ type ProjectWalletControlsProps = {
   client: ThirdwebClient;
 };
 
+const STORAGE_KEY_PREFIX = "project-wallet-selection";
+
+function getStorageKey(projectId: string): string {
+  return `${STORAGE_KEY_PREFIX}-${projectId}`;
+}
+
+type StoredSelection = {
+  chainId: number;
+  tokenAddress: string | undefined;
+};
+
+function readStoredSelection(projectId: string): StoredSelection | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  try {
+    const stored = localStorage.getItem(getStorageKey(projectId));
+    if (stored) {
+      return JSON.parse(stored) as StoredSelection;
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return null;
+}
+
+function saveStoredSelection(projectId: string, selection: StoredSelection) {
+  if (typeof window === "undefined") {
+    return;
+  }
+  try {
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(selection));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
 export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
   const { projectWallet, project, defaultChainId } = props;
   const [isSendOpen, setIsSendOpen] = useState(false);
   const [isReceiveOpen, setIsReceiveOpen] = useState(false);
-  const [selectedChainId, setSelectedChainId] = useState(defaultChainId ?? 1);
   const [isChangeWalletOpen, setIsChangeWalletOpen] = useState(false);
 
+  // Initialize chain and token from localStorage or defaults
+  const [selectedChainId, setSelectedChainId] = useState(() => {
+    const stored = readStoredSelection(project.id);
+    return stored?.chainId ?? defaultChainId ?? 1;
+  });
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState<
+    string | undefined
+  >(() => {
+    const stored = readStoredSelection(project.id);
+    if (stored) {
+      return stored.tokenAddress;
+    }
+    return undefined;
+  });
+
   const chain = useV5DashboardChain(selectedChainId);
+
+  // Handle chain change - reset token to native when chain changes
+  const handleChainChange = useCallback(
+    (newChainId: number) => {
+      setSelectedChainId((prevChainId) => {
+        if (prevChainId !== newChainId) {
+          // Reset token to native (undefined) when chain changes
+          setSelectedTokenAddress(undefined);
+          saveStoredSelection(project.id, {
+            chainId: newChainId,
+            tokenAddress: undefined,
+          });
+        }
+        return newChainId;
+      });
+    },
+    [project.id],
+  );
+
+  // Handle token change
+  const handleTokenChange = useCallback(
+    (token: TokenMetadata) => {
+      setSelectedTokenAddress(token.address);
+      saveStoredSelection(project.id, {
+        chainId: selectedChainId,
+        tokenAddress: token.address,
+      });
+    },
+    [project.id, selectedChainId],
+  );
 
   const engineCloudService = useMemo(
     () => project.services?.find((service) => service.name === "engineCloud"),
@@ -117,6 +205,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
     address: projectWallet.address,
     chain,
     client: props.client,
+    tokenAddress: selectedTokenAddress,
   });
 
   const canChangeWallet =
@@ -126,62 +215,12 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
 
   return (
     <div>
-      <div className="rounded-xl border border-border bg-card relative">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-label="Open wallet actions"
-              className="p-2 h-auto w-auto absolute right-4 top-4 z-10"
-              variant="ghost"
-            >
-              <EllipsisVerticalIcon className="size-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64 rounded-xl">
-            <DropdownMenuItem
-              className="flex items-center gap-2"
-              onSelect={() => setIsSendOpen(true)}
-            >
-              <SendIcon className="size-4 text-muted-foreground" />
-              Send funds
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="flex items-center gap-2"
-              onSelect={() => setIsReceiveOpen(true)}
-            >
-              <WalletIcon className="size-4 text-muted-foreground" />
-              Receive funds
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="flex items-center gap-2"
-              onSelect={() =>
-                router.push(
-                  `/team/${props.teamSlug}/${props.project.slug}/transactions`,
-                )
-              }
-            >
-              <ArrowLeftRightIcon className="size-4 text-muted-foreground" />
-              View transactions
-            </DropdownMenuItem>
-
-            {canChangeWallet && (
-              <DropdownMenuItem
-                className="flex items-center gap-2"
-                onSelect={() => setIsChangeWalletOpen(true)}
-              >
-                <ShuffleIcon className="size-4 text-muted-foreground" />
-                Change project wallet
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <div className="p-5 relative flex flex-col gap-5">
-          <div>
+      <div className="rounded-xl border border-border bg-card">
+        <div className="p-5 flex flex-col lg:flex-row gap-5">
+          <div className="flex-1">
             <p className="text-sm text-foreground mb-1">Wallet Address</p>
             <CopyTextButton
-              textToShow={projectWallet.address}
+              textToShow={shortenAddress(projectWallet.address, 6)}
               textToCopy={projectWallet.address}
               tooltip="Copy wallet address"
               copyIconPosition="right"
@@ -190,7 +229,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             />
           </div>
 
-          <div>
+          <div className="flex-1">
             <p className="text-sm text-foreground mb-1">Wallet Label</p>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm break-all py-2 sm:py-0 text-muted-foreground">
@@ -200,7 +239,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
           </div>
         </div>
 
-        <div className="p-5 border-t border-dashed flex justify-between items-center">
+        <div className="p-5 border-t border-dashed flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
           <div>
             <p className="text-sm text-foreground mb-1">Balance</p>
             <div className="flex items-center gap-1">
@@ -229,17 +268,88 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             </div>
           </div>
 
-          <SingleNetworkSelector
-            chainId={selectedChainId}
-            className="w-fit rounded-full bg-background hover:bg-accent/50"
-            client={props.client}
-            disableDeprecated
-            disableChainId
-            onChange={setSelectedChainId}
-            placeholder="Select network"
-            popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
-            align="end"
-          />
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <SingleNetworkSelector
+              chainId={selectedChainId}
+              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50"
+              client={props.client}
+              disableDeprecated
+              disableChainId
+              onChange={handleChainChange}
+              placeholder="Select network"
+              popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
+              align="end"
+            />
+            <TokenSelector
+              selectedToken={
+                selectedTokenAddress
+                  ? { chainId: selectedChainId, address: selectedTokenAddress }
+                  : undefined
+              }
+              onChange={handleTokenChange}
+              chainId={selectedChainId}
+              client={props.client}
+              enabled={true}
+              showCheck={true}
+              addNativeTokenIfMissing={true}
+              placeholder="Native token"
+              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50"
+              popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
+              align="end"
+            />
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-border flex justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 bg-background hover:bg-accent/50"
+            onClick={() => setIsSendOpen(true)}
+          >
+            <SendIcon className="size-4" />
+            Withdraw
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="px-2 bg-background hover:bg-accent/50"
+              >
+                <EllipsisVerticalIcon className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() => setIsReceiveOpen(true)}
+              >
+                <WalletIcon className="size-4 text-muted-foreground" />
+                Deposit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() =>
+                  router.push(
+                    `/team/${props.teamSlug}/${props.project.slug}/transactions`,
+                  )
+                }
+              >
+                <ArrowLeftRightIcon className="size-4 text-muted-foreground" />
+                Transactions
+              </DropdownMenuItem>
+              {canChangeWallet && (
+                <DropdownMenuItem
+                  className="flex items-center gap-2"
+                  onSelect={() => setIsChangeWalletOpen(true)}
+                >
+                  <ShuffleIcon className="size-4 text-muted-foreground" />
+                  Change Wallet
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -253,6 +363,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
         open={isSendOpen}
         publishableKey={project.publishableKey}
         teamId={project.teamId}
+        tokenAddress={selectedTokenAddress}
         walletAddress={projectWallet.address}
       />
 
@@ -467,6 +578,7 @@ const createSendFormSchema = (secretKeyLabel: string) =>
     chainId: z.number({
       required_error: "Select a network",
     }),
+    tokenAddress: z.string().optional(),
     toAddress: z
       .string()
       .trim()
@@ -491,6 +603,7 @@ type SendProjectWalletModalProps = {
   publishableKey: string;
   teamId: string;
   chainId: number;
+  tokenAddress?: string;
   label: string;
   client: ReturnType<typeof getClientThirdwebClient>;
   isManagedVault: boolean;
@@ -528,6 +641,7 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
     publishableKey,
     teamId,
     chainId,
+    tokenAddress,
     label,
     client,
     isManagedVault,
@@ -539,6 +653,7 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
     defaultValues: {
       amount: "0",
       chainId,
+      tokenAddress,
       secretKey: "",
       vaultAccessToken: "",
       toAddress: "",
@@ -548,10 +663,30 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
   });
 
   const selectedChain = useV5DashboardChain(form.watch("chainId"));
+  const selectedFormChainId = form.watch("chainId");
+  const selectedFormTokenAddress = form.watch("tokenAddress");
+
+  // Track the selected token symbol for display
+  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<
+    string | undefined
+  >(undefined);
 
   const sendMutation = useMutation({
     mutationFn: async (values: SendFormValues) => {
-      const quantityWei = toWei(values.amount).toString();
+      let decimals = 18;
+      if (values.tokenAddress) {
+        const decimalsRpc = await readContract({
+          contract: getContract({
+            address: values.tokenAddress,
+            chain: selectedChain,
+            client,
+          }),
+          method: "function decimals() view returns (uint8)",
+          params: [],
+        });
+        decimals = Number(decimalsRpc);
+      }
+      const quantityWei = toUnits(values.amount, decimals).toString();
       const secretKeyValue = values.secretKey.trim();
       const vaultAccessTokenValue = values.vaultAccessToken.trim();
 
@@ -563,16 +698,16 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
         teamId,
         walletAddress,
         secretKey: secretKeyValue,
+        ...(values.tokenAddress ? { tokenAddress: values.tokenAddress } : {}),
         ...(vaultAccessTokenValue
           ? { vaultAccessToken: vaultAccessTokenValue }
           : {}),
       });
 
       if (!result.ok) {
-        const errorMessage =
-          typeof result.error === "string"
-            ? result.error
-            : "Failed to send funds";
+        const errorMessage = result.error
+          ? JSON.stringify(result.error, null, 2)
+          : "Failed to send funds";
         throw new Error(errorMessage);
       }
 
@@ -623,8 +758,45 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                       disableDeprecated
                       onChange={(nextChainId) => {
                         field.onChange(nextChainId);
+                        // Reset token to native when chain changes
+                        form.setValue("tokenAddress", undefined);
+                        setSelectedTokenSymbol(undefined);
                       }}
                       placeholder="Select network"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tokenAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Token</FormLabel>
+                  <FormControl>
+                    <TokenSelector
+                      selectedToken={
+                        field.value
+                          ? {
+                              chainId: selectedFormChainId,
+                              address: field.value,
+                            }
+                          : undefined
+                      }
+                      onChange={(token) => {
+                        field.onChange(token.address);
+                        setSelectedTokenSymbol(token.symbol);
+                      }}
+                      chainId={selectedFormChainId}
+                      client={client}
+                      enabled={true}
+                      showCheck={true}
+                      addNativeTokenIfMissing={true}
+                      placeholder="Native token"
+                      className="w-full bg-card"
                     />
                   </FormControl>
                   <FormMessage />
@@ -655,12 +827,6 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                   <FormControl>
                     <Input inputMode="decimal" min="0" step="any" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Sending native token
-                    {selectedChain?.nativeCurrency?.symbol
-                      ? ` (${selectedChain.nativeCurrency.symbol})`
-                      : ""}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -682,7 +848,9 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>{secretKeyHelper}</FormDescription>
+                  <FormDescription className="text-muted-foreground text-xs">
+                    {secretKeyHelper}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -694,21 +862,20 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                 name="vaultAccessToken"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      Vault access token
-                      <span className="text-muted-foreground"> (optional)</span>
-                    </FormLabel>
+                    <FormLabel>Vault access token</FormLabel>
                     <FormControl>
                       <Input
                         autoComplete="off"
                         autoCorrect="off"
-                        placeholder="Enter a vault access token (optional)"
+                        placeholder="Enter a vault access token"
                         spellCheck={false}
                         type="password"
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>{vaultAccessTokenHelper}</FormDescription>
+                    <FormDescription className="text-muted-foreground text-xs">
+                      {vaultAccessTokenHelper}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -716,7 +883,7 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
             )}
           </div>
 
-          <div className="flex justify-end gap-3 border-t bg-card p-4 lg:p-6">
+          <div className="flex justify-end gap-3 border-t bg-card p-4">
             <Button onClick={onClose} type="button" variant="outline">
               Cancel
             </Button>

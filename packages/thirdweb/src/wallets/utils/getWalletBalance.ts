@@ -44,7 +44,7 @@ export async function getWalletBalance(
 ): Promise<GetBalanceResult> {
   const { address, client, chain, tokenAddress } = options;
   // erc20 case
-  if (tokenAddress) {
+  if (tokenAddress && tokenAddress !== NATIVE_TOKEN_ADDRESS) {
     // load balanceOf dynamically to avoid circular dependency
     const { getBalance } = await import(
       "../../extensions/erc20/read/getBalance.js"
