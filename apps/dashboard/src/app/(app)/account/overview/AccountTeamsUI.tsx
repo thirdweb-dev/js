@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { SearchInput } from "../components/SearchInput";
 
 export function AccountTeamsUI(props: {
@@ -117,8 +116,6 @@ function TeamRow(props: {
   role: TeamAccountRole;
   client: ThirdwebClient;
 }) {
-  const plan = getValidTeamPlan(props.team);
-
   return (
     <div className="flex items-center justify-between gap-2">
       {/* start */}
@@ -133,7 +130,11 @@ function TeamRow(props: {
         <div>
           <div className="flex items-center gap-3">
             <p className="font-semibold text-sm">{props.team.name}</p>
-            <TeamPlanBadge plan={plan} teamSlug={props.team.slug} />
+            <TeamPlanBadge
+              plan={props.team.billingPlan}
+              teamSlug={props.team.slug}
+              isLegacyPlan={props.team.isLegacyPlan}
+            />
           </div>
           <p className="text-muted-foreground text-sm capitalize">
             {props.role.toLowerCase()}

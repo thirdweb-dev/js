@@ -14,6 +14,7 @@ type GatedSwitchProps = {
   trackingLabel?: string;
   currentPlan: Team["billingPlan"];
   requiredPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   teamSlug: string;
   switchProps?: SwitchProps;
 };
@@ -33,7 +34,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
           <div className="w-full min-w-[280px]">
             <h3 className="font-medium text-base">
               <span className="capitalize">
-                {getTeamPlanBadgeLabel(props.requiredPlan)}+
+                {getTeamPlanBadgeLabel(props.requiredPlan, false)}+
               </span>{" "}
               plan required
             </h3>
@@ -48,7 +49,8 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  Upgrade to {getTeamPlanBadgeLabel(props.requiredPlan)} plan
+                  Upgrade to {getTeamPlanBadgeLabel(props.requiredPlan, false)}{" "}
+                  plan
                   <ExternalLinkIcon className="size-4" />
                 </Link>
               </Button>
@@ -61,6 +63,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
         {isUpgradeRequired && (
           <TeamPlanBadge
             plan={props.requiredPlan}
+            isLegacyPlan={props.isLegacyPlan}
             postfix="+"
             teamSlug={props.teamSlug}
           />

@@ -63,6 +63,7 @@ export function LaunchTokenStatus(props: {
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const formValues = props.values;
   const { createTokenFunctions } = props;
@@ -358,6 +359,7 @@ export function LaunchTokenStatus(props: {
             </div>
             <GatedSwitch
               currentPlan={props.teamPlan}
+              isLegacyPlan={props.isLegacyPlan}
               requiredPlan="starter"
               switchProps={{
                 checked: isGasless,

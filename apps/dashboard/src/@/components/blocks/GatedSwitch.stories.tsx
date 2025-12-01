@@ -70,6 +70,7 @@ function Variants() {
             key={currentPlan}
             requiredPlan={requiredPlan}
             teamSlug="foo"
+            isLegacyPlan={false}
           />
         </BadgeContainer>
       ))}

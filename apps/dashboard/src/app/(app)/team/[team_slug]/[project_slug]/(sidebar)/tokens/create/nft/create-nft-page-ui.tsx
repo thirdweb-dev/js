@@ -32,6 +32,7 @@ export function CreateNFTPageUI(props: {
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const [step, setStep] =
     useState<keyof typeof nftCreationPages>("collection-info");
@@ -135,6 +136,7 @@ export function CreateNFTPageUI(props: {
 
       {step === nftCreationPages["launch-nft"] && (
         <LaunchNFT
+          isLegacyPlan={props.isLegacyPlan}
           client={props.client}
           createNFTFunctions={props.createNFTFunctions}
           onLaunchSuccess={props.onLaunchSuccess}

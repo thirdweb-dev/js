@@ -117,6 +117,7 @@ export function TeamSelectionUI(props: {
 
                       <TeamPlanBadge
                         plan={team.billingPlan}
+                        isLegacyPlan={team.isLegacyPlan}
                         teamSlug={team.slug}
                       />
                     </Link>

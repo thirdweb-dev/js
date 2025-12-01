@@ -61,6 +61,7 @@ export default async function Page(props: {
       ) : (
         <>
           <AccountAbstractionSettingsPage
+            isLegacyPlan={team.isLegacyPlan}
             bundlerService={bundlerService}
             client={client}
             project={project}

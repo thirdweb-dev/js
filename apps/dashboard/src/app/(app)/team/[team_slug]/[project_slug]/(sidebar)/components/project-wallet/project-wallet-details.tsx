@@ -664,10 +664,10 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
 
   const selectedChain = useV5DashboardChain(form.watch("chainId"));
   const selectedFormChainId = form.watch("chainId");
-  const selectedFormTokenAddress = form.watch("tokenAddress");
+  const _selectedFormTokenAddress = form.watch("tokenAddress");
 
   // Track the selected token symbol for display
-  const [selectedTokenSymbol, setSelectedTokenSymbol] = useState<
+  const [_selectedTokenSymbol, setSelectedTokenSymbol] = useState<
     string | undefined
   >(undefined);
 
