@@ -2,7 +2,7 @@
 
 import { CoinsIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import type { ThirdwebClient } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, type ThirdwebClient } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import { Badge } from "@/components/ui/badge";
 import { Img } from "@/components/ui/Img";
@@ -21,13 +21,24 @@ export function TokenSelector(props: {
   client: ThirdwebClient;
   disabled?: boolean;
   enabled?: boolean;
+  includeNativeToken?: boolean;
 }) {
   const tokensQuery = useTokensData({
     chainId: props.chainId,
     enabled: props.enabled,
   });
 
-  const tokens = tokensQuery.data || [];
+  const tokens = useMemo(() => {
+    if (props.includeNativeToken === false) {
+      return (
+        tokensQuery.data?.filter(
+          (token) =>
+            token.address.toLowerCase() !== NATIVE_TOKEN_ADDRESS.toLowerCase(),
+        ) || []
+      );
+    }
+    return tokensQuery.data || [];
+  }, [tokensQuery.data, props.includeNativeToken]);
   const addressChainToToken = useMemo(() => {
     const value = new Map<string, TokenMetadata>();
     for (const token of tokens) {

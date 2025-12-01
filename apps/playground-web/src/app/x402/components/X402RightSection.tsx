@@ -2,7 +2,7 @@
 
 import { Badge } from "@workspace/ui/components/badge";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
-import { CodeIcon, LockIcon } from "lucide-react";
+import { CircleDollarSignIcon, CodeIcon, LockIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ConnectButton, useFetchWithPayment } from "thirdweb/react";
@@ -27,6 +27,11 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
 
   const { fetchWithPayment, isPending, data, error, isError } =
     useFetchWithPayment(THIRDWEB_CLIENT);
+
+  const isTokenSelected =
+    props.options.tokenAddress !==
+      "0x0000000000000000000000000000000000000000" &&
+    props.options.tokenSymbol !== "";
 
   const handlePayClick = async () => {
     const searchParams = new URLSearchParams();
@@ -140,34 +145,36 @@ export async function POST(request: Request) {
       >
         <BackgroundPattern />
 
-        {previewTab === "ui" && (
+        {previewTab === "ui" && !isTokenSelected && (
+          <Card className="p-8 text-center max-w-md mx-auto my-auto">
+            <CircleDollarSignIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">Select Payment Token</h3>
+            <p className="text-sm text-muted-foreground">
+              Please select a chain and payment token from the configuration
+              panel to continue.
+            </p>
+          </Card>
+        )}
+
+        {previewTab === "ui" && isTokenSelected && (
           <div className="flex flex-col gap-4 w-full p-4 md:p-12 max-w-lg mx-auto">
             <ConnectButton
               client={THIRDWEB_CLIENT}
               chain={props.options.chain}
               detailsButton={{
-                displayBalanceToken:
-                  props.options.tokenAddress !==
-                  "0x0000000000000000000000000000000000000000"
-                    ? {
-                        [props.options.chain.id]: props.options.tokenAddress,
-                      }
-                    : undefined,
+                displayBalanceToken: {
+                  [props.options.chain.id]: props.options.tokenAddress,
+                },
               }}
-              supportedTokens={
-                props.options.tokenAddress !==
-                "0x0000000000000000000000000000000000000000"
-                  ? {
-                      [props.options.chain.id]: [
-                        {
-                          address: props.options.tokenAddress,
-                          symbol: props.options.tokenSymbol,
-                          name: props.options.tokenSymbol,
-                        },
-                      ],
-                    }
-                  : undefined
-              }
+              supportedTokens={{
+                [props.options.chain.id]: [
+                  {
+                    address: props.options.tokenAddress,
+                    symbol: props.options.tokenSymbol,
+                    name: props.options.tokenSymbol,
+                  },
+                ],
+              }}
             />
             <Card className="p-6">
               <div className="flex items-center gap-3 mb-4">
@@ -175,8 +182,7 @@ export async function POST(request: Request) {
                 <span className="text-lg font-medium">Paid API Call</span>
                 <Badge variant="success">
                   <span className="text-xl font-bold">
-                    {props.options.amount}{" "}
-                    {props.options.tokenSymbol || "tokens"}
+                    {props.options.amount} {props.options.tokenSymbol}
                   </span>
                 </Badge>
               </div>
@@ -190,7 +196,7 @@ export async function POST(request: Request) {
                 Access Premium Content
               </Button>
               <p className="text-sm text-muted-foreground">
-                Pay for access with {props.options.tokenSymbol || "tokens"} on{" "}
+                Pay for access with {props.options.tokenSymbol} on{" "}
                 {props.options.chain.name || `chain ${props.options.chain.id}`}
               </p>
             </Card>

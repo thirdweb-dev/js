@@ -3,7 +3,7 @@
 import type React from "react";
 import { useId, useState } from "react";
 import { defineChain } from "thirdweb/chains";
-import { BridgeNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -106,7 +106,7 @@ export function X402LeftSection(props: {
           {/* Chain selection */}
           <div className="flex flex-col gap-2">
             <Label htmlFor={chainId}>Chain</Label>
-            <BridgeNetworkSelector
+            <SingleNetworkSelector
               chainId={selectedChain}
               onChange={handleChainChange}
               placeholder="Select a chain"
@@ -119,6 +119,7 @@ export function X402LeftSection(props: {
             <div className="flex flex-col gap-2">
               <Label htmlFor={tokenId}>Token</Label>
               <TokenSelector
+                includeNativeToken={false}
                 chainId={selectedChain}
                 client={THIRDWEB_CLIENT}
                 enabled={true}
