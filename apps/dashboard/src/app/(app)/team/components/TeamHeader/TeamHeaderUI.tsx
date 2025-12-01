@@ -72,7 +72,11 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
               <TeamVerifiedIcon domain={currentTeam.verifiedDomain} />
             </Link>
             {/* may render its own link so has to be outside of the link */}
-            <TeamPlanBadge plan={teamPlan} teamSlug={currentTeam.slug} />
+            <TeamPlanBadge
+              plan={teamPlan}
+              teamSlug={currentTeam.slug}
+              isLegacyPlan={currentTeam.isLegacyPlan}
+            />
           </span>
 
           <TeamAndProjectSelectorPopoverButton

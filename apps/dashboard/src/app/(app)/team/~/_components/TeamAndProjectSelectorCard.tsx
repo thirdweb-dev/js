@@ -66,6 +66,7 @@ export function ProjectAndTeamSelectorCard(props: {
                       <span className="font-medium text-sm">{team.name}</span>
                       <TeamPlanBadge
                         plan={team.billingPlan}
+                        isLegacyPlan={team.isLegacyPlan}
                         teamSlug={team.slug}
                       />
                     </div>

@@ -47,6 +47,7 @@ type InAppWalletSettingsPageProps = {
   teamId: string;
   teamSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   smsCountryTiers: SMSCountryTiers;
   client: ThirdwebClient;
 };
@@ -248,6 +249,7 @@ const InAppWalletSettingsUI: React.FC<
           teamPlan={props.teamPlan}
           teamSlug={props.teamSlug}
           isUpdating={props.isUpdating}
+          isLegacyPlan={props.isLegacyPlan}
         />
 
         <NativeAppsFieldset form={form} isUpdating={props.isUpdating} />
@@ -271,6 +273,7 @@ const InAppWalletSettingsUI: React.FC<
         >
           <JSONWebTokenFields
             form={form}
+            isLegacyPlan={props.isLegacyPlan}
             requiredPlan={authRequiredPlan}
             teamPlan={props.teamPlan}
             teamSlug={props.teamSlug}
@@ -280,6 +283,7 @@ const InAppWalletSettingsUI: React.FC<
 
           <AuthEndpointFields
             form={form}
+            isLegacyPlan={props.isLegacyPlan}
             requiredPlan={authRequiredPlan}
             teamPlan={props.teamPlan}
             teamSlug={props.teamSlug}
@@ -289,6 +293,7 @@ const InAppWalletSettingsUI: React.FC<
 
           <SMSCountryFields
             form={form}
+            isLegacyPlan={props.isLegacyPlan}
             requiredPlan={authRequiredPlan}
             smsCountryTiers={props.smsCountryTiers}
             teamPlan={props.teamPlan}
@@ -305,6 +310,7 @@ function BrandingFieldset(props: {
   teamPlan: Team["billingPlan"];
   teamSlug: string;
   requiredPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   client: ThirdwebClient;
   isUpdating: boolean;
 }) {
@@ -324,6 +330,7 @@ function BrandingFieldset(props: {
       <div className="absolute top-8 right-6">
         <GatedSwitch
           currentPlan={props.teamPlan}
+          isLegacyPlan={props.isLegacyPlan}
           requiredPlan={props.requiredPlan}
           switchProps={{
             checked: !!props.form.watch("branding"),
@@ -468,6 +475,7 @@ function SMSCountryFields(props: {
   smsCountryTiers: SMSCountryTiers;
   teamPlan: Team["billingPlan"];
   requiredPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   teamSlug: string;
 }) {
   return (
@@ -480,6 +488,7 @@ function SMSCountryFields(props: {
         <GatedSwitch
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
+          isLegacyPlan={props.isLegacyPlan}
           switchProps={{
             checked: !!props.form.watch("smsEnabledCountryISOs").length,
             id: "sms-switch",
@@ -521,6 +530,7 @@ function JSONWebTokenFields(props: {
   teamPlan: Team["billingPlan"];
   teamSlug: string;
   requiredPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   return (
     <div>
@@ -543,6 +553,7 @@ function JSONWebTokenFields(props: {
         <GatedSwitch
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
+          isLegacyPlan={props.isLegacyPlan}
           switchProps={{
             checked: !!props.form.watch("customAuthentication"),
             id: "authentication-switch",
@@ -608,6 +619,7 @@ function AuthEndpointFields(props: {
   teamPlan: Team["billingPlan"];
   teamSlug: string;
   requiredPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const expandCustomAuthEndpointField =
     props.form.watch("customAuthEndpoint") !== undefined;
@@ -634,6 +646,7 @@ function AuthEndpointFields(props: {
         <GatedSwitch
           currentPlan={props.teamPlan}
           requiredPlan={props.requiredPlan}
+          isLegacyPlan={props.isLegacyPlan}
           switchProps={{
             checked: expandCustomAuthEndpointField,
             id: "auth-endpoint-switch",

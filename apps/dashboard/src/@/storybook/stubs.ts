@@ -30,6 +30,7 @@ export function teamStub(id: string, billingPlan: Team["billingPlan"]): Team {
     billingPlan: billingPlan,
     billingStatus: "validPayment",
     canCreatePublicChains: null,
+    isLegacyPlan: false,
     capabilities: {
       bundler: {
         enabled: true,

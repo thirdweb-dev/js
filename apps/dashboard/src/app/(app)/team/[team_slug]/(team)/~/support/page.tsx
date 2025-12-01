@@ -28,6 +28,7 @@ export default async function Page(props: {
       <div className="flex flex-col grow justify-center items-center">
         <UpsellContent
           currentPlan={team.billingPlan}
+          isLegacyPlan={team.isLegacyPlan}
           featureDescription="Create support cases for your projects"
           featureName="Support Center"
           requiredPlan="starter"

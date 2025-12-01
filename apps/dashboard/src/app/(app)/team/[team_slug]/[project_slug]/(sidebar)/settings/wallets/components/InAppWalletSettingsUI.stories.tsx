@@ -52,6 +52,7 @@ function Variants(props: { currentPlan: Team["billingPlan"] }) {
     <div className="mx-auto w-full max-w-[1140px] px-4 py-6">
       <div className="flex flex-col gap-10">
         <InAppWalletSettingsUI
+          isLegacyPlan={false}
           client={storybookThirdwebClient}
           embeddedWalletService={{
             actions: [],

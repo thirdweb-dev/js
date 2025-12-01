@@ -22,6 +22,7 @@ interface UpsellWrapperProps {
   isLocked?: boolean;
   requiredPlan: Team["billingPlan"];
   currentPlan?: Team["billingPlan"];
+  isLegacyPlan?: boolean;
   featureName: string;
   featureDescription: string;
   benefits?: {
@@ -41,6 +42,7 @@ export function UpsellWrapper({
   featureDescription,
   benefits = [],
   className,
+  isLegacyPlan = false,
 }: UpsellWrapperProps) {
   if (!isLocked) {
     return <>{children}</>;
@@ -66,6 +68,7 @@ export function UpsellWrapper({
           featureDescription={featureDescription}
           featureName={featureName}
           requiredPlan={requiredPlan}
+          isLegacyPlan={isLegacyPlan}
           teamSlug={teamSlug}
         />
       </div>
@@ -79,6 +82,7 @@ export function UpsellContent(props: {
   featureDescription: string;
   requiredPlan: Team["billingPlan"];
   currentPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   benefits?: {
     description: string;
     status: "available" | "soon";
@@ -96,6 +100,7 @@ export function UpsellContent(props: {
             plan={props.requiredPlan}
             postfix=" Feature"
             teamSlug={props.teamSlug}
+            isLegacyPlan={props.isLegacyPlan}
           />
           <div className="space-y-1">
             <CardTitle className="font-bold text-2xl text-foreground md:text-3xl">
