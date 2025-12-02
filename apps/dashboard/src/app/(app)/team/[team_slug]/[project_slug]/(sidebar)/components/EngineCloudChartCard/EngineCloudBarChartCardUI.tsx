@@ -68,8 +68,8 @@ export function EngineCloudBarChartCardUI({
   if (data.length === 0 || isAllEmpty) {
     return (
       <EmptyStateCard
-        link="https://portal.thirdweb.com/transactions"
-        metric="Transactions"
+        link="https://portal.thirdweb.com/wallets/server"
+        metric="Server Wallets"
       />
     );
   }

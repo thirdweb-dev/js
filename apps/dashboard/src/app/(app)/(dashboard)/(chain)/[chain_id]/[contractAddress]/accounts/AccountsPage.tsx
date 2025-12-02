@@ -22,7 +22,7 @@ export function AccountsPage(props: {
             View list of smart accounts that have been created for this
             contract.{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/transactions/sponsor"
+              href="https://portal.thirdweb.com/wallets/sponsor-gas"
               target="_blank"
               rel="noopener noreferrer"
             >

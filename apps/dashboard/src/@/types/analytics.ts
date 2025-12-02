@@ -7,6 +7,10 @@ export interface WalletStats {
   walletType: string;
 }
 
+export type WalletStatsWithName = WalletStats & {
+  walletName: string;
+};
+
 export interface InAppWalletStats {
   date: string;
   authenticationMethod: string;

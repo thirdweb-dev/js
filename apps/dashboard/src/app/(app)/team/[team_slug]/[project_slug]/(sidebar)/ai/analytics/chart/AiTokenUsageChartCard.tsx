@@ -3,8 +3,8 @@ import { format } from "date-fns";
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
-import { TotalValueChartHeader } from "@/components/blocks/charts/area-chart";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { TotalValueChartHeader } from "@/components/blocks/charts/chart-header";
 import { ExportToCSVButton } from "@/components/blocks/ExportToCSVButton";
 import { Button } from "@/components/ui/button";
 import type { ChartConfig } from "@/components/ui/chart";
@@ -112,14 +112,18 @@ export function AiTokenUsageChartCardUI(props: {
 function AiTokenUsageEmptyChartState() {
   return (
     <div className="flex flex-col items-center justify-center px-4">
-      <span className="mb-3 text-center text-sm">
+      <h3 className="text-base font-semibold text-foreground mb-1 text-center">
+        No data available
+      </h3>
+      <p className="mb-6 text-center text-sm">
         Integrate thirdweb AI to interact with any EVM chain using natural
         language
-      </span>
+      </p>
       <Button
         asChild
-        variant="outline"
-        className="rounded-full bg-background gap-2"
+        size="sm"
+        variant="default"
+        className="rounded-full gap-2"
       >
         <Link href="https://portal.thirdweb.com/ai/chat" target="_blank">
           Get Started

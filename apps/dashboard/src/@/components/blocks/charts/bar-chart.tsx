@@ -45,6 +45,9 @@ type ThirdwebBarChartProps<TConfig extends ChartConfig> = {
   hideLabel?: boolean;
   emptyChartState?: React.ReactElement;
   className?: string;
+  xAxis?: {
+    showHour?: boolean;
+  };
 };
 
 export function ThirdwebBarChart<TConfig extends ChartConfig>(
@@ -84,7 +87,12 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
               <XAxis
                 axisLine={false}
                 dataKey="time"
-                tickFormatter={(value) => format(new Date(value), "MMM d")}
+                tickFormatter={(value) =>
+                  format(
+                    new Date(value),
+                    props.xAxis?.showHour ? "MMM dd, HH:mm" : "MMM dd",
+                  )
+                }
                 tickLine={false}
                 tickMargin={10}
               />

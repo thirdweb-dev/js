@@ -5,14 +5,12 @@ import {
   ResponsiveSuspense,
 } from "responsive-rsc";
 import type { ThirdwebClient } from "thirdweb";
-import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getAiUsage,
   getInAppWalletUsage,
   getInsightStatusCodeUsage,
   getRpcUsageByType,
   getUniversalBridgeUsage,
-  getWalletConnections,
   isProjectActive,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
@@ -28,9 +26,7 @@ import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getProjectWallet } from "@/lib/server/project-wallet";
 import { getFiltersFromSearchParams } from "@/lib/time";
-import type { InAppWalletStats, WalletStats } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
-import { PieChartCard } from "../../../components/Analytics/PieChartCard";
 import { AiTokenUsageChartCardUI } from "./ai/analytics/chart/AiTokenUsageChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
@@ -39,6 +35,7 @@ import { TransactionsChartCardAsync } from "./components/Transactions";
 import { RequestsByStatusGraph } from "./gateway/indexer/components/RequestsByStatusGraph";
 import { RPCRequestsChartUI } from "./gateway/rpc/components/RequestsGraph";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
+import { AllWalletConnectionsChart } from "./wallets/analytics/chart/all-wallet-connections-chart";
 
 type PageParams = {
   team_slug: string;
@@ -182,6 +179,7 @@ async function ProjectAnalytics(props: {
 
   return (
     <div className="flex grow flex-col gap-6">
+      {/* project highlights */}
       <ResponsiveSuspense
         fallback={<LoadingChartState className="h-[458px] border" />}
         searchParamsUsed={["from", "to", "interval", "appHighlights"]}
@@ -202,53 +200,19 @@ async function ProjectAnalytics(props: {
         />
       </ResponsiveSuspense>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[431px] border" />}
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncWalletDistributionCard
-            project={project}
-            range={range}
-            authToken={authToken}
-          />
-        </ResponsiveSuspense>
+      {/* wallet connections */}
+      <AllWalletConnectionsChart
+        teamSlug={params.team_slug}
+        projectSlug={params.project_slug}
+        authToken={authToken}
+        projectId={project.id}
+        from={range.from}
+        to={range.to}
+        interval={interval}
+        teamId={project.teamId}
+      />
 
-        <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[431px] border" />}
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncAuthMethodDistributionCard
-            project={project}
-            range={range}
-            authToken={authToken}
-          />
-        </ResponsiveSuspense>
-      </div>
-
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[458px] border" />}
-        searchParamsUsed={["from", "to", "interval", "client_transactions"]}
-      >
-        <TransactionsChartCardAsync
-          client={client}
-          params={{
-            from: range.from,
-            period: interval,
-            projectId: project.id,
-            teamId: project.teamId,
-            to: range.to,
-          }}
-          authToken={authToken}
-          selectedChart={
-            typeof searchParams.client_transactions === "string"
-              ? searchParams.client_transactions
-              : undefined
-          }
-          selectedChartQueryParam="client_transactions"
-        />
-      </ResponsiveSuspense>
-
+      {/* indexer and RPC requests */}
       <div className="grid gap-6 md:grid-cols-2">
         <ResponsiveSuspense
           fallback={
@@ -273,7 +237,13 @@ async function ProjectAnalytics(props: {
         </ResponsiveSuspense>
 
         <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[275px] border" />}
+          fallback={
+            <RPCRequestsChartUI
+              isPending={true}
+              data={[]}
+              viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/gateway/rpc`}
+            />
+          }
           searchParamsUsed={["from", "to", "interval"]}
         >
           <AsyncRPCRequestsChartCard
@@ -289,6 +259,7 @@ async function ProjectAnalytics(props: {
         </ResponsiveSuspense>
       </div>
 
+      {/* AI tokens */}
       <ResponsiveSuspense
         fallback={
           <AiTokenUsageChartCardUI
@@ -312,6 +283,31 @@ async function ProjectAnalytics(props: {
         />
       </ResponsiveSuspense>
 
+      {/* transactions */}
+      <ResponsiveSuspense
+        fallback={<LoadingChartState className="h-[458px] border" />}
+        searchParamsUsed={["from", "to", "interval", "client_transactions"]}
+      >
+        <TransactionsChartCardAsync
+          client={client}
+          params={{
+            from: range.from,
+            period: interval,
+            projectId: project.id,
+            teamId: project.teamId,
+            to: range.to,
+          }}
+          authToken={authToken}
+          selectedChart={
+            typeof searchParams.client_transactions === "string"
+              ? searchParams.client_transactions
+              : undefined
+          }
+          selectedChartQueryParam="client_transactions"
+        />
+      </ResponsiveSuspense>
+
+      {/* Engine cloud usage */}
       <ResponsiveSuspense
         fallback={<LoadingChartState className="h-[377px] border" />}
         searchParamsUsed={["from", "to", "interval"]}
@@ -384,34 +380,9 @@ async function AsyncRPCRequestsChartCard(props: {
 
   return (
     <RPCRequestsChartUI
+      isPending={false}
       data={requestsData || []}
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`}
-    />
-  );
-}
-
-async function AsyncAuthMethodDistributionCard(props: {
-  project: Project;
-  range: Range;
-  authToken: string;
-}) {
-  const inAppWalletUsage = await getInAppWalletUsage(
-    {
-      from: props.range.from,
-      period: "all",
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return inAppWalletUsage && inAppWalletUsage.length > 0 ? (
-    <AuthMethodDistributionCard data={inAppWalletUsage} />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-      metric="Wallets"
     />
   );
 }
@@ -494,95 +465,6 @@ async function AsyncAppHighlightsCard(props: {
       link="https://portal.thirdweb.com/wallets"
       metric="Wallets"
     />
-  );
-}
-
-async function AsyncWalletDistributionCard(props: {
-  project: Project;
-  range: Range;
-  authToken: string;
-}) {
-  const walletConnections = await getWalletConnections(
-    {
-      from: props.range.from,
-      period: "all",
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return walletConnections && walletConnections.length > 0 ? (
-    <WalletDistributionCard data={walletConnections} />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/wallets/external-wallets"
-      metric="External Wallets"
-    />
-  );
-}
-
-async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
-  const formattedData = await Promise.all(
-    data.map(async (w) => {
-      const wallet = await getWalletInfo(w.walletType as WalletId).catch(
-        () => ({ name: w.walletType }),
-      );
-      return {
-        totalConnections: w.totalConnections,
-        uniqueWalletsConnected: w.uniqueWalletsConnected,
-        walletName: wallet.name,
-        walletType: w.walletType,
-      };
-    }),
-  );
-
-  return (
-    <PieChartCard
-      data={formattedData.map(({ walletName, uniqueWalletsConnected }) => {
-        return {
-          label: walletName,
-          value: uniqueWalletsConnected,
-        };
-      })}
-      title="External Wallets Connected"
-    />
-  );
-}
-
-function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
-  return (
-    <PieChartCard
-      data={data.map(({ authenticationMethod, uniqueWalletsConnected }) => ({
-        label: authenticationMethod,
-        value: uniqueWalletsConnected,
-      }))}
-      title="Social Authentication"
-    />
-  );
-}
-
-export function Header(props: {
-  title: string;
-  showRangeSelector: boolean;
-  defaultRange: DurationId;
-}) {
-  const { title, showRangeSelector, defaultRange } = props;
-
-  return (
-    <div className="flex flex-col items-start gap-3 md:flex-row md:items-center">
-      <div className="flex-1">
-        <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
-          {title}
-        </h1>
-      </div>
-      {showRangeSelector && (
-        <div className="max-sm:w-full">
-          <ResponsiveTimeFilters defaultRange={defaultRange} />
-        </div>
-      )}
-    </div>
   );
 }
 

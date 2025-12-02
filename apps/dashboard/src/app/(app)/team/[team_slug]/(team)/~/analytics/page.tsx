@@ -6,13 +6,12 @@ import {
 } from "responsive-rsc";
 import { defineChain } from "thirdweb";
 import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
-import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
   getClientTransactions,
+  getEOAWalletConnections,
   getInAppWalletUsage,
   getUniversalBridgeUsage,
   getUserOpUsage,
-  getWalletConnections,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
 import { getTeamBySlug } from "@/api/team/get-team";
@@ -26,7 +25,7 @@ import { getFiltersFromSearchParams } from "@/lib/time";
 import type {
   InAppWalletStats,
   UserOpStats,
-  WalletStats,
+  WalletStatsWithName,
 } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../../components/Analytics/PieChartCard";
@@ -240,7 +239,7 @@ async function AsyncWalletDistributionCard(props: {
   range: Range;
   authToken: string;
 }) {
-  const walletConnections = await getWalletConnections(
+  const walletConnections = await getEOAWalletConnections(
     {
       from: props.range.from,
       period: "all",
@@ -378,24 +377,14 @@ async function AsyncTotalSponsoredCard(props: {
   );
 }
 
-async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
-  const formattedData = await Promise.all(
-    data.map(async (w) => {
-      const wallet = await getWalletInfo(w.walletType as WalletId).catch(
-        () => ({ name: w.walletType }),
-      );
-      return {
-        totalConnections: w.totalConnections,
-        uniqueWalletsConnected: w.uniqueWalletsConnected,
-        walletName: wallet.name,
-        walletType: w.walletType,
-      };
-    }),
-  );
-
+async function WalletDistributionCard({
+  data,
+}: {
+  data: WalletStatsWithName[];
+}) {
   return (
     <PieChartCard
-      data={formattedData.map(({ walletName, uniqueWalletsConnected }) => {
+      data={data.map(({ walletName, uniqueWalletsConnected }) => {
         return {
           label: walletName,
           value: uniqueWalletsConnected,

@@ -98,7 +98,11 @@ export async function RPCAnalytics(props: {
               value={totalRequests}
             />
           </div>
-          <RPCRequestsChartUI data={usageData} viewMoreLink={undefined} />
+          <RPCRequestsChartUI
+            data={usageData}
+            viewMoreLink={undefined}
+            isPending={false}
+          />
           <TopRPCMethodsTable
             client={props.client}
             data={evmMethodsData || []}

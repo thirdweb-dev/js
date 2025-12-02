@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import type { InAppWalletAuth } from "thirdweb/wallets";
 import { BadgeContainer } from "@/storybook/utils";
-import type { InAppWalletStats } from "@/types/analytics";
-import { InAppWalletUsersChartCardUI } from "./InAppWalletUsersChartCard";
+import { AutoMergeBarChart, type StatData } from "./automerge-barchart";
 
 const meta = {
   component: Component,
-  title: "Charts/InAppWallets",
+  title: "Charts/AutoMergeBarChart",
 } satisfies Meta<typeof Component>;
 
 export default meta;
@@ -22,57 +21,106 @@ function Component() {
     "This is an example of a description about user wallet usage chart";
   return (
     <div className="container flex max-w-6xl flex-col gap-10 py-10">
-      <BadgeContainer label="30 days">
-        <InAppWalletUsersChartCardUI
+      <BadgeContainer label="10 days, view more variant">
+        <AutoMergeBarChart
+          viewMoreLink={"#"}
           description={description}
-          inAppWalletStats={createInAppWalletStatsStub(30)}
+          stats={createStatsStub(10)}
           isPending={false}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={undefined}
+        />
+      </BadgeContainer>
+
+      <BadgeContainer label="30 days">
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
+          description={description}
+          stats={createStatsStub(30)}
+          isPending={false}
+          title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
 
       <BadgeContainer label="60 days">
-        <InAppWalletUsersChartCardUI
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
           description={description}
-          inAppWalletStats={createInAppWalletStatsStub(60)}
+          stats={createStatsStub(60)}
           isPending={false}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
 
       <BadgeContainer label="120 days">
-        <InAppWalletUsersChartCardUI
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
           description={description}
-          inAppWalletStats={createInAppWalletStatsStub(120)}
+          stats={createStatsStub(120)}
           isPending={false}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
 
       <BadgeContainer label="10 days">
-        <InAppWalletUsersChartCardUI
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
           description={description}
-          inAppWalletStats={createInAppWalletStatsStub(10)}
+          stats={createStatsStub(10)}
           isPending={false}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Empty List">
-        <InAppWalletUsersChartCardUI
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
           description={description}
-          inAppWalletStats={createInAppWalletStatsStub(0)}
+          stats={createStatsStub(0)}
           isPending={false}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
 
       <BadgeContainer label="Pending">
-        <InAppWalletUsersChartCardUI
+        <AutoMergeBarChart
+          viewMoreLink={undefined}
           description={description}
-          inAppWalletStats={[]}
+          stats={[]}
           isPending={true}
           title={title}
+          maxLabelsToShow={5}
+          emptyChartState={undefined}
+          exportButton={{
+            fileName: "in-app-wallets",
+          }}
         />
       </BadgeContainer>
     </div>
@@ -111,17 +159,16 @@ const pickRandomAuthMethod = () => {
   return capitalized;
 };
 
-function createInAppWalletStatsStub(days: number): InAppWalletStats[] {
-  const stubbedData: InAppWalletStats[] = [];
+function createStatsStub(days: number): StatData[] {
+  const stubbedData: StatData[] = [];
 
   let d = days;
   while (d !== 0) {
     const uniqueWallets = Math.floor(Math.random() * 100);
     stubbedData.push({
-      authenticationMethod: pickRandomAuthMethod(),
+      label: pickRandomAuthMethod(),
       date: new Date(2024, 11, d).toLocaleString(),
-      uniqueWalletsConnected: uniqueWallets,
-      newUsers: Math.floor(Math.random() * 100) + 1,
+      count: uniqueWallets,
     });
 
     if (Math.random() > 0.7) {
