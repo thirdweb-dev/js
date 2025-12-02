@@ -39,13 +39,6 @@ export interface TransactionStats {
   count: number;
 }
 
-export interface EngineCloudStats {
-  date: string;
-  chainId: string;
-  pathname: string;
-  totalRequests: number;
-}
-
 export interface UniversalBridgeStats {
   date: string;
   chainId: number;

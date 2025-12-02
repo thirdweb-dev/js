@@ -28,7 +28,6 @@ import { getProjectWallet } from "@/lib/server/project-wallet";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
 import { AiTokenUsageChartCardUI } from "./ai/analytics/chart/AiTokenUsageChartCard";
-import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
 import { TransactionsChartCardAsync } from "./components/Transactions";
@@ -304,23 +303,6 @@ async function ProjectAnalytics(props: {
               : undefined
           }
           selectedChartQueryParam="client_transactions"
-        />
-      </ResponsiveSuspense>
-
-      {/* Engine cloud usage */}
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[377px] border" />}
-        searchParamsUsed={["from", "to", "interval"]}
-      >
-        <EngineCloudChartCardAsync
-          params={{
-            from: range.from,
-            period: interval,
-            projectId: project.id,
-            teamId: project.teamId,
-            to: range.to,
-          }}
-          authToken={authToken}
         />
       </ResponsiveSuspense>
     </div>

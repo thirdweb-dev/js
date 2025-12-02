@@ -8,7 +8,6 @@ import type {
   AIUsageStats,
   AnalyticsQueryParams,
   EcosystemWalletStats,
-  EngineCloudStats,
   InAppWalletStats,
   TransactionStats,
   UniversalBridgeStats,
@@ -198,6 +197,9 @@ const cache_getEOAWalletConnections = unstable_cache(
     return modifiedResult;
   },
   ["getEOAWalletConnections"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
 );
 
 export async function getEOAWalletConnections(
@@ -252,6 +254,9 @@ const cache_getEOAAndInAppWalletConnections = unstable_cache(
     return modifiedResult;
   },
   ["getEOAAndInAppWalletConnections"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
 );
 
 export async function getEOAAndInAppWalletConnections(
@@ -784,41 +789,6 @@ export function getUniversalBridgeWalletUsage(
     normalizedParams(params),
     authToken,
   );
-}
-
-const cached_getEngineCloudMethodUsage = unstable_cache(
-  async (
-    params: AnalyticsQueryParams,
-    authToken: string,
-  ): Promise<EngineCloudStats[]> => {
-    const searchParams = buildSearchParams(params);
-    const res = await fetchAnalytics({
-      authToken,
-      url: `v2/engine-cloud/requests?${searchParams.toString()}`,
-      init: {
-        method: "GET",
-      },
-    });
-
-    if (res?.status !== 200) {
-      console.error("Failed to fetch Engine Cloud method usage");
-      return [];
-    }
-
-    const json = await res.json();
-    return json.data as EngineCloudStats[];
-  },
-  ["getEngineCloudMethodUsage"],
-  {
-    revalidate: 60 * 60, // 1 hour
-  },
-);
-
-export function getEngineCloudMethodUsage(
-  params: AnalyticsQueryParams,
-  authToken: string,
-) {
-  return cached_getEngineCloudMethodUsage(normalizedParams(params), authToken);
 }
 
 const _cached_getWebhookSummary = unstable_cache(
