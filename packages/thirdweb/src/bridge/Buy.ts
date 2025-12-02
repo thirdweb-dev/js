@@ -366,6 +366,7 @@ export async function prepare(
     purchaseData,
     maxSteps,
     paymentLinkId,
+    slippageToleranceBps,
   } = options;
 
   const clientFetch = getClientFetch(client);
@@ -384,6 +385,7 @@ export async function prepare(
       purchaseData,
       receiver,
       sender,
+      slippageToleranceBps,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -460,6 +462,8 @@ export declare namespace prepare {
     purchaseData?: PurchaseData;
     /** Maximum number of steps in the route */
     maxSteps?: number;
+    /** The maximum slippage in basis points (bps) allowed for the transaction. */
+    slippageToleranceBps?: number;
     /**
      * @hidden
      */

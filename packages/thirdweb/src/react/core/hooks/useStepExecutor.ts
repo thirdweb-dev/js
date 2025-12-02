@@ -9,6 +9,7 @@ import type { Status } from "../../../bridge/types/Status.js";
 import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import { waitForCallsReceipt } from "../../../wallets/eip5792/wait-for-calls-receipt.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
 import type { BridgePrepareResult } from "./useBridgePrepare.js";
@@ -200,6 +201,7 @@ export function useStepExecutor(
         data: tx.data,
         to: tx.to,
         value: tx.value,
+        extraGas: 50000n, // add gas buffer
       });
 
       // Send the transaction
@@ -276,6 +278,7 @@ export function useStepExecutor(
             data: tx.data,
             to: tx.to,
             value: tx.value,
+            extraGas: 50000n, // add gas buffer
           });
           return preparedTx;
         }),
@@ -304,6 +307,95 @@ export function useStepExecutor(
           chainId: firstTx.chainId,
           client: firstTx.client,
           transactionHash: result.transactionHash,
+        });
+
+        if (statusResult.status === "COMPLETED") {
+          // Add type field from preparedQuote for discriminated union
+          const typedStatusResult = {
+            type: preparedQuote.type,
+            ...statusResult,
+          };
+          completedStatusResults.push(typedStatusResult);
+          return { completed: true };
+        }
+
+        if (statusResult.status === "FAILED") {
+          throw new Error("Payment failed");
+        }
+
+        return { completed: false };
+      }, abortSignal);
+    },
+    [poller, preparedQuote?.type],
+  );
+
+  // Execute batch transactions
+  const executeSendCalls = useCallback(
+    async (
+      txs: FlattenedTx[],
+      wallet: Wallet,
+      account: Account,
+      completedStatusResults: CompletedStatusResult[],
+      abortSignal: AbortSignal,
+    ) => {
+      if (typeof preparedQuote?.type === "undefined") {
+        throw new Error("No quote generated. This is unexpected.");
+      }
+      if (!account.sendCalls) {
+        throw new Error("Account does not support eip5792 send calls");
+      }
+
+      const { prepareTransaction } = await import(
+        "../../../transaction/prepare-transaction.js"
+      );
+      const { sendCalls } = await import(
+        "../../../wallets/eip5792/send-calls.js"
+      );
+
+      if (txs.length === 0) {
+        throw new Error("No transactions to batch");
+      }
+      const firstTx = txs[0];
+      if (!firstTx) {
+        throw new Error("Invalid batch transaction");
+      }
+
+      // Prepare and convert all transactions
+      const serializableTxs = await Promise.all(
+        txs.map(async (tx) => {
+          const preparedTx = prepareTransaction({
+            chain: tx.chain,
+            client: tx.client,
+            data: tx.data,
+            to: tx.to,
+            value: tx.value,
+            extraGas: 50000n, // add gas buffer
+          });
+          return preparedTx;
+        }),
+      );
+
+      // Send batch
+      const result = await sendCalls({
+        wallet,
+        calls: serializableTxs,
+      });
+
+      // get tx hash
+      const callsStatus = await waitForCallsReceipt(result);
+      const lastReceipt =
+        callsStatus.receipts?.[callsStatus.receipts.length - 1];
+
+      if (!lastReceipt) {
+        throw new Error("No receipts found");
+      }
+
+      const { status } = await import("../../../bridge/Status.js");
+      await poller(async () => {
+        const statusResult = await status({
+          chainId: firstTx.chainId,
+          client: firstTx.client,
+          transactionHash: lastReceipt.transactionHash,
         });
 
         if (statusResult.status === "COMPLETED") {
@@ -448,11 +540,15 @@ export function useStepExecutor(
           }
 
           // Check if we can batch transactions
+          const canSendCalls =
+            (await supportsAtomic(account, currentTx.chainId)) &&
+            i < flatTxs.length - 1; // Not the last transaction;
+
           const canBatch =
             account.sendBatchTransaction !== undefined &&
             i < flatTxs.length - 1; // Not the last transaction
 
-          if (canBatch) {
+          if (canBatch || canSendCalls) {
             // Find consecutive transactions on the same chain
             const batchTxs: FlattenedTx[] = [currentTx];
             let j = i + 1;
@@ -467,12 +563,26 @@ export function useStepExecutor(
 
             // Execute batch if we have multiple transactions
             if (batchTxs.length > 1) {
-              await executeBatch(
-                batchTxs,
-                account,
-                completedStatusResults,
-                abortController.signal,
-              );
+              // prefer batching if supported
+              if (canBatch) {
+                await executeBatch(
+                  batchTxs,
+                  account,
+                  completedStatusResults,
+                  abortController.signal,
+                );
+              } else if (canSendCalls) {
+                await executeSendCalls(
+                  batchTxs,
+                  wallet,
+                  account,
+                  completedStatusResults,
+                  abortController.signal,
+                );
+              } else {
+                // should never happen
+                throw new Error("No supported execution mode found");
+              }
 
               // Mark all batched transactions as completed
               for (const tx of batchTxs) {
@@ -530,6 +640,7 @@ export function useStepExecutor(
     flatTxs,
     executeSingleTx,
     executeBatch,
+    executeSendCalls,
     onrampStatus,
     executeOnramp,
     onComplete,
@@ -601,4 +712,16 @@ export function useStepExecutor(
     start,
     steps: preparedQuote?.steps,
   };
+}
+
+async function supportsAtomic(account: Account, chainId: number) {
+  const capabilitiesFn = account.getCapabilities;
+  if (!capabilitiesFn) {
+    return false;
+  }
+  const capabilities = await capabilitiesFn({ chainId });
+  const atomic = capabilities[chainId]?.atomic as
+    | { status: "supported" | "ready" | "unsupported" }
+    | undefined;
+  return atomic?.status === "supported" || atomic?.status === "ready";
 }
