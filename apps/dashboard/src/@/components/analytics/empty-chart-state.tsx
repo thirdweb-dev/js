@@ -1,4 +1,5 @@
 "use client";
+import { XIcon } from "lucide-react";
 import { useId, useMemo } from "react";
 import { Area, AreaChart, Bar, BarChart } from "recharts";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
@@ -33,8 +34,15 @@ export function EmptyChartState({
 
   return (
     <div className="relative z-0 h-full w-full">
-      <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center font-medium text-base text-muted-foreground">
-        {children ?? "No data available"}
+      <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center text-base text-muted-foreground">
+        {children ?? (
+          <div className="flex items-center gap-3 flex-col">
+            <div className="rounded-full border p-2 bg-background">
+              <XIcon className="size-4" />
+            </div>
+            <p className="text-base"> No data available </p>
+          </div>
+        )}
       </div>
       <SkeletonBarChart data={barChartData} type={type} />
     </div>
@@ -61,7 +69,7 @@ function SkeletonBarChart(props: {
   const fillAreaSkeletonId = useId();
   return (
     <ChartContainer
-      className="pointer-events-none h-full w-full blur-[5px]"
+      className="pointer-events-none h-full w-full blur-[5px] aspect-auto"
       config={skeletonChartConfig}
     >
       {props.type === "bar" ? (

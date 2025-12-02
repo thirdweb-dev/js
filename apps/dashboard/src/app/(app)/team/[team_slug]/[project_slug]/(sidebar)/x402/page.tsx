@@ -80,11 +80,11 @@ export default async function Page(props: {
   return (
     <ResponsiveSearchParamsProvider value={searchParams}>
       <div className="flex flex-col gap-4 md:gap-6">
-        <ResponsiveTimeFilters defaultRange={defaultRange} />
         {totalPayments === 0 ? (
           <X402EmptyState walletAddress={projectWallet?.address} />
         ) : (
           <>
+            <ResponsiveTimeFilters defaultRange={defaultRange} />
             <X402Summary
               authToken={authToken}
               projectId={project.id}

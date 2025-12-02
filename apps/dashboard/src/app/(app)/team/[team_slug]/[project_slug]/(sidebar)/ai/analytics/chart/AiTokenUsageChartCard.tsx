@@ -60,7 +60,7 @@ export function AiTokenUsageChartCardUI(props: {
 
   return (
     <ThirdwebBarChart
-      chartClassName="h-[275px] w-full"
+      chartClassName="h-[275px] w-full aspect-auto"
       config={chartConfig}
       customHeader={
         props.viewMoreLink ? (

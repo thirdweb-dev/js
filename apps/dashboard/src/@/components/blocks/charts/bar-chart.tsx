@@ -59,7 +59,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
     props.variant || configKeys.length > 4 ? "stacked" : "grouped";
 
   return (
-    <Card className={props.className}>
+    <Card className={cn("overflow-hidden", props.className)}>
       {props.header && (
         <CardHeader>
           <CardTitle className={cn("mb-2", props.header.titleClassName)}>

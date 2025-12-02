@@ -11,6 +11,7 @@ import {
   getInsightStatusCodeUsage,
   getRpcUsageByType,
   getUniversalBridgeUsage,
+  getX402Settlements,
   isProjectActive,
 } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
@@ -35,6 +36,7 @@ import { RequestsByStatusGraph } from "./gateway/indexer/components/RequestsBySt
 import { RPCRequestsChartUI } from "./gateway/rpc/components/RequestsGraph";
 import { ProjectHighlightsCard } from "./overview/highlights-card";
 import { AllWalletConnectionsChart } from "./wallets/analytics/chart/all-wallet-connections-chart";
+import { X402RequestsChartCardUI } from "./x402/analytics/x402-requests-chart";
 
 type PageParams = {
   team_slug: string;
@@ -258,29 +260,55 @@ async function ProjectAnalytics(props: {
         </ResponsiveSuspense>
       </div>
 
-      {/* AI tokens */}
-      <ResponsiveSuspense
-        fallback={
-          <AiTokenUsageChartCardUI
-            isPending={true}
-            title="AI token volume"
-            viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/ai/analytics`}
-            aiUsageStats={[]}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* x402 */}
+        <ResponsiveSuspense
+          searchParamsUsed={["from", "to", "interval"]}
+          fallback={
+            <X402RequestsChartCardUI
+              stats={[]}
+              isPending={true}
+              teamSlug={params.team_slug}
+              projectSlug={params.project_slug}
+            />
+          }
+        >
+          <AsyncX402RequestsChart
+            from={range.from}
+            teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
+            to={range.to}
+            interval={interval}
+            projectId={project.id}
+            teamId={project.teamId}
+            authToken={authToken}
           />
-        }
-        searchParamsUsed={["from", "to", "interval"]}
-      >
-        <AsyncAiAnalytics
-          teamSlug={params.team_slug}
-          projectSlug={params.project_slug}
-          from={range.from}
-          to={range.to}
-          interval={interval}
-          projectId={project.id}
-          teamId={project.teamId}
-          authToken={authToken}
-        />
-      </ResponsiveSuspense>
+        </ResponsiveSuspense>
+
+        {/* AI tokens */}
+        <ResponsiveSuspense
+          fallback={
+            <AiTokenUsageChartCardUI
+              isPending={true}
+              title="AI token volume"
+              viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/ai/analytics`}
+              aiUsageStats={[]}
+            />
+          }
+          searchParamsUsed={["from", "to", "interval"]}
+        >
+          <AsyncAiAnalytics
+            teamSlug={params.team_slug}
+            projectSlug={params.project_slug}
+            from={range.from}
+            to={range.to}
+            interval={interval}
+            projectId={project.id}
+            teamId={project.teamId}
+            authToken={authToken}
+          />
+        </ResponsiveSuspense>
+      </div>
 
       {/* transactions */}
       <ResponsiveSuspense
@@ -480,6 +508,49 @@ async function AsyncAiAnalytics(props: {
       isPending={false}
       aiUsageStats={stats}
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/ai/analytics`}
+    />
+  );
+}
+
+async function AsyncX402RequestsChart(props: {
+  from: Date;
+  to: Date;
+  interval: "day" | "week";
+  projectId: string;
+  teamId: string;
+  authToken: string;
+  teamSlug: string;
+  projectSlug: string;
+}) {
+  const stats = await getX402Settlements(
+    {
+      from: props.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: props.to,
+    },
+    props.authToken,
+  ).catch((error) => {
+    console.error(error);
+    return [];
+  });
+
+  const isAllEmpty = stats.every((stat) => stat.totalRequests === 0);
+
+  return (
+    <X402RequestsChartCardUI
+      stats={
+        isAllEmpty
+          ? []
+          : stats.map((stat) => ({
+              requests: stat.totalRequests,
+              time: stat.date,
+            }))
+      }
+      isPending={false}
+      teamSlug={props.teamSlug}
+      projectSlug={props.projectSlug}
     />
   );
 }
