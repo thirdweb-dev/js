@@ -18,9 +18,9 @@ function AiAnalyticsUI({ stats, isPending }: AiAnalyticsProps) {
   return (
     <AiTokenUsageChartCardUI
       title="Token Usage"
-      description="The total number of tokens used for AI interactions on your project."
       aiUsageStats={stats || []}
       isPending={isPending}
+      viewMoreLink={undefined}
     />
   );
 }

@@ -83,9 +83,26 @@ export function ProjectSidebarLayout(props: {
       label: "Tokens",
     },
     {
-      href: `${props.layoutPath}/ai`,
-      icon: BotIcon,
-      label: "AI",
+      subMenu: {
+        icon: BotIcon,
+        label: "AI",
+      },
+      links: [
+        {
+          href: `${props.layoutPath}/ai`,
+          label: "Chat",
+          isActive: (pathname) => {
+            return (
+              pathname === `${props.layoutPath}/ai` ||
+              pathname.startsWith(`${props.layoutPath}/ai/chat`)
+            );
+          },
+        },
+        {
+          href: `${props.layoutPath}/ai/analytics`,
+          label: "Analytics",
+        },
+      ],
     },
     {
       subMenu: {

@@ -664,12 +664,6 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
 
   const selectedChain = useV5DashboardChain(form.watch("chainId"));
   const selectedFormChainId = form.watch("chainId");
-  const _selectedFormTokenAddress = form.watch("tokenAddress");
-
-  // Track the selected token symbol for display
-  const [_selectedTokenSymbol, setSelectedTokenSymbol] = useState<
-    string | undefined
-  >(undefined);
 
   const sendMutation = useMutation({
     mutationFn: async (values: SendFormValues) => {
@@ -760,7 +754,6 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                         field.onChange(nextChainId);
                         // Reset token to native when chain changes
                         form.setValue("tokenAddress", undefined);
-                        setSelectedTokenSymbol(undefined);
                       }}
                       placeholder="Select network"
                     />
@@ -788,7 +781,6 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
                       }
                       onChange={(token) => {
                         field.onChange(token.address);
-                        setSelectedTokenSymbol(token.symbol);
                       }}
                       chainId={selectedFormChainId}
                       client={client}

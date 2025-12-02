@@ -7,6 +7,7 @@ import {
 import type { ThirdwebClient } from "thirdweb";
 import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import {
+  getAiUsage,
   getInAppWalletUsage,
   getInsightStatusCodeUsage,
   getRpcUsageByType,
@@ -30,6 +31,7 @@ import { getFiltersFromSearchParams } from "@/lib/time";
 import type { InAppWalletStats, WalletStats } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
 import { PieChartCard } from "../../../components/Analytics/PieChartCard";
+import { AiTokenUsageChartCardUI } from "./ai/analytics/chart/AiTokenUsageChartCard";
 import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
@@ -286,6 +288,29 @@ async function ProjectAnalytics(props: {
           />
         </ResponsiveSuspense>
       </div>
+
+      <ResponsiveSuspense
+        fallback={
+          <AiTokenUsageChartCardUI
+            isPending={true}
+            title="AI token volume"
+            viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/ai/analytics`}
+            aiUsageStats={[]}
+          />
+        }
+        searchParamsUsed={["from", "to", "interval"]}
+      >
+        <AsyncAiAnalytics
+          teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
+          from={range.from}
+          to={range.to}
+          interval={interval}
+          projectId={project.id}
+          teamId={project.teamId}
+          authToken={authToken}
+        />
+      </ResponsiveSuspense>
 
       <ResponsiveSuspense
         fallback={<LoadingChartState className="h-[377px] border" />}
@@ -558,5 +583,39 @@ export function Header(props: {
         </div>
       )}
     </div>
+  );
+}
+
+async function AsyncAiAnalytics(props: {
+  from: Date;
+  to: Date;
+  interval: "day" | "week";
+  projectId: string;
+  teamId: string;
+  authToken: string;
+  teamSlug: string;
+  projectSlug: string;
+}) {
+  const stats = await getAiUsage(
+    {
+      from: props.from,
+      period: props.interval,
+      projectId: props.projectId,
+      teamId: props.teamId,
+      to: props.to,
+    },
+    props.authToken,
+  ).catch((error) => {
+    console.error(error);
+    return [];
+  });
+
+  return (
+    <AiTokenUsageChartCardUI
+      title="AI token volume"
+      isPending={false}
+      aiUsageStats={stats}
+      viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/ai/analytics`}
+    />
   );
 }

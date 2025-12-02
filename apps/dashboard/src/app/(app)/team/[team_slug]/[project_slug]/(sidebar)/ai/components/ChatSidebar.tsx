@@ -1,7 +1,6 @@
 "use client";
 import {
   BotIcon,
-  ChartLineIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   FileCode2Icon,
@@ -83,16 +82,6 @@ export function ChatSidebar(props: {
       <div className="h-5" />
 
       <div className="flex flex-col gap-3 border-t border-dashed px-4 py-4">
-        <Link
-          className="flex items-center gap-1 rounded-full text-foreground text-sm hover:underline justify-between"
-          href={`/team/${props.team_slug}/${props.project.slug}/ai/analytics`}
-        >
-          <div className="flex items-center gap-2">
-            <ChartLineIcon className="size-3.5 text-muted-foreground" />
-            Analytics
-          </div>
-          <ChevronRightIcon className="size-3.5 text-muted-foreground" />
-        </Link>
         <Link
           className="flex items-center gap-1 rounded-full text-foreground text-sm hover:underline justify-between"
           href={"https://portal.thirdweb.com/ai/chat"}

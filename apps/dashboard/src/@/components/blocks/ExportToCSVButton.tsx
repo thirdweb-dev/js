@@ -34,7 +34,10 @@ export function ExportToCSVButton(props: {
 
   return (
     <Button
-      className={cn("flex items-center gap-2 border text-xs", props.className)}
+      className={cn(
+        "flex items-center gap-2 border text-sm rounded-full",
+        props.className,
+      )}
       disabled={props.disabled || exportMutation.isPending}
       onClick={async () => {
         exportMutation.mutate();
@@ -42,16 +45,11 @@ export function ExportToCSVButton(props: {
       variant="outline"
     >
       {exportMutation.isPending ? (
-        <>
-          Downloading
-          <Spinner className="size-3" />
-        </>
+        <Spinner className="size-3.5" />
       ) : (
-        <>
-          <DownloadIcon className="size-3" />
-          Export as CSV
-        </>
+        <DownloadIcon className="size-3.5" />
       )}
+      Export
     </Button>
   );
 }

@@ -410,7 +410,7 @@ export function ChatBar(props: {
                     if (message.trim() === "" && images.length === 0) return;
                     handleSubmit(message);
                   }}
-                  variant="primary"
+                  variant="default"
                 >
                   <ArrowUpIcon className="size-4" />
                 </Button>
