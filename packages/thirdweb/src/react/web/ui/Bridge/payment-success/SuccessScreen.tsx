@@ -1,6 +1,6 @@
 "use client";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -61,6 +61,7 @@ export function SuccessScreen({
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
   const [viewState, setViewState] = useState<ViewState>("success");
+  const queryClient = useQueryClient();
 
   useQuery({
     queryFn: () => {
@@ -74,6 +75,26 @@ export function SuccessScreen({
           toToken: preparedQuote.intent.destinationTokenAddress,
         });
       }
+      if (preparedQuote.type === "transfer") {
+        trackPayEvent({
+          chainId: preparedQuote.intent.chainId,
+          client: client,
+          event: "ub:ui:success_screen",
+          fromToken: preparedQuote.intent.tokenAddress,
+          toChainId: preparedQuote.intent.chainId,
+          toToken: preparedQuote.intent.tokenAddress,
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: ["bridge/v1/wallets"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["walletBalance"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["payment-methods"],
+      });
+      return true;
     },
     queryKey: ["success_screen", preparedQuote.type],
   });
