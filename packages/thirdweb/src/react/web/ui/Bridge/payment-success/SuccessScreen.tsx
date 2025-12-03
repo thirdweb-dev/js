@@ -73,6 +73,7 @@ export function SuccessScreen({
           fromToken: preparedQuote.intent.originTokenAddress,
           toChainId: preparedQuote.intent.destinationChainId,
           toToken: preparedQuote.intent.destinationTokenAddress,
+          walletAddress: preparedQuote.intent.sender,
         });
       }
       if (preparedQuote.type === "transfer") {
@@ -83,6 +84,7 @@ export function SuccessScreen({
           fromToken: preparedQuote.intent.tokenAddress,
           toChainId: preparedQuote.intent.chainId,
           toToken: preparedQuote.intent.tokenAddress,
+          walletAddress: preparedQuote.intent.sender,
         });
       }
       queryClient.invalidateQueries({

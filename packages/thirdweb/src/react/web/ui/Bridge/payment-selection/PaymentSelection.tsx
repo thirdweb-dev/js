@@ -136,6 +136,8 @@ export function PaymentSelection({
         event: "payment_selection",
         toChainId: destinationToken.chainId,
         toToken: destinationToken.address,
+        walletAddress: payerWallet?.getAccount()?.address,
+        walletType: payerWallet?.id,
       });
       return true;
     },
