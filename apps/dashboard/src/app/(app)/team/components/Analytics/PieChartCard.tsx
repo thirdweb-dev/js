@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { useMemo } from "react";
+import {
+  EmptyChartState,
+  LoadingChartState,
+} from "@/components/analytics/empty-chart-state";
 import {
   Card,
   CardContent,
@@ -18,10 +23,18 @@ export function PieChartCard({
   title,
   data,
   aggregateFn = (data) => data.reduce((acc, curr) => acc + curr.value, 0),
+  isCurrency = false,
+  customHeader,
+  isPending = false,
+  emptyChartState,
 }: {
   title: string;
   data: ChartData[];
   aggregateFn?: (data: ChartData[]) => number;
+  isCurrency?: boolean;
+  customHeader?: React.ReactNode;
+  isPending?: boolean;
+  emptyChartState?: React.ReactNode;
 }) {
   const processedData = (() => {
     // Sort by value descending
@@ -53,48 +66,69 @@ export function PieChartCard({
     fill: item.fill || `hsl(var(--chart-${index + 1}))`,
   }));
 
+  const isAllEmpty = useMemo(() => {
+    return data.every((item) => item.value === 0);
+  }, [data]);
+
   return (
     <Card className="flex flex-col">
-      <CardHeader className="border-border border-b p-0">
-        <Stat label={title} value={aggregateFn(data)} />
-      </CardHeader>
+      {customHeader || (
+        <CardHeader className="border-border border-b p-0">
+          <Stat label={title} value={aggregateFn(data)} />
+        </CardHeader>
+      )}
+
       <CardContent className="flex-1 p-4">
-        <PieChart data={processedData} title={title} />
+        {isPending ? (
+          <LoadingChartState />
+        ) : isAllEmpty ? (
+          <EmptyChartState type="none"> {emptyChartState} </EmptyChartState>
+        ) : (
+          <PieChart
+            data={processedData}
+            title={title}
+            isCurrency={isCurrency}
+          />
+        )}
       </CardContent>
-      <CardFooter className="no-scrollbar flex max-w-full justify-center p-6 pt-0 max-md:overflow-x-auto">
-        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2.5">
-          {processedData.map(
-            ({
-              label,
-              fill,
-              link,
-            }: {
-              label: string;
-              fill?: string;
-              link?: string;
-            }) => (
-              <div className="flex items-center gap-2" key={fill}>
-                <div
-                  className="size-2 rounded-full"
-                  style={{ background: fill }}
-                />
-                {link ? (
-                  <Link
-                    className="text-muted-foreground text-xs hover:text-link-foreground"
-                    href={link}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <span className="text-muted-foreground text-xs">{label}</span>
-                )}
-              </div>
-            ),
-          )}
-        </div>
-      </CardFooter>
+      {!isAllEmpty && (
+        <CardFooter className="no-scrollbar flex max-w-full justify-center p-6 pt-0 max-md:overflow-x-auto">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2.5">
+            {processedData.map(
+              ({
+                label,
+                fill,
+                link,
+              }: {
+                label: string;
+                fill?: string;
+                link?: string;
+              }) => (
+                <div className="flex items-center gap-2" key={fill}>
+                  <div
+                    className="size-2 rounded-full"
+                    style={{ background: fill }}
+                  />
+                  {link ? (
+                    <Link
+                      className="text-muted-foreground text-xs hover:text-link-foreground"
+                      href={link}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">
+                      {label}
+                    </span>
+                  )}
+                </div>
+              ),
+            )}
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 }

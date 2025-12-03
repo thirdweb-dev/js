@@ -28,14 +28,14 @@ export function EmptyChartState({
   type,
 }: {
   children?: React.ReactNode;
-  type: "bar" | "area";
+  type: "bar" | "area" | "none";
 }) {
   const barChartData = useMemo(() => generateRandomData(), []);
 
   return (
     <div className="relative z-0 h-full w-full">
       <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center text-base text-muted-foreground">
-        {children ?? (
+        {children || (
           <div className="flex items-center gap-3 flex-col">
             <div className="rounded-full border p-2 bg-background">
               <XIcon className="size-4" />
@@ -44,7 +44,7 @@ export function EmptyChartState({
           </div>
         )}
       </div>
-      <SkeletonBarChart data={barChartData} type={type} />
+      {type !== "none" && <SkeletonBarChart data={barChartData} type={type} />}
     </div>
   );
 }

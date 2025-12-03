@@ -6,6 +6,7 @@ import { SkeletonContainer } from "@/components/ui/skeleton";
 export function TotalValueChartHeader(props: {
   total: number;
   title: string;
+  isUsd?: boolean;
   isPending: boolean;
   viewMoreLink: string | undefined;
 }) {
@@ -18,7 +19,9 @@ export function TotalValueChartHeader(props: {
           render={(value) => {
             return (
               <p className="text-3xl font-semibold tracking-tight">
-                {compactNumberFormatter.format(value)}
+                {props.isUsd
+                  ? compactUSDFormatter.format(value)
+                  : compactNumberFormatter.format(value)}
               </p>
             );
           }}
@@ -47,4 +50,11 @@ export function TotalValueChartHeader(props: {
 const compactNumberFormatter = new Intl.NumberFormat("en-US", {
   notation: "compact",
   maximumFractionDigits: 2,
+});
+
+const compactUSDFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+  style: "currency",
+  currency: "USD",
 });

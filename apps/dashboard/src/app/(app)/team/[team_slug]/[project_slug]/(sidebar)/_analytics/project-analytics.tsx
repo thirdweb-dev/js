@@ -6,6 +6,7 @@ import { LoadingChartState } from "@/components/analytics/empty-chart-state";
 import { TransactionsChartCardAsync } from "../components/Transactions";
 import { AIAnalyticsChartCard } from "./ai-card";
 import { AllWalletConnectionsChart } from "./all-wallet-connections-chart";
+import { BridgeChartCard } from "./bridge-card";
 import { ProjectHighlightCard } from "./highlights-card";
 import { IndexerRequestsChartCard } from "./indexer-card";
 import { RPCRequestsChartCard } from "./rpc-card";
@@ -37,17 +38,31 @@ export async function ProjectAnalytics(props: {
         searchParams={searchParams}
       />
 
-      {/* wallets */}
-      <AllWalletConnectionsChart
-        teamSlug={params.team_slug}
-        projectSlug={params.project_slug}
-        authToken={authToken}
-        projectId={project.id}
-        from={range.from}
-        to={range.to}
-        interval={interval}
-        teamId={project.teamId}
-      />
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* wallets */}
+        <AllWalletConnectionsChart
+          teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
+          authToken={authToken}
+          projectId={project.id}
+          from={range.from}
+          to={range.to}
+          interval={interval}
+          teamId={project.teamId}
+        />
+
+        {/* bridge */}
+        <BridgeChartCard
+          teamSlug={params.team_slug}
+          projectSlug={params.project_slug}
+          from={range.from}
+          to={range.to}
+          interval={interval}
+          projectId={project.id}
+          teamId={project.teamId}
+          authToken={authToken}
+        />
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Indexer */}
