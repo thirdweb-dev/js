@@ -1,244 +1,376 @@
 "use client";
 
-import {
-  ActivityIcon,
-  CheckCircle2Icon,
-  CoinsIcon,
-  WalletIcon,
-} from "lucide-react";
+import { format, formatDistance } from "date-fns";
+import { ExternalLinkIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
-import { toEther } from "thirdweb/utils";
-import type { Project } from "@/api/project/projects";
-import {
-  DateRangeSelector,
-  getLastNDaysRange,
-} from "@/components/analytics/date-range-selector";
-import { StatCard } from "@/components/analytics/stat";
+import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { PaginationButtons } from "@/components/blocks/pagination-buttons";
+import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
-import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { defineDashboardChain } from "@/lib/defineDashboardChain";
-import { normalizeTimeISOString } from "@/lib/time";
-import { useFleetAnalytics } from "../lib/hooks";
-import type { Fleet } from "../types";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useAllChainsData } from "@/hooks/chains/allChains";
+import { ChainIconClient } from "@/icons/ChainIcon";
+import {
+  useFleetTransactions,
+  useFleetTransactionsSummary,
+} from "../lib/hooks";
+import type { Fleet, FleetTransaction } from "../types";
 
 type DedicatedRelayerActiveStateProps = {
   fleet: Fleet;
-  project: Project;
-  authToken: string;
-  teamSlug: string;
+  teamId: string;
+  fleetId: string;
   client: ThirdwebClient;
+  from: string;
+  to: string;
 };
 
-/**
- * Active state shown when fleet is fully set up with executors.
- * Shows executor addresses, analytics, and transaction stats.
- */
 export function DedicatedRelayerActiveState(
   props: DedicatedRelayerActiveStateProps,
 ) {
-  const { fleet, project } = props;
+  const { fleet, teamId, fleetId, client, from, to } = props;
 
-  const [range, setRange] = useState(() => getLastNDaysRange("last-30"));
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
+  const [chainIdFilter, setChainIdFilter] = useState<number | undefined>();
 
-  const normalizedFrom = normalizeTimeISOString(range.from);
-  const normalizedTo = normalizeTimeISOString(range.to);
-
-  const analyticsQuery = useFleetAnalytics({
-    teamId: project.teamId,
-    projectId: project.id,
-    authToken: props.authToken,
-    startDate: normalizedFrom,
-    endDate: normalizedTo,
+  const summaryQuery = useFleetTransactionsSummary({
+    teamId,
+    fleetId,
+    from,
+    to,
   });
 
-  // Group executors by chain
-  const executorsByChain = fleet.executors.reduce(
-    (acc, executor) => {
-      if (!acc[executor.chainId]) {
-        acc[executor.chainId] = [];
-      }
-      acc[executor.chainId]?.push(executor.address);
-      return acc;
-    },
-    {} as Record<number, string[]>,
-  );
+  const transactionsQuery = useFleetTransactions({
+    teamId,
+    fleetId,
+    from,
+    to,
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+    chainId: chainIdFilter,
+  });
+
+  const totalPages = transactionsQuery.data
+    ? Math.ceil(transactionsQuery.data.meta.total / pageSize)
+    : 0;
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Status Banner */}
-      <div className="flex items-center gap-3 rounded-lg border border-success/50 bg-success/10 px-4 py-3">
-        <CheckCircle2Icon className="size-5 text-success" />
-        <div>
-          <p className="font-medium text-success">
-            Dedicated relayer is active
-          </p>
-          <p className="text-muted-foreground text-sm">
-            Your transactions are being relayed through dedicated executors.
-          </p>
-        </div>
-      </div>
-
-      {/* Date Range Selector */}
-      <div className="flex justify-start">
-        <DateRangeSelector range={range} setRange={setRange} />
-      </div>
-
       {/* Summary Stats */}
-      <FleetAnalyticsSummary
-        data={analyticsQuery.data}
-        isPending={analyticsQuery.isPending}
-      />
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          title="Total Transactions"
+          value={
+            summaryQuery.data?.data.totalTransactions.toLocaleString() ?? "—"
+          }
+          isLoading={summaryQuery.isPending}
+        />
+        <StatCard
+          title="Total Gas Spent"
+          value={
+            summaryQuery.data?.data.totalGasSpentUsd !== undefined
+              ? `$${summaryQuery.data.data.totalGasSpentUsd.toFixed(2)}`
+              : "—"
+          }
+          isLoading={summaryQuery.isPending}
+        />
+        <StatCard
+          title="Active Chains"
+          value={
+            summaryQuery.data?.data.transactionsByChain.length.toString() ?? "—"
+          }
+          isLoading={summaryQuery.isPending}
+        />
+      </div>
 
-      {/* Executor Wallets */}
+      {/* Executors Info */}
       <div className="rounded-lg border bg-card">
         <div className="border-b px-4 py-4 lg:px-6">
           <h2 className="font-semibold text-xl tracking-tight">
-            Executor Wallets
+            Fleet Executors
           </h2>
-          <p className="mt-1 text-muted-foreground text-sm">
-            Dedicated wallets relaying your transactions
-          </p>
+        </div>
+        <div className="p-4 lg:p-6">
+          <div className="flex flex-wrap gap-2">
+            {fleet.executors.map((address) => (
+              <div
+                key={address}
+                className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2"
+              >
+                <WalletAddress address={address} client={client} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Transactions Table */}
+      <div className="overflow-hidden rounded-lg border bg-card">
+        <div className="flex flex-col justify-between gap-3 border-b px-4 py-4 lg:flex-row lg:items-center lg:px-6">
+          <h2 className="font-semibold text-xl">Fleet Transactions</h2>
+          <div className="flex gap-2">
+            <ChainFilter
+              chainId={chainIdFilter}
+              setChainId={(chainId) => {
+                setChainIdFilter(chainId);
+                setPage(1);
+              }}
+              client={client}
+            />
+          </div>
         </div>
 
-        <div className="p-4 lg:p-6">
+        <TableContainer className="rounded-none border-none">
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Transaction Hash</TableHead>
                 <TableHead>Chain</TableHead>
-                <TableHead>Executor Address</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Wallet</TableHead>
+                <TableHead>Executor</TableHead>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>Fee</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Object.entries(executorsByChain).map(([chainId, addresses]) =>
-                addresses.map((address, idx) => {
-                  const chain = defineDashboardChain(
-                    Number(chainId),
-                    undefined,
-                  );
-                  return (
-                    <TableRow key={`${chainId}-${address}`}>
-                      <TableCell>
-                        <span className="font-medium">
-                          {chain.name || `Chain ${chainId}`}
-                        </span>
-                        {idx === 0 && addresses.length > 1 && (
-                          <span className="ml-2 text-muted-foreground text-xs">
-                            ({addresses.length} executors)
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <CopyAddressButton
-                          address={address}
-                          className="font-mono text-sm"
-                          copyIconPosition="right"
-                          variant="ghost"
-                        />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button asChild size="sm" variant="ghost">
-                          <a
-                            href={
-                              chain.blockExplorers?.[0]?.url
-                                ? `${chain.blockExplorers[0].url}/address/${address}`
-                                : "#"
-                            }
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            View on Explorer
-                          </a>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }),
-              )}
+              {!transactionsQuery.isPending
+                ? transactionsQuery.data?.data.map((tx) => (
+                    <TransactionRow
+                      key={tx.transactionHash}
+                      transaction={tx}
+                      client={client}
+                    />
+                  ))
+                : Array.from({ length: pageSize }).map((_, index) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: skeleton rows have no unique id
+                    <SkeletonRow key={`skeleton-${index}`} />
+                  ))}
             </TableBody>
           </Table>
-        </div>
-      </div>
+        </TableContainer>
 
-      {/* Supported Chains */}
-      <div className="rounded-lg border bg-card">
-        <div className="border-b px-4 py-4 lg:px-6">
-          <h2 className="font-semibold text-xl tracking-tight">
-            Supported Chains
-          </h2>
-        </div>
+        {!transactionsQuery.isPending &&
+          (transactionsQuery.isError ? (
+            <div className="px-6 py-24">
+              <div className="mb-4 flex justify-center">
+                <div className="rounded-full border p-2">
+                  <XIcon className="size-5" />
+                </div>
+              </div>
+              <p className="text-center text-destructive-text text-sm">
+                Failed to load transactions
+              </p>
+            </div>
+          ) : transactionsQuery.data?.data.length === 0 ? (
+            <div className="px-6 py-24">
+              <div className="mb-4 flex justify-center">
+                <div className="rounded-full border p-2">
+                  <XIcon className="size-5 text-muted-foreground" />
+                </div>
+              </div>
+              <p className="text-center text-muted-foreground text-sm">
+                No transactions yet
+              </p>
+            </div>
+          ) : null)}
 
-        <div className="p-4 lg:p-6">
-          <div className="flex flex-wrap gap-2">
-            {fleet.chainIds.map((chainId) => {
-              const chain = defineDashboardChain(chainId, undefined);
-              return (
-                <span
-                  key={chainId}
-                  className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-sm"
-                >
-                  {chain.name || `Chain ${chainId}`}
-                </span>
-              );
-            })}
+        {totalPages > 1 && (
+          <div className="flex justify-end gap-3 rounded-b-lg border-t p-4">
+            <PaginationButtons
+              activePage={page}
+              onPageClick={setPage}
+              totalPages={totalPages}
+            />
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 }
 
-function FleetAnalyticsSummary(props: {
-  data:
-    | {
-        totalTransactions: number;
-        totalGasSpentWei: string;
-        remainingBalanceWei: string;
-      }
-    | null
-    | undefined;
-  isPending: boolean;
+function StatCard(props: {
+  title: string;
+  value: string;
+  isLoading?: boolean;
 }) {
-  const formatWeiToEth = (weiString: string): number => {
-    try {
-      if (weiString === "0") return 0;
-      const weiBigInt = BigInt(weiString);
-      return Number.parseFloat(toEther(weiBigInt));
-    } catch {
-      return 0;
-    }
-  };
+  return (
+    <div className="rounded-lg border bg-card p-4">
+      <p className="text-muted-foreground text-sm">{props.title}</p>
+      {props.isLoading ? (
+        <Skeleton className="mt-1 h-8 w-24" />
+      ) : (
+        <p className="font-semibold text-2xl">{props.value}</p>
+      )}
+    </div>
+  );
+}
+
+function TransactionRow(props: {
+  transaction: FleetTransaction;
+  client: ThirdwebClient;
+}) {
+  const { transaction, client } = props;
+  const utcTimestamp = transaction.timestamp.endsWith("Z")
+    ? transaction.timestamp
+    : `${transaction.timestamp}Z`;
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <StatCard
-        icon={ActivityIcon}
-        isPending={props.isPending}
-        label="Total Transactions"
-        value={props.data?.totalTransactions ?? 0}
+    <TableRow>
+      <TableCell>
+        <TransactionHashCell
+          chainId={transaction.chainId}
+          hash={transaction.transactionHash}
+        />
+      </TableCell>
+      <TableCell>
+        <ChainCell chainId={transaction.chainId} client={client} />
+      </TableCell>
+      <TableCell>
+        <WalletAddress address={transaction.walletAddress} client={client} />
+      </TableCell>
+      <TableCell>
+        <WalletAddress address={transaction.executorAddress} client={client} />
+      </TableCell>
+      <TableCell>
+        <ToolTipLabel hoverable label={format(new Date(utcTimestamp), "PPpp")}>
+          <span>
+            {formatDistance(new Date(utcTimestamp), new Date(), {
+              addSuffix: true,
+            })}
+          </span>
+        </ToolTipLabel>
+      </TableCell>
+      <TableCell>
+        <TransactionFeeCell usdValue={transaction.transactionFeeUsd} />
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function SkeletonRow() {
+  return (
+    <TableRow className="h-[72.5px]">
+      <TableCell>
+        <Skeleton className="h-7 w-[160px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-7 w-[130px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-7 w-[130px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-7 w-[130px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-7 w-[80px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-7 w-[40px]" />
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function TransactionHashCell(props: { hash: string; chainId: string }) {
+  const { idToChain } = useAllChainsData();
+  const chain = idToChain.get(Number(props.chainId));
+
+  const explorerUrl = chain?.explorers?.[0]?.url;
+  const txHashToShow = `${props.hash.slice(0, 6)}...${props.hash.slice(-4)}`;
+
+  if (explorerUrl) {
+    return (
+      <Button asChild size="sm" variant="ghost">
+        <Link
+          className="-translate-x-2 gap-2 font-mono"
+          href={`${explorerUrl}/tx/${props.hash}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {txHashToShow}
+          <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
+        </Link>
+      </Button>
+    );
+  }
+
+  return (
+    <CopyTextButton
+      className="-translate-x-2 font-mono"
+      copyIconPosition="right"
+      textToCopy={props.hash}
+      textToShow={txHashToShow}
+      tooltip="Transaction Hash"
+      variant="ghost"
+    />
+  );
+}
+
+function ChainCell(props: { chainId: string; client: ThirdwebClient }) {
+  const { idToChain, allChains } = useAllChainsData();
+  const chain = idToChain.get(Number(props.chainId));
+
+  if (allChains.length === 0) {
+    return <Skeleton className="w-[100px]" />;
+  }
+
+  return (
+    <div className="relative flex w-max items-center gap-2">
+      <ChainIconClient
+        className="size-6"
+        client={props.client}
+        src={chain?.icon?.url}
       />
-      <StatCard
-        formatter={(v: number) => `${v.toFixed(6)} ETH`}
-        icon={CoinsIcon}
-        isPending={props.isPending}
-        label="Total Gas Spent"
-        value={formatWeiToEth(props.data?.totalGasSpentWei ?? "0")}
-      />
-      <StatCard
-        formatter={(v: number) => `${v.toFixed(6)} ETH`}
-        icon={WalletIcon}
-        isPending={props.isPending}
-        label="Remaining Balance"
-        value={formatWeiToEth(props.data?.remainingBalanceWei ?? "0")}
+      <Link
+        className="before:absolute before:inset-0 hover:underline hover:underline-offset-4"
+        href={`/${chain ? chain.slug : props.chainId}`}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {chain ? chain.name : `Chain #${props.chainId}`}
+      </Link>
+    </div>
+  );
+}
+
+function TransactionFeeCell(props: { usdValue: number }) {
+  return (
+    <span className="font-mono text-sm">
+      ${props.usdValue < 0.01 ? "<0.01" : props.usdValue.toFixed(2)}
+    </span>
+  );
+}
+
+function ChainFilter(props: {
+  chainId: number | undefined;
+  setChainId: (chainId: number | undefined) => void;
+  client: ThirdwebClient;
+}) {
+  return (
+    <div className="flex bg-background">
+      <SingleNetworkSelector
+        client={props.client}
+        chainId={props.chainId}
+        onChange={(chainId) => props.setChainId(chainId)}
+        popoverContentClassName="z-[10001]"
+        align="end"
+        placeholder="All Chains"
+        className="min-w-[150px]"
       />
     </div>
   );

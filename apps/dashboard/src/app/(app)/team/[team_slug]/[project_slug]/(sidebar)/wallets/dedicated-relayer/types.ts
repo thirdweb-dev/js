@@ -1,44 +1,61 @@
 /**
- * Types for Dedicated Relayer (Fleet) feature.
- *
- * Fleet lifecycle:
- * - Not returned: empty state, dev hasn't purchased
- * - Returned with empty executors: pending setup state
- * - Returned with executors: fully active state
+ * Represents a dedicated relayer fleet configuration.
+ * Fleet config is fetched from ProjectBundlerService.fleet (service-utils).
  */
-
-export type FleetExecutor = {
-  address: string;
-  chainId: number;
-};
-
-export type FleetTier = "starter" | "growth" | "enterprise";
-
 export type Fleet = {
   id: string;
-  tier?: FleetTier;
   chainIds: number[];
-  executors: FleetExecutor[];
-  createdAt: string;
-  updatedAt: string;
+  executors: string[]; // executor wallet addresses
 };
 
-export type FleetAnalytics = {
-  totalTransactions: number;
-  totalGasSpentWei: string;
-  remainingBalanceWei: string;
-};
-
+/**
+ * Fleet status based on its state.
+ */
 export type FleetStatus = "not-purchased" | "pending-setup" | "active";
 
-export function getFleetStatus(fleet: Fleet | null | undefined): FleetStatus {
+/**
+ * Derives the fleet status from the fleet object.
+ */
+export function getFleetStatus(fleet: Fleet | null): FleetStatus {
   if (!fleet) {
     return "not-purchased";
   }
-
   if (fleet.executors.length === 0) {
     return "pending-setup";
   }
-
   return "active";
+}
+
+/**
+ * A single transaction from the fleet.
+ */
+export type FleetTransaction = {
+  timestamp: string;
+  chainId: string;
+  transactionFee: number;
+  transactionFeeUsd: number;
+  walletAddress: string;
+  transactionHash: string;
+  userOpHash: string;
+  executorAddress: string;
+};
+
+/**
+ * Summary statistics for fleet transactions.
+ */
+export type FleetTransactionsSummary = {
+  totalTransactions: number;
+  totalGasSpentUsd: number;
+  transactionsByChain: {
+    chainId: string;
+    count: number;
+    gasSpentUsd: number;
+  }[];
+};
+
+/**
+ * Build the fleet ID from team and project.
+ */
+export function buildFleetId(teamId: string, projectId: string): string {
+  return `fleet-${teamId}-${projectId}`;
 }
