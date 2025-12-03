@@ -383,6 +383,16 @@ export function useStepExecutor(
 
       // get tx hash
       const callsStatus = await waitForCallsReceipt(result);
+
+      if (callsStatus.status === "failure") {
+        throw new ApiError({
+          code: "UNKNOWN_ERROR",
+          message:
+            "Transaction failed. Please try a different payment token or amount.",
+          statusCode: 500,
+        });
+      }
+
       const lastReceipt =
         callsStatus.receipts?.[callsStatus.receipts.length - 1];
 
@@ -714,14 +724,41 @@ export function useStepExecutor(
   };
 }
 
-async function supportsAtomic(account: Account, chainId: number) {
+// Cache for supportsAtomic results, keyed by `${accountAddress}_${chainId}`
+const supportsAtomicCache = new Map<string, boolean>();
+
+async function supportsAtomic(
+  account: Account,
+  chainId: number,
+): Promise<boolean> {
+  const cacheKey = `${account.address}_${chainId}`;
+  const cached = supportsAtomicCache.get(cacheKey);
+  if (cached !== undefined) {
+    return cached;
+  }
+
   const capabilitiesFn = account.getCapabilities;
   if (!capabilitiesFn) {
+    supportsAtomicCache.set(cacheKey, false);
     return false;
   }
-  const capabilities = await capabilitiesFn({ chainId });
-  const atomic = capabilities[chainId]?.atomic as
-    | { status: "supported" | "ready" | "unsupported" }
-    | undefined;
-  return atomic?.status === "supported" || atomic?.status === "ready";
+
+  try {
+    // 5s max timeout for capabilities fetch
+    const capabilities = await Promise.race([
+      capabilitiesFn({ chainId }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout")), 5000),
+      ),
+    ]);
+    const atomic = capabilities[chainId]?.atomic as
+      | { status: "supported" | "ready" | "unsupported" }
+      | undefined;
+    const result = atomic?.status === "supported" || atomic?.status === "ready";
+    supportsAtomicCache.set(cacheKey, result);
+    return result;
+  } catch (error) {
+    // Timeout or error fetching capabilities, assume not supported, but dont cache the result
+    return false;
+  }
 }
