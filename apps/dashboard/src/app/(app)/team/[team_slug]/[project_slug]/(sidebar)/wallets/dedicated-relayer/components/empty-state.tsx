@@ -70,7 +70,7 @@ export function DedicatedRelayerEmptyState(
 
           <Button asChild size="lg" variant="outline">
             <Link
-              href="https://portal.thirdweb.com/transactions/relayer"
+              href="https://portal.thirdweb.com/wallets/server"
               rel="noopener noreferrer"
               target="_blank"
             >

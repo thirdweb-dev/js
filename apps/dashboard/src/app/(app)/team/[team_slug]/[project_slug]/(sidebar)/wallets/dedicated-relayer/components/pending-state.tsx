@@ -83,7 +83,7 @@ export function DedicatedRelayerPendingState(
             <SetupStep
               completed={true}
               number={1}
-              title="Stripe subscription activated"
+              title="Subscription activated"
             />
             <SetupStep
               completed={false}

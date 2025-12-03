@@ -195,6 +195,10 @@ export type ProjectBundlerService = {
       value: string;
     }>;
   } | null;
+  fleet?: {
+    chainIds: number[];
+    executors: string[];
+  } | null;
 };
 
 export type ProjectEmbeddedWalletsService = {

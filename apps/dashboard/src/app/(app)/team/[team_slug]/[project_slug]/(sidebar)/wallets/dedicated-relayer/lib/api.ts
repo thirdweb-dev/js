@@ -1,91 +1,75 @@
-import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
-import type { Fleet, FleetAnalytics } from "../types";
+"use server";
 
-type GetFleetParams = {
+import { analyticsServerProxy } from "@/actions/proxies";
+import type { FleetTransaction, FleetTransactionsSummary } from "../types";
+
+type GetFleetTransactionsParams = {
   teamId: string;
-  projectId: string;
-  authToken: string;
+  fleetId: string;
+  from: string;
+  to: string;
+  limit: number;
+  offset: number;
+  chainId?: number;
 };
 
 /**
- * Fetches the fleet data for a project.
- * Returns null if no fleet exists (dev hasn't purchased).
+ * Fetches paginated fleet transactions from the analytics service.
  */
-export async function getFleet(params: GetFleetParams): Promise<Fleet | null> {
-  try {
-    const response = await fetch(
-      `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}/projects/${params.projectId}/fleet`,
-      {
-        headers: {
-          Authorization: `Bearer ${params.authToken}`,
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      },
-    );
+export async function getFleetTransactions(params: GetFleetTransactionsParams) {
+  const res = await analyticsServerProxy<{
+    data: FleetTransaction[];
+    meta: { total: number };
+  }>({
+    method: "GET",
+    pathname: "/v2/bundler/fleet-transactions",
+    searchParams: {
+      teamId: params.teamId,
+      fleetId: params.fleetId,
+      from: params.from,
+      to: params.to,
+      limit: params.limit.toString(),
+      offset: params.offset.toString(),
+      ...(params.chainId && { chainId: params.chainId.toString() }),
+    },
+  });
 
-    if (response.status === 404) {
-      // Fleet not purchased yet
-      return null;
-    }
-
-    if (!response.ok) {
-      console.error("Error fetching fleet:", response.status);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.result as Fleet;
-  } catch (error) {
-    console.error("Error fetching fleet:", error);
-    return null;
+  if (!res.ok) {
+    throw new Error(res.error);
   }
+
+  return res.data;
 }
 
-export type GetFleetAnalyticsParams = {
+type GetFleetTransactionsSummaryParams = {
   teamId: string;
-  projectId: string;
-  authToken: string;
-  startDate?: string;
-  endDate?: string;
+  fleetId: string;
+  from: string;
+  to: string;
 };
 
 /**
- * Fetches analytics for a fleet.
- * Only call this when fleet has executors (active state).
+ * Fetches fleet transactions summary from the analytics service.
  */
-export async function getFleetAnalytics(
-  params: GetFleetAnalyticsParams,
-): Promise<FleetAnalytics | null> {
-  try {
-    const url = new URL(
-      `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}/projects/${params.projectId}/fleet/analytics`,
-    );
+export async function getFleetTransactionsSummary(
+  params: GetFleetTransactionsSummaryParams,
+) {
+  const res = await analyticsServerProxy<{
+    data: FleetTransactionsSummary;
+  }>({
+    method: "GET",
+    pathname: "/v2/bundler/fleet-transactions/summary",
+    searchParams: {
+      teamId: params.teamId,
+      fleetId: params.fleetId,
+      from: params.from,
+      to: params.to,
+    },
+  });
 
-    if (params.startDate) {
-      url.searchParams.set("startDate", params.startDate);
-    }
-    if (params.endDate) {
-      url.searchParams.set("endDate", params.endDate);
-    }
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${params.authToken}`,
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    });
-
-    if (!response.ok) {
-      console.error("Error fetching fleet analytics:", response.status);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.result as FleetAnalytics;
-  } catch (error) {
-    console.error("Error fetching fleet analytics:", error);
-    return null;
+  if (!res.ok) {
+    throw new Error(res.error);
   }
+
+  return res.data;
 }

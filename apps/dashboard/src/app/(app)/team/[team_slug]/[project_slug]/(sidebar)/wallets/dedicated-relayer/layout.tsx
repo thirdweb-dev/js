@@ -37,23 +37,17 @@ export default async function Layout(props: {
         icon: WalletProductIcon,
         title: "Dedicated Relayer",
         description:
-          "Your own executor fleet for automatic transaction relaying at scale",
+          "Your own executor fleet for guaranteed transaction throughput",
         actions: null,
         client,
         links: [
           {
             type: "docs",
-            href: "https://portal.thirdweb.com/transactions/relayer",
+            href: "https://portal.thirdweb.com/wallets/server",
           },
         ],
       }}
-      tabs={[
-        {
-          name: "Overview",
-          path: `${basePath}`,
-          exactMatch: true,
-        },
-      ]}
+      tabs={[]}
     >
       {props.children}
     </ProjectPage>
