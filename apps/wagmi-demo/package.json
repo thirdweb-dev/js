@@ -14,16 +14,16 @@
   "dependencies": {
     "@tanstack/react-query": "5.81.5",
     "@thirdweb-dev/wagmi-adapter": "workspace:*",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "thirdweb": "workspace:*",
     "viem": "2.39.0",
     "wagmi": "2.19.4"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.0.4",
     "@wagmi/cli": "latest",
     "buffer": "^6.0.3",
