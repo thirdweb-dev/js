@@ -82,6 +82,10 @@ export const sidebar: SideBar = {
           href: `${walletSlug}/monitor`,
           name: "Monitor Transactions",
         },
+        {
+          href: `${walletSlug}/solana`,
+          name: "Solana Transactions",
+        },
       ],
     },
     { separator: true },

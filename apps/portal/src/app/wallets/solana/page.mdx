@@ -1,0 +1,237 @@
+import {
+  Callout,
+  createMetadata,
+  OpenApiEndpoint,
+  Steps,
+  Step,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@doc";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Solana Server Wallets",
+    icon: "wallets",
+  },
+  title: "Solana Server Wallets | thirdweb",
+  description:
+    "Create and manage Solana server wallets for backend applications",
+});
+
+# Solana Server Wallets
+
+Create and manage Solana wallets for backend applications using thirdweb's secure server wallet infrastructure.
+
+<Callout variant="info" title="Funding Required">
+  Solana server wallets are **not sponsored**. You must fund your wallet with SOL to transact.
+</Callout>
+
+## Capabilities
+
+- **Wallet Management**: Create and list Solana wallets
+- **Balance & Transactions**: Check balances, send SOL/SPL tokens, query transaction status
+- **Signing**: Sign messages and transactions without broadcasting
+- **Token Swaps**: Get quotes and execute swaps (mainnet only)
+- **Raw Transactions**: Build and broadcast custom transactions with full instruction control
+
+## Getting Started
+
+<Steps>
+  <Step title="Create a Server Wallet">
+    Create a Solana server wallet from the [dashboard](https://thirdweb.com/team/~/~/settings/server-wallets) or via API.
+  </Step>
+
+  <Step title="Fund Your Wallet">
+    Transfer SOL to your wallet address to cover transaction fees.
+  </Step>
+
+  <Step title="Start Transacting">
+    Send tokens, sign messages, execute swaps, or submit custom transactions.
+  </Step>
+</Steps>
+
+---
+
+## Wallet Management
+
+### List Solana Wallets
+
+<OpenApiEndpoint path="/v1/solana/wallets" method="GET" />
+
+### Create Solana Wallet
+
+<OpenApiEndpoint path="/v1/solana/wallets" method="POST" />
+
+---
+
+## Balance & Tokens
+
+### Get Wallet Balance
+
+<OpenApiEndpoint path="/v1/solana/wallets/{address}/balance" method="GET" />
+
+### Send Tokens
+
+Transfer native SOL or SPL tokens. Automatically handles token account creation for SPL tokens.
+
+<OpenApiEndpoint path="/v1/solana/send" method="POST" />
+
+---
+
+## Message & Transaction Signing
+
+### Sign Message
+
+<OpenApiEndpoint path="/v1/solana/sign-message" method="POST" />
+
+### Sign Transaction
+
+Sign a transaction without broadcasting. Provide a serialized transaction or instructions to assemble one.
+
+<OpenApiEndpoint path="/v1/solana/sign-transaction" method="POST" />
+
+### Broadcast Signed Transaction
+
+<OpenApiEndpoint path="/v1/solana/broadcast-transaction" method="POST" />
+
+---
+
+## Custom Transactions
+
+### Send Transaction
+
+Submit a transaction composed of one or more instructions. Transactions are queued and processed asynchronously.
+
+<OpenApiEndpoint path="/v1/solana/transactions" method="POST" />
+
+### Get Transaction Status
+
+<OpenApiEndpoint path="/v1/solana/transactions/{transactionId}" method="GET" />
+
+---
+
+## Token Swaps
+
+<Callout variant="info" title="Mainnet Only">
+  Token swaps are only available on Solana mainnet.
+</Callout>
+
+### Get Swap Quote
+
+<OpenApiEndpoint path="/v1/solana/swap" method="GET" />
+
+### Execute Swap
+
+<OpenApiEndpoint path="/v1/solana/swap" method="POST" />
+
+---
+
+## Example Workflow
+
+<Tabs defaultValue="create">
+  <TabsList>
+    <TabsTrigger value="create">1. Create Wallet</TabsTrigger>
+    <TabsTrigger value="fund">2. Check Balance</TabsTrigger>
+    <TabsTrigger value="send">3. Send Tokens</TabsTrigger>
+    <TabsTrigger value="swap">4. Swap Tokens</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="create">
+    ```bash
+    curl -X POST "https://api.thirdweb.com/v1/solana/wallets" \
+      -H "Content-Type: application/json" \
+      -H "x-secret-key: YOUR_SECRET_KEY" \
+      -d '{"label": "treasury-wallet"}'
+    ```
+
+    ```json
+    {
+      "result": {
+        "address": "8JBLmveV4YF5AQ7EVnKJgyj6etGgVkPp3tYqQMTu3p5B",
+        "label": "treasury-wallet",
+        "createdAt": "2024-01-15T10:30:00Z",
+        "updatedAt": "2024-01-15T10:30:00Z"
+      }
+    }
+    ```
+  </TabsContent>
+
+  <TabsContent value="fund">
+    ```bash
+    curl -X GET "https://api.thirdweb.com/v1/solana/wallets/8JBLmveV4YF5AQ7EVnKJgyj6etGgVkPp3tYqQMTu3p5B/balance?chainId=solana:mainnet" \
+      -H "x-secret-key: YOUR_SECRET_KEY"
+    ```
+
+    ```json
+    {
+      "result": {
+        "chainId": "solana:mainnet",
+        "decimals": 9,
+        "displayValue": "1.5",
+        "value": "1500000000"
+      }
+    }
+    ```
+  </TabsContent>
+
+  <TabsContent value="send">
+    ```bash
+    curl -X POST "https://api.thirdweb.com/v1/solana/send" \
+      -H "Content-Type: application/json" \
+      -H "x-secret-key: YOUR_SECRET_KEY" \
+      -d '{
+        "from": "8JBLmveV4YF5AQ7EVnKJgyj6etGgVkPp3tYqQMTu3p5B",
+        "to": "FhtwVYF1wKAm7fWmE2N5P2eCv13wt2aT8W4Q9NQ9YcJH",
+        "amount": "100000000",
+        "chainId": "solana:mainnet"
+      }'
+    ```
+
+    ```json
+    {
+      "result": {
+        "transactionId": "tx_abc123..."
+      }
+    }
+    ```
+  </TabsContent>
+
+  <TabsContent value="swap">
+    ```bash
+    curl -X POST "https://api.thirdweb.com/v1/solana/swap" \
+      -H "Content-Type: application/json" \
+      -H "x-secret-key: YOUR_SECRET_KEY" \
+      -d '{
+        "address": "8JBLmveV4YF5AQ7EVnKJgyj6etGgVkPp3tYqQMTu3p5B",
+        "tokenIn": "So11111111111111111111111111111111111111112",
+        "tokenOut": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "100000000",
+        "chainId": "solana:mainnet"
+      }'
+    ```
+
+    ```json
+    {
+      "result": {
+        "signature": "5ttCNobho7nk5F...",
+        "inputMint": "So11111111111111111111111111111111111111112",
+        "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "inputAmount": "100000000",
+        "outputAmount": "95423156",
+        "requestId": "uuid-1234-5678"
+      }
+    }
+    ```
+  </TabsContent>
+</Tabs>
+
+---
+
+## Network Identifiers
+
+| Network | Identifier |
+|---------|------------|
+| Mainnet | `solana:mainnet` |
+| Devnet | `solana:devnet` |
