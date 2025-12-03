@@ -108,6 +108,8 @@ export function PaymentDetails({
             preparedQuote.type === "transfer"
               ? preparedQuote.intent.tokenAddress
               : preparedQuote.intent.destinationTokenAddress,
+          walletAddress: paymentMethod.payerWallet?.getAccount()?.address,
+          walletType: paymentMethod.payerWallet?.id,
         });
       }
       return true;

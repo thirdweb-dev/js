@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { trackPayEvent } from "../../../analytics/track/pay.js";
 import type { status as OnrampStatus } from "../../../bridge/OnrampStatus.js";
 import { ApiError } from "../../../bridge/types/Errors.js";
 import type {
@@ -9,6 +10,7 @@ import type { Status } from "../../../bridge/types/Status.js";
 import { getCachedChain } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt.js";
+import { stringify } from "../../../utils/json.js";
 import { waitForCallsReceipt } from "../../../wallets/eip5792/wait-for-calls-receipt.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WindowAdapter } from "../adapters/WindowAdapter.js";
@@ -481,6 +483,22 @@ export function useStepExecutor(
       return;
     }
 
+    trackPayEvent({
+      client,
+      event: `ub:ui:execution:start`,
+      toChainId:
+        preparedQuote.steps[preparedQuote.steps.length - 1]?.destinationToken
+          .chainId,
+      toToken:
+        preparedQuote.steps[preparedQuote.steps.length - 1]?.destinationToken
+          .address,
+      fromToken: preparedQuote.steps[0]?.originToken.address,
+      chainId: preparedQuote.steps[0]?.destinationToken.chainId,
+      amountWei: preparedQuote.steps[0]?.originAmount?.toString(),
+      walletAddress: wallet?.getAccount()?.address,
+      walletType: wallet?.id,
+    });
+
     setExecutionState("executing");
     setError(undefined);
     const completedStatusResults: CompletedStatusResult[] = [];
@@ -625,9 +643,41 @@ export function useStepExecutor(
         if (onComplete) {
           onComplete(completedStatusResults);
         }
+
+        trackPayEvent({
+          client,
+          event: `ub:ui:execution:success`,
+          toChainId:
+            preparedQuote.steps[preparedQuote.steps.length - 1]
+              ?.destinationToken.chainId,
+          toToken:
+            preparedQuote.steps[preparedQuote.steps.length - 1]
+              ?.destinationToken.address,
+          fromToken: preparedQuote.steps[0]?.originToken.address,
+          chainId: preparedQuote.steps[0]?.destinationToken.chainId,
+          amountWei: preparedQuote.steps[0]?.originAmount?.toString(),
+          walletAddress: wallet?.getAccount()?.address,
+          walletType: wallet?.id,
+        });
       }
     } catch (err) {
       console.error("Error executing payment", err);
+      trackPayEvent({
+        client,
+        error: err instanceof Error ? err.message : stringify(err),
+        event: `ub:ui:execution:error`,
+        toChainId:
+          preparedQuote.steps[preparedQuote.steps.length - 1]?.destinationToken
+            .chainId,
+        toToken:
+          preparedQuote.steps[preparedQuote.steps.length - 1]?.destinationToken
+            .address,
+        fromToken: preparedQuote.steps[0]?.originToken.address,
+        chainId: preparedQuote.steps[0]?.destinationToken.chainId,
+        amountWei: preparedQuote.steps[0]?.originAmount?.toString(),
+        walletAddress: wallet?.getAccount()?.address,
+        walletType: wallet?.id,
+      });
       if (err instanceof ApiError) {
         setError(err);
       } else {
@@ -655,6 +705,7 @@ export function useStepExecutor(
     executeOnramp,
     onComplete,
     preparedQuote,
+    client,
   ]);
 
   // Start execution
