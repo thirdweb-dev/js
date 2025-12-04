@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
@@ -246,16 +245,15 @@ export type SwapWidgetProps = {
  * @bridge
  */
 export function SwapWidget(props: SwapWidgetProps) {
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client: props.client,
-        event: "ub:ui:swap_widget:render",
-      });
-      return true;
-    },
-    queryKey: ["swap_widget:render"],
-  });
+  const hasFiredRenderEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredRenderEvent.current) return;
+    hasFiredRenderEvent.current = true;
+    trackPayEvent({
+      client: props.client,
+      event: "ub:ui:swap_widget:render",
+    });
+  }, [props.client]);
 
   return (
     <SwapWidgetContainer
@@ -401,6 +399,17 @@ function SwapWidgetContent(
         amountSelection={amountSelection}
         setAmountSelection={setAmountSelection}
         onSwap={(data) => {
+          trackPayEvent({
+            chainId: data.result.intent.originChainId,
+            client: props.client,
+            event: "payment_details",
+            fromToken: data.result.intent.originTokenAddress,
+            toChainId: data.result.intent.destinationChainId,
+            toToken: data.result.intent.destinationTokenAddress,
+            walletAddress:
+              activeWalletInfo?.activeWallet?.getAccount()?.address,
+            walletType: activeWalletInfo?.activeWallet?.id,
+          });
           setScreen({
             id: "2:preview",
             buyToken: data.buyToken,

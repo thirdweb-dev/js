@@ -1,7 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
@@ -81,41 +79,6 @@ export function PaymentDetails({
       onError(error as Error);
     }
   };
-
-  useQuery({
-    queryFn: () => {
-      if (
-        preparedQuote.type === "buy" ||
-        preparedQuote.type === "sell" ||
-        preparedQuote.type === "transfer"
-      ) {
-        trackPayEvent({
-          chainId:
-            preparedQuote.type === "transfer"
-              ? preparedQuote.intent.chainId
-              : preparedQuote.intent.originChainId,
-          client,
-          event: "payment_details",
-          fromToken:
-            preparedQuote.type === "transfer"
-              ? preparedQuote.intent.tokenAddress
-              : preparedQuote.intent.originTokenAddress,
-          toChainId:
-            preparedQuote.type === "transfer"
-              ? preparedQuote.intent.chainId
-              : preparedQuote.intent.destinationChainId,
-          toToken:
-            preparedQuote.type === "transfer"
-              ? preparedQuote.intent.tokenAddress
-              : preparedQuote.intent.destinationTokenAddress,
-          walletAddress: paymentMethod.payerWallet?.getAccount()?.address,
-          walletType: paymentMethod.payerWallet?.id,
-        });
-      }
-      return true;
-    },
-    queryKey: ["payment_details", preparedQuote.type],
-  });
 
   const chainsQuery = useChainsQuery(
     preparedQuote.steps.flatMap((s) => [

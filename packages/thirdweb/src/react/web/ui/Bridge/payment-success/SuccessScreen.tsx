@@ -1,7 +1,7 @@
 "use client";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
@@ -63,43 +63,43 @@ export function SuccessScreen({
   const [viewState, setViewState] = useState<ViewState>("success");
   const queryClient = useQueryClient();
 
-  useQuery({
-    queryFn: () => {
-      if (preparedQuote.type === "buy" || preparedQuote.type === "sell") {
-        trackPayEvent({
-          chainId: preparedQuote.intent.originChainId,
-          client: client,
-          event: "ub:ui:success_screen",
-          fromToken: preparedQuote.intent.originTokenAddress,
-          toChainId: preparedQuote.intent.destinationChainId,
-          toToken: preparedQuote.intent.destinationTokenAddress,
-          walletAddress: preparedQuote.intent.sender,
-        });
-      }
-      if (preparedQuote.type === "transfer") {
-        trackPayEvent({
-          chainId: preparedQuote.intent.chainId,
-          client: client,
-          event: "ub:ui:success_screen",
-          fromToken: preparedQuote.intent.tokenAddress,
-          toChainId: preparedQuote.intent.chainId,
-          toToken: preparedQuote.intent.tokenAddress,
-          walletAddress: preparedQuote.intent.sender,
-        });
-      }
-      queryClient.invalidateQueries({
-        queryKey: ["bridge/v1/wallets"],
+  const hasFiredSuccessEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredSuccessEvent.current) return;
+    hasFiredSuccessEvent.current = true;
+
+    if (preparedQuote.type === "buy" || preparedQuote.type === "sell") {
+      trackPayEvent({
+        chainId: preparedQuote.intent.originChainId,
+        client: client,
+        event: "ub:ui:success_screen",
+        fromToken: preparedQuote.intent.originTokenAddress,
+        toChainId: preparedQuote.intent.destinationChainId,
+        toToken: preparedQuote.intent.destinationTokenAddress,
+        walletAddress: preparedQuote.intent.sender,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["walletBalance"],
+    }
+    if (preparedQuote.type === "transfer") {
+      trackPayEvent({
+        chainId: preparedQuote.intent.chainId,
+        client: client,
+        event: "ub:ui:success_screen",
+        fromToken: preparedQuote.intent.tokenAddress,
+        toChainId: preparedQuote.intent.chainId,
+        toToken: preparedQuote.intent.tokenAddress,
+        walletAddress: preparedQuote.intent.sender,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["payment-methods"],
-      });
-      return true;
-    },
-    queryKey: ["success_screen", preparedQuote.type],
-  });
+    }
+    queryClient.invalidateQueries({
+      queryKey: ["bridge/v1/wallets"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["walletBalance"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["payment-methods"],
+    });
+  }, [client, preparedQuote, queryClient]);
 
   if (viewState === "detail") {
     return (

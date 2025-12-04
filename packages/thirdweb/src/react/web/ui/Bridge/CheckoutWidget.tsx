@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { TokenWithPrices } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
@@ -335,18 +334,17 @@ function CheckoutWidgetContentWrapper(props: CheckoutWidgetProps) {
     client: props.client,
   });
 
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client: props.client,
-        event: "ub:ui:checkout_widget:render",
-        toChainId: props.chain.id,
-        toToken: props.tokenAddress,
-      });
-      return true;
-    },
-    queryKey: ["checkout_widget:render"],
-  });
+  const hasFiredRenderEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredRenderEvent.current) return;
+    hasFiredRenderEvent.current = true;
+    trackPayEvent({
+      client: props.client,
+      event: "ub:ui:checkout_widget:render",
+      toChainId: props.chain.id,
+      toToken: props.tokenAddress,
+    });
+  }, [props.client, props.chain.id, props.tokenAddress]);
 
   // if branding is disabled for widget, disable it for connect options too
   const connectOptions = useMemo(() => {
@@ -522,6 +520,12 @@ function CheckoutWidgetContent(
         buttonLabel={props.buttonLabel}
         // others
         onContinue={(destinationAmount, destinationToken, receiverAddress) => {
+          trackPayEvent({
+            client: props.client,
+            event: "payment_selection",
+            toChainId: destinationToken.chainId,
+            toToken: destinationToken.address,
+          });
           setScreen({
             id: "2:methodSelection",
             destinationAmount,
@@ -556,6 +560,20 @@ function CheckoutWidgetContent(
           handleError(error, undefined);
         }}
         onPaymentMethodSelected={(paymentMethod) => {
+          trackPayEvent({
+            chainId:
+              paymentMethod.type === "wallet"
+                ? paymentMethod.originToken.chainId
+                : undefined,
+            client: props.client,
+            event: "ub:ui:loading_quote:direct_payment",
+            fromToken:
+              paymentMethod.type === "wallet"
+                ? paymentMethod.originToken.address
+                : undefined,
+            toChainId: screen.destinationToken.chainId,
+            toToken: screen.destinationToken.address,
+          });
           setScreen({
             ...screen,
             id: "3:load-quote",
@@ -589,6 +607,35 @@ function CheckoutWidgetContent(
           handleError(error, undefined);
         }}
         onQuoteReceived={(preparedQuote, request) => {
+          if (
+            preparedQuote.type === "buy" ||
+            preparedQuote.type === "sell" ||
+            preparedQuote.type === "transfer"
+          ) {
+            trackPayEvent({
+              chainId:
+                preparedQuote.type === "transfer"
+                  ? preparedQuote.intent.chainId
+                  : preparedQuote.intent.originChainId,
+              client: props.client,
+              event: "payment_details",
+              fromToken:
+                preparedQuote.type === "transfer"
+                  ? preparedQuote.intent.tokenAddress
+                  : preparedQuote.intent.originTokenAddress,
+              toChainId:
+                preparedQuote.type === "transfer"
+                  ? preparedQuote.intent.chainId
+                  : preparedQuote.intent.destinationChainId,
+              toToken:
+                preparedQuote.type === "transfer"
+                  ? preparedQuote.intent.tokenAddress
+                  : preparedQuote.intent.destinationTokenAddress,
+              walletAddress:
+                screen.paymentMethod.payerWallet?.getAccount()?.address,
+              walletType: screen.paymentMethod.payerWallet?.id,
+            });
+          }
           setScreen({
             ...screen,
             id: "4:preview",

@@ -1,7 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Token } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { PurchaseData } from "../../../../pay/types.js";
@@ -92,7 +90,7 @@ export function QuoteLoader({
   purchaseData,
   paymentLinkId,
   feePayer,
-  mode,
+  mode: _mode,
 }: QuoteLoaderProps) {
   const request: BridgePrepareRequest = getBridgeParams({
     amount,
@@ -106,28 +104,6 @@ export function QuoteLoader({
     sender,
   });
   const prepareQuery = useBridgePrepare(request);
-
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        chainId:
-          paymentMethod.type === "wallet"
-            ? paymentMethod.originToken.chainId
-            : undefined,
-        client,
-        event: `ub:ui:loading_quote:${mode}`,
-        fromToken:
-          paymentMethod.type === "wallet"
-            ? paymentMethod.originToken.address
-            : undefined,
-        toChainId: destinationToken.chainId,
-        toToken: destinationToken.address,
-        walletAddress: sender,
-      });
-      return true;
-    },
-    queryKey: ["loading_quote", paymentMethod.type],
-  });
 
   // Handle successful quote
   useEffect(() => {

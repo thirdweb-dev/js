@@ -1,6 +1,6 @@
 "use client";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -38,17 +38,16 @@ export function ErrorBanner({
 
   const { userMessage } = useBridgeError({ error });
 
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client,
-        error: error.message,
-        event: "ub:ui:error",
-      });
-      return true;
-    },
-    queryKey: ["error_banner", userMessage],
-  });
+  const hasFiredErrorEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredErrorEvent.current) return;
+    hasFiredErrorEvent.current = true;
+    trackPayEvent({
+      client,
+      error: error.message,
+      event: "ub:ui:error",
+    });
+  }, [client, error.message]);
 
   return (
     <Container flex="column" fullHeight gap="md" p="md">
