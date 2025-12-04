@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.115.1
+
+### Patch Changes
+
+- [#8490](https://github.com/thirdweb-dev/js/pull/8490) [`551ec68`](https://github.com/thirdweb-dev/js/commit/551ec680df3a84d2cacca4dfb9f0522fd7383f7a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Payment selection tracking
+
+- [#8495](https://github.com/thirdweb-dev/js/pull/8495) [`b6be8d6`](https://github.com/thirdweb-dev/js/commit/b6be8d67ef74f425e911d900a9adb19f9a70efd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Faster token balance load query
+
 ## 5.115.0
 
 ### Minor Changes
