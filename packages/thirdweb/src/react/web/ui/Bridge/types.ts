@@ -37,7 +37,8 @@ export type PaymentMethod =
       payerWallet: Wallet;
       originToken: TokenWithPrices;
       balance: bigint;
-      quote: Quote;
+      quote?: Quote;
+      hasEnoughBalance: boolean;
     }
   | {
       type: "fiat";

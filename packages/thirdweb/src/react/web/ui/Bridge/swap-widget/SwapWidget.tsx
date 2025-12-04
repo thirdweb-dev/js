@@ -451,6 +451,7 @@ function SwapWidgetContent(
           balance: screen.sellTokenBalance,
           originToken: screen.sellToken,
           action: screen.mode,
+          hasEnoughBalance: true,
         }}
         preparedQuote={screen.preparedQuote}
         currency={props.currency}
