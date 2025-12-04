@@ -1,5 +1,6 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getInsightStatusCodeUsage } from "@/api/analytics";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import { RequestsByStatusGraph } from "../gateway/indexer/components/RequestsByStatusGraph";
 
 export function IndexerRequestsChartCard(props: {
@@ -63,6 +64,16 @@ async function AsyncIndexerRequestsChartCard(props: {
       data={requestsData && "data" in requestsData ? requestsData.data : []}
       isPending={false}
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/indexer`}
+      emptyChartState={
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View more details",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/gateway/indexer`,
+          }}
+          title="No data available"
+          description="No indexer requests found in selected time period"
+        />
+      }
     />
   );
 }

@@ -10,6 +10,7 @@ export function RPCRequestsChartUI(props: {
   data: RpcUsageTypeStats[];
   viewMoreLink: string | undefined;
   isPending: boolean;
+  emptyChartState?: React.ReactElement | undefined;
 }) {
   const total = useMemo(() => {
     return props.data.reduce((acc, curr) => acc + curr.count, 0);
@@ -73,6 +74,7 @@ export function RPCRequestsChartUI(props: {
       xAxis={{
         showHour: showBreakdownByHour,
       }}
+      emptyChartState={props.emptyChartState}
     />
   );
 }

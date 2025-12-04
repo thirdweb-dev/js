@@ -1,5 +1,6 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getX402Settlements } from "@/api/analytics";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import { X402RequestsChartCardUI } from "./x402-requests-chart";
 
 async function AsyncX402RequestsChart(props: {
@@ -41,6 +42,16 @@ async function AsyncX402RequestsChart(props: {
       isPending={false}
       teamSlug={props.teamSlug}
       projectSlug={props.projectSlug}
+      emptyChartState={
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View Configuration",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/x402/configuration`,
+          }}
+          title="No data available"
+          description="No X402 requests found in selected time period"
+        />
+      }
     />
   );
 }

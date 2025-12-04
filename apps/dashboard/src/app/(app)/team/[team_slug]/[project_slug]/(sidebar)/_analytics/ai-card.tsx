@@ -1,5 +1,6 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getAiUsage } from "@/api/analytics";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import { AiTokenUsageChartCardUI } from "../ai/analytics/chart/AiTokenUsageChartCard";
 
 async function AsyncAiAnalytics(props: {
@@ -32,6 +33,16 @@ async function AsyncAiAnalytics(props: {
       isPending={false}
       aiUsageStats={stats}
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/ai/analytics`}
+      emptyChartState={
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View more details",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/ai/analytics`,
+          }}
+          title="No data available"
+          description="No AI usage found in selected time period"
+        />
+      }
     />
   );
 }

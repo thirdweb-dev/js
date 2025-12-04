@@ -78,9 +78,7 @@ export function ThirdwebBarChart<TConfig extends ChartConfig>(
           {props.isPending ? (
             <LoadingChartState />
           ) : props.data.length === 0 ? (
-            <EmptyChartState type="bar">
-              {props.emptyChartState}
-            </EmptyChartState>
+            <EmptyChartState content={props.emptyChartState} />
           ) : (
             <BarChart accessibilityLayer data={props.data}>
               <CartesianGrid vertical={false} />

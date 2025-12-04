@@ -90,9 +90,7 @@ export function ThirdwebAreaChart<TConfig extends ChartConfig>(
           {props.isPending ? (
             <LoadingChartState />
           ) : props.data.length === 0 ? (
-            <EmptyChartState type="area">
-              {props.emptyChartState}
-            </EmptyChartState>
+            <EmptyChartState content={props.emptyChartState} />
           ) : (
             <AreaChart
               accessibilityLayer

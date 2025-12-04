@@ -1,7 +1,7 @@
 "use client";
 
-import { EmptyStateContent } from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { useSetResponsiveSearchParams } from "responsive-rsc";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import type { InAppWalletStats, UniversalBridgeStats } from "@/types/analytics";
 import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
 
@@ -39,10 +39,13 @@ export function ProjectHighlightsCard(props: {
     feesCollected: {
       color: "hsl(var(--chart-4))",
       emptyContent: (
-        <EmptyStateContent
-          description="Your app hasn't collected any fees yet."
-          link={`/team/${teamSlug}/${projectSlug}/bridge/configuration`}
-          metric="Fees"
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View Configuration",
+            href: `/team/${teamSlug}/${projectSlug}/bridge/configuration`,
+          }}
+          title="No data available"
+          description="No bridge revenue generated in selected time period"
         />
       ),
       isCurrency: true,

@@ -10,6 +10,7 @@ export function X402RequestsChartCardUI(props: {
   isPending: boolean;
   teamSlug: string;
   projectSlug: string;
+  emptyChartState?: React.ReactElement | undefined;
 }) {
   const total = useMemo(() => {
     return props.stats.reduce((acc, curr) => acc + curr.requests, 0);
@@ -41,6 +42,7 @@ export function X402RequestsChartCardUI(props: {
           viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/x402`}
         />
       }
+      emptyChartState={props.emptyChartState}
     />
   );
 }

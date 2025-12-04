@@ -1,5 +1,6 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getEOAAndInAppWalletConnections } from "@/api/analytics";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import {
   AutoMergeBarChart,
   type StatData,
@@ -75,7 +76,16 @@ function AllWalletConnectionsChartUI(props: {
       isPending={props.isPending}
       exportButton={undefined}
       maxLabelsToShow={5}
-      emptyChartState={undefined}
+      emptyChartState={
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View Configuration",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/wallets/user-wallets/configure`,
+          }}
+          title="No data available"
+          description="No wallet connections found in selected time period"
+        />
+      }
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/wallets/user-wallets`}
     />
   );

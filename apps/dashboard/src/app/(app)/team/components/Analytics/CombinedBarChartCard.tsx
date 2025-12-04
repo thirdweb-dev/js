@@ -83,7 +83,7 @@ export function CombinedBarChartCard<
           </div>
         </div>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6 sm:pl-0">
+      <CardContent className="">
         <BarChart
           activeKey={activeChart}
           chartConfig={chartConfig}

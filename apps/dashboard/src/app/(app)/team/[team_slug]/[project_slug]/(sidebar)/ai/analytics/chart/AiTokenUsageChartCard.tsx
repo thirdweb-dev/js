@@ -20,6 +20,7 @@ export function AiTokenUsageChartCardUI(props: {
   isPending: boolean;
   title: string;
   viewMoreLink: string | undefined;
+  emptyChartState?: React.ReactElement | undefined;
 }) {
   const { aiUsageStats } = props;
 
@@ -93,7 +94,7 @@ export function AiTokenUsageChartCardUI(props: {
         )
       }
       data={chartData}
-      emptyChartState={<AiTokenUsageEmptyChartState />}
+      emptyChartState={props.emptyChartState}
       hideLabel={false}
       isPending={props.isPending}
       showLegend={false}
@@ -109,7 +110,7 @@ export function AiTokenUsageChartCardUI(props: {
   );
 }
 
-function AiTokenUsageEmptyChartState() {
+function _AiTokenUsageEmptyChartState() {
   return (
     <div className="flex flex-col items-center justify-center px-4">
       <h3 className="text-base font-semibold text-foreground mb-1 text-center">

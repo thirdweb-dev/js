@@ -1,5 +1,6 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getRpcUsageByType } from "@/api/analytics";
+import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
 import { RPCRequestsChartUI } from "../gateway/rpc/components/RequestsGraph";
 
 async function AsyncRPCRequestsChartCard(props: {
@@ -23,11 +24,23 @@ async function AsyncRPCRequestsChartCard(props: {
     props.authToken,
   ).catch(() => undefined);
 
+  const isEmpty = requestsData?.every((d) => d.count === 0);
+
   return (
     <RPCRequestsChartUI
       isPending={false}
-      data={requestsData || []}
+      data={isEmpty ? [] : requestsData || []}
       viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`}
+      emptyChartState={
+        <EmptyChartStateGetStartedCTA
+          link={{
+            label: "View more details",
+            href: `/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`,
+          }}
+          title="No data available"
+          description="No RPC requests found in selected time period"
+        />
+      }
     />
   );
 }

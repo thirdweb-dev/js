@@ -1,6 +1,10 @@
 import { ResponsiveSuspense } from "responsive-rsc";
 import { getUniversalBridgeUsage } from "@/api/analytics";
-import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import {
+  EmptyChartState,
+  EmptyChartStateGetStartedCTA,
+  LoadingChartState,
+} from "@/components/analytics/empty-chart-state";
 import { TotalValueChartHeader } from "@/components/blocks/charts/chart-header";
 import type { UniversalBridgeStats } from "@/types/analytics";
 import { TotalVolumePieChart } from "../payments/components/TotalVolumePieChart";
@@ -76,7 +80,22 @@ function BridgeChartCardUI(props: {
         viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/bridge`}
       />
       <div className="p-6 grow flex items-center justify-center">
-        <TotalVolumePieChart data={props.data} hideTotal={true} />
+        {total === 0 ? (
+          <EmptyChartState
+            content={
+              <EmptyChartStateGetStartedCTA
+                link={{
+                  label: "View Configuration",
+                  href: `/team/${props.teamSlug}/${props.projectSlug}/bridge/configuration`,
+                }}
+                title="No data available"
+                description="No bridge volume found in selected time period"
+              />
+            }
+          />
+        ) : (
+          <TotalVolumePieChart data={props.data} hideTotal={true} />
+        )}
       </div>
     </div>
   );

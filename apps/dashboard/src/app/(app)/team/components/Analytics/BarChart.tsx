@@ -4,7 +4,6 @@ import {
   CartesianGrid,
   BarChart as RechartsBarChart,
   XAxis,
-  YAxis,
 } from "recharts";
 import { EmptyChartState } from "@/components/analytics/empty-chart-state";
 import {
@@ -13,6 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
 import { formatTickerNumber } from "@/utils/format-utils";
 import { toUSD } from "@/utils/number";
 
@@ -23,6 +23,7 @@ export function BarChart({
   tooltipLabel,
   isCurrency = false,
   emptyChartContent,
+  chartContentClassName,
 }: {
   chartConfig: ChartConfig;
   data: { [key in string]: number | string }[];
@@ -30,10 +31,11 @@ export function BarChart({
   tooltipLabel?: string;
   isCurrency?: boolean;
   emptyChartContent?: React.ReactNode;
+  chartContentClassName?: string;
 }) {
   return (
     <ChartContainer
-      className="aspect-auto h-[250px] w-full pt-6"
+      className={cn("aspect-auto h-[275px] w-full pt-6", chartContentClassName)}
       config={{
         [activeKey]: {
           label: tooltipLabel ?? chartConfig[activeKey]?.label,
@@ -42,16 +44,11 @@ export function BarChart({
       }}
     >
       {data.length === 0 || data.every((d) => d[activeKey] === 0) ? (
-        <EmptyChartState type="bar"> {emptyChartContent} </EmptyChartState>
+        <div className="h-full">
+          <EmptyChartState content={emptyChartContent} />
+        </div>
       ) : (
-        <RechartsBarChart
-          accessibilityLayer
-          data={data}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
+        <RechartsBarChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
             axisLine={false}
@@ -67,13 +64,7 @@ export function BarChart({
             tickLine={false}
             tickMargin={8}
           />
-          <YAxis
-            axisLine={false}
-            dataKey={activeKey}
-            tickFormatter={(value: number) => formatTickerNumber(value)}
-            tickLine={false}
-            width={48}
-          />
+
           <ChartTooltip
             content={
               <ChartTooltipContent

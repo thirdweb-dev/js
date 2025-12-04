@@ -82,7 +82,7 @@ export function PieChartCard({
         {isPending ? (
           <LoadingChartState />
         ) : isAllEmpty ? (
-          <EmptyChartState type="none"> {emptyChartState} </EmptyChartState>
+          <EmptyChartState content={emptyChartState} />
         ) : (
           <PieChart
             data={processedData}
