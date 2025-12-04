@@ -17,9 +17,9 @@ import { Button } from "@/components/ui/button";
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useTestWebhook } from "../hooks/useTestWebhook";
 import { CreateContractWebhookButton } from "./CreateWebhookModal";
 import { RelativeTime } from "./RelativeTime";
+import { useTestWebhook } from "./useTestWebhook";
 
 function getEventType(filters: WebhookFilters): string {
   if (!filters || typeof filters !== "object") {

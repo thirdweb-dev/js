@@ -16,26 +16,26 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
-import { useAbiMultiFetch } from "../hooks/useAbiProcessing";
-import { useTestWebhook } from "../hooks/useTestWebhook";
+import BasicInfoStep from "./BasicInfoStep";
+import { FilterDetailsStep } from "./FilterDetailsStep";
+import ReviewStep from "./ReviewStep";
+import { useAbiMultiFetch } from "./useAbiProcessing";
+import { useTestWebhook } from "./useTestWebhook";
 import {
   extractEventSignatures,
   extractFunctionSignatures,
-} from "../utils/abiUtils";
-import type { WebhookPayload } from "../utils/webhookPayloadUtils";
+} from "./utils/abiUtils";
+import type { WebhookPayload } from "./utils/webhookPayloadUtils";
 import {
   buildEventWebhookPayload,
   buildTransactionWebhookPayload,
-} from "../utils/webhookPayloadUtils";
+} from "./utils/webhookPayloadUtils";
 import {
   type WebhookFormStep,
   WebhookFormSteps,
   type WebhookFormValues,
   webhookFormSchema,
-} from "../utils/webhookTypes";
-import BasicInfoStep from "./BasicInfoStep";
-import { FilterDetailsStep } from "./FilterDetailsStep";
-import ReviewStep from "./ReviewStep";
+} from "./utils/webhookTypes";
 
 interface CreateWebhookModalProps {
   projectClientId: string;

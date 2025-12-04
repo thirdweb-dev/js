@@ -5,12 +5,12 @@ import { useMemo } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import { getContract, resolveAbiFromContractApi } from "thirdweb/contract";
 import { useGetV5DashboardChain } from "@/hooks/chains/v5-adapter";
-import { parseAddresses } from "../utils/webhookPayloadUtils";
+import { parseAddresses } from "./utils/webhookPayloadUtils";
 import type {
   AbiData,
   EventSignature,
   FunctionSignature,
-} from "../utils/webhookTypes";
+} from "./utils/webhookTypes";
 
 export function useAbiMultiFetch({
   isOpen,

@@ -1,16 +1,10 @@
 import { Button } from "@workspace/ui/components/button";
 import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
-import type { ThirdwebClient } from "thirdweb";
 import { getAuthToken } from "@/api/auth-token";
-import { getFilteredProjectContracts } from "@/api/project/getSortedDeployedContracts";
 import { getProject } from "@/api/project/projects";
 import { getTeamBySlug } from "@/api/team/get-team";
-import { ClientOnly } from "@/components/blocks/client-only";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
-import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
-import { ContractTable } from "@/components/contract-components/tables/contract-table";
 import {
   Dialog,
   DialogContent,
@@ -21,10 +15,11 @@ import {
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TokenIcon } from "@/icons/TokenIcon";
 import { loginRedirect } from "@/utils/redirects";
-import { Cards, ImportTokenButton } from "./cards";
+import { Cards, ImportTokenButton } from "../cards";
 
-export default async function Page(props: {
+export default async function Layout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
+  children: React.ReactNode;
 }) {
   const params = await props.params;
 
@@ -110,48 +105,19 @@ export default async function Page(props: {
           },
         ],
       }}
+      tabs={[
+        {
+          name: "Overview",
+          path: `/team/${params.team_slug}/${params.project_slug}/tokens`,
+          exactMatch: true,
+        },
+        {
+          name: "Webhooks",
+          path: `/team/${params.team_slug}/${params.project_slug}/tokens/webhooks`,
+        },
+      ]}
     >
-      <Suspense fallback={<GenericLoadingPage />}>
-        <AssetsPageAsync
-          authToken={authToken}
-          client={client}
-          projectId={project.id}
-          projectSlug={params.project_slug}
-          teamId={team.id}
-          teamSlug={params.team_slug}
-        />
-      </Suspense>
+      {props.children}
     </ProjectPage>
-  );
-}
-
-async function AssetsPageAsync(props: {
-  teamId: string;
-  projectId: string;
-  authToken: string;
-  client: ThirdwebClient;
-  teamSlug: string;
-  projectSlug: string;
-}) {
-  const deployedContracts = await getFilteredProjectContracts({
-    authToken: props.authToken,
-    type: "token-contracts",
-    projectId: props.projectId,
-    teamId: props.teamId,
-  });
-
-  return (
-    <ClientOnly ssr={<GenericLoadingPage />}>
-      <ContractTable
-        client={props.client}
-        contracts={deployedContracts}
-        pageSize={10}
-        projectId={props.projectId}
-        projectSlug={props.projectSlug}
-        teamId={props.teamId}
-        teamSlug={props.teamSlug}
-        variant="asset"
-      />
-    </ClientOnly>
   );
 }

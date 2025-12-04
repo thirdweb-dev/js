@@ -3,8 +3,8 @@ import { CheckIcon, PlayIcon, XIcon } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
-import { truncateMiddle } from "../utils/abiUtils";
-import type { WebhookFormValues } from "../utils/webhookTypes";
+import { truncateMiddle } from "./utils/abiUtils";
+import type { WebhookFormValues } from "./utils/webhookTypes";
 
 interface WebhookTestResult {
   status: string;

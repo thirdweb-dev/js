@@ -1,8 +1,9 @@
+import { XIcon } from "lucide-react";
 import { getWebhooks, type WebhookResponse } from "@/api/insight/webhooks";
 import type { Project } from "@/api/project/projects";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
-import { CreateContractWebhookButton } from "../components/CreateWebhookModal";
-import { ContractsWebhooksTable } from "../components/WebhooksTable";
+import { CreateContractWebhookButton } from "./CreateWebhookModal";
+import { ContractsWebhooksTable } from "./WebhooksTable";
 
 export async function ContractsWebhooksPageContent(props: {
   project: Project;
@@ -50,11 +51,14 @@ export async function ContractsWebhooksPageContent(props: {
           webhooks={webhooks}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border p-12 text-center">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-border py-14 px-6 text-center">
           <div>
-            <h3 className="mb-1 font-medium text-lg">No webhooks found</h3>
-            <p className="text-muted-foreground">
-              Create a webhook to get started.
+            <div className="rounded-full p-2 border bg-background inline-flex mb-3">
+              <XIcon className="size-4 text-muted-foreground" />
+            </div>
+            <h3 className="mb-1 font-semibold text-base">No webhooks found</h3>
+            <p className="text-muted-foreground text-sm">
+              Create a webhook to get started
             </p>
           </div>
           <CreateContractWebhookButton

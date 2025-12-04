@@ -46,7 +46,7 @@ export default async function Page(props: {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link
-                href={`/team/${params.team_slug}/${params.project_slug}/webhooks/payments`}
+                href={`/team/${params.team_slug}/${params.project_slug}/bridge/webhooks`}
               >
                 Webhooks
               </Link>

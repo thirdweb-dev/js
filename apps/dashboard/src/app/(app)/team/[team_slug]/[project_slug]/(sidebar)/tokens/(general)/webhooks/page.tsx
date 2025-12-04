@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getSupportedWebhookChains } from "@/api/insight/webhooks";
 import { getProject } from "@/api/project/projects";
-import { ContractsWebhooksPageContent } from "../contract-webhooks/contract-webhooks-page";
+import { ContractsWebhooksPageContent } from "./components/contract-webhooks-page";
 
 export default async function ContractsPage(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;

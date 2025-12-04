@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
-import { PayWebhooksPage } from "../../payments/webhooks/components/webhooks.client";
+import { PayWebhooksPage } from "./components/webhooks.client";
 
 export default async function Page(props: {
   params: Promise<{

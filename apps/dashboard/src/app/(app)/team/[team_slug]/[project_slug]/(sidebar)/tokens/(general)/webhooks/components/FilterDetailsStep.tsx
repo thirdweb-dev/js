@@ -17,13 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { truncateMiddle } from "../utils/abiUtils";
+import { truncateMiddle } from "./utils/abiUtils";
 import type {
   AbiData,
   EventSignature,
   FunctionSignature,
   WebhookFormValues,
-} from "../utils/webhookTypes";
+} from "./utils/webhookTypes";
 
 interface FilterDetailsStepProps {
   form: UseFormReturn<WebhookFormValues>;

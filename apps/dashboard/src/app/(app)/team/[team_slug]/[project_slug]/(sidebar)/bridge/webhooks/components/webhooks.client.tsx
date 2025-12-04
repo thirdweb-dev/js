@@ -12,6 +12,7 @@ import {
   PlusIcon,
   TrashIcon,
   WebhookIcon,
+  XIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { type PropsWithChildren, useMemo, useState } from "react";
@@ -95,9 +96,14 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
   if (!webhooksQuery.data?.length) {
     return (
       <div className="flex flex-col items-center gap-6 rounded-lg border border-border bg-card p-8 text-center">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-semibold text-xl">No webhooks configured</h2>
-          <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col items-center">
+          <div className="rounded-full p-2 border bg-background inline-flex mb-3">
+            <XIcon className="size-4 text-muted-foreground" />
+          </div>
+          <h2 className="font-semibold text-base mb-1">
+            No webhooks configured
+          </h2>
+          <p className="text-muted-foreground text-sm">
             Create a webhook to receive notifications for bridge, swap or onramp
             events.
           </p>
@@ -126,7 +132,7 @@ export function PayWebhooksPage(props: PayWebhooksPageProps) {
             webhook={webhook}
             clientId={props.clientId}
             teamId={props.teamId}
-            layoutPath={`/team/${props.teamSlug}/${props.projectSlug}/webhooks/payments`}
+            layoutPath={`/team/${props.teamSlug}/${props.projectSlug}/bridge/webhooks`}
           />
         ))}
       </div>
