@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
-import type { Token } from "../../../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
@@ -26,7 +26,7 @@ type PaymentSelectionProps = {
   /**
    * The destination token to bridge to
    */
-  destinationToken: Token;
+  destinationToken: TokenWithPrices;
 
   /**
    * The destination amount to bridge
