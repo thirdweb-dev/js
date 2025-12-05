@@ -1,0 +1,173 @@
+import { Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Solana Facilitator",
+    icon: "solana",
+  },
+  title: "Solana Facilitator",
+  description: "Verify and settle Solana transactions through your own facilitator wallets.",
+});
+
+# Solana Facilitator
+
+Solana is now a supported network for x402 payments. You can gate, verify, and settle Solana transactions through your own facilitator wallets — fully end-to-end.
+
+<Callout variant="info" title="Supported Networks">
+  We support Solana Mainnet and Devnet. Use the following network identifiers:
+
+  - **Mainnet**: `solana:mainnet`
+  - **Devnet**: `solana:devnet`
+</Callout>
+
+This enables you to spin up your own server wallet, prepare payment payloads, and handle verification + settlement directly on Solana (devnet or mainnet). No middle layers. No bloat.
+
+## Features
+
+- **Solana facilitator flow** — create or register a Solana server wallet, quote pricing with `/v1/payments/x402/accepts`, and settle signed transactions with `/v1/payments/x402/settle`.
+- **Unified verify path** — `/v1/payments/x402/verify` now validates Solana payloads the same way it does for EVM, so you can reuse your middleware checks across chains.
+- **End-to-end examples** — refreshed snippets for Node environments that show the exact headers, payloads, and success envelopes you should expect in production.
+
+## Fast Start Guide
+
+### 1. Create a facilitator wallet
+
+First, create a server-side wallet that will act as the facilitator.
+
+```ts
+const response = await fetch("https://api.thirdweb.com/v1/solana/wallets", {
+  method: "POST",
+  headers: {
+    "x-secret-key": "YOUR_SECRET_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    label: "my-solana-facilitator",
+  }),
+});
+
+const wallet = await response.json();
+console.log(wallet.result.address);
+```
+
+The returned address is the server-side payer for settles, so double-check that it appears in your project’s server wallet list.
+
+<Callout variant="info">
+  **Fund the wallet:** Top up SOL for fees on the target cluster (devnet or mainnet-beta).
+</Callout>
+
+### 2. Quote access
+
+Use `/v1/payments/x402/accepts` to generate the payment requirements.
+
+```ts
+const acceptsResponse = await fetch(
+  "https://api.thirdweb.com/v1/payments/x402/accepts",
+  {
+    method: "POST",
+    headers: {
+      "x-secret-key": "YOUR_SECRET_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      resourceUrl: "https://example.com/solana-protected",
+      method: "POST",
+      network: "solana:devnet",
+      price: {
+        amount: "0",
+        asset: {
+          address: "So11111111111111111111111111111111111111112",
+          decimals: 9,
+          tokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        },
+      },
+      serverWalletAddress: "YOUR_SOLANA_FACILITATOR_ADDRESS",
+    }),
+  }
+);
+
+const { accepts } = await acceptsResponse.json();
+const paymentRequirements = accepts[0];
+```
+
+Keep `paymentRequirements` around—clients will sign against it, and the facilitator will reuse it when settling.
+
+### 3. Verify before you settle
+
+Once you have the signed payment payload from the client, you can verify it.
+
+```ts
+const verifyResponse = await fetch(
+  "https://api.thirdweb.com/v1/payments/x402/verify",
+  {
+    method: "POST",
+    headers: {
+      "x-secret-key": "YOUR_SECRET_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      paymentPayload: SIGNED_PAYMENT_PAYLOAD,
+      paymentRequirements,
+    }),
+  }
+);
+
+const verifyData = await verifyResponse.json();
+console.log(verifyData.isValid);
+```
+
+A truthy `isValid` means the signatures, blockhash, and amounts all check out.
+
+### 4. Settle on-chain
+
+Settle the transaction using your facilitator wallet.
+
+```ts
+const settleResponse = await fetch(
+  "https://api.thirdweb.com/v1/payments/x402/settle",
+  {
+    method: "POST",
+    headers: {
+      "x-secret-key": "YOUR_SECRET_KEY",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      paymentPayload: SIGNED_PAYMENT_PAYLOAD,
+      paymentRequirements,
+      waitUntil: "submitted",
+    }),
+  }
+);
+
+const settleData = await settleResponse.json();
+console.log(settleData.transaction);
+```
+
+<Callout variant="info">
+  Use `waitUntil: "confirmed"` if you need finality before responding to the client.
+</Callout>
+
+Watch your server wallet dashboard or any Solana explorer for the transaction signature the settle endpoint returns.
+
+### Fetch protected resources
+
+Let payers fetch protected resources. If the client hits the protected endpoint first, have it replay the request through `/v1/payments/x402/fetch`. The API will answer with the payload you need for verification and settlement.
+
+```ts
+const fetchResponse = await fetch(
+  "https://api.thirdweb.com/v1/payments/x402/fetch?" +
+    new URLSearchParams({
+      url: "https://example.com/solana-protected",
+      from: "PAYER_SOLANA_ADDRESS",
+      chainId: "solana:devnet",
+    }),
+  {
+    method: "POST",
+    headers: {
+      "x-secret-key": "YOUR_SECRET_KEY",
+    },
+  }
+);
+
+const fetchData = await fetchResponse.json();
+```
