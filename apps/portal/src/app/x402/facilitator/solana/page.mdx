@@ -14,13 +14,13 @@ export const metadata = createMetadata({
 Solana is now a supported network for x402 payments. You can gate, verify, and settle Solana transactions through your own facilitator wallets — fully end-to-end.
 
 <Callout variant="info" title="Supported Networks">
-  We support Solana Mainnet and Testnet. Use the following CAIP-2 chain IDs:
+  We support Solana Mainnet and Devnet. Use the following network identifiers:
 
-  - **Mainnet**: `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`
-  - **Testnet**: `solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z`
+  - **Mainnet**: `solana:mainnet`
+  - **Devnet**: `solana:devnet`
 </Callout>
 
-This enables you to spin up your own server wallet, prepare payment payloads, and handle verification + settlement directly on Solana (testnet or mainnet). No middle layers. No bloat.
+This enables you to spin up your own server wallet, prepare payment payloads, and handle verification + settlement directly on Solana (devnet or mainnet). No middle layers. No bloat.
 
 ## Features
 
@@ -53,7 +53,7 @@ console.log(wallet.result.address);
 The returned address is the server-side payer for settles, so double-check that it appears in your project’s server wallet list.
 
 <Callout variant="info">
-  **Fund the wallet:** Top up SOL for fees on the target cluster (testnet or mainnet-beta).
+  **Fund the wallet:** Top up SOL for fees on the target cluster (devnet or mainnet-beta).
 </Callout>
 
 ### 2. Quote access
@@ -72,7 +72,7 @@ const acceptsResponse = await fetch(
     body: JSON.stringify({
       resourceUrl: "https://example.com/solana-protected",
       method: "POST",
-      network: "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
+      network: "solana:devnet",
       price: {
         amount: "0",
         asset: {
@@ -159,7 +159,7 @@ const fetchResponse = await fetch(
     new URLSearchParams({
       url: "https://example.com/solana-protected",
       from: "PAYER_SOLANA_ADDRESS",
-      chainId: "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
+      chainId: "solana:devnet",
     }),
   {
     method: "POST",
