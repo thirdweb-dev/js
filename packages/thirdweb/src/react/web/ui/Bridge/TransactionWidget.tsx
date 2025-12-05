@@ -786,6 +786,7 @@ function TransactionWidgetContent(
       <SuccessScreen
         // from props
         client={props.client}
+        type="payment-success"
         hasPaymentId={!!props.paymentLinkId}
         // others
         completedStatuses={screen.completedStatuses}

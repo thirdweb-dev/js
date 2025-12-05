@@ -75,6 +75,7 @@ const meta: Meta<typeof SuccessScreen> = {
     windowAdapter: webWindowAdapter,
     client: storyClient,
     hasPaymentId: false,
+    type: "payment-success",
   },
   component: SuccessScreen,
   decorators: [
@@ -92,6 +93,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {},
+};
+
+export const BasicSwapSuccess: Story = {
+  args: {
+    type: "swap-success",
+  },
 };
 
 export const OnrampPayment: Story = {

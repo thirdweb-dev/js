@@ -46,6 +46,8 @@ type SuccessScreenProps = {
    * Whether or not this payment is associated with a payment ID. If it does, we show a different message.
    */
   hasPaymentId: boolean;
+
+  type: "swap-success" | "payment-success";
 };
 
 type ViewState = "success" | "detail";
@@ -58,6 +60,7 @@ export function SuccessScreen({
   client,
   hasPaymentId = false,
   showContinueWithTx,
+  type,
 }: SuccessScreenProps) {
   const theme = useCustomTheme();
   const [viewState, setViewState] = useState<ViewState>("success");
@@ -112,6 +115,13 @@ export function SuccessScreen({
     );
   }
 
+  const title =
+    type === "swap-success" ? "Swap Successful" : "Payment Successful";
+  const description =
+    type === "swap-success"
+      ? "Your token swap has been completed successfully."
+      : "Your payment has been completed successfully.";
+
   return (
     <Container flex="column" fullHeight px="md" pb="md" pt="md+">
       <Spacer y="3xl" />
@@ -151,7 +161,7 @@ export function SuccessScreen({
               marginBottom: spacing.xxs,
             }}
           >
-            Payment Successful
+            {title}
           </Text>
 
           <Text center color="secondaryText" size="sm">
@@ -159,7 +169,7 @@ export function SuccessScreen({
               ? "You can now close this page and return to the application."
               : showContinueWithTx
                 ? "Click continue to execute your transaction."
-                : "Your payment has been completed successfully."}
+                : description}
           </Text>
         </div>
       </Container>
@@ -173,7 +183,7 @@ export function SuccessScreen({
           onClick={() => setViewState("detail")}
           variant="secondary"
         >
-          View Payment Receipt
+          View Transaction Receipt
         </Button>
 
         {!hasPaymentId && (

@@ -723,6 +723,7 @@ function BridgeWidgetContent(
   if (screen.id === "6:success") {
     return (
       <SuccessScreen
+        type="payment-success"
         // from props
         client={props.client}
         hasPaymentId={!!props.paymentLinkId}

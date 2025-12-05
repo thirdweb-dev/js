@@ -440,6 +440,7 @@ function SwapWidgetContent(
   if (screen.id === "4:success") {
     return (
       <SuccessScreen
+        type="swap-success"
         client={props.client}
         completedStatuses={screen.completedStatuses}
         onDone={() => {
