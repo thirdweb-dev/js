@@ -16,7 +16,7 @@ export type FleetStatus = "not-purchased" | "pending-setup" | "active";
 /**
  * Derives the fleet status from the fleet object.
  */
-export function getFleetStatus(fleet: Fleet | null): FleetStatus {
+function _getFleetStatus(fleet: Fleet | null): FleetStatus {
   if (!fleet) {
     return "not-purchased";
   }

@@ -2,7 +2,7 @@
 
 import { ClockIcon, Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { defineDashboardChain } from "@/lib/defineDashboardChain";
+import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import type { Fleet } from "../types";
 
 type DedicatedRelayerPendingStateProps = {
@@ -126,7 +126,7 @@ export function DedicatedRelayerPendingState(
 }
 
 function ChainBadge(props: { chainId: number }) {
-  const chain = defineDashboardChain(props.chainId, undefined);
+  const chain = useV5DashboardChain(props.chainId);
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-sm">
       {chain.name || `Chain ${props.chainId}`}
