@@ -37,7 +37,7 @@ export default async function Layout(props: {
         icon: WalletProductIcon,
         title: "Dedicated Relayer",
         description:
-          "Your own executor fleet for guaranteed transaction throughput",
+          "Executor wallets which automatically relay transactions with higher throughput and dedicated infrastructure",
         actions: null,
         client,
         links: [

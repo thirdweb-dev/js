@@ -1,15 +1,18 @@
 "use client";
 
-import { ExternalLinkIcon, ZapIcon } from "lucide-react";
-import Link from "next/link";
+import { Img } from "@workspace/ui/components/img";
+import { useTheme } from "next-themes";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { type RelayerTier, TierSelection } from "./tier-selection";
+import type { DedicatedRelayerSKU } from "@/types/billing";
+import { PlanSection } from "./tier-selection";
 
 type DedicatedRelayerEmptyStateProps = {
   teamSlug: string;
   projectSlug: string;
-  onPurchaseTier: (tier: RelayerTier) => Promise<void>;
+  onPurchaseTier: (
+    tier: DedicatedRelayerSKU,
+    chainIds: number[],
+  ) => Promise<void>;
 };
 
 /**
@@ -20,13 +23,16 @@ export function DedicatedRelayerEmptyState(
   props: DedicatedRelayerEmptyStateProps,
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<RelayerTier | null>(null);
+  const [selectedTier, setSelectedTier] = useState<DedicatedRelayerSKU | null>(
+    null,
+  );
 
-  const handleSelectTier = async (tier: RelayerTier) => {
+  const handleSelectTier = async (tier: DedicatedRelayerSKU) => {
     setSelectedTier(tier);
     setIsLoading(true);
     try {
-      await props.onPurchaseTier(tier);
+      // TODO-FLEET: pass the actual chain ids up
+      await props.onPurchaseTier(tier, [84532, 421614]);
     } finally {
       setIsLoading(false);
       setSelectedTier(null);
@@ -34,70 +40,76 @@ export function DedicatedRelayerEmptyState(
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* Hero Section */}
-      <div className="rounded-lg border bg-card">
-        <div className="flex flex-col items-center justify-center gap-6 px-6 py-12 text-center">
-          <div className="flex items-center justify-center rounded-full bg-primary/10 p-4">
-            <ZapIcon className="size-8 text-primary" />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <h2 className="font-semibold text-2xl tracking-tight">
-              Dedicated Relayer Fleet
-            </h2>
-            <p className="mx-auto max-w-md text-muted-foreground">
-              Your own dedicated executor wallets that automatically relay
-              transactions on your chosen chains. No manual gas management, no
-              shared infrastructure.
-            </p>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <FeatureCard
-              title="Priority Processing"
-              description="Your transactions never compete with others. Dedicated executors mean guaranteed throughput at scale."
-            />
-            <FeatureCard
-              title="Zero Config Relaying"
-              description="Select your chains and we handle the rest. Transactions are automatically relayed with optimal gas."
-            />
-            <FeatureCard
-              title="Full Visibility"
-              description="Monitor every transaction from your executor fleet. See gas usage, success rates, and balances in real-time."
-            />
-          </div>
-
-          <Button asChild size="lg" variant="outline">
-            <Link
-              href="https://portal.thirdweb.com/wallets/server"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn More
-              <ExternalLinkIcon className="ml-2 size-4" />
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Tier Selection */}
-      <div className="rounded-lg border bg-card p-6">
-        <TierSelection
-          onSelectTier={handleSelectTier}
-          isLoading={isLoading}
-          selectedTier={selectedTier}
-        />
-      </div>
+    <div className="flex flex-col gap-8 pt-2">
+      <FeatureSection />
+      <PlanSection
+        onSelectTier={handleSelectTier}
+        isLoading={isLoading}
+        selectedTier={selectedTier}
+      />
     </div>
   );
 }
 
-function FeatureCard(props: { title: string; description: string }) {
+function FeatureSection() {
   return (
-    <div className="rounded-lg border bg-background p-4 text-left">
-      <h3 className="font-medium">{props.title}</h3>
-      <p className="mt-1 text-muted-foreground text-sm">{props.description}</p>
+    <div className="grid lg:grid-cols-3 border rounded-xl bg-card">
+      <FeatureCard
+        title="Prioritized Queueing"
+        description="Dedicated infrastructure to avoid competing with other user wallets"
+        images={{
+          darkSrc: "/assets/dedicated-relayer/server-wallet-dark.png",
+          lightSrc: "/assets/dedicated-relayer/server-wallet-light.png",
+        }}
+      />
+
+      <FeatureCard
+        title="Zero Configuration"
+        className="border-t lg:border-t-0 lg:border-l border-dashed"
+        description="Gas fees are paid automatically without need to top up funds"
+        images={{
+          darkSrc: "/assets/dedicated-relayer/no-config-dark.png",
+          lightSrc: "/assets/dedicated-relayer/no-config-light.png",
+        }}
+      />
+
+      <FeatureCard
+        title="Monitoring"
+        className="border-t lg:border-t-0 lg:border-l border-dashed"
+        description="Full visibility on gas usage, success rates, and balances in real-time"
+        images={{
+          darkSrc: "/assets/dedicated-relayer/monitoring-dark.png",
+          lightSrc: "/assets/dedicated-relayer/monitoring-light.png",
+        }}
+      />
+    </div>
+  );
+}
+
+function FeatureCard(props: {
+  title: string;
+  description: string;
+  className?: string;
+  images: {
+    darkSrc: string;
+    lightSrc: string;
+  };
+}) {
+  const { resolvedTheme } = useTheme();
+  const imageSrc =
+    resolvedTheme === "light" ? props.images.lightSrc : props.images.darkSrc;
+
+  return (
+    <div className={props.className}>
+      <Img src={imageSrc} alt="" className="object-cover" key={imageSrc} />
+      <div className="p-6">
+        <h3 className="font-semibold text-xl mb-1 tracking-tight">
+          {props.title}
+        </h3>
+        <p className="text-muted-foreground text-sm text-pretty">
+          {props.description}
+        </p>
+      </div>
     </div>
   );
 }

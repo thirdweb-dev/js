@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { DedicatedRelayerSKU } from "@/types/billing";
+import { getAbsoluteUrl } from "@/utils/vercel";
 import type { Fleet, FleetStatus } from "../types";
 import { DedicatedRelayerActiveState } from "./active-state";
 import { DedicatedRelayerEmptyState } from "./empty-state";
 import { DedicatedRelayerPendingState } from "./pending-state";
-import type { RelayerTier } from "./tier-selection";
 
 type DedicatedRelayerPageClientProps = {
   teamId: string;
@@ -37,9 +38,22 @@ export function DedicatedRelayerPageClient(
   //    - Call bundler service to provision executor wallets
   //    - Update ProjectBundlerService with fleet config
   // 5. Refetch fleet status and update UI
-  const handlePurchaseTier = async (_tier: RelayerTier) => {
-    // TODO-FLEET: Replace with actual Stripe + API server integration
-    // For now, simulate purchase by transitioning to pending-setup
+  const handlePurchaseTier = async (
+    sku: DedicatedRelayerSKU,
+    chainIds: number[],
+  ) => {
+    const search = new URLSearchParams();
+    search.set("project_id", props.projectId);
+    for (const chainId of chainIds) {
+      search.set("chain_id", chainId.toString());
+    }
+
+    // TODO-FLEET: use the existing checkout pattern with `stripe-reditect` instead
+    window.open(
+      `${getAbsoluteUrl()}/checkout/${props.teamSlug}/${sku}?${search.toString()}`,
+      "_blank",
+    );
+
     const mockFleet: Fleet = {
       id: props.fleetId,
       chainIds: [],
