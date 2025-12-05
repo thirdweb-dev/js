@@ -1,4 +1,3 @@
-import { WebhookIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
@@ -43,13 +42,7 @@ export default async function Layout(props: {
             instantly
           </>
         ),
-        actions: {
-          secondary: {
-            href: `/team/${params.team_slug}/${params.project_slug}/webhooks/payments`,
-            label: "Webhooks",
-            icon: <WebhookIcon className="size-3.5 text-muted-foreground" />,
-          },
-        },
+        actions: null,
         links: [
           {
             type: "docs",
@@ -74,6 +67,10 @@ export default async function Layout(props: {
         {
           name: "Configuration",
           path: `/team/${params.team_slug}/${params.project_slug}/bridge/configuration`,
+        },
+        {
+          name: "Webhooks",
+          path: `/team/${params.team_slug}/${params.project_slug}/bridge/webhooks`,
         },
       ]}
     >

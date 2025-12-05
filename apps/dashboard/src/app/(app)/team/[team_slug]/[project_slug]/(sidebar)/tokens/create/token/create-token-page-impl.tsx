@@ -49,6 +49,7 @@ export function CreateTokenAssetPage(props: {
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const activeAccount = useActiveAccount();
   const addContractToProject = useAddContractToProject();
@@ -443,6 +444,7 @@ export function CreateTokenAssetPage(props: {
   return (
     <CreateTokenAssetPageUI
       accountAddress={props.accountAddress}
+      isLegacyPlan={props.isLegacyPlan}
       client={props.client}
       createTokenFunctions={{
         ERC20Asset: {

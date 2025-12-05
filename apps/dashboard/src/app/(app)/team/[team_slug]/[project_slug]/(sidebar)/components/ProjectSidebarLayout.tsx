@@ -6,7 +6,6 @@ import {
   DoorOpenIcon,
   HomeIcon,
   Settings2Icon,
-  WebhookIcon,
 } from "lucide-react";
 import {
   FullWidthSidebarLayout,
@@ -87,9 +86,26 @@ export function ProjectSidebarLayout(props: {
       label: "Tokens",
     },
     {
-      href: `${props.layoutPath}/ai`,
-      icon: BotIcon,
-      label: "AI",
+      subMenu: {
+        icon: BotIcon,
+        label: "AI",
+      },
+      links: [
+        {
+          href: `${props.layoutPath}/ai`,
+          label: "Chat",
+          isActive: (pathname) => {
+            return (
+              pathname === `${props.layoutPath}/ai` ||
+              pathname.startsWith(`${props.layoutPath}/ai/chat`)
+            );
+          },
+        },
+        {
+          href: `${props.layoutPath}/ai/analytics`,
+          label: "Analytics",
+        },
+      ],
     },
     {
       subMenu: {
@@ -122,14 +138,6 @@ export function ProjectSidebarLayout(props: {
   const footerSidebarLinks = [
     {
       separator: true,
-    },
-    {
-      href: `${props.layoutPath}/webhooks/contracts`,
-      icon: WebhookIcon,
-      isActive: (pathname) => {
-        return pathname.startsWith(`${props.layoutPath}/webhooks`);
-      },
-      label: "Webhooks",
     },
     {
       href: `${props.layoutPath}/settings`,

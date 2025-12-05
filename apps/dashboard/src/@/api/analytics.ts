@@ -1,19 +1,20 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { getWalletInfo, type WalletId } from "thirdweb/wallets";
 import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 import { normalizeTime } from "@/lib/time";
 import type {
   AIUsageStats,
   AnalyticsQueryParams,
   EcosystemWalletStats,
-  EngineCloudStats,
   InAppWalletStats,
   TransactionStats,
   UniversalBridgeStats,
   UniversalBridgeWalletStats,
   UserOpStats,
   WalletStats,
+  WalletStatsWithName,
   WebhookLatencyStats,
   WebhookSummaryStats,
   X402QueryParams,
@@ -148,13 +149,7 @@ const cached_getWalletConnections = unstable_cache(
     }
 
     const json = await res.json();
-    return (json.data as WalletStats[]).filter(
-      (w) =>
-        w.walletType !== "smart" &&
-        w.walletType !== "smartWallet" &&
-        w.walletType !== "inApp" &&
-        w.walletType !== "inAppWallet",
-    );
+    return json.data as WalletStats[];
   },
   ["getWalletConnections"],
   {
@@ -162,11 +157,116 @@ const cached_getWalletConnections = unstable_cache(
   },
 );
 
-export function getWalletConnections(
+const cache_getEOAWalletConnections = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<WalletStatsWithName[]> => {
+    const result = await cached_getWalletConnections(
+      normalizedParams(params),
+      authToken,
+    );
+    const filteredResult = result.filter(
+      (w) =>
+        w.walletType !== "smart" &&
+        w.walletType !== "smartWallet" &&
+        w.walletType !== "inApp" &&
+        w.walletType !== "inAppWallet",
+    );
+
+    const modifiedResult = await Promise.all(
+      filteredResult.map(async (w) => {
+        const wallet = await getWalletInfo(w.walletType as WalletId).catch(
+          () => undefined,
+        );
+
+        if (!wallet) {
+          return {
+            ...w,
+            walletName: w.walletType,
+          };
+        }
+
+        return {
+          ...w,
+          walletName: wallet.name,
+        };
+      }),
+    );
+
+    return modifiedResult;
+  },
+  ["getEOAWalletConnections"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export async function getEOAWalletConnections(
   params: AnalyticsQueryParams,
   authToken: string,
 ) {
-  return cached_getWalletConnections(normalizedParams(params), authToken);
+  return cache_getEOAWalletConnections(normalizedParams(params), authToken);
+}
+
+const cache_getEOAAndInAppWalletConnections = unstable_cache(
+  async (
+    params: AnalyticsQueryParams,
+    authToken: string,
+  ): Promise<WalletStatsWithName[]> => {
+    const result = await cached_getWalletConnections(
+      normalizedParams(params),
+      authToken,
+    );
+
+    const modifiedResult = await Promise.all(
+      result.map(async (w) => {
+        if (
+          w.walletType === "inApp" ||
+          w.walletType === "inAppWallet" ||
+          w.walletType === "smart" ||
+          w.walletType === "smartWallet"
+        ) {
+          return {
+            ...w,
+            walletName: "User wallet",
+          };
+        }
+
+        const wallet = await getWalletInfo(w.walletType as WalletId).catch(
+          () => undefined,
+        );
+
+        if (!wallet) {
+          return {
+            ...w,
+            walletName: w.walletType,
+          };
+        }
+
+        return {
+          ...w,
+          walletName: wallet.name,
+        };
+      }),
+    );
+
+    return modifiedResult;
+  },
+  ["getEOAAndInAppWalletConnections"],
+  {
+    revalidate: 60 * 60, // 1 hour
+  },
+);
+
+export async function getEOAAndInAppWalletConnections(
+  params: AnalyticsQueryParams,
+  authToken: string,
+): Promise<WalletStatsWithName[]> {
+  return cache_getEOAAndInAppWalletConnections(
+    normalizedParams(params),
+    authToken,
+  );
 }
 
 const cached_getInAppWalletUsage = unstable_cache(
@@ -689,41 +789,6 @@ export function getUniversalBridgeWalletUsage(
     normalizedParams(params),
     authToken,
   );
-}
-
-const cached_getEngineCloudMethodUsage = unstable_cache(
-  async (
-    params: AnalyticsQueryParams,
-    authToken: string,
-  ): Promise<EngineCloudStats[]> => {
-    const searchParams = buildSearchParams(params);
-    const res = await fetchAnalytics({
-      authToken,
-      url: `v2/engine-cloud/requests?${searchParams.toString()}`,
-      init: {
-        method: "GET",
-      },
-    });
-
-    if (res?.status !== 200) {
-      console.error("Failed to fetch Engine Cloud method usage");
-      return [];
-    }
-
-    const json = await res.json();
-    return json.data as EngineCloudStats[];
-  },
-  ["getEngineCloudMethodUsage"],
-  {
-    revalidate: 60 * 60, // 1 hour
-  },
-);
-
-export function getEngineCloudMethodUsage(
-  params: AnalyticsQueryParams,
-  authToken: string,
-) {
-  return cached_getEngineCloudMethodUsage(normalizedParams(params), authToken);
 }
 
 const _cached_getWebhookSummary = unstable_cache(

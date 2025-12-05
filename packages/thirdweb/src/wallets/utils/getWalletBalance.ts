@@ -10,6 +10,7 @@ import { getContract } from "../../contract/contract.js";
 import type { GetBalanceResult } from "../../extensions/erc20/read/getBalance.js";
 import { eth_getBalance } from "../../rpc/actions/eth_getBalance.js";
 import { getRpcClient } from "../../rpc/rpc.js";
+import { getAddress } from "../../utils/address.js";
 import { toTokens } from "../../utils/units.js";
 
 export type GetWalletBalanceOptions = {
@@ -44,7 +45,10 @@ export async function getWalletBalance(
 ): Promise<GetBalanceResult> {
   const { address, client, chain, tokenAddress } = options;
   // erc20 case
-  if (tokenAddress && tokenAddress !== NATIVE_TOKEN_ADDRESS) {
+  if (
+    tokenAddress &&
+    getAddress(tokenAddress) !== getAddress(NATIVE_TOKEN_ADDRESS)
+  ) {
     // load balanceOf dynamically to avoid circular dependency
     const { getBalance } = await import(
       "../../extensions/erc20/read/getBalance.js"

@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -251,16 +250,15 @@ export type BridgeWidgetProps = {
 export function BridgeWidget(props: BridgeWidgetProps) {
   const [tab, setTab] = useState<"swap" | "buy">("swap");
 
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client: props.client,
-        event: "ub:ui:bridge_widget:render",
-      });
-      return true;
-    },
-    queryKey: ["bridge_widget:render"],
-  });
+  const hasFiredRenderEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredRenderEvent.current) return;
+    hasFiredRenderEvent.current = true;
+    trackPayEvent({
+      client: props.client,
+      event: "ub:ui:bridge_widget:render",
+    });
+  }, [props.client]);
 
   return (
     <CustomThemeProvider theme={props.theme}>

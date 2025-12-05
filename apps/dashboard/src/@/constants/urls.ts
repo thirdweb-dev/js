@@ -25,3 +25,6 @@ export const THIRDWEB_INSIGHT_API_DOMAIN =
 
 export const THIRDWEB_BRIDGE_URL =
   process.env.NEXT_PUBLIC_BRIDGE_URL || "bridge.thirdweb-dev.com";
+
+export const THIRDWEB_ENGINE_CLOUD_URL =
+  process.env.NEXT_PUBLIC_ENGINE_CLOUD_URL || "https://engine.thirdweb-dev.com";

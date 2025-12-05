@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { TokenWithPrices } from "../../../../bridge/index.js";
 import type { Chain } from "../../../../chains/types.js";
@@ -327,18 +326,17 @@ export type BuyWidgetProps = {
  * @bridge
  */
 export function BuyWidget(props: BuyWidgetProps) {
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client: props.client,
-        event: "ub:ui:buy_widget:render",
-        toChainId: props.chain?.id,
-        toToken: props.tokenAddress,
-      });
-      return true;
-    },
-    queryKey: ["buy_widget:render"],
-  });
+  const hasFiredRenderEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredRenderEvent.current) return;
+    hasFiredRenderEvent.current = true;
+    trackPayEvent({
+      client: props.client,
+      event: "ub:ui:buy_widget:render",
+      toChainId: props.chain?.id,
+      toToken: props.tokenAddress,
+    });
+  }, [props.client, props.chain?.id, props.tokenAddress]);
 
   // if branding is disabled for widget, disable it for connect options too
   const connectOptions = useMemo(() => {
@@ -500,6 +498,12 @@ function BridgeWidgetContent(
         client={props.client}
         connectOptions={props.connectOptions}
         onContinue={(destinationAmount, destinationToken, receiverAddress) => {
+          trackPayEvent({
+            client: props.client,
+            event: "payment_selection",
+            toChainId: destinationToken.chainId,
+            toToken: destinationToken.address,
+          });
           setScreen({
             id: "2:methodSelection",
             destinationAmount,
@@ -548,6 +552,20 @@ function BridgeWidgetContent(
           handleError(error, undefined);
         }}
         onPaymentMethodSelected={(paymentMethod) => {
+          trackPayEvent({
+            chainId:
+              paymentMethod.type === "wallet"
+                ? paymentMethod.originToken.chainId
+                : undefined,
+            client: props.client,
+            event: "ub:ui:loading_quote:fund_wallet",
+            fromToken:
+              paymentMethod.type === "wallet"
+                ? paymentMethod.originToken.address
+                : undefined,
+            toChainId: screen.destinationToken.chainId,
+            toToken: screen.destinationToken.address,
+          });
           setScreen({
             ...screen,
             id: "3:load-quote",
@@ -581,6 +599,37 @@ function BridgeWidgetContent(
           handleError(error, undefined);
         }}
         onQuoteReceived={(preparedQuote, request) => {
+          trackPayEvent({
+            chainId:
+              preparedQuote.type === "transfer"
+                ? preparedQuote.intent.chainId
+                : preparedQuote.type === "onramp"
+                  ? preparedQuote.intent.chainId
+                  : preparedQuote.intent.originChainId,
+            client: props.client,
+            event: "payment_details",
+            fromToken:
+              preparedQuote.type === "transfer"
+                ? preparedQuote.intent.tokenAddress
+                : preparedQuote.type === "onramp"
+                  ? preparedQuote.intent.tokenAddress
+                  : preparedQuote.intent.originTokenAddress,
+            toChainId:
+              preparedQuote.type === "transfer"
+                ? preparedQuote.intent.chainId
+                : preparedQuote.type === "onramp"
+                  ? preparedQuote.intent.chainId
+                  : preparedQuote.intent.destinationChainId,
+            toToken:
+              preparedQuote.type === "transfer"
+                ? preparedQuote.intent.tokenAddress
+                : preparedQuote.type === "onramp"
+                  ? preparedQuote.intent.tokenAddress
+                  : preparedQuote.intent.destinationTokenAddress,
+            walletAddress:
+              screen.paymentMethod.payerWallet?.getAccount()?.address,
+            walletType: screen.paymentMethod.payerWallet?.id,
+          });
           setScreen({
             ...screen,
             id: "4:preview",

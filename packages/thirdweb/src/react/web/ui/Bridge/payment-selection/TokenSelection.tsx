@@ -47,10 +47,7 @@ function PaymentMethodTokenRow({
 }: PaymentMethodTokenRowProps) {
   const theme = useCustomTheme();
 
-  const displayOriginAmount = paymentMethod.quote.originAmount;
-  const hasEnoughBalance = displayOriginAmount
-    ? paymentMethod.balance >= displayOriginAmount
-    : false;
+  const hasEnoughBalance = paymentMethod.hasEnoughBalance;
   const currencyPrice = paymentMethod.originToken.prices[currency || "USD"];
 
   return (

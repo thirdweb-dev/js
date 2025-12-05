@@ -44,6 +44,7 @@ type AccountAbstractionSettingsPageProps = {
   teamId: string;
   teamSlug: string;
   validTeamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
   client: ThirdwebClient;
 };
 
@@ -565,6 +566,7 @@ export function AccountAbstractionSettingsPage(
                     <GatedSwitch
                       currentPlan={props.validTeamPlan}
                       requiredPlan="starter"
+                      isLegacyPlan={props.isLegacyPlan}
                       switchProps={{
                         checked: field.value.enabled,
                         id: "server-verifier-switch",

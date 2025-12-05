@@ -94,8 +94,9 @@ export function waitForCallsReceipt(
             resolve(result);
             return;
           }
-        } catch {
-          // noop, we'll try again on the next blocks
+        } catch (error) {
+          // we'll try again on the next blocks
+          console.error("waitForCallsReceipt error", error);
         }
       },
     });

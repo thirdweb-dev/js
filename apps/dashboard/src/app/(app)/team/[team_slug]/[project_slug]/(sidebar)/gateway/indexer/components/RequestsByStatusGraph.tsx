@@ -3,9 +3,8 @@ import { format } from "date-fns";
 import { useMemo } from "react";
 import { shortenLargeNumber } from "thirdweb/utils";
 import type { InsightStatusCodeStats } from "@/api/analytics";
-import { EmptyChartState } from "@/components/analytics/empty-chart-state";
-import { TotalValueChartHeader } from "@/components/blocks/charts/area-chart";
 import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { TotalValueChartHeader } from "@/components/blocks/charts/chart-header";
 import type { ChartConfig } from "@/components/ui/chart";
 
 type ChartData = Record<string, number> & {
@@ -17,6 +16,7 @@ export function RequestsByStatusGraph(props: {
   data: InsightStatusCodeStats[];
   isPending: boolean;
   viewMoreLink: string | undefined;
+  emptyChartState?: React.ReactElement | undefined;
 }) {
   const topStatusCodesToShow = 10;
 
@@ -105,7 +105,7 @@ export function RequestsByStatusGraph(props: {
         />
       }
       data={chartData}
-      emptyChartState={<EmptyChartState type="bar" />}
+      emptyChartState={props.emptyChartState}
       hideLabel={false}
       isPending={props.isPending}
       showLegend

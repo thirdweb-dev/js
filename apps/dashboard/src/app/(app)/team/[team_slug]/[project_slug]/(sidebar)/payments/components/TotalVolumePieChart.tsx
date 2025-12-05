@@ -12,7 +12,10 @@ type VolData = {
   color: string;
 };
 
-export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
+export function TotalVolumePieChart(props: {
+  data: UniversalBridgeStats[];
+  hideTotal?: boolean;
+}) {
   const data = props.data;
   const isEmpty =
     data.length === 0 || data.every((x) => x.amountUsdCents === 0);
@@ -36,20 +39,20 @@ export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
     .filter((x) => x.type === "onramp")
     .reduce((acc, curr) => acc + curr.amountUsdCents / 100, 0);
 
-  const volumeData: VolData[] = !isEmpty
-    ? [
-        {
-          amount: cryptoTotalUSD,
-          color: "hsl(var(--chart-1))",
-          name: "Crypto",
-        },
-        {
-          amount: fiatTotalUSD,
-          color: "hsl(var(--chart-2))",
-          name: "Fiat",
-        },
-      ]
-    : skeletonData;
+  const volumeData: VolData[] = [
+    {
+      amount: cryptoTotalUSD,
+      color: "hsl(var(--chart-1))",
+      name: "Crypto",
+    },
+    {
+      amount: fiatTotalUSD,
+      color: "hsl(var(--chart-2))",
+      name: "Fiat",
+    },
+  ];
+
+  const chartVolumeData = !isEmpty ? volumeData : skeletonData;
 
   return (
     <section className="w-full">
@@ -62,7 +65,7 @@ export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
               cornerRadius={100}
               cx="50%"
               cy="50%"
-              data={volumeData}
+              data={chartVolumeData}
               dataKey="amount"
               innerRadius="80%"
               outerRadius="100%"
@@ -72,41 +75,45 @@ export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
                 outline: "none",
               }}
             >
-              {volumeData.map((entry, index) => (
+              {chartVolumeData.map((entry, index) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok
                 <Cell fill={entry.color} key={index} />
               ))}
             </Pie>
           </PieChart>
 
-          <div className="absolute inset-0 flex items-center justify-center p-10">
-            <div className="flex flex-col items-center gap-1">
-              <p className="font-medium text-sm"> Total Volume</p>
+          {!props.hideTotal && (
+            <div className="absolute inset-0 flex items-center justify-center p-10">
+              <div className="flex flex-col items-center gap-1">
+                <p className="font-medium text-sm text-muted-foreground">
+                  Total Volume
+                </p>
 
-              <SkeletonContainer
-                loadedData={
-                  !data
-                    ? undefined
-                    : data.length > 0
-                      ? toUSD(cryptoTotalUSD + fiatTotalUSD)
-                      : "NA"
-                }
-                render={(totalAmount) => {
-                  return (
-                    <p
-                      className={cn(
-                        "font-semibold text-3xl tracking-tighter",
-                        totalAmount.length > 6 ? "text-3xl" : "text-4xl",
-                      )}
-                    >
-                      {totalAmount}
-                    </p>
-                  );
-                }}
-                skeletonData="$100"
-              />
+                <SkeletonContainer
+                  loadedData={
+                    !data
+                      ? undefined
+                      : data.length > 0
+                        ? toUSD(cryptoTotalUSD + fiatTotalUSD)
+                        : "NA"
+                  }
+                  render={(totalAmount) => {
+                    return (
+                      <p
+                        className={cn(
+                          "font-semibold text-2xl tracking-tighter",
+                          totalAmount.length > 6 ? "text-2xl" : "text-3xl",
+                        )}
+                      >
+                        {totalAmount}
+                      </p>
+                    );
+                  }}
+                  skeletonData="$100"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         {/* Right */}
         <div className="items-center border-border border-t pt-5 lg:flex lg:border-none lg:pt-0 lg:pr-10">
@@ -114,9 +121,9 @@ export function TotalVolumePieChart(props: { data: UniversalBridgeStats[] }) {
             {volumeData.map((v) => (
               <VolumeLegend
                 amount={
-                  !data ? undefined : data.length > 0 ? toUSD(v.amount) : "NA"
+                  isEmpty ? "NA" : data.length > 0 ? toUSD(v.amount) : "NA"
                 }
-                color={v.color}
+                color={isEmpty ? "hsl(var(--muted))" : v.color}
                 key={v.name}
                 label={v.name}
               />

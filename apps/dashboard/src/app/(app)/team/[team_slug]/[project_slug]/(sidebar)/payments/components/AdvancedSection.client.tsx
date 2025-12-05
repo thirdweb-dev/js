@@ -39,7 +39,7 @@ export function AdvancedSection({
           id="webhooks"
           features={["Instant events", "Transaction verification"]}
           link={{
-            href: `/team/${teamSlug}/${projectSlug}/webhooks/payments`,
+            href: `/team/${teamSlug}/${projectSlug}/bridge/webhooks`,
             label: "Setup Webhooks",
           }}
         />

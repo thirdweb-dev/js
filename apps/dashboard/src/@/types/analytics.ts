@@ -7,6 +7,10 @@ export interface WalletStats {
   walletType: string;
 }
 
+export type WalletStatsWithName = WalletStats & {
+  walletName: string;
+};
+
 export interface InAppWalletStats {
   date: string;
   authenticationMethod: string;
@@ -33,13 +37,6 @@ export interface TransactionStats {
   chainId: number;
   contractAddress?: string;
   count: number;
-}
-
-export interface EngineCloudStats {
-  date: string;
-  chainId: string;
-  pathname: string;
-  totalRequests: number;
 }
 
 export interface UniversalBridgeStats {

@@ -378,7 +378,10 @@ function createAccount({
       try {
         const result = await provider.request({
           method: "wallet_getCapabilities",
-          params: [getAddress(account.address)],
+          params: [
+            getAddress(account.address),
+            chainIdFilter ? [numberToHex(chainIdFilter)] : undefined,
+          ],
         });
         return toGetCapabilitiesResult(result, chainIdFilter);
       } catch (error: unknown) {

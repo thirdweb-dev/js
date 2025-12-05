@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.115.2
+
+### Patch Changes
+
+- [#8496](https://github.com/thirdweb-dev/js/pull/8496) [`859032d`](https://github.com/thirdweb-dev/js/commit/859032dc1761afdb7a4e12b40534e3a98b771498) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Skip swap review step when coming from swap widget
+
+## 5.115.1
+
+### Patch Changes
+
+- [#8490](https://github.com/thirdweb-dev/js/pull/8490) [`551ec68`](https://github.com/thirdweb-dev/js/commit/551ec680df3a84d2cacca4dfb9f0522fd7383f7a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Payment selection tracking
+
+- [#8495](https://github.com/thirdweb-dev/js/pull/8495) [`b6be8d6`](https://github.com/thirdweb-dev/js/commit/b6be8d67ef74f425e911d900a9adb19f9a70efd9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Faster token balance load query
+
+## 5.115.0
+
+### Minor Changes
+
+- [#8484](https://github.com/thirdweb-dev/js/pull/8484) [`9e43da4`](https://github.com/thirdweb-dev/js/commit/9e43da4ec0f88f32e988e445257fb518454c4c81) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support erc5792 batch transactions for swaps, add slippage option to Bridge API
+
+### Patch Changes
+
+- [#8469](https://github.com/thirdweb-dev/js/pull/8469) [`98d8f29`](https://github.com/thirdweb-dev/js/commit/98d8f292db7f9fd1a80cc67401787da836f24b8e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing NATIVE_TOKEN_ADDRESS to getWalletBalance()
+
+- [#8486](https://github.com/thirdweb-dev/js/pull/8486) [`3ebca18`](https://github.com/thirdweb-dev/js/commit/3ebca18f9e7f8e0af278d1b13c09832f565104e8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getWalletBalance with native token address
+
+- [#8485](https://github.com/thirdweb-dev/js/pull/8485) [`4c5696e`](https://github.com/thirdweb-dev/js/commit/4c5696e414cc18e1650d71b472274652c7d93952) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add caching and timeout for fetching capabilities
+
 ## 5.114.1
 
 ### Patch Changes

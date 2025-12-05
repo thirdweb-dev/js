@@ -60,7 +60,7 @@ export function QuickStartSection(props: {
           id="webhooks"
           features={["Instant events", "Transaction verification"]}
           link={{
-            href: `/team/${props.teamSlug}/${props.projectSlug}/webhooks/payments`,
+            href: `/team/${props.teamSlug}/${props.projectSlug}/bridge/webhooks`,
             label: "Setup Webhooks",
           }}
         />

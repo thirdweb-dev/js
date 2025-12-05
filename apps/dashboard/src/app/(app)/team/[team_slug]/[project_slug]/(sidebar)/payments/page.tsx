@@ -66,7 +66,7 @@ export default async function Page(props: {
             ),
           },
           secondary: {
-            href: `/team/${params.team_slug}/${params.project_slug}/webhooks/payments`,
+            href: `/team/${params.team_slug}/${params.project_slug}/bridge/webhooks`,
             label: "Webhooks",
             icon: <WebhookIcon className="size-3.5 text-muted-foreground" />,
           },

@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
 import type { Buy, Sell } from "../../../../../bridge/index.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
@@ -9,6 +8,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { getAddress } from "../../../../../utils/address.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
@@ -17,7 +17,6 @@ import { webWindowAdapter } from "../../../adapters/WindowAdapter.js";
 import { EmbedContainer } from "../../ConnectWallet/Modal/ConnectEmbed.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { ErrorBanner } from "../ErrorBanner.js";
-import { PaymentDetails } from "../payment-details/PaymentDetails.js";
 import { SuccessScreen } from "../payment-success/SuccessScreen.js";
 import { StepRunner } from "../StepRunner.js";
 import { useActiveWalletInfo } from "./hooks.js";
@@ -171,6 +170,10 @@ export type SwapWidgetProps = {
    * Called when the user disconnects the active wallet
    */
   onDisconnect?: () => void;
+  /**
+   * The wallet that should be pre-selected in the SwapWidget UI.
+   */
+  activeWallet?: Wallet;
 };
 
 /**
@@ -246,16 +249,15 @@ export type SwapWidgetProps = {
  * @bridge
  */
 export function SwapWidget(props: SwapWidgetProps) {
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client: props.client,
-        event: "ub:ui:swap_widget:render",
-      });
-      return true;
-    },
-    queryKey: ["swap_widget:render"],
-  });
+  const hasFiredRenderEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredRenderEvent.current) return;
+    hasFiredRenderEvent.current = true;
+    trackPayEvent({
+      client: props.client,
+      event: "ub:ui:swap_widget:render",
+    });
+  }, [props.client]);
 
   return (
     <SwapWidgetContainer
@@ -323,7 +325,7 @@ function SwapWidgetContent(
   },
 ) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });
-  const activeWalletInfo = useActiveWalletInfo();
+  const activeWalletInfo = useActiveWalletInfo(props.activeWallet);
   const isPersistEnabled = props.persistTokenSelections !== false;
 
   const [amountSelection, setAmountSelection] = useState<{
@@ -366,19 +368,6 @@ function SwapWidgetContent(
   // preload requests
   useBridgeChains(props.client);
 
-  const handleError = useCallback(
-    (error: Error, quote: SwapPreparedQuote) => {
-      console.error(error);
-      props.onError?.(error, quote);
-      setScreen({
-        id: "error",
-        preparedQuote: quote,
-        error,
-      });
-    },
-    [props.onError],
-  );
-
   // if wallet suddenly disconnects, show screen 1
   if (screen.id === "1:swap-ui" || !activeWalletInfo) {
     return (
@@ -402,7 +391,7 @@ function SwapWidgetContent(
         setAmountSelection={setAmountSelection}
         onSwap={(data) => {
           setScreen({
-            id: "2:preview",
+            id: "3:execute",
             buyToken: data.buyToken,
             sellToken: data.sellToken,
             sellTokenBalance: data.sellTokenBalance,
@@ -411,42 +400,6 @@ function SwapWidgetContent(
             request: data.request,
             quote: data.result,
           });
-        }}
-      />
-    );
-  }
-
-  if (screen.id === "2:preview") {
-    return (
-      <PaymentDetails
-        metadata={{
-          title: "Review Swap",
-          description: undefined,
-        }}
-        confirmButtonLabel="Swap"
-        client={props.client}
-        onBack={() => {
-          setScreen({ id: "1:swap-ui" });
-        }}
-        onConfirm={() => {
-          setScreen({
-            ...screen,
-            id: "3:execute",
-          });
-        }}
-        onError={(error) => handleError(error, screen.preparedQuote)}
-        paymentMethod={{
-          quote: screen.quote,
-          type: "wallet",
-          payerWallet: activeWalletInfo.activeWallet,
-          balance: screen.sellTokenBalance,
-          originToken: screen.sellToken,
-          action: screen.mode,
-        }}
-        preparedQuote={screen.preparedQuote}
-        currency={props.currency}
-        modeInfo={{
-          mode: "fund_wallet",
         }}
       />
     );
@@ -462,8 +415,7 @@ function SwapWidgetContent(
         onBack={() => {
           setScreen({
             ...screen,
-            id: "2:preview",
-            sellTokenBalance: screen.sellTokenBalance,
+            id: "1:swap-ui",
           });
         }}
         onCancel={() => props.onCancel?.(screen.preparedQuote)}

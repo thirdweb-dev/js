@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getAuthToken, getUserThirdwebClient } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
 import { getSessionById, getSessions } from "../../api/session";
@@ -39,7 +39,7 @@ export default async function Page(props: {
   ]);
 
   if (!session) {
-    notFound();
+    redirect(`/team/${params.team_slug}/${params.project_slug}/ai`);
   }
 
   return (

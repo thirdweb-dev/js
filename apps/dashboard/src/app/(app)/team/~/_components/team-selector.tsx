@@ -62,7 +62,11 @@ export function TeamSelectorCard(props: {
               >
                 {team.name}
               </Link>
-              <TeamPlanBadge plan={team.billingPlan} teamSlug={team.slug} />
+              <TeamPlanBadge
+                plan={team.billingPlan}
+                teamSlug={team.slug}
+                isLegacyPlan={team.isLegacyPlan}
+              />
               <ChevronRightIcon className="ml-auto size-4 text-muted-foreground group-hover:text-foreground" />
             </div>
           );

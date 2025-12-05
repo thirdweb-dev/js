@@ -42,6 +42,7 @@ export function CreateNFTPage(props: {
   teamId: string;
   projectId: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const activeAccount = useActiveAccount();
   const addContractToProject = useAddContractToProject();

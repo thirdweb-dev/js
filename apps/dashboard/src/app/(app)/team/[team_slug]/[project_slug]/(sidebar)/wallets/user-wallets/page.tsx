@@ -6,8 +6,9 @@ import type { DurationId } from "@/components/analytics/date-range-selector";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
 import { getFiltersFromSearchParams } from "@/lib/time";
 import { loginRedirect } from "@/utils/redirects";
-import { InAppWalletAnalytics } from "../analytics/chart";
+import { EOAConnectionsChart } from "../analytics/chart/eoa-connections-chart";
 import { InAppWalletsSummary } from "../analytics/chart/Summary";
+import { UserWalletConnectionsChart } from "../analytics/chart/user-wallet-connections-chart";
 
 export const dynamic = "force-dynamic";
 
@@ -55,11 +56,21 @@ export default async function Page(props: {
           range={range}
           teamId={project.teamId}
         />
-        <InAppWalletAnalytics
+        <UserWalletConnectionsChart
           authToken={authToken}
-          interval={interval}
           projectId={project.id}
-          range={range}
+          from={range.from}
+          to={range.to}
+          interval={interval}
+          teamId={project.teamId}
+        />
+
+        <EOAConnectionsChart
+          authToken={authToken}
+          projectId={project.id}
+          from={range.from}
+          to={range.to}
+          interval={interval}
           teamId={project.teamId}
         />
       </div>

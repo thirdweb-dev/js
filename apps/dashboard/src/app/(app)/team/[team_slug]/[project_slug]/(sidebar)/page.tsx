@@ -1,65 +1,25 @@
-import { EmptyStateCard } from "app/(app)/team/components/Analytics/EmptyStateCard";
 import { redirect } from "next/navigation";
-import {
-  ResponsiveSearchParamsProvider,
-  ResponsiveSuspense,
-} from "responsive-rsc";
-import type { ThirdwebClient } from "thirdweb";
-import { getWalletInfo, type WalletId } from "thirdweb/wallets";
-import {
-  getInAppWalletUsage,
-  getInsightStatusCodeUsage,
-  getRpcUsageByType,
-  getUniversalBridgeUsage,
-  getWalletConnections,
-  isProjectActive,
-} from "@/api/analytics";
+import { ResponsiveSearchParamsProvider } from "responsive-rsc";
+import { isProjectActive } from "@/api/analytics";
 import { getAuthToken } from "@/api/auth-token";
-import { getProject, type Project } from "@/api/project/projects";
-import type {
-  DurationId,
-  Range,
-} from "@/components/analytics/date-range-selector";
-import { LoadingChartState } from "@/components/analytics/empty-chart-state";
+import { getProject } from "@/api/project/projects";
+import type { DurationId } from "@/components/analytics/date-range-selector";
 import { ResponsiveTimeFilters } from "@/components/analytics/responsive-time-filters";
 import { ProjectAvatar } from "@/components/blocks/avatar/project-avatar";
 import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getProjectWallet } from "@/lib/server/project-wallet";
 import { getFiltersFromSearchParams } from "@/lib/time";
-import type { InAppWalletStats, WalletStats } from "@/types/analytics";
 import { loginRedirect } from "@/utils/redirects";
-import { PieChartCard } from "../../../components/Analytics/PieChartCard";
-import { EngineCloudChartCardAsync } from "./components/EngineCloudChartCard";
+import { ProjectAnalytics } from "./_analytics/project-analytics";
+import type { PageParams, PageSearchParams } from "./_analytics/types";
 import { ProjectFTUX } from "./components/ProjectFTUX/ProjectFTUX";
 import { ProjectWalletSection } from "./components/project-wallet/project-wallet";
-import { TransactionsChartCardAsync } from "./components/Transactions";
-import { RequestsByStatusGraph } from "./gateway/indexer/components/RequestsByStatusGraph";
-import { RPCRequestsChartUI } from "./gateway/rpc/components/RequestsGraph";
-import { ProjectHighlightsCard } from "./overview/highlights-card";
-
-type PageParams = {
-  team_slug: string;
-  project_slug: string;
-};
-
-type PageSearchParams = {
-  from: string | undefined | string[];
-  to: string | undefined | string[];
-  type: string | undefined | string[];
-  interval: string | undefined | string[];
-  appHighlights: string | undefined | string[];
-  client_transactions: string | undefined | string[];
-  totalSponsored: string | undefined | string[];
-};
 
 type PageProps = {
   params: Promise<PageParams>;
   searchParams: Promise<PageSearchParams>;
 };
-
-// Revalidate this page data every 30 seconds
-export const revalidate = 30;
 
 export default async function ProjectOverviewPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([
@@ -104,25 +64,25 @@ export default async function ProjectOverviewPage(props: PageProps) {
   const projectWallet = await getProjectWallet(project);
 
   return (
-    <ResponsiveSearchParamsProvider value={searchParams}>
-      <ProjectPage
-        header={{
-          client,
-          isProjectIcon: true,
-          icon: () => (
-            <ProjectAvatar
-              className="size-11"
-              client={client}
-              src={project.image ?? ""}
-            />
-          ),
-          title: project.name,
-          description: "Your project's overview and analytics",
-          // explicitly NO actions on the overview page
-          actions: null,
-        }}
-      >
-        {isActive ? (
+    <ProjectPage
+      header={{
+        client,
+        isProjectIcon: true,
+        icon: () => (
+          <ProjectAvatar
+            className="size-11"
+            client={client}
+            src={project.image ?? ""}
+          />
+        ),
+        title: project.name,
+        description: "Your project's overview and analytics",
+        // explicitly NO actions on the overview page
+        actions: null,
+      }}
+    >
+      {isActive ? (
+        <ResponsiveSearchParamsProvider value={searchParams}>
           <div className="flex flex-col gap-4 md:gap-10">
             <ProjectWalletSection
               project={project}
@@ -144,419 +104,24 @@ export default async function ProjectOverviewPage(props: PageProps) {
               />
             </div>
           </div>
-        ) : (
-          <div className="pt-6">
-            <ProjectFTUX
-              project={project}
-              teamSlug={params.team_slug}
-              projectWalletSection={
-                <ProjectWalletSection
-                  project={project}
-                  teamSlug={params.team_slug}
-                  projectWallet={projectWallet}
-                  client={client}
-                  layout="row"
-                />
-              }
-            />
-          </div>
-        )}
-      </ProjectPage>
-    </ResponsiveSearchParamsProvider>
-  );
-}
-
-async function ProjectAnalytics(props: {
-  project: Project;
-  params: PageParams;
-  range: Range;
-  interval: "day" | "week";
-  searchParams: PageSearchParams;
-  client: ThirdwebClient;
-  authToken: string;
-}) {
-  const { project, params, range, interval, searchParams, client, authToken } =
-    props;
-
-  return (
-    <div className="flex grow flex-col gap-6">
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[458px] border" />}
-        searchParamsUsed={["from", "to", "interval", "appHighlights"]}
-      >
-        <AsyncAppHighlightsCard
-          authToken={authToken}
-          client={client}
-          interval={interval}
-          params={params}
-          project={project}
-          range={range}
-          selectedChart={
-            typeof searchParams.appHighlights === "string"
-              ? searchParams.appHighlights
-              : undefined
-          }
-          selectedChartQueryParam="appHighlights"
-        />
-      </ResponsiveSuspense>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[431px] border" />}
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncWalletDistributionCard
+        </ResponsiveSearchParamsProvider>
+      ) : (
+        <div className="pt-6">
+          <ProjectFTUX
             project={project}
-            range={range}
-            authToken={authToken}
-          />
-        </ResponsiveSuspense>
-
-        <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[431px] border" />}
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncAuthMethodDistributionCard
-            project={project}
-            range={range}
-            authToken={authToken}
-          />
-        </ResponsiveSuspense>
-      </div>
-
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[458px] border" />}
-        searchParamsUsed={["from", "to", "interval", "client_transactions"]}
-      >
-        <TransactionsChartCardAsync
-          client={client}
-          params={{
-            from: range.from,
-            period: interval,
-            projectId: project.id,
-            teamId: project.teamId,
-            to: range.to,
-          }}
-          authToken={authToken}
-          selectedChart={
-            typeof searchParams.client_transactions === "string"
-              ? searchParams.client_transactions
-              : undefined
-          }
-          selectedChartQueryParam="client_transactions"
-        />
-      </ResponsiveSuspense>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <ResponsiveSuspense
-          fallback={
-            <RequestsByStatusGraph
-              data={[]}
-              isPending={true}
-              viewMoreLink={`/team/${params.team_slug}/${params.project_slug}/gateway/indexer`}
-            />
-          }
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncIndexerRequestsChartCard
             teamSlug={params.team_slug}
-            projectSlug={params.project_slug}
-            from={range.from}
-            to={range.to}
-            interval={interval}
-            projectId={project.id}
-            teamId={project.teamId}
-            authToken={authToken}
+            projectWalletSection={
+              <ProjectWalletSection
+                project={project}
+                teamSlug={params.team_slug}
+                projectWallet={projectWallet}
+                client={client}
+                layout="row"
+              />
+            }
           />
-        </ResponsiveSuspense>
-
-        <ResponsiveSuspense
-          fallback={<LoadingChartState className="h-[275px] border" />}
-          searchParamsUsed={["from", "to", "interval"]}
-        >
-          <AsyncRPCRequestsChartCard
-            teamSlug={params.team_slug}
-            projectSlug={params.project_slug}
-            from={range.from}
-            to={range.to}
-            interval={interval}
-            projectId={project.id}
-            teamId={project.teamId}
-            authToken={authToken}
-          />
-        </ResponsiveSuspense>
-      </div>
-
-      <ResponsiveSuspense
-        fallback={<LoadingChartState className="h-[377px] border" />}
-        searchParamsUsed={["from", "to", "interval"]}
-      >
-        <EngineCloudChartCardAsync
-          params={{
-            from: range.from,
-            period: interval,
-            projectId: project.id,
-            teamId: project.teamId,
-            to: range.to,
-          }}
-          authToken={authToken}
-        />
-      </ResponsiveSuspense>
-    </div>
-  );
-}
-
-async function AsyncIndexerRequestsChartCard(props: {
-  from: Date;
-  to: Date;
-  interval: "day" | "week";
-  projectId: string;
-  teamId: string;
-  authToken: string;
-  teamSlug: string;
-  projectSlug: string;
-}) {
-  const requestsData = await getInsightStatusCodeUsage(
-    {
-      from: props.from,
-      period: props.interval,
-      projectId: props.projectId,
-      teamId: props.teamId,
-      to: props.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return (
-    <RequestsByStatusGraph
-      data={requestsData && "data" in requestsData ? requestsData.data : []}
-      isPending={false}
-      viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/indexer`}
-    />
-  );
-}
-
-async function AsyncRPCRequestsChartCard(props: {
-  from: Date;
-  to: Date;
-  interval: "day" | "week";
-  projectId: string;
-  teamId: string;
-  authToken: string;
-  teamSlug: string;
-  projectSlug: string;
-}) {
-  const requestsData = await getRpcUsageByType(
-    {
-      from: props.from,
-      period: props.interval,
-      projectId: props.projectId,
-      teamId: props.teamId,
-      to: props.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return (
-    <RPCRequestsChartUI
-      data={requestsData || []}
-      viewMoreLink={`/team/${props.teamSlug}/${props.projectSlug}/gateway/rpc`}
-    />
-  );
-}
-
-async function AsyncAuthMethodDistributionCard(props: {
-  project: Project;
-  range: Range;
-  authToken: string;
-}) {
-  const inAppWalletUsage = await getInAppWalletUsage(
-    {
-      from: props.range.from,
-      period: "all",
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return inAppWalletUsage && inAppWalletUsage.length > 0 ? (
-    <AuthMethodDistributionCard data={inAppWalletUsage} />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/typescript/v5/inAppWallet"
-      metric="Wallets"
-    />
-  );
-}
-
-async function AsyncAppHighlightsCard(props: {
-  project: Project;
-  range: Range;
-  interval: "day" | "week";
-  selectedChartQueryParam: string;
-  selectedChart: string | undefined;
-  client: ThirdwebClient;
-  params: PageParams;
-  authToken: string;
-}) {
-  const [aggregatedUserStats, walletUserStatsTimeSeries, universalBridgeUsage] =
-    await Promise.allSettled([
-      getInAppWalletUsage(
-        {
-          from: props.range.from,
-          period: "all",
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-          to: props.range.to,
-        },
-        props.authToken,
-      ),
-      getInAppWalletUsage(
-        {
-          from: props.range.from,
-          period: props.interval,
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-          to: props.range.to,
-        },
-        props.authToken,
-      ),
-      getUniversalBridgeUsage(
-        {
-          from: props.range.from,
-          period: props.interval,
-          projectId: props.project.id,
-          teamId: props.project.teamId,
-          to: props.range.to,
-        },
-        props.authToken,
-      ),
-    ]);
-
-  if (
-    walletUserStatsTimeSeries.status === "fulfilled" &&
-    universalBridgeUsage.status === "fulfilled"
-  ) {
-    return (
-      <ProjectHighlightsCard
-        aggregatedUserStats={
-          aggregatedUserStats.status === "fulfilled"
-            ? aggregatedUserStats.value
-            : []
-        }
-        selectedChart={props.selectedChart}
-        selectedChartQueryParam={props.selectedChartQueryParam}
-        teamSlug={props.params.team_slug}
-        projectSlug={props.params.project_slug}
-        userStats={
-          walletUserStatsTimeSeries.status === "fulfilled"
-            ? walletUserStatsTimeSeries.value
-            : []
-        }
-        volumeStats={
-          universalBridgeUsage.status === "fulfilled"
-            ? universalBridgeUsage.value
-            : []
-        }
-      />
-    );
-  }
-
-  return (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/wallets"
-      metric="Wallets"
-    />
-  );
-}
-
-async function AsyncWalletDistributionCard(props: {
-  project: Project;
-  range: Range;
-  authToken: string;
-}) {
-  const walletConnections = await getWalletConnections(
-    {
-      from: props.range.from,
-      period: "all",
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-      to: props.range.to,
-    },
-    props.authToken,
-  ).catch(() => undefined);
-
-  return walletConnections && walletConnections.length > 0 ? (
-    <WalletDistributionCard data={walletConnections} />
-  ) : (
-    <EmptyStateCard
-      link="https://portal.thirdweb.com/wallets/external-wallets"
-      metric="External Wallets"
-    />
-  );
-}
-
-async function WalletDistributionCard({ data }: { data: WalletStats[] }) {
-  const formattedData = await Promise.all(
-    data.map(async (w) => {
-      const wallet = await getWalletInfo(w.walletType as WalletId).catch(
-        () => ({ name: w.walletType }),
-      );
-      return {
-        totalConnections: w.totalConnections,
-        uniqueWalletsConnected: w.uniqueWalletsConnected,
-        walletName: wallet.name,
-        walletType: w.walletType,
-      };
-    }),
-  );
-
-  return (
-    <PieChartCard
-      data={formattedData.map(({ walletName, uniqueWalletsConnected }) => {
-        return {
-          label: walletName,
-          value: uniqueWalletsConnected,
-        };
-      })}
-      title="External Wallets Connected"
-    />
-  );
-}
-
-function AuthMethodDistributionCard({ data }: { data: InAppWalletStats[] }) {
-  return (
-    <PieChartCard
-      data={data.map(({ authenticationMethod, uniqueWalletsConnected }) => ({
-        label: authenticationMethod,
-        value: uniqueWalletsConnected,
-      }))}
-      title="Social Authentication"
-    />
-  );
-}
-
-export function Header(props: {
-  title: string;
-  showRangeSelector: boolean;
-  defaultRange: DurationId;
-}) {
-  const { title, showRangeSelector, defaultRange } = props;
-
-  return (
-    <div className="flex flex-col items-start gap-3 md:flex-row md:items-center">
-      <div className="flex-1">
-        <h1 className="font-semibold text-2xl tracking-tight md:text-3xl">
-          {title}
-        </h1>
-      </div>
-      {showRangeSelector && (
-        <div className="max-sm:w-full">
-          <ResponsiveTimeFilters defaultRange={defaultRange} />
         </div>
       )}
-    </div>
+    </ProjectPage>
   );
 }

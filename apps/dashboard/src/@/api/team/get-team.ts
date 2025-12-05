@@ -8,7 +8,10 @@ import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 import { API_SERVER_SECRET } from "@/constants/server-envs";
 import { getMemberByAccountId } from "./team-members";
 
-export type Team = TeamResponse & { stripeCustomerId: string | null };
+export type Team = TeamResponse & {
+  stripeCustomerId: string | null;
+  isLegacyPlan: boolean;
+};
 
 export async function getTeamBySlug(slug: string) {
   const token = await getAuthToken();

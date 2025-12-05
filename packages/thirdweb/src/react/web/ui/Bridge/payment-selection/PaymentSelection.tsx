@@ -1,8 +1,7 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { trackPayEvent } from "../../../../../analytics/track/pay.js";
-import type { Token } from "../../../../../bridge/types/Token.js";
+import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
@@ -27,7 +26,7 @@ type PaymentSelectionProps = {
   /**
    * The destination token to bridge to
    */
-  destinationToken: Token;
+  destinationToken: TokenWithPrices;
 
   /**
    * The destination amount to bridge
@@ -129,19 +128,6 @@ export function PaymentSelection({
 
   const [currentStep, setCurrentStep] = useState<Step>(initialStep);
 
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        client,
-        event: "payment_selection",
-        toChainId: destinationToken.chainId,
-        toToken: destinationToken.address,
-      });
-      return true;
-    },
-    queryKey: ["payment_selection"],
-  });
-
   const payerWallet =
     currentStep.type === "tokenSelection"
       ? currentStep.selectedWallet
@@ -174,6 +160,10 @@ export function PaymentSelection({
   };
 
   const handleWalletSelected = (wallet: Wallet) => {
+    trackPayEvent({
+      client,
+      event: "ub:ui:token_selection",
+    });
     setCurrentStep({ selectedWallet: wallet, type: "tokenSelection" });
   };
 
@@ -182,6 +172,10 @@ export function PaymentSelection({
   };
 
   const handleFiatSelected = () => {
+    trackPayEvent({
+      client,
+      event: "ub:ui:fiat_provider_selection",
+    });
     setCurrentStep({ type: "fiatProviderSelection" });
   };
 

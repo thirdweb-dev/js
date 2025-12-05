@@ -13,6 +13,7 @@ import {
 import {
   THIRDWEB_BRIDGE_URL,
   THIRDWEB_BUNDLER_DOMAIN,
+  THIRDWEB_ENGINE_CLOUD_URL,
   THIRDWEB_INAPP_WALLET_DOMAIN,
   THIRDWEB_INSIGHT_API_DOMAIN,
   THIRDWEB_PAY_DOMAIN,
@@ -38,6 +39,7 @@ export function getConfiguredThirdwebClient(options: {
       rpc: THIRDWEB_RPC_DOMAIN,
       social: THIRDWEB_SOCIAL_API_DOMAIN,
       storage: THIRDWEB_STORAGE_DOMAIN,
+      engineCloud: new URL(THIRDWEB_ENGINE_CLOUD_URL).hostname,
     });
   }
 

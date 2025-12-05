@@ -3,14 +3,14 @@
 import { differenceInCalendarDays, format } from "date-fns";
 import { useMemo } from "react";
 import type { RpcUsageTypeStats } from "@/api/analytics";
-import {
-  ThirdwebAreaChart,
-  TotalValueChartHeader,
-} from "@/components/blocks/charts/area-chart";
+import { ThirdwebBarChart } from "@/components/blocks/charts/bar-chart";
+import { TotalValueChartHeader } from "@/components/blocks/charts/chart-header";
 
 export function RPCRequestsChartUI(props: {
   data: RpcUsageTypeStats[];
   viewMoreLink: string | undefined;
+  isPending: boolean;
+  emptyChartState?: React.ReactElement | undefined;
 }) {
   const total = useMemo(() => {
     return props.data.reduce((acc, curr) => acc + curr.count, 0);
@@ -27,7 +27,7 @@ export function RPCRequestsChartUI(props: {
   }, [props.data]);
 
   return (
-    <ThirdwebAreaChart
+    <ThirdwebBarChart
       chartClassName="aspect-auto h-[275px]"
       config={{
         requests: {
@@ -55,13 +55,13 @@ export function RPCRequestsChartUI(props: {
       customHeader={
         <TotalValueChartHeader
           total={total}
-          isPending={false}
+          isPending={props.isPending}
           title="RPC Requests"
           viewMoreLink={props.viewMoreLink}
         />
       }
       hideLabel={false}
-      isPending={false}
+      isPending={props.isPending}
       toolTipLabelFormatter={(label) => {
         if (showBreakdownByHour) {
           return format(label, "MMM dd, HH:mm");
@@ -74,6 +74,7 @@ export function RPCRequestsChartUI(props: {
       xAxis={{
         showHour: showBreakdownByHour,
       }}
+      emptyChartState={props.emptyChartState}
     />
   );
 }

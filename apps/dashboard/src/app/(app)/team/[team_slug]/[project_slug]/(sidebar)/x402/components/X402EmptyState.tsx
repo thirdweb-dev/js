@@ -22,7 +22,7 @@ export function X402EmptyState(props: { walletAddress?: string }) {
           label: "View Docs",
         },
       ]}
-      title="Start Monetizing your API"
+      title="Payment gate your API"
     />
   );
 }
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
     price: "$0.01",
     facilitator: thirdwebX402Facilitator,
   });
-  
+
   if (result.status === 200) {
     // Payment successful, continue to app logic
     return Response.json({ data: "premium content" });

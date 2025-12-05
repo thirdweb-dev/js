@@ -42,6 +42,7 @@ export default async function Page(props: {
   return (
     <div className="flex flex-col gap-6">
       <InAppWalletSettingsPage
+        isLegacyPlan={team.isLegacyPlan}
         client={client}
         project={project}
         smsCountryTiers={smsCountryTiers}

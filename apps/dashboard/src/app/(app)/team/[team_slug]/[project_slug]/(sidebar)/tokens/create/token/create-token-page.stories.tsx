@@ -57,6 +57,7 @@ const mockCreateTokenFunctions: CreateTokenFunctions = {
 
 export const Default: Story = {
   args: {
+    isLegacyPlan: false,
     accountAddress: "0x1234567890123456789012345678901234567890",
     client: storybookThirdwebClient,
     createTokenFunctions: mockCreateTokenFunctions,
@@ -69,6 +70,7 @@ export const Default: Story = {
 
 export const ErrorOnDeploy: Story = {
   args: {
+    isLegacyPlan: false,
     accountAddress: "0x1234567890123456789012345678901234567890",
     client: storybookThirdwebClient,
     createTokenFunctions: {
@@ -90,6 +92,7 @@ export const ErrorOnDeploy: Story = {
 
 export const StorageErrorOnDeploy: Story = {
   args: {
+    isLegacyPlan: false,
     accountAddress: "0x1234567890123456789012345678901234567890",
     client: storybookThirdwebClient,
     createTokenFunctions: {

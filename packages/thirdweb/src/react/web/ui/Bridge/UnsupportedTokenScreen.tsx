@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { trackPayEvent } from "../../../../analytics/track/pay.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -27,17 +27,17 @@ export function UnsupportedTokenScreen(props: UnsupportedTokenScreenProps) {
 
   const { data: chainMetadata } = useChainMetadata(chain);
 
-  useQuery({
-    queryFn: () => {
-      trackPayEvent({
-        chainId: chain.id,
-        client,
-        event: "ub:ui:unsupported_token",
-        fromToken: tokenAddress,
-      });
-    },
-    queryKey: ["unsupported_token"],
-  });
+  const hasFiredUnsupportedEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredUnsupportedEvent.current) return;
+    hasFiredUnsupportedEvent.current = true;
+    trackPayEvent({
+      chainId: chain.id,
+      client,
+      event: "ub:ui:unsupported_token",
+      fromToken: tokenAddress,
+    });
+  }, [chain.id, client, tokenAddress]);
 
   if (chainMetadata?.testnet) {
     return (

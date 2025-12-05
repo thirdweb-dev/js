@@ -63,15 +63,17 @@ function MetricPlaceholders({
             {metric.label}
           </span>
           <div className="h-32 w-full">
-            <EmptyChartState type="area">
-              {status === "active" ? (
-                <Badge>Coming Soon</Badge>
-              ) : status === "pending" ? (
-                <p className="text-xs">Activation in progress.</p>
-              ) : (
-                <p className="text-xs">Activate service to view metrics.</p>
-              )}
-            </EmptyChartState>
+            <EmptyChartState
+              content={
+                status === "active" ? (
+                  <Badge>Coming Soon</Badge>
+                ) : status === "pending" ? (
+                  <p className="text-xs">Activation in progress.</p>
+                ) : (
+                  <p className="text-xs">Activate service to view metrics.</p>
+                )
+              }
+            />
           </div>
         </Card>
       ))}

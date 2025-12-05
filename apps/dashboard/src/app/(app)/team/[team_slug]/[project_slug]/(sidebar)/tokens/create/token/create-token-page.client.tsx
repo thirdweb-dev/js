@@ -66,6 +66,7 @@ export function CreateTokenAssetPageUI(props: {
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const [step, setStep] = useState<"token-info" | "distribution" | "launch">(
     "token-info",
@@ -228,6 +229,7 @@ export function CreateTokenAssetPageUI(props: {
 
       {step === "launch" && (
         <LaunchTokenStatus
+          isLegacyPlan={props.isLegacyPlan}
           client={props.client}
           createTokenFunctions={props.createTokenFunctions}
           onLaunchSuccess={props.onLaunchSuccess}

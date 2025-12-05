@@ -69,7 +69,7 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-  address: "{{contract_address}}", 
+  address: "{{contract_address}}",
   chainId: {{chainId}},
 );
 
@@ -124,7 +124,7 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-  address: "{{contract_address}}", 
+  address: "{{contract_address}}",
   chainId: {{chainId}}
 );
 
@@ -214,7 +214,7 @@ function App() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-  address: "{{contract_address}}", 
+  address: "{{contract_address}}",
   chainId: {{chainId}}
 );`,
     dotnet: `using Thirdweb;
@@ -272,7 +272,7 @@ export default function Component() {
 
 // Get your contract
 var contract = await ThirdwebManager.Instance.GetContract(
-  address: "{{contract_address}}", 
+  address: "{{contract_address}}",
   chainId: {{chainId}}
 );
 
@@ -1103,7 +1103,7 @@ function AccountFactorySection(props: {
           <AlertDescription>
             The recommended way to use account factories is to integrate the{" "}
             <UnderlineLink
-              href="https://portal.thirdweb.com/transactions/sponsor"
+              href="https://portal.thirdweb.com/wallets/sponsor-gas"
               rel="noopener noreferrer"
               target="_blank"
             >

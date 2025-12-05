@@ -69,6 +69,7 @@ export function LaunchNFT(props: {
   teamSlug: string;
   projectSlug: string;
   teamPlan: Team["billingPlan"];
+  isLegacyPlan: boolean;
 }) {
   const formValues = props.values;
   const [steps, setSteps] = useState<MultiStepState<StepId>[]>([]);
@@ -716,6 +717,7 @@ export function LaunchNFT(props: {
             </div>
             <GatedSwitch
               currentPlan={props.teamPlan}
+              isLegacyPlan={props.isLegacyPlan}
               requiredPlan="starter"
               switchProps={{
                 checked: isGasless,

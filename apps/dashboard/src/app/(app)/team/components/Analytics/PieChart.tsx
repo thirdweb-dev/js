@@ -8,13 +8,16 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { formatTickerNumber } from "@/utils/format-utils";
+import { toUSD } from "@/utils/number";
 
 export function PieChart({
   title,
   data,
+  isCurrency = false,
 }: {
   title: string;
   data: { value: number; label: string; fill?: string }[];
+  isCurrency?: boolean;
 }) {
   const chartConfig: ChartConfig = Object.fromEntries(
     Object.entries(data).map(([name, value]) => [
@@ -42,7 +45,11 @@ export function PieChart({
           content={
             <ChartTooltipContent
               hideLabel
-              valueFormatter={(v: unknown) => formatTickerNumber(v as number)}
+              valueFormatter={(v: unknown) =>
+                isCurrency
+                  ? toUSD(v as number)
+                  : formatTickerNumber(v as number)
+              }
             />
           }
           cursor={false}

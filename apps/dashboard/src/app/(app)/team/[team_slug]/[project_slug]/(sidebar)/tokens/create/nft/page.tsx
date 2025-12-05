@@ -50,6 +50,7 @@ export default async function Page(props: {
       <div className="container max-w-5xl pt-8 pb-32">
         <CreateNFTPage
           accountAddress={accountAddress}
+          isLegacyPlan={team.isLegacyPlan}
           client={client}
           projectId={project.id}
           projectSlug={params.project_slug}

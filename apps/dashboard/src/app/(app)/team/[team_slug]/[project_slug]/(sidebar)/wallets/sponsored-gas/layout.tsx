@@ -43,7 +43,7 @@ export default async function Layout(props: {
         links: [
           {
             type: "docs",
-            href: "https://portal.thirdweb.com/transactions/sponsor",
+            href: "https://portal.thirdweb.com/wallets/sponsor-gas",
           },
         ],
       }}

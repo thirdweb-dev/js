@@ -67,24 +67,9 @@ export async function PayAnalytics(props: {
     walletDataPromise,
   ]);
 
-  const hasVolume = volumeData.some((d) => d.amountUsdCents > 0);
-  const hasWallet = walletData.some((d) => d.count > 0);
-
-  if (!hasVolume && !hasWallet) {
-    return null;
-  }
-
   return (
     <div>
       <div>
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight mb-1">
-            Analytics
-          </h2>
-          <p className="text-muted-foreground mb-4 text-sm">
-            Track Bridge volume, customers, payouts, and success rates.
-          </p>
-        </div>
         <div className="mb-4 flex justify-start">
           <PayAnalyticsFilter />
         </div>
