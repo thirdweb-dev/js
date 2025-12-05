@@ -37,6 +37,10 @@ export const sidebar: SideBar = {
           href: `${x402Slug}/facilitator`,
           name: "Facilitator",
         },
+        {
+          href: `${x402Slug}/facilitator/solana`,
+          name: "Solana",
+        },
       ],
       name: "Guides",
     },
