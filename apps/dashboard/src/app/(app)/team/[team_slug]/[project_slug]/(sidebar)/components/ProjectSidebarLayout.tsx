@@ -51,6 +51,10 @@ export function ProjectSidebarLayout(props: {
           href: `${props.layoutPath}/wallets/sponsored-gas`,
           label: "Gas Sponsorship",
         },
+        {
+          href: `${props.layoutPath}/wallets/dedicated-relayer`,
+          label: "Dedicated Relayer",
+        },
       ],
     },
     ...(props.showContracts
