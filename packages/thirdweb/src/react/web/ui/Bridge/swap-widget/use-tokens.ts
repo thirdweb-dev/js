@@ -4,6 +4,7 @@ import { tokens } from "../../../../../bridge/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isAddress } from "../../../../../utils/address.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
+import { getClientFetch } from "../../../../../utils/fetch.js";
 
 export function useTokens(options: {
   client: ThirdwebClient;
@@ -72,7 +73,7 @@ type TokenBalancesResponse = {
 };
 
 export function useTokenBalances(options: {
-  clientId: string;
+  client: ThirdwebClient;
   page: number;
   limit: number;
   walletAddress: string | undefined;
@@ -101,11 +102,8 @@ export function useTokenBalances(options: {
       url.searchParams.set("sortOrder", "desc");
       url.searchParams.set("includeWithoutPrice", "false"); // filter out tokens with no price
 
-      const response = await fetch(url.toString(), {
-        headers: {
-          "x-client-id": options.clientId,
-        },
-      });
+      const clientFetch = getClientFetch(options.client);
+      const response = await clientFetch(url.toString());
 
       if (!response.ok) {
         throw new Error(
