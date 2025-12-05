@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  ArrowLeftIcon,
   ArrowLeftRightIcon,
   EllipsisVerticalIcon,
   RefreshCcwIcon,
@@ -10,17 +11,22 @@ import {
   ShuffleIcon,
   WalletIcon,
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
+  createThirdwebClient,
+  Engine,
   getContract,
   readContract,
   type ThirdwebClient,
   toUnits,
 } from "thirdweb";
-import { useWalletBalance } from "thirdweb/react";
+import type { Chain } from "thirdweb/chains";
+import { SwapWidget, useWalletBalance } from "thirdweb/react";
 import { isAddress, shortenAddress } from "thirdweb/utils";
+import { createWalletAdapter } from "thirdweb/wallets";
 import { z } from "zod";
 import { sendProjectWalletTokens } from "@/actions/project-wallet/send-tokens";
 import type { Project } from "@/api/project/projects";
@@ -69,6 +75,7 @@ import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { ProjectWalletSummary } from "@/lib/server/project-wallet";
 import { cn } from "@/lib/utils";
+import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { updateDefaultProjectWallet } from "../../transactions/lib/vault.client";
 
 type GetProjectServerWallets = (params: {
@@ -127,6 +134,11 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
   const [isSendOpen, setIsSendOpen] = useState(false);
   const [isReceiveOpen, setIsReceiveOpen] = useState(false);
   const [isChangeWalletOpen, setIsChangeWalletOpen] = useState(false);
+  const [isSwapOpen, setIsSwapOpen] = useState(false);
+
+  // Persist swap credentials in memory so users don't have to re-enter them
+  const [swapSecretKey, setSwapSecretKey] = useState("");
+  const [swapVaultAccessToken, setSwapVaultAccessToken] = useState("");
 
   // Initialize chain and token from localStorage or defaults
   const [selectedChainId, setSelectedChainId] = useState(() => {
@@ -310,6 +322,15 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             <SendIcon className="size-4" />
             Withdraw
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 bg-background hover:bg-accent/50"
+            onClick={() => setIsSwapOpen(true)}
+          >
+            <ArrowLeftRightIcon className="size-4" />
+            Swap
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -391,6 +412,24 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             client={props.client}
             project={project}
             managementAccessToken={managementAccessToken}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog onOpenChange={setIsSwapOpen} open={isSwapOpen}>
+        <DialogContent className="gap-0 p-0 overflow-hidden max-w-md">
+          <SwapProjectWalletModalContent
+            chainId={selectedChainId}
+            tokenAddress={selectedTokenAddress}
+            walletAddress={projectWallet.address}
+            chain={chain}
+            isManagedVault={isManagedVault}
+            publishableKey={project.publishableKey}
+            secretKey={swapSecretKey}
+            setSecretKey={setSwapSecretKey}
+            vaultAccessToken={swapVaultAccessToken}
+            setVaultAccessToken={setSwapVaultAccessToken}
+            onClose={() => setIsSwapOpen(false)}
           />
         </DialogContent>
       </Dialog>
@@ -568,6 +607,189 @@ function ChangeProjectWalletDialogContent(props: {
           )}
           Set as project wallet
         </Button>
+      </div>
+    </div>
+  );
+}
+
+type SwapProjectWalletModalContentProps = {
+  chainId: number;
+  tokenAddress: string | undefined;
+  walletAddress: string;
+  chain: Chain;
+  isManagedVault: boolean;
+  publishableKey: string;
+  secretKey: string;
+  setSecretKey: (value: string) => void;
+  vaultAccessToken: string;
+  setVaultAccessToken: (value: string) => void;
+  onClose: () => void;
+};
+
+function SwapProjectWalletModalContent(
+  props: SwapProjectWalletModalContentProps,
+) {
+  const {
+    chainId,
+    tokenAddress,
+    walletAddress,
+    chain,
+    isManagedVault,
+    publishableKey,
+    secretKey,
+    setSecretKey,
+    vaultAccessToken,
+    setVaultAccessToken,
+    onClose,
+  } = props;
+
+  const [screen, setScreen] = useState<"credentials" | "swap">("credentials");
+  const { theme } = useTheme();
+  const t = theme === "light" ? "light" : "dark";
+
+  const hasRequiredCredentials = isManagedVault
+    ? secretKey.trim().length > 0
+    : secretKey.trim().length > 0 && vaultAccessToken.trim().length > 0;
+
+  const swapClient = useMemo(() => {
+    if (!secretKey.trim()) {
+      return null;
+    }
+    return createThirdwebClient({
+      clientId: publishableKey,
+      secretKey: secretKey.trim(),
+    });
+  }, [secretKey, publishableKey]);
+
+  const activeWallet = useMemo(() => {
+    if (!swapClient) {
+      return undefined;
+    }
+    const vaultAccessTokenValue = vaultAccessToken.trim();
+    return createWalletAdapter({
+      adaptedAccount: Engine.serverWallet({
+        client: swapClient,
+        address: walletAddress,
+        ...(vaultAccessTokenValue
+          ? { vaultAccessToken: vaultAccessTokenValue }
+          : {}),
+      }),
+      chain: chain,
+      client: swapClient,
+      onDisconnect: () => {},
+      switchChain: () => {},
+    });
+  }, [swapClient, walletAddress, chain, vaultAccessToken]);
+
+  // Screen 1: Credentials
+  if (screen === "credentials") {
+    return (
+      <div>
+        <DialogHeader className="p-4 lg:p-6">
+          <DialogTitle>Swap Tokens</DialogTitle>
+          <DialogDescription>
+            Enter your credentials to swap tokens from your project wallet
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="px-4 pb-4 lg:px-6 lg:pb-6 space-y-4">
+          <div className="space-y-2">
+            <label
+              htmlFor="swap-secret-key"
+              className="text-sm font-medium leading-none"
+            >
+              Project secret key
+            </label>
+            <Input
+              id="swap-secret-key"
+              type="password"
+              placeholder="Enter your project secret key"
+              value={secretKey}
+              onChange={(e) => setSecretKey(e.target.value)}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+            />
+            <p className="text-xs text-muted-foreground">{secretKeyHelper}</p>
+          </div>
+
+          {!isManagedVault && (
+            <div className="space-y-2">
+              <label
+                htmlFor="swap-vault-access-token"
+                className="text-sm font-medium leading-none"
+              >
+                Vault access token
+              </label>
+              <Input
+                id="swap-vault-access-token"
+                type="password"
+                placeholder="Enter a vault access token"
+                value={vaultAccessToken}
+                onChange={(e) => setVaultAccessToken(e.target.value)}
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+              />
+              <p className="text-xs text-muted-foreground">
+                {vaultAccessTokenHelper}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end gap-3 border-t bg-card p-4">
+          <Button onClick={onClose} type="button" variant="outline">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => setScreen("swap")}
+            type="button"
+            disabled={!hasRequiredCredentials}
+          >
+            Continue
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Screen 2: Swap Widget
+  return (
+    <div className="w-full">
+      <DialogHeader className="p-4 lg:p-6">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-1 h-auto w-auto"
+            onClick={() => setScreen("credentials")}
+          >
+            <ArrowLeftIcon className="size-4" />
+          </Button>
+          <div>
+            <DialogTitle>Swap Tokens</DialogTitle>
+            <DialogDescription>
+              Swap tokens from your project wallet
+            </DialogDescription>
+          </div>
+        </div>
+      </DialogHeader>
+
+      <div className="px-4 pb-4 lg:px-6 lg:pb-6 flex justify-center">
+        {swapClient && activeWallet && (
+          <SwapWidget
+            client={swapClient}
+            prefill={{
+              sellToken: {
+                chainId: chainId,
+                tokenAddress: tokenAddress,
+              },
+            }}
+            activeWallet={activeWallet}
+            theme={getSDKTheme(t)}
+          />
+        )}
       </div>
     </div>
   );

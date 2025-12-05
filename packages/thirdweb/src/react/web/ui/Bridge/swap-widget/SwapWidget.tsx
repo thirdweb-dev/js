@@ -8,6 +8,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { getAddress } from "../../../../../utils/address.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
@@ -169,6 +170,10 @@ export type SwapWidgetProps = {
    * Called when the user disconnects the active wallet
    */
   onDisconnect?: () => void;
+  /**
+   * The wallet that should be pre-selected in the SwapWidget UI.
+   */
+  activeWallet?: Wallet;
 };
 
 /**
@@ -320,7 +325,7 @@ function SwapWidgetContent(
   },
 ) {
   const [screen, setScreen] = useState<SwapWidgetScreen>({ id: "1:swap-ui" });
-  const activeWalletInfo = useActiveWalletInfo();
+  const activeWalletInfo = useActiveWalletInfo(props.activeWallet);
   const isPersistEnabled = props.persistTokenSelections !== false;
 
   const [amountSelection, setAmountSelection] = useState<{
