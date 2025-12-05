@@ -68,4 +68,7 @@ module.exports = [
   "/token",
   "/vault",
   "/monetize/bridge",
+  // ai
+  "/ai-privacy-policy",
+  "/ai-terms",
 ];
