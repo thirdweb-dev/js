@@ -419,6 +419,7 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
       <Dialog onOpenChange={setIsSwapOpen} open={isSwapOpen}>
         <DialogContent className="gap-0 p-0 overflow-hidden max-w-md">
           <SwapProjectWalletModalContent
+            client={props.client}
             chainId={selectedChainId}
             tokenAddress={selectedTokenAddress}
             walletAddress={projectWallet.address}
@@ -613,6 +614,7 @@ function ChangeProjectWalletDialogContent(props: {
 }
 
 type SwapProjectWalletModalContentProps = {
+  client: ThirdwebClient;
   chainId: number;
   tokenAddress: string | undefined;
   walletAddress: string;
@@ -630,6 +632,7 @@ function SwapProjectWalletModalContent(
   props: SwapProjectWalletModalContentProps,
 ) {
   const {
+    client,
     chainId,
     tokenAddress,
     walletAddress,
@@ -655,6 +658,7 @@ function SwapProjectWalletModalContent(
     if (!secretKey.trim()) {
       return null;
     }
+    // use the inputted secret key to create the client used for the serverWallet
     return createThirdwebClient({
       clientId: publishableKey,
       secretKey: secretKey.trim(),
@@ -777,9 +781,9 @@ function SwapProjectWalletModalContent(
       </DialogHeader>
 
       <div className="px-4 pb-4 lg:px-6 lg:pb-6 flex justify-center">
-        {swapClient && activeWallet && (
+        {activeWallet && (
           <SwapWidget
-            client={swapClient}
+            client={props.client}
             prefill={{
               sellToken: {
                 chainId: chainId,

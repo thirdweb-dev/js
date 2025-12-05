@@ -90,7 +90,7 @@ export function SelectToken(props: SelectTokenUIProps) {
 
   // owned tokens
   const ownedTokensQuery = useTokenBalances({
-    clientId: props.client.clientId,
+    client: props.client,
     chainId: selectedChain?.chainId,
     limit,
     page: 1,
