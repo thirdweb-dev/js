@@ -85,7 +85,7 @@ export default async function Page(props: {
           },
           {
             type: "api",
-            href: "https://api.thirdweb.com/reference#tag/payments",
+            href: "https://api.thirdweb.com/reference#tag/x402",
           },
         ],
       }}
