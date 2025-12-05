@@ -71,7 +71,7 @@ export const sidebar: SideBar = {
       isCollapsible: false,
       links: [
         {
-          href: "/reference#tag/contracts",
+          href: "/reference#tag/gateway",
           icon: <CodeIcon />,
           name: "HTTP API",
         },

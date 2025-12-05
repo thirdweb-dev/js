@@ -98,7 +98,7 @@ export default async function Page(props: {
             },
             {
               type: "api",
-              href: "https://api.thirdweb.com/reference#tag/contracts",
+              href: "https://api.thirdweb.com/reference#tag/gateway",
             },
             {
               type: "webhooks",
