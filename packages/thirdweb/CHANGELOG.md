@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.115.3
+
+### Patch Changes
+
+- [#8509](https://github.com/thirdweb-dev/js/pull/8509) [`7b873d3`](https://github.com/thirdweb-dev/js/commit/7b873d38db373151ef42dfa7bc1e083568cb5432) Thanks [@MananTank](https://github.com/MananTank)! - Update success message shown in SwapWidget component
+
+- [#8501](https://github.com/thirdweb-dev/js/pull/8501) [`b0eccf3`](https://github.com/thirdweb-dev/js/commit/b0eccf365a7521ec882fca9e680837c84147041e) Thanks [@MananTank](https://github.com/MananTank)! - Remove tabs from token selection UI in SwapWidget
+
+- [#8504](https://github.com/thirdweb-dev/js/pull/8504) [`a704c3f`](https://github.com/thirdweb-dev/js/commit/a704c3f2b00434f8f50653aa2825b4adf7cd4696) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow passing an activeWallet to SwapWidget
+
 ## 5.115.2
 
 ### Patch Changes
