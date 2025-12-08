@@ -51,7 +51,7 @@
 		"@types/react": "19.2.7",
 		"@types/react-dom": "19.2.3",
 		"@typescript-eslint/eslint-plugin": "7.14.1",
-		"@typescript-eslint/parser": "7.14.1",
+		"@typescript-eslint/parser": "8.49.0",
 		"autoprefixer": "^10.4.21",
 		"eslint": "8.57.0",
 		"eslint-config-biome": "1.9.4",
