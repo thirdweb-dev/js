@@ -43,7 +43,15 @@ export type GetWalletBalanceResult = GetBalanceResult;
 export async function getWalletBalance(
   options: GetWalletBalanceOptions,
 ): Promise<GetBalanceResult> {
-  const { address, client, chain, tokenAddress } = options;
+  const { address, client, chain } = options;
+
+  // Scipper chain (42429) uses a wrapped native token for balance queries
+  const tokenAddress =
+    options.tokenAddress ||
+    (chain.id === 42429
+      ? "0x20c0000000000000000000000000000000000000"
+      : undefined);
+
   // erc20 case
   if (
     tokenAddress &&
