@@ -1,57 +1,66 @@
 "use client";
 
-import { useSetResponsiveSearchParams } from "responsive-rsc";
-import { EmptyChartStateGetStartedCTA } from "@/components/analytics/empty-chart-state";
-import type { InAppWalletStats, UniversalBridgeStats } from "@/types/analytics";
-import { CombinedBarChartCard } from "../../../../components/Analytics/CombinedBarChartCard";
+import { useState } from "react";
+import type {
+  InAppWalletStats,
+  UniversalBridgeStats,
+  X402SettlementsOverall,
+} from "@/types/analytics";
+import {
+  CombinedBarChartCard,
+  type CombinedBarChartConfig,
+} from "../../../../components/Analytics/CombinedBarChartCard";
 
 type AggregatedMetrics = {
   activeUsers: number;
   newUsers: number;
   feesCollected: number;
+  bridgeRevenue: number;
+  x402Revenue: number;
 };
 
 export function ProjectHighlightsCard(props: {
-  selectedChart: string | undefined;
   aggregatedUserStats: InAppWalletStats[];
   userStats: InAppWalletStats[];
   volumeStats: UniversalBridgeStats[];
-  teamSlug: string;
-  projectSlug: string;
-  selectedChartQueryParam: string;
+  x402Settlements: X402SettlementsOverall[];
 }) {
-  const {
-    selectedChart,
-    aggregatedUserStats,
+  const { aggregatedUserStats, userStats, volumeStats, x402Settlements } =
+    props;
+
+  const [selectedChart, setSelectedChart] = useState<string | undefined>(
+    "activeUsers",
+  );
+
+  const timeSeriesData = processTimeSeriesData(
     userStats,
     volumeStats,
-    teamSlug,
-    projectSlug,
-    selectedChartQueryParam,
-  } = props;
+    x402Settlements,
+  );
 
-  const timeSeriesData = processTimeSeriesData(userStats, volumeStats);
-  const setResponsiveSearchParams = useSetResponsiveSearchParams();
-
-  const chartConfig = {
+  const chartConfig: CombinedBarChartConfig<keyof AggregatedMetrics> = {
     activeUsers: { color: "hsl(var(--chart-1))", label: "Active Users" },
-    newUsers: { color: "hsl(var(--chart-3))", label: "New Users" },
-    feesCollected: {
-      color: "hsl(var(--chart-4))",
-      emptyContent: (
-        <EmptyChartStateGetStartedCTA
-          link={{
-            label: "View Configuration",
-            href: `/team/${teamSlug}/${projectSlug}/bridge/configuration`,
-          }}
-          title="No data available"
-          description="No bridge revenue generated in selected time period"
-        />
-      ),
+    newUsers: { color: "hsl(var(--chart-2))", label: "New Users" },
+    bridgeRevenue: {
+      color: "hsl(var(--chart-3))",
       isCurrency: true,
-      label: "Bridge Revenue",
+      label: "Bridge",
+      hideAsTab: true,
     },
-  } as const;
+    x402Revenue: {
+      color: "hsl(var(--chart-4))",
+      isCurrency: true,
+      label: "x402",
+      hideAsTab: true,
+    },
+    feesCollected: {
+      color: "hsl(var(--chart-3))",
+      emptyContent: undefined,
+      isCurrency: true,
+      label: "Revenue",
+      stackedKeys: ["bridgeRevenue", "x402Revenue"],
+    },
+  };
 
   return (
     <CombinedBarChartCard
@@ -73,12 +82,7 @@ export function ProjectHighlightsCard(props: {
       chartConfig={chartConfig}
       data={timeSeriesData}
       onSelect={(key) => {
-        setResponsiveSearchParams((v) => {
-          return {
-            ...v,
-            [selectedChartQueryParam]: key,
-          };
-        });
+        setSelectedChart(key);
       }}
       trendFn={(data, key) =>
         data.filter((d) => (d[key] as number) > 0).length >= 2
@@ -93,6 +97,8 @@ export function ProjectHighlightsCard(props: {
 
 type TimeSeriesMetrics = AggregatedMetrics & {
   date: string;
+  bridgeRevenue: number;
+  x402Revenue: number;
 };
 
 /**
@@ -101,39 +107,51 @@ type TimeSeriesMetrics = AggregatedMetrics & {
 function processTimeSeriesData(
   userStats: InAppWalletStats[],
   volumeStats: UniversalBridgeStats[],
+  x402Settlements: X402SettlementsOverall[],
 ): TimeSeriesMetrics[] {
   const metrics: TimeSeriesMetrics[] = [];
   const dates = [
     ...new Set([
-      ...userStats.map((a) => new Date(a.date).toISOString().slice(0, 10)),
-      ...volumeStats.map((a) => new Date(a.date).toISOString().slice(0, 10)),
+      ...userStats.map((a) => ignoreTimePeriod(a.date)),
+      ...volumeStats.map((a) => ignoreTimePeriod(a.date)),
+      ...x402Settlements.map((a) => ignoreTimePeriod(a.date)),
     ]),
   ];
 
   for (const date of dates) {
     const activeUsers = userStats
-      .filter((u) => new Date(u.date).toISOString().slice(0, 10) === date)
+      .filter((u) => ignoreTimePeriod(u.date) === ignoreTimePeriod(date))
       .reduce((acc, curr) => acc + curr.uniqueWalletsConnected, 0);
 
     const newUsers = userStats
-      .filter((u) => new Date(u.date).toISOString().slice(0, 10) === date)
+      .filter((u) => ignoreTimePeriod(u.date) === ignoreTimePeriod(date))
       .reduce((acc, curr) => acc + curr.newUsers, 0);
 
-    const fees = volumeStats
+    const bridgeRevenue = volumeStats
       .filter(
         (v) =>
-          new Date(v.date).toISOString().slice(0, 10) === date &&
+          ignoreTimePeriod(v.date) === ignoreTimePeriod(date) &&
           v.status === "completed",
       )
       .reduce((acc, curr) => acc + curr.developerFeeUsdCents / 100, 0);
 
+    const x402Revenue = x402Settlements
+      .filter((x) => ignoreTimePeriod(x.date) === ignoreTimePeriod(date))
+      .reduce((acc, curr) => acc + curr.totalValueUSD, 0);
+
     metrics.push({
       activeUsers: activeUsers,
       date: date,
-      feesCollected: fees,
+      feesCollected: bridgeRevenue + x402Revenue,
+      bridgeRevenue: bridgeRevenue,
+      x402Revenue: x402Revenue,
       newUsers: newUsers,
     });
   }
 
   return metrics;
+}
+
+function ignoreTimePeriod(date: string) {
+  return new Date(date).toISOString().slice(0, 10);
 }

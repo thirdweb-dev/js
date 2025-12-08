@@ -101,36 +101,20 @@ export interface X402SettlementsOverall {
   totalValueUSD: number;
 }
 
-export interface X402SettlementsByChainId {
-  date: string;
+export interface X402SettlementsByChainId extends X402SettlementsOverall {
   chainId: string;
-  totalRequests: number;
-  totalValue: number;
-  totalValueUSD: number;
 }
 
-export interface X402SettlementsByPayer {
-  date: string;
+export interface X402SettlementsByPayer extends X402SettlementsOverall {
   payer: string;
-  totalRequests: number;
-  totalValue: number;
-  totalValueUSD: number;
 }
 
-interface X402SettlementsByReceiver {
-  date: string;
+interface X402SettlementsByReceiver extends X402SettlementsOverall {
   receiver: string;
-  totalRequests: number;
-  totalValue: number;
-  totalValueUSD: number;
 }
 
-export interface X402SettlementsByResource {
-  date: string;
+export interface X402SettlementsByResource extends X402SettlementsOverall {
   resource: string;
-  totalRequests: number;
-  totalValue: number;
-  totalValueUSD: number;
 }
 
 interface X402SettlementsByAsset {

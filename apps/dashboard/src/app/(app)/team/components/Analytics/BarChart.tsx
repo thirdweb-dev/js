@@ -25,7 +25,11 @@ export function BarChart({
   emptyChartContent,
   chartContentClassName,
 }: {
-  chartConfig: ChartConfig;
+  chartConfig: ChartConfig & {
+    [k: string]: {
+      stackedKeys?: string[];
+    };
+  };
   data: { [key in string]: number | string }[];
   activeKey: string;
   tooltipLabel?: string;
@@ -33,6 +37,16 @@ export function BarChart({
   emptyChartContent?: React.ReactNode;
   chartContentClassName?: string;
 }) {
+  const stackedKeys =
+    (chartConfig?.[activeKey] as { stackedKeys?: string[] } | undefined)
+      ?.stackedKeys || undefined;
+
+  const isEmpty =
+    data.length === 0 ||
+    (stackedKeys && stackedKeys.length > 0
+      ? data.every((d) => stackedKeys.every((k) => (Number(d[k]) || 0) === 0))
+      : data.every((d) => (Number(d[activeKey]) || 0) === 0));
+
   return (
     <ChartContainer
       className={cn("aspect-auto h-[275px] w-full pt-6", chartContentClassName)}
@@ -43,7 +57,7 @@ export function BarChart({
         ...chartConfig,
       }}
     >
-      {data.length === 0 || data.every((d) => d[activeKey] === 0) ? (
+      {isEmpty ? (
         <div className="h-full">
           <EmptyChartState content={emptyChartContent} />
         </div>
@@ -76,7 +90,9 @@ export function BarChart({
                     year: "numeric",
                   });
                 }}
-                nameKey={activeKey}
+                nameKey={
+                  stackedKeys && stackedKeys.length > 0 ? undefined : activeKey
+                }
                 valueFormatter={(v: unknown) =>
                   isCurrency || chartConfig[activeKey]?.isCurrency
                     ? toUSD(v as number)
@@ -85,13 +101,31 @@ export function BarChart({
               />
             }
           />
-          <Bar
-            className="stroke-background"
-            dataKey={activeKey}
-            fill={chartConfig[activeKey]?.color ?? "hsl(var(--chart-1))"}
-            radius={4}
-            strokeWidth={1}
-          />
+          {stackedKeys && stackedKeys.length > 0 ? (
+            stackedKeys.map((k) => (
+              <Bar
+                key={k}
+                className="stroke-background"
+                dataKey={k}
+                fill={
+                  chartConfig[k]?.color ??
+                  chartConfig[activeKey]?.color ??
+                  "hsl(var(--chart-1))"
+                }
+                radius={4}
+                strokeWidth={1}
+                stackId={activeKey}
+              />
+            ))
+          ) : (
+            <Bar
+              className="stroke-background"
+              dataKey={activeKey}
+              fill={chartConfig[activeKey]?.color ?? "hsl(var(--chart-1))"}
+              radius={4}
+              strokeWidth={1}
+            />
+          )}
         </RechartsBarChart>
       )}
     </ChartContainer>

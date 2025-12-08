@@ -632,7 +632,6 @@ function SwapProjectWalletModalContent(
   props: SwapProjectWalletModalContentProps,
 ) {
   const {
-    client,
     chainId,
     tokenAddress,
     walletAddress,

@@ -36,7 +36,7 @@ export function LoadingChartState({ className }: { className?: string }) {
 }
 
 export function EmptyChartStateGetStartedCTA(props: {
-  link: {
+  link?: {
     label: string;
     href: string;
   };
@@ -59,16 +59,18 @@ export function EmptyChartStateGetStartedCTA(props: {
         )}
       </div>
 
-      <Button
-        asChild
-        className="rounded-full gap-2"
-        variant="default"
-        size="sm"
-      >
-        <Link href={props.link.href}>
-          {props.link.label} <ArrowUpRightIcon className="size-4" />
-        </Link>
-      </Button>
+      {props.link && (
+        <Button
+          asChild
+          className="rounded-full gap-2"
+          variant="default"
+          size="sm"
+        >
+          <Link href={props.link.href}>
+            {props.link.label} <ArrowUpRightIcon className="size-4" />
+          </Link>
+        </Button>
+      )}
     </div>
   );
 }

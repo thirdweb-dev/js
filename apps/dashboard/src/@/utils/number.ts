@@ -1,10 +1,10 @@
 const usdCurrencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
-  maximumFractionDigits: 6, // prefix with $
-  minimumFractionDigits: 0, // don't show decimal places if value is a whole number
-  notation: "compact", // at max 2 decimal places
-  roundingMode: "halfEven", // round to nearest even number, standard practice for financial calculations
-  style: "currency", // shows 1.2M instead of 1,200,000, 1.2B instead of 1,200,000,000
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 0,
+  notation: "compact",
+  roundingMode: "halfEven",
+  style: "currency",
 });
 
 export const toUSD = (value: number) => {
