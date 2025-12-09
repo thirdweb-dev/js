@@ -109,7 +109,7 @@ function FeatureSection() {
     <div className="grid lg:grid-cols-3 border rounded-xl bg-card">
       <FeatureCard
         title="Prioritized Queueing"
-        description="Dedicated infrastructure to avoid competing with other user wallets"
+        description="Dedicated infrastructure to avoid sharing a competing with other wallets"
         images={{
           darkSrc: "/assets/dedicated-relayer/server-wallet-dark.png",
           lightSrc: "/assets/dedicated-relayer/server-wallet-light.png",
@@ -119,7 +119,7 @@ function FeatureSection() {
       <FeatureCard
         title="Zero Configuration"
         className="border-t lg:border-t-0 lg:border-l border-dashed"
-        description="Gas fees are paid automatically without need to top up funds"
+        description="No code changes required, gas fees continue to be sponsored without need to top up funds"
         images={{
           darkSrc: "/assets/dedicated-relayer/no-config-dark.png",
           lightSrc: "/assets/dedicated-relayer/no-config-light.png",
@@ -129,7 +129,7 @@ function FeatureSection() {
       <FeatureCard
         title="Monitoring"
         className="border-t lg:border-t-0 lg:border-l border-dashed"
-        description="Full visibility on gas usage, success rates, and balances in real-time"
+        description="All your transactions are initiated from the same onchain relayer address, making monitoring and dashboard building easy"
         images={{
           darkSrc: "/assets/dedicated-relayer/monitoring-dark.png",
           lightSrc: "/assets/dedicated-relayer/monitoring-light.png",
