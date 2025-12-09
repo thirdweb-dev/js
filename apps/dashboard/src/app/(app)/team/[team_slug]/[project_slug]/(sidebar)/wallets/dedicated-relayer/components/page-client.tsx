@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { DedicatedRelayerSKU } from "@/types/billing";
 import { getAbsoluteUrl } from "@/utils/vercel";
+import { useFleetTransactionsSummary } from "../lib/hooks";
 import type { Fleet, FleetStatus } from "../types";
 import { DedicatedRelayerActiveState } from "./active-state";
 import { DedicatedRelayerEmptyState } from "./empty-state";
@@ -24,10 +25,20 @@ type DedicatedRelayerPageClientProps = {
 export function DedicatedRelayerPageClient(
   props: DedicatedRelayerPageClientProps,
 ) {
-  const [fleet, setFleet] = useState<Fleet | null>(props.initialFleet);
-  const [fleetStatus, setFleetStatus] = useState<FleetStatus>(() =>
+  const [fleet, _setFleet] = useState<Fleet | null>(props.initialFleet);
+  const [fleetStatus, _setFleetStatus] = useState<FleetStatus>(() =>
     getInitialStatus(props.initialFleet),
   );
+
+  const summaryQuery = useFleetTransactionsSummary({
+    teamId: props.teamId,
+    fleetId: props.fleetId,
+    from: props.from,
+    to: props.to,
+  });
+
+  const totalTransactions = summaryQuery.data?.data.totalTransactions ?? 0;
+  const hasTransactions = totalTransactions > 0;
 
   // TODO-FLEET: Implement purchase flow
   // 1. Call Stripe checkout API to create a checkout session for the selected tier
@@ -53,28 +64,6 @@ export function DedicatedRelayerPageClient(
       `${getAbsoluteUrl()}/checkout/${props.teamSlug}/${sku}?${search.toString()}`,
       "_blank",
     );
-
-    const mockFleet: Fleet = {
-      id: props.fleetId,
-      chainIds: [],
-      executors: [],
-    };
-    setFleet(mockFleet);
-    setFleetStatus("pending-setup");
-  };
-
-  // TODO-FLEET: This is a dev helper to skip purchase - remove in production
-  const handleSkipSetup = () => {
-    // TODO-FLEET: Replace with actual setup completion flow
-    // For now, simulate setup completion by transitioning to active with mock executors
-    if (fleet) {
-      setFleet({
-        ...fleet,
-        executors: ["0x1234567890123456789012345678901234567890"],
-        chainIds: [1, 137],
-      });
-      setFleetStatus("active");
-    }
   };
 
   return (
@@ -84,17 +73,22 @@ export function DedicatedRelayerPageClient(
           projectSlug={props.projectSlug}
           teamSlug={props.teamSlug}
           onPurchaseTier={handlePurchaseTier}
+          client={props.client}
         />
       )}
 
       {fleetStatus === "pending-setup" && fleet && (
+        <DedicatedRelayerPendingState fleet={fleet} />
+      )}
+
+      {fleetStatus === "active" && fleet && !hasTransactions && (
         <DedicatedRelayerPendingState
           fleet={fleet}
-          onSkipSetup={handleSkipSetup}
+          hasTransactions={hasTransactions}
         />
       )}
 
-      {fleetStatus === "active" && fleet && (
+      {fleetStatus === "active" && fleet && hasTransactions && (
         <DedicatedRelayerActiveState
           fleet={fleet}
           teamId={props.teamId}

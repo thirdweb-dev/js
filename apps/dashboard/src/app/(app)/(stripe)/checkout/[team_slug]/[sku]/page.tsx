@@ -18,7 +18,7 @@ export default async function CheckoutPage(props: {
     amount?: string;
     invoice_id?: string;
     project_id?: string;
-    chain_id?: string[];
+    chain_id?: string | string[];
   }>;
 }) {
   const [params, searchParams] = await Promise.all([

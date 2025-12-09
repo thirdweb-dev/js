@@ -1,13 +1,12 @@
 "use client";
 
 import { ClockIcon, Loader2Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import type { Fleet } from "../types";
 
 type DedicatedRelayerPendingStateProps = {
   fleet: Fleet;
-  onSkipSetup?: () => void;
+  hasTransactions?: boolean;
 };
 
 /**
@@ -17,7 +16,8 @@ type DedicatedRelayerPendingStateProps = {
 export function DedicatedRelayerPendingState(
   props: DedicatedRelayerPendingStateProps,
 ) {
-  const { fleet } = props;
+  const { fleet, hasTransactions } = props;
+  const hasExecutors = fleet.executors.length > 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,10 +26,14 @@ export function DedicatedRelayerPendingState(
         <Loader2Icon className="size-5 animate-spin text-warning" />
         <div>
           <p className="font-medium text-warning">
-            Setting up your dedicated relayer
+            {hasExecutors
+              ? "Waiting for first transaction"
+              : "Setting up your dedicated relayer"}
           </p>
           <p className="text-muted-foreground text-sm">
-            Your relayer is being provisioned. This usually takes a few minutes.
+            {hasExecutors
+              ? "Your dedicated relayer is ready. Waiting for the first transaction to appear."
+              : "Your relayer is being provisioned. This usually takes a few minutes."}
           </p>
         </div>
       </div>
@@ -63,7 +67,11 @@ export function DedicatedRelayerPendingState(
               </h3>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <ClockIcon className="size-4" />
-                <span>Awaiting executor deployment</span>
+                <span>
+                  {hasExecutors
+                    ? "Active, waiting for transactions"
+                    : "Awaiting executor deployment"}
+                </span>
               </div>
             </div>
           </div>
@@ -86,41 +94,20 @@ export function DedicatedRelayerPendingState(
               title="Subscription activated"
             />
             <SetupStep
-              completed={false}
-              inProgress={true}
+              completed={hasExecutors}
+              inProgress={!hasExecutors}
               number={2}
-              title="Executor wallets being deployed"
+              title="Executor wallets deployed"
             />
             <SetupStep
-              completed={false}
+              completed={!!hasTransactions}
+              inProgress={hasExecutors && !hasTransactions}
               number={3}
-              title="Funding wallets and bundler setup"
-            />
-            <SetupStep
-              completed={false}
-              number={4}
-              title="Ready for transactions"
+              title="Waiting for first transaction"
             />
           </ol>
         </div>
       </div>
-
-      {/* Dev Skip Button */}
-      {props.onSkipSetup && (
-        <div className="rounded-lg border border-dashed border-muted-foreground/50 bg-muted/30 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-sm">🧪 Dev Mode</p>
-              <p className="text-muted-foreground text-xs">
-                Skip the setup wait and go straight to active state
-              </p>
-            </div>
-            <Button onClick={props.onSkipSetup} size="sm" variant="outline">
-              Skip Setup
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

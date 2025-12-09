@@ -3,6 +3,16 @@
 import { Img } from "@workspace/ui/components/img";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import type { ThirdwebClient } from "thirdweb";
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { DedicatedRelayerSKU } from "@/types/billing";
 import { PlanSection } from "./tier-selection";
 
@@ -13,6 +23,7 @@ type DedicatedRelayerEmptyStateProps = {
     tier: DedicatedRelayerSKU,
     chainIds: number[],
   ) => Promise<void>;
+  client: ThirdwebClient;
 };
 
 /**
@@ -26,18 +37,34 @@ export function DedicatedRelayerEmptyState(
   const [selectedTier, setSelectedTier] = useState<DedicatedRelayerSKU | null>(
     null,
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedChainIds, setSelectedChainIds] = useState<number[]>([]);
 
   const handleSelectTier = async (tier: DedicatedRelayerSKU) => {
+    if (tier === "product:dedicated_relayer_enterprise") {
+      window.open("https://thirdweb.com/contact-us", "_blank");
+      return;
+    }
+
     setSelectedTier(tier);
+    setSelectedChainIds([]);
+    setIsModalOpen(true);
+  };
+
+  const handlePurchase = async () => {
+    if (!selectedTier) return;
     setIsLoading(true);
     try {
-      // TODO-FLEET: pass the actual chain ids up
-      await props.onPurchaseTier(tier, [84532, 421614]);
+      await props.onPurchaseTier(selectedTier, selectedChainIds);
+      setIsModalOpen(false);
     } finally {
       setIsLoading(false);
       setSelectedTier(null);
     }
   };
+
+  const requiredChains =
+    selectedTier === "product:dedicated_relayer_standard" ? 2 : 4;
 
   return (
     <div className="flex flex-col gap-8 pt-2">
@@ -47,6 +74,32 @@ export function DedicatedRelayerEmptyState(
         isLoading={isLoading}
         selectedTier={selectedTier}
       />
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Select Chains</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <p className="text-muted-foreground text-sm">
+              Select {requiredChains} chains for your dedicated relayer.
+            </p>
+            <MultiNetworkSelector
+              selectedChainIds={selectedChainIds}
+              onChange={setSelectedChainIds}
+              client={props.client}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={handlePurchase}
+              disabled={selectedChainIds.length !== requiredChains || isLoading}
+            >
+              {isLoading ? "Processing..." : "Continue"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

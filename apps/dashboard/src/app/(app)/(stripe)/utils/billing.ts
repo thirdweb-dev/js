@@ -8,8 +8,8 @@ export async function getBillingCheckoutUrl(options: {
   teamSlug: string;
   sku: Exclude<ProductSKU, null>;
   params: {
-    projectId?: string;
-    chain_id?: string[];
+    project_id?: string;
+    chain_id?: string | string[];
   };
 }) {
   const token = await getAuthToken();
@@ -20,11 +20,19 @@ export async function getBillingCheckoutUrl(options: {
       status: "error",
     } as const;
   }
+
+  const chainIds = options.params.chain_id
+    ? (Array.isArray(options.params.chain_id)
+        ? options.params.chain_id
+        : [options.params.chain_id]
+      ).map(Number)
+    : undefined;
+
   const body = {
     redirectTo: getAbsoluteStripeRedirectUrl(),
     sku: options.sku,
-    projectId: options.params.projectId,
-    chainIds: options.params.chain_id?.map(Number),
+    projectId: options.params.project_id,
+    chainIds: chainIds,
   };
 
   const res = await fetch(
