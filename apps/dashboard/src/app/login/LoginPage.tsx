@@ -1,6 +1,7 @@
 "use client";
 
 import { Turnstile } from "@marsidev/react-turnstile";
+import { MoonIcon, SunIcon } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { lazy, Suspense, useEffect, useState } from "react";
@@ -20,13 +21,16 @@ import {
 } from "@/actions/auth-actions";
 import { resetAnalytics } from "@/analytics/reset";
 import { ClientOnly } from "@/components/blocks/client-only";
-import { ToggleThemeButton } from "@/components/blocks/color-mode-toggle";
 import { GenericLoadingPage } from "@/components/blocks/skeletons/GenericLoadingPage";
+import { DotsBackgroundPattern } from "@/components/ui/background-patterns";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LAST_USED_PROJECT_ID, LAST_USED_TEAM_ID } from "@/constants/cookie";
 import { NEXT_PUBLIC_TURNSTILE_SITE_KEY } from "@/constants/public-envs";
 import type { Account } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { cn } from "@/lib/utils";
 import { isAccountOnboardingComplete } from "@/utils/account-onboarding";
 import { deleteCookie } from "@/utils/cookie";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
@@ -76,13 +80,16 @@ export function LoginAndOnboardingPage(props: {
 }) {
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
-      <div className="border-b bg-card">
-        <header className="container flex w-full flex-row items-center justify-between px-6 py-4">
-          <div className="flex shrink-0 items-center gap-3">
+      <div className="bg-background backdrop-blur-lg">
+        <header className="container flex w-full flex-row items-center justify-between px-6 py-5 max-w-5xl">
+          <div className="flex shrink-0 items-center gap-2">
             <ThirdwebMiniLogo className="size-7 md:size-8" />
+            <p className="text-2xl font-semibold tracking-tight hidden md:block">
+              thirdweb
+            </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <Link
                 className="px-2 text-muted-foreground text-sm hover:text-foreground"
@@ -114,6 +121,7 @@ export function LoginAndOnboardingPage(props: {
         redirectPath={props.redirectPath}
       />
 
+      <DotsBackgroundPattern />
       <ResetLastUsedCookies />
     </div>
   );
@@ -121,32 +129,9 @@ export function LoginAndOnboardingPage(props: {
 
 function LoginPageContainer(props: { children: React.ReactNode }) {
   return (
-    <>
-      <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-24 px-2">
-        {props.children}
-      </main>
-
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        alt=""
-        className="-bottom-12 -right-12 pointer-events-none fixed lg:right-0 lg:bottom-0"
-        src="/assets/login/background.svg"
-      />
-
-      <footer className="z-20 relative bg-background">
-        <div className="px-4  border-t  p-4 text-center">
-          <div className="text-sm font-medium mb-1">
-            <span>Login with phone number is no longer supported</span>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            <p>
-              You can instead log into your account using your account email
-              address.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </>
+    <main className="container z-10 flex grow flex-col items-center justify-center gap-6 py-24 px-2">
+      {props.children}
+    </main>
   );
 }
 
@@ -355,5 +340,33 @@ function ConnectEmbedSizedLoadingCard() {
     <ConnectEmbedSizedCard>
       <Spinner className="size-10" />
     </ConnectEmbedSizedCard>
+  );
+}
+
+function ToggleThemeButton(props: { className?: string }) {
+  const { setTheme, theme } = useTheme();
+
+  return (
+    <ClientOnly
+      ssr={<Skeleton className="size-[36px] rounded-full border bg-accent" />}
+    >
+      <Button
+        aria-label="Toggle theme"
+        className={cn(
+          "h-auto w-auto rounded-full p-2 text-muted-foreground hover:text-foreground",
+          props.className,
+        )}
+        onClick={() => {
+          setTheme(theme === "dark" ? "light" : "dark");
+        }}
+        variant="ghost"
+      >
+        {theme === "light" ? (
+          <SunIcon className="size-5 " />
+        ) : (
+          <MoonIcon className="size-5 " />
+        )}
+      </Button>
+    </ClientOnly>
   );
 }
