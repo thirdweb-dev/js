@@ -232,13 +232,13 @@ type TokenSwapParams = {
   buyTokenAddress: string;
   sellTokenChainId: number;
   sellTokenAddress: string;
-  pageType: "asset" | "bridge" | "chain";
+  pageType: "asset" | "bridge" | "chain" | "bridge-iframe";
 };
 
 type TokenBuyParams = {
   buyTokenChainId: number | undefined;
   buyTokenAddress: string | undefined;
-  pageType: "asset" | "bridge" | "chain";
+  pageType: "asset" | "bridge" | "chain" | "bridge-iframe";
 };
 
 /**
@@ -298,7 +298,7 @@ export function reportTokenSwapSuccessful(properties: TokenSwapParams) {
  * @MananTank
  */
 export function reportSwapWidgetShown(properties: {
-  pageType: "asset" | "bridge" | "chain";
+  pageType: "asset" | "bridge" | "chain" | "bridge-iframe";
 }) {
   posthog.capture("swap widget shown", properties);
 }

@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID,
   NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID,
   NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID,
 } from "@/constants/public-envs";
@@ -30,7 +31,7 @@ import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { appMetadata } from "../../constants/connect";
 import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
 
-type PageType = "asset" | "bridge" | "chain";
+type PageType = "asset" | "bridge" | "chain" | "bridge-iframe";
 
 export type BuyAndSwapEmbedProps = {
   buyTab:
@@ -92,7 +93,9 @@ export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
             ? NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID
             : props.pageType === "chain"
               ? NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID
-              : undefined,
+              : props.pageType === "bridge-iframe"
+                ? NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID
+                : undefined,
       secretKey: undefined,
       teamId: undefined,
     });

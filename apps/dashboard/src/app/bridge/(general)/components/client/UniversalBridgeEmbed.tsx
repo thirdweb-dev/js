@@ -21,12 +21,13 @@ export const bridgeWallets = [
 export function UniversalBridgeEmbed(props: {
   buyTab: BuyAndSwapEmbedProps["buyTab"];
   swapTab: BuyAndSwapEmbedProps["swapTab"];
+  pageType: "bridge" | "bridge-iframe";
 }) {
   return (
     <BuyAndSwapEmbed
       buyTab={props.buyTab}
       swapTab={props.swapTab}
-      pageType="bridge"
+      pageType={props.pageType}
       wallets={bridgeWallets}
     />
   );

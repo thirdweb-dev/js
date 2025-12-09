@@ -18,6 +18,11 @@ const ContentSecurityPolicy = `
   block-all-mixed-content;
 `;
 
+const EmbedContentSecurityPolicy = `
+  ${ContentSecurityPolicy}
+  frame-ancestors *;
+`;
+
 const securityHeaders = [
   {
     key: "X-DNS-Prefetch-Control",
@@ -137,6 +142,24 @@ const baseNextConfig: NextConfig = {
         ],
         // Apply these headers to all routes in your application.
         source: "/(.*)",
+      },
+      {
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+          },
+        ],
+        source: "/bridge/embed",
+      },
+      {
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+          },
+        ],
+        source: "/bridge/embed/:path*",
       },
     ];
   },

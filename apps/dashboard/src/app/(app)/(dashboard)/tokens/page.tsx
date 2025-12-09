@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { Bridge } from "thirdweb";
 import { serverThirdwebClient } from "@/constants/thirdweb-client.server";
-import { bridgeStats } from "../../../bridge/data";
+import { bridgeStats } from "../../../bridge/(general)/data";
 import { PageHeader } from "./components/header";
 import { TokenPage } from "./components/token-page";
 
