@@ -37,6 +37,7 @@ export function DedicatedRelayerPageClient(
     fleetStatus === "not-purchased" || fleetStatus === "pending-setup",
   );
 
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (fleetStatusQuery.data) {
       _setFleet(fleetStatusQuery.data);

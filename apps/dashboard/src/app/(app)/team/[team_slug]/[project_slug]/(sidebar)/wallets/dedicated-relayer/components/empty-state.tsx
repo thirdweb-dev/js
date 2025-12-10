@@ -3,6 +3,7 @@
 import { Img } from "@workspace/ui/components/img";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,9 @@ export function DedicatedRelayerEmptyState(
       setIsModalOpen(false);
       setSelectedTier(null);
       setSelectedChainIds([]);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to purchase dedicated relayer");
     } finally {
       setIsLoading(false);
     }
