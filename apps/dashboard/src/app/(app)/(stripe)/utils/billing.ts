@@ -7,6 +7,10 @@ import { getAbsoluteUrl } from "@/utils/vercel";
 export async function getBillingCheckoutUrl(options: {
   teamSlug: string;
   sku: Exclude<ProductSKU, null>;
+  params: {
+    project_id?: string;
+    chain_id?: string | string[];
+  };
 }) {
   const token = await getAuthToken();
 
@@ -17,13 +21,26 @@ export async function getBillingCheckoutUrl(options: {
     } as const;
   }
 
+  const chainIds = options.params.chain_id
+    ? (Array.isArray(options.params.chain_id)
+        ? options.params.chain_id
+        : [options.params.chain_id]
+      )
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value))
+    : undefined;
+
+  const body = {
+    redirectTo: getAbsoluteStripeRedirectUrl(),
+    sku: options.sku,
+    projectId: options.params.project_id,
+    chainIds: chainIds,
+  };
+
   const res = await fetch(
     `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamSlug}/checkout/create-link`,
     {
-      body: JSON.stringify({
-        redirectTo: getAbsoluteStripeRedirectUrl(),
-        sku: options.sku,
-      }),
+      body: JSON.stringify(body),
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

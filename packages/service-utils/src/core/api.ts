@@ -195,6 +195,11 @@ export type ProjectBundlerService = {
       value: string;
     }>;
   } | null;
+  dedicatedRelayer?: {
+    sku: string;
+    chainIds: number[];
+    executors: string[];
+  } | null;
 };
 
 export type ProjectEmbeddedWalletsService = {
