@@ -25,7 +25,9 @@ export async function getBillingCheckoutUrl(options: {
     ? (Array.isArray(options.params.chain_id)
         ? options.params.chain_id
         : [options.params.chain_id]
-      ).map(Number)
+      )
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value))
     : undefined;
 
   const body = {

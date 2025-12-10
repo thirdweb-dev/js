@@ -3,11 +3,13 @@
 import { ClockIcon, Loader2Icon } from "lucide-react";
 import { CodeClient } from "@/components/ui/code/code.client";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
+import { cn } from "@/lib/utils";
 import type { Fleet } from "../types";
 
 type DedicatedRelayerPendingStateProps = {
   fleet: Fleet;
   hasTransactions?: boolean;
+  className?: string;
 };
 
 /**
@@ -21,7 +23,7 @@ export function DedicatedRelayerPendingState(
   const hasExecutors = fleet.executors.length > 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={cn("flex flex-col gap-6", props.className)}>
       {/* Status Banner */}
       <div className="flex items-center gap-3 rounded-lg border border-warning/50 bg-warning/10 px-4 py-3">
         <Loader2Icon className="size-5 animate-spin text-warning" />
@@ -152,9 +154,10 @@ export function DedicatedRelayerPendingState(
 
 function ChainBadge(props: { chainId: number }) {
   const chain = useV5DashboardChain(props.chainId);
+  const label = chain?.name ?? `Chain ${props.chainId}`;
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-sm">
-      {chain.name || `Chain ${props.chainId}`}
+      {label}
     </span>
   );
 }

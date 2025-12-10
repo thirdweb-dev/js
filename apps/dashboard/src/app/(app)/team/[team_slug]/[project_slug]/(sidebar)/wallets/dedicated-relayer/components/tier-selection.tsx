@@ -8,6 +8,7 @@ import {
   FoldersIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type React from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
 import { WalletProductIcon } from "@/icons/WalletProductIcon";
@@ -78,9 +79,10 @@ export function PlanSection(props: {
   onSelectTier: (tier: DedicatedRelayerSKU) => void;
   isLoading?: boolean;
   selectedTier?: DedicatedRelayerSKU | null;
+  className?: string;
 }) {
   return (
-    <div className="border rounded-xl bg-card">
+    <div className={cn("border rounded-xl bg-card", props.className)}>
       <div className="p-6 border-b border-dashed">
         <h2 className="font-semibold text-xl tracking-tight">Select a plan</h2>
       </div>

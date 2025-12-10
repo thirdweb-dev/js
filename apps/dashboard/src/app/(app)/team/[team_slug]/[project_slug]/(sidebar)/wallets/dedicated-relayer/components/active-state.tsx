@@ -23,6 +23,7 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useAllChainsData } from "@/hooks/chains/allChains";
 import { ChainIconClient } from "@/icons/ChainIcon";
+import { cn } from "@/lib/utils";
 import {
   useFleetTransactions,
   useFleetTransactionsSummary,
@@ -36,6 +37,7 @@ type DedicatedRelayerActiveStateProps = {
   client: ThirdwebClient;
   from: string;
   to: string;
+  className?: string;
 };
 
 export function DedicatedRelayerActiveState(
@@ -69,7 +71,7 @@ export function DedicatedRelayerActiveState(
     : 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={cn("flex flex-col gap-6", props.className)}>
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { DedicatedRelayerSKU } from "@/types/billing";
 import { getAbsoluteUrl } from "@/utils/vercel";
-import { useFleetTransactionsSummary } from "../lib/hooks";
+import { useFleetStatus, useFleetTransactionsSummary } from "../lib/hooks";
 import type { Fleet, FleetStatus } from "../types";
 import { DedicatedRelayerActiveState } from "./active-state";
 import { DedicatedRelayerEmptyState } from "./empty-state";
@@ -30,6 +30,20 @@ export function DedicatedRelayerPageClient(
     getInitialStatus(props.initialFleet),
   );
 
+  // Poll for fleet status when not purchased or pending setup
+  const fleetStatusQuery = useFleetStatus(
+    props.teamSlug,
+    props.projectSlug,
+    fleetStatus === "not-purchased" || fleetStatus === "pending-setup",
+  );
+
+  useEffect(() => {
+    if (fleetStatusQuery.data) {
+      _setFleet(fleetStatusQuery.data);
+      _setFleetStatus(getInitialStatus(fleetStatusQuery.data));
+    }
+  }, [fleetStatusQuery.data]);
+
   // Only fetch transactions summary when we have an active fleet with executors
   const summaryQuery = useFleetTransactionsSummary({
     teamId: props.teamId,
@@ -37,6 +51,7 @@ export function DedicatedRelayerPageClient(
     from: props.from,
     to: props.to,
     enabled: fleetStatus === "active",
+    refetchInterval: 5000,
   });
 
   const totalTransactions = summaryQuery.data?.data.totalTransactions ?? 0;

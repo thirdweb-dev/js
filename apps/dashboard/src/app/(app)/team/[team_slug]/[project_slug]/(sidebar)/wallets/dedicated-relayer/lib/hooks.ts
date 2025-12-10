@@ -1,7 +1,11 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getFleetTransactions, getFleetTransactionsSummary } from "./api";
+import {
+  getFleetStatus,
+  getFleetTransactions,
+  getFleetTransactionsSummary,
+} from "./api";
 
 type UseFleetTransactionsParams = {
   teamId: string;
@@ -31,6 +35,7 @@ type UseFleetTransactionsSummaryParams = {
   from: string;
   to: string;
   enabled?: boolean;
+  refetchInterval?: number;
 };
 
 /**
@@ -44,5 +49,23 @@ export function useFleetTransactionsSummary(
     queryFn: () => getFleetTransactionsSummary(params),
     refetchOnWindowFocus: false,
     enabled: params.enabled !== false,
+    refetchInterval: params.refetchInterval,
+  });
+}
+
+/**
+ * React Query hook for fetching fleet status.
+ * Polls every 5 seconds if enabled.
+ */
+export function useFleetStatus(
+  teamSlug: string,
+  projectSlug: string,
+  enabled: boolean,
+) {
+  return useQuery({
+    queryKey: ["fleet-status", teamSlug, projectSlug],
+    queryFn: () => getFleetStatus(teamSlug, projectSlug),
+    enabled,
+    refetchInterval: 5000,
   });
 }

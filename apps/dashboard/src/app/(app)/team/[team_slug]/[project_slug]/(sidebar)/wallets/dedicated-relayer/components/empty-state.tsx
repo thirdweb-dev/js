@@ -13,7 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import type { DedicatedRelayerSKU } from "@/types/billing";
+import { RELAYER_SUPPORTED_CHAINS } from "../constants";
 import { PlanSection } from "./tier-selection";
 
 type DedicatedRelayerEmptyStateProps = {
@@ -24,6 +26,7 @@ type DedicatedRelayerEmptyStateProps = {
     chainIds: number[],
   ) => Promise<void>;
   client: ThirdwebClient;
+  className?: string;
 };
 
 /**
@@ -57,9 +60,10 @@ export function DedicatedRelayerEmptyState(
     try {
       await props.onPurchaseTier(selectedTier, selectedChainIds);
       setIsModalOpen(false);
+      setSelectedTier(null);
+      setSelectedChainIds([]);
     } finally {
       setIsLoading(false);
-      setSelectedTier(null);
     }
   };
 
@@ -67,7 +71,7 @@ export function DedicatedRelayerEmptyState(
     selectedTier === "product:dedicated_relayer_standard" ? 2 : 4;
 
   return (
-    <div className="flex flex-col gap-8 pt-2">
+    <div className={cn("flex flex-col gap-8 pt-2", props.className)}>
       <FeatureSection />
       <PlanSection
         onSelectTier={handleSelectTier}
@@ -88,6 +92,7 @@ export function DedicatedRelayerEmptyState(
               selectedChainIds={selectedChainIds}
               onChange={setSelectedChainIds}
               client={props.client}
+              chainIds={RELAYER_SUPPORTED_CHAINS}
             />
           </div>
           <DialogFooter>
@@ -109,7 +114,7 @@ function FeatureSection() {
     <div className="grid lg:grid-cols-3 border rounded-xl bg-card">
       <FeatureCard
         title="Prioritized Queueing"
-        description="Dedicated infrastructure to avoid sharing a competing with other wallets"
+        description="Dedicated infrastructure to avoid sharing resources and competing with other wallets"
         images={{
           darkSrc: "/assets/dedicated-relayer/server-wallet-dark.png",
           lightSrc: "/assets/dedicated-relayer/server-wallet-light.png",

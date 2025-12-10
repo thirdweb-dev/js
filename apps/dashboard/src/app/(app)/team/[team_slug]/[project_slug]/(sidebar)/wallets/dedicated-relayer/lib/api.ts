@@ -1,7 +1,13 @@
 "use server";
 
 import { analyticsServerProxy } from "@/actions/proxies";
-import type { FleetTransaction, FleetTransactionsSummary } from "../types";
+import { getProject } from "@/api/project/projects";
+import {
+  buildFleetId,
+  type Fleet,
+  type FleetTransaction,
+  type FleetTransactionsSummary,
+} from "../types";
 
 type GetFleetTransactionsParams = {
   teamId: string;
@@ -72,4 +78,34 @@ export async function getFleetTransactionsSummary(
   }
 
   return res.data;
+}
+
+/**
+ * Fetches the current fleet status for a project.
+ */
+export async function getFleetStatus(
+  teamSlug: string,
+  projectSlug: string,
+): Promise<Fleet | null> {
+  const project = await getProject(teamSlug, projectSlug);
+  if (!project) return null;
+
+  const bundlerService = project.services.find((s) => s.name === "bundler");
+  const fleetConfig =
+    bundlerService && "dedicatedRelayer" in bundlerService
+      ? (bundlerService.dedicatedRelayer as {
+          sku: string;
+          chainIds: number[];
+          executors: string[];
+        } | null)
+      : null;
+
+  if (fleetConfig) {
+    return {
+      id: buildFleetId(project.teamId, project.id),
+      chainIds: fleetConfig.chainIds,
+      executors: fleetConfig.executors,
+    };
+  }
+  return null;
 }
