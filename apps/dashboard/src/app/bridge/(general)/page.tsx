@@ -60,7 +60,7 @@ export default async function Page(props: {
           : undefined,
       }}
       title={
-        <h1 className="text-3xl md:text-6xl font-semibold tracking-tighter text-balance text-center">
+        <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter text-balance text-center">
           Bridge and Swap tokens <br className="max-sm:hidden" /> across any
           chain, instantly
         </h1>

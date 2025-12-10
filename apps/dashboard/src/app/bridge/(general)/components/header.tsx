@@ -13,10 +13,10 @@ import { bridgeWallets } from "./client/UniversalBridgeEmbed";
 
 export function BridgePageHeader(props: { containerClassName?: string }) {
   return (
-    <div className="border-b border-border/70">
+    <div>
       <header
         className={cn(
-          "container flex max-w-7xl justify-between py-3 lg:py-4",
+          "container flex max-w-5xl justify-between py-3 lg:py-5",
           props.containerClassName,
         )}
       >

@@ -1,5 +1,6 @@
 "use client";
 
+import type { SupportedFiatCurrency } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
 import {
   BuyAndSwapEmbed,
@@ -19,12 +20,16 @@ export const bridgeWallets = [
 ];
 
 export function UniversalBridgeEmbed(props: {
+  persistTokenSelections?: boolean;
   buyTab: BuyAndSwapEmbedProps["buyTab"];
   swapTab: BuyAndSwapEmbedProps["swapTab"];
   pageType: "bridge" | "bridge-iframe";
+  currency?: SupportedFiatCurrency;
 }) {
   return (
     <BuyAndSwapEmbed
+      persistTokenSelections={props.persistTokenSelections}
+      currency={props.currency}
       buyTab={props.buyTab}
       swapTab={props.swapTab}
       pageType={props.pageType}

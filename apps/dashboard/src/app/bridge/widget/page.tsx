@@ -3,6 +3,7 @@ import { isAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { UniversalBridgeEmbed } from "../(general)/components/client/UniversalBridgeEmbed";
 import { bridgeStats } from "../(general)/data";
 import "@workspace/ui/global.css";
+import type { SupportedFiatCurrency } from "thirdweb/react";
 import { NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID } from "@/constants/public-envs";
 import { BridgeProviders } from "../(general)/components/client/Providers.client";
 
@@ -38,15 +39,28 @@ export default async function Page(props: {
   const buyChain = parse(searchParams.outputChain, onlyNumber);
   const buyCurrency = parse(searchParams.outputCurrency, onlyAddress);
 
+  const persistTokenSelections =
+    parse(searchParams.persistTokenSelections, (v) =>
+      v === "false" ? "false" : "true",
+    ) || "true";
+
   const theme =
     parse(searchParams.theme, (v) => (v === "light" ? "light" : "dark")) ||
     "dark";
+
+  const currency = parse(searchParams.currency, (v) =>
+    VALID_CURRENCIES.includes(v as SupportedFiatCurrency)
+      ? (v as SupportedFiatCurrency)
+      : undefined,
+  );
 
   return (
     <Providers theme={theme}>
       <div className="flex items-center justify-center min-h-screen py-6 bg-background">
         <UniversalBridgeEmbed
+          persistTokenSelections={persistTokenSelections === "true"}
           pageType="bridge-iframe"
+          currency={currency}
           buyTab={{
             buyToken: buyChain
               ? {
@@ -74,6 +88,32 @@ export default async function Page(props: {
     </Providers>
   );
 }
+
+const VALID_CURRENCIES: SupportedFiatCurrency[] = [
+  "USD",
+  "EUR",
+  "GBP",
+  "JPY",
+  "KRW",
+  "CNY",
+  "INR",
+  "NOK",
+  "SEK",
+  "CHF",
+  "AUD",
+  "CAD",
+  "NZD",
+  "MXN",
+  "BRL",
+  "CLP",
+  "CZK",
+  "DKK",
+  "HKD",
+  "HUF",
+  "IDR",
+  "ILS",
+  "ISK",
+];
 
 function parse<T>(
   value: string | string[] | undefined,

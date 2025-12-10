@@ -210,12 +210,6 @@ export type BridgeWidgetProps = {
  *   client={client}
  *   currency="USD"
  *   theme="dark"
- *   showThirdwebBranding
- *   buy={{
- *     // Buy 0.1 native tokens on Base
- *     amount: "0.1",
- *     chainId: 8453,
- *   }}
  * />
  * ```
  *

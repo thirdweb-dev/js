@@ -1,0 +1,61 @@
+import {
+  Details,
+  createMetadata,
+  DocImage
+} from "@doc";
+import bridgeWidgetDark from "./bridge-widget-dark.png";
+import bridgeWidgetLight from "./bridge-widget-light.png";
+import { ArticleIconCard, Grid } from "@doc";
+import { CodeIcon, FrameIcon } from "lucide-react";
+import { ReactIcon } from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Bridge widget",
+    icon: "payments",
+  },
+  title: "Bridge widget",
+  description: "Add a widget to add cross chain swaps and fiat onramp to your app",
+});
+
+# Bridge widget
+
+The Bridge widget makes it easy to embed cross-chain swaps and fiat onramp UI into your app.
+
+
+<div className='dark-only'>
+<DocImage src={bridgeWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={bridgeWidgetLight} />
+</div>
+
+
+## Get Started
+
+You can integrate the bridge widget into your website using an iframe, a script tag, or a React component
+
+<div className="space-y-4">
+
+<ArticleIconCard
+	title="Iframe"
+  icon={FrameIcon}
+	description="Integrate bridge widget into your website using an iframe"
+	href="/bridge/bridge-widget/iframe"
+/>
+
+<ArticleIconCard
+	title="Script"
+  icon={CodeIcon}
+	description="Integrate bridge widget into your website using a script tag"
+	href="/bridge/bridge-widget/script"
+/>
+
+<ArticleIconCard
+	title="React Component"
+  icon={ReactIcon}
+	description="Integrate bridge widget into your app using a React component"
+	href="/bridge/bridge-widget/react"
+/>
+
+</div>

@@ -1093,6 +1093,10 @@ const walletRefactorRedirects = {
   "/typescript/v5/supported-wallets/:path*": "/wallets/external-wallets",
 };
 
+const bridgeRedirects = {
+  "/bridge/bridge-widget-script": "/bridge/bridge-widget/script",
+};
+
 /**
  * @type {import('next').NextConfig['redirects']}
  */
@@ -1115,6 +1119,7 @@ export const redirects = async () => {
     ...createRedirects(glossaryRedirects),
     ...createRedirects(payRedirects),
     ...createRedirects(walletRefactorRedirects),
+    ...createRedirects(bridgeRedirects),
   ];
 };
 

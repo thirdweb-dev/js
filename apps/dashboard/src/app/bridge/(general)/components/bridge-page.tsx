@@ -8,6 +8,7 @@ import RoutesImage from "../assets/routes.png";
 import TokensImage from "../assets/tokens.png";
 import { bridgeStats, bridgeStatsNumbers } from "../data";
 import { AnimatedNumbers } from "./client/animated-numbers";
+import { AddBridgeWidgetLink } from "./client/badge-link";
 import { UniversalBridgeEmbed } from "./client/UniversalBridgeEmbed";
 import { BridgePageHeader } from "./header";
 
@@ -29,6 +30,12 @@ export function BridgePageUI(props: {
         />
       </div>
 
+      <div className="container max-w-2xl flex justify-center">
+        <AddBridgeWidgetLink />
+      </div>
+
+      <div className="h-10" />
+
       <HeadingSection title={props.title} />
 
       <div className="h-20 lg:h-40" />
@@ -43,7 +50,7 @@ export function BridgePageUI(props: {
 function HeadingSection(props: { title: React.ReactNode }) {
   return (
     <div className="container">
-      <div className="mb-3 lg:mb-6">{props.title}</div>
+      <div className="mb-3 lg:mb-5">{props.title}</div>
 
       <p className="text-muted-foreground text-sm text-pretty text-center lg:text-lg mb-6 lg:mb-8">
         Seamlessly move your assets across {bridgeStats.supportedChains} chains
@@ -81,9 +88,9 @@ function DataSquare(props: {
   imageClassName?: string;
 }) {
   return (
-    <div className="py-2 lg:py-0 size-full lg:size-[220px] rounded-xl border hover:bg-card bg-card/50 relative shrink-0 overflow-hidden">
+    <div className="py-2 lg:py-0 size-full lg:size-[200px] rounded-2xl border hover:bg-card bg-card/50 relative shrink-0 overflow-hidden">
       <div className="p-4">
-        <div className="flex items-center gap-1 text-3xl lg:text-5xl font-medium tracking-tight font-mono mb-1 h-[45px] lg:h-[56px]">
+        <div className="flex items-center gap-1 text-3xl lg:text-4xl font-semibold tracking-tight mb-1 h-[45px]">
           <AnimatedNumbers
             value={props.data}
             format={props.format}

@@ -1,3 +1,4 @@
+export type { SupportedFiatCurrency } from "../pay/convert/type.js";
 export {
   AccountProvider,
   type AccountProviderProps,
