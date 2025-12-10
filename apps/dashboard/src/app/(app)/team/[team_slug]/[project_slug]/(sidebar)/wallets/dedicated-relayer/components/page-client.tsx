@@ -21,6 +21,7 @@ type DedicatedRelayerPageClientProps = {
   fleetId: string;
   from: string;
   to: string;
+  rangeType: Range["type"];
   initialFleet: Fleet | null;
 };
 
@@ -35,7 +36,7 @@ export function DedicatedRelayerPageClient(
   const [dateRange, setDateRange] = useState<Range>({
     from: new Date(props.from),
     to: new Date(props.to),
-    type: "last-7",
+    type: props.rangeType,
   });
 
   // Poll for fleet status when not purchased or pending setup

@@ -79,6 +79,7 @@ export default async function DedicatedRelayerPage(props: {
       fleetId={fleetId}
       from={range.from.toISOString()}
       to={range.to.toISOString()}
+      rangeType={range.type}
       initialFleet={initialFleet}
     />
   );
