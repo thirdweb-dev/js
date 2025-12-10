@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.115.4
+
+### Patch Changes
+
+- [#8526](https://github.com/thirdweb-dev/js/pull/8526) [`70ff608`](https://github.com/thirdweb-dev/js/commit/70ff608c72628a9c1958d3d77cea2bdaca3139b2) Thanks [@jnsdls](https://github.com/jnsdls)! - added utf-8 encoded JSON support for tokenURI and contract metadata
+
 ## 5.115.3
 
 ### Patch Changes
