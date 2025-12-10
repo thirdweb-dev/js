@@ -33,11 +33,9 @@ export type FleetTransaction = {
   timestamp: string;
   chainId: string;
   transactionFee: number;
-  transactionFeeUsd: number;
+  transactionFeeUsd: number | null;
   walletAddress: string;
   transactionHash: string;
-  userOpHash: string;
-  executorAddress: string;
 };
 
 /**
