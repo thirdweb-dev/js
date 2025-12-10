@@ -1,7 +1,7 @@
 import { base64ToString } from "../uint8-array.js";
 
-type Base64Prefix = "data:application/json;base64";
-type Base64String = `${Base64Prefix},${string}`;
+const Base64Prefix = "data:application/json;base64" as const;
+type Base64String = `${typeof Base64Prefix},${string}`;
 
 /**
  * Checks if a given string is a base64 encoded JSON string.
@@ -14,7 +14,7 @@ type Base64String = `${Base64Prefix},${string}`;
  * ```
  */
 export function isBase64JSON(input: string): input is Base64String {
-  if (input.startsWith("data:application/json;base64")) {
+  if (input.toLowerCase().startsWith(Base64Prefix)) {
     return true;
   }
   return false;
@@ -31,6 +31,7 @@ export function isBase64JSON(input: string): input is Base64String {
  * ```
  */
 export function parseBase64String(input: Base64String) {
-  const [, base64] = input.split(",") as [Base64Prefix, string];
+  const commaIndex = input.indexOf(",");
+  const base64 = input.slice(commaIndex + 1);
   return base64ToString(base64);
 }
