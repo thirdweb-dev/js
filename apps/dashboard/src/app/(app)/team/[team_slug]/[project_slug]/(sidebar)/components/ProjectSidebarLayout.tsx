@@ -22,6 +22,7 @@ export function ProjectSidebarLayout(props: {
   children: React.ReactNode;
   hasEngines: boolean;
   showContracts: boolean;
+  teamId: string;
 }) {
   const contentSidebarLinks = [
     {
@@ -51,10 +52,14 @@ export function ProjectSidebarLayout(props: {
           href: `${props.layoutPath}/wallets/sponsored-gas`,
           label: "Gas Sponsorship",
         },
-        {
-          href: `${props.layoutPath}/wallets/dedicated-relayer`,
-          label: "Dedicated Relayer",
-        },
+        ...(props.teamId === "team_clmb33q9w00gn1x0u2ri8z0k0"
+          ? [
+              {
+                href: `${props.layoutPath}/wallets/dedicated-relayer`,
+                label: "Dedicated Relayer",
+              },
+            ]
+          : []),
       ],
     },
     ...(props.showContracts

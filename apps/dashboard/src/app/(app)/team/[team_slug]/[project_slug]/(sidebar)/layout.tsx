@@ -107,6 +107,7 @@ export default async function ProjectLayout(props: {
           layoutPath={layoutPath}
           hasEngines={hasLegacyDedicatedEngines}
           showContracts={showContracts}
+          teamId={team.id}
         >
           {props.children}
         </ProjectSidebarLayout>

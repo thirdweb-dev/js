@@ -30,11 +30,13 @@ export function DedicatedRelayerPageClient(
     getInitialStatus(props.initialFleet),
   );
 
+  // Only fetch transactions summary when we have an active fleet with executors
   const summaryQuery = useFleetTransactionsSummary({
     teamId: props.teamId,
     fleetId: props.fleetId,
     from: props.from,
     to: props.to,
+    enabled: fleetStatus === "active",
   });
 
   const totalTransactions = summaryQuery.data?.data.totalTransactions ?? 0;
@@ -56,10 +58,10 @@ export function DedicatedRelayerPageClient(
     const search = new URLSearchParams();
     search.set("project_id", props.projectId);
     for (const chainId of chainIds) {
-      search.set("chain_id", chainId.toString());
+      search.append("chain_id", chainId.toString());
     }
 
-    // TODO-FLEET: use the existing checkout pattern with `stripe-reditect` instead
+    // Redirect to Stripe checkout
     window.open(
       `${getAbsoluteUrl()}/checkout/${props.teamSlug}/${sku}?${search.toString()}`,
       "_blank",

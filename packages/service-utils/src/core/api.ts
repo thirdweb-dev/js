@@ -195,7 +195,8 @@ export type ProjectBundlerService = {
       value: string;
     }>;
   } | null;
-  fleet?: {
+  dedicatedRelayer?: {
+    sku: string;
     chainIds: number[];
     executors: string[];
   } | null;

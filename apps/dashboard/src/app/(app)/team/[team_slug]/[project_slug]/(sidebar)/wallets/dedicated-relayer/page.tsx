@@ -47,8 +47,22 @@ export default async function DedicatedRelayerPage(props: {
 
   // Extract fleet configuration from bundler service
   const bundlerService = project.services.find((s) => s.name === "bundler");
+  console.log(
+    "[DedicatedRelayer] bundlerService:",
+    JSON.stringify(bundlerService, null, 2),
+  );
   const fleetConfig =
-    bundlerService && "fleet" in bundlerService ? bundlerService.fleet : null;
+    bundlerService && "dedicatedRelayer" in bundlerService
+      ? (bundlerService.dedicatedRelayer as {
+          sku: string;
+          chainIds: number[];
+          executors: string[];
+        } | null)
+      : null;
+  console.log(
+    "[DedicatedRelayer] fleetConfig:",
+    JSON.stringify(fleetConfig, null, 2),
+  );
 
   // Convert fleet config to Fleet type
   // If fleet is undefined/null, show empty state (not-purchased)

@@ -1,6 +1,7 @@
 "use client";
 
 import { ClockIcon, Loader2Icon } from "lucide-react";
+import { CodeClient } from "@/components/ui/code/code.client";
 import { useV5DashboardChain } from "@/hooks/chains/v5-adapter";
 import type { Fleet } from "../types";
 
@@ -33,7 +34,7 @@ export function DedicatedRelayerPendingState(
           <p className="text-muted-foreground text-sm">
             {hasExecutors
               ? "Your dedicated relayer is ready. Waiting for the first transaction to appear."
-              : "Your relayer is being provisioned. This usually takes a few minutes."}
+              : "Your relayer is being provisioned. This usually takes 48 to 72 hours."}
           </p>
         </div>
       </div>
@@ -108,6 +109,43 @@ export function DedicatedRelayerPendingState(
           </ol>
         </div>
       </div>
+
+      {/* Test Transaction Snippet */}
+      {hasExecutors && (
+        <div className="rounded-lg border bg-card">
+          <div className="border-b px-4 py-4 lg:px-6">
+            <h2 className="font-semibold text-xl tracking-tight">
+              Send a Test Transaction
+            </h2>
+          </div>
+          <div className="p-4 lg:p-6">
+            <p className="mb-4 text-muted-foreground text-sm">
+              You can send a test transaction using the thirdweb API. Replace{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+                YOUR_SECRET_KEY
+              </code>{" "}
+              with your actual secret key.
+            </p>
+            <CodeClient
+              code={`curl https://api.thirdweb.com/v1/transactions \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --header 'x-secret-key: YOUR_SECRET_KEY' \\
+  --data '{
+  "chainId": ${fleet.chainIds[0]},
+  "transactions": [
+    {
+      "data": "0x",
+      "to": "vitalik.eth",
+      "value": "0"
+    }
+  ]
+}'`}
+              lang="bash"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

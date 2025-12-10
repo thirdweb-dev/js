@@ -30,6 +30,7 @@ type UseFleetTransactionsSummaryParams = {
   fleetId: string;
   from: string;
   to: string;
+  enabled?: boolean;
 };
 
 /**
@@ -42,5 +43,6 @@ export function useFleetTransactionsSummary(
     queryKey: ["fleet-transactions-summary", params],
     queryFn: () => getFleetTransactionsSummary(params),
     refetchOnWindowFocus: false,
+    enabled: params.enabled !== false,
   });
 }
