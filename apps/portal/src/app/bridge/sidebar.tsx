@@ -26,8 +26,22 @@ export const sidebar: SideBar = {
           name: "Swap Tokens",
         },
         {
-          href: `${bridgeSlug}/bridge-widget-script`,
-          name: "BridgeWidget Script",
+          name: "Bridge Widget",
+          href: `${bridgeSlug}/bridge-widget`,
+          links: [
+            {
+              href: `${bridgeSlug}/bridge-widget/iframe`,
+              name: "Iframe",
+            },
+            {
+              href: `${bridgeSlug}/bridge-widget/script`,
+              name: "Script",
+            },
+            {
+              href: `${bridgeSlug}/bridge-widget/react`,
+              name: "React Component",
+            },
+          ],
         },
         {
           href: `${bridgeSlug}/fund`,

@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
+import { isUTF8JSONString, parseUTF8String } from "../utf8/utf8.js";
 
 /**
  * @internal
@@ -28,6 +29,18 @@ export async function fetchContractMetadata(
     } catch (e) {
       console.error(
         "Failed to decode base64 encoded contract metadata",
+        { uri },
+        e,
+      );
+      return undefined;
+    }
+  }
+  if (isUTF8JSONString(uri)) {
+    try {
+      return JSON.parse(parseUTF8String(uri));
+    } catch (e) {
+      console.error(
+        "Failed to fetch utf8 encoded contract metadata",
         { uri },
         e,
       );

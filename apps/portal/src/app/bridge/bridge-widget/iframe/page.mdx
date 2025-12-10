@@ -1,0 +1,153 @@
+import {
+  Details,
+  createMetadata,
+  DocImage
+} from "@doc";
+import bridgeWidgetDark from "../bridge-widget-dark.png";
+import bridgeWidgetLight from "../bridge-widget-light.png";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
+import { IframeCodePreview } from "./iframe-code-preview";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Bridge widget iframe",
+    icon: "payments",
+  },
+  title: "Bridge widget iframe",
+  description: "Add a widget to add cross chain swaps and fiat onramp to your app using an iframe",
+});
+
+# Bridge widget iframe
+
+The Bridge widget iframe makes it easy to embed cross-chain swaps and fiat onramp UI into your app. Just add an iframe to your HTML and get a fully customizable widget - no build setup required.
+
+## Features
+- Cross-chain token swaps across 85+ blockchains
+- Fiat onramp support to buy tokens with credit/debit cards
+- dark and light mode support
+- Set custom default token selections using query parameters
+- Display fiat values in multiple currencies
+
+
+<div className='dark-only'>
+<DocImage src={bridgeWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={bridgeWidgetLight} />
+</div>
+
+
+## Iframe Integration
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget" />
+
+
+## Options
+
+You can customize theme, currencies, token selections etc using query parameters as mentioned below
+
+### Theme
+
+By default the widget uses the "dark" theme.
+
+You can set the light theme by passing the `theme=light` query parameter.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?theme=light" />
+
+
+### Change default token selections
+
+By default no tokens are selected in the widget UI.
+
+You can change the default token selections by using query parameters mentioned below:
+
+* `inputCurrency`, `inputChain` to set sell token.
+* `outputCurrency`, `outputChain` to set buy token.
+
+Chain parameter should be the chain id (eg. 1 for Ethereum Mainnet, 137 for Polygon Mainnet, 8453 for Base Mainnet, etc.)
+and currency parameter should be the token address. You can use [thirdweb chainlist](https://thirdweb.com/chainlist?service=pay) to find the chain id for a chain.
+
+To set native token of the chain,
+only specify the chain parameter and omit the currency parameter.
+
+
+#### Examples
+
+<Details summary="Change default Sell Token to ERC20 Token">
+
+Set USDC on Base as the default sell token.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?inputCurrency=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&inputChain=8453" />
+
+</Details>
+
+<Details summary="Change default Sell Token to Native Token">
+
+Set Base native token as the default sell token.
+
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?inputChain=8453" />
+
+</Details>
+
+<Details summary="Change default Sell and Buy Tokens">
+
+
+Set USDC on Base as the default sell token and USDC on Polygon as the default buy token.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?inputCurrency=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&inputChain=8453&outputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputChain=137" />
+
+</Details>
+
+
+### Persist Token Selections
+
+By default, the widget saves the last used token selections to localStorage so that if the user revisits the widget later, last used tokens are selected by default. To disable this feature, you can set the `persistTokenSelections` query parameter to `false`.
+
+if the custom default token selection is specified using the query params mentioned above, it overrides the last used tokens to ensure that configuration specified in query params is always respected.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?persistTokenSelections=false" />
+
+
+### Currency
+
+By default the fiat value of the token amounts is displayed in USD.
+
+You can change the currency by setting the `currency` query parameter to the desired currency.
+
+<Details summary="Supported Currencies">
+
+- `USD` - US Dollar (default)
+- `EUR` - Euro
+- `GBP` - British Pound
+- `JPY` - Japanese Yen
+- `KRW` - Korean Won
+- `CNY` - Chinese Yuan
+- `INR` - Indian Rupee
+- `NOK` - Norwegian Krone
+- `SEK` - Swedish Krona
+- `CHF` - Swiss Franc
+- `AUD` - Australian Dollar
+- `CAD` - Canadian Dollar
+- `NZD` - New Zealand Dollar
+- `MXN` - Mexican Peso
+- `BRL` - Brazilian Real
+- `CLP` - Chilean Peso
+- `CZK` - Czech Koruna
+- `DKK` - Danish Krone
+- `HKD` - Hong Kong Dollar
+- `HUF` - Hungarian Forint
+- `IDR` - Indonesian Rupiah
+- `ILS` - Israeli New Sheqel
+- `ISK` - Icelandic Krona
+
+</Details>
+
+
+#### Example
+
+Show fiat values in Japanese Yen (JPY) in the widget.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?currency=JPY" />
+
+

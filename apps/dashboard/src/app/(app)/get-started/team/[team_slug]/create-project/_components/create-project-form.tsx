@@ -312,7 +312,7 @@ function CreateProjectForm(props: {
             type="submit"
           >
             {createProject.isPending && <Spinner className="size-4" />}
-            Create Projecct
+            Create Project
           </Button>
         </footer>
       </form>

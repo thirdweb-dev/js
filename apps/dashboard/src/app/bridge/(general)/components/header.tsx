@@ -7,16 +7,16 @@ import { ClientOnly } from "@/components/blocks/client-only";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { PublicPageConnectButton } from "../../(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/public-pages/_components/PublicPageConnectButton";
-import { ThirdwebMiniLogo } from "../../(app)/components/ThirdwebMiniLogo";
+import { PublicPageConnectButton } from "../../../(app)/(dashboard)/(chain)/[chain_id]/[contractAddress]/public-pages/_components/PublicPageConnectButton";
+import { ThirdwebMiniLogo } from "../../../(app)/components/ThirdwebMiniLogo";
 import { bridgeWallets } from "./client/UniversalBridgeEmbed";
 
 export function BridgePageHeader(props: { containerClassName?: string }) {
   return (
-    <div className="border-b border-border/70">
+    <div>
       <header
         className={cn(
-          "container flex max-w-7xl justify-between py-3 lg:py-4",
+          "container flex max-w-5xl justify-between py-3 lg:py-5",
           props.containerClassName,
         )}
       >

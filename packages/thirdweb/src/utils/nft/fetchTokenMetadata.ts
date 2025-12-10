@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { isBase64JSON, parseBase64String } from "../base64/base64.js";
 import { numberToHex } from "../encoding/hex.js";
+import { isUTF8JSONString, parseUTF8String } from "../utf8/utf8.js";
 import type { NFTMetadata } from "./parseNft.js";
 
 /**
@@ -37,6 +38,18 @@ export async function fetchTokenMetadata(
     }
   }
 
+  if (isUTF8JSONString(tokenUri)) {
+    try {
+      return JSON.parse(parseUTF8String(tokenUri));
+    } catch (e) {
+      console.error(
+        "Failed to fetch utf8 encoded NFT",
+        { tokenId, tokenUri },
+        e,
+      );
+      throw e;
+    }
+  }
   // in all other cases we will need the `download` function from storage
   const { download } = await import("../../storage/download.js");
 

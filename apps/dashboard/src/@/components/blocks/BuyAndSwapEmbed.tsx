@@ -4,7 +4,11 @@
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { defineChain } from "thirdweb";
-import { BuyWidget, SwapWidget } from "thirdweb/react";
+import {
+  BuyWidget,
+  type SupportedFiatCurrency,
+  SwapWidget,
+} from "thirdweb/react";
 import type { Wallet } from "thirdweb/wallets";
 import {
   reportAssetBuyCancelled,
@@ -21,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID,
+  NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID,
   NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID,
   NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID,
 } from "@/constants/public-envs";
@@ -30,9 +35,10 @@ import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { appMetadata } from "../../constants/connect";
 import { getConfiguredThirdwebClient } from "../../constants/thirdweb.server";
 
-type PageType = "asset" | "bridge" | "chain";
+type PageType = "asset" | "bridge" | "chain" | "bridge-iframe";
 
 export type BuyAndSwapEmbedProps = {
+  persistTokenSelections?: boolean;
   buyTab:
     | {
         buyToken:
@@ -64,6 +70,7 @@ export type BuyAndSwapEmbedProps = {
     | undefined;
   pageType: PageType;
   wallets?: Wallet[];
+  currency?: SupportedFiatCurrency;
 };
 
 export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
@@ -92,7 +99,9 @@ export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
             ? NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID
             : props.pageType === "chain"
               ? NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID
-              : undefined,
+              : props.pageType === "bridge-iframe"
+                ? NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID
+                : undefined,
       secretKey: undefined,
       teamId: undefined,
     });
@@ -115,6 +124,7 @@ export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
 
       {tab === "buy" && (
         <BuyWidget
+          currency={props.currency || "USD"}
           amount={props.buyTab?.buyToken?.amount || "1"}
           chain={
             props.buyTab?.buyToken?.chainId
@@ -238,6 +248,8 @@ export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
 
       {tab === "swap" && (
         <SwapWidget
+          currency={props.currency || "USD"}
+          persistTokenSelections={props.persistTokenSelections}
           client={client}
           theme={themeObj}
           className="!rounded-2xl !border-none"
