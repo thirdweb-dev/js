@@ -156,7 +156,6 @@ export function DedicatedRelayerActiveState(
                 <TableHead>Transaction Hash</TableHead>
                 <TableHead>Chain</TableHead>
                 <TableHead>Wallet</TableHead>
-                <TableHead>Executor</TableHead>
                 <TableHead>Timestamp</TableHead>
                 <TableHead>Fee</TableHead>
               </TableRow>
@@ -258,9 +257,6 @@ function TransactionRow(props: {
         <WalletAddress address={transaction.walletAddress} client={client} />
       </TableCell>
       <TableCell>
-        <WalletAddress address={transaction.executorAddress} client={client} />
-      </TableCell>
-      <TableCell>
         <ToolTipLabel hoverable label={format(new Date(utcTimestamp), "PPpp")}>
           <span>
             {formatDistance(new Date(utcTimestamp), new Date(), {
@@ -281,9 +277,6 @@ function SkeletonRow() {
     <TableRow className="h-[72.5px]">
       <TableCell>
         <Skeleton className="h-7 w-[160px]" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-7 w-[130px]" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-7 w-[130px]" />
@@ -363,7 +356,10 @@ function ChainCell(props: { chainId: string; client: ThirdwebClient }) {
   );
 }
 
-function TransactionFeeCell(props: { usdValue: number }) {
+function TransactionFeeCell(props: { usdValue: number | null }) {
+  if (props.usdValue === null) {
+    return <span className="font-mono text-sm text-muted-foreground">—</span>;
+  }
   return (
     <span className="font-mono text-sm">
       ${props.usdValue < 0.01 ? "<0.01" : props.usdValue.toFixed(2)}
