@@ -1,7 +1,7 @@
 "use client";
 
 import { subDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { Range } from "@/components/analytics/date-range-selector";
 import type { DedicatedRelayerSKU } from "@/types/billing";
@@ -54,13 +54,21 @@ export function DedicatedRelayerPageClient(
     }
   }, [fleetStatusQuery.data]);
 
+  const activityWindowDates = useMemo(() => {
+    const now = new Date();
+    return {
+      from: subDays(now, 120).toISOString(),
+      to: now.toISOString(),
+    };
+  }, []);
+
   // Check for any activity in the last 120 days to determine if we should show the dashboard
   // This prevents switching back to "pending" state if the user selects a date range with no transactions
   const hasActivityQuery = useFleetTransactionsSummary({
     teamId: props.teamId,
     fleetId: props.fleetId,
-    from: subDays(new Date(), 120).toISOString(),
-    to: new Date().toISOString(),
+    from: activityWindowDates.from,
+    to: activityWindowDates.to,
     enabled: fleetStatus === "active",
     refetchInterval: 5000,
   });
