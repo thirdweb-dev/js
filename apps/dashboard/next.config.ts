@@ -150,7 +150,7 @@ const baseNextConfig: NextConfig = {
             value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
           },
         ],
-        source: "/bridge/embed",
+        source: "/bridge/widget",
       },
       {
         headers: [
@@ -159,7 +159,7 @@ const baseNextConfig: NextConfig = {
             value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
           },
         ],
-        source: "/bridge/embed/:path*",
+        source: "/bridge/widget/:path*",
       },
     ];
   },
