@@ -9,4 +9,6 @@ export type X402PlaygroundOptions = {
   amount: string;
   payTo: Address;
   waitUntil: "simulated" | "submitted" | "confirmed";
+  scheme: "exact" | "upto";
+  minAmount: string;
 };

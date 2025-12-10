@@ -4,7 +4,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { CodeClient } from "@workspace/ui/components/code/code.client";
 import { CircleDollarSignIcon, CodeIcon, LockIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ConnectButton, useFetchWithPayment } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,6 +19,14 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
   const [previewTab, _setPreviewTab] = useState<Tab>(() => {
     return "ui";
   });
+  const [selectedAmount, setSelectedAmount] = useState<string>(
+    props.options.amount,
+  );
+
+  // Sync selectedAmount when options change
+  useEffect(() => {
+    setSelectedAmount(props.options.amount);
+  }, [props.options.amount]);
 
   function setPreviewTab(tab: "ui" | "client-code" | "server-code") {
     _setPreviewTab(tab);
@@ -41,6 +49,11 @@ export function X402RightSection(props: { options: X402PlaygroundOptions }) {
     searchParams.set("tokenAddress", props.options.tokenAddress);
     searchParams.set("decimals", props.options.tokenDecimals.toString());
     searchParams.set("waitUntil", props.options.waitUntil);
+    searchParams.set("scheme", props.options.scheme);
+    if (props.options.scheme === "upto") {
+      searchParams.set("minPrice", props.options.minAmount);
+      searchParams.set("settlementAmount", selectedAmount);
+    }
 
     const url =
       "/api/paywall" +
@@ -182,10 +195,39 @@ export async function POST(request: Request) {
                 <span className="text-lg font-medium">Paid API Call</span>
                 <Badge variant="success">
                   <span className="text-xl font-bold">
-                    {props.options.amount} {props.options.tokenSymbol}
+                    {props.options.scheme === "upto"
+                      ? `up to ${props.options.amount} ${props.options.tokenSymbol}`
+                      : `${props.options.amount} ${props.options.tokenSymbol}`}
                   </span>
                 </Badge>
               </div>
+
+              {props.options.scheme === "upto" && (
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm text-muted-foreground mb-2">
+                    <span>
+                      Min: {props.options.minAmount} {props.options.tokenSymbol}
+                    </span>
+                    <span>
+                      Max: {props.options.amount} {props.options.tokenSymbol}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={Number(props.options.minAmount)}
+                    max={Number(props.options.amount)}
+                    step={Number(props.options.minAmount)}
+                    value={selectedAmount}
+                    onChange={(e) => setSelectedAmount(e.target.value)}
+                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                  />
+                  <div className="text-center mt-2">
+                    <span className="text-lg font-semibold">
+                      {selectedAmount} {props.options.tokenSymbol}
+                    </span>
+                  </div>
+                </div>
+              )}
 
               <Button
                 onClick={handlePayClick}

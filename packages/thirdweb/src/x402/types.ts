@@ -29,6 +29,8 @@ export type PaymentArgs = {
   network: FacilitatorNetwork | Chain;
   /** The price for accessing the resource - either a USD amount (e.g., "$0.10") or a specific token amount */
   price: Money | ERC20TokenAmount;
+  /** The minimum price for accessing the resource - Only applicable for the "upto" payment scheme */
+  minPrice?: Money | ERC20TokenAmount;
   /** The payment facilitator instance used to verify and settle payments */
   facilitator: ThirdwebX402Facilitator;
   /** The scheme of the payment, either "exact" or "upto", defaults to "exact" */
@@ -97,6 +99,12 @@ export type VerifyPaymentResult = Prettify<
       decodedPayment: RequestedPaymentPayload;
       /** The selected payment requirements */
       selectedPaymentRequirements: RequestedPaymentRequirements;
+      /** The current remaining allowance of the payment of the selected payment asset, only applicable for the "upto" payment scheme */
+      allowance?: string;
+      /** The current balance of the user's wallet in the selected payment asset */
+      balance?: string;
+      /** The payer address if verification succeeded */
+      payer?: string;
     }
   | PaymentRequiredResult
 >;
