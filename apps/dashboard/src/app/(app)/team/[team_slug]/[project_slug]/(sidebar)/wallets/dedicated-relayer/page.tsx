@@ -42,8 +42,8 @@ export default async function DedicatedRelayerPage(props: {
   // Build fleet ID from team and project
   const fleetId = buildFleetId(team.id, project.id);
 
-  // Default date range: last 30 days
-  const range = getLastNDaysRange("last-30");
+  // Default date range: last 7 days
+  const range = getLastNDaysRange("last-7");
 
   // Extract fleet configuration from bundler service
   const bundlerService = project.services.find((s) => s.name === "bundler");

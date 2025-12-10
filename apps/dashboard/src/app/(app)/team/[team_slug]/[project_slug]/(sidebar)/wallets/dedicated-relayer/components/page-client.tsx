@@ -1,7 +1,9 @@
 "use client";
 
+import { subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import type { Range } from "@/components/analytics/date-range-selector";
 import type { DedicatedRelayerSKU } from "@/types/billing";
 import { getAbsoluteUrl } from "@/utils/vercel";
 import { useFleetStatus, useFleetTransactionsSummary } from "../lib/hooks";
@@ -30,6 +32,12 @@ export function DedicatedRelayerPageClient(
     getInitialStatus(props.initialFleet),
   );
 
+  const [dateRange, setDateRange] = useState<Range>({
+    from: new Date(props.from),
+    to: new Date(props.to),
+    type: "last-7",
+  });
+
   // Poll for fleet status when not purchased or pending setup
   const fleetStatusQuery = useFleetStatus(
     props.teamSlug,
@@ -45,17 +53,18 @@ export function DedicatedRelayerPageClient(
     }
   }, [fleetStatusQuery.data]);
 
-  // Only fetch transactions summary when we have an active fleet with executors
-  const summaryQuery = useFleetTransactionsSummary({
+  // Check for any activity in the last 120 days to determine if we should show the dashboard
+  // This prevents switching back to "pending" state if the user selects a date range with no transactions
+  const hasActivityQuery = useFleetTransactionsSummary({
     teamId: props.teamId,
     fleetId: props.fleetId,
-    from: props.from,
-    to: props.to,
+    from: subDays(new Date(), 120).toISOString(),
+    to: new Date().toISOString(),
     enabled: fleetStatus === "active",
     refetchInterval: 5000,
   });
 
-  const totalTransactions = summaryQuery.data?.data.totalTransactions ?? 0;
+  const totalTransactions = hasActivityQuery.data?.data.totalTransactions ?? 0;
   const hasTransactions = totalTransactions > 0;
 
   // TODO-FLEET: Implement purchase flow
@@ -112,8 +121,8 @@ export function DedicatedRelayerPageClient(
           teamId={props.teamId}
           fleetId={props.fleetId}
           client={props.client}
-          from={props.from}
-          to={props.to}
+          range={dateRange}
+          setRange={setDateRange}
         />
       )}
     </div>

@@ -5,6 +5,10 @@ import { ExternalLinkIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
+import {
+  DateRangeSelector,
+  type Range,
+} from "@/components/analytics/date-range-selector";
 import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
@@ -35,15 +39,15 @@ type DedicatedRelayerActiveStateProps = {
   teamId: string;
   fleetId: string;
   client: ThirdwebClient;
-  from: string;
-  to: string;
+  range: Range;
+  setRange: (range: Range) => void;
   className?: string;
 };
 
 export function DedicatedRelayerActiveState(
   props: DedicatedRelayerActiveStateProps,
 ) {
-  const { fleet, teamId, fleetId, client, from, to } = props;
+  const { fleet, teamId, fleetId, client, range, setRange } = props;
 
   const pageSize = 10;
   const [page, setPage] = useState(1);
@@ -52,15 +56,15 @@ export function DedicatedRelayerActiveState(
   const summaryQuery = useFleetTransactionsSummary({
     teamId,
     fleetId,
-    from,
-    to,
+    from: range.from.toISOString(),
+    to: range.to.toISOString(),
   });
 
   const transactionsQuery = useFleetTransactions({
     teamId,
     fleetId,
-    from,
-    to,
+    from: range.from.toISOString(),
+    to: range.to.toISOString(),
     limit: pageSize,
     offset: (page - 1) * pageSize,
     chainId: chainIdFilter,
@@ -70,8 +74,18 @@ export function DedicatedRelayerActiveState(
     ? Math.ceil(transactionsQuery.data.meta.total / pageSize)
     : 0;
 
+  // Filter active chains to only include those in the fleet
+  const activeChainsCount =
+    summaryQuery.data?.data.transactionsByChain.filter((c) =>
+      fleet.chainIds.includes(Number(c.chainId)),
+    ).length ?? 0;
+
   return (
     <div className={cn("flex flex-col gap-6", props.className)}>
+      <div className="flex justify-end">
+        <DateRangeSelector range={range} setRange={setRange} />
+      </div>
+
       {/* Summary Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <StatCard
@@ -92,9 +106,7 @@ export function DedicatedRelayerActiveState(
         />
         <StatCard
           title="Active Chains"
-          value={
-            summaryQuery.data?.data.transactionsByChain.length.toString() ?? "—"
-          }
+          value={summaryQuery.data ? activeChainsCount.toString() : "—"}
           isLoading={summaryQuery.isPending}
         />
       </div>
@@ -132,6 +144,7 @@ export function DedicatedRelayerActiveState(
                 setPage(1);
               }}
               client={client}
+              chainIds={fleet.chainIds}
             />
           </div>
         </div>
@@ -362,6 +375,7 @@ function ChainFilter(props: {
   chainId: number | undefined;
   setChainId: (chainId: number | undefined) => void;
   client: ThirdwebClient;
+  chainIds: number[];
 }) {
   return (
     <div className="flex bg-background">
@@ -373,6 +387,7 @@ function ChainFilter(props: {
         align="end"
         placeholder="All Chains"
         className="min-w-[150px]"
+        chainIds={props.chainIds}
       />
     </div>
   );
