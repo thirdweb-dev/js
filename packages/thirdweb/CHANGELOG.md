@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.116.1
+
+### Patch Changes
+
+- [#8538](https://github.com/thirdweb-dev/js/pull/8538) [`f5ab57f`](https://github.com/thirdweb-dev/js/commit/f5ab57f3657bf0569e77ac2dcbf7f158a3211fb1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Automatically store and re-use permit x402 signatures for upto schemes
+
 ## 5.116.0
 
 ### Minor Changes
