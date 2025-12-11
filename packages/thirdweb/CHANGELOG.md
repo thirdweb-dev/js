@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.116.0
+
+### Minor Changes
+
+- [#8534](https://github.com/thirdweb-dev/js/pull/8534) [`18425f9`](https://github.com/thirdweb-dev/js/commit/18425f9d744fd9605e901abb6c2ba89e7b518f5f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New 'minPrice' property for x402 payments using 'upto' schema
+
 ## 5.115.4
 
 ### Patch Changes
