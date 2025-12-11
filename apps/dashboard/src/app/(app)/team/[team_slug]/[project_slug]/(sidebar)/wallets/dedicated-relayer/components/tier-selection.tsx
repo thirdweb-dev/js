@@ -33,12 +33,12 @@ const TIERS: TierConfig[] = [
     icon: FolderIcon,
     name: "Standard",
     description:
-      "Most suitable for small startups and apps doing less than 10,000 transactions per day",
+      "Most suitable for startups and applications with moderate transaction volume",
     price: "$99",
     isPerMonth: true,
     features: [
       { icon: WalletProductIcon, label: "Single executor wallet" },
-      { icon: BoxesIcon, label: "Support for up to 2 chains" },
+      { icon: BoxesIcon, label: "Support for 1 chain" },
     ],
     cta: "Select",
   },
@@ -47,7 +47,7 @@ const TIERS: TierConfig[] = [
     icon: FoldersIcon,
     name: "Premium",
     description:
-      "Best for large enterprise companies and apps doing 100,000+ transactions per day",
+      "Best for enterprise companies and applications with high transaction volume",
     price: "$299",
     isPerMonth: true,
     features: [
@@ -55,7 +55,7 @@ const TIERS: TierConfig[] = [
         icon: WalletProductIcon,
         label: "10 executor wallets (10x throughput)",
       },
-      { icon: BoxesIcon, label: "Support for up to 4 chains" },
+      { icon: BoxesIcon, label: "Support for up to 2 chains" },
     ],
     cta: "Select",
     isRecommended: true,
@@ -65,7 +65,7 @@ const TIERS: TierConfig[] = [
     icon: FolderCogIcon,
     name: "Custom",
     description:
-      "Contact us for more throughput with custom number of chains and executor wallets",
+      "Contact us for applications operating at a global scale with custom requirements",
     price: "Custom",
     features: [
       { icon: WalletProductIcon, label: "Unlimited executor wallets" },

@@ -5,8 +5,8 @@ import {
 	TabsContent,
 	DocImage,
 	createMetadata,
-  Stack,
-  GithubTemplateCard
+	Stack,
+	GithubTemplateCard,
 } from "@doc";
 import { Steps, Step } from "@doc";
 import PaymentFlow from "./x402-protocol-flow.png";
@@ -70,19 +70,21 @@ if (result.status === 200) {
 
 ### Upto Payment Scheme
 
-For dynamic pricing, use `verifyPayment()` first, do the work, then `settlePayment()`:
+With the `upto` payment scheme, you can charge only what the client actually uses, and can also settle multiple times up to the authorized maximum amount. Use `verifyPayment()` first to verify the payment is valid for the maximum amount, do the work, then `settlePayment()`:
 
+- Ensures the payment for the maximum amount is valid before doing the expensive work
 - The final price can be dynamic based on the work performed
-- Ensures the payment is valid before doing the expensive work
+- The payment authorization is valid for the maximum amount, until expiration
+- The merchant can settle multiple times up to the authorized maximum amount using the same signed payment payload
 
-This is great for AI apis that need to charge based on the token usage for example. Check out a fully working example check out [this x402 ai inference example](https://github.com/thirdweb-example/x402-ai-inference).
+This is great for AI apis that need to charge based on the token usage for example. For a fully working example check out [this x402 ai inference example](https://github.com/thirdweb-example/x402-ai-inference).
 
 <Stack>
-<GithubTemplateCard
-  title="x402 AI Inference Example"
-  description="A fully working example of charging an for AI inference with x402"
-  href="https://github.com/thirdweb-example/x402-ai-inference"
-/>
+	<GithubTemplateCard
+		title="x402 AI Inference Example"
+		description="A fully working example of charging for AI inference with x402"
+		href="https://github.com/thirdweb-example/x402-ai-inference"
+	/>
 </Stack>
 
 Here's a high level example of how to use the `upto` payment scheme with a dynamic price based on the token usage. First we verify the payment is valid for the max payable amount and then settle the payment based on the actual usage.
@@ -96,6 +98,7 @@ const paymentArgs = {
 	network: arbitrum,
 	scheme: "upto", // enables dynamic pricing
 	price: "$0.10", // max payable amount
+	minPrice: "$0.01", // min payable amount
 	facilitator: thirdwebFacilitator,
 };
 
@@ -122,6 +125,28 @@ const settleResult = await settlePayment({
 return Response.json(answer);
 ```
 
+You can call verifyPayment() and settlePayment() multiple times using the same paymentData, as long as its still valid. `verifyPayment()` will check that:
+ - Allowance is still valid and greater than the min payable amount
+ - Balance is still valid and greater than the min payable amount
+ - Payment is still valid for the expiration time.
+
+ If any of these checks fail, `verifyPayment()` will return a 402 response requiring a new payment authorization.
+
+`wrapFetchWithPayment()` and `useFetchWithPayment()` will automatically handle the caching and re-use of the payment data for you, so you don't need to have any additional state or storage on the backend.
+
+## Signature expiration configuration
+
+You can configure the expiration of the payment signature in the `routeConfig` parameter of the `settlePayment()` or `verifyPayment()` functions.
+
+```typescript
+const result = await verifyPayment({
+	...paymentArgs,
+	routeConfig: {
+		maxTimeoutSeconds: 60 * 60 * 24, // 24 hours
+	},
+});
+```
+
 ## Price and Token Configuration
 
 You can specify prices in multiple ways:
@@ -142,13 +167,16 @@ You can use any ERC20 token that supports the ERC-2612 permit or ERC-3009 sign w
 Simply pass the amount in base units and the token address.
 
 ```typescript
-network: arbitrum,
-price: {
-  amount: "1000000000000000", // Amount in base units (0.001 tokens with 18 decimals)
-  asset: {
-    address: "0xf01E52B0BAC3E147f6CAf956a64586865A0aA928", // Token address
-  }
-}
+const result = await settlePayment({
+	...paymentArgs,
+	network: arbitrum,
+	price: {
+		amount: "1000000000000000", // Amount in base units (0.001 tokens with 18 decimals)
+		asset: {
+			address: "0xf01E52B0BAC3E147f6CAf956a64586865A0aA928", // Token address
+		},
+	},
+});
 ```
 
 ### Native Token
@@ -197,6 +225,7 @@ Protect individual API endpoints with x402 payments:
         routeConfig: {
           description: "Access to premium API content",
           mimeType: "application/json",
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
       });
 
@@ -246,7 +275,7 @@ Protect individual API endpoints with x402 payments:
         routeConfig: {
           description: "Access to premium content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
       });
 
@@ -299,7 +328,7 @@ Protect individual API endpoints with x402 payments:
         routeConfig: {
           description: "Access to premium content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
       });
 
@@ -366,7 +395,7 @@ Protect multiple endpoints with a shared middleware:
         routeConfig: {
           description: "Access to paid content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
         facilitator: thirdwebFacilitator,
       });
@@ -424,7 +453,7 @@ Protect multiple endpoints with a shared middleware:
         routeConfig: {
           description: "Access to paid content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
       });
 
@@ -479,7 +508,7 @@ Protect multiple endpoints with a shared middleware:
         routeConfig: {
           description: "Access to paid content",
           mimeType: "application/json",
-          maxTimeoutSeconds: 300,
+          maxTimeoutSeconds: 60 * 60, // 1 hour signature expiration
         },
       });
 
@@ -505,4 +534,3 @@ Protect multiple endpoints with a shared middleware:
 
   </TabsContent>
 </Tabs>
-

@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createThirdwebClient, defineChain } from "thirdweb";
 import { toUnits } from "thirdweb/utils";
-import { facilitator, settlePayment } from "thirdweb/x402";
+import { facilitator, settlePayment, verifyPayment } from "thirdweb/x402";
 import { token } from "../../x402/components/constants";
 
 // Allow streaming responses up to 5 minutes
@@ -46,27 +46,78 @@ export async function GET(request: NextRequest) {
   const waitUntil =
     (queryParams.get("waitUntil") as "simulated" | "submitted" | "confirmed") ||
     "simulated";
+  const scheme = (queryParams.get("scheme") as "exact" | "upto") || "exact";
+  const minPriceAmount = queryParams.get("minPrice");
+  const settlementAmount = queryParams.get("settlementAmount");
 
-  const result = await settlePayment({
+  const priceConfig = tokenAddress
+    ? {
+        amount: toUnits(amount, parseInt(decimals)).toString(),
+        asset: {
+          address: tokenAddress as `0x${string}`,
+          decimals: decimals ? parseInt(decimals) : token.decimals,
+        },
+      }
+    : amount;
+
+  const minPriceConfig =
+    scheme === "upto" && minPriceAmount
+      ? tokenAddress
+        ? {
+            amount: toUnits(minPriceAmount, parseInt(decimals)).toString(),
+            asset: {
+              address: tokenAddress as `0x${string}`,
+              decimals: decimals ? parseInt(decimals) : token.decimals,
+            },
+          }
+        : minPriceAmount
+      : undefined;
+
+  let finalPriceConfig = priceConfig;
+
+  const paymentArgs = {
     resourceUrl: "https://playground-web.thirdweb.com/api/paywall",
     method: "GET",
     paymentData,
     network: defineChain(Number(chainId)),
     payTo,
-    price: tokenAddress
-      ? {
-          amount: toUnits(amount, parseInt(decimals)).toString(),
-          asset: {
-            address: tokenAddress as `0x${string}`,
-            decimals: decimals ? parseInt(decimals) : token.decimals,
-          },
-        }
-      : amount,
+    scheme,
+    price: priceConfig,
+    minPrice: minPriceConfig,
     routeConfig: {
       description: "Access to paid content",
     },
     waitUntil,
     facilitator: twFacilitator,
+  };
+
+  if (minPriceConfig) {
+    const verifyResult = await verifyPayment(paymentArgs);
+
+    if (verifyResult.status !== 200) {
+      return NextResponse.json(verifyResult.responseBody, {
+        status: verifyResult.status,
+        headers: verifyResult.responseHeaders,
+      });
+    }
+
+    // If settlementAmount is provided, override the price for settlement
+    if (settlementAmount) {
+      finalPriceConfig = tokenAddress
+        ? {
+            amount: toUnits(settlementAmount, parseInt(decimals)).toString(),
+            asset: {
+              address: tokenAddress as `0x${string}`,
+              decimals: decimals ? parseInt(decimals) : token.decimals,
+            },
+          }
+        : settlementAmount;
+    }
+  }
+
+  const result = await settlePayment({
+    ...paymentArgs,
+    price: finalPriceConfig,
   });
 
   if (result.status === 200) {
@@ -76,7 +127,7 @@ export async function GET(request: NextRequest) {
         success: true,
         message: "Payment successful. You have accessed the protected route.",
         payment: {
-          amount,
+          amount: settlementAmount || amount,
           tokenAddress,
         },
         receipt: result.paymentReceipt,

@@ -109,6 +109,9 @@ export async function verifyPayment(
         status: 200,
         decodedPayment,
         selectedPaymentRequirements,
+        allowance: verification.allowance,
+        balance: verification.balance,
+        payer: verification.payer,
       };
     } else {
       const error = verification.invalidReason || "Verification failed";

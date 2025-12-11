@@ -71,8 +71,8 @@ export function DedicatedRelayerEmptyState(
     }
   };
 
-  const requiredChains =
-    selectedTier === "product:dedicated_relayer_standard" ? 2 : 4;
+  const maxChains =
+    selectedTier === "product:dedicated_relayer_standard" ? 1 : 2;
 
   return (
     <div className={cn("flex flex-col gap-8 pt-2", props.className)}>
@@ -90,7 +90,7 @@ export function DedicatedRelayerEmptyState(
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <p className="text-muted-foreground text-sm">
-              Select {requiredChains} chains for your dedicated relayer.
+              Select up to {maxChains} chains for your dedicated relayer.
             </p>
             <MultiNetworkSelector
               selectedChainIds={selectedChainIds}
@@ -102,7 +102,11 @@ export function DedicatedRelayerEmptyState(
           <DialogFooter>
             <Button
               onClick={handlePurchase}
-              disabled={selectedChainIds.length !== requiredChains || isLoading}
+              disabled={
+                selectedChainIds.length === 0 ||
+                selectedChainIds.length > maxChains ||
+                isLoading
+              }
             >
               {isLoading ? "Processing..." : "Continue"}
             </Button>
