@@ -15,6 +15,8 @@ const defaultOptions: X402PlaygroundOptions = {
   amount: "0.01",
   payTo: "0x0000000000000000000000000000000000000000",
   waitUntil: "simulated",
+  scheme: "exact",
+  minAmount: "0.001",
 };
 
 export function X402Playground() {

@@ -46,6 +46,8 @@ export function X402LeftSection(props: {
   const amountId = useId();
   const waitUntilId = useId();
   const payToId = useId();
+  const schemeId = useId();
+  const minAmountId = useId();
 
   const handleChainChange = (chainId: number) => {
     setSelectedChain(chainId);
@@ -95,6 +97,20 @@ export function X402LeftSection(props: {
     setOptions((v) => ({
       ...v,
       waitUntil: value,
+    }));
+  };
+
+  const handleSchemeChange = (value: "exact" | "upto") => {
+    setOptions((v) => ({
+      ...v,
+      scheme: value,
+    }));
+  };
+
+  const handleMinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOptions((v) => ({
+      ...v,
+      minAmount: e.target.value,
     }));
   };
 
@@ -186,6 +202,46 @@ export function X402LeftSection(props: {
               submitted (medium), or confirmed (most secure)
             </p>
           </div>
+
+          {/* Scheme selection */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor={schemeId}>Payment Scheme</Label>
+            <Select value={options.scheme} onValueChange={handleSchemeChange}>
+              <SelectTrigger className="bg-card">
+                <SelectValue placeholder="Select payment scheme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="exact">Exact</SelectItem>
+                <SelectItem value="upto">Up To</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              {options.scheme === "exact"
+                ? "Exact: Payment must match the specified amount exactly"
+                : "Up To: Payment can be any amount between the minimum and maximum"}
+            </p>
+          </div>
+
+          {/* Min Amount input - only show when scheme is 'upto' */}
+          {options.scheme === "upto" && (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor={minAmountId}>Minimum Amount</Label>
+              <Input
+                id={minAmountId}
+                type="text"
+                placeholder="0.001"
+                value={options.minAmount}
+                onChange={handleMinAmountChange}
+                className="bg-card"
+              />
+              {options.tokenSymbol && (
+                <p className="text-sm text-muted-foreground">
+                  Minimum amount in {options.tokenSymbol} (must be less than or
+                  equal to Amount)
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

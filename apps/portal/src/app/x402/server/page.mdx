@@ -98,6 +98,7 @@ const paymentArgs = {
 	network: arbitrum,
 	scheme: "upto", // enables dynamic pricing
 	price: "$0.10", // max payable amount
+	minPrice: "$0.01", // min payable amount
 	facilitator: thirdwebFacilitator,
 };
 
@@ -116,6 +117,38 @@ const { answer, tokensUsed } = await callExpensiveAIModel();
 
 // Now settle the payment based on actual usage
 const pricePerTokenUsed = 0.00001; // ex: $0.00001 per AI model token used
+const settleResult = await settlePayment({
+	...paymentArgs,
+	price: tokensUsed * pricePerTokenUsed, // adjust final price based on usage
+});
+
+return Response.json(answer);
+```
+
+You can call verifyPayment() and settlePayment() multiple times using the same paymentData, as long as its still valid. `verifyPayment()` will check that:
+ - Allowance is still valid and greater than the min payable amount
+ - Balance is still valid and greater than the min payable amount
+ - Payment is still valid for the expiration time.
+
+ If any of these checks fail, `verifyPayment()` will return a 402 response requiring a new payment authorization.
+
+You can retrieve the previously signed paymentData from any storage mechanism, for example:
+
+```typescript
+const paymentData = retrievePaymentDataFromStorage(userId, sessionId); // example implementation, can be any storage mechanism
+const paymentArgs = { ...otherPaymentArgs, paymentData };
+
+// verify paymentData is still valid
+const verifyResult = await verifyPayment(paymentArgs);
+
+if (verifyResult.status !== 200) {
+	return Response.json(verifyResult.responseBody, {
+		status: verifyResult.status,
+		headers: verifyResult.responseHeaders,
+	});
+}
+
+// settle payment based on usage, re-using the previous paymentData
 const settleResult = await settlePayment({
 	...paymentArgs,
 	price: tokensUsed * pricePerTokenUsed, // adjust final price based on usage
