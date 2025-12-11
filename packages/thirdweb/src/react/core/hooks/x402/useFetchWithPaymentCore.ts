@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { wrapFetchWithPayment } from "../../../../x402/fetchWithPayment.js";
 import type { RequestedPaymentRequirements } from "../../../../x402/schemas.js";
@@ -14,6 +15,11 @@ export type UseFetchWithPaymentOptions = {
     paymentRequirements: RequestedPaymentRequirements[],
   ) => RequestedPaymentRequirements | undefined;
   parseAs?: "json" | "text" | "raw";
+  /**
+   * Storage for caching permit signatures (for "upto" scheme).
+   * When provided, permit signatures will be cached and reused if the on-chain allowance is sufficient.
+   */
+  storage?: AsyncStorage;
 };
 
 type ShowErrorModalCallback = (data: {
@@ -81,7 +87,11 @@ export function useFetchWithPaymentCore(
           globalThis.fetch,
           client,
           currentWallet,
-          options,
+          {
+            maxValue: options?.maxValue,
+            paymentRequirementsSelector: options?.paymentRequirementsSelector,
+            storage: options?.storage,
+          },
         );
 
         const response = await wrappedFetch(input, init);

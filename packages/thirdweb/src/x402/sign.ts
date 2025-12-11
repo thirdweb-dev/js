@@ -3,12 +3,19 @@ import type { ExactEvmPayloadAuthorization } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
+import { allowance } from "../extensions/erc20/__generated__/IERC20/read/allowance.js";
 import { nonces } from "../extensions/erc20/__generated__/IERC20Permit/read/nonces.js";
 import { type Address, getAddress } from "../utils/address.js";
 import { type Hex, toHex } from "../utils/encoding/hex.js";
+import type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { getSupportedSignatureType } from "./common.js";
 import { encodePayment } from "./encode.js";
+import {
+  getPermitSignatureFromCache,
+  type PermitCacheKeyParams,
+  savePermitSignatureToCache,
+} from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
   networkToCaip2ChainId,
@@ -63,6 +70,7 @@ function preparePaymentHeader(
  * @param client - The signer wallet instance used to sign the payment header
  * @param paymentRequirements - The payment requirements containing scheme and network information
  * @param unsignedPaymentHeader - The unsigned payment payload to be signed
+ * @param storage - Optional storage for caching permit signatures (for "upto" scheme)
  * @returns A promise that resolves to the signed payment payload
  */
 async function signPaymentHeader(
@@ -70,6 +78,7 @@ async function signPaymentHeader(
   account: Account,
   paymentRequirements: RequestedPaymentRequirements,
   x402Version: number,
+  storage?: AsyncStorage,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
   const caip2ChainId = networkToCaip2ChainId(paymentRequirements.network);
@@ -91,6 +100,55 @@ async function signPaymentHeader(
 
   switch (supportedSignatureType) {
     case "Permit": {
+      const shouldCache =
+        paymentRequirements.scheme === "upto" && storage !== undefined;
+      const spender = getAddress(paymentRequirements.payTo);
+
+      const cacheParams: PermitCacheKeyParams = {
+        chainId,
+        asset: paymentRequirements.asset,
+        owner: from,
+        spender,
+      };
+
+      // Try to reuse cached signature for "upto" scheme
+      if (shouldCache && storage) {
+        const cached = await getPermitSignatureFromCache(storage, cacheParams);
+
+        if (cached) {
+          // Validate deadline hasn't passed
+          const now = BigInt(Math.floor(Date.now() / 1000));
+          if (BigInt(cached.deadline) > now) {
+            // Check on-chain allowance
+            const currentAllowance = await allowance({
+              contract: getContract({
+                address: paymentRequirements.asset,
+                chain: getCachedChain(chainId),
+                client,
+              }),
+              owner: from,
+              spender,
+            });
+
+            // Determine threshold - use minAmountRequired if present, else maxAmountRequired
+            const extra = paymentRequirements.extra as
+              | (ERC20TokenAmount["asset"]["eip712"] & {
+                  minAmountRequired?: string;
+                })
+              | undefined;
+            const threshold = extra?.minAmountRequired
+              ? BigInt(extra.minAmountRequired)
+              : BigInt(paymentRequirements.maxAmountRequired);
+
+            // If allowance >= threshold, reuse signature
+            if (currentAllowance >= threshold) {
+              return cached.payload;
+            }
+          }
+        }
+      }
+
+      // Generate new signature
       const nonce = await nonces({
         contract: getContract({
           address: paymentRequirements.asset,
@@ -110,13 +168,27 @@ async function signPaymentHeader(
         unsignedPaymentHeader.payload.authorization,
         paymentRequirements,
       );
-      return {
+
+      const signedPayload: RequestedPaymentPayload = {
         ...unsignedPaymentHeader,
         payload: {
           ...unsignedPaymentHeader.payload,
           signature,
         },
       };
+
+      // Cache the signature for "upto" scheme
+      if (shouldCache && storage) {
+        await savePermitSignatureToCache(
+          storage,
+          cacheParams,
+          signedPayload,
+          unsignedPaymentHeader.payload.authorization.validBefore,
+          paymentRequirements.maxAmountRequired,
+        );
+      }
+
+      return signedPayload;
     }
     case "TransferWithAuthorization": {
       // default to transfer with authorization
@@ -153,6 +225,7 @@ async function signPaymentHeader(
  * @param client - The signer wallet instance used to create the payment header
  * @param x402Version - The version of the X402 protocol to use
  * @param paymentRequirements - The payment requirements containing scheme and network information
+ * @param storage - Optional storage for caching permit signatures (for "upto" scheme)
  * @returns A promise that resolves to the encoded payment header string
  */
 export async function createPaymentHeader(
@@ -160,12 +233,14 @@ export async function createPaymentHeader(
   account: Account,
   paymentRequirements: RequestedPaymentRequirements,
   x402Version: number,
+  storage?: AsyncStorage,
 ): Promise<string> {
   const payment = await signPaymentHeader(
     client,
     account,
     paymentRequirements,
     x402Version,
+    storage,
   );
   return encodePayment(payment);
 }
