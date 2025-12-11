@@ -154,7 +154,7 @@ export function DedicatedRelayerActiveState(
       {/* Transactions Table */}
       <div className="overflow-hidden rounded-lg border bg-card">
         <div className="flex flex-col justify-between gap-3 border-b px-4 py-4 lg:flex-row lg:items-center lg:px-6">
-          <h2 className="font-semibold text-xl">Fleet Transactions</h2>
+          <h2 className="font-semibold text-xl">Transaction History</h2>
           <div className="flex gap-2">
             <ChainFilter
               chainId={chainIdFilter}
