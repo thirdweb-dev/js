@@ -171,7 +171,7 @@ function PlanCard(props: {
           className="w-full rounded-full py-3 h-auto text-base bg-background gap-2"
         >
           <Link
-            href="https://thirdweb.com/contact-us"
+            href="https://ea58c.share.hsforms.com/2o8qbJVozSX2Q4oukYfYGuA"
             target="_blank"
             rel="noopener noreferrer"
           >
