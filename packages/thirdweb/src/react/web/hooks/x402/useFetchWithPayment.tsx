@@ -259,7 +259,7 @@ export function useFetchWithPayment(
   // Default to webLocalStorage for permit signature caching
   const resolvedOptions = useMemo(
     () => ({
-      ...options,
+      ...(options ?? {}),
       storage: options?.storage ?? webLocalStorage,
     }),
     [options],
