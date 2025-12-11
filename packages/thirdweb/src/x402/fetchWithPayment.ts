@@ -1,6 +1,10 @@
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { getAddress } from "../utils/address.js";
+import type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
+import { webLocalStorage } from "../utils/storage/webStorage.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
+import { clearPermitSignatureFromCache } from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
   networkToCaip2ChainId,
@@ -57,6 +61,11 @@ export function wrapFetchWithPayment(
     paymentRequirementsSelector?: (
       paymentRequirements: RequestedPaymentRequirements[],
     ) => RequestedPaymentRequirements | undefined;
+    /**
+     * Storage for caching permit signatures (for "upto" scheme).
+     * When provided, permit signatures will be cached and reused if the on-chain allowance is sufficient.
+     */
+    storage?: AsyncStorage;
   },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
@@ -131,6 +140,7 @@ export function wrapFetchWithPayment(
       account,
       selectedPaymentRequirements,
       x402Version,
+      options?.storage ?? webLocalStorage,
     );
 
     const initParams = init || {};
@@ -150,6 +160,17 @@ export function wrapFetchWithPayment(
     };
 
     const secondResponse = await fetch(input, newInit);
+
+    // If payment was rejected (still 402), clear cached signature
+    if (secondResponse.status === 402 && options?.storage) {
+      await clearPermitSignatureFromCache(options.storage, {
+        chainId: paymentChainId,
+        asset: selectedPaymentRequirements.asset,
+        owner: getAddress(account.address),
+        spender: getAddress(selectedPaymentRequirements.payTo),
+      });
+    }
+
     return secondResponse;
   };
 }

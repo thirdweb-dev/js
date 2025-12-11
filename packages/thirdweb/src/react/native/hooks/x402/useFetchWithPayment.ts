@@ -1,6 +1,7 @@
 "use client";
 
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import {
   type UseFetchWithPaymentOptions,
   useFetchWithPaymentCore,
@@ -29,6 +30,7 @@ export type { UseFetchWithPaymentOptions };
  * @param options.maxValue - The maximum allowed payment amount in base units
  * @param options.paymentRequirementsSelector - Custom function to select payment requirements from available options
  * @param options.parseAs - How to parse the response: "json" (default), "text", or "raw"
+ * @param options.storage - Storage for caching permit signatures (for "upto" scheme). Provide your own AsyncStorage implementation for React Native.
  * @returns An object containing:
  * - `fetchWithPayment`: Function to make fetch requests with automatic payment handling (returns parsed data)
  * - `isPending`: Boolean indicating if a request is in progress
@@ -92,5 +94,8 @@ export function useFetchWithPayment(
   options?: UseFetchWithPaymentOptions,
 ) {
   // Native version doesn't show modal, errors bubble up naturally
-  return useFetchWithPaymentCore(client, options);
+  return useFetchWithPaymentCore(client, {
+    ...options,
+    storage: options?.storage ?? nativeLocalStorage,
+  });
 }

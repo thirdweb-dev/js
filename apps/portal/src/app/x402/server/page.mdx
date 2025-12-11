@@ -132,30 +132,7 @@ You can call verifyPayment() and settlePayment() multiple times using the same p
 
  If any of these checks fail, `verifyPayment()` will return a 402 response requiring a new payment authorization.
 
-You can retrieve the previously signed paymentData from any storage mechanism, for example:
-
-```typescript
-const paymentData = retrievePaymentDataFromStorage(userId, sessionId); // example implementation, can be any storage mechanism
-const paymentArgs = { ...otherPaymentArgs, paymentData };
-
-// verify paymentData is still valid
-const verifyResult = await verifyPayment(paymentArgs);
-
-if (verifyResult.status !== 200) {
-	return Response.json(verifyResult.responseBody, {
-		status: verifyResult.status,
-		headers: verifyResult.responseHeaders,
-	});
-}
-
-// settle payment based on usage, re-using the previous paymentData
-const settleResult = await settlePayment({
-	...paymentArgs,
-	price: tokensUsed * pricePerTokenUsed, // adjust final price based on usage
-});
-
-return Response.json(answer);
-```
+`wrapFetchWithPayment()` and `useFetchWithPayment()` will automatically handle the caching and re-use of the payment data for you, so you don't need to have any additional state or storage on the backend.
 
 ## Signature expiration configuration
 

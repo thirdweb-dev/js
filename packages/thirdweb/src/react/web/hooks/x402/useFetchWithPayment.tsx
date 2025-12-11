@@ -1,7 +1,8 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import {
@@ -255,9 +256,18 @@ export function useFetchWithPayment(
       }
     : undefined;
 
+  // Default to webLocalStorage for permit signature caching
+  const resolvedOptions = useMemo(
+    () => ({
+      ...options,
+      storage: options?.storage ?? webLocalStorage,
+    }),
+    [options],
+  );
+
   return useFetchWithPaymentCore(
     client,
-    options,
+    resolvedOptions,
     showErrorModal,
     showConnectModal,
   );
