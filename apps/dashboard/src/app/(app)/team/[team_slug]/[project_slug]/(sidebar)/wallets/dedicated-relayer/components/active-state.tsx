@@ -13,7 +13,6 @@ import { SingleNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { PaginationButtons } from "@/components/blocks/pagination-buttons";
 import { WalletAddress } from "@/components/blocks/wallet-address";
 import { Button } from "@/components/ui/button";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -111,23 +110,43 @@ export function DedicatedRelayerActiveState(
         />
       </div>
 
-      {/* Executors Info */}
-      <div className="rounded-lg border bg-card">
-        <div className="border-b px-4 py-4 lg:px-6">
-          <h2 className="font-semibold text-xl tracking-tight">
-            Fleet Executors
-          </h2>
+      {/* Configuration Info */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Executors */}
+        <div className="rounded-lg border bg-card">
+          <div className="border-b px-4 py-4 lg:px-6">
+            <h2 className="font-semibold text-xl tracking-tight">Executors</h2>
+          </div>
+          <div className="p-4 lg:p-6">
+            <div className="flex flex-wrap gap-2">
+              {fleet.executors.map((address) => (
+                <div
+                  key={address}
+                  className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2"
+                >
+                  <WalletAddress address={address} client={client} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className="p-4 lg:p-6">
-          <div className="flex flex-wrap gap-2">
-            {fleet.executors.map((address) => (
-              <div
-                key={address}
-                className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2"
-              >
-                <WalletAddress address={address} client={client} />
-              </div>
-            ))}
+
+        {/* Chains */}
+        <div className="rounded-lg border bg-card">
+          <div className="border-b px-4 py-4 lg:px-6">
+            <h2 className="font-semibold text-xl tracking-tight">Chains</h2>
+          </div>
+          <div className="p-4 lg:p-6">
+            <div className="flex flex-wrap gap-2">
+              {fleet.chainIds.map((chainId) => (
+                <div
+                  key={chainId}
+                  className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2"
+                >
+                  <ChainCell chainId={chainId.toString()} client={client} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -295,37 +314,20 @@ function SkeletonRow() {
 }
 
 function TransactionHashCell(props: { hash: string; chainId: string }) {
-  const { idToChain } = useAllChainsData();
-  const chain = idToChain.get(Number(props.chainId));
-
-  const explorerUrl = chain?.explorers?.[0]?.url;
   const txHashToShow = `${props.hash.slice(0, 6)}...${props.hash.slice(-4)}`;
 
-  if (explorerUrl) {
-    return (
-      <Button asChild size="sm" variant="ghost">
-        <Link
-          className="-translate-x-2 gap-2 font-mono"
-          href={`${explorerUrl}/tx/${props.hash}`}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {txHashToShow}
-          <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
-        </Link>
-      </Button>
-    );
-  }
-
   return (
-    <CopyTextButton
-      className="-translate-x-2 font-mono"
-      copyIconPosition="right"
-      textToCopy={props.hash}
-      textToShow={txHashToShow}
-      tooltip="Transaction Hash"
-      variant="ghost"
-    />
+    <Button asChild size="sm" variant="ghost">
+      <Link
+        className="-translate-x-2 gap-2 font-mono"
+        href={`https://thirdweb.com/${props.chainId}/tx/${props.hash}`}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        {txHashToShow}
+        <ExternalLinkIcon className="size-3.5 text-muted-foreground" />
+      </Link>
+    </Button>
   );
 }
 
@@ -362,7 +364,7 @@ function TransactionFeeCell(props: { usdValue: number | null }) {
   }
   return (
     <span className="font-mono text-sm">
-      ${props.usdValue < 0.01 ? "<0.01" : props.usdValue.toFixed(2)}
+      {props.usdValue < 0.001 ? "< $0.001" : `$${props.usdValue.toFixed(3)}`}
     </span>
   );
 }
@@ -379,7 +381,7 @@ function ChainFilter(props: {
         client={props.client}
         chainId={props.chainId}
         onChange={(chainId) => props.setChainId(chainId)}
-        popoverContentClassName="z-[10001]"
+        popoverContentClassName="z-[10001] !w-[280px]"
         align="end"
         placeholder="All Chains"
         className="min-w-[150px]"

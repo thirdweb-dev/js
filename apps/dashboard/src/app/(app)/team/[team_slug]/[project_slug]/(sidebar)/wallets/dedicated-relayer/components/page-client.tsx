@@ -73,6 +73,7 @@ export function DedicatedRelayerPageClient(
     refetchInterval: 5000,
   });
 
+  const isCheckingActivity = hasActivityQuery.isPending;
   const totalTransactions = hasActivityQuery.data?.data.totalTransactions ?? 0;
   const hasTransactions = totalTransactions > 0;
 
@@ -117,23 +118,28 @@ export function DedicatedRelayerPageClient(
         <DedicatedRelayerPendingState fleet={fleet} />
       )}
 
-      {fleetStatus === "active" && fleet && !hasTransactions && (
-        <DedicatedRelayerPendingState
-          fleet={fleet}
-          hasTransactions={hasTransactions}
-        />
-      )}
+      {fleetStatus === "active" &&
+        fleet &&
+        !hasTransactions &&
+        !isCheckingActivity && (
+          <DedicatedRelayerPendingState
+            fleet={fleet}
+            hasTransactions={hasTransactions}
+          />
+        )}
 
-      {fleetStatus === "active" && fleet && hasTransactions && (
-        <DedicatedRelayerActiveState
-          fleet={fleet}
-          teamId={props.teamId}
-          fleetId={props.fleetId}
-          client={props.client}
-          range={dateRange}
-          setRange={setDateRange}
-        />
-      )}
+      {fleetStatus === "active" &&
+        fleet &&
+        (hasTransactions || isCheckingActivity) && (
+          <DedicatedRelayerActiveState
+            fleet={fleet}
+            teamId={props.teamId}
+            fleetId={props.fleetId}
+            client={props.client}
+            range={dateRange}
+            setRange={setDateRange}
+          />
+        )}
     </div>
   );
 }
