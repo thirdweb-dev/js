@@ -55,7 +55,7 @@ Use `settlePayment()` to verify and settle the payment in one step. This is the 
 const result = await settlePayment({
 	resourceUrl: "https://api.example.com/premium-content",
 	method: "GET",
-	paymentData,
+	paymentData: request.headers.get("x-payment"),
 	payTo: "0x1234567890123456789012345678901234567890",
 	network: arbitrum,
 	price: "$0.10",
@@ -93,7 +93,7 @@ Here's a high level example of how to use the `upto` payment scheme with a dynam
 const paymentArgs = {
 	resourceUrl: "https://api.example.com/premium-content",
 	method: "GET",
-	paymentData,
+	paymentData: request.headers.get("x-payment"),
 	payTo: "0x1234567890123456789012345678901234567890",
 	network: arbitrum,
 	scheme: "upto", // enables dynamic pricing
@@ -135,7 +135,8 @@ You can call verifyPayment() and settlePayment() multiple times using the same p
 You can retrieve the previously signed paymentData from any storage mechanism, for example:
 
 ```typescript
-const paymentData = retrievePaymentDataFromStorage(userId, sessionId); // example implementation, can be any storage mechanism
+// example implementation: get payment data from storage, if not present, use the payment data from the request headers
+const paymentData = retrievePaymentDataFromStorage(userId, sessionId) || request.headers.get("x-payment");
 const paymentArgs = { ...otherPaymentArgs, paymentData };
 
 // verify paymentData is still valid
