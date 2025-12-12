@@ -109,6 +109,18 @@ export async function getChainInfraCheckoutURL(options: {
   }
 
   const json = await res.json();
+
+  if (
+    "error" in json &&
+    "message" in json.error &&
+    typeof json.error.message === "string"
+  ) {
+    return {
+      error: json.error.message,
+      status: "error",
+    } as const;
+  }
+
   if (!json.result) {
     return {
       error: "An unknown error occurred, please try again later.",
