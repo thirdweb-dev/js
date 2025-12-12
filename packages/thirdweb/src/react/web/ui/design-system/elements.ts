@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 
 export const StyledDiv = /* @__PURE__ */ styled.div;
 export const StyledSvg = /* @__PURE__ */ styled.svg;
-export const StyledCircle = /* @__PURE__ */ styled.circle;
 export const StyledSpan = /* @__PURE__ */ styled.span;
 export const StyledAnchor = /* @__PURE__ */ styled.a;
 export const StyledButton = /* @__PURE__ */ styled.button;

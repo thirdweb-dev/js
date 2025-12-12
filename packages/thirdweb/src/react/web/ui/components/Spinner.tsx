@@ -3,7 +3,7 @@ import { keyframes } from "@emotion/react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { iconSize } from "../../../core/design-system/index.js";
-import { StyledCircle, StyledSvg } from "../design-system/elements.js";
+import { StyledSvg } from "../design-system/elements.js";
 
 /**
  * @internal
@@ -24,20 +24,25 @@ export const Spinner: React.FC<{
       viewBox="0 0 50 50"
       className="tw-spinner"
     >
-      <Circle
+      <circle
         cx="25"
         cy="25"
         fill="none"
         r="20"
+        style={{
+          strokeLinecap: "round",
+          animation: `tw-spinner-circle-dash 1.5s ease-in-out infinite`,
+        }}
         stroke={props.color ? theme.colors[props.color] : "currentColor"}
         strokeWidth={Number(iconSize[props.size]) > 64 ? "2" : "4"}
       />
+      <style>{dashAnimation}</style>
     </Svg>
   );
 };
-
 // animations
-const dashAnimation = keyframes`
+const dashAnimation = `
+@keyframes tw-spinner-circle-dash {
   0% {
     stroke-dasharray: 1, 150;
     stroke-dashoffset: 0;
@@ -62,9 +67,4 @@ const Svg = /* @__PURE__ */ StyledSvg({
   animation: `${rotateAnimation} 2s linear infinite`,
   height: "1em",
   width: "1em",
-});
-
-const Circle = /* @__PURE__ */ StyledCircle({
-  animation: `${dashAnimation} 1.5s ease-in-out infinite`,
-  strokeLinecap: "round",
 });
