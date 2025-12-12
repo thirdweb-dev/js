@@ -26,7 +26,7 @@ export default function Page() {
         icon={CreditCardIcon}
         title={title}
         description={description}
-        docsLink="https://portal.thirdweb.com/payments?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/references/typescript/v5/CheckoutWidget?utm_source=playground"
       >
         <CheckoutPlayground />
       </PageLayout>

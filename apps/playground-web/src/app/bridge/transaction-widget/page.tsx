@@ -26,7 +26,7 @@ export default function Page() {
         icon={ArrowLeftRightIcon}
         containerClassName="space-y-12"
         description={description}
-        docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/references/typescript/v5/TransactionWidget?utm_source=playground"
         title={title}
       >
         <TransactionPlayground />

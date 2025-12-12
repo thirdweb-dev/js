@@ -26,7 +26,7 @@ export default function Page() {
         icon={ShoppingBagIcon}
         title={title}
         description={description}
-        docsLink="https://portal.thirdweb.com/wallets/sponsor-gas?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/references/typescript/v5/BuyWidget?utm_source=playground"
       >
         <BuyPlayground />
       </PageLayout>
