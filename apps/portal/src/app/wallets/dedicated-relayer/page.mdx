@@ -1,0 +1,62 @@
+import { createMetadata, Callout } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Dedicated Relayer",
+		icon: "wallets",
+	},
+	title: "Dedicated Relayer | thirdweb Documentation",
+	description:
+		"High-performance, private transaction infrastructure for scaling your application.",
+});
+
+# Dedicated Relayer
+
+**Dedicated Relayers** provide fully managed, private transaction infrastructure designed to give your application the dedicated resources it needs to scale.
+
+Unlike shared relayers where your transactions are processed alongside thousands of other applications, a Dedicated Relayer ensures guaranteed throughput, lower latency, and isolation from traffic spikes.
+
+## Why use a Dedicated Relayer?
+
+<div className="grid gap-4 md:grid-cols-2 my-8">
+    <div className="rounded-lg border p-4">
+        <h3 className="font-semibold mb-2 text-lg">Guaranteed Throughput</h3>
+        <p className="text-muted-foreground">Your infrastructure is yours alone. No rate limits caused by other users and no "noisy neighbor" problems.</p>
+    </div>
+    <div className="rounded-lg border p-4">
+        <h3 className="font-semibold mb-2 text-lg">Parallel Execution</h3>
+        <p className="text-muted-foreground">Scale your transaction capacity by adding multiple executor wallets. Submit transactions in parallel for higher throughput.</p>
+    </div>
+    <div className="rounded-lg border p-4">
+        <h3 className="font-semibold mb-2 text-lg">Multi-Chain Support</h3>
+        <p className="text-muted-foreground">Seamless operation across multiple chains. Configure your fleet to handle traffic on the networks that matter to you.</p>
+    </div>
+    <div className="rounded-lg border p-4">
+        <h3 className="font-semibold mb-2 text-lg">Advanced Analytics</h3>
+        <p className="text-muted-foreground">Track your fleet's performance, including total gas spent, transaction success rates, and active chain metrics.</p>
+    </div>
+</div>
+
+## Setting up a Dedicated Relayer
+
+1. Navigate to the [thirdweb Dashboard](https://thirdweb.com/dashboard).
+2. Select your project and go to **Wallets > Dedicated Relayer** in the sidebar.
+3. Choose a plan that fits your needs:
+    - **Standard**: For startups and apps with moderate volume.
+    - **Premium**: For enterprise-grade scale with higher throughput limits.
+4. Configure your fleet by selecting the chains you want to support.
+
+Once deployed, your application's gasless transactions will automatically be routed through your dedicated infrastructure.
+
+## Pricing Tiers
+
+| Feature | Standard | Premium | Custom |
+| :--- | :--- | :--- | :--- |
+| **Price** | $99 / month | $299 / month | Custom |
+| **Executors** | 1 Wallet | 10 Wallets | Unlimited |
+| **Chains** | 1 Chain | Up to 2 Chains | Unlimited |
+| **Throughput** | Standard | 10x Parallelization | Custom |
+
+<Callout variant="info">
+    For applications operating at massive scale, [contact us](https://ea58c.share.hsforms.com/2o8qbJVozSX2Q4oukYfYGuA) for custom configurations.
+</Callout>

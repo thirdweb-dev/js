@@ -102,6 +102,10 @@ export const sidebar: SideBar = {
           name: "Sponsorship Policies",
         },
         {
+          href: `${walletSlug}/dedicated-relayer`,
+          name: "Dedicated Relayer",
+        },
+        {
           href: `${walletSlug}/session-keys`,
           name: "Session Keys",
         },
