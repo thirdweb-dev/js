@@ -102,7 +102,7 @@ export default async function Page(props: {
             },
             {
               type: "webhooks",
-              href: `/team/${params.team_slug}/${params.project_slug}/webhooks/contracts`,
+              href: `/team/${params.team_slug}/${params.project_slug}/tokens/webhooks`,
             },
           ],
         }}
