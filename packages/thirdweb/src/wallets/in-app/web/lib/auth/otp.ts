@@ -51,7 +51,17 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to send verification code");
+    const raw = await response.text();
+    let message: string | undefined;
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.message === "string") {
+        message = parsed.message;
+      }
+    } catch {
+      // ignore parse errors
+    }
+    throw new Error(message || "Failed to send verification code");
   }
 
   return await response.json();
