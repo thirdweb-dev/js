@@ -20,35 +20,17 @@ export function QuickStartSection(props: {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <FeatureCard
-          title="Buy Widget Component"
-          icon={CodeIcon}
-          id="swap_tokens"
-          features={[
-            "React component",
-            "Cross-chain token swaps across 85+ blockchains",
-            "Fiat onramp support to buy tokens with credit/debit cards",
-            "Customizable UI",
-          ]}
-          description={undefined}
-          link={{
-            href: `https://portal.thirdweb.com/bridge/swap`,
-            label: "Get Started",
-          }}
-        />
-
-        <FeatureCard
-          title="Bridge Widget Script"
-          description={undefined}
+          title="Bridge Widget"
+          description="Integrate cross-chain swaps and fiat onramp into your app using bridge widget"
           icon={CodeIcon}
           id="fees"
           features={[
-            "Integrate with a script tag",
+            "Integrate with iframe, script, or React component",
             "Cross-chain token swaps across 85+ blockchains",
             "Fiat onramp support to buy tokens with credit/debit cards",
-            "Customizable UI",
           ]}
           link={{
-            href: `/team/${props.teamSlug}/${props.projectSlug}/bridge/configuration`,
+            href: `https://portal.thirdweb.com/bridge/bridge-widget`,
             label: "Get Started",
           }}
         />
