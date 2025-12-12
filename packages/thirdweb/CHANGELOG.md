@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.116.2
+
+### Patch Changes
+
+- [#8552](https://github.com/thirdweb-dev/js/pull/8552) [`5ec84bd`](https://github.com/thirdweb-dev/js/commit/5ec84bd3b631395f80cb1f5ee24bc8b481b9f5cb) Thanks [@MananTank](https://github.com/MananTank)! - Token Selection UX improvements in SwapWidget
+
+- [#8551](https://github.com/thirdweb-dev/js/pull/8551) [`31e24f1`](https://github.com/thirdweb-dev/js/commit/31e24f1c58aa7c53a207d07599fe498bc10e8953) Thanks [@MananTank](https://github.com/MananTank)! - Alphabetically sort the chains in SwapWidget UI
+
+- [#8556](https://github.com/thirdweb-dev/js/pull/8556) [`151127d`](https://github.com/thirdweb-dev/js/commit/151127d66825365cb0ed949ae28b9906ee4dfc8d) Thanks [@MananTank](https://github.com/MananTank)! - Update in-app wallet icon in wide connect ui
+
+- [#8553](https://github.com/thirdweb-dev/js/pull/8553) [`38f4a89`](https://github.com/thirdweb-dev/js/commit/38f4a890764b3aa6406f54f0a8238b5dbb280b2e) Thanks [@MananTank](https://github.com/MananTank)! - Fix Spinner animation not working sometimes in Next.js
+
 ## 5.116.1
 
 ### Patch Changes
