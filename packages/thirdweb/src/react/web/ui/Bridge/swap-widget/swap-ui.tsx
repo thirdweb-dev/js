@@ -6,8 +6,10 @@ import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { prepare as SellPrepare } from "../../../../../bridge/Sell.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import { getToken } from "../../../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import { getAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -245,6 +247,18 @@ export function SwapUI(props: SwapUIProps) {
               ) {
                 props.setSellToken(undefined);
               }
+
+              // if sell token is not selected, set it as native token of the buy token's chain if buy token is not a native token itself
+              if (
+                !props.sellToken &&
+                token.tokenAddress.toLowerCase() !==
+                  NATIVE_TOKEN_ADDRESS.toLowerCase()
+              ) {
+                props.setSellToken({
+                  tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
+                  chainId: token.chainId,
+                });
+              }
             }}
           />
         )}
@@ -269,6 +283,18 @@ export function SwapUI(props: SwapUIProps) {
                 token.chainId === props.buyToken.chainId
               ) {
                 props.setBuyToken(undefined);
+              }
+
+              // if buy token is not selected, set it as native token of the sell token's chain if sell token is not a native token itself
+              if (
+                !props.buyToken &&
+                token.tokenAddress.toLowerCase() !==
+                  NATIVE_TOKEN_ADDRESS.toLowerCase()
+              ) {
+                props.setBuyToken({
+                  tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
+                  chainId: token.chainId,
+                });
               }
             }}
             activeWalletInfo={props.activeWalletInfo}
