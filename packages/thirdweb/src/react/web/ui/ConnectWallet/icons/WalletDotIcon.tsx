@@ -11,6 +11,7 @@ export const WalletDotIcon: IconFC = (props) => {
       viewBox="0 0 18 18"
       width={props.size}
       height={props.size}
+      style={{ color: props.color }}
       role="presentation"
     >
       <path

@@ -61,7 +61,7 @@ export type ConnectWalletSelectUIState =
       };
     };
 
-const defaultAuthOptions: AuthOption[] = [
+export const defaultAuthOptions: AuthOption[] = [
   "email",
   "phone",
   "google",

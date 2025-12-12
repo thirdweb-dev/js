@@ -1,6 +1,7 @@
 import type { Meta } from "@storybook/react";
 import { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
 import { ConnectEmbed } from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
+import { createWallet } from "../wallets/create-wallet.js";
 import { ecosystemWallet } from "../wallets/in-app/web/ecosystem.js";
 import { inAppWallet } from "../wallets/in-app/web/in-app.js";
 import { storyClient } from "./utils.js";
@@ -103,6 +104,60 @@ export function AllInAppWalletAuthMethods() {
               "passkey",
               "wallet",
             ],
+          },
+        }),
+      ]}
+    />
+  );
+}
+
+export function ConfiguredInAppWalletWideModal() {
+  return (
+    <ConnectEmbed
+      client={storyClient}
+      className="foo-bar"
+      modalSize="wide"
+      wallets={[
+        createWallet("io.metamask"),
+        inAppWallet({
+          auth: {
+            options: ["google", "github", "email"],
+          },
+        }),
+      ]}
+    />
+  );
+}
+
+export function GoogleLoginWideModal() {
+  return (
+    <ConnectEmbed
+      client={storyClient}
+      className="foo-bar"
+      modalSize="wide"
+      wallets={[
+        createWallet("io.metamask"),
+        inAppWallet({
+          auth: {
+            options: ["google"],
+          },
+        }),
+      ]}
+    />
+  );
+}
+
+export function GithubLoginWideModal() {
+  return (
+    <ConnectEmbed
+      client={storyClient}
+      className="foo-bar"
+      modalSize="wide"
+      wallets={[
+        createWallet("io.metamask"),
+        inAppWallet({
+          auth: {
+            options: ["github"],
           },
         }),
       ]}
