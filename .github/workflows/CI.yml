@@ -81,7 +81,7 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Set up foundry
-        uses: foundry-rs/foundry-toolchain@82dee4ba654bd2146511f85f0d013af94670c4de # v1.4.0
+        uses: foundry-rs/foundry-toolchain@8b0419c685ef46cb79ec93fbdc131174afceb730 # v1.6.0
         with:
           cache: false
           version: nightly-c4a984fbf2c48b793c8cd53af84f56009dd1070c
