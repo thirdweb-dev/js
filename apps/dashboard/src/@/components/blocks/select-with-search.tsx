@@ -125,7 +125,7 @@ export const SelectWithSearch = React.forwardRef<
                   ? renderOption(selectedOption)
                   : selectedOption?.label || placeholder}
               </span>
-              <ChevronDownIcon className="size-4 cursor-pointer text-muted-foreground" />
+              <ChevronDownIcon className="size-3.5 cursor-pointer text-muted-foreground shrink-0" />
             </div>
           </Button>
         </PopoverTrigger>

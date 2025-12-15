@@ -3,13 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  ArrowDownToLineIcon,
   ArrowLeftIcon,
   ArrowLeftRightIcon,
+  ArrowUpFromLineIcon,
   EllipsisVerticalIcon,
+  ListCollapseIcon,
   RefreshCcwIcon,
-  SendIcon,
-  ShuffleIcon,
-  WalletIcon,
+  Settings2Icon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useCallback, useMemo, useState } from "react";
@@ -49,6 +50,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -228,9 +230,12 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
   return (
     <div>
       <div className="rounded-xl border border-border bg-card">
-        <div className="p-5 flex flex-col lg:flex-row gap-5">
-          <div className="flex-1">
-            <p className="text-sm text-foreground mb-1">Wallet Address</p>
+        <div className="px-5 py-4 border-b border-dashed flex justify-between items-center">
+          <div>
+            <h2 className="text-base font-semibold text-foreground mb-0.5 tracking-tight">
+              {projectWallet.label || "Project Wallet"}
+            </h2>
+
             <CopyTextButton
               textToShow={shortenAddress(projectWallet.address, 6)}
               textToCopy={projectWallet.address}
@@ -241,14 +246,66 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             />
           </div>
 
-          <div className="flex-1">
-            <p className="text-sm text-foreground mb-1">Wallet Label</p>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm break-all py-2 sm:py-0 text-muted-foreground">
-                {projectWallet.label || "N/A"}
-              </p>
-            </div>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-auto h-auto p-2 rounded-full"
+              >
+                <EllipsisVerticalIcon className="size-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-56 rounded-xl"
+              sideOffset={10}
+            >
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() => setIsReceiveOpen(true)}
+              >
+                <ArrowUpFromLineIcon className="size-4 text-muted-foreground" />
+                Deposit Funds
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() => setIsSendOpen(true)}
+              >
+                <ArrowDownToLineIcon className="size-4 text-muted-foreground" />
+                Withdraw Funds
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() => setIsSwapOpen(true)}
+              >
+                <ArrowLeftRightIcon className="size-4 text-muted-foreground" />
+                Swap Tokens
+              </DropdownMenuItem>
+              {/* add line */}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onSelect={() =>
+                  router.push(
+                    `/team/${props.teamSlug}/${props.project.slug}/transactions`,
+                  )
+                }
+              >
+                <ListCollapseIcon className="size-4 text-muted-foreground" />
+                View Transactions
+              </DropdownMenuItem>
+              {canChangeWallet && (
+                <DropdownMenuItem
+                  className="flex items-center gap-2"
+                  onSelect={() => setIsChangeWalletOpen(true)}
+                >
+                  <Settings2Icon className="size-4 text-muted-foreground" />
+                  Change Project Wallet
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="p-5 border-t border-dashed flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
@@ -280,10 +337,10 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="flex flex-col sm:flex-row sm:items-center">
             <SingleNetworkSelector
               chainId={selectedChainId}
-              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50"
+              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50 border-r-0 rounded-r-none"
               client={props.client}
               disableDeprecated
               disableChainId
@@ -302,75 +359,15 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
               chainId={selectedChainId}
               client={props.client}
               enabled={true}
+              disableAddress={true}
               showCheck={true}
               addNativeTokenIfMissing={true}
               placeholder="Native token"
-              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50"
+              className="w-full sm:w-fit rounded-full bg-background hover:bg-accent/50 rounded-l-none"
               popoverContentClassName="!w-[320px] rounded-xl overflow-hidden"
               align="end"
             />
           </div>
-        </div>
-
-        <div className="p-4 border-t border-border flex justify-end gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 bg-background hover:bg-accent/50"
-            onClick={() => setIsSendOpen(true)}
-          >
-            <SendIcon className="size-4" />
-            Withdraw
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 bg-background hover:bg-accent/50"
-            onClick={() => setIsSwapOpen(true)}
-          >
-            <ArrowLeftRightIcon className="size-4" />
-            Swap
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="px-2 bg-background hover:bg-accent/50"
-              >
-                <EllipsisVerticalIcon className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                className="flex items-center gap-2"
-                onSelect={() => setIsReceiveOpen(true)}
-              >
-                <WalletIcon className="size-4 text-muted-foreground" />
-                Deposit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="flex items-center gap-2"
-                onSelect={() =>
-                  router.push(
-                    `/team/${props.teamSlug}/${props.project.slug}/transactions`,
-                  )
-                }
-              >
-                <ArrowLeftRightIcon className="size-4 text-muted-foreground" />
-                Transactions
-              </DropdownMenuItem>
-              {canChangeWallet && (
-                <DropdownMenuItem
-                  className="flex items-center gap-2"
-                  onSelect={() => setIsChangeWalletOpen(true)}
-                >
-                  <ShuffleIcon className="size-4 text-muted-foreground" />
-                  Change Wallet
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 

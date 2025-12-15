@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UnderlineLink } from "@workspace/ui/components/UnderlineLink";
-import { ArrowUpRightIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -134,11 +134,8 @@ function CreateProjectWalletSection(props: {
 
   return (
     <div className="rounded-xl border p-5 bg-card">
-      <div className="rounded-full p-2 border bg-background inline-flex mb-4">
-        <XIcon className="size-4 text-muted-foreground" />
-      </div>
-      <h2 className="text-base font-medium text-foreground mb-0.5">
-        No Project Wallet set
+      <h2 className="text-sm font-medium text-foreground mb-0.5 text-yellow-700 dark:text-yellow-500">
+        No project wallet set
       </h2>
       <p className="text-sm text-muted-foreground">
         Set a project wallet to set the default sender in thirdweb API.
