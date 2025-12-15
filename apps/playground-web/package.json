@@ -36,7 +36,7 @@
     "prettier": "3.6.2",
     "react": "19.2.1",
     "react-children-utilities": "^2.10.0",
-    "react-dom": "19.2.1",
+    "react-dom": "19.2.3",
     "react-hook-form": "7.55.0",
     "react-markdown": "10.1.0",
     "react-pick-color": "^2.0.0",
