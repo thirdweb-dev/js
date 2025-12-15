@@ -47,7 +47,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "4.0.1",
     "@storybook/addon-docs": "9.0.15",
-    "@storybook/addon-links": "9.0.15",
+    "@storybook/addon-links": "10.1.9",
     "@storybook/addon-onboarding": "9.0.15",
     "@storybook/nextjs": "9.0.15",
     "@types/react": "19.2.7",

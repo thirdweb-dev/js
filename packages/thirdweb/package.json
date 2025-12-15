@@ -54,7 +54,7 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@size-limit/preset-big-lib": "11.2.0",
     "@storybook/addon-docs": "9.0.15",
-    "@storybook/addon-links": "9.0.15",
+    "@storybook/addon-links": "10.1.9",
     "@storybook/addon-onboarding": "9.0.15",
     "@storybook/react": "9.0.15",
     "@storybook/react-vite": "9.0.15",
