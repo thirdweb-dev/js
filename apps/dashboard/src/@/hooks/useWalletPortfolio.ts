@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { ThirdwebClient } from "thirdweb";
 import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 
-export type WalletPortfolioToken = GetBalanceResult & {
+type WalletPortfolioToken = GetBalanceResult & {
   usdValue?: number;
   priceUsd?: number;
 };
@@ -92,7 +92,7 @@ async function fetchWalletPortfolio(
 }
 
 // Batch fetch portfolios for all addresses with progress callback
-export async function fetchAllPortfolios(
+async function fetchAllPortfolios(
   addresses: string[],
   client: ThirdwebClient,
   chainIds: number[],
