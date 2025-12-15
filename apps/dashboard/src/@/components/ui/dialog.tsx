@@ -42,7 +42,7 @@ const DialogContent = React.forwardRef<
       <DialogOverlay className={dialogOverlayClassName} />
       <DialogPrimitive.Content
         className={cn(
-          "fixed z-50 grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-lg",
+          "fixed z-50 grid w-full gap-4 rounded-t-xl border border-border bg-background p-6 shadow-lg duration-300 md:max-w-lg md:rounded-xl",
           // on mobile - put the dialog at the bottom of the screen, animate - slide up and fade in
           "right-0 bottom-0 left-0",
           "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",

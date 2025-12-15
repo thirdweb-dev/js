@@ -8,6 +8,7 @@ import { ProjectPage } from "@/components/blocks/project-page/project-page";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,7 +16,7 @@ import {
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { TokenIcon } from "@/icons/TokenIcon";
 import { loginRedirect } from "@/utils/redirects";
-import { Cards, ImportTokenButton } from "../cards";
+import { Cards, ImportTokenButton } from "./cards";
 
 export default async function Layout(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -63,9 +64,12 @@ export default async function Layout(props: {
                     Create Token
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="!max-w-md">
+                <DialogContent className="!max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>Create Token</DialogTitle>
+                    <DialogDescription>
+                      Launch your own ERC-20 coin or NFT collection
+                    </DialogDescription>
                   </DialogHeader>
                   <Cards
                     client={client}
