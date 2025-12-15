@@ -203,7 +203,7 @@ function DocSidebarCategory(props: {
         "text-muted-foreground hover:text-foreground",
       )}
     >
-      <div className="flex gap-2" ref={triggerRef}>
+      <div className="flex gap-2 py-1.5 px-3" ref={triggerRef}>
         {icon && <SidebarIcon icon={icon} />}
         {name}
       </div>
@@ -211,7 +211,7 @@ function DocSidebarCategory(props: {
   );
 
   const triggerEl = href ? (
-    <Link className={cn("w-full py-1.5 px-3 text-left")} href={href}>
+    <Link className={cn("w-full text-left")} href={href}>
       {triggerElContent}
     </Link>
   ) : (

@@ -19,6 +19,7 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
+      name: "Guides",
       isCollapsible: false,
       links: [
         {
@@ -76,7 +77,6 @@ export const sidebar: SideBar = {
           name: "Custom Data",
         },
       ],
-      name: "Guides",
     },
     { separator: true },
     {
