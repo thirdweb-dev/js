@@ -6,13 +6,16 @@ export const StatCard: React.FC<{
   icon: React.FC<{ className?: string }>;
   formatter?: (value: number) => string;
   isPending: boolean;
-}> = ({ label, value, formatter, icon: Icon, isPending }) => {
+  emptyText?: string;
+}> = ({ label, value, formatter, icon: Icon, isPending, emptyText }) => {
   return (
     <dl className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 pr-6">
       <div>
         <dd className="mb-0.5 font-semibold text-2xl tracking-tight">
           {isPending ? (
             <Skeleton className="h-8 w-20" />
+          ) : emptyText ? (
+            <span className="text-muted-foreground">{emptyText}</span>
           ) : value !== undefined && formatter ? (
             formatter(value)
           ) : (

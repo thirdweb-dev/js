@@ -2,14 +2,25 @@
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowLeftIcon, ArrowRightIcon, UserIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  DollarSignIcon,
+  RefreshCwIcon,
+  UserIcon,
+  WalletIcon,
+} from "lucide-react";
 import Papa from "papaparse";
 import { useCallback, useMemo, useState } from "react";
 import type { ThirdwebClient } from "thirdweb";
 import type { WalletUser } from "thirdweb/wallets";
+import { StatCard } from "@/components/analytics/stat";
+import { MultiNetworkSelector } from "@/components/blocks/NetworkSelectors";
 import { TWTable } from "@/components/blocks/TWTable";
 import { WalletAddress } from "@/components/blocks/wallet-address";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Spinner } from "@/components/ui/Spinner";
 import {
   ToolTipLabel,
@@ -22,6 +33,10 @@ import {
   useAllEmbeddedWallets,
   useEmbeddedWallets,
 } from "@/hooks/useEmbeddedWallets";
+import {
+  useFetchAllPortfolios,
+  type WalletPortfolioData,
+} from "@/hooks/useWalletPortfolio";
 import { CopyTextButton } from "../ui/CopyTextButton";
 import { AdvancedSearchInput } from "./AdvancedSearchInput";
 import { SearchResults } from "./SearchResults";
@@ -74,6 +89,100 @@ export function UserWalletsTable(
     | { ecosystemSlug: string; projectClientId?: never }
   ),
 ) {
+  const [activePage, setActivePage] = useState(1);
+  const [searchResults, setSearchResults] = useState<WalletUser[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearchResults, setHasSearchResults] = useState(false);
+
+  // Portfolio state
+  const [selectedChains, setSelectedChains] = useState<number[]>([1]); // Default to Ethereum
+  const [portfolioMap, setPortfolioMap] = useState<
+    Map<string, WalletPortfolioData>
+  >(new Map());
+  const [portfolioLoaded, setPortfolioLoaded] = useState(false);
+  const [fetchProgress, setFetchProgress] = useState({
+    completed: 0,
+    total: 0,
+  });
+
+  const walletsQuery = useEmbeddedWallets({
+    authToken: props.authToken,
+    clientId: props.projectClientId,
+    ecosystemSlug: props.ecosystemSlug,
+    teamId: props.teamId,
+    page: activePage,
+  });
+  const wallets = walletsQuery?.data?.users || [];
+  const { mutateAsync: getAllEmbeddedWallets, isPending: isLoadingAllWallets } =
+    useAllEmbeddedWallets({
+      authToken: props.authToken,
+    });
+
+  const fetchPortfoliosMutation = useFetchAllPortfolios();
+
+  const handleFetchBalances = useCallback(async () => {
+    if (selectedChains.length === 0) return;
+
+    try {
+      // First get all wallets
+      const allWallets = await getAllEmbeddedWallets({
+        clientId: props.projectClientId,
+        ecosystemSlug: props.ecosystemSlug,
+        teamId: props.teamId,
+      });
+
+      const allAddresses = allWallets
+        .map((w) => w.wallets[0]?.address)
+        .filter((a): a is string => !!a);
+
+      if (allAddresses.length === 0) {
+        setPortfolioLoaded(true);
+        return;
+      }
+
+      setFetchProgress({ completed: 0, total: allAddresses.length });
+
+      const results = await fetchPortfoliosMutation.mutateAsync({
+        addresses: allAddresses,
+        client: props.client,
+        chainIds: selectedChains,
+        authToken: props.authToken,
+        onProgress: (completed, total) => {
+          setFetchProgress({ completed, total });
+        },
+      });
+
+      setPortfolioMap(results);
+      setPortfolioLoaded(true);
+    } catch (error) {
+      console.error("Failed to fetch balances:", error);
+    }
+  }, [
+    selectedChains,
+    getAllEmbeddedWallets,
+    props.projectClientId,
+    props.ecosystemSlug,
+    props.teamId,
+    props.client,
+    props.authToken,
+    fetchPortfoliosMutation,
+  ]);
+
+  const isFetchingBalances =
+    isLoadingAllWallets || fetchPortfoliosMutation.isPending;
+
+  const aggregatedStats = useMemo(() => {
+    let fundedWallets = 0;
+    let totalValue = 0;
+    portfolioMap.forEach((data) => {
+      if (data.totalUsdValue > 0) {
+        fundedWallets++;
+        totalValue += data.totalUsdValue;
+      }
+    });
+    return { fundedWallets, totalValue };
+  }, [portfolioMap]);
+
   const columns = useMemo(() => {
     return [
       columnHelper.accessor("id", {
@@ -128,6 +237,79 @@ export function UserWalletsTable(
         },
         header: "Address",
         id: "address",
+      }),
+      columnHelper.accessor("wallets", {
+        id: "total_balance",
+        header: "Total Balance",
+        cell: (cell) => {
+          const address = cell.getValue()[0]?.address;
+          if (!address) return "N/A";
+          if (!portfolioLoaded) {
+            return <span className="text-muted-foreground text-sm">—</span>;
+          }
+          const data = portfolioMap.get(address);
+          if (!data) {
+            return <span className="text-muted-foreground text-sm">—</span>;
+          }
+          return (
+            <span className="text-sm">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(data.totalUsdValue)}
+            </span>
+          );
+        },
+      }),
+      columnHelper.accessor("wallets", {
+        id: "tokens",
+        header: "Tokens",
+        cell: (cell) => {
+          const address = cell.getValue()[0]?.address;
+          if (!address) return "N/A";
+          if (!portfolioLoaded) {
+            return <span className="text-muted-foreground text-sm">—</span>;
+          }
+          const data = portfolioMap.get(address);
+          if (!data || data.tokens.length === 0) {
+            return <span className="text-muted-foreground text-sm">None</span>;
+          }
+
+          const topTokens = data.tokens
+            .sort((a, b) => (b.usdValue || 0) - (a.usdValue || 0))
+            .slice(0, 3)
+            .map((t) => t.symbol)
+            .join(", ");
+
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger className="text-sm">
+                  {topTokens}
+                  {data.tokens.length > 3 ? "..." : ""}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div className="flex flex-col gap-1">
+                    {data.tokens.map((t) => (
+                      <div
+                        key={`${t.tokenAddress}-${t.chainId}`}
+                        className="flex justify-between gap-4 text-xs"
+                      >
+                        <span>{t.symbol}</span>
+                        <span>
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(t.usdValue || 0)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        },
       }),
       columnHelper.accessor("linkedAccounts", {
         cell: (cell) => {
@@ -201,24 +383,7 @@ export function UserWalletsTable(
         id: "login_methods",
       }),
     ];
-  }, [props.client]);
-
-  const [activePage, setActivePage] = useState(1);
-  const [searchResults, setSearchResults] = useState<WalletUser[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [hasSearchResults, setHasSearchResults] = useState(false);
-  const walletsQuery = useEmbeddedWallets({
-    authToken: props.authToken,
-    clientId: props.projectClientId,
-    ecosystemSlug: props.ecosystemSlug,
-    teamId: props.teamId,
-    page: activePage,
-  });
-  const wallets = walletsQuery?.data?.users || [];
-  const { mutateAsync: getAllEmbeddedWallets, isPending } =
-    useAllEmbeddedWallets({
-      authToken: props.authToken,
-    });
+  }, [props.client, portfolioMap, portfolioLoaded]);
 
   const handleSearch = async (searchType: SearchType, query: string) => {
     setIsSearching(true);
@@ -315,11 +480,11 @@ export function UserWalletsTable(
           </div>
           <Button
             className="gap-2 bg-background rounded-full"
-            disabled={wallets.length === 0 || isPending}
+            disabled={wallets.length === 0 || isLoadingAllWallets}
             onClick={downloadCSV}
             variant="outline"
           >
-            {isPending && <Spinner className="size-4" />}
+            {isLoadingAllWallets && <Spinner className="size-4" />}
             Download as .csv
           </Button>
         </div>
@@ -330,6 +495,83 @@ export function UserWalletsTable(
           <SearchResults results={searchResults} client={props.client} />
         ) : (
           <>
+            {/* Chain Selector and Fetch Button */}
+            <div className="flex items-center gap-3 px-4 lg:px-6 pb-4 border-b border-border">
+              <div className="flex items-center gap-2">
+                <MultiNetworkSelector
+                  client={props.client}
+                  selectedChainIds={selectedChains}
+                  onChange={setSelectedChains}
+                  disableChainId
+                  hideTestnets
+                  popoverContentClassName="max-h-[300px]"
+                />
+                <Button
+                  onClick={() => handleFetchBalances()}
+                  disabled={
+                    isFetchingBalances ||
+                    selectedChains.length === 0 ||
+                    walletsQuery.isPending
+                  }
+                  className="gap-2"
+                >
+                  {isFetchingBalances ? (
+                    <Spinner className="size-4" />
+                  ) : (
+                    <RefreshCwIcon className="size-4" />
+                  )}
+                  {isFetchingBalances
+                    ? `Fetching... ${fetchProgress.total > 0 ? Math.round((fetchProgress.completed / fetchProgress.total) * 100) : 0}%`
+                    : "Fetch All Balances"}
+                </Button>
+              </div>
+
+              {isFetchingBalances && (
+                <div className="flex flex-col gap-1 flex-1 min-w-[150px]">
+                  {fetchProgress.total > 0 && (
+                    <Progress
+                      value={
+                        (fetchProgress.completed / fetchProgress.total) * 100
+                      }
+                      className="h-2"
+                    />
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    This may take a few minutes
+                  </p>
+                </div>
+              )}
+
+              {portfolioLoaded && !isFetchingBalances && (
+                <Badge variant="success" className="ml-auto">
+                  Balances loaded for {portfolioMap.size} wallets
+                </Badge>
+              )}
+            </div>
+
+            {/* Stats Section */}
+            <div className="grid grid-cols-2 gap-4 px-4 lg:px-6 py-4">
+              <StatCard
+                label="Funded Wallets"
+                value={portfolioLoaded ? aggregatedStats.fundedWallets : 0}
+                icon={WalletIcon}
+                isPending={isFetchingBalances}
+                emptyText={!portfolioLoaded ? "—" : undefined}
+              />
+              <StatCard
+                label="Total Value"
+                value={portfolioLoaded ? aggregatedStats.totalValue : 0}
+                icon={DollarSignIcon}
+                formatter={(value) =>
+                  new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(value)
+                }
+                isPending={isFetchingBalances}
+                emptyText={!portfolioLoaded ? "—" : undefined}
+              />
+            </div>
             <TWTable
               columns={columns}
               data={wallets}
