@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { GetBalanceResult } from "thirdweb/extensions/erc20";
+import { THIRDWEB_API_HOST } from "@/constants/urls";
 
 type WalletPortfolioToken = GetBalanceResult & {
   usdValue?: number;
@@ -52,9 +53,7 @@ async function fetchTokensForChain(
   ecosystemSlug?: string,
 ): Promise<WalletPortfolioToken[]> {
   try {
-    const url = new URL(
-      `https://api.thirdweb.com/v1/wallets/${address}/tokens`,
-    );
+    const url = new URL(`${THIRDWEB_API_HOST}/v1/wallets/${address}/tokens`);
     url.searchParams.set("chainId", chainId.toString());
     url.searchParams.set("limit", "50");
     url.searchParams.set("metadata", "true");
