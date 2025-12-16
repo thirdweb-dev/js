@@ -12,14 +12,12 @@ export type WalletPortfolioData = {
   tokens: WalletPortfolioToken[];
 };
 
-// Retry helper with exponential backoff
+// Retry helper with exponential backoff - returns null on failure instead of throwing
 async function fetchWithRetry(
   url: string,
   options: RequestInit,
   maxRetries = 3,
-): Promise<Response> {
-  let lastError: Error | null = null;
-
+): Promise<Response | null> {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const response = await fetch(url, options);
@@ -32,15 +30,15 @@ async function fetchWithRetry(
       }
 
       return response;
-    } catch (e) {
-      lastError = e instanceof Error ? e : new Error(String(e));
+    } catch (_e) {
       // Network error - retry with backoff
       const delay = Math.min(1000 * 2 ** attempt, 10000);
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
 
-  throw lastError || new Error("Max retries exceeded");
+  // All retries failed - return null instead of throwing
+  return null;
 }
 
 // Fetch tokens for a single address on a single chain
@@ -74,7 +72,8 @@ async function fetchTokensForChain(
       },
     });
 
-    if (!response.ok) {
+    // If all retries failed or response not ok, return empty (balance = 0)
+    if (!response || !response.ok) {
       return [];
     }
 
@@ -158,15 +157,18 @@ async function fetchAllPortfolios(
   onProgress?: (completed: number, total: number) => void,
 ): Promise<Map<string, WalletPortfolioData>> {
   const results = new Map<string, WalletPortfolioData>();
-  const batchSize = 10; // Process 10 addresses at a time for better throughput
+  const concurrency = 50; // Process up to 50 addresses concurrently
   let completed = 0;
+  let index = 0;
 
-  for (let i = 0; i < addresses.length; i += batchSize) {
-    const batch = addresses.slice(i, i + batchSize);
+  // Worker function that processes one address at a time
+  async function worker() {
+    while (index < addresses.length) {
+      const currentIndex = index++;
+      const address = addresses[currentIndex];
+      if (!address) continue;
 
-    // Process batch concurrently with individual error handling
-    const batchResults = await Promise.allSettled(
-      batch.map(async (address) => {
+      try {
         const data = await fetchWalletPortfolio(
           address,
           chainIds,
@@ -175,25 +177,23 @@ async function fetchAllPortfolios(
           clientId,
           ecosystemSlug,
         );
-        return { address, data };
-      }),
-    );
-
-    // Only add successful results
-    for (const result of batchResults) {
-      if (result.status === "fulfilled") {
-        results.set(result.value.address, result.value.data);
+        results.set(address, data);
+      } catch (e) {
+        // Silent fail - continue with others
+        console.warn(`Failed to fetch portfolio for ${address}:`, e);
       }
-    }
 
-    completed = Math.min(i + batchSize, addresses.length);
-    onProgress?.(completed, addresses.length);
-
-    // Small delay between batches to avoid overwhelming the API
-    if (i + batchSize < addresses.length) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      completed++;
+      onProgress?.(completed, addresses.length);
     }
   }
+
+  // Start concurrent workers
+  const workers = Array.from(
+    { length: Math.min(concurrency, addresses.length) },
+    () => worker(),
+  );
+  await Promise.all(workers);
 
   return results;
 }
