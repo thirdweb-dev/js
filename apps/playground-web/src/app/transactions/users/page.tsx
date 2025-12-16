@@ -31,9 +31,8 @@ export default function Page() {
 
 function UserTransactions() {
   return (
-    <>
-      <CodeExample
-        code={`\
+    <CodeExample
+      code={`\
 import { inAppWallet } from "thirdweb/wallets/in-app";
 import { ConnectButton, useActiveWallet } from "thirdweb/react";
 
@@ -88,14 +87,13 @@ function App() {
     </>
   );
 }`}
-        header={{
-          description:
-            "Queue, monitor, and retry transactions from your users in-app wallets. All transactions and analytics will be displayed in your developer dashboard.",
-          title: "Transactions from User Wallets",
-        }}
-        lang="tsx"
-        preview={<GatewayPreview />}
-      />
-    </>
+      header={{
+        description:
+          "Queue, monitor, and retry transactions from your users in-app wallets. All transactions and analytics will be displayed in your developer dashboard.",
+        title: "Transactions from User Wallets",
+      }}
+      lang="tsx"
+      preview={<GatewayPreview />}
+    />
   );
 }

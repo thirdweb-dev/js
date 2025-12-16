@@ -283,7 +283,7 @@ function TokenInfoSection(props: {
         <dt className="text-xs font-medium text-muted-foreground tracking-wider uppercase">
           {props.label}
         </dt>
-        <dd className="text-3xl font-bold text-foreground tracking-tight">
+        <dd className="text-3xl font-semibold text-foreground tracking-tight">
           {props.value}
         </dd>
       </dl>

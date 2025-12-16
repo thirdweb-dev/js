@@ -3,7 +3,6 @@ import {
   BotIcon,
   BoxIcon,
   CircleUserIcon,
-  CreditCardIcon,
   DollarSignIcon,
   GlobeIcon,
   ImageIcon,
@@ -14,7 +13,7 @@ import {
   RectangleHorizontalIcon,
   RssIcon,
   ShieldIcon,
-  ShoppingBagIcon,
+  SquareIcon,
   SquircleDashedIcon,
   StampIcon,
   UserIcon,
@@ -118,27 +117,34 @@ export const headlessComponentsFeatureCards: FeatureCardMetadata[] = [
 
 export const bridgeFeatureCards: FeatureCardMetadata[] = [
   {
-    icon: ArrowLeftRightIcon,
+    icon: SquareIcon,
+    title: "Bridge Widget",
+    link: "/bridge/bridge-widget",
+    description:
+      "A widget for bridging tokens with cross-chain support and fiat onramp",
+  },
+  {
+    icon: SquareIcon,
     title: "Swap Widget",
     link: "/bridge/swap-widget",
     description: "A widget for swapping tokens with cross-chain support",
   },
   {
-    icon: ShoppingBagIcon,
+    icon: SquareIcon,
     title: "Buy Widget",
     link: "/bridge/buy-widget",
     description:
-      "Buy any token with ability to customize theme, amounts, and more",
+      "A widget to buy tokens with fiat onramp support or cross-chain swaps",
   },
   {
-    icon: CreditCardIcon,
+    icon: SquareIcon,
     title: "Checkout Widget",
     link: "/bridge/checkout-widget",
     description:
       "Enable crypto payments for services and get notified on each sale",
   },
   {
-    icon: ArrowLeftRightIcon,
+    icon: SquareIcon,
     title: "Transaction Widget",
     link: "/bridge/transaction-widget",
     description:

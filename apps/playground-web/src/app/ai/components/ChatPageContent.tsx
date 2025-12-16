@@ -84,7 +84,7 @@ export function ChatPageContent(props: {
     const userChainIdArray = userChainIds
       .split(",")
       .map((id) => id.trim())
-      .filter((id) => id !== "" && !isNaN(Number(id)));
+      .filter((id) => id !== "" && !Number.isNaN(Number(id)));
 
     return {
       chainIds:
