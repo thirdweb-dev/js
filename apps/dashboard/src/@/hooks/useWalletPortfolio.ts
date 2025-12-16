@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import type { ThirdwebClient } from "thirdweb";
 import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 
 type WalletPortfolioToken = GetBalanceResult & {
@@ -47,8 +46,10 @@ async function fetchWithRetry(
 async function fetchTokensForChain(
   address: string,
   chainId: number,
-  client: ThirdwebClient,
   authToken: string,
+  teamId: string,
+  clientId?: string,
+  ecosystemSlug?: string,
 ): Promise<WalletPortfolioToken[]> {
   try {
     const url = new URL(
@@ -66,7 +67,11 @@ async function fetchTokensForChain(
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
-        "x-client-id": client.clientId,
+        "x-thirdweb-team-id": teamId,
+        ...(clientId && { "x-client-id": clientId }),
+        ...(ecosystemSlug && {
+          "x-ecosystem-id": `ecosystem.${ecosystemSlug}`,
+        }),
       },
     });
 
@@ -111,14 +116,23 @@ async function fetchTokensForChain(
 // Fetch tokens for a single address on selected chains
 async function fetchWalletPortfolio(
   address: string,
-  client: ThirdwebClient,
   chainIds: number[],
   authToken: string,
+  teamId: string,
+  clientId?: string,
+  ecosystemSlug?: string,
 ): Promise<WalletPortfolioData> {
   // Fetch all chains concurrently for this address
   const results = await Promise.all(
     chainIds.map((chainId) =>
-      fetchTokensForChain(address, chainId, client, authToken),
+      fetchTokensForChain(
+        address,
+        chainId,
+        authToken,
+        teamId,
+        clientId,
+        ecosystemSlug,
+      ),
     ),
   );
 
@@ -137,9 +151,11 @@ async function fetchWalletPortfolio(
 // Batch fetch portfolios for all addresses with progress callback
 async function fetchAllPortfolios(
   addresses: string[],
-  client: ThirdwebClient,
   chainIds: number[],
   authToken: string,
+  teamId: string,
+  clientId?: string,
+  ecosystemSlug?: string,
   onProgress?: (completed: number, total: number) => void,
 ): Promise<Map<string, WalletPortfolioData>> {
   const results = new Map<string, WalletPortfolioData>();
@@ -154,9 +170,11 @@ async function fetchAllPortfolios(
       batch.map(async (address) => {
         const data = await fetchWalletPortfolio(
           address,
-          client,
           chainIds,
           authToken,
+          teamId,
+          clientId,
+          ecosystemSlug,
         );
         return { address, data };
       }),
@@ -185,22 +203,28 @@ export function useFetchAllPortfolios() {
   return useMutation({
     mutationFn: async ({
       addresses,
-      client,
       chainIds,
       authToken,
+      teamId,
+      clientId,
+      ecosystemSlug,
       onProgress,
     }: {
       addresses: string[];
-      client: ThirdwebClient;
       chainIds: number[];
       authToken: string;
+      teamId: string;
+      clientId?: string;
+      ecosystemSlug?: string;
       onProgress?: (completed: number, total: number) => void;
     }) => {
       return fetchAllPortfolios(
         addresses,
-        client,
         chainIds,
         authToken,
+        teamId,
+        clientId,
+        ecosystemSlug,
         onProgress,
       );
     },

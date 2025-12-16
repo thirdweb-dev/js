@@ -144,9 +144,11 @@ export function UserWalletsTable(
 
       const results = await fetchPortfoliosMutation.mutateAsync({
         addresses: allAddresses,
-        client: props.client,
         chainIds: selectedChains,
         authToken: props.authToken,
+        teamId: props.teamId,
+        clientId: props.projectClientId,
+        ecosystemSlug: props.ecosystemSlug,
         onProgress: (completed, total) => {
           setFetchProgress({ completed, total });
         },
@@ -163,7 +165,6 @@ export function UserWalletsTable(
     props.projectClientId,
     props.ecosystemSlug,
     props.teamId,
-    props.client,
     props.authToken,
     fetchPortfoliosMutation,
   ]);
