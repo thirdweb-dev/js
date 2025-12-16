@@ -177,33 +177,63 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
     }) => {
       const responses: WalletUser[] = [];
       let page = 1;
+      let consecutiveFailures = 0;
+      const maxConsecutiveFailures = 3;
 
-      while (true) {
-        const res = await queryClient.fetchQuery<{
-          users: WalletUser[];
-          hasMore: boolean;
-        }>({
-          queryFn: fetchAccountList({
-            clientId,
-            ecosystemSlug,
-            teamId,
-            jwt: authToken,
-            pageNumber: page,
-          }),
-          queryKey: embeddedWalletsKeys.embeddedWallets(
-            address || "",
-            clientId || ecosystemSlug || "",
-            page,
-          ),
-        });
+      while (consecutiveFailures < maxConsecutiveFailures) {
+        try {
+          const res = await queryClient.fetchQuery<{
+            users: WalletUser[];
+            hasMore: boolean;
+          }>({
+            queryFn: fetchAccountList({
+              clientId,
+              ecosystemSlug,
+              teamId,
+              jwt: authToken,
+              pageNumber: page,
+            }),
+            queryKey: embeddedWalletsKeys.embeddedWallets(
+              address || "",
+              clientId || ecosystemSlug || "",
+              page,
+            ),
+            retry: 3,
+            retryDelay: (attemptIndex) =>
+              Math.min(1000 * 2 ** attemptIndex, 10000),
+          });
 
-        responses.push(...res.users);
+          responses.push(...res.users);
+          consecutiveFailures = 0; // Reset on success
 
-        if (!res.hasMore) {
-          break;
+          if (!res.hasMore) {
+            break;
+          }
+
+          page++;
+        } catch (error) {
+          consecutiveFailures++;
+          console.warn(
+            `Failed to fetch page ${page}, attempt ${consecutiveFailures}/${maxConsecutiveFailures}:`,
+            error,
+          );
+
+          if (consecutiveFailures >= maxConsecutiveFailures) {
+            // If we have some data, return it instead of throwing
+            if (responses.length > 0) {
+              console.warn(
+                `Returning partial results (${responses.length} users) after ${maxConsecutiveFailures} consecutive failures`,
+              );
+              break;
+            }
+            throw error;
+          }
+
+          // Wait before retrying the same page
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * consecutiveFailures),
+          );
         }
-
-        page++;
       }
 
       return responses;
