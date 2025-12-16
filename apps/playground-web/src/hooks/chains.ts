@@ -30,7 +30,22 @@ async function fetchBridgeSupportedChainsFromApi() {
     throw new Error(json.error.message);
   }
 
-  return json.data as BridgeChain[];
+  const data = json.data as BridgeChain[];
+
+  return data.sort((a, b) => {
+    const aStartsWithNumber = a.name[0]?.match(/^\d/);
+    const bStartsWithNumber = b.name[0]?.match(/^\d/);
+
+    if (aStartsWithNumber && !bStartsWithNumber) {
+      return 1;
+    }
+
+    if (!aStartsWithNumber && bStartsWithNumber) {
+      return -1;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
 }
 
 export function useBridgeSupportedChains() {

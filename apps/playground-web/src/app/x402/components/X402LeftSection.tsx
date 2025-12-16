@@ -66,6 +66,7 @@ export function X402LeftSection(props: {
   const handleTokenChange = (token: TokenMetadata) => {
     setSelectedToken({
       address: token.address,
+      // biome-ignore lint/style/noNonNullAssertion: ok
       chainId: selectedChain!,
     });
 

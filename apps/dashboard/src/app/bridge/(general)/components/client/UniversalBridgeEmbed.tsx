@@ -25,6 +25,7 @@ export function UniversalBridgeEmbed(props: {
   swapTab: BuyAndSwapEmbedProps["swapTab"];
   pageType: "bridge" | "bridge-iframe";
   currency?: SupportedFiatCurrency;
+  showThirdwebBranding?: boolean;
 }) {
   return (
     <BuyAndSwapEmbed
@@ -34,6 +35,7 @@ export function UniversalBridgeEmbed(props: {
       swapTab={props.swapTab}
       pageType={props.pageType}
       wallets={bridgeWallets}
+      showThirdwebBranding={props.showThirdwebBranding}
     />
   );
 }

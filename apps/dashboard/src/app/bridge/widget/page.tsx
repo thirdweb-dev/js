@@ -35,9 +35,16 @@ export default async function Page(props: {
   // output is buy, input is sell
   const sellChain = parse(searchParams.inputChain, onlyNumber);
   const sellCurrency = parse(searchParams.inputCurrency, onlyAddress);
+  const sellAmount = parse(searchParams.inputCurrencyAmount, onlyNumber);
 
   const buyChain = parse(searchParams.outputChain, onlyNumber);
   const buyCurrency = parse(searchParams.outputCurrency, onlyAddress);
+  const buyAmount = parse(searchParams.outputCurrencyAmount, onlyNumber);
+
+  const showThirdwebBranding = parse(
+    searchParams.showThirdwebBranding,
+    (v) => v !== "false",
+  );
 
   const persistTokenSelections =
     parse(searchParams.persistTokenSelections, (v) =>
@@ -61,11 +68,14 @@ export default async function Page(props: {
           persistTokenSelections={persistTokenSelections === "true"}
           pageType="bridge-iframe"
           currency={currency}
+          showThirdwebBranding={showThirdwebBranding}
           buyTab={{
             buyToken: buyChain
               ? {
                   chainId: buyChain,
                   tokenAddress: buyCurrency || NATIVE_TOKEN_ADDRESS,
+                  amount:
+                    buyAmount === undefined ? undefined : buyAmount.toString(),
                 }
               : undefined,
           }}
@@ -74,12 +84,18 @@ export default async function Page(props: {
               ? {
                   chainId: sellChain,
                   tokenAddress: sellCurrency || NATIVE_TOKEN_ADDRESS,
+                  amount:
+                    sellAmount === undefined
+                      ? undefined
+                      : sellAmount.toString(),
                 }
               : undefined,
             buyToken: buyChain
               ? {
                   chainId: buyChain,
                   tokenAddress: buyCurrency || NATIVE_TOKEN_ADDRESS,
+                  amount:
+                    buyAmount === undefined ? undefined : buyAmount.toString(),
                 }
               : undefined,
           }}

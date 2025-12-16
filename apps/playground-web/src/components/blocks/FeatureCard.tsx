@@ -13,7 +13,7 @@ export function FeatureCard(props: {
           <props.icon className="size-4 text-muted-foreground" />
         </div>
       </div>
-      <h3 className="font-medium mb-0.5 text-lg tracking-tight">
+      <h3 className="font-semibold mb-0.5 text-lg tracking-tight">
         <Link className="before:absolute before:inset-0" href={props.href}>
           {props.title}
         </Link>

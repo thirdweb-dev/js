@@ -2,13 +2,8 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { defineChain } from "thirdweb";
-import {
-  BuyWidget,
-  type SupportedFiatCurrency,
-  SwapWidget,
-} from "thirdweb/react";
+import { useEffect, useMemo, useRef } from "react";
+import { BridgeWidget, type SupportedFiatCurrency } from "thirdweb/react";
 import type { Wallet } from "thirdweb/wallets";
 import {
   reportAssetBuyCancelled,
@@ -22,14 +17,12 @@ import {
   reportTokenSwapFailed,
   reportTokenSwapSuccessful,
 } from "@/analytics/report";
-import { Button } from "@/components/ui/button";
 import {
   NEXT_PUBLIC_ASSET_PAGE_CLIENT_ID,
   NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID,
   NEXT_PUBLIC_BRIDGE_PAGE_CLIENT_ID,
   NEXT_PUBLIC_CHAIN_PAGE_CLIENT_ID,
 } from "@/constants/public-envs";
-import { cn } from "@/lib/utils";
 import { parseError } from "@/utils/errorParser";
 import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { appMetadata } from "../../constants/connect";
@@ -71,11 +64,11 @@ export type BuyAndSwapEmbedProps = {
   pageType: PageType;
   wallets?: Wallet[];
   currency?: SupportedFiatCurrency;
+  showThirdwebBranding?: boolean;
 };
 
 export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
   const { theme } = useTheme();
-  const [tab, setTab] = useState<"buy" | "swap">("swap");
   const themeObj = getSDKTheme(theme === "light" ? "light" : "dark");
   const isMounted = useRef(false);
 
@@ -108,211 +101,161 @@ export function BuyAndSwapEmbed(props: BuyAndSwapEmbedProps) {
   }, [props.pageType]);
 
   return (
-    <div className="bg-card rounded-2xl border overflow-hidden flex flex-col relative z-10 shadow-xl min-w-0">
-      <div className="flex gap-2.5 p-4 border-b border-dashed">
-        <TabButton
-          label="Swap"
-          onClick={() => setTab("swap")}
-          isActive={tab === "swap"}
-        />
-        <TabButton
-          label="Buy"
-          onClick={() => setTab("buy")}
-          isActive={tab === "buy"}
-        />
-      </div>
+    <BridgeWidget
+      client={client}
+      theme={themeObj}
+      className="z-10 min-w-0 shadow-xl"
+      connectOptions={{
+        autoConnect: false,
+        wallets: props.wallets,
+        appMetadata: appMetadata,
+      }}
+      buy={
+        props.buyTab
+          ? {
+              amount: props.buyTab.buyToken?.amount,
+              chainId: props.buyTab.buyToken?.chainId,
+              tokenAddress: props.buyTab.buyToken?.tokenAddress,
+              onError: (e, quote) => {
+                const errorMessage = parseError(e);
 
-      {tab === "buy" && (
-        <BuyWidget
-          currency={props.currency || "USD"}
-          amount={props.buyTab?.buyToken?.amount || "1"}
-          chain={
-            props.buyTab?.buyToken?.chainId
-              ? defineChain(props.buyTab.buyToken.chainId)
-              : undefined
-          }
-          tokenAddress={
-            props.buyTab?.buyToken?.tokenAddress as `0x${string}` | undefined
-          }
-          className="!rounded-2xl !border-none"
-          title=""
-          client={client}
-          connectOptions={{
-            autoConnect: false,
-            wallets: props.wallets,
-            appMetadata: appMetadata,
-          }}
-          onError={(e, quote) => {
-            const errorMessage = parseError(e);
+                const buyChainId =
+                  quote?.type === "buy"
+                    ? quote.intent.destinationChainId
+                    : quote?.type === "onramp"
+                      ? quote.intent.chainId
+                      : undefined;
 
-            const buyChainId =
-              quote?.type === "buy"
-                ? quote.intent.destinationChainId
-                : quote?.type === "onramp"
-                  ? quote.intent.chainId
-                  : undefined;
+                if (!buyChainId) {
+                  return;
+                }
 
-            if (!buyChainId) {
-              return;
+                reportTokenBuyFailed({
+                  buyTokenChainId: buyChainId,
+                  buyTokenAddress:
+                    quote?.type === "buy"
+                      ? quote.intent.destinationTokenAddress
+                      : quote?.type === "onramp"
+                        ? quote.intent.tokenAddress
+                        : undefined,
+                  pageType: props.pageType,
+                });
+
+                if (props.pageType === "asset") {
+                  reportAssetBuyFailed({
+                    assetType: "coin",
+                    chainId: buyChainId,
+                    error: errorMessage,
+                    contractType: undefined,
+                    is_testnet: false,
+                  });
+                }
+              },
+              onCancel: (quote) => {
+                const buyChainId =
+                  quote?.type === "buy"
+                    ? quote.intent.destinationChainId
+                    : quote?.type === "onramp"
+                      ? quote.intent.chainId
+                      : undefined;
+
+                if (!buyChainId) {
+                  return;
+                }
+
+                reportTokenBuyCancelled({
+                  buyTokenChainId: buyChainId,
+                  buyTokenAddress:
+                    quote?.type === "buy"
+                      ? quote.intent.destinationTokenAddress
+                      : quote?.type === "onramp"
+                        ? quote.intent.tokenAddress
+                        : undefined,
+                  pageType: props.pageType,
+                });
+
+                if (props.pageType === "asset") {
+                  reportAssetBuyCancelled({
+                    assetType: "coin",
+                    chainId: buyChainId,
+                    contractType: undefined,
+                    is_testnet: false,
+                  });
+                }
+              },
+              onSuccess: ({ quote }) => {
+                const buyChainId =
+                  quote?.type === "buy"
+                    ? quote.intent.destinationChainId
+                    : quote?.type === "onramp"
+                      ? quote.intent.chainId
+                      : undefined;
+
+                if (!buyChainId) {
+                  return;
+                }
+
+                reportTokenBuySuccessful({
+                  buyTokenChainId: buyChainId,
+                  buyTokenAddress:
+                    quote?.type === "buy"
+                      ? quote.intent.destinationTokenAddress
+                      : quote?.type === "onramp"
+                        ? quote.intent.tokenAddress
+                        : undefined,
+                  pageType: props.pageType,
+                });
+
+                if (props.pageType === "asset") {
+                  reportAssetBuySuccessful({
+                    assetType: "coin",
+                    chainId: buyChainId,
+                    contractType: undefined,
+                    is_testnet: false,
+                  });
+                }
+              },
             }
-
-            reportTokenBuyFailed({
-              buyTokenChainId: buyChainId,
-              buyTokenAddress:
-                quote?.type === "buy"
-                  ? quote.intent.destinationTokenAddress
-                  : quote?.type === "onramp"
-                    ? quote.intent.tokenAddress
-                    : undefined,
-              pageType: props.pageType,
-            });
-
-            if (props.pageType === "asset") {
-              reportAssetBuyFailed({
-                assetType: "coin",
-                chainId: buyChainId,
-                error: errorMessage,
-                contractType: undefined,
-                is_testnet: false,
-              });
-            }
-          }}
-          onCancel={(quote) => {
-            const buyChainId =
-              quote?.type === "buy"
-                ? quote.intent.destinationChainId
-                : quote?.type === "onramp"
-                  ? quote.intent.chainId
-                  : undefined;
-
-            if (!buyChainId) {
-              return;
-            }
-
-            reportTokenBuyCancelled({
-              buyTokenChainId: buyChainId,
-              buyTokenAddress:
-                quote?.type === "buy"
-                  ? quote.intent.destinationTokenAddress
-                  : quote?.type === "onramp"
-                    ? quote.intent.tokenAddress
-                    : undefined,
-              pageType: props.pageType,
-            });
-
-            if (props.pageType === "asset") {
-              reportAssetBuyCancelled({
-                assetType: "coin",
-                chainId: buyChainId,
-                contractType: undefined,
-                is_testnet: false,
-              });
-            }
-          }}
-          onSuccess={({ quote }) => {
-            const buyChainId =
-              quote?.type === "buy"
-                ? quote.intent.destinationChainId
-                : quote?.type === "onramp"
-                  ? quote.intent.chainId
-                  : undefined;
-
-            if (!buyChainId) {
-              return;
-            }
-
-            reportTokenBuySuccessful({
-              buyTokenChainId: buyChainId,
-              buyTokenAddress:
-                quote?.type === "buy"
-                  ? quote.intent.destinationTokenAddress
-                  : quote?.type === "onramp"
-                    ? quote.intent.tokenAddress
-                    : undefined,
-              pageType: props.pageType,
-            });
-
-            if (props.pageType === "asset") {
-              reportAssetBuySuccessful({
-                assetType: "coin",
-                chainId: buyChainId,
-                contractType: undefined,
-                is_testnet: false,
-              });
-            }
-          }}
-          theme={themeObj}
-          paymentMethods={["card"]}
-        />
-      )}
-
-      {tab === "swap" && (
-        <SwapWidget
-          currency={props.currency || "USD"}
-          persistTokenSelections={props.persistTokenSelections}
-          client={client}
-          theme={themeObj}
-          className="!rounded-2xl !border-none"
-          connectOptions={{
-            autoConnect: false,
-            wallets: props.wallets,
-            appMetadata: appMetadata,
-          }}
-          prefill={{
-            buyToken: props.swapTab?.buyToken,
-            sellToken: props.swapTab?.sellToken,
-          }}
-          onError={(error, quote) => {
-            const errorMessage = parseError(error);
-            reportTokenSwapFailed({
-              errorMessage: errorMessage,
-              buyTokenChainId: quote.intent.destinationChainId,
-              buyTokenAddress: quote.intent.destinationTokenAddress,
-              sellTokenChainId: quote.intent.originChainId,
-              sellTokenAddress: quote.intent.originTokenAddress,
-              pageType: props.pageType,
-            });
-          }}
-          onSuccess={({ quote }) => {
-            reportTokenSwapSuccessful({
-              buyTokenChainId: quote.intent.destinationChainId,
-              buyTokenAddress: quote.intent.destinationTokenAddress,
-              sellTokenChainId: quote.intent.originChainId,
-              sellTokenAddress: quote.intent.originTokenAddress,
-              pageType: props.pageType,
-            });
-          }}
-          onCancel={(quote) => {
-            reportTokenSwapCancelled({
-              buyTokenChainId: quote.intent.destinationChainId,
-              buyTokenAddress: quote.intent.destinationTokenAddress,
-              sellTokenChainId: quote.intent.originChainId,
-              sellTokenAddress: quote.intent.originTokenAddress,
-              pageType: props.pageType,
-            });
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-function TabButton(props: {
-  label: string;
-  onClick: () => void;
-  isActive: boolean;
-}) {
-  return (
-    <Button
-      onClick={props.onClick}
-      size="sm"
-      className={cn(
-        "rounded-full text-muted-foreground px-4 bg-accent",
-        props.isActive && "text-foreground border-foreground/50",
-      )}
-      variant="outline"
-    >
-      {props.label}
-    </Button>
+          : undefined
+      }
+      swap={{
+        persistTokenSelections: props.persistTokenSelections,
+        prefill: {
+          buyToken: props.swapTab?.buyToken,
+          sellToken: props.swapTab?.sellToken,
+        },
+        onError: (error, quote) => {
+          const errorMessage = parseError(error);
+          reportTokenSwapFailed({
+            errorMessage: errorMessage,
+            buyTokenChainId: quote.intent.destinationChainId,
+            buyTokenAddress: quote.intent.destinationTokenAddress,
+            sellTokenChainId: quote.intent.originChainId,
+            sellTokenAddress: quote.intent.originTokenAddress,
+            pageType: props.pageType,
+          });
+        },
+        onSuccess: ({ quote }) => {
+          reportTokenSwapSuccessful({
+            buyTokenChainId: quote.intent.destinationChainId,
+            buyTokenAddress: quote.intent.destinationTokenAddress,
+            sellTokenChainId: quote.intent.originChainId,
+            sellTokenAddress: quote.intent.originTokenAddress,
+            pageType: props.pageType,
+          });
+        },
+        onCancel: (quote) => {
+          reportTokenSwapCancelled({
+            buyTokenChainId: quote.intent.destinationChainId,
+            buyTokenAddress: quote.intent.destinationTokenAddress,
+            sellTokenChainId: quote.intent.originChainId,
+            sellTokenAddress: quote.intent.originTokenAddress,
+            pageType: props.pageType,
+          });
+        },
+      }}
+      currency={props.currency}
+      showThirdwebBranding={props.showThirdwebBranding}
+    />
   );
 }

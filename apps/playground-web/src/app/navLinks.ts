@@ -188,6 +188,10 @@ const bridge: ShadcnSidebarLink = {
       exactMatch: true,
     },
     {
+      href: "/bridge/bridge-widget",
+      label: "Bridge Widget",
+    },
+    {
       href: "/bridge/swap-widget",
       label: "Swap Widget",
     },

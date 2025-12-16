@@ -55,14 +55,14 @@ You can set the light theme by passing the `theme=light` query parameter.
 <IframeCodePreview src="https://thirdweb.com/bridge/widget?theme=light" />
 
 
-### Change default token selections
+### Token selections
 
 By default no tokens are selected in the widget UI.
 
 You can change the default token selections by using query parameters mentioned below:
 
-* `inputCurrency`, `inputChain` to set sell token.
-* `outputCurrency`, `outputChain` to set buy token.
+* `inputCurrency`, `inputChain`, `inputCurrencyAmount` to set sell token and amount.
+* `outputCurrency`, `outputChain`, `outputCurrencyAmount` to set buy token and amount.
 
 Chain parameter should be the chain id (eg. 1 for Ethereum Mainnet, 137 for Polygon Mainnet, 8453 for Base Mainnet, etc.)
 and currency parameter should be the token address. You can use [thirdweb chainlist](https://thirdweb.com/chainlist?service=pay) to find the chain id for a chain.
@@ -96,6 +96,27 @@ Set Base native token as the default sell token.
 Set USDC on Base as the default sell token and USDC on Polygon as the default buy token.
 
 <IframeCodePreview src="https://thirdweb.com/bridge/widget?inputCurrency=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&inputChain=8453&outputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputChain=137" />
+
+</Details>
+
+
+### Token amounts
+
+You can set default token amounts using the `inputCurrencyAmount` and `outputCurrencyAmount` query parameters.
+
+<Details summary="Set default sell token amount">
+
+Set 100 USDC on Base as the default sell token with amount.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?inputCurrency=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&inputChain=8453&inputCurrencyAmount=100" />
+
+</Details>
+
+<Details summary="Set default buy token amount">
+
+Set 50 USDC on Polygon as the default buy token with amount.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?outputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputChain=137&outputCurrencyAmount=50" />
 
 </Details>
 
@@ -149,5 +170,12 @@ You can change the currency by setting the `currency` query parameter to the des
 Show fiat values in Japanese Yen (JPY) in the widget.
 
 <IframeCodePreview src="https://thirdweb.com/bridge/widget?currency=JPY" />
+
+
+### thirdweb branding
+
+By default, the widget displays thirdweb branding at the bottom. You can hide this by setting the `showThirdwebBranding` query parameter to `false`.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/widget?showThirdwebBranding=false" />
 
 
