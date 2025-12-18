@@ -8,6 +8,9 @@ const title = "Bridge Widget";
 const description =
   "Easily embed cross-chain token swap and fiat onramp UI into your app";
 
+const validTabs = ["iframe", "script", "react"] as const;
+type ValidTabs = (typeof validTabs)[number];
+
 export const metadata = createMetadata({
   description: description,
   title,
@@ -17,7 +20,19 @@ export const metadata = createMetadata({
   },
 });
 
-export default function Page() {
+export default async function Page(props: {
+  searchParams: Promise<{
+    tab?: string | undefined | string[];
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const tab =
+    typeof searchParams.tab === "string" ? searchParams.tab : undefined;
+
+  const validTab = validTabs.includes(tab as ValidTabs)
+    ? (tab as ValidTabs)
+    : undefined;
+
   return (
     <ThirdwebProvider>
       <PageLayout
@@ -26,7 +41,7 @@ export default function Page() {
         description={description}
         docsLink="https://portal.thirdweb.com/bridge/bridge-widget?utm_source=playground"
       >
-        <BridgeWidgetPlayground />
+        <BridgeWidgetPlayground defaultTab={validTab} />
       </PageLayout>
     </ThirdwebProvider>
   );

@@ -1,12 +1,17 @@
+import bridgeWidgetDark from "../bridge-widget-dark.png";
+import bridgeWidgetLight from "../bridge-widget-light.png";
 import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  ArticleIconCard,
   Details,
   createMetadata,
   DocImage
 } from "@doc";
-import bridgeWidgetDark from "../bridge-widget-dark.png";
-import bridgeWidgetLight from "../bridge-widget-light.png";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
 import { IframeCodePreview } from "./iframe-code-preview";
+import { PlayIcon } from "lucide-react";
 
 export const metadata = createMetadata({
   image: {
@@ -41,6 +46,15 @@ The Bridge widget iframe makes it easy to embed cross-chain swaps and fiat onram
 
 <IframeCodePreview src="https://thirdweb.com/bridge/widget" />
 
+
+## Try it out
+
+<ArticleIconCard
+	title="Bridge Widget Playground"
+	description="Try out the Bridge Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/bridge-widget"
+/>
 
 ## Options
 

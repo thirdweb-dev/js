@@ -25,7 +25,7 @@ export function CodeGen(props: { options: BridgeWidgetPlaygroundOptions }) {
         <CodeClient
           className="grow"
           code={getCode(props.options)}
-          lang={props.options.integrationType === "component" ? "tsx" : "html"}
+          lang={props.options.integrationType === "react" ? "tsx" : "html"}
         />
       </Suspense>
     </div>
@@ -36,7 +36,7 @@ function getCode(options: BridgeWidgetPlaygroundOptions) {
   if (options.integrationType === "script") {
     return getCode_Script(options);
   }
-  if (options.integrationType === "component") {
+  if (options.integrationType === "react") {
     return getCode_ReactComponent(options);
   }
   if (options.integrationType === "iframe") {

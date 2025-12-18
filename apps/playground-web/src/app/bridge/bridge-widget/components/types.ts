@@ -5,7 +5,7 @@ import type {
 } from "thirdweb/react";
 
 export type BridgeWidgetPlaygroundOptions = {
-  integrationType: "script" | "component" | "iframe";
+  integrationType: "iframe" | "script" | "react";
   theme: {
     type: "dark" | "light";
     darkColorOverrides: ThemeOverrides["colors"];

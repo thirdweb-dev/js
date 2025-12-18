@@ -1,13 +1,12 @@
 import {
-  Details,
+  ArticleIconCard,
   createMetadata,
   DocImage
 } from "@doc";
 import bridgeWidgetDark from "../bridge-widget-dark.png";
 import bridgeWidgetLight from "../bridge-widget-light.png";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@doc";
+import { PlayIcon } from "lucide-react";
 import { ReactIcon } from "@/icons";
-import { ArticleIconCard } from "@doc";
 
 export const metadata = createMetadata({
   image: {
@@ -80,4 +79,13 @@ function Example() {
   description="View the API reference for the BridgeWidget component"
   icon={ReactIcon}
   href="/references/typescript/v5/BridgeWidget"
+/>
+
+## Try it out
+
+<ArticleIconCard
+	title="Bridge Widget Playground"
+	description="Try out the Bridge Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/bridge-widget?tab=react"
 />

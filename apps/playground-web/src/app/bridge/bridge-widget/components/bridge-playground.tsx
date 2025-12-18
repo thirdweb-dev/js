@@ -19,11 +19,28 @@ const defaultOptions: BridgeWidgetPlaygroundOptions = {
   },
 };
 
-export function BridgeWidgetPlayground() {
+function updatePageUrl(tab: BridgeWidgetPlaygroundOptions["integrationType"]) {
+  const url = new URL(window.location.href);
+  if (tab === defaultOptions.integrationType) {
+    url.searchParams.delete("tab");
+  } else {
+    url.searchParams.set("tab", tab);
+  }
+
+  window.history.replaceState({}, "", url.toString());
+}
+
+export function BridgeWidgetPlayground(props: {
+  defaultTab: "iframe" | "script" | "react" | undefined;
+}) {
   const { theme } = useTheme();
 
-  const [options, setOptions] =
-    useState<BridgeWidgetPlaygroundOptions>(defaultOptions);
+  const [options, setOptions] = useState<BridgeWidgetPlaygroundOptions>(() => {
+    return {
+      ...defaultOptions,
+      integrationType: props.defaultTab || defaultOptions.integrationType,
+    };
+  });
 
   // change theme on global theme change
   useEffect(() => {
@@ -35,6 +52,10 @@ export function BridgeWidgetPlayground() {
       },
     }));
   }, [theme]);
+
+  useEffect(() => {
+    updatePageUrl(options.integrationType);
+  }, [options.integrationType]);
 
   return (
     <div>
@@ -54,9 +75,8 @@ export function BridgeWidgetPlayground() {
           },
           {
             name: "React",
-            onClick: () =>
-              setOptions({ ...options, integrationType: "component" }),
-            isActive: options.integrationType === "component",
+            onClick: () => setOptions({ ...options, integrationType: "react" }),
+            isActive: options.integrationType === "react",
           },
         ]}
       />
