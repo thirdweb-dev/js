@@ -23,6 +23,9 @@ export const metadata = createMetadata({
      <TabsTrigger value="server-wallets" className="flex items-center [&>p]:mb-0">
       Server Wallets
     </TabsTrigger>
+    <TabsTrigger value="audits" className="flex items-center [&>p]:mb-0">
+      Audits
+    </TabsTrigger>
   </TabsList>
   <TabsContent value="user-wallets">
 
@@ -187,6 +190,16 @@ The response also arrives in the same payload format. We just perform the steps 
 2. HKDF the `shared_secret` to get the `encryption_key`
 3. Use the `nonce` in the response (which Vault randomly generates) + the `shared_secret` with xChaCha20Poly1305 to decrypt your payload.
 
+</TabsContent>
+
+<TabsContent value="audits">
+
+## Wallets Audits
+
+View the full audit reports for any wallets related features and specs:
+
+- [7702 (Minimal Account)](https://0xmacro.com/library/audits/thirdweb-22)
+- [Managed Account Factory](https://ipfs.io/ipfs/Qmc36VUCuwG2u7kZrqmXmJsH5c8sF7SHySVbPnwVmo3XYX/thirdweb%20A-14%20_%20Macro%20Audits%20_%20The%200xMacro%20Library.pdf)
 </TabsContent>
 
 </Tabs>
