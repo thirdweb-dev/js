@@ -96,7 +96,7 @@ function ArchiveSection() {
         />
         <ArticleCardIndex
           description="Transactions knowledge base and guides"
-          href="/wallets/server/send-transactions"
+          href="/engine"
           icon={ArchiveIcon}
           title="Transactions"
           external
