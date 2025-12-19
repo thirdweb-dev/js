@@ -366,7 +366,7 @@ function SwapWidgetContent(
   }, [buyToken, sellToken, isPersistEnabled]);
 
   // preload requests
-  useBridgeChains(props.client);
+  useBridgeChains({ client: props.client });
 
   // if wallet suddenly disconnects, show screen 1
   if (screen.id === "1:swap-ui" || !activeWalletInfo) {

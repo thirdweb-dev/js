@@ -22,6 +22,7 @@ import {
 } from "../../../../core/design-system/index.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
+import { onModalUnmount } from "../../ConnectWallet/constants.js";
 import { DetailsModal } from "../../ConnectWallet/Details.js";
 import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
 import connectLocaleEn from "../../ConnectWallet/locale/en.js";
@@ -49,7 +50,7 @@ import type {
   SwapWidgetConnectOptions,
   TokenSelection,
 } from "./types.js";
-import { useBridgeChains } from "./use-bridge-chains.js";
+import { useBridgeChain } from "./use-bridge-chains.js";
 
 type SwapUIProps = {
   activeWalletInfo: ActiveWalletInfo | undefined;
@@ -226,8 +227,14 @@ export function SwapUI(props: SwapUIProps) {
           }
         }}
       >
+        {/* buy token modal */}
         {modalState.screen === "select-buy-token" && (
           <SelectToken
+            type="buy"
+            selections={{
+              buyChainId: props.buyToken?.chainId,
+              sellChainId: props.sellToken?.chainId,
+            }}
             activeWalletInfo={props.activeWalletInfo}
             onClose={() => {
               setModalState((v) => ({
@@ -264,6 +271,7 @@ export function SwapUI(props: SwapUIProps) {
           />
         )}
 
+        {/* sell token modal */}
         {modalState.screen === "select-sell-token" && (
           <SelectToken
             onClose={() => {
@@ -292,13 +300,22 @@ export function SwapUI(props: SwapUIProps) {
                 token.tokenAddress.toLowerCase() !==
                   NATIVE_TOKEN_ADDRESS.toLowerCase()
               ) {
-                props.setBuyToken({
-                  tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
-                  chainId: token.chainId,
+                // set the buy token after a delay to avoid updating the "selections" prop passed to the <SelectToken> component and trigger unnecessay fetch of chains query that will never be used
+                // we have to do this because the modal does not close immediately onClose - it has a fade out animation
+                onModalUnmount(() => {
+                  props.setBuyToken({
+                    tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
+                    chainId: token.chainId,
+                  });
                 });
               }
             }}
             activeWalletInfo={props.activeWalletInfo}
+            type="sell"
+            selections={{
+              buyChainId: props.buyToken?.chainId,
+              sellChainId: props.sellToken?.chainId,
+            }}
           />
         )}
       </Modal>
@@ -320,8 +337,12 @@ export function SwapUI(props: SwapUIProps) {
         />
       )}
 
-      {/* Sell  */}
+      {/* Sell token  */}
       <TokenSection
+        selection={{
+          buyChainId: props.buyToken?.chainId,
+          sellChainId: props.sellToken?.chainId,
+        }}
         onMaxClick={() => {
           if (sellTokenBalanceQuery.data) {
             props.setAmountSelection({
@@ -382,6 +403,10 @@ export function SwapUI(props: SwapUIProps) {
 
       {/* Buy */}
       <TokenSection
+        selection={{
+          buyChainId: props.buyToken?.chainId,
+          sellChainId: props.sellToken?.chainId,
+        }}
         onMaxClick={undefined}
         onWalletClick={() => {
           setDetailsModalOpen(true);
@@ -663,6 +688,10 @@ function useSwapQuote(params: {
 
 function TokenSection(props: {
   type: "buy" | "sell";
+  selection: {
+    buyChainId: number | undefined;
+    sellChainId: number | undefined;
+  };
   amount: {
     data: string;
     isFetching: boolean;
@@ -688,10 +717,12 @@ function TokenSection(props: {
   onMaxClick: (() => void) | undefined;
 }) {
   const theme = useCustomTheme();
-  const chainQuery = useBridgeChains(props.client);
-  const chain = chainQuery.data?.find(
-    (chain) => chain.chainId === props.selectedToken?.data?.chainId,
-  );
+
+  const chainQuery = useBridgeChain({
+    chainId: props.selectedToken?.data?.chainId,
+    client: props.client,
+  });
+  const chain = chainQuery.data;
 
   const fiatPricePerToken = props.selectedToken?.data?.prices[props.currency];
   const totalFiatValue = !props.amount.data

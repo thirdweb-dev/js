@@ -15,7 +15,7 @@ import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { SearchInput } from "./SearchInput.js";
-import { useBridgeChains } from "./use-bridge-chains.js";
+import { useBridgeChainsWithFilters } from "./use-bridge-chains.js";
 import { cleanedChainName } from "./utils.js";
 
 type SelectBuyTokenProps = {
@@ -24,13 +24,23 @@ type SelectBuyTokenProps = {
   onSelectChain: (chain: BridgeChain) => void;
   selectedChain: BridgeChain | undefined;
   isMobile: boolean;
+  type: "buy" | "sell";
+  selections: {
+    buyChainId: number | undefined;
+    sellChainId: number | undefined;
+  };
 };
 
 /**
  * @internal
  */
 export function SelectBridgeChain(props: SelectBuyTokenProps) {
-  const chainQuery = useBridgeChains(props.client);
+  const chainQuery = useBridgeChainsWithFilters({
+    client: props.client,
+    type: props.type,
+    buyChainId: props.selections.buyChainId,
+    sellChainId: props.selections.sellChainId,
+  });
 
   return (
     <SelectBridgeChainUI
@@ -126,7 +136,7 @@ export function SelectBridgeChainUI(
         {props.isPending &&
           new Array(20).fill(0).map(() => (
             // biome-ignore lint/correctness/useJsxKeyInIterable: ok
-            <ChainButtonSkeleton />
+            <ChainButtonSkeleton isMobile={props.isMobile} />
           ))}
 
         {filteredChains.length === 0 && !props.isPending && (
@@ -148,18 +158,24 @@ export function SelectBridgeChainUI(
   );
 }
 
-function ChainButtonSkeleton() {
+function ChainButtonSkeleton(props: { isMobile: boolean }) {
+  const iconSizeValue = props.isMobile ? iconSize.lg : iconSize.md;
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
         gap: spacing.sm,
-        padding: `${spacing.sm} ${spacing.sm}`,
+        padding: props.isMobile
+          ? `${spacing.sm} ${spacing.sm}`
+          : `${spacing.xs} ${spacing.xs}`,
       }}
     >
-      <Skeleton height={`${iconSize.lg}px`} width={`${iconSize.lg}px`} />
-      <Skeleton height={fontSize.md} width="160px" />
+      <Skeleton height={`${iconSizeValue}px`} width={`${iconSizeValue}px`} />
+      <Skeleton
+        height={props.isMobile ? fontSize.md : fontSize.sm}
+        width="160px"
+      />
     </div>
   );
 }

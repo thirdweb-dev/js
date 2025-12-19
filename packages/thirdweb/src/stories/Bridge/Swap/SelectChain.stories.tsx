@@ -23,6 +23,11 @@ export function WithDataDesktop() {
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChain
+        type="buy"
+        selections={{
+          buyChainId: undefined,
+          sellChainId: undefined,
+        }}
         isMobile={false}
         client={storyClient}
         onSelectChain={setSelectedChain}
@@ -40,6 +45,11 @@ export function LoadingDesktop() {
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChainUI
+        type="buy"
+        selections={{
+          buyChainId: undefined,
+          sellChainId: undefined,
+        }}
         isMobile={false}
         client={storyClient}
         onSelectChain={setSelectedChain}
@@ -59,6 +69,11 @@ export function WithDataMobile() {
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChain
+        type="buy"
+        selections={{
+          buyChainId: undefined,
+          sellChainId: undefined,
+        }}
         isMobile={true}
         client={storyClient}
         onSelectChain={setSelectedChain}
@@ -76,6 +91,11 @@ export function LoadingMobile() {
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChainUI
+        type="buy"
+        selections={{
+          buyChainId: undefined,
+          sellChainId: undefined,
+        }}
         isMobile={true}
         client={storyClient}
         onSelectChain={setSelectedChain}

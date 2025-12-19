@@ -20,5 +20,5 @@ export const modalCloseFadeOutDuration = 250;
  * @internal
  */
 export function onModalUnmount(cb: () => void) {
-  setTimeout(cb, modalCloseFadeOutDuration + 100);
+  setTimeout(cb, modalCloseFadeOutDuration + 200);
 }

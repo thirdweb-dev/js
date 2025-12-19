@@ -26,7 +26,7 @@ import { SearchInput } from "./SearchInput.js";
 import { SelectChainButton } from "./SelectChainButton.js";
 import { SelectBridgeChain } from "./select-chain.js";
 import type { ActiveWalletInfo, TokenSelection } from "./types.js";
-import { useBridgeChains } from "./use-bridge-chains.js";
+import { useBridgeChainsWithFilters } from "./use-bridge-chains.js";
 import {
   type TokenBalance,
   useTokenBalances,
@@ -43,6 +43,11 @@ type SelectTokenUIProps = {
   selectedToken: TokenSelection | undefined;
   setSelectedToken: (token: TokenSelection) => void;
   activeWalletInfo: ActiveWalletInfo | undefined;
+  type: "buy" | "sell";
+  selections: {
+    buyChainId: number | undefined;
+    sellChainId: number | undefined;
+  };
 };
 
 function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
@@ -58,7 +63,13 @@ const INITIAL_LIMIT = 100;
  * @internal
  */
 export function SelectToken(props: SelectTokenUIProps) {
-  const chainQuery = useBridgeChains(props.client);
+  const chainQuery = useBridgeChainsWithFilters({
+    client: props.client,
+    type: props.type,
+    buyChainId: props.selections.buyChainId,
+    sellChainId: props.selections.sellChainId,
+  });
+
   const [search, _setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 500);
   const [limit, setLimit] = useState(INITIAL_LIMIT);
@@ -146,6 +157,11 @@ function SelectTokenUI(
     selectedToken: TokenSelection | undefined;
     setSelectedToken: (token: TokenSelection) => void;
     showMore: (() => void) | undefined;
+    type: "buy" | "sell";
+    selections: {
+      buyChainId: number | undefined;
+      sellChainId: number | undefined;
+    };
   },
 ) {
   const isMobile = useIsMobile();
@@ -203,6 +219,8 @@ function SelectTokenUI(
       >
         <LeftContainer>
           <SelectBridgeChain
+            type={props.type}
+            selections={props.selections}
             onBack={() => setScreen("select-token")}
             client={props.client}
             isMobile={false}
@@ -269,6 +287,8 @@ function SelectTokenUI(
           setScreen("select-token");
         }}
         selectedChain={props.selectedChain}
+        type={props.type}
+        selections={props.selections}
       />
     );
   }
@@ -467,16 +487,16 @@ function TokenSelectionScreen(props: {
       </Container>
 
       {!props.selectedChain && (
-        <div
+        <Container
+          flex="column"
+          center="both"
+          expand
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             minHeight: "300px",
           }}
         >
           <Spinner color="secondaryText" size="xl" />
-        </div>
+        </Container>
       )}
 
       {props.selectedChain && (

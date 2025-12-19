@@ -50,7 +50,7 @@ import { WithHeader } from "./common/WithHeader.js";
 import { useActiveWalletInfo } from "./swap-widget/hooks.js";
 import { SelectToken } from "./swap-widget/select-token-ui.js";
 import type { ActiveWalletInfo } from "./swap-widget/types.js";
-import { useBridgeChains } from "./swap-widget/use-bridge-chains.js";
+import { useBridgeChain } from "./swap-widget/use-bridge-chains.js";
 
 type FundWalletProps = {
   /**
@@ -212,6 +212,11 @@ export function FundWallet(props: FundWalletProps) {
         autoFocusCrossIcon={false}
       >
         <SelectToken
+          type="buy"
+          selections={{
+            buyChainId: props.selectedToken?.chainId,
+            sellChainId: undefined,
+          }}
           activeWalletInfo={activeWalletInfo}
           onClose={() => setIsTokenSelectionOpen(false)}
           client={props.client}
@@ -411,11 +416,11 @@ function TokenSection(props: {
   presetOptions: [number, number, number];
 }) {
   const theme = useCustomTheme();
-  const chainQuery = useBridgeChains(props.client);
-  const chain = chainQuery.data?.find(
-    (chain) => chain.chainId === props.selectedToken?.data?.chainId,
-  );
-
+  const chainQuery = useBridgeChain({
+    chainId: props.selectedToken?.data?.chainId,
+    client: props.client,
+  });
+  const chain = chainQuery.data;
   const fiatPricePerToken = props.selectedToken?.data?.prices[props.currency];
 
   const { fiatValue, tokenValue } = getAmounts(
