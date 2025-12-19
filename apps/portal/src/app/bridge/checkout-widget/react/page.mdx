@@ -1,0 +1,98 @@
+import {
+  ArticleIconCard,
+  createMetadata,
+  DocImage,
+} from "@doc";
+import { PlayIcon } from "lucide-react";
+import { ReactIcon } from "@/icons";
+import checkoutWidgetDark from "../checkout-widget-dark.jpg";
+import checkoutWidgetLight from "../checkout-widget.jpg";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Checkout widget component",
+    icon: "payments",
+  },
+  title: "Checkout widget component",
+  description: "Add a widget to accept crypto and fiat payments in your app using a React component",
+});
+
+# Checkout widget component
+
+The Checkout widget component makes it easy to accept crypto and fiat payments in your app using the thirdweb SDK.
+
+<div className='dark-only'>
+<DocImage src={checkoutWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={checkoutWidgetLight} />
+</div>
+
+## Features
+
+- Accept payments in crypto or fiat (credit/debit cards)
+- Cross-chain payment support across 85+ blockchains
+- Display product information (name, description, image)
+- Customizable UI - use prebuilt themes or override with your brand colors
+- Display fiat values in multiple currencies
+- Event callbacks to track purchase status (success, error, cancel)
+
+## Example
+
+You will need a thirdweb project client id to use the `CheckoutWidget` component. You can get your clientId by creating a project in the [thirdweb dashboard](https://thirdweb.com/team).
+
+```tsx
+import { CheckoutWidget } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { base } from "thirdweb/chains";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_THIRDWEB_CLIENT_ID",
+});
+
+function Example() {
+  return (
+    <CheckoutWidget
+      client={client}
+      chain={base}
+      amount="0.01"
+      seller="0x123...abc"
+    />
+  );
+}
+```
+
+Make sure to wrap the component containing `CheckoutWidget` with the `ThirdwebProvider` component.
+
+```tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+function App() {
+  return (
+    <ThirdwebProvider>
+      <YourApp />
+    </ThirdwebProvider>
+  );
+}
+```
+
+
+
+## API Reference
+
+<ArticleIconCard
+  title="CheckoutWidget Component"
+  description="View the API reference for the CheckoutWidget component"
+  icon={ReactIcon}
+  href="/references/typescript/v5/CheckoutWidget"
+/>
+
+## Try it out
+
+<ArticleIconCard
+	title="Checkout Widget Playground"
+	description="Try out the Checkout Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/checkout-widget?tab=react"
+/>
+

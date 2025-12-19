@@ -19,17 +19,17 @@ export const sidebar: SideBar = {
     },
     { separator: true },
     {
-      name: "Guides",
+      name: "Widgets",
       isCollapsible: false,
       links: [
-        {
-          href: `${bridgeSlug}/swap`,
-          name: "Swap Tokens",
-        },
         {
           name: "Bridge Widget",
           href: `${bridgeSlug}/bridge-widget`,
           links: [
+            {
+              href: `${bridgeSlug}/bridge-widget/react`,
+              name: "React Component",
+            },
             {
               href: `${bridgeSlug}/bridge-widget/iframe`,
               name: "Iframe",
@@ -38,12 +38,38 @@ export const sidebar: SideBar = {
               href: `${bridgeSlug}/bridge-widget/script`,
               name: "Script",
             },
+          ],
+        },
+        {
+          name: "Checkout Widget",
+          href: `${bridgeSlug}/checkout-widget`,
+          links: [
             {
-              href: `${bridgeSlug}/bridge-widget/react`,
+              href: `${bridgeSlug}/checkout-widget/react`,
               name: "React Component",
+            },
+            {
+              href: `${bridgeSlug}/checkout-widget/iframe`,
+              name: "Iframe",
             },
           ],
         },
+        {
+          name: "Swap Widget",
+          href: `${bridgeSlug}/swap-widget`,
+        },
+      ],
+    },
+    { separator: true },
+    {
+      name: "Guides",
+      isCollapsible: false,
+      links: [
+        {
+          href: `${bridgeSlug}/swap`,
+          name: "Swap Tokens",
+        },
+
         {
           href: `${bridgeSlug}/fund`,
           name: "Fund Wallets",

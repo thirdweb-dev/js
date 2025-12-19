@@ -83,11 +83,16 @@ export function CheckoutWidgetEmbed({
         wallets: bridgeWallets,
         appMetadata,
       }}
-      onSuccess={(data) => {
-        sendMessageToParent("success", data);
+      onSuccess={() => {
+        sendMessageToParent({
+          source: "checkout-widget",
+          type: "success",
+        });
       }}
       onError={(error) => {
-        sendMessageToParent("error", {
+        sendMessageToParent({
+          source: "checkout-widget",
+          type: "error",
           message: error.message,
         });
       }}
@@ -95,19 +100,9 @@ export function CheckoutWidgetEmbed({
   );
 }
 
-function sendMessageToParent(
-  type: "success" | "error",
-  data: object | undefined,
-) {
+function sendMessageToParent(content: object) {
   try {
-    window.parent.postMessage(
-      {
-        source: "checkout-widget",
-        type,
-        data,
-      },
-      "*",
-    );
+    window.parent.postMessage(content, "*");
   } catch (error) {
     console.error("Failed to send post message to parent window");
     console.error(error);

@@ -1,0 +1,71 @@
+import {
+  Details,
+  createMetadata,
+  DocImage,
+} from "@doc";
+import { ArticleIconCard } from "@doc";
+import { FrameIcon, PlayIcon } from "lucide-react";
+import { ReactIcon } from "@/icons";
+import checkoutWidgetDark from "./checkout-widget-dark.jpg";
+import checkoutWidgetLight from "./checkout-widget.jpg";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Checkout widget",
+    icon: "payments",
+  },
+  title: "Checkout widget",
+  description: "Add a widget to accept crypto and fiat payments in your app",
+});
+
+# Checkout widget
+
+The Checkout widget makes it easy to accept crypto and fiat payments directly to your wallet. It supports cross-chain payments, fiat onramp via credit/debit cards, and provides a seamless checkout experience for your users.
+
+<div className='dark-only'>
+<DocImage src={checkoutWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={checkoutWidgetLight} />
+</div>
+
+## Features
+
+- Accept payments in crypto or fiat (credit/debit cards)
+- Cross-chain payment support across 85+ blockchains
+- Display product information (name, description, image)
+- Customizable UI with dark and light mode support
+- Display fiat values in multiple currencies
+- Event callbacks to track purchase status (success, error, cancel)
+
+## Get Started
+
+You can integrate the checkout widget into your website using an iframe or a React component.
+
+<div className="space-y-4">
+
+<ArticleIconCard
+	title="Iframe"
+  icon={FrameIcon}
+	description="Integrate checkout widget into your website using an iframe"
+	href="/bridge/checkout-widget/iframe"
+/>
+
+<ArticleIconCard
+	title="React Component"
+  icon={ReactIcon}
+	description="Integrate checkout widget into your app using a React component"
+	href="/bridge/checkout-widget/react"
+/>
+
+</div>
+
+## Try it out
+
+<ArticleIconCard
+	title="Checkout Widget Playground"
+	description="Try out the Checkout Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/checkout-widget"
+/>
+

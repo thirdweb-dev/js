@@ -1,0 +1,162 @@
+import {
+  ArticleIconCard,
+  Details,
+  createMetadata,
+  DocImage,
+} from "@doc";
+import { IframeCodePreview } from "./iframe-code-preview";
+import { PlayIcon } from "lucide-react";
+import checkoutWidgetDark from "../checkout-widget-dark.jpg";
+import checkoutWidgetLight from "../checkout-widget.jpg";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Checkout widget iframe",
+    icon: "payments",
+  },
+  title: "Checkout widget iframe",
+  description: "Add a widget to accept crypto and fiat payments in your app using an iframe",
+});
+
+# Checkout widget iframe
+
+The Checkout widget iframe makes it easy to accept crypto and fiat payments in your app. Just add an iframe to your HTML and get a fully customizable checkout widget - no build setup required.
+
+<div className='dark-only'>
+<DocImage src={checkoutWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={checkoutWidgetLight} />
+</div>
+
+## Features
+
+- Accept payments in crypto or fiat (credit/debit cards)
+- Cross-chain payment support across 85+ blockchains
+- Display product information (name, description, image)
+- Dark and light mode support
+- Display fiat values in multiple currencies
+
+## Iframe Integration
+
+The checkout widget requires below minimum parameters to be set:
+
+- `chain` - The chain ID where you want to receive payment (e.g., 8453 for Base)
+- `tokenAddress` (optional) - The token address to accept as payment. If this parameter is not set, payment will be accepted in the native token of the specified chain.
+- `amount` - The amount to charge (as a decimal string, e.g., "0.01")
+- `seller` - The wallet address that will receive the payment
+
+### Example
+
+Accept 0.1 USDC on Base as payment to seller (`0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024`)
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&tokenAddress=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&amount=0.1&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024" />
+
+## Try it out
+
+<ArticleIconCard
+	title="Checkout Widget Playground"
+	description="Try out the Checkout Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/checkout-widget?tab=iframe"
+/>
+
+## Options
+
+You can customize the checkout widget using query parameters as mentioned below.
+
+
+### Theme
+
+By default the widget uses the "dark" theme. You can set the light theme by passing the `theme=light` query parameter.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&theme=light" />
+
+
+### Product Information
+
+You can display product information by passing `title`, `description`, and `image` query parameters. Each of these parameters are optional.
+
+Make sure to URI encode the parameters if they contain special characters
+
+<Details summary="Example">
+
+* title: `"Something"`
+* description: `"Description of something goes here"`
+* image: `"https://picsum.photos/600/300"`
+* price: 0.01 ETH on Base
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&title=Something&description=Description%20of%20something%20goes%20here&image=https%3A%2F%2Fpicsum.photos%2F600%2F300" />
+
+</Details>
+
+
+### Currency
+
+By default the fiat value of the token amounts is displayed in USD. You can change the currency by setting the `currency` query parameter.
+
+<Details summary="Supported Currencies">
+
+- `USD` - US Dollar (default)
+- `EUR` - Euro
+- `GBP` - British Pound
+- `JPY` - Japanese Yen
+- `KRW` - Korean Won
+- `CNY` - Chinese Yuan
+- `INR` - Indian Rupee
+- `NOK` - Norwegian Krone
+- `SEK` - Swedish Krona
+- `CHF` - Swiss Franc
+- `AUD` - Australian Dollar
+- `CAD` - Canadian Dollar
+- `NZD` - New Zealand Dollar
+- `MXN` - Mexican Peso
+- `BRL` - Brazilian Real
+- `CLP` - Chilean Peso
+- `CZK` - Czech Koruna
+- `DKK` - Danish Krone
+- `HKD` - Hong Kong Dollar
+- `HUF` - Hungarian Forint
+- `IDR` - Indonesian Rupiah
+- `ILS` - Israeli New Sheqel
+- `ISK` - Icelandic Krona
+
+</Details>
+
+#### Example
+
+Show fiat values in Euro (EUR) in the widget.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&currency=EUR" />
+
+### thirdweb branding
+
+By default, the widget displays thirdweb branding at the bottom. You can hide this by setting the `showThirdwebBranding` query parameter to `false`.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&showThirdwebBranding=false" />
+
+## Listening for Events
+
+The checkout widget iframe sends events to the parent window using `postMessage` when a purchase succeeds or fails.
+
+You can listen for these events to handle the purchase result in your application.
+
+```js
+window.addEventListener("message", (event) => {
+
+  // verify that message is from thirdweb checkout widget iframe
+  if (
+    event.origin === "https://thirdweb.com" && event.data.source === "checkout-widget"
+  ) {
+
+  if (event.data.type === "success") {
+    console.log("Purchase successful!");
+  }
+
+  if (event.data.type === "error") {
+    console.error("Purchase failed with error:", event.data.message);
+  }
+  }
+
+});
+```
