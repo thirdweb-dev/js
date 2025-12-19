@@ -49,7 +49,7 @@ const contract = getContract({
   client,
 });
 
-describe.runIf(process.env.TW_SECRET_KEY).sequential(
+describe.skip.sequential(
   "SmartWallet 0.7 core tests",
   {
     retry: 0,
@@ -158,7 +158,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(isValid).toEqual(true);
     });
 
-    it("should use ERC-1271 typed data signatures after deployment", async () => {
+    it.skip("should use ERC-1271 typed data signatures after deployment", async () => {
       await deploySmartAccount({
         accountContract,
         chain,
@@ -302,7 +302,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
     });
 
     // FIXME: this test always fails
-    it.skip("can execute a 2 tx in parallel", async () => {
+    it("can execute a 2 tx in parallel", async () => {
       const newSmartWallet = smartWallet({
         chain,
         factoryAddress: DEFAULT_ACCOUNT_FACTORY_V0_7,

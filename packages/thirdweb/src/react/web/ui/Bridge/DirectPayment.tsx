@@ -63,27 +63,6 @@ export function DirectPayment({
     );
   };
 
-  const buyNow = buttonLabel ? (
-    <Text color="primaryButtonText" size="md">
-      {buttonLabel}
-    </Text>
-  ) : (
-    <Container flex="row" gap="3xs">
-      <Text color="primaryButtonText" size="md">
-        Buy Now ·
-      </Text>
-      <FiatValue
-        currency={currency}
-        chain={chain}
-        client={client}
-        color="primaryButtonText"
-        size="md"
-        token={paymentInfo.token}
-        tokenAmount={paymentInfo.amount}
-      />
-    </Container>
-  );
-
   return (
     <WithHeader
       client={client}
@@ -183,7 +162,7 @@ export function DirectPayment({
       {/* Action button */}
       <Container flex="column">
         <Button fullWidth onClick={handleContinue} variant="primary">
-          {buyNow}
+          {buttonLabel || "Buy Now"}
         </Button>
 
         {showThirdwebBranding ? (

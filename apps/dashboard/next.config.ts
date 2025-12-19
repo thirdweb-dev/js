@@ -161,6 +161,24 @@ const baseNextConfig: NextConfig = {
         ],
         source: "/bridge/widget/:path*",
       },
+      {
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+          },
+        ],
+        source: "/bridge/checkout-widget",
+      },
+      {
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: EmbedContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+          },
+        ],
+        source: "/bridge/checkout-widget/:path*",
+      },
     ];
   },
   images: {

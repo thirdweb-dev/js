@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { isAddress, NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { UniversalBridgeEmbed } from "../(general)/components/client/UniversalBridgeEmbed";
 import { bridgeStats } from "../(general)/data";
 import "@workspace/ui/global.css";
-import type { SupportedFiatCurrency } from "thirdweb/react";
 import { NEXT_PUBLIC_BRIDGE_IFRAME_CLIENT_ID } from "@/constants/public-envs";
+import { isValidCurrency } from "../_common/isValidCurrency";
+import {
+  onlyAddress,
+  onlyNumber,
+  parseQueryParams,
+} from "../_common/parseQueryParams";
 import { BridgeProviders } from "../(general)/components/client/Providers.client";
 
 const title = `thirdweb Bridge: Buy, Bridge & Swap Crypto on ${bridgeStats.supportedChains} Chains`;
@@ -28,37 +33,44 @@ export default async function Page(props: {
 }) {
   const searchParams = await props.searchParams;
 
-  const onlyAddress = (v: string) => (isAddress(v) ? v : undefined);
-  const onlyNumber = (v: string) =>
-    Number.isNaN(Number(v)) ? undefined : Number(v);
-
   // output is buy, input is sell
-  const sellChain = parse(searchParams.inputChain, onlyNumber);
-  const sellCurrency = parse(searchParams.inputCurrency, onlyAddress);
-  const sellAmount = parse(searchParams.inputCurrencyAmount, onlyNumber);
+  const sellChain = parseQueryParams(searchParams.inputChain, onlyNumber);
+  const sellCurrency = parseQueryParams(
+    searchParams.inputCurrency,
+    onlyAddress,
+  );
+  const sellAmount = parseQueryParams(
+    searchParams.inputCurrencyAmount,
+    onlyNumber,
+  );
 
-  const buyChain = parse(searchParams.outputChain, onlyNumber);
-  const buyCurrency = parse(searchParams.outputCurrency, onlyAddress);
-  const buyAmount = parse(searchParams.outputCurrencyAmount, onlyNumber);
+  const buyChain = parseQueryParams(searchParams.outputChain, onlyNumber);
+  const buyCurrency = parseQueryParams(
+    searchParams.outputCurrency,
+    onlyAddress,
+  );
+  const buyAmount = parseQueryParams(
+    searchParams.outputCurrencyAmount,
+    onlyNumber,
+  );
 
-  const showThirdwebBranding = parse(
+  const showThirdwebBranding = parseQueryParams(
     searchParams.showThirdwebBranding,
     (v) => v !== "false",
   );
 
   const persistTokenSelections =
-    parse(searchParams.persistTokenSelections, (v) =>
+    parseQueryParams(searchParams.persistTokenSelections, (v) =>
       v === "false" ? "false" : "true",
     ) || "true";
 
   const theme =
-    parse(searchParams.theme, (v) => (v === "light" ? "light" : "dark")) ||
-    "dark";
+    parseQueryParams(searchParams.theme, (v) =>
+      v === "light" ? "light" : "dark",
+    ) || "dark";
 
-  const currency = parse(searchParams.currency, (v) =>
-    VALID_CURRENCIES.includes(v as SupportedFiatCurrency)
-      ? (v as SupportedFiatCurrency)
-      : undefined,
+  const currency = parseQueryParams(searchParams.currency, (v) =>
+    isValidCurrency(v) ? v : undefined,
   );
 
   return (
@@ -103,42 +115,6 @@ export default async function Page(props: {
       </div>
     </Providers>
   );
-}
-
-const VALID_CURRENCIES: SupportedFiatCurrency[] = [
-  "USD",
-  "EUR",
-  "GBP",
-  "JPY",
-  "KRW",
-  "CNY",
-  "INR",
-  "NOK",
-  "SEK",
-  "CHF",
-  "AUD",
-  "CAD",
-  "NZD",
-  "MXN",
-  "BRL",
-  "CLP",
-  "CZK",
-  "DKK",
-  "HKD",
-  "HUF",
-  "IDR",
-  "ILS",
-  "ISK",
-];
-
-function parse<T>(
-  value: string | string[] | undefined,
-  fn: (value: string) => T | undefined,
-): T | undefined {
-  if (typeof value === "string") {
-    return fn(value);
-  }
-  return undefined;
 }
 
 function Providers({
