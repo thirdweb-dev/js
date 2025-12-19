@@ -70,7 +70,6 @@ export function WalletSwitcherConnectionScreen(
       onClose={() => {}}
       onConnect={(w) => {
         props.onSelect(w);
-        props.onBack();
       }}
       recommendedWallets={props.recommendedWallets}
       screenSetup={screenSetup}
