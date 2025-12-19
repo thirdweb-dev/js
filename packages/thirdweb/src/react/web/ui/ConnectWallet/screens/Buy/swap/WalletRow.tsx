@@ -5,6 +5,7 @@ import { isSmartWallet } from "../../../../../../../wallets/smart/index.js";
 import {
   fontSize,
   iconSize,
+  radius,
 } from "../../../../../../core/design-system/index.js";
 import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
 import {
@@ -58,7 +59,27 @@ export function WalletRow(props: {
             size={iconSizeValue}
           />
         ) : (
-          <OutlineWalletIcon size={iconSizeValue} />
+          <Container
+            borderColor="borderColor"
+            bg="modalBg"
+            flex="row"
+            center="both"
+            style={{
+              borderStyle: "solid",
+              borderWidth: "1px",
+              borderRadius: radius.full,
+              width: `${iconSizeValue}px`,
+              height: `${iconSizeValue}px`,
+              position: "relative",
+            }}
+          >
+            <OutlineWalletIcon
+              style={{
+                position: "absolute",
+                inset: "25%",
+              }}
+            />
+          </Container>
         )}
         <Container flex="column" gap="3xs">
           {props.label ? (

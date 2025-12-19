@@ -33,7 +33,7 @@ export function TokenBalanceRow({
       style={{
         display: "flex",
         justifyContent: "space-between",
-        padding: `${spacing.sm} ${spacing.md}`,
+        padding: `${spacing.md} ${spacing.md}`,
         ...style,
       }}
       variant="secondary"

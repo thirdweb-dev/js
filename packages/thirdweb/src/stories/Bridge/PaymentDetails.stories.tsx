@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PaymentDetails } from "../../react/web/ui/Bridge/payment-details/PaymentDetails.js";
 import type { PaymentMethod } from "../../react/web/ui/Bridge/types.js";
-import { stringify } from "../../utils/json.js";
 import { ModalThemeWrapper, storyClient } from "../utils.js";
 import {
   buyWithApprovalQuote,
@@ -22,41 +21,45 @@ const fiatPaymentMethod: PaymentMethod = {
   type: "fiat",
 };
 
-const cryptoPaymentMethod: PaymentMethod = JSON.parse(
-  stringify({
-    balance: 100000000n,
-    originToken: {
-      address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      chainId: 1,
-      decimals: 6,
-      iconUri:
-        "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
-      name: "USD Coin",
-      priceUsd: 1.0,
-      symbol: "USDC",
+const cryptoPaymentMethod: PaymentMethod = {
+  action: "buy",
+  balance: 100000000n,
+  hasEnoughBalance: true,
+  originToken: {
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    chainId: 1,
+    decimals: 6,
+    iconUri:
+      "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+    name: "USD Coin",
+    prices: {
+      USD: 1.0,
     },
-    payerWallet: STORY_MOCK_WALLET,
-    type: "wallet",
-  }),
-);
+    symbol: "USDC",
+  },
+  payerWallet: STORY_MOCK_WALLET,
+  type: "wallet",
+};
 
-const ethCryptoPaymentMethod: PaymentMethod = JSON.parse(
-  stringify({
-    balance: 1000000000000000000n,
-    originToken: {
-      address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-      chainId: 1,
-      decimals: 18,
-      iconUri:
-        "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
-      name: "Ethereum",
-      priceUsd: 2500.0,
-      symbol: "ETH",
+const ethCryptoPaymentMethod: PaymentMethod = {
+  action: "buy",
+  balance: 1000000000000000000n,
+  hasEnoughBalance: true,
+  originToken: {
+    address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    chainId: 1,
+    decimals: 18,
+    iconUri:
+      "https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png",
+    name: "Ethereum",
+    prices: {
+      USD: 2500.0,
     },
-    payerWallet: STORY_MOCK_WALLET,
-    type: "wallet",
-  }),
-);
+    symbol: "ETH",
+  },
+  payerWallet: STORY_MOCK_WALLET,
+  type: "wallet",
+};
 
 const meta: Meta<typeof PaymentDetails> = {
   args: {

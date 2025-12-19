@@ -47,7 +47,7 @@ export function PaymentOverview(props: {
         flex="column"
         style={{
           border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.lg,
+          borderRadius: radius.xl,
         }}
       >
         {sender && (
@@ -55,9 +55,9 @@ export function PaymentOverview(props: {
             flex="row"
             gap="sm"
             px="md"
-            py="sm"
+            py="md"
             style={{
-              borderBottom: `1px solid ${theme.colors.borderColor}`,
+              borderBottom: `1px dashed ${theme.colors.borderColor}`,
             }}
           >
             <WalletRow
@@ -88,7 +88,7 @@ export function PaymentOverview(props: {
             flex="row"
             gap="sm"
             px="md"
-            py="sm"
+            py="md"
             style={{ justifyContent: "space-between" }}
           >
             {/* left */}
@@ -122,7 +122,7 @@ export function PaymentOverview(props: {
         flex="column"
         style={{
           border: `1px solid ${theme.colors.borderColor}`,
-          borderRadius: radius.lg,
+          borderRadius: radius.xl,
         }}
       >
         {isDifferentRecipient && (
@@ -130,9 +130,9 @@ export function PaymentOverview(props: {
             flex="row"
             gap="sm"
             px="md"
-            py="sm"
+            py="md"
             style={{
-              borderBottom: `1px solid ${theme.colors.borderColor}`,
+              borderBottom: `1px dashed ${theme.colors.borderColor}`,
             }}
           >
             <WalletRow

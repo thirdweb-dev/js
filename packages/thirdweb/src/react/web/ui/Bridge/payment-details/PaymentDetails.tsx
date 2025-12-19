@@ -4,7 +4,11 @@ import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
-import { radius, spacing } from "../../../../core/design-system/index.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { useChainsQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
 import {
@@ -306,12 +310,12 @@ export function PaymentDetails({
 
             <Container
               flex="column"
-              gap="sm"
+              gap="md+"
               style={{
                 backgroundColor: theme.colors.tertiaryBg,
                 border: `1px solid ${theme.colors.borderColor}`,
-                borderRadius: radius.md,
-                padding: `${spacing.sm} ${spacing.md}`,
+                borderRadius: radius.xl,
+                padding: `${spacing.md} ${spacing.md}`,
               }}
             >
               {preparedQuote.steps.map((step, stepIndex) => (
@@ -323,24 +327,24 @@ export function PaymentDetails({
                   {/* Step Header */}
                   <Container
                     flex="row"
-                    gap="md"
+                    gap="sm"
                     style={{ alignItems: "center" }}
                   >
                     <Container
                       center="both"
                       flex="row"
                       style={{
-                        backgroundColor: theme.colors.accentButtonBg,
-                        borderRadius: "50%",
-                        color: theme.colors.accentButtonText,
+                        backgroundColor: theme.colors.modalBg,
+                        border: `1px solid ${theme.colors.borderColor}`,
+                        borderRadius: radius.full,
+                        color: theme.colors.secondaryText,
                         flexShrink: 0,
-                        fontSize: "12px",
                         fontWeight: "bold",
-                        height: "24px",
-                        width: "24px",
+                        height: `${iconSize.lg}px`,
+                        width: `${iconSize.lg}px`,
                       }}
                     >
-                      <Text color="accentButtonText" size="xs">
+                      <Text color="secondaryText" size="sm">
                         {stepIndex + 1}
                       </Text>
                     </Container>
@@ -352,7 +356,7 @@ export function PaymentDetails({
                       style={{ flex: 1 }}
                     >
                       <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                        <Text color="primaryText" size="sm">
+                        <Text color="primaryText" size="sm" weight={500}>
                           {step.destinationToken.chainId !==
                           step.originToken.chainId ? (
                             <>
@@ -401,11 +405,16 @@ export function PaymentDetails({
           </Container>
         )}
 
-        <Spacer y="lg" />
+        <Spacer y="md" />
 
         {/* Action Buttons */}
         <Container flex="column" gap="sm">
-          <Button fullWidth onClick={handleConfirm} variant="accent">
+          <Button
+            fullWidth
+            onClick={handleConfirm}
+            variant="primary"
+            style={{ borderRadius: radius.full }}
+          >
             {confirmButtonLabel || "Confirm Payment"}
           </Button>
         </Container>
