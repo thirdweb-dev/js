@@ -25,5 +25,27 @@ export function getDefaultWallets(options?: {
     createWallet(RAINBOW),
     createWallet("io.rabby"),
     createWallet(ZERION),
+    createWallet("com.okex.wallet"),
+  ];
+}
+
+/**
+ * @internal
+ */
+export function getDefaultWalletsForBridgeComponents(options?: {
+  appMetadata?: AppMetadata;
+  chains?: Chain[];
+  executionMode?: ExecutionModeOptions;
+}): Wallet[] {
+  return [
+    createWallet(METAMASK),
+    createWallet(COINBASE, {
+      appMetadata: options?.appMetadata,
+      chains: options?.chains,
+    }),
+    createWallet(RAINBOW),
+    createWallet("io.rabby"),
+    createWallet(ZERION),
+    createWallet("com.okex.wallet"),
   ];
 }

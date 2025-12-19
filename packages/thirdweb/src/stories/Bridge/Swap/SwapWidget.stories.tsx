@@ -4,6 +4,7 @@ import {
   SwapWidget,
   type SwapWidgetProps,
 } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
+import { createWallet } from "../../../wallets/create-wallet.js";
 import { storyClient } from "../../utils.js";
 
 const meta: Meta<typeof SwapWidget> = {
@@ -62,6 +63,19 @@ export function CustomTheme() {
           accentText: "#E43636",
         },
       })}
+    />
+  );
+}
+
+export function CustomWallets() {
+  return (
+    <Variant
+      client={storyClient}
+      currency="JPY"
+      persistTokenSelections={false}
+      connectOptions={{
+        wallets: [createWallet("io.metamask"), createWallet("me.rainbow")],
+      }}
     />
   );
 }

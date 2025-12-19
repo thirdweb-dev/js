@@ -3,6 +3,7 @@ import {
   TransactionWidget,
   type TransactionWidgetProps,
 } from "../../../react/web/ui/Bridge/TransactionWidget.js";
+import { createWallet } from "../../../wallets/create-wallet.js";
 import { storyClient } from "../../utils.js";
 import { TRANSACTION_UI_OPTIONS } from "../fixtures.js";
 
@@ -25,6 +26,15 @@ type Story = StoryObj<typeof meta>;
 export const EthereumTransfer: Story = {
   args: {
     ...TRANSACTION_UI_OPTIONS.ethTransfer,
+  },
+};
+
+export const EthereumTransferCustomWallets: Story = {
+  args: {
+    ...TRANSACTION_UI_OPTIONS.ethTransfer,
+    connectOptions: {
+      wallets: [createWallet("io.metamask"), createWallet("me.rainbow")],
+    },
   },
 };
 

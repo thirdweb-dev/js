@@ -6,6 +6,7 @@ import {
   BuyWidget,
   type BuyWidgetProps,
 } from "../react/web/ui/Bridge/BuyWidget.js";
+import { createWallet } from "../wallets/create-wallet.js";
 import { storyClient } from "./utils.js";
 
 const meta = {
@@ -147,6 +148,17 @@ export function NoAutoConnect() {
       amount="150000"
       connectOptions={{
         autoConnect: false,
+      }}
+    />
+  );
+}
+
+export function CustomWallets() {
+  return (
+    <Variant
+      client={storyClient}
+      connectOptions={{
+        wallets: [createWallet("io.metamask"), createWallet("me.rainbow")],
       }}
     />
   );

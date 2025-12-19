@@ -11,6 +11,7 @@ import {
   shortenAddress,
 } from "../../../../utils/address.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { getDefaultWalletsForBridgeComponents } from "../../../../wallets/defaultWallets.js";
 import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -445,6 +446,13 @@ export function TransactionPayment({
           }}
           theme={theme}
           {...connectOptions}
+          wallets={
+            connectOptions?.wallets ||
+            getDefaultWalletsForBridgeComponents({
+              appMetadata: connectOptions?.appMetadata,
+              chains: connectOptions?.chains,
+            })
+          }
         />
       )}
 

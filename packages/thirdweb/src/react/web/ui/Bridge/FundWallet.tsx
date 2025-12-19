@@ -15,6 +15,7 @@ import {
   isAddress,
   shortenAddress,
 } from "../../../../utils/address.js";
+import { getDefaultWalletsForBridgeComponents } from "../../../../wallets/defaultWallets.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -299,6 +300,13 @@ export function FundWallet(props: FundWalletProps) {
           theme={theme}
           {...props.connectOptions}
           autoConnect={false}
+          wallets={
+            props.connectOptions?.wallets ||
+            getDefaultWalletsForBridgeComponents({
+              appMetadata: props.connectOptions?.appMetadata,
+              chains: props.connectOptions?.chains,
+            })
+          }
         />
       ) : (
         <Button

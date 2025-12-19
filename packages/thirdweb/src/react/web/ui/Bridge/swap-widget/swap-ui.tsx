@@ -11,6 +11,7 @@ import { getToken } from "../../../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { getAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
+import { getDefaultWalletsForBridgeComponents } from "../../../../../wallets/defaultWallets.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
@@ -456,6 +457,13 @@ export function SwapUI(props: SwapUIProps) {
           }}
           theme={props.theme}
           {...props.connectOptions}
+          wallets={
+            props.connectOptions?.wallets ||
+            getDefaultWalletsForBridgeComponents({
+              appMetadata: props.connectOptions?.appMetadata,
+              chains: props.connectOptions?.chains,
+            })
+          }
         />
       ) : (
         <Button
