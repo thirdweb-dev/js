@@ -2,6 +2,7 @@ import {
   Callout,
   OpenSourceCard,
   createMetadata,
+  DocImage,
   InstallTabs,
   SDKCard,
   Grid,
@@ -19,25 +20,31 @@ import {
   UnrealEngineIcon,
 } from "@/icons";
 
+import BridgeWebhookScreen from "./assets/bridge-webhooks.png";
+
 export const metadata = createMetadata({
   image: {
-    title: "Payments Webhooks",
+    title: "Bridge Webhooks",
     icon: "payments",
   },
-  title: "Payments Webhooks",
-  description: "Learn how to set up and handle webhooks for thirdweb Payments transactions.",
+  title: "Bridge Webhooks",
+  description: "Learn how to set up and handle webhooks for thirdweb Bridge transactions.",
 });
 
-# Webhooks
+# Bridge Webhooks
 
-Create webhooks to be notified each time a payment is completed in your app.
+Create webhooks to be notified on each bridge, swap, and onramp transaction. 
 
-## Create a Webhook
+## Dashboard
 
-You can create a webhook in your project dashboard under the Webhooks > Bridge tab. You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
+You can create a webhook in your project dashboard by navigating to Bridge > Webhooks tab. 
+
+You'll be prompted to copy a secret key before saving the webhook. This will be used for verification on all webhook requests received by your backend.
+
+<DocImage src={BridgeWebhookScreen} alt="Project Overview"/>
 
 
-## Parse Webhook Payload with thirdweb SDK
+## Parse Webhook Payload
 
 The thirdweb SDK has a built-in function for parsing bridge webhook payloads
 
@@ -102,7 +109,6 @@ const payload = await Bridge.Webhook.parse(
 );
 
 ```
-
 
 ## Example Payloads
 

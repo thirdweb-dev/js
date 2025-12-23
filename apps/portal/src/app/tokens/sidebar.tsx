@@ -37,6 +37,10 @@ export const sidebar: SideBar = {
           ],
           name: "Deploy Tokens",
         },
+        {
+          href: `${slug}/webhooks`,
+          name: "Webhooks",
+        },
       ],
       name: "Guides",
     },
