@@ -53,12 +53,40 @@ export const metadata = createMetadata({
 	However, you will need to provide a separate flow to create in-app wallets as you would with any wallet provider (WalletConnect, Coinbase Wallet, etc.).
 </Details>
 
-## Server Wallets
-
 ## Ecosystem Wallets
 
 <Details summary="Can I edit my Ecosystem Wallet name and icon after it is created?">
 Yes, you can change your Ecosystem Wallet name and icon. However, you cannot change the Ecosystem Wallet slug.
+</Details>
+
+## Gas Sponsorship
+
+<Details summary="Is the dedicated relayer a part of a specific thirdweb plan?">
+	No, the Dedicated Relayer service is an add-on service. View more information on the different tiers on the [pricing page](https://thirdweb.com/pricing). 
+</Details>
+
+<Details summary="What sort of benchmarks or throughput improvements can we expect from the dedicated relayer?">
+	A single executor will lead to about 20% faster queue to confirmation times and 15% higher throughput.
+
+	The premium tier with ten executors instead of one will improve this by 10x.
+</Details>
+
+<Details summary="How does the thirdweb dedicated relayer compare to other alternatives?">
+	Our dedicated relayer gives you your very own queue. It is also built for 7702 - meaning both user and server wallets can use it without any code changes and msg.sender still remains as the user. 
+
+	This is in contrast with an EIP-2771 relayer which requires contract changes.
+
+	Dedicated relayer also gives you easier analytics for Dune dashboards and more by just fetching all transactions originating from dedicated executors.
+</Details>
+
+<Details summary="When scaling on multiple relayer instances, is scaling managed?">
+	Yes, scaling is managed. You can choose the number of executors and chains through the different standard, premium, or custom tiers.
+
+	Infrastructure and automatic funding is already managed by thirdweb.
+</Details>
+
+<Details summary="How many transactions per second can dedicated relayers handle?">
+	This depends on the chain stability and features but typically ten executors can handle around 100 TPS. 
 </Details>
 
 ## Security & Recoverability
