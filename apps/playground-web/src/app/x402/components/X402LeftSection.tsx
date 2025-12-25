@@ -128,6 +128,7 @@ export function X402LeftSection(props: {
               onChange={handleChainChange}
               placeholder="Select a chain"
               className="bg-card"
+              disableDeprecated
             />
           </div>
 
