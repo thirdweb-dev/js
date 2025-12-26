@@ -151,10 +151,15 @@ window.addEventListener("message", (event) => {
 
   if (event.data.type === "success") {
     console.log("Purchase successful!");
+    console.log("Transaction hashes:", event.data.transactions);
+    // event.data.transactions is an array of objects with chainId and transactionHash
+    // Example: [{ chainId: 8453, transactionHash: "0x..." }]
   }
 
   if (event.data.type === "error") {
     console.error("Purchase failed with error:", event.data.message);
+    console.log("Transaction hashes (if any):", event.data.transactions);
+    // event.data.transactions may contain partial transaction data if the error occurred mid-flow
   }
   }
 
