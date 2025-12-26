@@ -83,17 +83,38 @@ export function CheckoutWidgetEmbed({
         wallets: bridgeWallets,
         appMetadata,
       }}
-      onSuccess={() => {
+      onSuccess={(data) => {
+        // Extract transaction hashes from completed statuses
+        const transactionHashes = data.statuses.flatMap((status) => {
+          return status.transactions.map((tx) => ({
+            chainId: tx.chainId,
+            transactionHash: tx.transactionHash,
+          }));
+        });
+
         sendMessageToParent({
           source: "checkout-widget",
           type: "success",
+          transactions: transactionHashes,
         });
       }}
-      onError={(error) => {
+      onError={(error, quote) => {
+        // Extract transaction hashes from the quote if available
+        const transactionHashes =
+          quote?.steps?.flatMap((step) => {
+            return (
+              step.transactions?.map((tx) => ({
+                chainId: tx.chainId,
+                transactionHash: tx.transactionHash,
+              })) || []
+            );
+          }) || [];
+
         sendMessageToParent({
           source: "checkout-widget",
           type: "error",
           message: error.message,
+          transactions: transactionHashes,
         });
       }}
     />
