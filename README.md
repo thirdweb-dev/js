@@ -22,7 +22,7 @@
 The main SDK package providing all-in-one web3 functionality for Browser, Node, and Mobile applications.
 
 ```bash
-npm install thirdweb
+pnpm add thirdweb
 ```
 
 **Features:**
@@ -46,7 +46,7 @@ Visit the [developer portal](https://portal.thirdweb.com) for full documentation
 #### For React Applications
 
 ```bash
-npm install thirdweb
+pnpm add thirdweb
 ```
 
 ```typescript
@@ -70,7 +70,7 @@ For React Native Applications, you'll also need to install the `@thirdweb-dev/re
 #### For Backend Applications
 
 ```bash
-npm install thirdweb
+pnpm add thirdweb
 ```
 
 ```typescript
@@ -107,7 +107,7 @@ await wallet.enqueueTransaction({
 Required polyfills and configuration for running the thirdweb SDK in React Native applications.
 
 ```bash
-npm install @thirdweb-dev/react-native-adapter
+pnpm add @thirdweb-dev/react-native-adapter
 ```
 
 #### [`@thirdweb-dev/wagmi-adapter`](./packages/wagmi-adapter/README.md)
@@ -115,7 +115,7 @@ npm install @thirdweb-dev/react-native-adapter
 Integration layer for using thirdweb's in-app wallets with wagmi.
 
 ```bash
-npm install @thirdweb-dev/wagmi-adapter
+pnpm add @thirdweb-dev/wagmi-adapter
 ```
 
 ## Type safe API wrappers
@@ -125,7 +125,7 @@ npm install @thirdweb-dev/wagmi-adapter
 TypeScript SDK for thirdweb's API, combining all of thirdweb products.
 
 ```bash
-npm install @thirdweb-dev/api
+pnpm add @thirdweb-dev/api
 ```
 
 #### [`@thirdweb-dev/engine`](./packages/engine/README.md)
@@ -133,7 +133,7 @@ npm install @thirdweb-dev/api
 TypeScript SDK for Engine, thirdweb's backend onchain executor service.
 
 ```bash
-npm install @thirdweb-dev/engine
+pnpm add @thirdweb-dev/engine
 ```
 
 #### [`@thirdweb-dev/insight`](./packages/insight/README.md)
@@ -141,7 +141,7 @@ npm install @thirdweb-dev/engine
 TypeScript SDK for Insight, thirdweb's multichain indexer service.
 
 ```bash
-npm install @thirdweb-dev/insight
+pnpm add @thirdweb-dev/insight
 ```
 
 #### [`@thirdweb-dev/vault-sdk`](./packages/vault-sdk/README.md)
@@ -149,7 +149,7 @@ npm install @thirdweb-dev/insight
 SDK for interacting with Vault, thirdweb's secure key management service.
 
 ```bash
-npm install @thirdweb-dev/vault-sdk
+pnpm add @thirdweb-dev/vault-sdk
 ```
 
 #### [`@thirdweb-dev/nebula`](./packages/nebula/README.md)
@@ -157,7 +157,7 @@ npm install @thirdweb-dev/vault-sdk
 TypeScript SDK for Nebula, thirdweb's AI agent service.
 
 ```bash
-npm install @thirdweb-dev/nebula
+pnpm add @thirdweb-dev/nebula
 ```
 
 ## Contributing
