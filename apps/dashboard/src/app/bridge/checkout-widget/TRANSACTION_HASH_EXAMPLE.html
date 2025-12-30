@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Widget iframe - Transaction Hash Example</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 750px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .events {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 750px;
+        }
+        .event {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #0070f3;
+        }
+        .event.success {
+            border-left-color: #00c853;
+        }
+        .event.error {
+            border-left-color: #ff3d00;
+        }
+        .event-type {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .event-data {
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .tx-hash {
+            background: #e3f2fd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkout Widget iframe - Transaction Hash Example</h1>
+    <p>This example demonstrates how to listen for transaction hashes from the checkout widget iframe.</p>
+    
+    <div class="container">
+        <div>
+            <h2>Widget</h2>
+            <iframe 
+                src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024"
+                title="Checkout Widget"
+            ></iframe>
+        </div>
+        
+        <div>
+            <h2>Events Log</h2>
+            <div class="events" id="events">
+                <p>Waiting for events...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const eventsContainer = document.getElementById('events');
+        let eventCount = 0;
+
+        // Clear initial message
+        function clearEvents() {
+            if (eventCount === 0) {
+                eventsContainer.innerHTML = '';
+            }
+        }
+
+        // Add event to log
+        function logEvent(type, data) {
+            clearEvents();
+            eventCount++;
+            
+            const eventDiv = document.createElement('div');
+            eventDiv.className = `event ${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            
+            let content = `<div class="event-type">${type.toUpperCase()} - ${timestamp}</div>`;
+            
+            if (type === 'success') {
+                content += '<div class="event-data">';
+                content += '<strong>Payment Successful!</strong><br><br>';
+                
+                if (data.transactions && data.transactions.length > 0) {
+                    content += '<strong>Transaction Hashes:</strong><br>';
+                    data.transactions.forEach((tx, index) => {
+                        content += `<div class="tx-hash">`;
+                        content += `Chain ID: ${tx.chainId}<br>`;
+                        content += `Hash: ${tx.transactionHash}`;
+                        content += `</div>`;
+                    });
+                } else {
+                    content += 'No transaction hashes available';
+                }
+                content += '</div>';
+            } else if (type === 'error') {
+                content += '<div class="event-data">';
+                content += `<strong>Error:</strong> ${data.message}<br><br>`;
+                
+                if (data.transactions && data.transactions.length > 0) {
+                    content += '<strong>Transaction Hashes (partial):</strong><br>';
+                    data.transactions.forEach((tx, index) => {
+                        content += `<div class="tx-hash">`;
+                        content += `Chain ID: ${tx.chainId}<br>`;
+                        content += `Hash: ${tx.transactionHash}`;
+                        content += `</div>`;
+                    });
+                } else {
+                    content += 'No transaction hashes available';
+                }
+                content += '</div>';
+            }
+            
+            eventDiv.innerHTML = content;
+            eventsContainer.insertBefore(eventDiv, eventsContainer.firstChild);
+        }
+
+        // Listen for messages from the iframe
+        window.addEventListener('message', (event) => {
+            // Verify the message is from the thirdweb checkout widget
+            if (event.origin === 'https://thirdweb.com' && event.data.source === 'checkout-widget') {
+                console.log('Received event from checkout widget:', event.data);
+                
+                if (event.data.type === 'success') {
+                    logEvent('success', event.data);
+                    
+                    // Example: Send transaction hashes to your backend
+                    if (event.data.transactions && event.data.transactions.length > 0) {
+                        console.log('Transaction hashes:', event.data.transactions);
+                        // fetch('/api/payment-success', {
+                        //     method: 'POST',
+                        //     body: JSON.stringify({
+                        //         transactions: event.data.transactions
+                        //     })
+                        // });
+                    }
+                } else if (event.data.type === 'error') {
+                    logEvent('error', event.data);
+                    
+                    // Example: Log error with transaction hashes if available
+                    console.error('Payment failed:', event.data.message);
+                    if (event.data.transactions && event.data.transactions.length > 0) {
+                        console.log('Partial transaction hashes:', event.data.transactions);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
