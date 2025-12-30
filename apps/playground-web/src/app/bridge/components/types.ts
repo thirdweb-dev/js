@@ -31,6 +31,7 @@ const CURRENCIES = [
 type SupportedFiatCurrency = (typeof CURRENCIES)[number];
 
 export type BridgeComponentsPlaygroundOptions = {
+  integrationType?: "iframe" | "react";
   theme: {
     type: "dark" | "light";
     darkColorOverrides: ThemeOverrides["colors"];

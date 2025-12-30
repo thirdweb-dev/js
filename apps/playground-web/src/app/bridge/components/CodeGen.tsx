@@ -5,6 +5,7 @@ import {
   stringifyImports,
   stringifyProps,
 } from "../../../lib/code-gen";
+import { buildCheckoutIframeUrl } from "./buildCheckoutIframeUrl";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
 const CodeClient = lazy(() =>
@@ -25,17 +26,36 @@ export function CodeGen(props: {
   widget: "buy" | "checkout" | "transaction";
   options: BridgeComponentsPlaygroundOptions;
 }) {
+  const isIframe =
+    props.widget === "checkout" && props.options.integrationType === "iframe";
+
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
         <CodeClient
           className="grow"
-          code={getCode(props.widget, props.options)}
-          lang="tsx"
+          code={
+            isIframe
+              ? getIframeCode(props.options)
+              : getCode(props.widget, props.options)
+          }
+          lang={isIframe ? "html" : "tsx"}
         />
       </Suspense>
     </div>
   );
+}
+
+function getIframeCode(options: BridgeComponentsPlaygroundOptions) {
+  const src = buildCheckoutIframeUrl(options);
+
+  return `\
+<iframe
+  src="${src}"
+  height="700px"
+  width="100%"
+  style="border: 0;"
+/>`;
 }
 
 function getCode(

@@ -15,6 +15,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { cn } from "../../../lib/utils";
+import { buildCheckoutIframeUrl } from "./buildCheckoutIframeUrl";
 import { CodeGen } from "./CodeGen";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
@@ -156,7 +157,22 @@ export function RightSection(props: {
       >
         <BackgroundPattern />
 
-        {previewTab === "ui" && embed}
+        {previewTab === "ui" &&
+          (props.widget === "checkout" &&
+          props.options.integrationType === "iframe" ? (
+            <iframe
+              src={buildCheckoutIframeUrl(props.options)}
+              height="700px"
+              width="100%"
+              title="Checkout Widget"
+              className="fade-in-0 animate-in rounded-xl duration-500"
+              style={{
+                border: "0",
+              }}
+            />
+          ) : (
+            embed
+          ))}
 
         {previewTab === "code" && (
           <CodeGen widget={props.widget} options={props.options} />

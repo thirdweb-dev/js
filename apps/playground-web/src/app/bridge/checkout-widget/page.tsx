@@ -10,6 +10,9 @@ const description =
 const ogDescription =
   "Accept fiat or crypto payments on any chain—direct to your wallet. Instant checkout, webhook support, and full control over post-sale actions.";
 
+const validTabs = ["iframe", "react"] as const;
+type ValidTabs = (typeof validTabs)[number];
+
 export const metadata = createMetadata({
   description: ogDescription,
   title,
@@ -19,16 +22,28 @@ export const metadata = createMetadata({
   },
 });
 
-export default function Page() {
+export default async function Page(props: {
+  searchParams: Promise<{
+    tab?: string | undefined | string[];
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const tab =
+    typeof searchParams.tab === "string" ? searchParams.tab : undefined;
+
+  const validTab = validTabs.includes(tab as ValidTabs)
+    ? (tab as ValidTabs)
+    : undefined;
+
   return (
     <ThirdwebProvider>
       <PageLayout
         icon={CreditCardIcon}
         title={title}
         description={description}
-        docsLink="https://portal.thirdweb.com/references/typescript/v5/CheckoutWidget?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/bridge/checkout-widget?utm_source=playground"
       >
-        <CheckoutPlayground />
+        <CheckoutPlayground defaultTab={validTab} />
       </PageLayout>
     </ThirdwebProvider>
   );

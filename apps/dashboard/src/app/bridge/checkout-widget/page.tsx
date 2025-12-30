@@ -68,6 +68,14 @@ export default async function Page(props: {
     isValidCurrency(v) ? (v as SupportedFiatCurrency) : undefined,
   );
 
+  const paymentMethods = parseQueryParams(searchParams.paymentMethods, (v) => {
+    if (v === "crypto" || v === "card") {
+      return [v] as ("crypto" | "card")[];
+    }
+
+    return undefined;
+  });
+
   // Validate required params
   if (!chainId || !amount || !seller) {
     return (
@@ -125,6 +133,7 @@ export default async function Page(props: {
           showThirdwebBranding={showThirdwebBranding}
           theme={theme}
           currency={currency}
+          paymentMethods={paymentMethods}
         />
       </div>
     </Providers>

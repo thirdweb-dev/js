@@ -34,6 +34,7 @@ export function CheckoutWidgetEmbed({
   showThirdwebBranding,
   theme,
   currency,
+  paymentMethods,
 }: {
   chainId: number;
   amount: string;
@@ -48,6 +49,7 @@ export function CheckoutWidgetEmbed({
   showThirdwebBranding?: boolean;
   theme: "light" | "dark";
   currency?: SupportedFiatCurrency;
+  paymentMethods?: ("crypto" | "card")[];
 }) {
   const client = useMemo(
     () =>
@@ -79,6 +81,7 @@ export function CheckoutWidgetEmbed({
       showThirdwebBranding={showThirdwebBranding}
       theme={theme}
       currency={currency}
+      paymentMethods={paymentMethods}
       connectOptions={{
         wallets: bridgeWallets,
         appMetadata,

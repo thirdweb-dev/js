@@ -129,6 +129,29 @@ Show fiat values in Euro (EUR) in the widget.
 
 <IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&currency=EUR" />
 
+### Payment Methods
+
+By default, the widget enables both crypto and card (fiat) payment methods.
+
+You can customize which payment methods are available by setting the `paymentMethods` query parameter.
+
+Accepted values (comma-separated):
+- `crypto` - Enable crypto payments only
+- `card` - Enable card (fiat) payments only
+
+<Details summary="Only enable crypto payments">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&paymentMethods=crypto" />
+
+</Details>
+
+
+<Details summary="Only enable card payments">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/checkout-widget?chain=8453&amount=0.01&seller=0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024&paymentMethods=card" />
+
+</Details>
+
 ### thirdweb branding
 
 By default, the widget displays thirdweb branding at the bottom. You can hide this by setting the `showThirdwebBranding` query parameter to `false`.
