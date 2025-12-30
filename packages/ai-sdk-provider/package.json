@@ -4,7 +4,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "devDependencies": {
-    "@ai-sdk/provider": "2.0.0",
+    "@ai-sdk/provider": "3.0.0",
     "@ai-sdk/provider-utils": "3.0.7",
     "@biomejs/biome": "2.0.6",
     "rimraf": "6.0.1"
