@@ -5,15 +5,15 @@ import { RewindModal } from "./RewindModal";
 
 export function RewindModalClient() {
   const [open, setOpen] = useState(false);
-  const currentYear = new Date().getFullYear();
+  const displayYear = 2025; // Match the hardcoded year in RewindModal
   const currentMonth = new Date().getMonth();
   const _currentDay = new Date().getDate();
 
   // Show rewind modal in December or January
-  // Check if user has seen it this year
+  // Check if user has seen it for the display year
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    const hasSeenRewind = localStorage.getItem(`rewind-seen-${currentYear}`);
+    const hasSeenRewind = localStorage.getItem(`rewind-seen-${displayYear}`);
     const shouldShowRewind =
       (currentMonth === 11 || currentMonth === 0) && !hasSeenRewind;
 
@@ -25,13 +25,13 @@ export function RewindModalClient() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentYear, currentMonth]);
+  }, [currentMonth]);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
     if (!newOpen) {
-      // Mark as seen for this year
-      localStorage.setItem(`rewind-seen-${currentYear}`, "true");
+      // Mark as seen for the display year
+      localStorage.setItem(`rewind-seen-${displayYear}`, "true");
     }
   };
 

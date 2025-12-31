@@ -1,13 +1,13 @@
+import "server-only";
 import { NextResponse } from "next/server";
 import { getAuthToken } from "@/api/auth-token";
 import { getYearInReview } from "@/api/rewind/get-year-in-review";
 import { getTeams } from "@/api/team/get-team";
-import { loginRedirect } from "@/utils/redirects";
 
-export async function GET() {
+export async function GET(request: Request) {
   const authToken = await getAuthToken();
   if (!authToken) {
-    return loginRedirect("/account/rewind");
+    return NextResponse.redirect(new URL("/account/rewind", request.url));
   }
 
   try {

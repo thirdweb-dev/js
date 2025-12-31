@@ -5,7 +5,7 @@ import {
   getRpcUsageByType,
 } from "@/api/analytics";
 
-export type YearInReviewStats = {
+type YearInReviewStats = {
   totalRpcRequests: number;
   totalWalletConnections: number;
   totalMainnetSponsoredTransactions: number;
@@ -107,23 +107,31 @@ async function getTotalWalletConnections(
     // Aggregate wallet connections across all teams
     const connections = await Promise.all(
       teamIds.map(async (teamId) => {
-        const walletStats = await getEOAAndInAppWalletConnections(
-          {
-            teamId,
-            from,
-            to,
-            period: "all",
-          },
-          authToken,
-        );
+        try {
+          const walletStats = await getEOAAndInAppWalletConnections(
+            {
+              teamId,
+              from,
+              to,
+              period: "all",
+            },
+            authToken,
+          );
 
-        // Sum unique wallets connected (for "onboarded users" metric)
-        // Note: With period: "all", this should be a single aggregated stat,
-        // but we sum in case there are multiple stats (e.g., by wallet type)
-        return walletStats.reduce(
-          (sum, stat) => sum + (stat.uniqueWalletsConnected || 0),
-          0,
-        );
+          // Sum unique wallets connected (for "onboarded users" metric)
+          // Note: With period: "all", this should be a single aggregated stat,
+          // but we sum in case there are multiple stats (e.g., by wallet type)
+          return walletStats.reduce(
+            (sum, stat) => sum + (stat.uniqueWalletsConnected || 0),
+            0,
+          );
+        } catch (error) {
+          console.error(
+            `Failed to fetch wallet connections for team ${teamId}:`,
+            error,
+          );
+          return 0;
+        }
       }),
     );
 
@@ -145,16 +153,24 @@ async function getTotalMainnetSponsoredTransactions(
     // getAggregateUserOpUsage filters out testnets automatically
     const transactions = await Promise.all(
       teamIds.map(async (teamId) => {
-        const aggregateStats = await getAggregateUserOpUsage(
-          {
-            teamId,
-            from,
-            to,
-          },
-          authToken,
-        );
+        try {
+          const aggregateStats = await getAggregateUserOpUsage(
+            {
+              teamId,
+              from,
+              to,
+            },
+            authToken,
+          );
 
-        return aggregateStats.successful || 0;
+          return aggregateStats.successful || 0;
+        } catch (error) {
+          console.error(
+            `Failed to fetch mainnet sponsored transactions for team ${teamId}:`,
+            error,
+          );
+          return 0;
+        }
       }),
     );
 
