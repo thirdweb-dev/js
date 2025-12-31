@@ -9,6 +9,7 @@ import { NotificationsButton } from "@/components/notifications/notification-but
 import type { Account } from "@/hooks/useApi";
 import { cn } from "@/lib/utils";
 import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
+import { RewindBadge } from "../../../account/components/RewindBadge";
 import { SecondaryNav } from "../../../components/Header/SecondaryNav/SecondaryNav";
 import { MobileBurgerMenuButton } from "../../../components/MobileBurgerMenuButton";
 import { ThirdwebMiniLogo } from "../../../components/ThirdwebMiniLogo";
@@ -53,6 +54,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
         <Link href="/team">
           <ThirdwebMiniLogo className="h-5" />
         </Link>
+        <RewindBadge />
 
         <SlashSeparator />
 

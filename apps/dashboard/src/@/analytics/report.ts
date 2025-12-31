@@ -702,3 +702,21 @@ export function reportTokenRowClicked(params: {
 }) {
   posthog.capture("token row clicked", params);
 }
+
+/**
+ * ### Why do we need to report this event?
+ * - To track engagement with the year-in-review/rewind feature
+ * - To measure how many users view their yearly stats
+ * - To understand the impact of this marketing feature
+ *
+ * ### Who is responsible for this event?
+ * @thirdweb
+ */
+export function reportRewindViewed(properties: {
+  year: number;
+  totalRpcRequests: number;
+  totalWalletConnections: number;
+  totalMainnetSponsoredTransactions: number;
+}) {
+  posthog.capture("rewind viewed", properties);
+}
