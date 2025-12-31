@@ -6,6 +6,7 @@ import { getMemberByAccountId } from "@/api/team/team-members";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { loginRedirect } from "@/utils/redirects";
 import { AccountTeamsUI } from "./overview/AccountTeamsUI";
+import { RewindModalClient } from "./rewind/RewindModalClient";
 
 export default async function Page() {
   const [authToken, account, teams] = await Promise.all([
@@ -49,6 +50,8 @@ export default async function Page() {
       <div className="container flex max-w-[950px] grow flex-col py-8">
         <AccountTeamsUI client={client} teamsWithRole={teamsWithRole} />
       </div>
+
+      <RewindModalClient />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { MobileBurgerMenuButton } from "../../components/MobileBurgerMenuButton"
 import { ThirdwebMiniLogo } from "../../components/ThirdwebMiniLogo";
 import { TeamAndProjectSelectorPopoverButton } from "../../team/components/TeamHeader/TeamAndProjectSelectorPopoverButton";
 import { TeamSelectorMobileMenuButton } from "../../team/components/TeamHeader/TeamSelectorMobileMenuButton";
+import { RewindBadge } from "./RewindBadge";
 
 export type AccountHeaderCompProps = {
   className?: string;
@@ -36,6 +37,7 @@ export function AccountHeaderDesktopUI(props: AccountHeaderCompProps) {
         <Link href="/team">
           <ThirdwebMiniLogo className="h-5" />
         </Link>
+        <RewindBadge />
 
         <SlashSeparator />
 

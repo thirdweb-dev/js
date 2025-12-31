@@ -79,6 +79,10 @@ async function HeaderAndNav(props: {
             path: "/account",
           },
           {
+            name: "Rewind",
+            path: "/account/rewind",
+          },
+          {
             name: "Settings",
             path: "/account/settings",
           },
