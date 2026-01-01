@@ -75,7 +75,7 @@
     "ethers6": "npm:ethers@6",
     "expo-linking": "8.0.8",
     "expo-web-browser": "15.0.9",
-    "happy-dom": "17.4.4",
+    "happy-dom": "20.0.2",
     "knip": "5.60.2",
     "msw": "2.7.5",
     "prettier": "3.6.2",
@@ -89,12 +89,12 @@
     "rimraf": "6.0.1",
     "sharp": "^0.34.2",
     "size-limit": "11.2.0",
-    "storybook": "9.0.15",
+    "storybook": "9.1.17",
     "tsup": "^8.5.0",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
-    "vite": "7.1.7",
+    "vite": "7.1.11",
     "vitest": "3.2.4"
   },
   "engines": {
