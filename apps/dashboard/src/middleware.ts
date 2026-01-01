@@ -1,7 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
-import { getChainMetadata } from "thirdweb/chains";
-import { isValidENSName } from "thirdweb/utils";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { defineDashboardChain } from "@/lib/defineDashboardChain";
 import { isLoginRequired } from "@/utils/auth";
