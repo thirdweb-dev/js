@@ -1,5 +1,29 @@
 # thirdweb
 
+## 5.117.0
+
+### Minor Changes
+
+- [#8579](https://github.com/thirdweb-dev/js/pull/8579) [`304e4e5`](https://github.com/thirdweb-dev/js/commit/304e4e5be860e4989abf0493cb737f46e050a697) Thanks [@MananTank](https://github.com/MananTank)! - Remove in-app wallet from default wallet list for bridge widgets"
+
+### Patch Changes
+
+- [#8573](https://github.com/thirdweb-dev/js/pull/8573) [`9c04b3f`](https://github.com/thirdweb-dev/js/commit/9c04b3f18042b162de24cb7cf5c296a38a9af4f0) Thanks [@MananTank](https://github.com/MananTank)! - More reliable list of chains shown in token selection UI in SwapWidget based on origin and destination chain selections
+
+- [#8552](https://github.com/thirdweb-dev/js/pull/8552) [`5ec84bd`](https://github.com/thirdweb-dev/js/commit/5ec84bd3b631395f80cb1f5ee24bc8b481b9f5cb) Thanks [@MananTank](https://github.com/MananTank)! - Token Selection UX improvements in SwapWidget
+
+- [#8580](https://github.com/thirdweb-dev/js/pull/8580) [`0ff8b9f`](https://github.com/thirdweb-dev/js/commit/0ff8b9ff602aa7fc4c94355f60e8c422e68f9e89) Thanks [@MananTank](https://github.com/MananTank)! - Move directly to token selection screen after connecting wallet in "Choose Payment" screen instead of showing the "Choose Payment" screen again after connecting wallet in bridge widgets
+
+- [#8551](https://github.com/thirdweb-dev/js/pull/8551) [`31e24f1`](https://github.com/thirdweb-dev/js/commit/31e24f1c58aa7c53a207d07599fe498bc10e8953) Thanks [@MananTank](https://github.com/MananTank)! - Alphabetically sort the chains in SwapWidget UI
+
+- [#8578](https://github.com/thirdweb-dev/js/pull/8578) [`fdd2557`](https://github.com/thirdweb-dev/js/commit/fdd25576630399b8f9049b7d47d3ef415e50b47f) Thanks [@MananTank](https://github.com/MananTank)! - Remove fiat price shown in the button in `CheckoutWidget` to avoid showing it twice in the UI.
+
+- [#8556](https://github.com/thirdweb-dev/js/pull/8556) [`151127d`](https://github.com/thirdweb-dev/js/commit/151127d66825365cb0ed949ae28b9906ee4dfc8d) Thanks [@MananTank](https://github.com/MananTank)! - Update in-app wallet icon in wide connect ui
+
+- [#8553](https://github.com/thirdweb-dev/js/pull/8553) [`38f4a89`](https://github.com/thirdweb-dev/js/commit/38f4a890764b3aa6406f54f0a8238b5dbb280b2e) Thanks [@MananTank](https://github.com/MananTank)! - Fix Spinner animation not working sometimes in Next.js
+
+- [#8576](https://github.com/thirdweb-dev/js/pull/8576) [`56a1c0a`](https://github.com/thirdweb-dev/js/commit/56a1c0a467e4adcc4d40794d89b0d853f2cd8803) Thanks [@MananTank](https://github.com/MananTank)! - Payment Details UI improvements for bridge widget components
+
 ## 5.116.1
 
 ### Patch Changes
