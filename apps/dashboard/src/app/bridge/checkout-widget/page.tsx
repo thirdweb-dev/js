@@ -3,14 +3,13 @@ import "@workspace/ui/global.css";
 import { InlineCode } from "@workspace/ui/components/code/inline-code";
 import { AlertTriangleIcon } from "lucide-react";
 import type { SupportedFiatCurrency } from "thirdweb/react";
-import { NEXT_PUBLIC_CHECKOUT_IFRAME_CLIENT_ID } from "@/constants/public-envs";
 import { isValidCurrency } from "../_common/isValidCurrency";
 import {
   onlyAddress,
   onlyNumber,
   parseQueryParams,
 } from "../_common/parseQueryParams";
-import { BridgeProviders } from "../(general)/components/client/Providers.client";
+import { BridgeProvidersLite } from "../(general)/components/client/Providers.client";
 import { CheckoutWidgetEmbed } from "./CheckoutWidgetEmbed.client";
 
 const title = "thirdweb Checkout: Accept Crypto & Fiat Payments";
@@ -79,7 +78,7 @@ export default async function Page(props: {
   // Validate required params
   if (!chainId || !amount || !seller) {
     return (
-      <Providers theme={theme}>
+      <BridgeProvidersLite forcedTheme={theme}>
         <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
           <div className="w-full max-w-lg rounded-xl border bg-card p-6 shadow-xl">
             <div className="p-2.5 inline-flex rounded-full bg-background mb-4 border">
@@ -112,12 +111,12 @@ export default async function Page(props: {
             </ul>
           </div>
         </div>
-      </Providers>
+      </BridgeProvidersLite>
     );
   }
 
   return (
-    <Providers theme={theme}>
+    <BridgeProvidersLite forcedTheme={theme}>
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
         <CheckoutWidgetEmbed
           chainId={chainId}
@@ -136,26 +135,6 @@ export default async function Page(props: {
           paymentMethods={paymentMethods}
         />
       </div>
-    </Providers>
-  );
-}
-
-function Providers({
-  children,
-  theme,
-}: {
-  children: React.ReactNode;
-  theme: string;
-}) {
-  if (!NEXT_PUBLIC_CHECKOUT_IFRAME_CLIENT_ID) {
-    throw new Error("NEXT_PUBLIC_CHECKOUT_IFRAME_CLIENT_ID is not set");
-  }
-  return (
-    <BridgeProviders
-      clientId={NEXT_PUBLIC_CHECKOUT_IFRAME_CLIENT_ID}
-      forcedTheme={theme}
-    >
-      {children}
-    </BridgeProviders>
+    </BridgeProvidersLite>
   );
 }

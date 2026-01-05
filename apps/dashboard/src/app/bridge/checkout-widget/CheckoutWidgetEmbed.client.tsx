@@ -4,21 +4,8 @@ import { useMemo } from "react";
 import type { Address } from "thirdweb";
 import { defineChain } from "thirdweb";
 import { CheckoutWidget, type SupportedFiatCurrency } from "thirdweb/react";
-import { createWallet } from "thirdweb/wallets";
-import { appMetadata } from "@/constants/connect";
 import { NEXT_PUBLIC_CHECKOUT_IFRAME_CLIENT_ID } from "@/constants/public-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
-
-const bridgeWallets = [
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet", {
-    appMetadata,
-  }),
-  createWallet("me.rainbow"),
-  createWallet("io.rabby"),
-  createWallet("io.zerion.wallet"),
-  createWallet("com.okex.wallet"),
-];
 
 export function CheckoutWidgetEmbed({
   chainId,
@@ -82,10 +69,6 @@ export function CheckoutWidgetEmbed({
       theme={theme}
       currency={currency}
       paymentMethods={paymentMethods}
-      connectOptions={{
-        wallets: bridgeWallets,
-        appMetadata,
-      }}
       onSuccess={() => {
         sendMessageToParent({
           source: "checkout-widget",

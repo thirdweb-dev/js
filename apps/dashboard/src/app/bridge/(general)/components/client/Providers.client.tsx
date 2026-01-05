@@ -40,3 +40,25 @@ export function BridgeProviders({
     </ThirdwebProvider>
   );
 }
+
+export function BridgeProvidersLite({
+  children,
+  forcedTheme,
+}: {
+  children: React.ReactNode;
+  forcedTheme?: string;
+}) {
+  return (
+    <ThirdwebProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        disableTransitionOnChange
+        enableSystem={false}
+        forcedTheme={forcedTheme}
+      >
+        {children}
+      </ThemeProvider>
+    </ThirdwebProvider>
+  );
+}
