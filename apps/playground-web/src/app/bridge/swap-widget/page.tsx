@@ -19,7 +19,9 @@ export const metadata = createMetadata({
   },
 });
 
-export default function Page() {
+export default function Page(props: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   return (
     <ThirdwebProvider>
       <PageLayout
@@ -28,8 +30,20 @@ export default function Page() {
         description={description}
         docsLink="https://portal.thirdweb.com/references/typescript/v5/SwapWidget?utm_source=playground"
       >
-        <SwapWidgetPlayground />
+        <SwapWidgetPlaygroundAsync searchParams={props.searchParams} />
       </PageLayout>
     </ThirdwebProvider>
   );
+}
+
+async function SwapWidgetPlaygroundAsync(props: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const defaultTab =
+    searchParams.tab === "iframe" || searchParams.tab === "react"
+      ? searchParams.tab
+      : undefined;
+
+  return <SwapWidgetPlayground defaultTab={defaultTab} />;
 }

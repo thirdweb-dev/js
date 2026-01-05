@@ -85,16 +85,18 @@ export function LeftSection(props: {
 
         <div className="h-6" />
 
-        {/* Colors */}
-        <ColorFormGroup
-          onChange={(newTheme) => {
-            setOptions((v) => ({
-              ...v,
-              theme: newTheme,
-            }));
-          }}
-          theme={options.theme}
-        />
+        {/* Colors - disabled for iframe */}
+        {options.integrationType !== "iframe" && (
+          <ColorFormGroup
+            onChange={(newTheme) => {
+              setOptions((v) => ({
+                ...v,
+                theme: newTheme,
+              }));
+            }}
+            theme={options.theme}
+          />
+        )}
 
         <div className="my-4 flex items-center gap-2">
           <Checkbox

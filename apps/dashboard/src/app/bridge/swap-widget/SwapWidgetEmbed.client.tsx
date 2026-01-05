@@ -16,6 +16,7 @@ export function SwapWidgetEmbed({
   showThirdwebBranding,
   theme,
   currency,
+  persistTokenSelections,
 }: {
   buyChainId?: number;
   buyTokenAddress?: Address;
@@ -26,6 +27,7 @@ export function SwapWidgetEmbed({
   showThirdwebBranding?: boolean;
   theme: "light" | "dark";
   currency?: SupportedFiatCurrency;
+  persistTokenSelections?: boolean;
 }) {
   const client = useMemo(
     () =>
@@ -77,6 +79,7 @@ export function SwapWidgetEmbed({
       showThirdwebBranding={showThirdwebBranding}
       theme={theme}
       currency={currency}
+      persistTokenSelections={persistTokenSelections}
       onSuccess={() => {
         sendMessageToParent({
           source: "swap-widget",

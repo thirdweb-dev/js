@@ -51,7 +51,14 @@ export default async function Page(props: {
   // Optional params
   const showThirdwebBranding = parseQueryParams(
     searchParams.showThirdwebBranding,
-    (v) => v !== "false",
+    // biome-ignore lint/complexity/noUselessTernary: this is easier to understand
+    (v) => (v === "false" ? false : true),
+  );
+
+  const persistTokenSelections = parseQueryParams(
+    searchParams.persistTokenSelections,
+    // biome-ignore lint/complexity/noUselessTernary: this is easier to understand
+    (v) => (v === "false" ? false : true),
   );
 
   const theme =
@@ -76,6 +83,7 @@ export default async function Page(props: {
           showThirdwebBranding={showThirdwebBranding}
           theme={theme}
           currency={currency}
+          persistTokenSelections={persistTokenSelections}
         />
       </div>
     </BridgeProvidersLite>

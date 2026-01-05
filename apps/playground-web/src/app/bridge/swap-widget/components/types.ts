@@ -1,6 +1,7 @@
 import type { SwapWidgetProps, ThemeOverrides } from "thirdweb/react";
 
 export type SwapWidgetPlaygroundOptions = {
+  integrationType: "iframe" | "react";
   theme: {
     type: "dark" | "light";
     darkColorOverrides: ThemeOverrides["colors"];

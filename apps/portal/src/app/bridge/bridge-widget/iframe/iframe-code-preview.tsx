@@ -1,5 +1,12 @@
 import { CodeBlock, Tabs, TabsContent, TabsList, TabsTrigger } from "@doc";
 
+function getPreviewSrc(src: string) {
+  const url = new URL(src);
+  // Disable token persistence for docs previews
+  url.searchParams.set("persistTokenSelections", "false");
+  return url.toString();
+}
+
 export function IframeCodePreview(props: { src: string }) {
   return (
     <Tabs defaultValue="code">
@@ -22,7 +29,7 @@ export function IframeCodePreview(props: { src: string }) {
       <TabsContent value="preview">
         <iframe
           title="Bridge widget iframe"
-          src={props.src}
+          src={getPreviewSrc(props.src)}
           height="750px"
           width="100%"
           style={{ border: 0 }}

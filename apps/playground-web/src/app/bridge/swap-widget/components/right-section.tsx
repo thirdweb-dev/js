@@ -4,6 +4,7 @@ import { darkTheme, lightTheme, SwapWidget } from "thirdweb/react";
 import { Button } from "@/components/ui/button";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cn } from "@/lib/utils";
+import { buildSwapIframeUrl } from "./buildSwapIframeUrl";
 import { CodeGen } from "./code";
 import type { SwapWidgetPlaygroundOptions } from "./types";
 
@@ -50,40 +51,35 @@ export function RightSection(props: { options: SwapWidgetPlaygroundOptions }) {
           previewTab !== "code" && "items-center",
         )}
       >
-        <BackgroundPattern />
-
-        {previewTab === "ui" && (
-          <SwapWidget
-            client={THIRDWEB_CLIENT}
-            theme={themeObj}
-            prefill={props.options.prefill}
-            currency={props.options.currency}
-            showThirdwebBranding={props.options.showThirdwebBranding}
-            key={JSON.stringify({
-              prefill: props.options.prefill,
-            })}
-            persistTokenSelections={false}
-          />
-        )}
+        {previewTab === "ui" &&
+          (props.options.integrationType === "iframe" ? (
+            <iframe
+              src={buildSwapIframeUrl(props.options, "preview")}
+              height="700px"
+              width="100%"
+              title="Swap Widget"
+              className="fade-in-0 animate-in rounded-xl duration-500"
+              style={{
+                border: "0",
+              }}
+            />
+          ) : (
+            <SwapWidget
+              client={THIRDWEB_CLIENT}
+              theme={themeObj}
+              prefill={props.options.prefill}
+              currency={props.options.currency}
+              showThirdwebBranding={props.options.showThirdwebBranding}
+              key={JSON.stringify({
+                prefill: props.options.prefill,
+              })}
+              persistTokenSelections={false}
+            />
+          ))}
 
         {previewTab === "code" && <CodeGen options={props.options} />}
       </div>
     </div>
-  );
-}
-
-function BackgroundPattern() {
-  const color = "hsl(var(--foreground)/15%)";
-  return (
-    <div
-      className="absolute inset-0 z-[-1]"
-      style={{
-        backgroundImage: `radial-gradient(${color} 1px, transparent 1px)`,
-        backgroundSize: "24px 24px",
-        maskImage:
-          "radial-gradient(ellipse 100% 100% at 50% 50%, black 30%, transparent 60%)",
-      }}
-    />
   );
 }
 

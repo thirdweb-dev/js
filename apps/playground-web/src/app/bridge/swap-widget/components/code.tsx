@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { LoadingDots } from "@/components/ui/LoadingDots";
 import { quotes, stringifyImports, stringifyProps } from "@/lib/code-gen";
+import { buildSwapIframeUrl } from "./buildSwapIframeUrl";
 import type { SwapWidgetPlaygroundOptions } from "./types";
 
 const CodeClient = lazy(() =>
@@ -18,16 +19,35 @@ function CodeLoading() {
 }
 
 export function CodeGen(props: { options: SwapWidgetPlaygroundOptions }) {
+  const code =
+    props.options.integrationType === "iframe"
+      ? getIframeCode(props.options)
+      : getReactCode(props.options);
+
+  const lang = props.options.integrationType === "iframe" ? "html" : "ts";
+
   return (
     <div className="flex w-full grow flex-col">
       <Suspense fallback={<CodeLoading />}>
-        <CodeClient className="grow" code={getCode(props.options)} lang="ts" />
+        <CodeClient className="grow" code={code} lang={lang} />
       </Suspense>
     </div>
   );
 }
 
-function getCode(options: SwapWidgetPlaygroundOptions) {
+function getIframeCode(options: SwapWidgetPlaygroundOptions) {
+  // Use "code" type to exclude persistTokenSelections from the generated code
+  const iframeUrl = buildSwapIframeUrl(options, "code");
+
+  return `<iframe
+  src="${iframeUrl}"
+  height="700px"
+  width="100%"
+  style="border: 0;"
+/>`;
+}
+
+function getReactCode(options: SwapWidgetPlaygroundOptions) {
   const imports = {
     thirdweb: ["createThirdwebClient"] as string[],
     "thirdweb/react": ["SwapWidget"] as string[],
