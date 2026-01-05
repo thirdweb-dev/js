@@ -1,0 +1,168 @@
+import {
+  ArticleIconCard,
+  Details,
+  createMetadata,
+  DocImage,
+} from "@doc";
+import { IframeCodePreview } from "./iframe-code-preview";
+import { PlayIcon } from "lucide-react";
+import SwapWidgetDark from "../../swap/swap-dark.jpg";
+import SwapWidgetLight from "../../swap/swap-light.jpg";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Swap widget iframe",
+    icon: "payments",
+  },
+  title: "Swap widget iframe",
+  description: "Add a widget to swap tokens across chains using an iframe",
+});
+
+# Swap widget iframe
+
+The Swap widget iframe makes it easy to add cross-chain token swaps to your app. Just add an iframe to your HTML and get a fully customizable swap widget - no build setup required.
+
+<div className='dark-only'>
+<DocImage src={SwapWidgetDark} />
+</div>
+<div className='light-only'>
+<DocImage src={SwapWidgetLight} />
+</div>
+
+## Features
+
+- Cross-chain token swaps across 90+ blockchains
+- Route optimization to find the best path for any token pair
+- Dark and light mode support
+- Display fiat values in multiple currencies
+
+## Iframe Integration
+
+The swap widget supports various query parameters to customize the default token selection. All parameters are optional - if not set, the widget will display without any pre-selected tokens.
+
+### Example
+
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget" />
+
+## Try it out
+
+<ArticleIconCard
+	title="Swap Widget Playground"
+	description="Try out the Swap Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/swap-widget?tab=iframe"
+/>
+
+## Options
+
+You can customize the swap widget using query parameters as mentioned below.
+
+### Token Selection
+
+You can prefill the buy and sell token selections using the following parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `buyChain` | Chain ID for the buy token (e.g., 1 for Ethereum, 8453 for Base) |
+| `buyTokenAddress` | Token contract address for the buy token. If not set, native token is used |
+| `buyAmount` | Default amount to buy |
+| `sellChain` | Chain ID for the sell token |
+| `sellTokenAddress` | Token contract address for the sell token. If not set, native token is used |
+| `sellAmount` | Default amount to sell |
+
+<Details summary="Set sell token to Base USDC">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?sellChain=8453&sellTokenAddress=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913" />
+
+</Details>
+
+<Details summary="Set buy token to Ethereum native (ETH)">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?buyChain=1" />
+
+</Details>
+
+<Details summary="Set both buy and sell tokens">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?sellChain=8453&sellTokenAddress=0x833589fcd6edb6e08f4c7c32d4f71b54bda02913&buyChain=137" />
+
+</Details>
+
+### Theme
+
+By default the widget uses the "dark" theme. You can set the light theme by passing the `theme=light` query parameter.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?theme=light&sellChain=8453" />
+
+
+### Currency
+
+By default the fiat value of the token amounts is displayed in USD. You can change the currency by setting the `currency` query parameter.
+
+<Details summary="Supported Currencies">
+
+- `USD` - US Dollar (default)
+- `EUR` - Euro
+- `GBP` - British Pound
+- `JPY` - Japanese Yen
+- `KRW` - Korean Won
+- `CNY` - Chinese Yuan
+- `INR` - Indian Rupee
+- `NOK` - Norwegian Krone
+- `SEK` - Swedish Krona
+- `CHF` - Swiss Franc
+- `AUD` - Australian Dollar
+- `CAD` - Canadian Dollar
+- `NZD` - New Zealand Dollar
+- `MXN` - Mexican Peso
+- `BRL` - Brazilian Real
+- `CLP` - Chilean Peso
+- `CZK` - Czech Koruna
+- `DKK` - Danish Krone
+- `HKD` - Hong Kong Dollar
+- `HUF` - Hungarian Forint
+- `IDR` - Indonesian Rupiah
+- `ILS` - Israeli New Sheqel
+- `ISK` - Icelandic Krona
+
+</Details>
+
+#### Example
+
+Show fiat values in Euro (EUR) in the widget.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?sellChain=8453&currency=EUR" />
+
+### thirdweb branding
+
+By default, the widget displays thirdweb branding at the bottom. You can hide this by setting the `showThirdwebBranding` query parameter to `false`.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/swap-widget?sellChain=8453&showThirdwebBranding=false" />
+
+## Listening for Events
+
+The swap widget iframe sends events to the parent window using `postMessage` when a swap succeeds or fails.
+
+You can listen for these events to handle the swap result in your application.
+
+```js
+window.addEventListener("message", (event) => {
+
+  // verify that message is from thirdweb swap widget iframe
+  if (
+    event.origin === "https://thirdweb.com" && event.data.source === "swap-widget"
+  ) {
+
+  if (event.data.type === "success") {
+    console.log("Swap successful!");
+  }
+
+  if (event.data.type === "error") {
+    console.error("Swap failed with error:", event.data.message);
+  }
+  }
+
+});
+```
+

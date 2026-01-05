@@ -57,6 +57,16 @@ export const sidebar: SideBar = {
         {
           name: "Swap Widget",
           href: `${bridgeSlug}/swap-widget`,
+          links: [
+            {
+              href: `${bridgeSlug}/swap-widget/react`,
+              name: "React Component",
+            },
+            {
+              href: `${bridgeSlug}/swap-widget/iframe`,
+              name: "Iframe",
+            },
+          ],
         },
       ],
     },

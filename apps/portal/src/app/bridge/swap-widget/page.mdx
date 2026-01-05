@@ -3,7 +3,7 @@ import {
   createMetadata,
   DocImage,
 } from "@doc";
-import { PlayIcon } from "lucide-react";
+import { FrameIcon, PlayIcon } from "lucide-react";
 import { ReactIcon } from "@/icons";
 import SwapWidgetDark from "../swap/swap-dark.jpg";
 import SwapWidgetLight from "../swap/swap-light.jpg";
@@ -19,7 +19,7 @@ export const metadata = createMetadata({
 
 # Swap widget
 
-The Swap widget makes it easy to add cross-chain token swaps to your app using the thirdweb SDK.
+The Swap widget makes it easy to add cross-chain token swaps to your app. It supports swaps across 90+ blockchains with real-time quotes and route optimization to find the best path for any token pair.
 
 <div className='dark-only'>
 <DocImage src={SwapWidgetDark} />
@@ -30,128 +30,39 @@ The Swap widget makes it easy to add cross-chain token swaps to your app using t
 
 ## Features
 
-- Cross-chain token swaps across 50+ blockchains
-- Real-time quotes with up-to-date pricing
+- Cross-chain token swaps across 90+ blockchains
 - Route optimization to find the best path for any token pair
-- Customizable UI - use prebuilt themes or override with your brand colors
+- Customizable UI with dark and light mode support
 - Prefill token selections for a smoother user experience
-- Event callbacks to track user actions (success, error, cancel)
+- Display fiat values in multiple currencies
 
-## Example
+## Get Started
 
-You will need a thirdweb project client id to use the `SwapWidget` component. You can get your clientId by creating a project in the [thirdweb dashboard](https://thirdweb.com/team).
+You can integrate the swap widget into your website using an iframe or a React component.
 
-```tsx
-import { SwapWidget } from "thirdweb/react";
-import { createThirdwebClient } from "thirdweb";
-
-const client = createThirdwebClient({
-  clientId: "YOUR_THIRDWEB_CLIENT_ID",
-});
-
-function Example() {
-  return <SwapWidget client={client} />;
-}
-```
-
-Make sure to wrap the component containing `SwapWidget` with the `ThirdwebProvider` component.
-
-```tsx
-import { ThirdwebProvider } from "thirdweb/react";
-
-function App() {
-  return (
-    <ThirdwebProvider>
-      <YourApp />
-    </ThirdwebProvider>
-  );
-}
-```
-
-## Configuring Default Token Selection
-
-By default, no tokens are selected in the widget UI. You can configure the default token selection by passing in the `prefill` prop. It only sets the default token selection - users can change these selections in the widget UI.
-
-### Set an ERC20 token to Buy by default
-
-```tsx
-<SwapWidget
-  client={client}
-  prefill={{
-    buyToken: {
-      // Base USDC
-      chainId: 8453,
-      tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-    },
-  }}
-/>
-```
-
-### Set a native token to Sell by default
-
-To configure a native token to sell by default, you can omit the `tokenAddress` property.
-
-```tsx
-<SwapWidget
-  client={client}
-  prefill={{
-    // Base native token (ETH)
-    sellToken: {
-      chainId: 8453,
-    },
-  }}
-/>
-```
-
-### Set amount and token to Buy by default
-
-```tsx
-<SwapWidget
-  client={client}
-  prefill={{
-    buyToken: {
-      chainId: 8453,
-      amount: "0.1",
-      tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-    },
-  }}
-/>
-```
-
-### Set both buy and sell tokens by default
-
-```tsx
-<SwapWidget
-  client={client}
-  prefill={{
-    // Base USDC
-    buyToken: {
-      chainId: 8453,
-      tokenAddress: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-    },
-    // Polygon native token (POL)
-    sellToken: {
-      chainId: 137,
-    },
-  }}
-/>
-```
-
-## API Reference
+<div className="space-y-4">
 
 <ArticleIconCard
-  title="SwapWidget Component"
-  description="View the API reference for the SwapWidget component"
-  icon={ReactIcon}
-  href="/references/typescript/v5/SwapWidget"
+	title="Iframe"
+  icon={FrameIcon}
+	description="Integrate swap widget into your website using an iframe"
+	href="/bridge/swap-widget/iframe"
 />
+
+<ArticleIconCard
+	title="React Component"
+  icon={ReactIcon}
+	description="Integrate swap widget into your app using a React component"
+	href="/bridge/swap-widget/react"
+/>
+
+</div>
 
 ## Try it out
 
 <ArticleIconCard
-  title="Swap Widget Playground"
-  description="Try out the Swap Widget in our live playground"
-  icon={PlayIcon}
-  href="https://playground.thirdweb.com/bridge/swap-widget"
+	title="Swap Widget Playground"
+	description="Try out the Swap Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/swap-widget"
 />
-
