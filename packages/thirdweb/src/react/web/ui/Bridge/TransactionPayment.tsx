@@ -16,6 +16,7 @@ import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js"
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
+  radius,
   spacing,
   type Theme,
 } from "../../../core/design-system/index.js";
@@ -29,7 +30,9 @@ import { formatCurrencyAmount } from "../ConnectWallet/screens/formatTokenBalanc
 import { Container, Line } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { ChainName } from "../components/ChainName.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
+import { Spinner } from "../components/Spinner.js";
 import { Text } from "../components/text.js";
 import type { PayEmbedConnectOptions } from "../PayEmbed.js";
 import { ChainIcon } from "./common/TokenAndChain.js";
@@ -161,36 +164,34 @@ export function TransactionPayment({
 
         <Spacer y="md" />
 
-        <Line />
+        <Line dashed />
 
-        <Spacer y="md" />
+        <Spacer y="lg" />
 
         {/* Loading Rows */}
-        <SkeletonRow theme={theme} width="60%" />
-        <Spacer y="xs" />
-        <SkeletonRow theme={theme} width="40%" />
-        <Spacer y="xs" />
-        <SkeletonRow theme={theme} width="50%" />
-        <Spacer y="xs" />
-        <SkeletonRow theme={theme} width="45%" />
-        <Spacer y="xs" />
-        <SkeletonRow theme={theme} width="55%" />
+        <Container flex="column" gap="sm">
+          <SkeletonRow valueWidth="110px" labelWidth="60px" />
+          <SkeletonRow valueWidth="40%" labelWidth="90px" />
+          <SkeletonRow valueWidth="50%" labelWidth="60px" />
+          <SkeletonRow valueWidth="45%" labelWidth="90px" />
+        </Container>
 
-        <Spacer y="md" />
+        <Spacer y="lg" />
 
-        <Line />
+        <Line dashed />
 
         <Spacer y="lg" />
 
         {/* Loading Button */}
-        <div
-          style={{
-            backgroundColor: theme.colors.skeletonBg,
-            borderRadius: spacing.md,
-            height: "48px",
-            width: "100%",
-          }}
-        />
+        <Button
+          fullWidth
+          variant="primary"
+          gap="xs"
+          disabled
+          style={{ borderRadius: radius.full, fontSize: fontSize.md }}
+        >
+          <Spinner size="sm" /> Loading
+        </Button>
 
         {showThirdwebBranding ? (
           <div>
@@ -227,7 +228,7 @@ export function TransactionPayment({
         {/* Function Name */}
         <Text
           color="secondaryText"
-          size="md"
+          size="sm"
           style={{
             backgroundColor: theme.colors.tertiaryBg,
             borderRadius: spacing.sm,
@@ -242,15 +243,15 @@ export function TransactionPayment({
 
       <Spacer y="md" />
 
-      <Line />
+      <Line dashed />
 
-      <Spacer y="md" />
+      <Spacer y="lg" />
 
-      {/* Contract Info */}
-      {contractName !== "UnknownContract" &&
-        contractName !== undefined &&
-        contractName !== "Unknown Contract" && (
-          <>
+      <Container flex="column" gap="sm">
+        {/* Contract Info */}
+        {contractName !== "UnknownContract" &&
+          contractName !== undefined &&
+          contractName !== "Unknown Contract" && (
             <Container
               flex="row"
               style={{
@@ -265,70 +266,62 @@ export function TransactionPayment({
                 {contractName}
               </Text>
             </Container>
+          )}
 
-            <Spacer y="xs" />
-          </>
-        )}
-
-      {/* Address */}
-      <Container
-        flex="row"
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text color="secondaryText" size="sm">
-          Address
-        </Text>
-        <a
-          href={`https://thirdweb.com/${transaction.chain.id}/${transaction.to}`}
-          rel="noopener noreferrer"
+        {/* Address */}
+        <Container
+          flex="row"
           style={{
-            color: theme.colors.accentText,
-            fontFamily: "monospace",
-            fontSize: fontSize.sm,
-            textDecoration: "none",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-          target="_blank"
         >
-          {shortenAddress(transaction.to as string)}
-        </a>
-      </Container>
-
-      <Spacer y="xs" />
-
-      {/* Network */}
-      <Container
-        flex="row"
-        style={{
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text color="secondaryText" size="sm">
-          Network
-        </Text>
-        <Container center="y" flex="row" gap="3xs">
-          <ChainIcon chain={transaction.chain} client={client} size="xs" />
-          <ChainName
-            chain={transaction.chain}
-            client={client}
-            color="primaryText"
-            short
-            size="sm"
+          <Text color="secondaryText" size="sm">
+            Address
+          </Text>
+          <a
+            href={`https://thirdweb.com/${transaction.chain.id}/${transaction.to}`}
+            rel="noopener noreferrer"
             style={{
+              color: theme.colors.accentText,
               fontFamily: "monospace",
+              fontSize: fontSize.sm,
+              textDecoration: "none",
             }}
-          />
+            target="_blank"
+          >
+            {shortenAddress(transaction.to as string)}
+          </a>
         </Container>
-      </Container>
 
-      <Spacer y="xs" />
+        {/* Network */}
+        <Container
+          flex="row"
+          style={{
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text color="secondaryText" size="sm">
+            Network
+          </Text>
+          <Container center="y" flex="row" gap="3xs">
+            <ChainIcon chain={transaction.chain} client={client} size="xs" />
+            <ChainName
+              chain={transaction.chain}
+              client={client}
+              color="primaryText"
+              short
+              size="sm"
+              style={{
+                fontFamily: "monospace",
+              }}
+            />
+          </Container>
+        </Container>
 
-      {/* Cost */}
-      {transactionDataQuery.data?.txCostDisplay && (
-        <>
+        {/* Cost */}
+        {transactionDataQuery.data?.txCostDisplay && (
           <Container
             flex="row"
             style={{
@@ -344,19 +337,19 @@ export function TransactionPayment({
               size="sm"
               style={{
                 fontFamily: "monospace",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: "60%",
               }}
             >
               {transactionDataQuery.data?.txCostDisplay}
             </Text>
           </Container>
+        )}
 
-          <Spacer y="xs" />
-        </>
-      )}
-
-      {/* Network Fees */}
-      {transactionDataQuery.data?.gasCostDisplay && (
-        <>
+        {/* Network Fees */}
+        {transactionDataQuery.data?.gasCostDisplay && (
           <Container
             flex="row"
             style={{
@@ -377,12 +370,12 @@ export function TransactionPayment({
               {transactionDataQuery.data?.gasCostDisplay}
             </Text>
           </Container>
+        )}
+      </Container>
 
-          <Spacer y="md" />
-        </>
-      )}
+      <Spacer y="lg" />
 
-      <Line />
+      <Line dashed />
 
       <Spacer y="lg" />
 
@@ -432,7 +425,7 @@ export function TransactionPayment({
           }}
           style={{
             fontSize: fontSize.md,
-            padding: `${spacing.sm} ${spacing.md}`,
+            borderRadius: radius.full,
           }}
           variant="primary"
         >
@@ -443,6 +436,9 @@ export function TransactionPayment({
           client={client}
           connectButton={{
             label: buttonLabel,
+            style: {
+              borderRadius: radius.full,
+            },
           }}
           theme={theme}
           {...connectOptions}
@@ -467,67 +463,39 @@ export function TransactionPayment({
   );
 }
 
-const SkeletonHeader = (props: { theme: Theme }) => (
+const SkeletonHeader = (_props: { theme: Theme }) => (
   <Container
     center="y"
     flex="row"
-    gap="3xs"
+    gap="sm"
     style={{
       justifyContent: "space-between",
     }}
   >
-    {/* USD Value Skeleton */}
-    <div
-      style={{
-        backgroundColor: props.theme.colors.skeletonBg,
-        borderRadius: spacing.xs,
-        height: "32px",
-        width: "80px",
-      }}
+    <Skeleton
+      height="32px"
+      width="60px"
+      style={{ borderRadius: radius.full }}
     />
-
-    {/* Function Name Skeleton */}
-    <div
-      style={{
-        backgroundColor: props.theme.colors.skeletonBg,
-        borderRadius: spacing.sm,
-        height: "24px",
-        width: "120px",
-      }}
+    <Skeleton
+      height="32px"
+      width="180px"
+      style={{ borderRadius: radius.full }}
     />
   </Container>
 );
 
-// Skeleton component for loading state
-const SkeletonRow = ({
-  width = "100%",
-  theme,
-}: {
-  width?: string;
-  theme: Theme;
-}) => (
-  <Container
-    flex="row"
-    style={{
-      alignItems: "center",
-      justifyContent: "space-between",
-    }}
-  >
-    <div
+function SkeletonRow(props: { labelWidth?: string; valueWidth?: string }) {
+  return (
+    <Container
+      flex="row"
       style={{
-        backgroundColor: theme.colors.skeletonBg,
-        borderRadius: spacing.xs,
-        height: "16px",
-        width: "30%",
+        alignItems: "center",
+        justifyContent: "space-between",
       }}
-    />
-    <div
-      style={{
-        backgroundColor: theme.colors.skeletonBg,
-        borderRadius: spacing.xs,
-        height: "16px",
-        width,
-      }}
-    />
-  </Container>
-);
+    >
+      <Skeleton height="16px" width={props.labelWidth} />
+      <Skeleton height="16px" width={props.valueWidth} />
+    </Container>
+  );
+}

@@ -14,7 +14,6 @@ const meta: Meta<typeof StoryVariant> = {
     onError: () => {},
     onCancel: () => {},
     currency: "USD",
-    ...TRANSACTION_UI_OPTIONS.ethTransfer,
   },
   component: StoryVariant,
   title: "Bridge/Transaction/TransactionWidget",
@@ -23,9 +22,24 @@ const meta: Meta<typeof StoryVariant> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const EthereumTransfer: Story = {
+export const BaseEthTransfer: Story = {
   args: {
     ...TRANSACTION_UI_OPTIONS.ethTransfer,
+  },
+};
+
+export const BaseEthTransferWithDescription: Story = {
+  args: {
+    ...TRANSACTION_UI_OPTIONS.ethTransfer,
+    description: "This is a description of the transaction",
+  },
+};
+
+export const BaseEthTransferWithImage: Story = {
+  args: {
+    ...TRANSACTION_UI_OPTIONS.ethTransfer,
+    description: "This is a description of the transaction",
+    image: "https://picsum.photos/400/600",
   },
 };
 

@@ -1,7 +1,6 @@
 import { stringify } from "viem";
 import type { TokenWithPrices } from "../../bridge/types/Token.js";
 import { base } from "../../chains/chain-definitions/base.js";
-import { baseSepolia } from "../../chains/chain-definitions/base-sepolia.js";
 import { polygon } from "../../chains/chain-definitions/polygon.js";
 import { defineChain } from "../../chains/utils.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/addresses.js";
@@ -608,7 +607,7 @@ export const simpleBuyRequest: BridgePrepareRequest = {
 
 // mintTo raw transaction
 const ethTransferTransaction = prepareTransaction({
-  chain: baseSepolia,
+  chain: base,
   client: storyClient,
   data: "0x449a52f80000000000000000000000008447c7a30d18e9adf2abe362689fc994cc6a340d00000000000000000000000000000000000000000000000000038d7ea4c68000",
   to: "0x87C52295891f208459F334975a3beE198fE75244",
