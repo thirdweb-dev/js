@@ -213,6 +213,7 @@ export function FundWallet(props: FundWalletProps) {
       >
         <SelectToken
           type="buy"
+          currency={props.currency}
           selections={{
             buyChainId: props.selectedToken?.chainId,
             sellChainId: undefined,

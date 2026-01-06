@@ -46,10 +46,20 @@ function formatMoney(
   locale: string,
   currencyCode: string,
 ): string {
+  if (value < 0) {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: currencyCode,
+      maximumFractionDigits: 6,
+      minimumFractionDigits: 0,
+    }).format(value);
+  }
+
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currencyCode,
     maximumFractionDigits: 2,
     minimumFractionDigits: 0,
+    notation: "compact",
   }).format(value);
 }

@@ -1,7 +1,11 @@
+import { PlusIcon } from "@radix-ui/react-icons";
 import { useCallback, useMemo, useState } from "react";
 import type { Token } from "../../../../../bridge/index.js";
 import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isNativeTokenAddress } from "../../../../../constants/addresses.js";
+import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import { shortenAddress } from "../../../../../utils/address.js";
 import { toTokens } from "../../../../../utils/units.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -11,17 +15,26 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
+import { InfoIcon } from "../../ConnectWallet/icons/InfoIcon.js";
 import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
-import { Container, noScrollBar } from "../../components/basic.js";
-import { Button } from "../../components/buttons.js";
+import { formatCurrencyAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
+import {
+  Container,
+  Line,
+  ModalHeader,
+  noScrollBar,
+} from "../../components/basic.js";
+import { Button, IconButton } from "../../components/buttons.js";
+import { CopyIcon } from "../../components/CopyIcon.js";
 import { Img } from "../../components/Img.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
-import { Text } from "../../components/text.js";
+import { Link, Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
 import { useIsMobile } from "../../hooks/useisMobile.js";
+import { useTokenPrice } from "./hooks.js";
 import { SearchInput } from "./SearchInput.js";
 import { SelectChainButton } from "./SelectChainButton.js";
 import { SelectBridgeChain } from "./select-chain.js";
@@ -48,6 +61,7 @@ type SelectTokenUIProps = {
     buyChainId: number | undefined;
     sellChainId: number | undefined;
   };
+  currency: SupportedFiatCurrency;
 };
 
 function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
@@ -238,6 +252,7 @@ function SelectTokenUI(
               props.onClose();
             }}
             isMobile={false}
+            key={props.selectedChain?.chainId}
             selectedToken={props.selectedToken}
             isFetching={props.isFetching}
             ownedTokens={props.ownedTokens}
@@ -248,6 +263,7 @@ function SelectTokenUI(
             client={props.client}
             search={props.search}
             setSearch={props.setSearch}
+            currency={props.currency}
           />
         </Container>
       </Container>
@@ -257,6 +273,7 @@ function SelectTokenUI(
   if (screen === "select-token") {
     return (
       <TokenSelectionScreen
+        key={props.selectedChain?.chainId}
         onSelectToken={(token) => {
           props.setSelectedToken(token);
           props.onClose();
@@ -272,6 +289,7 @@ function SelectTokenUI(
         client={props.client}
         search={props.search}
         setSearch={props.setSearch}
+        currency={props.currency}
       />
     );
   }
@@ -320,6 +338,7 @@ function TokenButton(props: {
   token: TokenBalance | Token;
   client: ThirdwebClient;
   onSelect: (tokenWithPrices: TokenSelection) => void;
+  onInfoClick: (tokenAddress: string, chainId: number) => void;
   isSelected: boolean;
 }) {
   const theme = useCustomTheme();
@@ -331,6 +350,11 @@ function TokenButton(props: {
     "balance" in props.token
       ? props.token.price_data.price_usd * Number(tokenBalanceInUnits)
       : undefined;
+
+  const tokenAddress =
+    "balance" in props.token ? props.token.token_address : props.token.address;
+  const chainId =
+    "balance" in props.token ? props.token.chain_id : props.token.chainId;
 
   return (
     <Button
@@ -348,17 +372,10 @@ function TokenButton(props: {
       }}
       gap="sm"
       onClick={async () => {
-        if ("balance" in props.token) {
-          props.onSelect({
-            tokenAddress: props.token.token_address,
-            chainId: props.token.chain_id,
-          });
-        } else {
-          props.onSelect({
-            tokenAddress: props.token.address,
-            chainId: props.token.chainId,
-          });
-        }
+        props.onSelect({
+          tokenAddress,
+          chainId,
+        });
       }}
     >
       <Img
@@ -387,6 +404,7 @@ function TokenButton(props: {
           </Container>
         }
       />
+
       <div
         style={{
           display: "flex",
@@ -395,6 +413,7 @@ function TokenButton(props: {
           flex: 1,
         }}
       >
+        {/* left */}
         <Container
           flex="row"
           style={{
@@ -402,7 +421,15 @@ function TokenButton(props: {
             width: "100%",
           }}
         >
-          <Text size="md" color="primaryText" weight={500}>
+          <Text
+            size="md"
+            color="primaryText"
+            weight={500}
+            style={{
+              maxWidth: "200px",
+              whiteSpace: "nowrap",
+            }}
+          >
             {props.token.symbol}
           </Text>
 
@@ -416,6 +443,8 @@ function TokenButton(props: {
             </Text>
           )}
         </Container>
+
+        {/* right */}
         <Container
           flex="row"
           style={{
@@ -427,8 +456,6 @@ function TokenButton(props: {
             size="xs"
             color="secondaryText"
             style={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               maxWidth: "200px",
             }}
@@ -444,7 +471,234 @@ function TokenButton(props: {
           )}
         </Container>
       </div>
+
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          props.onInfoClick(tokenAddress, chainId);
+        }}
+        style={{
+          padding: spacing.xxs,
+          borderRadius: radius.full,
+        }}
+      >
+        <InfoIcon size={iconSize.sm} />
+      </IconButton>
     </Button>
+  );
+}
+
+function TokenInfoScreen(props: {
+  tokenAddress: string;
+  chainId: number;
+  client: ThirdwebClient;
+  onBack: () => void;
+  currency: SupportedFiatCurrency;
+}) {
+  const theme = useCustomTheme();
+  const tokenQuery = useTokenPrice({
+    token: {
+      tokenAddress: props.tokenAddress,
+      chainId: props.chainId,
+    },
+    client: props.client,
+  });
+  const token = tokenQuery.data;
+
+  if (tokenQuery.isPending) {
+    return (
+      <Container
+        flex="column"
+        center="both"
+        expand
+        style={{ minHeight: "350px" }}
+      >
+        <Spinner size="lg" color="secondaryText" />
+      </Container>
+    );
+  }
+
+  if (!token) {
+    return (
+      <Container
+        flex="column"
+        center="both"
+        expand
+        style={{ minHeight: "350px" }}
+      >
+        <Text size="sm" color="secondaryText">
+          Token not found
+        </Text>
+      </Container>
+    );
+  }
+
+  const isNativeToken = isNativeTokenAddress(props.tokenAddress);
+  const explorerLink = isNativeToken
+    ? `https://thirdweb.com/${props.chainId}`
+    : `https://thirdweb.com/${props.chainId}/${props.tokenAddress}`;
+
+  return (
+    <Container
+      flex="column"
+      expand
+      style={{ minHeight: "350px" }}
+      animate="fadein"
+    >
+      {/* Header */}
+      <Container px="md" py="md+">
+        <ModalHeader onBack={props.onBack} title="Token Details" />
+      </Container>
+      <Line dashed />
+
+      {/* Content */}
+      <Container flex="column" gap="md" px="md" py="lg">
+        {/* name + icon */}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text size="sm" color="secondaryText">
+            Name
+          </Text>
+
+          <Container flex="row" gap="xxs" center="y">
+            <Img
+              src={token.iconUri || ""}
+              client={props.client}
+              width={iconSize.sm}
+              height={iconSize.sm}
+              style={{
+                borderRadius: radius.full,
+              }}
+              fallback={
+                <Container
+                  style={{
+                    background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                    borderRadius: radius.full,
+                    width: `${iconSize.sm}px`,
+                    height: `${iconSize.sm}px`,
+                  }}
+                />
+              }
+            />
+            <Text
+              size="sm"
+              color="primaryText"
+              weight={500}
+              style={{
+                maxWidth: "200px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {token.name}
+            </Text>
+          </Container>
+        </Container>
+
+        {/* symbol */}
+        <TokenInfoRow label="Symbol" value={token.symbol} />
+
+        {/* price */}
+        {"prices" in token && (
+          <TokenInfoRow
+            label="Price"
+            value={
+              token.prices[props.currency]
+                ? formatCurrencyAmount(
+                    props.currency,
+                    token.prices[props.currency] as number,
+                  )
+                : "N/A"
+            }
+          />
+        )}
+
+        {/* market cap */}
+        {!!token.marketCapUsd && (
+          <TokenInfoRow
+            label="Market Cap"
+            value={formatCurrencyAmount(props.currency, token.marketCapUsd)}
+          />
+        )}
+
+        {/* volume 24h */}
+        {!!token.volume24hUsd && (
+          <TokenInfoRow
+            label="Volume (24h)"
+            value={formatCurrencyAmount(props.currency, token.volume24hUsd)}
+          />
+        )}
+
+        {/* address + link */}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text size="sm" color="secondaryText">
+            Contract Address
+          </Text>
+
+          <Container flex="row" gap="3xs" center="y">
+            {!isNativeToken && (
+              <CopyIcon
+                text={props.tokenAddress}
+                iconSize={13}
+                tip="Copy Address"
+              />
+            )}
+
+            <Link
+              href={explorerLink}
+              target="_blank"
+              rel="noreferrer"
+              color="accentText"
+              hoverColor="primaryText"
+              weight={500}
+              size="sm"
+            >
+              {isNativeToken
+                ? "Native Currency"
+                : shortenAddress(props.tokenAddress)}
+            </Link>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
+  );
+}
+
+function TokenInfoRow(props: { label: string; value: string }) {
+  return (
+    <Container
+      flex="row"
+      style={{
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <Text size="sm" color="secondaryText">
+        {props.label}
+      </Text>
+      <Text
+        size="sm"
+        color="primaryText"
+        weight={500}
+        style={{
+          maxWidth: "200px",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {props.value}
+      </Text>
+    </Container>
   );
 }
 
@@ -461,11 +715,29 @@ function TokenSelectionScreen(props: {
   showMore: (() => void) | undefined;
   selectedToken: TokenSelection | undefined;
   onSelectToken: (token: TokenSelection) => void;
+  currency: SupportedFiatCurrency;
 }) {
+  const [tokenInfoScreen, setTokenInfoScreen] = useState<{
+    tokenAddress: string;
+    chainId: number;
+  } | null>(null);
+
   const noTokensFound =
     !props.isFetching &&
     props.otherTokens.length === 0 &&
     props.ownedTokens.length === 0;
+
+  if (tokenInfoScreen) {
+    return (
+      <TokenInfoScreen
+        tokenAddress={tokenInfoScreen.tokenAddress}
+        chainId={tokenInfoScreen.chainId}
+        client={props.client}
+        onBack={() => setTokenInfoScreen(null)}
+        currency={props.currency}
+      />
+    );
+  }
 
   return (
     <Container fullHeight flex="column">
@@ -495,7 +767,7 @@ function TokenSelectionScreen(props: {
             minHeight: "300px",
           }}
         >
-          <Spinner color="secondaryText" size="xl" />
+          <Spinner color="secondaryText" size="lg" />
         </Container>
       )}
 
@@ -574,6 +846,9 @@ function TokenSelectionScreen(props: {
                   token={token}
                   client={props.client}
                   onSelect={props.onSelectToken}
+                  onInfoClick={(tokenAddress, chainId) =>
+                    setTokenInfoScreen({ tokenAddress, chainId })
+                  }
                   isSelected={
                     !!props.selectedToken &&
                     props.selectedToken.tokenAddress.toLowerCase() ===
@@ -615,6 +890,9 @@ function TokenSelectionScreen(props: {
                   token={token}
                   client={props.client}
                   onSelect={props.onSelectToken}
+                  onInfoClick={(tokenAddress, chainId) =>
+                    setTokenInfoScreen({ tokenAddress, chainId })
+                  }
                   isSelected={
                     !!props.selectedToken &&
                     props.selectedToken.tokenAddress.toLowerCase() ===
@@ -626,12 +904,17 @@ function TokenSelectionScreen(props: {
 
             {props.showMore && (
               <Button
-                variant="secondary"
+                variant="outline"
                 fullWidth
+                style={{
+                  borderRadius: radius.full,
+                }}
+                gap="xs"
                 onClick={() => {
                   props.showMore?.();
                 }}
               >
+                <PlusIcon width={iconSize.sm} height={iconSize.sm} />
                 Load More
               </Button>
             )}

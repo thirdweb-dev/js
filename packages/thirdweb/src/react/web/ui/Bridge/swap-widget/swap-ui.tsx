@@ -7,7 +7,6 @@ import type { prepare as SellPrepare } from "../../../../../bridge/Sell.js";
 import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
-import { getToken } from "../../../../../pay/convert/get-token.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import { getAddress } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
@@ -43,6 +42,7 @@ import { ActiveWalletDetails } from "../common/active-wallet-details.js";
 import { DecimalInput } from "../common/decimal-input.js";
 import { SelectedTokenButton } from "../common/selected-token-button.js";
 import { useTokenBalance } from "../common/token-balance.js";
+import { useTokenPrice } from "./hooks.js";
 import { SelectToken } from "./select-token-ui.js";
 import type {
   ActiveWalletInfo,
@@ -81,29 +81,6 @@ type SwapUIProps = {
   }) => void;
   onDisconnect: (() => void) | undefined;
 };
-
-function useTokenPrice(options: {
-  token: TokenSelection | undefined;
-  client: ThirdwebClient;
-}) {
-  return useQuery({
-    queryKey: ["token-price", options.token],
-    enabled: !!options.token,
-    queryFn: () => {
-      if (!options.token) {
-        throw new Error("Token is required");
-      }
-      return getToken(
-        options.client,
-        options.token.tokenAddress,
-        options.token.chainId,
-      );
-    },
-    refetchOnMount: false,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-}
 
 /**
  * @internal
@@ -244,6 +221,7 @@ export function SwapUI(props: SwapUIProps) {
             }}
             client={props.client}
             selectedToken={props.buyToken}
+            currency={props.currency}
             setSelectedToken={(token) => {
               props.setBuyToken(token);
               // if buy token is same as sell token, unset sell token
@@ -282,6 +260,7 @@ export function SwapUI(props: SwapUIProps) {
             }}
             client={props.client}
             selectedToken={props.sellToken}
+            currency={props.currency}
             setSelectedToken={(token) => {
               props.setSellToken(token);
               // if sell token is same as buy token, unset buy token

@@ -128,7 +128,15 @@ export function SelectedTokenButton(props: {
             {props.selectedToken?.isFetching ? (
               <Skeleton width="60px" height={fontSize.md} />
             ) : (
-              <Text size="md" color="primaryText" weight={500}>
+              <Text
+                size="md"
+                color="primaryText"
+                weight={500}
+                style={{
+                  whiteSpace: "nowrap",
+                  maxWidth: "200px",
+                }}
+              >
                 {props.selectedToken?.data?.symbol}
               </Text>
             )}
@@ -138,8 +146,6 @@ export function SelectedTokenButton(props: {
                 size="xs"
                 color="secondaryText"
                 style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                 }}
               >
