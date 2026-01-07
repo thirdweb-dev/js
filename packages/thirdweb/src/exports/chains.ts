@@ -32,6 +32,7 @@ export { degen } from "../chains/chain-definitions/degen.js";
 // mainnet = alias for ethereum
 export { ethereum, mainnet } from "../chains/chain-definitions/ethereum.js";
 export { etherlink } from "../chains/chain-definitions/etherlink.js";
+export { etherlinkShadownet } from "../chains/chain-definitions/etherlink-shadownet.js";
 export { etherlinkTestnet } from "../chains/chain-definitions/etherlink-testnet.js";
 export { fantom } from "../chains/chain-definitions/fantom.js";
 export { fantomTestnet } from "../chains/chain-definitions/fantom-testnet.js";
