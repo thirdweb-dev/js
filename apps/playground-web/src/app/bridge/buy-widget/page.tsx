@@ -19,7 +19,15 @@ export const metadata = createMetadata({
   },
 });
 
-export default function Page() {
+export default async function Page(props: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const searchParams = await props.searchParams;
+  const defaultTab =
+    searchParams.tab === "iframe" || searchParams.tab === "react"
+      ? searchParams.tab
+      : undefined;
+
   return (
     <ThirdwebProvider>
       <PageLayout
@@ -28,7 +36,7 @@ export default function Page() {
         description={description}
         docsLink="https://portal.thirdweb.com/references/typescript/v5/BuyWidget?utm_source=playground"
       >
-        <BuyPlayground />
+        <BuyPlayground defaultTab={defaultTab} />
       </PageLayout>
     </ThirdwebProvider>
   );

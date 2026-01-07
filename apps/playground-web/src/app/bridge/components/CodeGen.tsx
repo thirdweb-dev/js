@@ -5,6 +5,7 @@ import {
   stringifyImports,
   stringifyProps,
 } from "../../../lib/code-gen";
+import { buildBuyIframeUrl } from "./buildBuyIframeUrl";
 import { buildCheckoutIframeUrl } from "./buildCheckoutIframeUrl";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
 
@@ -27,7 +28,8 @@ export function CodeGen(props: {
   options: BridgeComponentsPlaygroundOptions;
 }) {
   const isIframe =
-    props.widget === "checkout" && props.options.integrationType === "iframe";
+    (props.widget === "checkout" || props.widget === "buy") &&
+    props.options.integrationType === "iframe";
 
   return (
     <div className="flex w-full grow flex-col">
@@ -36,7 +38,7 @@ export function CodeGen(props: {
           className="grow"
           code={
             isIframe
-              ? getIframeCode(props.options)
+              ? getIframeCode(props.widget as "buy" | "checkout", props.options)
               : getCode(props.widget, props.options)
           }
           lang={isIframe ? "html" : "tsx"}
@@ -46,13 +48,22 @@ export function CodeGen(props: {
   );
 }
 
-function getIframeCode(options: BridgeComponentsPlaygroundOptions) {
-  const src = buildCheckoutIframeUrl(options);
+function getIframeCode(
+  widget: "buy" | "checkout",
+  options: BridgeComponentsPlaygroundOptions,
+) {
+  const src =
+    widget === "buy"
+      ? buildBuyIframeUrl(options)
+      : buildCheckoutIframeUrl(options);
+
+  const hasImage = src.includes("image=");
+  const height = hasImage ? "850px" : "700px";
 
   return `\
 <iframe
   src="${src}"
-  height="700px"
+  height="${height}"
   width="100%"
   style="border: 0;"
 />`;

@@ -486,7 +486,8 @@ export function LeftSection(props: {
 
         {/* Colors - disabled for iframe */}
         {!(
-          props.widget === "checkout" && options.integrationType === "iframe"
+          (props.widget === "checkout" || props.widget === "buy") &&
+          options.integrationType === "iframe"
         ) && (
           <ColorFormGroup
             onChange={(newTheme) => {

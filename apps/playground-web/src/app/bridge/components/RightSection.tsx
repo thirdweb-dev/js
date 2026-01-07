@@ -15,6 +15,7 @@ import {
 import { Button } from "../../../components/ui/button";
 import { THIRDWEB_CLIENT } from "../../../lib/client";
 import { cn } from "../../../lib/utils";
+import { buildBuyIframeUrl } from "./buildBuyIframeUrl";
 import { buildCheckoutIframeUrl } from "./buildCheckoutIframeUrl";
 import { CodeGen } from "./CodeGen";
 import type { BridgeComponentsPlaygroundOptions } from "./types";
@@ -155,21 +156,15 @@ export function RightSection(props: {
           previewTab !== "code" && "items-center",
         )}
       >
-        <BackgroundPattern />
-
         {previewTab === "ui" &&
-          (props.widget === "checkout" &&
-          props.options.integrationType === "iframe" ? (
-            <iframe
-              src={buildCheckoutIframeUrl(props.options)}
-              height="700px"
-              width="100%"
-              title="Checkout Widget"
-              className="fade-in-0 animate-in rounded-xl duration-500"
-              style={{
-                border: "0",
-              }}
-            />
+          (props.options.integrationType === "iframe" ? (
+            props.widget === "checkout" ? (
+              <CheckoutIframePreview options={props.options} />
+            ) : props.widget === "buy" ? (
+              <BuyWidgetIframePreview options={props.options} />
+            ) : (
+              embed
+            )
           ) : (
             embed
           ))}
@@ -182,7 +177,46 @@ export function RightSection(props: {
   );
 }
 
-function BackgroundPattern() {
+function CheckoutIframePreview(props: {
+  options: BridgeComponentsPlaygroundOptions;
+}) {
+  const src = buildCheckoutIframeUrl(props.options);
+  return (
+    <iframe
+      src={src}
+      height="700px"
+      width="100%"
+      title="Checkout Widget"
+      className="fade-in-0 animate-in rounded-xl duration-500"
+      style={{
+        border: "0",
+      }}
+    />
+  );
+}
+
+function BuyWidgetIframePreview(props: {
+  options: BridgeComponentsPlaygroundOptions;
+}) {
+  const src = buildBuyIframeUrl(props.options);
+
+  const hasImage = src.includes("image=");
+  const height = hasImage ? "850px" : "700px";
+  return (
+    <iframe
+      src={src}
+      height={height}
+      width="100%"
+      title="Buy Widget"
+      className="fade-in-0 animate-in rounded-xl duration-500"
+      style={{
+        border: "0",
+      }}
+    />
+  );
+}
+
+function _BackgroundPattern() {
   const color = "hsl(var(--foreground)/15%)";
   return (
     <div
