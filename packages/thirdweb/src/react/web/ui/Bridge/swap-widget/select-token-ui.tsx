@@ -506,34 +506,6 @@ function TokenInfoScreen(props: {
   });
   const token = tokenQuery.data;
 
-  if (tokenQuery.isPending) {
-    return (
-      <Container
-        flex="column"
-        center="both"
-        expand
-        style={{ minHeight: "350px" }}
-      >
-        <Spinner size="lg" color="secondaryText" />
-      </Container>
-    );
-  }
-
-  if (!token) {
-    return (
-      <Container
-        flex="column"
-        center="both"
-        expand
-        style={{ minHeight: "350px" }}
-      >
-        <Text size="sm" color="secondaryText">
-          Token not found
-        </Text>
-      </Container>
-    );
-  }
-
   const isNativeToken = isNativeTokenAddress(props.tokenAddress);
   const explorerLink = isNativeToken
     ? `https://thirdweb.com/${props.chainId}`
@@ -543,7 +515,7 @@ function TokenInfoScreen(props: {
     <Container
       flex="column"
       expand
-      style={{ minHeight: "350px" }}
+      style={{ minHeight: "450px" }}
       animate="fadein"
     >
       {/* Header */}
@@ -552,125 +524,136 @@ function TokenInfoScreen(props: {
       </Container>
       <Line dashed />
 
-      {/* Content */}
-      <Container flex="column" gap="md" px="md" py="lg">
-        {/* name + icon */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+      {tokenQuery.isPending ? (
+        <Container flex="column" center="both" expand>
+          <Spinner size="lg" color="secondaryText" />
+        </Container>
+      ) : !token ? (
+        <Container flex="column" center="both" expand>
           <Text size="sm" color="secondaryText">
-            Name
+            Token not found
           </Text>
+        </Container>
+      ) : (
+        <Container flex="column" gap="md" px="md" py="lg">
+          {/* name + icon */}
+          <Container
+            flex="row"
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text size="sm" color="secondaryText">
+              Name
+            </Text>
 
-          <Container flex="row" gap="xxs" center="y">
-            <Img
-              src={token.iconUri || ""}
-              client={props.client}
-              width={iconSize.sm}
-              height={iconSize.sm}
-              style={{
-                borderRadius: radius.full,
-              }}
-              fallback={
-                <Container
-                  style={{
-                    background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
-                    borderRadius: radius.full,
-                    width: `${iconSize.sm}px`,
-                    height: `${iconSize.sm}px`,
-                  }}
-                />
+            <Container flex="row" gap="xxs" center="y">
+              <Img
+                src={token.iconUri || ""}
+                client={props.client}
+                width={iconSize.sm}
+                height={iconSize.sm}
+                style={{
+                  borderRadius: radius.full,
+                }}
+                fallback={
+                  <Container
+                    style={{
+                      background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                      borderRadius: radius.full,
+                      width: `${iconSize.sm}px`,
+                      height: `${iconSize.sm}px`,
+                    }}
+                  />
+                }
+              />
+              <Text
+                size="sm"
+                color="primaryText"
+                weight={500}
+                style={{
+                  maxWidth: "200px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {token.name}
+              </Text>
+            </Container>
+          </Container>
+
+          {/* symbol */}
+          <TokenInfoRow label="Symbol" value={token.symbol} />
+
+          {/* price */}
+          {"prices" in token && (
+            <TokenInfoRow
+              label="Price"
+              value={
+                token.prices[props.currency]
+                  ? formatCurrencyAmount(
+                      props.currency,
+                      token.prices[props.currency] as number,
+                    )
+                  : "N/A"
               }
             />
-            <Text
-              size="sm"
-              color="primaryText"
-              weight={500}
-              style={{
-                maxWidth: "200px",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {token.name}
+          )}
+
+          {/* market cap */}
+          {!!token.marketCapUsd && (
+            <TokenInfoRow
+              label="Market Cap"
+              value={formatCurrencyAmount(props.currency, token.marketCapUsd)}
+            />
+          )}
+
+          {/* volume 24h */}
+          {!!token.volume24hUsd && (
+            <TokenInfoRow
+              label="Volume (24h)"
+              value={formatCurrencyAmount(props.currency, token.volume24hUsd)}
+            />
+          )}
+
+          {/* address + link */}
+          <Container
+            flex="row"
+            style={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Text size="sm" color="secondaryText">
+              Contract Address
             </Text>
+
+            <Container flex="row" gap="3xs" center="y">
+              {!isNativeToken && (
+                <CopyIcon
+                  text={props.tokenAddress}
+                  iconSize={13}
+                  tip="Copy Address"
+                />
+              )}
+
+              <Link
+                href={explorerLink}
+                target="_blank"
+                rel="noreferrer"
+                color="accentText"
+                hoverColor="primaryText"
+                weight={500}
+                size="sm"
+              >
+                {isNativeToken
+                  ? "Native Currency"
+                  : shortenAddress(props.tokenAddress)}
+              </Link>
+            </Container>
           </Container>
         </Container>
-
-        {/* symbol */}
-        <TokenInfoRow label="Symbol" value={token.symbol} />
-
-        {/* price */}
-        {"prices" in token && (
-          <TokenInfoRow
-            label="Price"
-            value={
-              token.prices[props.currency]
-                ? formatCurrencyAmount(
-                    props.currency,
-                    token.prices[props.currency] as number,
-                  )
-                : "N/A"
-            }
-          />
-        )}
-
-        {/* market cap */}
-        {!!token.marketCapUsd && (
-          <TokenInfoRow
-            label="Market Cap"
-            value={formatCurrencyAmount(props.currency, token.marketCapUsd)}
-          />
-        )}
-
-        {/* volume 24h */}
-        {!!token.volume24hUsd && (
-          <TokenInfoRow
-            label="Volume (24h)"
-            value={formatCurrencyAmount(props.currency, token.volume24hUsd)}
-          />
-        )}
-
-        {/* address + link */}
-        <Container
-          flex="row"
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text size="sm" color="secondaryText">
-            Contract Address
-          </Text>
-
-          <Container flex="row" gap="3xs" center="y">
-            {!isNativeToken && (
-              <CopyIcon
-                text={props.tokenAddress}
-                iconSize={13}
-                tip="Copy Address"
-              />
-            )}
-
-            <Link
-              href={explorerLink}
-              target="_blank"
-              rel="noreferrer"
-              color="accentText"
-              hoverColor="primaryText"
-              weight={500}
-              size="sm"
-            >
-              {isNativeToken
-                ? "Native Currency"
-                : shortenAddress(props.tokenAddress)}
-            </Link>
-          </Container>
-        </Container>
-      </Container>
+      )}
     </Container>
   );
 }
