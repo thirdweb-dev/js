@@ -1,0 +1,168 @@
+import {
+  ArticleIconCard,
+  Details,
+  createMetadata,
+} from "@doc";
+import { IframeCodePreview } from "./iframe-code-preview";
+import { PlayIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Buy widget iframe",
+    icon: "payments",
+  },
+  title: "Buy widget iframe",
+  description: "Add a widget to let users buy crypto in your app using an iframe",
+});
+
+# Buy widget iframe
+
+The Buy widget iframe makes it easy for users to purchase crypto tokens in your app. Just add an iframe to your HTML and get a fully customizable buy widget - no build setup required.
+
+## Features
+
+- Purchase crypto tokens with fiat (credit/debit cards)
+- Cross-chain token swaps across 90+ blockchains
+- Display product information (title, description, image)
+- Customizable UI with dark and light mode support
+- Display fiat values in multiple currencies
+
+
+### Example
+
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget" />
+
+
+## Try it out
+
+<ArticleIconCard
+	title="Buy Widget Playground"
+	description="Try out the Buy Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/buy-widget?tab=iframe"
+/>
+
+## Options
+
+You can customize the buy widget using query parameters as mentioned below.
+
+
+### Theme
+
+By default the widget uses the "dark" theme. You can set the light theme by passing the `theme=light` query parameter.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?theme=light" />
+
+
+### Product Information
+
+You can display product information by passing `title`, `description`, and `image` query parameters. Each of these parameters are optional.
+
+Make sure to URI encode the parameters if they contain special characters.
+
+<Details summary="Example">
+
+* title: `"Something"`
+* description: `"Description of something goes here"`
+* image: `"https://picsum.photos/600/300"`
+* price: 0.01 ETH on Base
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?chain=8453&amount=0.01&title=Something&description=Description%20of%20something%20goes%20here&image=https%3A%2F%2Fpicsum.photos%2F600%2F300" />
+
+</Details>
+
+
+### Currency
+
+By default the fiat value of the token amounts is displayed in USD. You can change the currency by setting the `currency` query parameter.
+
+<Details summary="Supported Currencies">
+
+- `USD` - US Dollar (default)
+- `EUR` - Euro
+- `GBP` - British Pound
+- `JPY` - Japanese Yen
+- `KRW` - Korean Won
+- `CNY` - Chinese Yuan
+- `INR` - Indian Rupee
+- `NOK` - Norwegian Krone
+- `SEK` - Swedish Krona
+- `CHF` - Swiss Franc
+- `AUD` - Australian Dollar
+- `CAD` - Canadian Dollar
+- `NZD` - New Zealand Dollar
+- `MXN` - Mexican Peso
+- `BRL` - Brazilian Real
+- `CLP` - Chilean Peso
+- `CZK` - Czech Koruna
+- `DKK` - Danish Krone
+- `HKD` - Hong Kong Dollar
+- `HUF` - Hungarian Forint
+- `IDR` - Indonesian Rupiah
+- `ILS` - Israeli New Sheqel
+- `ISK` - Icelandic Krona
+
+</Details>
+
+#### Example
+
+Show fiat values in Euro (EUR) in the widget.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?currency=EUR" />
+
+### Payment Methods
+
+By default, the widget enables both crypto and card (fiat) payment methods.
+
+You can customize which payment methods are available by setting the `paymentMethods` query parameter.
+
+Accepted values:
+- `crypto` - Enable crypto payments only
+- `card` - Enable card (fiat) payments only
+
+<Details summary="Only enable crypto payments">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?paymentMethods=crypto" />
+
+</Details>
+
+
+<Details summary="Only enable card payments">
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?paymentMethods=card" />
+
+</Details>
+
+### thirdweb branding
+
+By default, the widget displays thirdweb branding at the bottom. You can hide this by setting the `showThirdwebBranding` query parameter to `false`.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?showThirdwebBranding=false" />
+
+## Listening for Events
+
+The buy widget iframe sends events to the parent window using `postMessage` when a purchase succeeds or fails.
+
+You can listen for these events to handle the purchase result in your application.
+
+```js
+window.addEventListener("message", (event) => {
+
+  // verify that message is from thirdweb buy widget iframe
+  if (
+    event.origin === "https://thirdweb.com" && event.data.source === "buy-widget"
+  ) {
+
+  if (event.data.type === "success") {
+    console.log("Purchase successful!");
+  }
+
+  if (event.data.type === "error") {
+    console.error("Purchase failed with error:", event.data.message);
+  }
+  }
+
+});
+```
+

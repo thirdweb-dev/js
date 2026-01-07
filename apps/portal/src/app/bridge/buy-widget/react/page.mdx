@@ -1,0 +1,127 @@
+import {
+  ArticleIconCard,
+  createMetadata,
+} from "@doc";
+import { PlayIcon } from "lucide-react";
+import { ReactIcon } from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Buy widget component",
+    icon: "payments",
+  },
+  title: "Buy widget component",
+  description: "Add a widget to let users buy crypto in your app using a React component",
+});
+
+# Buy widget component
+
+The Buy widget component makes it easy for users to purchase crypto tokens in your app
+
+## Features
+
+- Purchase crypto tokens with fiat (credit/debit cards)
+- Cross-chain token swaps across 90+ blockchains
+- Display product information (title, description, image)
+- Customizable UI with dark and light mode support
+- Display fiat values in multiple currencies
+
+## Example
+
+You will need a thirdweb project client id to use the `BuyWidget` component. You can get your clientId by creating a project in the [thirdweb dashboard](https://thirdweb.com/team).
+
+```tsx
+import { BuyWidget } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+import { base } from "thirdweb/chains";
+
+const client = createThirdwebClient({
+  clientId: "YOUR_THIRDWEB_CLIENT_ID",
+});
+
+function Example() {
+  return (
+    <BuyWidget
+      client={client}
+      chain={base}
+      amount="0.01"
+    />
+  );
+}
+```
+
+Make sure to wrap the component containing `BuyWidget` with the `ThirdwebProvider` component.
+
+```tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+function App() {
+  return (
+    <ThirdwebProvider>
+      <YourApp />
+    </ThirdwebProvider>
+  );
+}
+```
+
+### Prefill a specific token
+
+You can prefill the widget with a specific token by passing the `tokenAddress` prop.
+
+```tsx
+import { BuyWidget } from "thirdweb/react";
+import { base } from "thirdweb/chains";
+
+function Example() {
+  return (
+    <BuyWidget
+      client={client}
+      chain={base}
+      // USDC on Base
+      tokenAddress="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      amount="10"
+    />
+  );
+}
+```
+
+### Send to a specific address
+
+By default, the connected wallet address receives the purchased tokens.
+
+You can set `receiverAddress` prop to send the purchased tokens to a different address.
+
+```tsx
+import { BuyWidget } from "thirdweb/react";
+import { base } from "thirdweb/chains";
+
+function Example() {
+  return (
+    <BuyWidget
+      client={client}
+      chain={base}
+      amount="0.01"
+      receiverAddress="0x123...abc"
+    />
+  );
+}
+```
+
+## API Reference
+
+<ArticleIconCard
+  title="BuyWidget Component"
+  description="View the API reference for the BuyWidget component"
+  icon={ReactIcon}
+  href="/references/typescript/v5/BuyWidget"
+/>
+
+## Try it out
+
+<ArticleIconCard
+	title="Buy Widget Playground"
+	description="Try out the Buy Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/buy-widget?tab=react"
+/>
+

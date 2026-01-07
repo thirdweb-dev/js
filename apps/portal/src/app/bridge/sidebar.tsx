@@ -41,20 +41,6 @@ export const sidebar: SideBar = {
           ],
         },
         {
-          name: "Checkout Widget",
-          href: `${bridgeSlug}/checkout-widget`,
-          links: [
-            {
-              href: `${bridgeSlug}/checkout-widget/react`,
-              name: "React Component",
-            },
-            {
-              href: `${bridgeSlug}/checkout-widget/iframe`,
-              name: "Iframe",
-            },
-          ],
-        },
-        {
           name: "Swap Widget",
           href: `${bridgeSlug}/swap-widget`,
           links: [
@@ -64,6 +50,34 @@ export const sidebar: SideBar = {
             },
             {
               href: `${bridgeSlug}/swap-widget/iframe`,
+              name: "Iframe",
+            },
+          ],
+        },
+        {
+          name: "Buy Widget",
+          href: `${bridgeSlug}/buy-widget`,
+          links: [
+            {
+              href: `${bridgeSlug}/buy-widget/react`,
+              name: "React Component",
+            },
+            {
+              href: `${bridgeSlug}/buy-widget/iframe`,
+              name: "Iframe",
+            },
+          ],
+        },
+        {
+          name: "Checkout Widget",
+          href: `${bridgeSlug}/checkout-widget`,
+          links: [
+            {
+              href: `${bridgeSlug}/checkout-widget/react`,
+              name: "React Component",
+            },
+            {
+              href: `${bridgeSlug}/checkout-widget/iframe`,
               name: "Iframe",
             },
           ],

@@ -1,0 +1,61 @@
+import {
+  Details,
+  createMetadata,
+  DocImage,
+} from "@doc";
+import { ArticleIconCard } from "@doc";
+import { FrameIcon, PlayIcon } from "lucide-react";
+import { ReactIcon } from "@/icons";
+
+export const metadata = createMetadata({
+  image: {
+    title: "Buy widget",
+    icon: "payments",
+  },
+  title: "Buy widget",
+  description: "Add a widget to let users buy crypto in your app",
+});
+
+# Buy widget
+
+The Buy widget makes it easy for users to purchase crypto tokens in your app. It supports both fiat payments (credit/debit cards) and crypto payments, with cross-chain support across 90+ blockchains.
+
+## Features
+
+- Purchase crypto tokens with fiat (credit/debit cards)
+- Cross-chain token swaps across 90+ blockchains
+- Display product information (title, description, image)
+- Customizable UI with dark and light mode support
+- Display fiat values in multiple currencies
+
+## Get Started
+
+You can integrate the buy widget into your website using an iframe or a React component.
+
+<div className="space-y-4">
+
+<ArticleIconCard
+	title="Iframe"
+  icon={FrameIcon}
+	description="Integrate buy widget into your website using an iframe"
+	href="/bridge/buy-widget/iframe"
+/>
+
+<ArticleIconCard
+	title="React Component"
+  icon={ReactIcon}
+	description="Integrate buy widget into your app using a React component"
+	href="/bridge/buy-widget/react"
+/>
+
+</div>
+
+## Try it out
+
+<ArticleIconCard
+	title="Buy Widget Playground"
+	description="Try out the Buy Widget in our live playground"
+	icon={PlayIcon}
+	href="https://playground.thirdweb.com/bridge/buy-widget"
+/>
+
