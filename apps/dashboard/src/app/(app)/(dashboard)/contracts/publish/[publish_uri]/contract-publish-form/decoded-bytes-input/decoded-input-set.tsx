@@ -72,7 +72,6 @@ export const DecodedInputSet: React.FC<DecodedInputSetProps> = ({
       <div className="mt-6 flex justify-start">
         <Button
           className="gap-2"
-          disabled={param.type === "bytes" && fields.length >= 1}
           onClick={() =>
             append({
               defaultValue: "",
