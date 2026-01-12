@@ -89,6 +89,13 @@ export function wrapFetchWithPayment(
         accepts: unknown[];
         error?: string;
       };
+
+      if (!Array.isArray(parsed.accepts)) {
+        throw new Error(
+          `Invalid 402 response: 'accepts' must be an array. ${parsed.error ?? ""}`,
+        );
+      }
+
       x402Version = parsed.x402Version;
       parsedPaymentRequirements = parsed.accepts.map((x) =>
         RequestedPaymentRequirementsSchema.parse(x),
@@ -100,6 +107,13 @@ export function wrapFetchWithPayment(
         accepts: unknown[];
         error?: string;
       };
+
+      if (!Array.isArray(body.accepts)) {
+        throw new Error(
+          `Invalid 402 response: 'accepts' must be an array. ${body.error ?? ""}`,
+        );
+      }
+
       x402Version = body.x402Version;
       parsedPaymentRequirements = body.accepts.map((x) =>
         RequestedPaymentRequirementsSchema.parse(x),
