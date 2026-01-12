@@ -29,6 +29,9 @@ async function withRetry<T>(
   options: { maxAttempts?: number; baseDelayMs?: number } = {},
 ): Promise<T> {
   const { maxAttempts = 3, baseDelayMs = 1000 } = options;
+  if (maxAttempts < 1) {
+    throw new Error("maxAttempts must be at least 1");
+  }
   let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -257,6 +260,7 @@ async function createAndEncryptVaultAccessTokens(props: {
   const {
     project,
     projectSecretKey,
+    projectSecretHash,
     vaultClient,
     adminKey,
     rotationCode,
@@ -297,7 +301,7 @@ async function createAndEncryptVaultAccessTokens(props: {
     const secretKeysHashed = [
       ...project.secretKeys,
       // for newly rotated secret keys, we don't have the secret key in the project secret keys yet
-      ...(props.projectSecretHash ? [{ hash: props.projectSecretHash }] : []),
+      ...(projectSecretHash ? [{ hash: projectSecretHash }] : []),
     ];
     if (!secretKeysHashed.some((key) => key?.hash === projectSecretKeyHash)) {
       throw new Error("Invalid project secret key");
@@ -332,12 +336,12 @@ async function createAndEncryptVaultAccessTokens(props: {
     () =>
       updateProjectClient(
         {
-          projectId: props.project.id,
-          teamId: props.project.teamId,
+          projectId: project.id,
+          teamId: project.teamId,
         },
         {
           services: [
-            ...props.project.services.filter(
+            ...project.services.filter(
               (service) => service.name !== "engineCloud",
             ),
             {
