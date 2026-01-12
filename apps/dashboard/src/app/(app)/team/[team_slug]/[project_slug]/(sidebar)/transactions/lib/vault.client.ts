@@ -69,6 +69,9 @@ export async function rotateVaultAccountAndAccessToken(props: {
       vaultClient,
       adminKey,
       rotationCode,
+      // Skip wallet creation on rotation - preserve the existing project wallet
+      skipWalletCreation: true,
+      existingProjectWalletAddress: service?.projectWalletAddress ?? undefined,
     });
 
   return {
@@ -222,9 +225,18 @@ async function createAndEncryptVaultAccessTokens(props: {
   projectSecretHash?: string;
   adminKey: string;
   rotationCode: string;
+  skipWalletCreation?: boolean;
+  existingProjectWalletAddress?: string;
 }) {
-  const { project, projectSecretKey, vaultClient, adminKey, rotationCode } =
-    props;
+  const {
+    project,
+    projectSecretKey,
+    vaultClient,
+    adminKey,
+    rotationCode,
+    skipWalletCreation,
+    existingProjectWalletAddress,
+  } = props;
 
   const [managementTokenResult, walletTokenResult] = await Promise.all([
     createManagementAccessToken({ project, adminKey, vaultClient }),
@@ -246,12 +258,12 @@ async function createAndEncryptVaultAccessTokens(props: {
   const managementToken = managementTokenResult.data;
   const walletToken = walletTokenResult.data;
 
-  // create a default project server wallet
-  const defaultProjectServerWallet = await createProjectServerWallet({
-    project,
-    managementAccessToken: managementToken.accessToken,
-    label: getProjectWalletLabel(project.name),
-  });
+  // CRITICAL: Save credentials IMMEDIATELY after creating tokens.
+  // This prevents a broken state if wallet creation or other operations fail.
+  // The rotationCode is consumed when rotating, so if we don't save the new one,
+  // the project becomes unrecoverable.
+  let encryptedAdminKey: string | null = null;
+  let encryptedWalletAccessToken: string | null = null;
 
   if (projectSecretKey) {
     // verify that the project secret key is valid
@@ -266,60 +278,52 @@ async function createAndEncryptVaultAccessTokens(props: {
     }
 
     // encrypt admin key and wallet token with project secret key
-    const [encryptedAdminKey, encryptedWalletAccessToken] = await Promise.all([
+    [encryptedAdminKey, encryptedWalletAccessToken] = await Promise.all([
       encrypt(adminKey, projectSecretKey),
       encrypt(walletToken.accessToken, projectSecretKey),
     ]);
-
-    await updateProjectClient(
-      {
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-      },
-      {
-        services: [
-          ...props.project.services.filter(
-            (service) => service.name !== "engineCloud",
-          ),
-          {
-            name: "engineCloud",
-            actions: [],
-            managementAccessToken: managementToken.accessToken,
-            maskedAdminKey: maskSecret(adminKey),
-            encryptedAdminKey,
-            encryptedWalletAccessToken,
-            rotationCode: rotationCode,
-            projectWalletAddress: defaultProjectServerWallet.address,
-          },
-        ],
-      },
-    );
-  } else {
-    // no secret key, only store the management token, remove any encrypted keys
-    await updateProjectClient(
-      {
-        projectId: props.project.id,
-        teamId: props.project.teamId,
-      },
-      {
-        services: [
-          ...props.project.services.filter(
-            (service) => service.name !== "engineCloud",
-          ),
-          {
-            name: "engineCloud",
-            actions: [],
-            managementAccessToken: managementToken.accessToken,
-            maskedAdminKey: maskSecret(adminKey),
-            encryptedAdminKey: null,
-            encryptedWalletAccessToken: null,
-            rotationCode: rotationCode,
-            projectWalletAddress: defaultProjectServerWallet.address,
-          },
-        ],
-      },
-    );
   }
+
+  // For rotation, preserve existing wallet address. For new creation, create a default wallet.
+  let projectWalletAddress: string | null | undefined =
+    existingProjectWalletAddress ??
+    project.services.find((s) => s.name === "engineCloud")
+      ?.projectWalletAddress;
+
+  // Only create a new wallet if we don't have one (initial setup, not rotation)
+  if (!skipWalletCreation && !projectWalletAddress) {
+    const defaultProjectServerWallet = await createProjectServerWallet({
+      project,
+      managementAccessToken: managementToken.accessToken,
+      label: getProjectWalletLabel(project.name),
+    });
+    projectWalletAddress = defaultProjectServerWallet.address;
+  }
+
+  // Save credentials
+  await updateProjectClient(
+    {
+      projectId: props.project.id,
+      teamId: props.project.teamId,
+    },
+    {
+      services: [
+        ...props.project.services.filter(
+          (service) => service.name !== "engineCloud",
+        ),
+        {
+          name: "engineCloud",
+          actions: [],
+          managementAccessToken: managementToken.accessToken,
+          maskedAdminKey: maskSecret(adminKey),
+          encryptedAdminKey,
+          encryptedWalletAccessToken,
+          rotationCode: rotationCode,
+          projectWalletAddress: projectWalletAddress ?? null,
+        },
+      ],
+    },
+  );
 
   return {
     managementToken,
