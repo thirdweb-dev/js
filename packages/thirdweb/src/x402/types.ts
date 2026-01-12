@@ -11,7 +11,7 @@ import type {
   SupportedSignatureTypeSchema,
 } from "./schemas.js";
 
-export const supportedX402Versions = [1, 2] as const;
+const supportedX402Versions = [1, 2] as const;
 export type X402Version = (typeof supportedX402Versions)[number];
 export const x402Version: X402Version = 2;
 
