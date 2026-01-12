@@ -21,6 +21,32 @@ const SERVER_WALLET_ACCESS_TOKEN_PURPOSE =
 export const SERVER_WALLET_MANAGEMENT_ACCESS_TOKEN_PURPOSE =
   "Management Token for Dashboard";
 
+/**
+ * Retry a function with exponential backoff.
+ */
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  options: { maxAttempts?: number; baseDelayMs?: number } = {},
+): Promise<T> {
+  const { maxAttempts = 3, baseDelayMs = 1000 } = options;
+  let lastError: Error | undefined;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (attempt < maxAttempts) {
+        // Exponential backoff: 1s, 2s, 4s...
+        const delay = baseDelayMs * 2 ** (attempt - 1);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 let vc: VaultClient | null = null;
 
 export async function initVaultClient() {
@@ -300,29 +326,34 @@ async function createAndEncryptVaultAccessTokens(props: {
     projectWalletAddress = defaultProjectServerWallet.address;
   }
 
-  // Save credentials
-  await updateProjectClient(
-    {
-      projectId: props.project.id,
-      teamId: props.project.teamId,
-    },
-    {
-      services: [
-        ...props.project.services.filter(
-          (service) => service.name !== "engineCloud",
-        ),
+  // Save credentials with retry - this is critical because if rotation succeeded
+  // but this save fails, the new rotation code is lost and project becomes unrecoverable
+  await withRetry(
+    () =>
+      updateProjectClient(
         {
-          name: "engineCloud",
-          actions: [],
-          managementAccessToken: managementToken.accessToken,
-          maskedAdminKey: maskSecret(adminKey),
-          encryptedAdminKey,
-          encryptedWalletAccessToken,
-          rotationCode: rotationCode,
-          projectWalletAddress: projectWalletAddress ?? null,
+          projectId: props.project.id,
+          teamId: props.project.teamId,
         },
-      ],
-    },
+        {
+          services: [
+            ...props.project.services.filter(
+              (service) => service.name !== "engineCloud",
+            ),
+            {
+              name: "engineCloud",
+              actions: [],
+              managementAccessToken: managementToken.accessToken,
+              maskedAdminKey: maskSecret(adminKey),
+              encryptedAdminKey,
+              encryptedWalletAccessToken,
+              rotationCode: rotationCode,
+              projectWalletAddress: projectWalletAddress ?? null,
+            },
+          ],
+        },
+      ),
+    { maxAttempts: 3, baseDelayMs: 1000 },
   );
 
   return {
