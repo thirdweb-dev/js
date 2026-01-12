@@ -1,6 +1,7 @@
 import { stringify } from "../utils/json.js";
 import { decodePaymentRequest } from "./common.js";
 import { safeBase64Encode } from "./encode.js";
+import { getPaymentResponseHeader } from "./headers.js";
 import {
   type SettlePaymentArgs,
   type SettlePaymentResult,
@@ -37,7 +38,9 @@ import {
  * });
  *
  * export async function GET(request: Request) {
- *   const paymentData = request.headers.get("x-payment");
+ *   const paymentData =
+ *     request.headers.get("payment-signature") ??
+ *     request.headers.get("x-payment");
  *
  *   // verify and process the payment
  *   const result = await settlePayment({
@@ -104,7 +107,8 @@ import {
  *   const result = await settlePayment({
  *     resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
  *     method: req.method,
- *     paymentData: req.headers["x-payment"],
+ *     paymentData:
+ *       req.headers["payment-signature"] ?? req.headers["x-payment"],
  *     payTo: "0x1234567890123456789012345678901234567890",
  *     network: arbitrumSepolia, // or any other chain
  *     price: "$0.05",
@@ -151,6 +155,9 @@ export async function settlePayment(
     decodePaymentResult;
 
   try {
+    const paymentResponseHeaderName = getPaymentResponseHeader(
+      decodedPayment.x402Version,
+    );
     const settlement = await facilitator.settle(
       decodedPayment,
       selectedPaymentRequirements,
@@ -162,8 +169,8 @@ export async function settlePayment(
         status: 200,
         paymentReceipt: settlement,
         responseHeaders: {
-          "Access-Control-Expose-Headers": "X-PAYMENT-RESPONSE",
-          "X-PAYMENT-RESPONSE": safeBase64Encode(stringify(settlement)),
+          "Access-Control-Expose-Headers": paymentResponseHeaderName,
+          [paymentResponseHeaderName]: safeBase64Encode(stringify(settlement)),
         },
       };
     } else {
@@ -174,7 +181,7 @@ export async function settlePayment(
           "Content-Type": "application/json",
         },
         responseBody: {
-          x402Version,
+          x402Version: decodedPayment.x402Version ?? x402Version,
           error,
           errorMessage:
             errorMessages?.settlementFailed || settlement.errorMessage,
@@ -190,7 +197,7 @@ export async function settlePayment(
         "Content-Type": "application/json",
       },
       responseBody: {
-        x402Version,
+        x402Version: decodedPayment.x402Version ?? x402Version,
         error: "Settlement error",
         errorMessage:
           errorMessages?.settlementFailed ||

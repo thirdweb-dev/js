@@ -51,7 +51,8 @@ export async function decodePaymentRequest(
   let decodedPayment: RequestedPaymentPayload;
   try {
     decodedPayment = decodePayment(paymentData);
-    decodedPayment.x402Version = x402Version;
+    // Preserve version provided by the client, default to the current protocol version if missing
+    decodedPayment.x402Version ??= x402Version;
   } catch (error) {
     return {
       status: 402,

@@ -82,7 +82,7 @@ const FacilitatorSupportedResponseSchema =
   SupportedPaymentKindsResponseSchema.extend({
     kinds: z.array(
       z.object({
-        x402Version: z.literal(1),
+        x402Version: z.union([z.literal(1), z.literal(2)]),
         scheme: PaymentSchemeSchema,
         network: FacilitatorNetworkSchema,
         extra: z

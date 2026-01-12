@@ -11,7 +11,9 @@ import type {
   SupportedSignatureTypeSchema,
 } from "./schemas.js";
 
-export const x402Version = 1;
+export const supportedX402Versions = [1, 2] as const;
+export type X402Version = (typeof supportedX402Versions)[number];
+export const x402Version: X402Version = 2;
 
 /**
  * Configuration object for verifying or processing X402 payments.
@@ -23,7 +25,9 @@ export type PaymentArgs = {
   resourceUrl: string;
   /** The HTTP method used to access the resource */
   method: "GET" | "POST" | ({} & string);
-  /** The payment data/proof provided by the client, typically from the X-PAYMENT header */
+  /**
+   * The payment data/proof provided by the client, typically from the PAYMENT-SIGNATURE (v2) or X-PAYMENT (v1) header
+   */
   paymentData?: string | null;
   /** The blockchain network where the payment should be processed */
   network: FacilitatorNetwork | Chain;

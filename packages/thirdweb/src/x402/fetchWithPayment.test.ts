@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { safeBase64Decode, safeBase64Encode } from "./encode.js";
 import { wrapFetchWithPayment } from "./fetchWithPayment.js";
+import { getPaymentRequestHeader } from "./headers.js";
 
 // Mock the createPaymentHeader function
 vi.mock("./sign.js", () => ({
@@ -34,7 +35,7 @@ describe("wrapFetchWithPayment", () => {
   };
 
   const mock402ResponseData = {
-    x402Version: 1,
+    x402Version: 2,
     accepts: [mockPaymentRequirements],
     error: undefined,
   };
@@ -109,9 +110,11 @@ describe("wrapFetchWithPayment", () => {
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(2);
 
-    // Verify the second call includes the X-PAYMENT header
+    // Verify the second call includes the payment header for the version
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty("X-PAYMENT");
+    expect(secondCallInit.headers).toHaveProperty(
+      getPaymentRequestHeader(mock402ResponseData.x402Version),
+    );
   });
 
   it("should parse payment requirements from JSON body when payment-required header is absent", async () => {
@@ -141,9 +144,11 @@ describe("wrapFetchWithPayment", () => {
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(2);
 
-    // Verify the second call includes the X-PAYMENT header
+    // Verify the second call includes the payment header for the version
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty("X-PAYMENT");
+    expect(secondCallInit.headers).toHaveProperty(
+      getPaymentRequestHeader(mock402ResponseData.x402Version),
+    );
   });
 
   it("should prefer payment-required header over JSON body when both are present", async () => {
@@ -152,12 +157,12 @@ describe("wrapFetchWithPayment", () => {
       maxAmountRequired: "500000", // Different amount to verify header is used
     };
     const headerResponseData = {
-      x402Version: 1,
+      x402Version: 2,
       accepts: [headerPaymentRequirements],
     };
 
     const bodyResponseData = {
-      x402Version: 1,
+      x402Version: 2,
       accepts: [{ ...mockPaymentRequirements, maxAmountRequired: "2000000" }],
     };
 
@@ -237,9 +242,11 @@ describe("wrapFetchWithPayment", () => {
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(2);
 
-    // Verify the second call includes the X-PAYMENT header
+    // Verify the second call includes the payment header for the version
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty("X-PAYMENT");
+    expect(secondCallInit.headers).toHaveProperty(
+      getPaymentRequestHeader(mock402ResponseData.x402Version),
+    );
   });
 
   it("should correctly decode a raw base64 encoded payment-required header", async () => {
@@ -297,8 +304,10 @@ describe("wrapFetchWithPayment", () => {
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(2);
 
-    // Verify the retry request was made with X-PAYMENT header
+    // Verify the retry request was made with the v1 payment header
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty("X-PAYMENT");
+    expect(secondCallInit.headers).toHaveProperty(
+      getPaymentRequestHeader(parsed.x402Version),
+    );
   });
 });
