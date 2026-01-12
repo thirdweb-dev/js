@@ -330,20 +330,16 @@ export async function rotateSecretKeyClient(params: { project: Project }) {
     throw new Error(res.error);
   }
 
-  try {
-    // if the project has an encrypted vault admin key, rotate it as well
-    const service = params.project.services.find(
-      (service) => service.name === "engineCloud",
-    );
-    if (service?.encryptedAdminKey) {
-      await rotateVaultAccountAndAccessToken({
-        project: params.project,
-        projectSecretKey: res.data.data.secret,
-        projectSecretHash: res.data.data.secretHash,
-      });
-    }
-  } catch (error) {
-    console.error("Failed to rotate vault admin key", error);
+  // if the project has an encrypted vault admin key, rotate it as well
+  const service = params.project.services.find(
+    (service) => service.name === "engineCloud",
+  );
+  if (service?.encryptedAdminKey) {
+    await rotateVaultAccountAndAccessToken({
+      project: params.project,
+      projectSecretKey: res.data.data.secret,
+      projectSecretHash: res.data.data.secretHash,
+    });
   }
 
   return res.data;

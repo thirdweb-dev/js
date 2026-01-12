@@ -9,6 +9,7 @@ import { ServerWalletsTable } from "../../../transactions/components/server-wall
 import type { Wallet } from "../../../transactions/server-wallets/wallet-table/types";
 import { listSolanaAccounts } from "../../../transactions/solana-wallets/lib/vault.client";
 import type { SolanaWallet } from "../../../transactions/solana-wallets/wallet-table/types";
+import { VaultRecoveryCard } from "./vault-recovery-card.client";
 
 export const dynamic = "force-dynamic";
 
@@ -107,12 +108,10 @@ export default async function Page(props: {
   return (
     <div className="flex flex-col gap-10">
       {eoas.error ? (
-        <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4">
-          <p className="text-destructive font-semibold mb-2">
-            EVM Wallet Error
-          </p>
-          <p className="text-sm text-muted-foreground">{eoas.error.message}</p>
-        </div>
+        <VaultRecoveryCard
+          errorMessage={eoas.error.message}
+          project={project}
+        />
       ) : (
         <ServerWalletsTable
           client={client}
