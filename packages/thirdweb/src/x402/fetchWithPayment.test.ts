@@ -64,7 +64,11 @@ describe("wrapFetchWithPayment", () => {
     });
     const mockFetch = vi.fn().mockResolvedValue(mockResponse);
 
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, mockWallet);
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      mockWallet,
+    );
     const response = await wrappedFetch("https://api.example.com/resource");
 
     expect(response.status).toBe(200);
@@ -83,16 +87,23 @@ describe("wrapFetchWithPayment", () => {
       },
     });
 
-    const mockSuccessResponse = new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    const mockSuccessResponse = new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+      },
+    );
 
     const mockFetch = vi
       .fn()
       .mockResolvedValueOnce(mock402Response)
       .mockResolvedValueOnce(mockSuccessResponse);
 
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, mockWallet);
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      mockWallet,
+    );
     const response = await wrappedFetch("https://api.example.com/resource");
 
     expect(response.status).toBe(200);
@@ -108,16 +119,23 @@ describe("wrapFetchWithPayment", () => {
       status: 402,
     });
 
-    const mockSuccessResponse = new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    const mockSuccessResponse = new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+      },
+    );
 
     const mockFetch = vi
       .fn()
       .mockResolvedValueOnce(mock402Response)
       .mockResolvedValueOnce(mockSuccessResponse);
 
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, mockWallet);
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      mockWallet,
+    );
     const response = await wrappedFetch("https://api.example.com/resource");
 
     expect(response.status).toBe(200);
@@ -155,9 +173,12 @@ describe("wrapFetchWithPayment", () => {
       },
     });
 
-    const mockSuccessResponse = new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    const mockSuccessResponse = new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+      },
+    );
 
     const mockFetch = vi
       .fn()
@@ -167,9 +188,14 @@ describe("wrapFetchWithPayment", () => {
     // Use maxValue to verify which payment requirements are used
     // If header is used (500000), it should pass
     // If body is used (2000000), it would exceed maxValue
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, mockWallet, {
-      maxValue: BigInt(1000000),
-    });
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      mockWallet,
+      {
+        maxValue: BigInt(1000000),
+      },
+    );
 
     const response = await wrappedFetch("https://api.example.com/resource");
 
@@ -189,16 +215,23 @@ describe("wrapFetchWithPayment", () => {
       },
     });
 
-    const mockSuccessResponse = new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    const mockSuccessResponse = new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+      },
+    );
 
     const mockFetch = vi
       .fn()
       .mockResolvedValueOnce(mock402Response)
       .mockResolvedValueOnce(mockSuccessResponse);
 
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, mockWallet);
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      mockWallet,
+    );
     const response = await wrappedFetch("https://api.example.com/resource");
 
     expect(response.status).toBe(200);
@@ -235,9 +268,12 @@ describe("wrapFetchWithPayment", () => {
       },
     });
 
-    const mockSuccessResponse = new Response(JSON.stringify({ success: true }), {
-      status: 200,
-    });
+    const mockSuccessResponse = new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+      },
+    );
 
     const mockFetch = vi
       .fn()
@@ -251,7 +287,11 @@ describe("wrapFetchWithPayment", () => {
       switchChain: vi.fn(),
     } as unknown as Parameters<typeof wrapFetchWithPayment>[2];
 
-    const wrappedFetch = wrapFetchWithPayment(mockFetch, mockClient, baseWallet);
+    const wrappedFetch = wrapFetchWithPayment(
+      mockFetch,
+      mockClient,
+      baseWallet,
+    );
     const response = await wrappedFetch("https://example.com/api");
 
     expect(response.status).toBe(200);
