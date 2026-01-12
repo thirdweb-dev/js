@@ -29,8 +29,11 @@ async function withRetry<T>(
   options: { maxAttempts?: number; baseDelayMs?: number } = {},
 ): Promise<T> {
   const { maxAttempts = 3, baseDelayMs = 1000 } = options;
-  if (maxAttempts < 1) {
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1) {
     throw new Error("maxAttempts must be at least 1");
+  }
+  if (!Number.isFinite(baseDelayMs) || baseDelayMs < 0) {
+    throw new Error("baseDelayMs must be a non-negative number");
   }
   let lastError: Error | undefined;
 
@@ -40,14 +43,17 @@ async function withRetry<T>(
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       if (attempt < maxAttempts) {
-        // Exponential backoff: 1s, 2s, 4s...
-        const delay = baseDelayMs * 2 ** (attempt - 1);
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        // Exponential backoff with cap at 30s and jitter to prevent thundering herd
+        const delay = Math.min(baseDelayMs * 2 ** (attempt - 1), 30_000);
+        const jitter = Math.floor(Math.random() * Math.min(250, delay));
+        await new Promise<void>((resolve) =>
+          setTimeout(resolve, delay + jitter),
+        );
       }
     }
   }
 
-  throw lastError;
+  throw lastError ?? new Error("withRetry failed without capturing an error");
 }
 
 let vc: VaultClient | null = null;
@@ -74,6 +80,20 @@ export async function rotateVaultAccountAndAccessToken(props: {
   const storedRotationCode = service?.rotationCode;
   if (!storedRotationCode) {
     throw new Error("No rotation code found");
+  }
+
+  // IMPORTANT: Validate secret key BEFORE rotating to prevent bricking the project.
+  // If we rotate first and then secret key validation fails, the old rotation code
+  // is consumed but we can't save the new one, leaving the project unrecoverable.
+  if (props.projectSecretKey) {
+    const projectSecretKeyHash = await hashSecretKey(props.projectSecretKey);
+    const secretKeysHashed = [
+      ...props.project.secretKeys,
+      ...(props.projectSecretHash ? [{ hash: props.projectSecretHash }] : []),
+    ];
+    if (!secretKeysHashed.some((key) => key?.hash === projectSecretKeyHash)) {
+      throw new Error("Invalid project secret key");
+    }
   }
 
   const rotateServiceAccountRes = await rotateServiceAccount({
