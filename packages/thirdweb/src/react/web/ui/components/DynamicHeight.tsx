@@ -5,10 +5,7 @@ import { useEffect, useRef, useState } from "react";
 /**
  * @internal
  */
-export function DynamicHeight(props: {
-  children: React.ReactNode;
-  maxHeight?: string;
-}) {
+export function DynamicHeight(props: { children: React.ReactNode }) {
   const { height, elementRef } = useHeightObserver();
 
   return (
@@ -20,14 +17,7 @@ export function DynamicHeight(props: {
         transition: "height 210ms ease",
       }}
     >
-      <div
-        ref={elementRef}
-        style={{
-          maxHeight: props.maxHeight,
-        }}
-      >
-        {props.children}
-      </div>
+      <div ref={elementRef}>{props.children}</div>
     </div>
   );
 }

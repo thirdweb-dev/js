@@ -1,9 +1,10 @@
-import type { IconFC } from "./types.js";
-
 /**
  * @internal
  */
-export const WalletDotIcon: IconFC = (props) => {
+export const WalletDotIcon = (props: {
+  size?: string;
+  style?: React.CSSProperties;
+}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -11,7 +12,7 @@ export const WalletDotIcon: IconFC = (props) => {
       viewBox="0 0 18 18"
       width={props.size}
       height={props.size}
-      style={{ color: props.color }}
+      style={props.style}
       role="presentation"
     >
       <path

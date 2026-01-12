@@ -11,7 +11,7 @@ import type { ConnectLocale } from "../locale/types.js";
 import { ConnectModalContent } from "../Modal/ConnectModalContent.js";
 import { useSetupScreen } from "../Modal/screen.js";
 
-export type WalletSwitcherConnectionScreenProps = {
+export type WalletConnectionScreenProps = {
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   client: ThirdwebClient;
@@ -24,17 +24,17 @@ export type WalletSwitcherConnectionScreenProps = {
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean;
   hiddenWallets?: WalletId[];
+  size: "compact" | "wide";
   walletConnect:
     | {
         projectId?: string;
       }
     | undefined;
   onBack: () => void;
+  shouldSetActive: boolean;
 };
 
-export function WalletSwitcherConnectionScreen(
-  props: WalletSwitcherConnectionScreenProps,
-) {
+export function WalletConnectionScreen(props: WalletConnectionScreenProps) {
   const walletChain = useActiveWalletChain();
   const connectedWallets = useConnectedWallets();
   const wallets =
@@ -74,9 +74,9 @@ export function WalletSwitcherConnectionScreen(
       recommendedWallets={props.recommendedWallets}
       screenSetup={screenSetup}
       setModalVisibility={() => {}}
-      shouldSetActive={false}
+      shouldSetActive={props.shouldSetActive}
       showAllWallets={props.showAllWallets}
-      size="compact"
+      size={props.size}
       walletConnect={props.walletConnect}
       walletIdsToHide={connectedWallets.map((x) => x.id)}
       wallets={wallets}

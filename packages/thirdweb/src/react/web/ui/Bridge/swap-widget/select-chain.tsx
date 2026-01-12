@@ -8,6 +8,7 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
+import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
@@ -15,14 +16,15 @@ import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
 import { SearchInput } from "./SearchInput.js";
+import type { SelectedTab } from "./types.js";
 import { useBridgeChainsWithFilters } from "./use-bridge-chains.js";
 import { cleanedChainName } from "./utils.js";
 
 type SelectBuyTokenProps = {
   onBack: () => void;
   client: ThirdwebClient;
-  onSelectChain: (chain: BridgeChain) => void;
-  selectedChain: BridgeChain | undefined;
+  onSelectTab: (tab: SelectedTab) => void;
+  selectedTab: SelectedTab;
   isMobile: boolean;
   type: "buy" | "sell";
   selections: {
@@ -46,7 +48,7 @@ export function SelectBridgeChain(props: SelectBuyTokenProps) {
     <SelectBridgeChainUI
       {...props}
       isPending={chainQuery.isPending}
-      onSelectChain={props.onSelectChain}
+      onSelectTab={props.onSelectTab}
       chains={chainQuery.data ?? []}
     />
   );
@@ -59,12 +61,14 @@ export function SelectBridgeChainUI(
   props: SelectBuyTokenProps & {
     isPending: boolean;
     chains: BridgeChain[];
-    onSelectChain: (chain: BridgeChain) => void;
-    selectedChain: BridgeChain | undefined;
+    onSelectTab: (tab: SelectedTab) => void;
+    selectedTab: SelectedTab;
   },
 ) {
   const [search, setSearch] = useState("");
-  const [initiallySelectedChain] = useState(props.selectedChain);
+  const [initiallySelectedChain] = useState(
+    props.selectedTab?.type === "chain" ? props.selectedTab.chain : undefined,
+  );
 
   // put the initially selected chain first
   const sortedChains = useMemo(() => {
@@ -84,7 +88,13 @@ export function SelectBridgeChainUI(
   });
 
   return (
-    <Container fullHeight flex="column">
+    <Container
+      fullHeight
+      flex="column"
+      style={{
+        minHeight: "450px",
+      }}
+    >
       {props.isMobile && (
         <>
           <Container px="md" py="md+">
@@ -96,6 +106,7 @@ export function SelectBridgeChainUI(
 
       <Spacer y="md" />
 
+      {/* search */}
       <Container
         px="md"
         style={{
@@ -108,13 +119,12 @@ export function SelectBridgeChainUI(
           placeholder="Search Chain"
         />
       </Container>
-      <Spacer y="sm" />
+      <Spacer y="xs" />
 
+      {/* scroll container */}
       <Container
-        expand
-        px="md"
-        gap={props.isMobile ? undefined : "xxs"}
         flex="column"
+        expand
         style={{
           maxHeight: props.isMobile ? "400px" : "none",
           overflowY: "auto",
@@ -122,60 +132,87 @@ export function SelectBridgeChainUI(
           paddingBottom: spacing.md,
         }}
       >
-        {filteredChains.map((chain) => (
-          <ChainButton
-            key={chain.chainId}
-            chain={chain}
-            client={props.client}
-            onClick={() => props.onSelectChain(chain)}
-            isSelected={chain.chainId === props.selectedChain?.chainId}
-            isMobile={props.isMobile}
-          />
-        ))}
+        {/* chains label */}
+        {!props.isMobile && (
+          <>
+            {/* your tokens button */}
+            <Container px="md">
+              <YourTokensButton
+                onClick={() => props.onSelectTab({ type: "your-tokens" })}
+                isSelected={props.selectedTab?.type === "your-tokens"}
+              />
+            </Container>
 
-        {props.isPending &&
-          new Array(20).fill(0).map(() => (
-            // biome-ignore lint/correctness/useJsxKeyInIterable: ok
-            <ChainButtonSkeleton isMobile={props.isMobile} />
+            <Spacer y="sm" />
+
+            <Container px="lg">
+              <Text size="sm" color="secondaryText">
+                Chains
+              </Text>
+            </Container>
+
+            <Spacer y="xs" />
+          </>
+        )}
+
+        {/* chains list */}
+        <Container expand px="md" gap="xxs" flex="column">
+          {filteredChains.map((chain) => (
+            <ChainButton
+              key={chain.chainId}
+              chain={chain}
+              client={props.client}
+              onClick={() => props.onSelectTab({ type: "chain", chain })}
+              isSelected={
+                props.selectedTab?.type === "chain" &&
+                chain.chainId === props.selectedTab.chain.chainId
+              }
+            />
           ))}
 
-        {filteredChains.length === 0 && !props.isPending && (
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text color="secondaryText" size="md" center multiline>
-              No chains found for "{search}"
-            </Text>
-          </div>
-        )}
+          {props.isPending &&
+            new Array(20).fill(0).map(() => (
+              // biome-ignore lint/correctness/useJsxKeyInIterable: ok
+              <ChainButtonSkeleton />
+            ))}
+
+          {filteredChains.length === 0 && !props.isPending && (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text color="secondaryText" size="sm" center multiline>
+                No chains found
+              </Text>
+            </div>
+          )}
+        </Container>
       </Container>
     </Container>
   );
 }
 
-function ChainButtonSkeleton(props: { isMobile: boolean }) {
-  const iconSizeValue = props.isMobile ? iconSize.lg : iconSize.md;
+function ChainButtonSkeleton() {
+  const iconSizeValue = iconSize.md;
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
         gap: spacing.sm,
-        padding: props.isMobile
-          ? `${spacing.sm} ${spacing.sm}`
-          : `${spacing.xs} ${spacing.xs}`,
+        padding: `${spacing.xs} ${spacing.xs}`,
       }}
     >
-      <Skeleton height={`${iconSizeValue}px`} width={`${iconSizeValue}px`} />
       <Skeleton
-        height={props.isMobile ? fontSize.md : fontSize.sm}
-        width="160px"
+        height={`${iconSizeValue}px`}
+        width={`${iconSizeValue}px`}
+        style={{ borderRadius: radius.full }}
       />
+      <Skeleton height={fontSize.sm} width="160px" />
     </div>
   );
 }
@@ -185,10 +222,9 @@ function ChainButton(props: {
   client: ThirdwebClient;
   onClick: () => void;
   isSelected: boolean;
-  isMobile: boolean;
 }) {
   const theme = useCustomTheme();
-  const iconSizeValue = props.isMobile ? iconSize.lg : iconSize.md;
+  const iconSizeValue = iconSize.md;
   return (
     <Button
       variant={props.isSelected ? "secondary" : "ghost-solid"}
@@ -196,9 +232,9 @@ function ChainButton(props: {
       style={{
         justifyContent: "flex-start",
         fontWeight: 500,
-        fontSize: props.isMobile ? fontSize.md : fontSize.sm,
+        fontSize: fontSize.sm,
         border: "1px solid transparent",
-        padding: !props.isMobile ? `${spacing.xs} ${spacing.xs}` : undefined,
+        padding: `${spacing.xs} ${spacing.xs}`,
       }}
       onClick={props.onClick}
       gap="sm"
@@ -225,6 +261,44 @@ function ChainButton(props: {
         }
       />
       {cleanedChainName(props.chain.name)}
+    </Button>
+  );
+}
+
+function YourTokensButton(props: { onClick: () => void; isSelected: boolean }) {
+  const iconSizeValue = iconSize.md;
+  return (
+    <Button
+      variant={props.isSelected ? "secondary" : "ghost-solid"}
+      fullWidth
+      style={{
+        justifyContent: "flex-start",
+        fontWeight: 500,
+        fontSize: fontSize.sm,
+        border: "1px solid transparent",
+        padding: `${spacing.xs} ${spacing.xs}`,
+      }}
+      onClick={props.onClick}
+      gap="sm"
+    >
+      <Container
+        flex="column"
+        center="both"
+        color="secondaryText"
+        style={{
+          width: `${iconSizeValue}px`,
+          height: `${iconSizeValue}px`,
+        }}
+      >
+        <WalletDotIcon
+          style={{
+            width: "85%",
+            height: "85%",
+            transform: "translateX(7.5%)", // optical alignment
+          }}
+        />
+      </Container>
+      Your Tokens
     </Button>
   );
 }

@@ -17,7 +17,9 @@ import {
 import { CoinsIcon } from "../../ConnectWallet/icons/CoinsIcon.js";
 import { InfoIcon } from "../../ConnectWallet/icons/InfoIcon.js";
 import { WalletDotIcon } from "../../ConnectWallet/icons/WalletDotIcon.js";
+import connectLocaleEn from "../../ConnectWallet/locale/en.js";
 import { formatCurrencyAmount } from "../../ConnectWallet/screens/formatTokenBalance.js";
+import { WalletConnectionScreen } from "../../ConnectWallet/screens/WalletSwitcherConnectionScreen.js";
 import {
   Container,
   Line,
@@ -36,16 +38,17 @@ import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
 import { useIsMobile } from "../../hooks/useisMobile.js";
 import { useTokenPrice } from "./hooks.js";
 import { SearchInput } from "./SearchInput.js";
-import { SelectChainButton } from "./SelectChainButton.js";
+import { MobileTabSelector } from "./SelectChainButton.js";
+import type { SwapWidgetProps } from "./SwapWidget.js";
 import { SelectBridgeChain } from "./select-chain.js";
-import type { ActiveWalletInfo, TokenSelection } from "./types.js";
+import type { ActiveWalletInfo, SelectedTab, TokenSelection } from "./types.js";
 import { useBridgeChainsWithFilters } from "./use-bridge-chains.js";
 import {
   type TokenBalance,
   useTokenBalances,
   useTokens,
 } from "./use-tokens.js";
-import { tokenAmountFormatter } from "./utils.js";
+import { cleanedChainName, tokenAmountFormatter } from "./utils.js";
 
 /**
  * @internal
@@ -62,6 +65,8 @@ type SelectTokenUIProps = {
     sellChainId: number | undefined;
   };
   currency: SupportedFiatCurrency;
+  theme: SwapWidgetProps["theme"];
+  connectOptions: SwapWidgetProps["connectOptions"];
 };
 
 function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
@@ -73,9 +78,6 @@ function findChain(chains: BridgeChain[], activeChainId: number | undefined) {
 
 const INITIAL_LIMIT = 100;
 
-/**
- * @internal
- */
 export function SelectToken(props: SelectTokenUIProps) {
   const chainQuery = useBridgeChainsWithFilters({
     client: props.client,
@@ -84,142 +86,80 @@ export function SelectToken(props: SelectTokenUIProps) {
     sellChainId: props.selections.sellChainId,
   });
 
-  const [search, _setSearch] = useState("");
-  const debouncedSearch = useDebouncedValue(search, 500);
-  const [limit, setLimit] = useState(INITIAL_LIMIT);
+  if (chainQuery.isPending) {
+    return (
+      <Container
+        flex="column"
+        center="both"
+        fullHeight
+        expand
+        style={{
+          minHeight: "450px",
+        }}
+      >
+        <Spinner color="secondaryText" size="xl" />
+      </Container>
+    );
+  }
 
-  const setSearch = useCallback((search: string) => {
-    _setSearch(search);
-    setLimit(INITIAL_LIMIT);
-  }, []);
+  if (!chainQuery.data) {
+    return (
+      <Container center="both">
+        <Text size="sm" color="secondaryText">
+          Failed to fetch chains
+        </Text>
+      </Container>
+    );
+  }
 
-  const [_selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
-    undefined,
-  );
-  const selectedChain =
-    _selectedChain ||
-    (chainQuery.data
-      ? findChain(chainQuery.data, props.selectedToken?.chainId) ||
-        findChain(chainQuery.data, props.activeWalletInfo?.activeChain.id) ||
-        findChain(chainQuery.data, 1)
-      : undefined);
-
-  // all tokens
-  const tokensQuery = useTokens({
-    client: props.client,
-    chainId: selectedChain?.chainId,
-    search: debouncedSearch,
-    limit,
-    offset: 0,
-  });
-
-  // owned tokens
-  const ownedTokensQuery = useTokenBalances({
-    client: props.client,
-    chainId: selectedChain?.chainId,
-    limit,
-    page: 1,
-    walletAddress: props.activeWalletInfo?.activeAccount.address,
-  });
-
-  const filteredOwnedTokens = useMemo(() => {
-    return ownedTokensQuery.data?.tokens?.filter((token) => {
-      return (
-        token.symbol.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        token.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        token.token_address
-          .toLowerCase()
-          .includes(debouncedSearch.toLowerCase())
-      );
-    });
-  }, [ownedTokensQuery.data?.tokens, debouncedSearch]);
-
-  const isFetching = tokensQuery.isFetching || ownedTokensQuery.isFetching;
-
-  return (
-    <SelectTokenUI
-      {...props}
-      ownedTokens={filteredOwnedTokens || []}
-      allTokens={tokensQuery.data || []}
-      isFetching={isFetching}
-      selectedChain={selectedChain}
-      setSelectedChain={setSelectedChain}
-      search={search}
-      setSearch={setSearch}
-      selectedToken={props.selectedToken}
-      setSelectedToken={props.setSelectedToken}
-      showMore={
-        tokensQuery.data?.length === limit
-          ? () => {
-              setLimit(limit + INITIAL_LIMIT);
-            }
-          : undefined
-      }
-    />
-  );
+  return <SelectTokenUI {...props} chains={chainQuery.data} />;
 }
 
 function SelectTokenUI(
   props: SelectTokenUIProps & {
-    ownedTokens: TokenBalance[];
-    allTokens: Token[];
-    isFetching: boolean;
-    selectedChain: BridgeChain | undefined;
-    setSelectedChain: (chain: BridgeChain) => void;
-    search: string;
-    setSearch: (search: string) => void;
-    selectedToken: TokenSelection | undefined;
-    setSelectedToken: (token: TokenSelection) => void;
-    showMore: (() => void) | undefined;
-    type: "buy" | "sell";
-    selections: {
-      buyChainId: number | undefined;
-      sellChainId: number | undefined;
-    };
-  },
+    chains: BridgeChain[];
+  }
 ) {
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>(() => {
+    if (props.selectedToken) {
+      const chain = findChain(props.chains, props.selectedToken?.chainId);
+      if (chain) {
+        return { type: "chain", chain };
+      }
+    }
+    return { type: "your-tokens" };
+  });
+
   const isMobile = useIsMobile();
-  const [screen, setScreen] = useState<"select-chain" | "select-token">(
-    "select-token",
-  );
+  const [screen, setScreen] = useState<
+    "select-chain" | "select-token" | "connect-wallet"
+  >("select-token");
 
-  // show tokens with icons first
-  const sortedOwnedTokens = useMemo(() => {
-    return props.ownedTokens.sort((a, b) => {
-      if (a.icon_uri && !b.icon_uri) {
-        return -1;
-      }
-      if (!a.icon_uri && b.icon_uri) {
-        return 1;
-      }
-      return 0;
-    });
-  }, [props.ownedTokens]);
-
-  const otherTokens = useMemo(() => {
-    const ownedTokenSet = new Set(
-      sortedOwnedTokens.map((t) =>
-        `${t.token_address}-${t.chain_id}`.toLowerCase(),
-      ),
+  if (screen === "connect-wallet") {
+    return (
+      <WalletConnectionScreen
+        shouldSetActive={true}
+        size={isMobile ? "compact" : "wide"}
+        client={props.client}
+        chain={props.connectOptions?.chain}
+        chains={props.connectOptions?.chains}
+        wallets={props.connectOptions?.wallets}
+        appMetadata={props.connectOptions?.appMetadata}
+        connectLocale={connectLocaleEn}
+        recommendedWallets={props.connectOptions?.recommendedWallets}
+        showAllWallets={props.connectOptions?.showAllWallets || true}
+        walletConnect={props.connectOptions?.walletConnect}
+        onBack={() => {
+          setScreen("select-token");
+        }}
+        isEmbed={false}
+        accountAbstraction={props.connectOptions?.accountAbstraction}
+        onSelect={() => {
+          setScreen("select-token");
+        }}
+      />
     );
-    return props.allTokens.filter(
-      (token) =>
-        !ownedTokenSet.has(`${token.address}-${token.chainId}`.toLowerCase()),
-    );
-  }, [props.allTokens, sortedOwnedTokens]);
-
-  // show tokens with icons first
-  const sortedOtherTokens = useMemo(() => {
-    return otherTokens.sort((a, b) => {
-      if (a.iconUri && !b.iconUri) {
-        return -1;
-      }
-      if (!a.iconUri && b.iconUri) {
-        return 1;
-      }
-      return 0;
-    });
-  }, [otherTokens]);
+  }
 
   // desktop
   if (!isMobile) {
@@ -238,58 +178,69 @@ function SelectTokenUI(
             onBack={() => setScreen("select-token")}
             client={props.client}
             isMobile={false}
-            onSelectChain={(chain) => {
-              props.setSelectedChain(chain);
+            onSelectTab={(tab) => {
+              setSelectedTab(tab);
               setScreen("select-token");
             }}
-            selectedChain={props.selectedChain}
+            selectedTab={selectedTab}
           />
         </LeftContainer>
         <Container flex="column" relative scrollY>
           <TokenSelectionScreen
+            setSelectedTab={setSelectedTab}
+            chains={props.chains}
+            onConnectWallet={() => {
+              setScreen("connect-wallet");
+            }}
+            activeWalletInfo={props.activeWalletInfo}
             onSelectToken={(token) => {
               props.setSelectedToken(token);
               props.onClose();
             }}
             isMobile={false}
-            key={props.selectedChain?.chainId}
+            key={
+              selectedTab?.type === "chain"
+                ? selectedTab.chain.chainId
+                : undefined
+            }
             selectedToken={props.selectedToken}
-            isFetching={props.isFetching}
-            ownedTokens={props.ownedTokens}
-            otherTokens={sortedOtherTokens}
-            showMore={props.showMore}
-            selectedChain={props.selectedChain}
-            onSelectChain={() => setScreen("select-chain")}
+            selectedTab={selectedTab}
+            onShowChainSelector={() => setScreen("select-chain")}
             client={props.client}
-            search={props.search}
-            setSearch={props.setSearch}
             currency={props.currency}
+            theme={props.theme}
+            connectOptions={props.connectOptions}
           />
         </Container>
       </Container>
     );
   }
 
+  // mobile
   if (screen === "select-token") {
     return (
       <TokenSelectionScreen
-        key={props.selectedChain?.chainId}
+        setSelectedTab={setSelectedTab}
+        chains={props.chains}
+        onConnectWallet={() => {
+          setScreen("connect-wallet");
+        }}
+        activeWalletInfo={props.activeWalletInfo}
+        key={
+          selectedTab?.type === "chain" ? selectedTab.chain.chainId : undefined
+        }
         onSelectToken={(token) => {
           props.setSelectedToken(token);
           props.onClose();
         }}
         selectedToken={props.selectedToken}
-        isFetching={props.isFetching}
-        ownedTokens={props.ownedTokens}
-        otherTokens={sortedOtherTokens}
-        showMore={props.showMore}
-        selectedChain={props.selectedChain}
+        selectedTab={selectedTab}
         isMobile={true}
-        onSelectChain={() => setScreen("select-chain")}
+        onShowChainSelector={() => setScreen("select-chain")}
         client={props.client}
-        search={props.search}
-        setSearch={props.setSearch}
         currency={props.currency}
+        theme={props.theme}
+        connectOptions={props.connectOptions}
       />
     );
   }
@@ -300,11 +251,11 @@ function SelectTokenUI(
         isMobile={true}
         onBack={() => setScreen("select-token")}
         client={props.client}
-        onSelectChain={(chain) => {
-          props.setSelectedChain(chain);
+        onSelectTab={(tab) => {
+          setSelectedTab(tab);
           setScreen("select-token");
         }}
-        selectedChain={props.selectedChain}
+        selectedTab={selectedTab}
         type={props.type}
         selections={props.selections}
       />
@@ -321,11 +272,16 @@ function TokenButtonSkeleton() {
         display: "flex",
         alignItems: "center",
         gap: spacing.sm,
-        padding: `${spacing.xs} ${spacing.xs}`,
-        height: "70px",
+        padding: spacing.xs,
       }}
     >
-      <Skeleton height={`${iconSize.lg}px`} width={`${iconSize.lg}px`} />
+      <Skeleton
+        height={`${iconSize.lg}px`}
+        width={`${iconSize.lg}px`}
+        style={{
+          borderRadius: radius.full,
+        }}
+      />
       <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
         <Skeleton height={fontSize.sm} width="100px" />
         <Skeleton height={fontSize.md} width="200px" />
@@ -365,7 +321,7 @@ function TokenButton(props: {
         fontWeight: 500,
         fontSize: fontSize.md,
         border: "1px solid transparent",
-        padding: `${spacing.xs} ${spacing.xs}`,
+        padding: spacing.xs,
         textAlign: "left",
         lineHeight: "1.5",
         borderRadius: radius.lg,
@@ -437,8 +393,8 @@ function TokenButton(props: {
             <Text size="md" color="primaryText">
               {tokenAmountFormatter.format(
                 Number(
-                  toTokens(BigInt(props.token.balance), props.token.decimals),
-                ),
+                  toTokens(BigInt(props.token.balance), props.token.decimals)
+                )
               )}
             </Text>
           )}
@@ -463,6 +419,180 @@ function TokenButton(props: {
             {props.token.name}
           </Text>
           {usdValue && (
+            <Container flex="row">
+              <Text size="xs" color="secondaryText" weight={400}>
+                ${usdValue.toFixed(2)}
+              </Text>
+            </Container>
+          )}
+        </Container>
+      </div>
+
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          props.onInfoClick(tokenAddress, chainId);
+        }}
+        style={{
+          padding: spacing.xxs,
+          borderRadius: radius.full,
+        }}
+      >
+        <InfoIcon size={iconSize.sm} />
+      </IconButton>
+    </Button>
+  );
+}
+
+function YourTokenButton(props: {
+  token: TokenBalance;
+  chain: BridgeChain | undefined;
+  client: ThirdwebClient;
+  onSelect: (tokenWithPrices: TokenSelection) => void;
+  onInfoClick: (tokenAddress: string, chainId: number) => void;
+  isSelected: boolean;
+}) {
+  const theme = useCustomTheme();
+  const tokenBalanceInUnits = toTokens(
+    BigInt(props.token.balance),
+    props.token.decimals
+  );
+  const usdValue =
+    props.token.price_data.price_usd * Number(tokenBalanceInUnits);
+
+  const tokenAddress = props.token.token_address;
+  const chainId = props.token.chain_id;
+
+  return (
+    <Button
+      variant={props.isSelected ? "secondary" : "ghost-solid"}
+      fullWidth
+      style={{
+        justifyContent: "flex-start",
+        fontWeight: 500,
+        fontSize: fontSize.md,
+        border: "1px solid transparent",
+        padding: spacing.xs,
+        textAlign: "left",
+        lineHeight: "1.5",
+        borderRadius: radius.lg,
+      }}
+      gap="sm"
+      onClick={async () => {
+        props.onSelect({
+          tokenAddress,
+          chainId,
+        });
+      }}
+    >
+      {/* Token icon with chain icon overlay */}
+      <div
+        style={{
+          position: "relative",
+          width: `${iconSize.lg}px`,
+          height: `${iconSize.lg}px`,
+          flexShrink: 0,
+        }}
+      >
+        <Img
+          src={props.token.icon_uri || ""}
+          client={props.client}
+          width={iconSize.lg}
+          height={iconSize.lg}
+          style={{
+            borderRadius: radius.full,
+          }}
+          fallback={
+            <Container color="secondaryText">
+              <Container
+                style={{
+                  background: `linear-gradient(45deg, white, ${theme.colors.accentText})`,
+                  borderRadius: radius.full,
+                  width: `${iconSize.lg}px`,
+                  height: `${iconSize.lg}px`,
+                }}
+              />
+            </Container>
+          }
+        />
+        {/* Chain icon - small, overlapping bottom right */}
+        {props.chain?.icon && (
+          <Img
+            src={props.chain.icon}
+            client={props.client}
+            width={iconSize.sm}
+            height={iconSize.sm}
+            style={{
+              position: "absolute",
+              bottom: -2,
+              right: -2,
+              borderRadius: radius.full,
+              border: `1.5px solid ${theme.colors.modalBg}`,
+              background: theme.colors.modalBg,
+            }}
+          />
+        )}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: spacing["3xs"],
+          flex: 1,
+        }}
+      >
+        {/* Top row - Symbol and Balance */}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Text
+            size="md"
+            color="primaryText"
+            weight={500}
+            style={{
+              maxWidth: "200px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {props.token.symbol}
+          </Text>
+
+          <Text size="md" color="primaryText">
+            {tokenAmountFormatter.format(
+              Number(
+                toTokens(BigInt(props.token.balance), props.token.decimals)
+              )
+            )}
+          </Text>
+        </Container>
+
+        {/* Bottom row - Chain name and USD value */}
+        <Container
+          flex="row"
+          style={{
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Text
+            size="xs"
+            color="secondaryText"
+            style={{
+              whiteSpace: "nowrap",
+              maxWidth: "200px",
+            }}
+          >
+            {props.chain
+              ? cleanedChainName(props.chain.name)
+              : `Chain ${chainId}`}
+          </Text>
+          {usdValue > 0 && (
             <Container flex="row">
               <Text size="xs" color="secondaryText" weight={400}>
                 ${usdValue.toFixed(2)}
@@ -593,7 +723,7 @@ function TokenInfoScreen(props: {
                 token.prices[props.currency]
                   ? formatCurrencyAmount(
                       props.currency,
-                      token.prices[props.currency] as number,
+                      token.prices[props.currency] as number
                     )
                   : "N/A"
               }
@@ -686,29 +816,27 @@ function TokenInfoRow(props: { label: string; value: string }) {
 }
 
 function TokenSelectionScreen(props: {
-  selectedChain: BridgeChain | undefined;
+  selectedTab: SelectedTab;
   isMobile: boolean;
-  onSelectChain: () => void;
   client: ThirdwebClient;
-  search: string;
-  setSearch: (search: string) => void;
-  isFetching: boolean;
-  ownedTokens: TokenBalance[];
-  otherTokens: Token[];
-  showMore: (() => void) | undefined;
   selectedToken: TokenSelection | undefined;
   onSelectToken: (token: TokenSelection) => void;
   currency: SupportedFiatCurrency;
+  onShowChainSelector: () => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  theme: SwapWidgetProps["theme"];
+  connectOptions: SwapWidgetProps["connectOptions"];
+  onConnectWallet: () => void;
+  setSelectedTab: (tab: SelectedTab) => void;
+  chains: BridgeChain[];
 }) {
-  const [tokenInfoScreen, setTokenInfoScreen] = useState<{
-    tokenAddress: string;
-    chainId: number;
-  } | null>(null);
-
-  const noTokensFound =
-    !props.isFetching &&
-    props.otherTokens.length === 0 &&
-    props.ownedTokens.length === 0;
+  const [tokenInfoScreen, setTokenInfoScreen] = useState<
+    | {
+        tokenAddress: string;
+        chainId: number;
+      }
+    | undefined
+  >();
 
   if (tokenInfoScreen) {
     return (
@@ -716,209 +844,547 @@ function TokenSelectionScreen(props: {
         tokenAddress={tokenInfoScreen.tokenAddress}
         chainId={tokenInfoScreen.chainId}
         client={props.client}
-        onBack={() => setTokenInfoScreen(null)}
+        onBack={() => setTokenInfoScreen(undefined)}
         currency={props.currency}
       />
     );
   }
 
   return (
-    <Container fullHeight flex="column">
-      <Container px="md" pt="md+">
-        <Text size="lg" weight={600} color="primaryText" trackingTight>
-          Select Token
-        </Text>
-        <Spacer y="3xs" />
-        <Text
-          size="sm"
-          color="secondaryText"
-          multiline
-          style={{
-            textWrap: "pretty",
-          }}
-        >
-          Select a token from the list or use the search
-        </Text>
+    <Container
+      flex="column"
+      fullHeight
+      style={{
+        minHeight: "450px",
+      }}
+    >
+      <ScreenHeader
+        title="Select Token"
+        description="Select a token from the list or use the search"
+      />
+
+      {/* tab switcher */}
+      {props.isMobile ? (
+        <Container py="sm">
+          <MobileTabSelector
+            selectedTab={props.selectedTab}
+            client={props.client}
+            onSelect={(value) => {
+              if (value === "your-tokens") {
+                props.setSelectedTab({ type: "your-tokens" });
+              }
+              if (value === "all-tokens") {
+                const chain = props.selectedToken
+                  ? findChain(props.chains, props.selectedToken.chainId)
+                  : props.chains[0];
+                if (chain) {
+                  props.setSelectedTab({ type: "chain", chain: chain });
+                }
+              }
+              if (value === "chain-selector") {
+                props.onShowChainSelector();
+              }
+            }}
+          />
+        </Container>
+      ) : (
+        <Spacer y="md" />
+      )}
+
+      {props.selectedTab.type === "chain" && (
+        <ChainTokenSelectionScreen
+          selectedTab={props.selectedTab}
+          setSelectedTab={props.setSelectedTab}
+          chains={props.chains}
+          isMobile={props.isMobile}
+          client={props.client}
+          selectedToken={props.selectedToken}
+          onSelectToken={props.onSelectToken}
+          currency={props.currency}
+          onShowChainSelector={props.onShowChainSelector}
+          activeWalletInfo={props.activeWalletInfo}
+          showTokenInfo={tokenInfoScreen}
+          setShowTokenInfo={setTokenInfoScreen}
+        />
+      )}
+
+      {props.selectedTab.type === "your-tokens" && (
+        <YourTokenSelectionScreen
+          isMobile={props.isMobile}
+          showTokenInfo={tokenInfoScreen}
+          setShowTokenInfo={setTokenInfoScreen}
+          setSelectedTab={props.setSelectedTab}
+          chains={props.chains}
+          selectedTab={props.selectedTab}
+          onConnectWallet={props.onConnectWallet}
+          client={props.client}
+          selectedToken={props.selectedToken}
+          onSelectToken={props.onSelectToken}
+          currency={props.currency}
+          onShowChainSelector={props.onShowChainSelector}
+          activeWalletInfo={props.activeWalletInfo}
+          theme={props.theme}
+          connectOptions={props.connectOptions}
+        />
+      )}
+    </Container>
+  );
+}
+
+function ChainTokenSelectionScreen(props: {
+  selectedTab: SelectedTab;
+  setSelectedTab: (tab: SelectedTab) => void;
+  isMobile: boolean;
+  client: ThirdwebClient;
+  chains: BridgeChain[];
+  selectedToken: TokenSelection | undefined;
+  onSelectToken: (token: TokenSelection) => void;
+  currency: SupportedFiatCurrency;
+  onShowChainSelector: () => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  showTokenInfo: { tokenAddress: string; chainId: number } | undefined;
+  setShowTokenInfo: (
+    showTokenInfo: { tokenAddress: string; chainId: number } | undefined
+  ) => void;
+}) {
+  const [limit, setLimit] = useState(INITIAL_LIMIT);
+  const [search, _setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 500);
+  const setSearch = useCallback((search: string) => {
+    _setSearch(search);
+    setLimit(INITIAL_LIMIT);
+  }, []);
+
+  const allTokensQuery = useTokens({
+    client: props.client,
+    chainId:
+      props.selectedTab?.type === "chain"
+        ? props.selectedTab.chain.chainId
+        : undefined,
+    search: debouncedSearch,
+    limit,
+    offset: 0,
+  });
+
+  const ownedTokensQuery = useTokenBalances({
+    client: props.client,
+    chainId:
+      props.selectedTab?.type === "chain"
+        ? props.selectedTab.chain.chainId
+        : undefined,
+    limit,
+    page: 1,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+  });
+
+  const isFetching = allTokensQuery.isFetching || ownedTokensQuery.isFetching;
+
+  const ownedTokens = useMemo(() => {
+    if (!ownedTokensQuery.data || ownedTokensQuery.data?.tokens?.length === 0) {
+      return [];
+    }
+
+    let tokens = ownedTokensQuery.data.tokens;
+
+    if (debouncedSearch) {
+      tokens = tokens.filter((token) => {
+        return (
+          token.symbol.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          token.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          token.token_address
+            .toLowerCase()
+            .includes(debouncedSearch.toLowerCase())
+        );
+      });
+    }
+
+    tokens = tokens.sort((a, b) => {
+      if (a.icon_uri && !b.icon_uri) {
+        return -1;
+      }
+      if (!a.icon_uri && b.icon_uri) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return tokens;
+  }, [ownedTokensQuery.data?.tokens, debouncedSearch, ownedTokensQuery.data]);
+
+  const otherTokens = useMemo(() => {
+    if (!allTokensQuery.data || allTokensQuery.data?.length === 0) {
+      return [];
+    }
+
+    const ownedTokenSet = new Set(
+      ownedTokens.map((t) => `${t.token_address}-${t.chain_id}`.toLowerCase())
+    );
+
+    let tokens = allTokensQuery.data.filter(
+      (token) =>
+        !ownedTokenSet.has(`${token.address}-${token.chainId}`.toLowerCase())
+    );
+
+    tokens = tokens.sort((a, b) => {
+      if (a.iconUri && !b.iconUri) {
+        return -1;
+      }
+      if (!a.iconUri && b.iconUri) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return tokens;
+  }, [allTokensQuery.data, ownedTokens]);
+
+  const showMore = useCallback(() => {
+    setLimit(limit + INITIAL_LIMIT);
+  }, [limit]);
+
+  const showLoadMoreButton = allTokensQuery.data?.length === limit;
+
+  const noTokensFound =
+    !isFetching && otherTokens.length === 0 && ownedTokens.length === 0;
+
+  return (
+    <Container
+      flex="column"
+      fullHeight
+      style={{
+        minHeight: "450px",
+      }}
+    >
+      {/* search */}
+      <Container px="md">
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search by token or address"
+          autoFocus={!props.isMobile}
+        />
       </Container>
 
-      {!props.selectedChain && (
+      <Spacer y="xs" />
+
+      {/* tokens for a chain */}
+      {props.selectedTab?.type === "chain" && (
         <Container
-          flex="column"
-          center="both"
+          pb="md"
+          px="md"
           expand
+          gap="xxs"
+          flex="column"
           style={{
             minHeight: "300px",
+            maxHeight: props.isMobile ? "450px" : "none",
+            overflowY: "auto",
+            scrollbarWidth: "none",
+            paddingBottom: spacing.md,
           }}
         >
-          <Spinner color="secondaryText" size="lg" />
-        </Container>
-      )}
+          {isFetching &&
+            new Array(20).fill(0).map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: ok
+              <TokenButtonSkeleton key={i} />
+            ))}
 
-      {props.selectedChain && (
-        <>
-          {props.isMobile ? (
-            <Container p="md">
-              <SelectChainButton
-                onClick={props.onSelectChain}
-                selectedChain={props.selectedChain}
-                client={props.client}
-              />
+          {!isFetching && ownedTokens.length > 0 && (
+            <Container
+              px="xs"
+              py="xs"
+              flex="row"
+              gap="xs"
+              center="y"
+              color="secondaryText"
+            >
+              <WalletDotIcon size="14" />
+              <Text
+                size="sm"
+                color="secondaryText"
+                style={{
+                  overflow: "unset",
+                }}
+              >
+                Your Tokens
+              </Text>
             </Container>
-          ) : (
-            <Spacer y="md" />
           )}
 
-          {/* search */}
-          <Container px="md">
-            <SearchInput
-              value={props.search}
-              onChange={props.setSearch}
-              placeholder="Search by token or address"
-              autoFocus={!props.isMobile}
+          {!isFetching &&
+            ownedTokens.map((token) => (
+              <TokenButton
+                key={token.token_address}
+                token={token}
+                client={props.client}
+                onSelect={props.onSelectToken}
+                onInfoClick={(tokenAddress, chainId) =>
+                  props.setShowTokenInfo({ tokenAddress, chainId })
+                }
+                isSelected={
+                  !!props.selectedToken &&
+                  props.selectedToken.tokenAddress.toLowerCase() ===
+                    token.token_address.toLowerCase() &&
+                  token.chain_id === props.selectedToken.chainId
+                }
+              />
+            ))}
+
+          {!isFetching && ownedTokens.length > 0 && (
+            <Container
+              px="xs"
+              py="xs"
+              flex="row"
+              gap="xs"
+              center="y"
+              color="secondaryText"
+              style={{
+                marginTop: spacing.sm,
+              }}
+            >
+              <CoinsIcon size="14" />
+              <Text
+                size="sm"
+                color="secondaryText"
+                style={{
+                  overflow: "unset",
+                }}
+              >
+                Other Tokens
+              </Text>
+            </Container>
+          )}
+
+          {!isFetching &&
+            otherTokens.map((token) => (
+              <TokenButton
+                key={token.address}
+                token={token}
+                client={props.client}
+                onSelect={props.onSelectToken}
+                onInfoClick={(tokenAddress, chainId) =>
+                  props.setShowTokenInfo({ tokenAddress, chainId })
+                }
+                isSelected={
+                  !!props.selectedToken &&
+                  props.selectedToken.tokenAddress.toLowerCase() ===
+                    token.address.toLowerCase() &&
+                  token.chainId === props.selectedToken.chainId
+                }
+              />
+            ))}
+
+          {showLoadMoreButton && (
+            <Button
+              variant="outline"
+              fullWidth
+              style={{
+                borderRadius: radius.full,
+              }}
+              gap="xs"
+              onClick={() => {
+                showMore();
+              }}
+            >
+              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+              Load More
+            </Button>
+          )}
+
+          {noTokensFound && (
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text size="sm" color="secondaryText">
+                No Tokens Found
+              </Text>
+            </div>
+          )}
+        </Container>
+      )}
+    </Container>
+  );
+}
+
+function YourTokenSelectionScreen(props: {
+  client: ThirdwebClient;
+  selectedToken: TokenSelection | undefined;
+  onSelectToken: (token: TokenSelection) => void;
+  currency: SupportedFiatCurrency;
+  onShowChainSelector: () => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  theme: SwapWidgetProps["theme"];
+  connectOptions: SwapWidgetProps["connectOptions"];
+  onConnectWallet: () => void;
+  isMobile: boolean;
+  setSelectedTab: (tab: SelectedTab) => void;
+  selectedTab: SelectedTab;
+  showTokenInfo: { tokenAddress: string; chainId: number } | undefined;
+  setShowTokenInfo: (
+    showTokenInfo: { tokenAddress: string; chainId: number } | undefined
+  ) => void;
+  chains: BridgeChain[];
+}) {
+  const [search, _setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 500);
+  const setSearch = useCallback((value: string) => {
+    _setSearch(value);
+  }, []);
+
+  const allTokensQuery = useTokenBalances({
+    client: props.client,
+    limit: 100,
+    page: 1,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+    chainId: props.chains.map((chain) => chain.chainId), // TODO - this is not working!!
+  });
+
+  const chainMap = useMemo(() => {
+    const map = new Map<number, BridgeChain>();
+    for (const chain of props.chains) {
+      map.set(chain.chainId, chain);
+    }
+    return map;
+  }, [props.chains]);
+
+  const filteredTokens = useMemo(() => {
+    if (!allTokensQuery.data?.tokens) {
+      return [];
+    }
+
+    let tokens = allTokensQuery.data.tokens;
+
+    if (debouncedSearch) {
+      const searchLower = debouncedSearch.toLowerCase();
+      tokens = tokens.filter((token) => {
+        const chain = chainMap.get(token.chain_id);
+        const chainName = chain?.name.toLowerCase() || "";
+        return (
+          token.symbol.toLowerCase().includes(searchLower) ||
+          token.name.toLowerCase().includes(searchLower) ||
+          token.token_address.toLowerCase().includes(searchLower) ||
+          chainName.includes(searchLower)
+        );
+      });
+    }
+
+    // Sort by tokens with icons first
+    tokens = tokens.sort((a, b) => {
+      if (a.icon_uri && !b.icon_uri) {
+        return -1;
+      }
+      if (!a.icon_uri && b.icon_uri) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return tokens;
+  }, [allTokensQuery.data?.tokens, debouncedSearch, chainMap]);
+
+  if (!props.activeWalletInfo) {
+    return (
+      <Container center="both" expand flex="column">
+        <Button
+          variant="primary"
+          gap="xs"
+          style={{
+            paddingInline: spacing.lg,
+          }}
+          onClick={() => {
+            props.onConnectWallet();
+          }}
+        >
+          Connect Wallet
+        </Button>
+      </Container>
+    );
+  }
+
+  const isFetching = allTokensQuery.isFetching;
+  const noTokensFound = !isFetching && filteredTokens.length === 0;
+
+  return (
+    <Container
+      flex="column"
+      fullHeight
+      style={{
+        minHeight: "450px",
+      }}
+    >
+      {/* search */}
+      <Container px="md">
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search by token, chain, or address"
+          autoFocus={!props.isMobile}
+        />
+      </Container>
+
+      <Spacer y="xs" />
+
+      {/* tokens list */}
+      <Container
+        pb="md"
+        px="md"
+        expand
+        gap="xxs"
+        flex="column"
+        style={{
+          minHeight: "300px",
+          maxHeight: props.isMobile ? "450px" : "none",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          paddingBottom: spacing.md,
+        }}
+      >
+        {isFetching &&
+          new Array(20).fill(0).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: ok
+            <TokenButtonSkeleton key={i} />
+          ))}
+
+        {!isFetching &&
+          filteredTokens.map((token) => (
+            <YourTokenButton
+              key={`${token.token_address}-${token.chain_id}`}
+              token={token}
+              chain={chainMap.get(token.chain_id)}
+              client={props.client}
+              onSelect={props.onSelectToken}
+              onInfoClick={(tokenAddress, chainId) =>
+                props.setShowTokenInfo({ tokenAddress, chainId })
+              }
+              isSelected={
+                !!props.selectedToken &&
+                props.selectedToken.tokenAddress.toLowerCase() ===
+                  token.token_address.toLowerCase() &&
+                token.chain_id === props.selectedToken.chainId
+              }
             />
-          </Container>
+          ))}
 
-          <Spacer y="xs" />
-
-          <Container
-            pb="md"
-            px="md"
-            expand
-            gap="xxs"
-            flex="column"
+        {noTokensFound && (
+          <div
             style={{
-              minHeight: "300px",
-              maxHeight: props.isMobile ? "450px" : "none",
-              overflowY: "auto",
-              scrollbarWidth: "none",
-              paddingBottom: spacing.md,
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {props.isFetching &&
-              new Array(20).fill(0).map((_, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                <TokenButtonSkeleton key={i} />
-              ))}
-
-            {!props.isFetching && props.ownedTokens.length > 0 && (
-              <Container
-                px="xs"
-                py="xs"
-                flex="row"
-                gap="xs"
-                center="y"
-                color="secondaryText"
-              >
-                <WalletDotIcon size="14" />
-                <Text
-                  size="sm"
-                  color="secondaryText"
-                  style={{
-                    overflow: "unset",
-                  }}
-                >
-                  Your Tokens
-                </Text>
-              </Container>
-            )}
-
-            {!props.isFetching &&
-              props.ownedTokens.map((token) => (
-                <TokenButton
-                  key={token.token_address}
-                  token={token}
-                  client={props.client}
-                  onSelect={props.onSelectToken}
-                  onInfoClick={(tokenAddress, chainId) =>
-                    setTokenInfoScreen({ tokenAddress, chainId })
-                  }
-                  isSelected={
-                    !!props.selectedToken &&
-                    props.selectedToken.tokenAddress.toLowerCase() ===
-                      token.token_address.toLowerCase() &&
-                    token.chain_id === props.selectedToken.chainId
-                  }
-                />
-              ))}
-
-            {!props.isFetching && props.ownedTokens.length > 0 && (
-              <Container
-                px="xs"
-                py="xs"
-                flex="row"
-                gap="xs"
-                center="y"
-                color="secondaryText"
-                style={{
-                  marginTop: spacing.sm,
-                }}
-              >
-                <CoinsIcon size="14" />
-                <Text
-                  size="sm"
-                  color="secondaryText"
-                  style={{
-                    overflow: "unset",
-                  }}
-                >
-                  Other Tokens
-                </Text>
-              </Container>
-            )}
-
-            {!props.isFetching &&
-              props.otherTokens.map((token) => (
-                <TokenButton
-                  key={token.address}
-                  token={token}
-                  client={props.client}
-                  onSelect={props.onSelectToken}
-                  onInfoClick={(tokenAddress, chainId) =>
-                    setTokenInfoScreen({ tokenAddress, chainId })
-                  }
-                  isSelected={
-                    !!props.selectedToken &&
-                    props.selectedToken.tokenAddress.toLowerCase() ===
-                      token.address.toLowerCase() &&
-                    token.chainId === props.selectedToken.chainId
-                  }
-                />
-              ))}
-
-            {props.showMore && (
-              <Button
-                variant="outline"
-                fullWidth
-                style={{
-                  borderRadius: radius.full,
-                }}
-                gap="xs"
-                onClick={() => {
-                  props.showMore?.();
-                }}
-              >
-                <PlusIcon width={iconSize.sm} height={iconSize.sm} />
-                Load More
-              </Button>
-            )}
-
-            {noTokensFound && (
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text size="sm" color="secondaryText">
-                  No Tokens Found
-                </Text>
-              </div>
-            )}
-          </Container>
-        </>
-      )}
+            <Text size="sm" color="secondaryText">
+              {debouncedSearch ? "No Tokens Found" : "No tokens in wallet"}
+            </Text>
+          </div>
+        )}
+      </Container>
     </Container>
   );
 }
@@ -934,3 +1400,25 @@ const LeftContainer = /* @__PURE__ */ StyledDiv((_) => {
     position: "relative",
   };
 });
+
+function ScreenHeader(props: {
+  title: string;
+  description: string | undefined;
+}) {
+  return (
+    <Container px="md" pt="md+">
+      <Text size="lg" weight={600} color="primaryText" trackingTight>
+        {props.title}
+      </Text>
+      {props.description && (
+        <>
+          {" "}
+          <Spacer y="3xs" />
+          <Text size="sm" color="secondaryText">
+            {props.description}
+          </Text>
+        </>
+      )}
+    </Container>
+  );
+}

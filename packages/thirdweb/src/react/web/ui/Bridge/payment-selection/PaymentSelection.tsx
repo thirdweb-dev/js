@@ -13,7 +13,7 @@ import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.
 import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
 import type { SupportedTokens } from "../../../../core/utils/defaultTokens.js";
 import type { ConnectLocale } from "../../ConnectWallet/locale/types.js";
-import { WalletSwitcherConnectionScreen } from "../../ConnectWallet/screens/WalletSwitcherConnectionScreen.js";
+import { WalletConnectionScreen } from "../../ConnectWallet/screens/WalletSwitcherConnectionScreen.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Spacer } from "../../components/Spacer.js";
 import type { PayEmbedConnectOptions } from "../../PayEmbed.js";
@@ -239,7 +239,9 @@ export function PaymentSelection({
       : connectOptions?.chains;
 
     return (
-      <WalletSwitcherConnectionScreen
+      <WalletConnectionScreen
+        shouldSetActive={false}
+        size="compact"
         accountAbstraction={connectOptions?.accountAbstraction}
         appMetadata={connectOptions?.appMetadata}
         chain={destinationChain || connectOptions?.chain}

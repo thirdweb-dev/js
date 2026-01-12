@@ -1,11 +1,11 @@
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
-import type { BridgeChain } from "../../../bridge/types/Chain.js";
 import { SwapWidgetContainer } from "../../../react/web/ui/Bridge/swap-widget/SwapWidget.js";
 import {
   SelectBridgeChain,
   SelectBridgeChainUI,
 } from "../../../react/web/ui/Bridge/swap-widget/select-chain.js";
+import type { SelectedTab } from "../../../react/web/ui/Bridge/swap-widget/types.js";
 import { storyClient } from "../../utils.js";
 
 const meta = {
@@ -17,9 +17,9 @@ const meta = {
 export default meta;
 
 export function WithDataDesktop() {
-  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
-    undefined,
-  );
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>({
+    type: "your-tokens",
+  });
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChain
@@ -30,18 +30,18 @@ export function WithDataDesktop() {
         }}
         isMobile={false}
         client={storyClient}
-        onSelectChain={setSelectedChain}
+        onSelectTab={setSelectedTab}
         onBack={() => {}}
-        selectedChain={selectedChain}
+        selectedTab={selectedTab}
       />
     </SwapWidgetContainer>
   );
 }
 
 export function LoadingDesktop() {
-  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
-    undefined,
-  );
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>({
+    type: "your-tokens",
+  });
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChainUI
@@ -52,20 +52,20 @@ export function LoadingDesktop() {
         }}
         isMobile={false}
         client={storyClient}
-        onSelectChain={setSelectedChain}
+        onSelectTab={setSelectedTab}
         onBack={() => {}}
         isPending={true}
         chains={[]}
-        selectedChain={selectedChain}
+        selectedTab={selectedTab}
       />
     </SwapWidgetContainer>
   );
 }
 
 export function WithDataMobile() {
-  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
-    undefined,
-  );
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>({
+    type: "your-tokens",
+  });
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChain
@@ -76,18 +76,18 @@ export function WithDataMobile() {
         }}
         isMobile={true}
         client={storyClient}
-        onSelectChain={setSelectedChain}
+        onSelectTab={setSelectedTab}
         onBack={() => {}}
-        selectedChain={selectedChain}
+        selectedTab={selectedTab}
       />
     </SwapWidgetContainer>
   );
 }
 
 export function LoadingMobile() {
-  const [selectedChain, setSelectedChain] = useState<BridgeChain | undefined>(
-    undefined,
-  );
+  const [selectedTab, setSelectedTab] = useState<SelectedTab>({
+    type: "your-tokens",
+  });
   return (
     <SwapWidgetContainer theme="dark" className="w-full">
       <SelectBridgeChainUI
@@ -98,11 +98,11 @@ export function LoadingMobile() {
         }}
         isMobile={true}
         client={storyClient}
-        onSelectChain={setSelectedChain}
+        onSelectTab={setSelectedTab}
         onBack={() => {}}
         isPending={true}
         chains={[]}
-        selectedChain={selectedChain}
+        selectedTab={selectedTab}
       />
     </SwapWidgetContainer>
   );

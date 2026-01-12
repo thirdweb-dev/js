@@ -77,13 +77,13 @@ export function useTokenBalances(options: {
   page: number;
   limit: number;
   walletAddress: string | undefined;
-  chainId: number | undefined;
+  chainId: number | number[] | undefined;
 }) {
   return useQuery({
     queryKey: ["bridge/v1/wallets", options],
-    enabled: !!options.chainId && !!options.walletAddress,
+    enabled: !!options.walletAddress,
     queryFn: async () => {
-      if (!options.chainId || !options.walletAddress) {
+      if (!options.walletAddress) {
         throw new Error("invalid options");
       }
       const baseUrl = getThirdwebBaseUrl("bridge");
@@ -91,7 +91,18 @@ export function useTokenBalances(options: {
       const url = new URL(
         `https://api.${isDev ? "thirdweb-dev" : "thirdweb"}.com/v1/wallets/${options.walletAddress}/tokens`,
       );
-      url.searchParams.set("chainId", options.chainId.toString());
+
+      // Set chainId param(s) if provided
+      if (options.chainId !== undefined) {
+        if (Array.isArray(options.chainId)) {
+          for (const id of options.chainId) {
+            url.searchParams.append("chainId", id.toString());
+          }
+        } else {
+          url.searchParams.set("chainId", options.chainId.toString());
+        }
+      }
+
       url.searchParams.set("limit", options.limit.toString());
       url.searchParams.set("page", options.page.toString());
       url.searchParams.set("metadata", "true");

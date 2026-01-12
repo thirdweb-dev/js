@@ -208,6 +208,8 @@ export function SwapUI(props: SwapUIProps) {
         {modalState.screen === "select-buy-token" && (
           <SelectToken
             type="buy"
+            theme={props.theme}
+            connectOptions={props.connectOptions}
             selections={{
               buyChainId: props.buyToken?.chainId,
               sellChainId: props.sellToken?.chainId,
@@ -252,6 +254,8 @@ export function SwapUI(props: SwapUIProps) {
         {/* sell token modal */}
         {modalState.screen === "select-sell-token" && (
           <SelectToken
+            theme={props.theme}
+            connectOptions={props.connectOptions}
             onClose={() => {
               setModalState((v) => ({
                 ...v,

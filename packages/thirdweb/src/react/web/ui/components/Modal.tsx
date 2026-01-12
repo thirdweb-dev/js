@@ -99,6 +99,10 @@ export const Modal: React.FC<{
                 props.hide
                   ? { height: 0, opacity: 0, overflow: "hidden", width: 0 }
                   : {
+                      maxHeight:
+                        props.size === "compact"
+                          ? compactModalMaxHeight
+                          : undefined,
                       height:
                         props.size === "compact" ? "auto" : wideModalMaxHeight,
                       maxWidth:
@@ -125,9 +129,7 @@ export const Modal: React.FC<{
                 {props.title}
               </Dialog.Title>
               {props.size === "compact" ? (
-                <DynamicHeight maxHeight={compactModalMaxHeight}>
-                  {props.children}
-                </DynamicHeight>
+                <DynamicHeight>{props.children}</DynamicHeight>
               ) : (
                 props.children
               )}

@@ -1,3 +1,4 @@
+import type { BridgeChain } from "../../../../../bridge/types/Chain.js";
 import type { Chain } from "../../../../../chains/types.js";
 import type {
   Account,
@@ -155,3 +156,7 @@ export type SwapPreparedQuote = Extract<
   BridgePrepareResult,
   { type: "buy" | "sell" }
 >;
+
+export type SelectedTab =
+  | { type: "chain"; chain: BridgeChain }
+  | { type: "your-tokens" };

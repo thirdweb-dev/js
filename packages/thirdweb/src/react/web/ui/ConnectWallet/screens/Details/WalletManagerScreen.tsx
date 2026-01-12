@@ -28,14 +28,14 @@ import { WalletImage } from "../../../components/WalletImage.js";
 import { WalletButtonEl } from "../../WalletEntryButton.js";
 import { formatTokenBalance } from "../formatTokenBalance.js";
 import {
-  WalletSwitcherConnectionScreen,
-  type WalletSwitcherConnectionScreenProps,
+  WalletConnectionScreen,
+  type WalletConnectionScreenProps,
 } from "../WalletSwitcherConnectionScreen.js";
 
 export function WalletManagerScreen(
   props: Omit<
-    WalletSwitcherConnectionScreenProps,
-    "onSelect" | "isEmbed" | "selectedWallet"
+    WalletConnectionScreenProps,
+    "onSelect" | "isEmbed" | "selectedWallet" | "size" | "shouldSetActive"
   > & {
     activeAccount: Account;
     activeWallet: Wallet;
@@ -53,13 +53,15 @@ export function WalletManagerScreen(
 
   if (screen === "connect") {
     return (
-      <WalletSwitcherConnectionScreen
+      <WalletConnectionScreen
         {...props}
         isEmbed={false}
         onSelect={(w) => {
           setActive(w);
           props.onBack();
         }}
+        shouldSetActive={false}
+        size="compact"
       />
     );
   }

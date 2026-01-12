@@ -213,6 +213,8 @@ export function FundWallet(props: FundWalletProps) {
       >
         <SelectToken
           type="buy"
+          theme={props.theme}
+          connectOptions={props.connectOptions}
           currency={props.currency}
           selections={{
             buyChainId: props.selectedToken?.chainId,
@@ -645,7 +647,7 @@ function ReceiverWalletSection(props: {
         gap="xs"
         color="secondaryText"
       >
-        <WalletDotIcon size={iconSize.xs} color="secondaryText" />
+        <WalletDotIcon size={iconSize.xs} />
         <Text size="sm" color="primaryText">
           {ensNameQuery.data || shortenAddress(props.address)}
         </Text>
