@@ -92,7 +92,7 @@ export function wrapFetchWithPayment(
 
       if (!Array.isArray(parsed.accepts)) {
         throw new Error(
-          `Invalid 402 response: 'accepts' must be an array. ${parsed.error ?? ""}`,
+          `402 response has no usable x402 payment requirements. ${parsed.error ?? ""}`,
         );
       }
 
@@ -110,7 +110,7 @@ export function wrapFetchWithPayment(
 
       if (!Array.isArray(body.accepts)) {
         throw new Error(
-          `Invalid 402 response: 'accepts' must be an array. ${body.error ?? ""}`,
+          `402 response has no usable x402 payment requirements. ${body.error ?? ""}`,
         );
       }
 
