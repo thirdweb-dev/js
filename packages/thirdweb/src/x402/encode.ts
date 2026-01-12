@@ -66,7 +66,7 @@ export function safeBase64Encode(data: string): string {
  * @param data - The base64 encoded string to be decoded
  * @returns The decoded string in UTF-8 format
  */
-function safeBase64Decode(data: string): string {
+export function safeBase64Decode(data: string): string {
   if (
     typeof globalThis !== "undefined" &&
     typeof globalThis.atob === "function"
