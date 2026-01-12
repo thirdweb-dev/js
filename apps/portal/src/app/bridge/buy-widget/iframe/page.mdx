@@ -140,6 +140,33 @@ By default, the widget displays thirdweb branding at the bottom. You can hide th
 
 <IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?showThirdwebBranding=false" />
 
+### Editability Options
+
+You can control whether users can edit certain fields in the widget.
+
+
+<Details summary="Token Selection">
+
+By default, users can change the token they want to purchase.
+
+You can disable this by setting the `tokenEditable` query parameter to `false`.
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?chain=8453&tokenEditable=false" />
+
+</Details>
+
+<Details summary="Token Amount">
+
+By default, users can edit the purchase amount.
+
+You can disable this by setting the `amountEditable` query parameter to `false`.
+
+
+<IframeCodePreview src="https://thirdweb.com/bridge/buy-widget?chain=8453&amount=0.01&amountEditable=false" />
+
+</Details>
+
+
 ## Listening for Events
 
 The buy widget iframe sends events to the parent window using `postMessage` when a purchase succeeds or fails.

@@ -213,6 +213,16 @@ export type BuyWidgetProps = {
    * Callback to be called when the user disconnects the active wallet.
    */
   onDisconnect?: () => void;
+
+  /**
+   * By default the token amount is editable. Set this to false to disable editing the token amount
+   */
+  amountEditable?: boolean;
+
+  /**
+   * By default the token selection is editable. Set this to false to disable editing the token selection.
+   */
+  tokenEditable?: boolean;
 };
 
 /**
@@ -490,6 +500,12 @@ function BridgeWidgetContent(
     };
   });
 
+  const amountEditable =
+    props.amountEditable === undefined ? true : props.amountEditable;
+
+  const tokenEditable =
+    props.tokenEditable === undefined ? true : props.tokenEditable;
+
   if (screen.id === "1:buy-ui") {
     return (
       <FundWallet
@@ -525,6 +541,8 @@ function BridgeWidgetContent(
         setSelectedToken={setSelectedToken}
         amountSelection={amountSelection}
         setAmountSelection={setAmountSelection}
+        amountEditable={amountEditable}
+        tokenEditable={tokenEditable}
       />
     );
   }

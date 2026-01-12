@@ -259,6 +259,46 @@ export function LeftSection(props: {
                     </div>
                   </div>
                 </div>
+
+                {/* Editability Options */}
+                <div className="flex flex-col gap-3">
+                  <Label>Editability Options</Label>
+                  <div className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.tokenEditable}
+                        id="token-editable"
+                        onCheckedChange={(checked) => {
+                          setOptions((v) => ({
+                            ...v,
+                            payOptions: {
+                              ...v.payOptions,
+                              tokenEditable: checked === true,
+                            },
+                          }));
+                        }}
+                      />
+                      <Label htmlFor="token-editable">Token Editable</Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        checked={payOptions.amountEditable}
+                        id="amount-editable"
+                        onCheckedChange={(checked) => {
+                          setOptions((v) => ({
+                            ...v,
+                            payOptions: {
+                              ...v.payOptions,
+                              amountEditable: checked === true,
+                            },
+                          }));
+                        }}
+                      />
+                      <Label htmlFor="amount-editable">Amount Editable</Label>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

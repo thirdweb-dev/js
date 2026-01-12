@@ -31,7 +31,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
   }
   return {
     all: "unset",
-    "&:active": {
+    "[&:active]:not([disabled])": {
       transform: "translateY(1px)",
     },
     "&[data-disabled='true']": {

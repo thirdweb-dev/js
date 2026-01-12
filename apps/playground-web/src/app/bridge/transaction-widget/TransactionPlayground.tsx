@@ -21,6 +21,8 @@ const defaultOptions: BridgeComponentsPlaygroundOptions = {
     currency: "USD",
     showThirdwebBranding: true,
     receiverAddress: undefined,
+    amountEditable: true,
+    tokenEditable: true,
   },
   theme: {
     darkColorOverrides: {},

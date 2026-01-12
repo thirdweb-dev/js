@@ -113,6 +113,16 @@ type FundWalletProps = {
     description: string | undefined;
     image: string | undefined;
   };
+
+  /**
+   * Whether the user can edit the amount. Defaults to true.
+   */
+  amountEditable: boolean;
+
+  /**
+   * Whether the user can edit the token selection. Defaults to true.
+   */
+  tokenEditable: boolean;
 };
 
 export type SelectedToken =
@@ -264,6 +274,8 @@ export function FundWallet(props: FundWalletProps) {
             setDetailsModalOpen(true);
           }}
           currency={props.currency}
+          amountEditable={props.amountEditable}
+          tokenEditable={props.tokenEditable}
         />
 
         {receiver && isReceiverDifferentFromActiveWallet && (
@@ -415,6 +427,8 @@ function TokenSection(props: {
   };
   onWalletClick: () => void;
   presetOptions: [number, number, number];
+  amountEditable: boolean;
+  tokenEditable: boolean;
 }) {
   const theme = useCustomTheme();
   const chainQuery = useBridgeChain({
@@ -467,6 +481,7 @@ function TokenSection(props: {
         client={props.client}
         onSelectToken={props.onSelectToken}
         chain={chain}
+        disabled={props.tokenEditable === false}
       />
 
       <Container px="md" py="md">
@@ -479,6 +494,7 @@ function TokenSection(props: {
               value,
             });
           }}
+          disabled={props.amountEditable === false}
           style={{
             border: "none",
             boxShadow: "none",
@@ -527,6 +543,7 @@ function TokenSection(props: {
                   value,
                 });
               }}
+              disabled={props.amountEditable === false}
               style={{
                 border: "none",
                 boxShadow: "none",
@@ -541,36 +558,41 @@ function TokenSection(props: {
           )}
         </div>
 
-        <Spacer y="md" />
-
         {/* suggested amounts */}
-        <Container flex="row" gap="xxs">
-          {props.presetOptions.map((amount) => (
-            <Button
-              disabled={!props.selectedToken?.data}
-              key={amount}
-              onClick={() =>
-                props.setAmount({
-                  type: "usd",
-                  value: String(amount),
-                })
-              }
-              style={{
-                backgroundColor: "transparent",
-                color: theme.colors.secondaryText,
-                fontSize: fontSize.xs,
-                fontWeight: 400,
-                borderRadius: radius.full,
-                gap: "0.5px",
-                padding: `${spacing.xxs} ${spacing.sm}`,
-              }}
-              variant="outline"
-            >
-              <span>{getFiatSymbol(props.currency)}</span>
-              <span>{amount}</span>
-            </Button>
-          ))}
-        </Container>
+        {props.amountEditable && (
+          <>
+            <Spacer y="md" />
+            <Container flex="row" gap="xxs">
+              {props.presetOptions.map((amount) => (
+                <Button
+                  disabled={
+                    !props.selectedToken?.data || props.amountEditable === false
+                  }
+                  key={amount}
+                  onClick={() =>
+                    props.setAmount({
+                      type: "usd",
+                      value: String(amount),
+                    })
+                  }
+                  style={{
+                    backgroundColor: "transparent",
+                    color: theme.colors.secondaryText,
+                    fontSize: fontSize.xs,
+                    fontWeight: 400,
+                    borderRadius: radius.full,
+                    gap: "0.5px",
+                    padding: `${spacing.xxs} ${spacing.sm}`,
+                  }}
+                  variant="outline"
+                >
+                  <span>{getFiatSymbol(props.currency)}</span>
+                  <span>{amount}</span>
+                </Button>
+              ))}
+            </Container>
+          </>
+        )}
       </Container>
 
       {/* balance */}

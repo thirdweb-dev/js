@@ -68,5 +68,14 @@ export function buildBuyIframeUrl(options: BridgeComponentsPlaygroundOptions) {
     );
   }
 
+  // Editability options
+  if (options.payOptions.amountEditable === false) {
+    url.searchParams.set("amountEditable", "false");
+  }
+
+  if (options.payOptions.tokenEditable === false) {
+    url.searchParams.set("tokenEditable", "false");
+  }
+
   return url.toString();
 }

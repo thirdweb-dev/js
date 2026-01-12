@@ -63,6 +63,43 @@ export function BuyBaseUSDC() {
   );
 }
 
+export function TokenNotEditable() {
+  return (
+    <Variant
+      client={storyClient}
+      chain={base}
+      amount="0.1"
+      tokenAddress="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      tokenEditable={false}
+    />
+  );
+}
+
+export function AmountNotEditable() {
+  return (
+    <Variant
+      client={storyClient}
+      chain={base}
+      amount="0.1"
+      tokenAddress="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      amountEditable={false}
+    />
+  );
+}
+
+export function TokenAndAmountNotEditable() {
+  return (
+    <Variant
+      client={storyClient}
+      chain={base}
+      amount="0.1"
+      tokenAddress="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+      tokenEditable={false}
+      amountEditable={false}
+    />
+  );
+}
+
 export function CustomTitleDescriptionAndButtonLabel() {
   return (
     <Variant

@@ -24,6 +24,8 @@ const defaultOptions: BridgeComponentsPlaygroundOptions = {
     transactionData: "",
     currency: "USD",
     showThirdwebBranding: true,
+    amountEditable: true,
+    tokenEditable: true,
   },
   theme: {
     darkColorOverrides: {},

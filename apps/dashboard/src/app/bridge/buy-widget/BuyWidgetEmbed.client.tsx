@@ -20,6 +20,8 @@ export function BuyWidgetEmbed({
   buttonLabel,
   receiverAddress,
   country,
+  amountEditable,
+  tokenEditable,
 }: {
   chainId?: number;
   tokenAddress?: Address;
@@ -34,6 +36,8 @@ export function BuyWidgetEmbed({
   buttonLabel?: string;
   receiverAddress?: Address;
   country?: string;
+  amountEditable?: boolean;
+  tokenEditable?: boolean;
 }) {
   const client = useMemo(
     () =>
@@ -68,6 +72,8 @@ export function BuyWidgetEmbed({
       buttonLabel={buttonLabel}
       receiverAddress={receiverAddress}
       country={country}
+      amountEditable={amountEditable}
+      tokenEditable={tokenEditable}
       onSuccess={() => {
         sendMessageToParent({
           source: "buy-widget",

@@ -73,6 +73,14 @@ export default async function Page(props: {
   const receiverAddress = parseQueryParams(searchParams.receiver, onlyAddress);
   const country = parseQueryParams(searchParams.country, (v) => v);
 
+  // Editable params
+  const amountEditable = parseQueryParams(searchParams.amountEditable, (v) =>
+    v === "false" ? false : undefined,
+  );
+  const tokenEditable = parseQueryParams(searchParams.tokenEditable, (v) =>
+    v === "false" ? false : undefined,
+  );
+
   return (
     <BridgeProvidersLite forcedTheme={theme}>
       <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
@@ -90,6 +98,8 @@ export default async function Page(props: {
           buttonLabel={buttonLabel}
           receiverAddress={receiverAddress}
           country={country}
+          amountEditable={amountEditable}
+          tokenEditable={tokenEditable}
         />
       </div>
     </BridgeProvidersLite>

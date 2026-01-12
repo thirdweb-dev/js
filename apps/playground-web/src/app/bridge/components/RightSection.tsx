@@ -70,6 +70,8 @@ export function RightSection(props: {
         currency={props.options.payOptions.currency}
         showThirdwebBranding={props.options.payOptions.showThirdwebBranding}
         receiverAddress={props.options.payOptions.receiverAddress}
+        amountEditable={props.options.payOptions.amountEditable}
+        tokenEditable={props.options.payOptions.tokenEditable}
         key={JSON.stringify({
           amount: props.options.payOptions.buyTokenAmount,
           chain: props.options.payOptions.buyTokenChain,

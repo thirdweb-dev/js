@@ -27,21 +27,26 @@ export function SelectedTokenButton(props: {
   client: ThirdwebClient;
   onSelectToken: () => void;
   chain: BridgeChain | undefined;
+  disabled?: boolean;
 }) {
   const theme = useCustomTheme();
   return (
     <Button
       variant="ghost-solid"
-      hoverBg="secondaryButtonBg"
+      hoverBg={props.disabled ? undefined : "secondaryButtonBg"}
       fullWidth
       onClick={props.onSelectToken}
       gap="sm"
+      disabled={props.disabled}
       style={{
         borderBottom: `1px dashed ${theme.colors.borderColor}`,
         justifyContent: "space-between",
         paddingInline: spacing.md,
         paddingBlock: spacing.md,
         borderRadius: 0,
+        background: props.disabled ? "transparent" : undefined,
+        cursor: props.disabled ? "default" : "pointer",
+        opacity: 1,
       }}
     >
       <Container gap="sm" flex="row" center="y">
@@ -166,20 +171,22 @@ export function SelectedTokenButton(props: {
           </Container>
         )}
       </Container>
-      <Container
-        color="secondaryText"
-        flex="row"
-        center="both"
-        borderColor="borderColor"
-        style={{
-          borderRadius: radius.full,
-          borderWidth: 1,
-          borderStyle: "solid",
-          padding: spacing.xs,
-        }}
-      >
-        <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-      </Container>
+      {!props.disabled && (
+        <Container
+          color="secondaryText"
+          flex="row"
+          center="both"
+          borderColor="borderColor"
+          style={{
+            borderRadius: radius.full,
+            borderWidth: 1,
+            borderStyle: "solid",
+            padding: spacing.xs,
+          }}
+        >
+          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
+        </Container>
+      )}
     </Button>
   );
 }

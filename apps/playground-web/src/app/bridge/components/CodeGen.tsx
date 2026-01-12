@@ -160,6 +160,14 @@ tokenId: 2n,
       ? quotes(options.payOptions.buttonLabel)
       : undefined,
     transaction: transaction,
+    amountEditable:
+      widget === "buy" && options.payOptions.amountEditable === false
+        ? false
+        : undefined,
+    tokenEditable:
+      widget === "buy" && options.payOptions.tokenEditable === false
+        ? false
+        : undefined,
   };
 
   return `\

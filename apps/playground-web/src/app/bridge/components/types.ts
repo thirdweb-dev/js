@@ -59,5 +59,9 @@ export type BridgeComponentsPlaygroundOptions = {
     currency?: SupportedFiatCurrency;
 
     showThirdwebBranding: boolean;
+
+    // Editability options
+    amountEditable: boolean;
+    tokenEditable: boolean;
   };
 };
