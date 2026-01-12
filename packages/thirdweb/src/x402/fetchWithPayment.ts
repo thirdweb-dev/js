@@ -4,6 +4,7 @@ import { getAddress } from "../utils/address.js";
 import type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
+import { safeBase64Decode } from "./encode.js";
 import { clearPermitSignatureFromCache } from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
@@ -75,14 +76,36 @@ export function wrapFetchWithPayment(
       return response;
     }
 
-    const { x402Version, accepts, error } = (await response.json()) as {
-      x402Version: number;
-      accepts: unknown[];
-      error?: string;
-    };
-    const parsedPaymentRequirements = accepts.map((x) =>
-      RequestedPaymentRequirementsSchema.parse(x),
-    );
+    let x402Version: number;
+    let parsedPaymentRequirements: RequestedPaymentRequirements[];
+    let error: string | undefined;
+
+    // Check payment-required header first before falling back to JSON body
+    const paymentRequiredHeader = response.headers.get("payment-required");
+    if (paymentRequiredHeader) {
+      const decoded = safeBase64Decode(paymentRequiredHeader);
+      const parsed = JSON.parse(decoded) as {
+        x402Version: number;
+        accepts: unknown[];
+        error?: string;
+      };
+      x402Version = parsed.x402Version;
+      parsedPaymentRequirements = parsed.accepts.map((x) =>
+        RequestedPaymentRequirementsSchema.parse(x),
+      );
+      error = parsed.error;
+    } else {
+      const body = (await response.json()) as {
+        x402Version: number;
+        accepts: unknown[];
+        error?: string;
+      };
+      x402Version = body.x402Version;
+      parsedPaymentRequirements = body.accepts.map((x) =>
+        RequestedPaymentRequirementsSchema.parse(x),
+      );
+      error = body.error;
+    }
 
     const account = wallet.getAccount();
     let chain = wallet.getChain();
