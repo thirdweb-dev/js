@@ -45,6 +45,8 @@ export function VaultRecoveryCard({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [secretKeyInput, setSecretKeyInput] = useState("");
+  // Option for managed vault users who lost their secret key
+  const [manageKeysSelf, setManageKeysSelf] = useState(false);
   // For ejected vault key download flow
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
@@ -54,6 +56,9 @@ export function VaultRecoveryCard({
     (s) => s.name === "engineCloud",
   );
   const wasManagedVault = !!engineCloudService?.encryptedAdminKey;
+
+  // Will create ejected vault if: wasn't managed, OR user chose to manage keys themselves
+  const willCreateEjectedVault = !wasManagedVault || manageKeysSelf;
 
   const isInsufficientScopeError =
     errorMessage.includes("AUTH_INSUFFICIENT_SCOPE") ||
@@ -65,16 +70,16 @@ export function VaultRecoveryCard({
 
       const result = await createVaultAccountAndAccessToken({
         project,
-        // Only pass secret key if it was a managed vault and user provided one
-        projectSecretKey: wasManagedVault ? secretKeyInput : undefined,
+        // Only pass secret key if creating managed vault (not ejected)
+        projectSecretKey: willCreateEjectedVault ? undefined : secretKeyInput,
       });
 
       return result;
     },
     onSuccess: () => {
-      // For managed vaults, reload immediately (keys are encrypted with secret key)
+      // For managed vaults (with secret key), reload immediately
       // For ejected vaults, show the key download dialog first
-      if (wasManagedVault) {
+      if (!willCreateEjectedVault) {
         window.location.reload();
       }
       // For ejected vaults, we stay in the dialog to show the admin key
@@ -110,10 +115,11 @@ export function VaultRecoveryCard({
     window.location.reload();
   };
 
-  // For managed vaults, require secret key input
-  const canProceed = wasManagedVault
-    ? confirmed && secretKeyInput.trim().length > 0
-    : confirmed;
+  // For managed vaults creating managed vault, require secret key input
+  // For ejected vaults (or managed choosing to manage keys), just need confirmation
+  const canProceed = willCreateEjectedVault
+    ? confirmed
+    : confirmed && secretKeyInput.trim().length > 0;
 
   if (!isInsufficientScopeError) {
     // Show standard error for non-scope errors
@@ -164,7 +170,7 @@ export function VaultRecoveryCard({
           </AlertDialogTrigger>
           <AlertDialogContent>
             {/* Show key download UI for ejected vaults after success */}
-            {!wasManagedVault && regenerateMutation.data ? (
+            {willCreateEjectedVault && regenerateMutation.data ? (
               <>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Save your Vault Admin Key</AlertDialogTitle>
@@ -267,24 +273,50 @@ export function VaultRecoveryCard({
                       </div>
 
                       {wasManagedVault && (
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="secret-key-input"
-                            className="font-medium text-sm"
-                          >
-                            Enter your project Secret Key
-                          </label>
-                          <Input
-                            id="secret-key-input"
-                            type="password"
-                            placeholder="sk_..."
-                            value={secretKeyInput}
-                            onChange={(e) => setSecretKeyInput(e.target.value)}
-                          />
-                          <p className="text-muted-foreground text-xs">
-                            Your secret key is required to create a managed
-                            vault.
-                          </p>
+                        <div className="space-y-3">
+                          {!manageKeysSelf && (
+                            <>
+                              <label
+                                htmlFor="secret-key-input"
+                                className="font-medium text-sm"
+                              >
+                                Enter your project Secret Key
+                              </label>
+                              <Input
+                                id="secret-key-input"
+                                type="password"
+                                placeholder="sk_..."
+                                value={secretKeyInput}
+                                onChange={(e) =>
+                                  setSecretKeyInput(e.target.value)
+                                }
+                              />
+                              <p className="text-muted-foreground text-xs">
+                                Your secret key is required to create a managed
+                                vault.
+                              </p>
+                            </>
+                          )}
+
+                          <div className="flex items-start gap-2 border-t pt-3">
+                            <Checkbox
+                              id="manage-keys-self"
+                              checked={manageKeysSelf}
+                              onCheckedChange={(checked) => {
+                                setManageKeysSelf(checked === true);
+                                if (checked) {
+                                  setSecretKeyInput("");
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="manage-keys-self"
+                              className="cursor-pointer text-sm leading-tight"
+                            >
+                              I lost my secret key and want to manage vault keys
+                              myself (advanced)
+                            </label>
+                          </div>
                         </div>
                       )}
 
@@ -312,6 +344,7 @@ export function VaultRecoveryCard({
                     onClick={() => {
                       setConfirmed(false);
                       setSecretKeyInput("");
+                      setManageKeysSelf(false);
                     }}
                   >
                     Cancel
