@@ -31,7 +31,12 @@ import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js
 import { GuestIcon } from "../../ui/ConnectWallet/icons/GuestIcon.js";
 import { OutlineWalletIcon } from "../../ui/ConnectWallet/icons/OutlineWalletIcon.js";
 import { PhoneIcon } from "../../ui/ConnectWallet/icons/PhoneIcon.js";
+import {
+  getLastUsedSocialAuth,
+  getLastUsedWalletId,
+} from "../../ui/ConnectWallet/Modal/storage.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
+import { LastUsedBadge } from "../../ui/components/badge.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Img } from "../../ui/components/Img.js";
@@ -97,6 +102,9 @@ export const ConnectWalletSocialOptions = (
   ) => void;
 
   const themeObj = useCustomTheme();
+  const lastUsedSocialAuth = useMemo(() => getLastUsedSocialAuth(), []);
+  const lastUsedWalletId = useMemo(() => getLastUsedWalletId(), []);
+
   const optionalImageMetadata = useMemo(
     () =>
       props.wallet.id === "inApp"
@@ -134,9 +142,25 @@ export const ConnectWalletSocialOptions = (
     queryKey: ["auth-options", wallet.id],
     retry: false,
   });
-  const authOptions = isEcosystemWallet(wallet)
+  const _authOptions = isEcosystemWallet(wallet)
     ? (ecosystemAuthOptions ?? defaultAuthOptions)
     : (wallet.getConfig()?.auth?.options ?? defaultAuthOptions);
+
+  const authOptions = useMemo(() => {
+    if (!lastUsedSocialAuth || wallet.id !== lastUsedWalletId) {
+      return _authOptions;
+    }
+
+    return [..._authOptions].sort((a, b) => {
+      if (lastUsedSocialAuth === a) {
+        return -1;
+      }
+      if (lastUsedSocialAuth === b) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [_authOptions, lastUsedSocialAuth, wallet.id, lastUsedWalletId]);
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
@@ -369,9 +393,13 @@ export const ConnectWalletSocialOptions = (
                     }}
                     style={{
                       flexGrow: socialLogins.length < 7 ? 1 : 0,
+                      position: "relative",
                     }}
                     variant="outline"
                   >
+                    {lastUsedWalletId === wallet.id &&
+                      lastUsedSocialAuth === loginMethod && <LastUsedBadge />}
+
                     <Img
                       client={props.client}
                       height={imgIconSize}
@@ -397,6 +425,9 @@ export const ConnectWalletSocialOptions = (
         (inputMode === "email" ? (
           <InputSelectionUI
             className="tw-input-container tw-input-container__email"
+            lastUsedBadge={
+              lastUsedWalletId === wallet.id && lastUsedSocialAuth === "email"
+            }
             disabled={props.disabled}
             emptyErrorMessage={emptyErrorMessage}
             errorMessage={(input) => {
@@ -417,6 +448,9 @@ export const ConnectWalletSocialOptions = (
           />
         ) : (
           <WalletTypeRowButton
+            lastUsedBadge={
+              lastUsedWalletId === wallet.id && lastUsedSocialAuth === "email"
+            }
             className="tw-select-button tw-select-button__email"
             client={props.client}
             disabled={props.disabled}
@@ -427,6 +461,7 @@ export const ConnectWalletSocialOptions = (
             title={locale.emailPlaceholder}
           />
         ))}
+
       {isPhoneEnabled &&
         (inputMode === "phone" ? (
           <InputSelectionUI
@@ -436,6 +471,9 @@ export const ConnectWalletSocialOptions = (
             }
             defaultSmsCountryCode={
               wallet.getConfig()?.auth?.defaultSmsCountryCode
+            }
+            lastUsedBadge={
+              lastUsedWalletId === wallet.id && lastUsedSocialAuth === "phone"
             }
             disabled={props.disabled}
             emptyErrorMessage={emptyErrorMessage}
@@ -463,6 +501,9 @@ export const ConnectWalletSocialOptions = (
           />
         ) : (
           <WalletTypeRowButton
+            lastUsedBadge={
+              lastUsedWalletId === wallet.id && lastUsedSocialAuth === "phone"
+            }
             className="tw-select-button tw-select-button__phone"
             client={props.client}
             disabled={props.disabled}
@@ -476,6 +517,9 @@ export const ConnectWalletSocialOptions = (
 
       {passKeyEnabled && (
         <WalletTypeRowButton
+          lastUsedBadge={
+            lastUsedWalletId === wallet.id && lastUsedSocialAuth === "passkey"
+          }
           className="tw-select-button tw-select-button__passkey"
           client={props.client}
           disabled={props.disabled}
@@ -490,6 +534,9 @@ export const ConnectWalletSocialOptions = (
       {/* SIWE login */}
       {siweEnabled && !props.isLinking && (
         <WalletTypeRowButton
+          lastUsedBadge={
+            lastUsedWalletId === wallet.id && lastUsedSocialAuth === "wallet"
+          }
           className="tw-select-button tw-select-button__link-wallet"
           client={props.client}
           icon={OutlineWalletIcon}
@@ -503,6 +550,9 @@ export const ConnectWalletSocialOptions = (
       {/* Guest login */}
       {guestEnabled && (
         <WalletTypeRowButton
+          lastUsedBadge={
+            lastUsedWalletId === wallet.id && lastUsedSocialAuth === "guest"
+          }
           className="tw-select-button tw-select-button__guest"
           client={props.client}
           disabled={props.disabled}
@@ -516,6 +566,7 @@ export const ConnectWalletSocialOptions = (
 
       {props.isLinking && (
         <WalletTypeRowButton
+          lastUsedBadge={false}
           className="tw-select-button tw-select-button__link-wallet"
           client={props.client}
           icon={OutlineWalletIcon}

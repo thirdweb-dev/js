@@ -6,6 +6,7 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import { LastUsedBadge } from "../../ui/components/badge.js";
 import { IconButton } from "../../ui/components/buttons.js";
 import { Input, InputContainer } from "../../ui/components/formElements.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -26,6 +27,7 @@ export function InputSelectionUI(props: {
   disabled?: boolean;
   defaultSmsCountryCode?: SupportedSmsCountry;
   allowedSmsCountryCodes?: SupportedSmsCountry[];
+  lastUsedBadge: boolean;
 }) {
   const [countryCodeInfo, setCountryCodeInfo] = useState(
     props.defaultSmsCountryCode
@@ -72,6 +74,8 @@ export function InputSelectionUI(props: {
           position: "relative",
         }}
       >
+        {props.lastUsedBadge && <LastUsedBadge />}
+
         {props.format === "phone" && (
           <CountrySelector
             allowedCountryCodes={props.allowedSmsCountryCodes}

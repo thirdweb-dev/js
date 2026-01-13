@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { iconSize, spacing } from "../../../core/design-system/index.js";
 import { Text } from "../../ui/components/text.js";
+import { LastUsedBadge } from "../components/badge.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import type { IconFC } from "./icons/types.js";
@@ -12,6 +13,7 @@ type WalletTypeRowProps = {
   icon: IconFC;
   disabled?: boolean;
   className?: string;
+  lastUsedBadge: boolean;
 };
 
 export function WalletTypeRowButton(props: WalletTypeRowProps) {
@@ -27,9 +29,11 @@ export function WalletTypeRowButton(props: WalletTypeRowProps) {
         display: "flex",
         justifyContent: "flex-start",
         padding: spacing.sm,
+        position: "relative",
       }}
       variant="outline"
     >
+      {props.lastUsedBadge && <LastUsedBadge />}
       <Container center="y" color="accentText" flex="row" gap="sm">
         <props.icon size={iconSize.md} />
         <Text color="primaryText">{props.title}</Text>

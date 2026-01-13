@@ -1,6 +1,6 @@
 "use client";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
@@ -19,6 +19,7 @@ import {
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import InAppWalletSelectionUI from "../../wallets/in-app/InAppWalletSelectionUI.js";
+import { LAST_USED_BADGE_VERTICAL_RESERVED_SPACE } from "../components/badge.js";
 import {
   Container,
   Line,
@@ -38,6 +39,7 @@ import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { useScreenContext } from "./Modal/screen.js";
+import { getLastUsedWalletId } from "./Modal/storage.js";
 import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButtonEl, WalletEntryButton } from "./WalletEntryButton.js";
@@ -136,6 +138,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   const [approvedTOS, setApprovedTOS] = useState(false);
 
   const installedWallets = getInstalledWallets();
+  const lastUsedWalletId = useMemo(() => getLastUsedWalletId(), []);
   const propsWallets = props.wallets;
   let _wallets: Wallet[] = [...propsWallets];
 
@@ -219,6 +222,11 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   const connectAWallet = (
     <WalletTypeRowButton
       className="tw-select-connect-a-wallet-button"
+      lastUsedBadge={
+        !!lastUsedWalletId &&
+        lastUsedWalletId !== "inApp" &&
+        !lastUsedWalletId.startsWith("ecosystem.")
+      }
       client={props.client}
       disabled={props.meta.requireApproval && !approvedTOS}
       icon={OutlineWalletIcon}
@@ -497,7 +505,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     >
       {/* Header */}
       {showHeader && (
-        <Container p="lg">
+        <Container px="lg" pt="lg" pb="xs">
           {isWalletGroupExpanded ? (
             <ModalHeader
               onBack={() => {
@@ -514,12 +522,11 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       {/* Body */}
       <Container
         expand
-        px="md"
         scrollY
         style={
           !showHeader
             ? {
-                paddingTop: spacing.lg,
+                paddingTop: spacing.md,
               }
             : {
                 paddingTop: "2px",
@@ -527,28 +534,30 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         }
       >
         {!showHeader && isWalletGroupExpanded && (
-          <Container
-            center="y"
-            flex="row"
-            style={{
-              padding: spacing.sm,
-              paddingTop: 0,
-            }}
-          >
-            <IconButton
-              onClick={() => {
-                setIsWalletGroupExpanded(false);
-              }}
+          <Container px="md">
+            <Container
+              center="y"
+              flex="row"
               style={{
-                gap: spacing.xxs,
-                paddingBlock: spacing.xxs,
-                paddingRight: spacing.xs,
-                transform: `translateX(-${spacing.xs})`,
+                padding: spacing.sm,
+                paddingTop: 0,
               }}
             >
-              <ChevronLeftIcon height={iconSize.sm} width={iconSize.sm} />
-              {props.connectLocale.goBackButton}
-            </IconButton>
+              <IconButton
+                onClick={() => {
+                  setIsWalletGroupExpanded(false);
+                }}
+                style={{
+                  gap: spacing.xxs,
+                  paddingBlock: spacing.xxs,
+                  paddingRight: spacing.xs,
+                  transform: `translateX(-${spacing.xs})`,
+                }}
+              >
+                <ChevronLeftIcon height={iconSize.sm} width={iconSize.sm} />
+                {props.connectLocale.goBackButton}
+              </IconButton>
+            </Container>
           </Container>
         )}
 
@@ -602,11 +611,16 @@ const WalletSelection: React.FC<{
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
   const { screen } = useScreenContext();
   const setSelectionData = useSetSelectionData();
+
+  const lastUsedWalletId = useMemo(() => getLastUsedWalletId(), []);
+
   return (
     <WalletList
       style={{
         maxHeight: "370px",
         minHeight: "100%",
+        paddingTop:
+          props.size === "wide" ? 0 : LAST_USED_BADGE_VERTICAL_RESERVED_SPACE,
       }}
     >
       {wallets.map((wallet) => {
@@ -634,7 +648,7 @@ const WalletSelection: React.FC<{
             ) : (
               <WalletEntryButton
                 className="tw-wallet-select-wallet-button"
-                badge={undefined}
+                badge={lastUsedWalletId === wallet.id ? "Last used" : undefined}
                 client={props.client}
                 connectLocale={props.connectLocale}
                 isActive={isActive}
@@ -730,7 +744,7 @@ const WalletList = /* @__PURE__ */ StyledUl({
   margin: "-2px",
   marginBottom: 0,
   // to show the box-shadow of inputs that overflows
-  padding: "2px",
+  paddingInline: spacing.md,
   paddingBottom: spacing.lg,
 });
 
