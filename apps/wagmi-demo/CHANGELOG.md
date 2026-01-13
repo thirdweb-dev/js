@@ -1,5 +1,13 @@
 # wagmi-inapp
 
+## 0.0.46
+
+### Patch Changes
+
+- Updated dependencies [[`8d4b6a1`](https://github.com/thirdweb-dev/js/commit/8d4b6a1fea53013cbdbe9f450d00470b2f8d3761), [`9c04b3f`](https://github.com/thirdweb-dev/js/commit/9c04b3f18042b162de24cb7cf5c296a38a9af4f0), [`5ec84bd`](https://github.com/thirdweb-dev/js/commit/5ec84bd3b631395f80cb1f5ee24bc8b481b9f5cb), [`01004e8`](https://github.com/thirdweb-dev/js/commit/01004e840856551ec704de674f92f5d01c548a0e), [`36ff327`](https://github.com/thirdweb-dev/js/commit/36ff3277443dd0d7b47e6a0e51eb533a8db0da34), [`26a9153`](https://github.com/thirdweb-dev/js/commit/26a91537d2d05c5a4cf06de620004f5fef86d07b), [`0ff8b9f`](https://github.com/thirdweb-dev/js/commit/0ff8b9ff602aa7fc4c94355f60e8c422e68f9e89), [`31e24f1`](https://github.com/thirdweb-dev/js/commit/31e24f1c58aa7c53a207d07599fe498bc10e8953), [`304e4e5`](https://github.com/thirdweb-dev/js/commit/304e4e5be860e4989abf0493cb737f46e050a697), [`fdd2557`](https://github.com/thirdweb-dev/js/commit/fdd25576630399b8f9049b7d47d3ef415e50b47f), [`151127d`](https://github.com/thirdweb-dev/js/commit/151127d66825365cb0ed949ae28b9906ee4dfc8d), [`5766c90`](https://github.com/thirdweb-dev/js/commit/5766c90fb4bc48f40e858a03b90fcf60a3b11923), [`f68c2c6`](https://github.com/thirdweb-dev/js/commit/f68c2c62a58d1071fd9892af57536ec9efda691e), [`a3ff757`](https://github.com/thirdweb-dev/js/commit/a3ff7572d64d54e0674c32b6a24c6c965de9345c), [`38f4a89`](https://github.com/thirdweb-dev/js/commit/38f4a890764b3aa6406f54f0a8238b5dbb280b2e), [`56a1c0a`](https://github.com/thirdweb-dev/js/commit/56a1c0a467e4adcc4d40794d89b0d853f2cd8803)]:
+  - thirdweb@5.117.0
+  - @thirdweb-dev/wagmi-adapter@0.2.201
+
 ## 0.0.45
 
 ### Patch Changes

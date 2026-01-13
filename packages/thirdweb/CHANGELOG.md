@@ -1,5 +1,43 @@
 # thirdweb
 
+## 5.117.0
+
+### Minor Changes
+
+- [#8579](https://github.com/thirdweb-dev/js/pull/8579) [`304e4e5`](https://github.com/thirdweb-dev/js/commit/304e4e5be860e4989abf0493cb737f46e050a697) Thanks [@MananTank](https://github.com/MananTank)! - Remove in-app wallet from default wallet list for bridge widgets"
+
+### Patch Changes
+
+- [#8621](https://github.com/thirdweb-dev/js/pull/8621) [`8d4b6a1`](https://github.com/thirdweb-dev/js/commit/8d4b6a1fea53013cbdbe9f450d00470b2f8d3761) Thanks [@MananTank](https://github.com/MananTank)! - Add `amountEditable` and `tokenEditable` props on `BuyWidget` component to disable token selection and token amount editing
+
+- [#8573](https://github.com/thirdweb-dev/js/pull/8573) [`9c04b3f`](https://github.com/thirdweb-dev/js/commit/9c04b3f18042b162de24cb7cf5c296a38a9af4f0) Thanks [@MananTank](https://github.com/MananTank)! - More reliable list of chains shown in token selection UI in SwapWidget based on origin and destination chain selections
+
+- [#8552](https://github.com/thirdweb-dev/js/pull/8552) [`5ec84bd`](https://github.com/thirdweb-dev/js/commit/5ec84bd3b631395f80cb1f5ee24bc8b481b9f5cb) Thanks [@MananTank](https://github.com/MananTank)! - Token Selection UX improvements in SwapWidget
+
+- [#8607](https://github.com/thirdweb-dev/js/pull/8607) [`01004e8`](https://github.com/thirdweb-dev/js/commit/01004e840856551ec704de674f92f5d01c548a0e) Thanks [@MananTank](https://github.com/MananTank)! - TransactionWidget UI improvements
+
+- [#8623](https://github.com/thirdweb-dev/js/pull/8623) [`36ff327`](https://github.com/thirdweb-dev/js/commit/36ff3277443dd0d7b47e6a0e51eb533a8db0da34) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support x402 v2
+
+- [#8611](https://github.com/thirdweb-dev/js/pull/8611) [`26a9153`](https://github.com/thirdweb-dev/js/commit/26a91537d2d05c5a4cf06de620004f5fef86d07b) Thanks [@Yash094](https://github.com/Yash094)! - Add Etherlink Shadownet testnet chain (chain ID 127823)
+
+- [#8580](https://github.com/thirdweb-dev/js/pull/8580) [`0ff8b9f`](https://github.com/thirdweb-dev/js/commit/0ff8b9ff602aa7fc4c94355f60e8c422e68f9e89) Thanks [@MananTank](https://github.com/MananTank)! - Move directly to token selection screen after connecting wallet in "Choose Payment" screen instead of showing the "Choose Payment" screen again after connecting wallet in bridge widgets
+
+- [#8551](https://github.com/thirdweb-dev/js/pull/8551) [`31e24f1`](https://github.com/thirdweb-dev/js/commit/31e24f1c58aa7c53a207d07599fe498bc10e8953) Thanks [@MananTank](https://github.com/MananTank)! - Alphabetically sort the chains in SwapWidget UI
+
+- [#8578](https://github.com/thirdweb-dev/js/pull/8578) [`fdd2557`](https://github.com/thirdweb-dev/js/commit/fdd25576630399b8f9049b7d47d3ef415e50b47f) Thanks [@MananTank](https://github.com/MananTank)! - Remove fiat price shown in the button in `CheckoutWidget` to avoid showing it twice in the UI.
+
+- [#8556](https://github.com/thirdweb-dev/js/pull/8556) [`151127d`](https://github.com/thirdweb-dev/js/commit/151127d66825365cb0ed949ae28b9906ee4dfc8d) Thanks [@MananTank](https://github.com/MananTank)! - Update in-app wallet icon in wide connect ui
+
+- [#8617](https://github.com/thirdweb-dev/js/pull/8617) [`5766c90`](https://github.com/thirdweb-dev/js/commit/5766c90fb4bc48f40e858a03b90fcf60a3b11923) Thanks [@jelilat](https://github.com/jelilat)! - Support for x402 payment-required headers
+
+- [#8631](https://github.com/thirdweb-dev/js/pull/8631) [`f68c2c6`](https://github.com/thirdweb-dev/js/commit/f68c2c62a58d1071fd9892af57536ec9efda691e) Thanks [@MananTank](https://github.com/MananTank)! - Add Last Used badge in Connect UI to highlight the last used sign-in method
+
+- [#8608](https://github.com/thirdweb-dev/js/pull/8608) [`a3ff757`](https://github.com/thirdweb-dev/js/commit/a3ff7572d64d54e0674c32b6a24c6c965de9345c) Thanks [@MananTank](https://github.com/MananTank)! - Add token details screen in token selection UI in SwapWidget, BridgeWidget
+
+- [#8553](https://github.com/thirdweb-dev/js/pull/8553) [`38f4a89`](https://github.com/thirdweb-dev/js/commit/38f4a890764b3aa6406f54f0a8238b5dbb280b2e) Thanks [@MananTank](https://github.com/MananTank)! - Fix Spinner animation not working sometimes in Next.js
+
+- [#8576](https://github.com/thirdweb-dev/js/pull/8576) [`56a1c0a`](https://github.com/thirdweb-dev/js/commit/56a1c0a467e4adcc4d40794d89b0d853f2cd8803) Thanks [@MananTank](https://github.com/MananTank)! - Payment Details UI improvements for bridge widget components
+
 ## 5.116.1
 
 ### Patch Changes
