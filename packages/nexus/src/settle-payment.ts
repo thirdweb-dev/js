@@ -32,7 +32,7 @@ import { stringify } from "./utils.js";
  * });
  *
  * export async function GET(request: Request) {
- *   const paymentData = request.headers.get("x-payment");
+ *   const paymentData = request.headers.get("PAYMENT-SIGNATURE") || request.headers.get("X-PAYMENT");
  *
  *   // verify and process the payment
  *   const result = await settlePayment({

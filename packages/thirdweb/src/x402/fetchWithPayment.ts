@@ -5,6 +5,10 @@ import type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
 import { safeBase64Decode } from "./encode.js";
+import {
+  getPaymentRequestHeader,
+  getPaymentResponseHeader,
+} from "./headers.js";
 import { clearPermitSignatureFromCache } from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
@@ -13,6 +17,7 @@ import {
   RequestedPaymentRequirementsSchema,
 } from "./schemas.js";
 import { createPaymentHeader } from "./sign.js";
+import { x402Version as defaultX402Version } from "./types.js";
 
 /**
  * Enables the payment of APIs using the x402 payment protocol.
@@ -89,14 +94,13 @@ export function wrapFetchWithPayment(
         accepts: unknown[];
         error?: string;
       };
-
       if (!Array.isArray(parsed.accepts)) {
         throw new Error(
           `402 response has no usable x402 payment requirements. ${parsed.error ?? ""}`,
         );
       }
 
-      x402Version = parsed.x402Version;
+      x402Version = parsed.x402Version ?? defaultX402Version;
       parsedPaymentRequirements = parsed.accepts.map((x) =>
         RequestedPaymentRequirementsSchema.parse(x),
       );
@@ -114,7 +118,7 @@ export function wrapFetchWithPayment(
         );
       }
 
-      x402Version = body.x402Version;
+      x402Version = body.x402Version ?? defaultX402Version;
       parsedPaymentRequirements = body.accepts.map((x) =>
         RequestedPaymentRequirementsSchema.parse(x),
       );
@@ -180,6 +184,9 @@ export function wrapFetchWithPayment(
       options?.storage ?? webLocalStorage,
     );
 
+    const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
+    const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
+
     const initParams = init || {};
 
     if ((initParams as { __is402Retry?: boolean }).__is402Retry) {
@@ -190,8 +197,8 @@ export function wrapFetchWithPayment(
       ...initParams,
       headers: {
         ...(initParams.headers || {}),
-        "X-PAYMENT": paymentHeader,
-        "Access-Control-Expose-Headers": "X-PAYMENT-RESPONSE",
+        [paymentRequestHeaderName]: paymentHeader,
+        "Access-Control-Expose-Headers": paymentResponseHeaderName,
       },
       __is402Retry: true,
     };

@@ -27,7 +27,9 @@ export async function GET(request: NextRequest) {
     vaultAccessToken: ENGINE_VAULT_ACCESS_TOKEN,
   });
 
-  const paymentData = request.headers.get("X-PAYMENT");
+  const paymentData =
+    request.headers.get("PAYMENT-SIGNATURE") ||
+    request.headers.get("X-PAYMENT");
   const queryParams = request.nextUrl.searchParams;
 
   const chainId = queryParams.get("chainId");

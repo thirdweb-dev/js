@@ -10,7 +10,11 @@ import {
   type RequestedPaymentPayload,
   type RequestedPaymentRequirements,
 } from "./schemas.js";
-import type { PaymentArgs, PaymentRequiredResult } from "./types.js";
+import {
+  type PaymentArgs,
+  type PaymentRequiredResultV1,
+  x402Version,
+} from "./types.js";
 
 export type WaitUntil = "simulated" | "submitted" | "confirmed";
 
@@ -50,7 +54,7 @@ export type ThirdwebX402Facilitator = {
   }) => Promise<FacilitatorSupportedResponse>;
   accepts: (
     args: Omit<PaymentArgs, "facilitator">,
-  ) => Promise<PaymentRequiredResult>;
+  ) => Promise<PaymentRequiredResultV1>;
 };
 
 const DEFAULT_BASE_URL = "https://api.thirdweb.com/v1/payments/x402";
@@ -264,7 +268,7 @@ export function facilitator(
 
     async accepts(
       args: Omit<PaymentArgs, "facilitator">,
-    ): Promise<PaymentRequiredResult> {
+    ): Promise<PaymentRequiredResultV1> {
       const url = config.baseUrl ?? DEFAULT_BASE_URL;
       let headers = { "Content-Type": "application/json" };
       const authHeaders = await facilitator.createAuthHeaders();
@@ -284,6 +288,7 @@ export function facilitator(
           serverWalletAddress: facilitator.address,
           recipientAddress: args.payTo,
           extraMetadata: args.extraMetadata,
+          x402Version: args.x402Version ?? x402Version,
         }),
       });
       if (res.status !== 402) {
@@ -294,7 +299,7 @@ export function facilitator(
       return {
         status: res.status as 402,
         responseBody:
-          (await res.json()) as PaymentRequiredResult["responseBody"],
+          (await res.json()) as PaymentRequiredResultV1["responseBody"],
         responseHeaders: {
           "Content-Type": "application/json",
         },

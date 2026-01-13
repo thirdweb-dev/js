@@ -29,7 +29,9 @@ import {
  * });
  *
  * export async function GET(request: Request) {
- *   const paymentData = request.headers.get("x-payment");
+ *   const paymentData =
+ *     request.headers.get("payment-signature") ??
+ *     request.headers.get("x-payment");
  *
  *   const paymentArgs = {
  *     resourceUrl: "https://api.example.com/premium-content",
@@ -121,7 +123,7 @@ export async function verifyPayment(
           "Content-Type": "application/json",
         },
         responseBody: {
-          x402Version,
+          x402Version: decodedPayment.x402Version ?? x402Version,
           error: error,
           errorMessage:
             errorMessages?.verificationFailed || verification.errorMessage,
@@ -137,7 +139,7 @@ export async function verifyPayment(
         "Content-Type": "application/json",
       },
       responseBody: {
-        x402Version,
+        x402Version: decodedPayment.x402Version ?? x402Version,
         error: "Verification error",
         errorMessage:
           errorMessages?.verificationFailed ||

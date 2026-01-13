@@ -211,7 +211,7 @@ Protect individual API endpoints with x402 payments:
     });
 
     export async function GET(request: Request) {
-      const paymentData = request.headers.get("x-payment");
+      const paymentData = request.headers.get("PAYMENT-SIGNATURE") || request.headers.get("X-PAYMENT");
 
       // Verify and process the payment
       const result = await settlePayment({
@@ -383,7 +383,7 @@ Protect multiple endpoints with a shared middleware:
     export async function middleware(request: NextRequest) {
       const method = request.method.toUpperCase();
       const resourceUrl = request.nextUrl.toString();
-      const paymentData = request.headers.get("x-payment");
+      const paymentData = request.headers.get("PAYMENT-SIGNATURE") || request.headers.get("X-PAYMENT");
 
       const result = await settlePayment({
         resourceUrl,

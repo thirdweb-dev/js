@@ -11,7 +11,9 @@ import type {
   SupportedSignatureTypeSchema,
 } from "./schemas.js";
 
-export const x402Version = 1;
+const supportedX402Versions = [1, 2] as const;
+export type X402Version = (typeof supportedX402Versions)[number];
+export const x402Version: X402Version = 2;
 
 /**
  * Configuration object for verifying or processing X402 payments.
@@ -23,7 +25,9 @@ export type PaymentArgs = {
   resourceUrl: string;
   /** The HTTP method used to access the resource */
   method: "GET" | "POST" | ({} & string);
-  /** The payment data/proof provided by the client, typically from the X-PAYMENT header */
+  /**
+   * The payment data/proof provided by the client, typically from the PAYMENT-SIGNATURE (v2) or X-PAYMENT (v1) header
+   */
   paymentData?: string | null;
   /** The blockchain network where the payment should be processed */
   network: FacilitatorNetwork | Chain;
@@ -41,15 +45,22 @@ export type PaymentArgs = {
   payTo?: string;
   /** Optional extra data to be included in the payment request */
   extraMetadata?: Record<string, unknown>;
+  /** The x402 protocol version to use, defaults to v2 */
+  x402Version?: X402Version;
 };
 
 export type SettlePaymentArgs = PaymentArgs & {
   waitUntil?: WaitUntil;
 };
 
-export type PaymentRequiredResult = {
+/**
+ * Payment required result for x402 v1 (body-based format)
+ */
+export type PaymentRequiredResultV1 = {
   /** HTTP 402 - Payment Required, verification or processing failed or payment missing */
   status: 402;
+  /** Response headers for the error response */
+  responseHeaders: Record<string, string>;
   /** The error response body containing payment requirements */
   responseBody: {
     /** The X402 protocol version */
@@ -65,9 +76,26 @@ export type PaymentRequiredResult = {
     /** Optional link to a wallet to fund the wallet of the payer */
     fundWalletLink?: string;
   };
-  /** Response headers for the error response */
-  responseHeaders: Record<string, string>;
 };
+
+/**
+ * Payment required result for x402 v2 (header-based format)
+ */
+export type PaymentRequiredResultV2 = {
+  /** HTTP 402 - Payment Required, verification or processing failed or payment missing */
+  status: 402;
+  /** Response headers containing base64 encoded payment requirements */
+  responseHeaders: Record<string, string>;
+  /** Empty response body for v2 */
+  responseBody: Record<string, never>;
+};
+
+/**
+ * Payment required result supporting both v1 and v2 formats
+ */
+export type PaymentRequiredResult =
+  | PaymentRequiredResultV1
+  | PaymentRequiredResultV2;
 
 /**
  * The result of a payment settlement operation.
