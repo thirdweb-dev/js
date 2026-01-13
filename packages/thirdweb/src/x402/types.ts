@@ -45,15 +45,22 @@ export type PaymentArgs = {
   payTo?: string;
   /** Optional extra data to be included in the payment request */
   extraMetadata?: Record<string, unknown>;
+  /** The x402 protocol version to use, defaults to v2 */
+  x402Version?: X402Version;
 };
 
 export type SettlePaymentArgs = PaymentArgs & {
   waitUntil?: WaitUntil;
 };
 
-export type PaymentRequiredResult = {
+/**
+ * Payment required result for x402 v1 (body-based format)
+ */
+export type PaymentRequiredResultV1 = {
   /** HTTP 402 - Payment Required, verification or processing failed or payment missing */
   status: 402;
+  /** Response headers for the error response */
+  responseHeaders: Record<string, string>;
   /** The error response body containing payment requirements */
   responseBody: {
     /** The X402 protocol version */
@@ -69,9 +76,26 @@ export type PaymentRequiredResult = {
     /** Optional link to a wallet to fund the wallet of the payer */
     fundWalletLink?: string;
   };
-  /** Response headers for the error response */
-  responseHeaders: Record<string, string>;
 };
+
+/**
+ * Payment required result for x402 v2 (header-based format)
+ */
+export type PaymentRequiredResultV2 = {
+  /** HTTP 402 - Payment Required, verification or processing failed or payment missing */
+  status: 402;
+  /** Response headers containing base64 encoded payment requirements */
+  responseHeaders: Record<string, string>;
+  /** Empty response body for v2 */
+  responseBody: Record<string, never>;
+};
+
+/**
+ * Payment required result supporting both v1 and v2 formats
+ */
+export type PaymentRequiredResult =
+  | PaymentRequiredResultV1
+  | PaymentRequiredResultV2;
 
 /**
  * The result of a payment settlement operation.

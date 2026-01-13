@@ -94,7 +94,6 @@ export function wrapFetchWithPayment(
         accepts: unknown[];
         error?: string;
       };
-
       if (!Array.isArray(parsed.accepts)) {
         throw new Error(
           `402 response has no usable x402 payment requirements. ${parsed.error ?? ""}`,

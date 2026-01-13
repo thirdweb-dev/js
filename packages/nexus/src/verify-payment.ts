@@ -24,7 +24,7 @@ import {
  * });
  *
  * export async function GET(request: Request) {
- *   const paymentData = request.headers.get("x-payment");
+ *   const paymentData = request.headers.get("PAYMENT-SIGNATURE") || request.headers.get("X-PAYMENT");
  *
  *   const paymentArgs = {
  *     resourceUrl: "https://api.example.com/premium-content",

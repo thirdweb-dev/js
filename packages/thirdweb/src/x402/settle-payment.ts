@@ -39,8 +39,8 @@ import {
  *
  * export async function GET(request: Request) {
  *   const paymentData =
- *     request.headers.get("payment-signature") ??
- *     request.headers.get("x-payment");
+ *     request.headers.get("PAYMENT-SIGNATURE") ||
+ *     request.headers.get("X-PAYMENT");
  *
  *   // verify and process the payment
  *   const result = await settlePayment({

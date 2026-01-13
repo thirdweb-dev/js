@@ -6,7 +6,7 @@ import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import { getContract } from "../contract/contract.js";
 import { isPermitSupported } from "../extensions/erc20/__generated__/IERC20Permit/write/permit.js";
 import { isTransferWithAuthorizationSupported } from "../extensions/erc20/__generated__/USDC/write/transferWithAuthorization.js";
-import { decodePayment } from "./encode.js";
+import { decodePayment, encodePaymentRequired } from "./encode.js";
 import {
   networkToCaip2ChainId,
   type RequestedPaymentPayload,
@@ -16,6 +16,8 @@ import {
   type ERC20TokenAmount,
   type PaymentArgs,
   type PaymentRequiredResult,
+  type PaymentRequiredResultV1,
+  type PaymentRequiredResultV2,
   type SupportedSignatureType,
   x402Version,
 } from "./types.js";
@@ -28,6 +30,50 @@ type GetPaymentRequirementsResult = {
 };
 
 /**
+ * Formats a payment required response in x402 v2 format (header-based)
+ */
+function formatPaymentRequiredResponseV2(
+  paymentRequirements: RequestedPaymentRequirements[],
+  error: string,
+  resourceUrl: string,
+): PaymentRequiredResultV2 {
+  const paymentRequired = {
+    x402Version: 2,
+    error,
+    accepts: paymentRequirements,
+    resource: { url: resourceUrl },
+  };
+
+  return {
+    status: 402,
+    responseHeaders: {
+      "PAYMENT-REQUIRED": encodePaymentRequired(paymentRequired),
+    },
+    responseBody: {} as Record<string, never>,
+  };
+}
+
+/**
+ * Formats a payment required response in x402 v1 format (body-based)
+ */
+function formatPaymentRequiredResponseV1(
+  paymentRequirements: RequestedPaymentRequirements[],
+  error: string,
+): PaymentRequiredResultV1 {
+  return {
+    status: 402,
+    responseHeaders: {
+      "Content-Type": "application/json",
+    },
+    responseBody: {
+      x402Version: 1,
+      error,
+      accepts: paymentRequirements,
+    },
+  };
+}
+
+/**
  * Decodes a payment request and returns the payment requirements, selected payment requirements, and decoded payment
  * @param args
  * @returns The payment requirements, selected payment requirements, and decoded payment
@@ -35,17 +81,21 @@ type GetPaymentRequirementsResult = {
 export async function decodePaymentRequest(
   args: PaymentArgs,
 ): Promise<GetPaymentRequirementsResult | PaymentRequiredResult> {
-  const { facilitator, routeConfig = {}, paymentData } = args;
+  const { facilitator, routeConfig = {}, paymentData, resourceUrl } = args;
   const { errorMessages } = routeConfig;
 
+  // facilitator.accepts() returns v1 format from API - extract payment requirements
   const paymentRequirementsResult = await facilitator.accepts(args);
-
-  // Check for payment header, if none, return the payment requirements
-  if (!paymentData) {
-    return paymentRequirementsResult;
-  }
-
   const paymentRequirements = paymentRequirementsResult.responseBody.accepts;
+
+  // Check for payment header, if none, return the payment requirements in v2 format (default)
+  if (!paymentData) {
+    return formatPaymentRequiredResponseV2(
+      paymentRequirements,
+      "Payment required",
+      resourceUrl,
+    );
+  }
 
   // decode b64 payment
   let decodedPayment: RequestedPaymentPayload;
@@ -54,19 +104,13 @@ export async function decodePaymentRequest(
     // Preserve version provided by the client, default to the current protocol version if missing
     decodedPayment.x402Version ??= x402Version;
   } catch (error) {
-    return {
-      status: 402,
-      responseHeaders: {
-        "Content-Type": "application/json",
-      },
-      responseBody: {
-        x402Version,
-        error:
-          errorMessages?.invalidPayment ||
-          (error instanceof Error ? error.message : "Invalid payment"),
-        accepts: paymentRequirements,
-      },
-    };
+    // Decode error - default to v2 format since we can't determine client version
+    return formatPaymentRequiredResponseV2(
+      paymentRequirements,
+      errorMessages?.invalidPayment ||
+        (error instanceof Error ? error.message : "Invalid payment"),
+      resourceUrl,
+    );
   }
 
   const selectedPaymentRequirements = paymentRequirements.find(
@@ -76,19 +120,19 @@ export async function decodePaymentRequest(
         networkToCaip2ChainId(decodedPayment.network),
   );
   if (!selectedPaymentRequirements) {
-    return {
-      status: 402,
-      responseHeaders: {
-        "Content-Type": "application/json",
-      },
-      responseBody: {
-        x402Version,
-        error:
-          errorMessages?.noMatchingRequirements ||
-          "Unable to find matching payment requirements",
-        accepts: paymentRequirements,
-      },
-    };
+    // Use the client's version for the response format
+    const errorMessage =
+      errorMessages?.noMatchingRequirements ||
+      "Unable to find matching payment requirements";
+
+    if (decodedPayment.x402Version === 1) {
+      return formatPaymentRequiredResponseV1(paymentRequirements, errorMessage);
+    }
+    return formatPaymentRequiredResponseV2(
+      paymentRequirements,
+      errorMessage,
+      resourceUrl,
+    );
   }
 
   return {
