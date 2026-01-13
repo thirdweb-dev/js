@@ -153,6 +153,7 @@ export function WalletConnectReceiverScreen(props: {
                 </Text>
                 <Spacer y="xl" />
                 <InputSelectionUI
+                  lastUsedBadge={false}
                   disabled={
                     loading || !!errorConnecting || !walletConnectClient
                   }

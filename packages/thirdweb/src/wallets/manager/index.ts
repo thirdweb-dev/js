@@ -24,6 +24,7 @@ export type ConnectionStatus =
 const CONNECTED_WALLET_IDS = "thirdweb:connected-wallet-ids";
 const LAST_ACTIVE_EOA_ID = "thirdweb:active-wallet-id";
 const LAST_ACTIVE_CHAIN = "thirdweb:active-chain";
+export const LAST_USED_WALLET_ID = "thirdweb:last-used-wallet-id";
 
 export type ConnectionManager = ReturnType<typeof createConnectionManager>;
 export type ConnectManagerOptions = {
@@ -148,6 +149,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     })();
 
     await storage.setItem(LAST_ACTIVE_EOA_ID, wallet.id);
+    await storage.setItem(LAST_USED_WALLET_ID, wallet.id);
 
     // add personal wallet to connected wallets list even if it's not the active one
     addConnectedWallet(wallet);
@@ -218,6 +220,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     // do not set smart wallet as last active EOA
     if (activeWallet.id !== "smart") {
       await storage.setItem(LAST_ACTIVE_EOA_ID, activeWallet.id);
+      await storage.setItem(LAST_USED_WALLET_ID, activeWallet.id);
     }
   };
 

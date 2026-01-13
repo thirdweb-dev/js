@@ -1,5 +1,6 @@
 import { getInstalledWalletProviders } from "../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
+import { getLastUsedWalletId } from "../ui/ConnectWallet/Modal/storage.js";
 
 /**
  *
@@ -10,6 +11,7 @@ export function sortWallets<T extends { id: string }>(
   recommendedWallets?: { id: WalletId }[],
 ): T[] {
   const providers = getInstalledWalletProviders();
+  const lastUsedWalletId = getLastUsedWalletId();
   return (
     wallets
       // show the installed wallets first
@@ -34,6 +36,16 @@ export function sortWallets<T extends { id: string }>(
           return -1;
         }
         if (!aIsRecommended && bIsRecommended) {
+          return 1;
+        }
+        return 0;
+      })
+      // show the last used wallet even before recommended wallets
+      .sort((a, b) => {
+        if (a.id === lastUsedWalletId) {
+          return -1;
+        }
+        if (b.id === lastUsedWalletId) {
           return 1;
         }
         return 0;
