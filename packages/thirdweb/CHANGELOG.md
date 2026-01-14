@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.117.1
+
+### Patch Changes
+
+- [#8637](https://github.com/thirdweb-dev/js/pull/8637) [`6390052`](https://github.com/thirdweb-dev/js/commit/6390052f8bc3b9b7d58d57f8f953c1da9a34066a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - newer zkos chains no longer support zks\_ rpc endpoints, fallback to evm std
+
 ## 5.117.0
 
 ### Minor Changes
