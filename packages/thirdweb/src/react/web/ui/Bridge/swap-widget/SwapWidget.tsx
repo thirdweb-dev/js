@@ -7,6 +7,7 @@ import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import type { Address } from "../../../../../utils/address.js";
 import { getAddress } from "../../../../../utils/address.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { CustomThemeProvider } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -174,6 +175,10 @@ export type SwapWidgetProps = {
    * The wallet that should be pre-selected in the SwapWidget UI.
    */
   activeWallet?: Wallet;
+  /**
+   * The receiver address for the swapped tokens. If not provided, defaults to the connected wallet address.
+   */
+  receiverAddress?: Address;
 };
 
 /**
@@ -389,6 +394,7 @@ function SwapWidgetContent(
         setSellToken={setSellToken}
         amountSelection={amountSelection}
         setAmountSelection={setAmountSelection}
+        receiverAddress={props.receiverAddress}
         onSwap={(data) => {
           setScreen({
             id: "3:execute",

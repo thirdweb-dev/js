@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { prepare as BuyPrepare } from "../../../../../bridge/Buy.js";
 import { Buy, Sell } from "../../../../../bridge/index.js";
 import type { prepare as SellPrepare } from "../../../../../bridge/Sell.js";
@@ -8,7 +8,12 @@ import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
-import { getAddress } from "../../../../../utils/address.js";
+import type { Address } from "../../../../../utils/address.js";
+import {
+  getAddress,
+  isAddress,
+  shortenAddress,
+} from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
 import { getDefaultWalletsForBridgeComponents } from "../../../../../wallets/defaultWallets.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -32,6 +37,7 @@ import {
 } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
+import { Input } from "../../components/formElements.js";
 import { Modal } from "../../components/Modal.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -80,12 +86,14 @@ type SwapUIProps = {
     amount: string;
   }) => void;
   onDisconnect: (() => void) | undefined;
+  receiverAddress?: Address;
 };
 
 /**
  * @internal
  */
 export function SwapUI(props: SwapUIProps) {
+  const theme = useCustomTheme();
   const [modalState, setModalState] = useState<{
     screen: "select-buy-token" | "select-sell-token";
     isOpen: boolean;
@@ -95,7 +103,37 @@ export function SwapUI(props: SwapUIProps) {
   });
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [receiverAddressMode, setReceiverAddressMode] = useState<
+    "wallet" | "custom"
+  >(props.receiverAddress ? "custom" : "wallet");
+  const [receiverAddress, setReceiverAddress] = useState<string>(
+    props.receiverAddress ?? "",
+  );
+  const [showReceiverDropdown, setShowReceiverDropdown] = useState(false);
+  const [receiverAddressModalOpen, setReceiverAddressModalOpen] =
+    useState(false);
+  const [tempReceiverAddress, setTempReceiverAddress] = useState<string>("");
+  const receiverDropdownRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showReceiverDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        receiverDropdownRef.current &&
+        !receiverDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowReceiverDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showReceiverDropdown]);
 
   // Token Prices ----------------------------------------------------------------------------
   const buyTokenQuery = useTokenPrice({
@@ -117,6 +155,7 @@ export function SwapUI(props: SwapUIProps) {
     sellTokenWithPrices: sellTokenWithPrices,
     activeWalletInfo: props.activeWalletInfo,
     client: props.client,
+    receiverAddress: receiverAddress,
   });
 
   // Amount and Amount.fetching ------------------------------------------------------------
@@ -421,7 +460,114 @@ export function SwapUI(props: SwapUIProps) {
             isOpen: true,
           })
         }
+        receiverAddressMode={receiverAddressMode}
+        receiverAddress={receiverAddress}
+        showReceiverDropdown={showReceiverDropdown}
+        receiverDropdownRef={receiverDropdownRef}
+        onReceiverModeChange={(mode) => {
+          setReceiverAddressMode(mode);
+          if (mode === "wallet") {
+            setReceiverAddress("");
+          }
+        }}
+        onReceiverAddressChange={setReceiverAddress}
+        onShowReceiverDropdownChange={setShowReceiverDropdown}
+        onOpenReceiverModal={() => {
+          setReceiverAddressModalOpen(true);
+          setTempReceiverAddress(receiverAddress || "");
+        }}
       />
+
+      {/* Receiver Address Modal */}
+      {receiverAddressModalOpen && (
+        <Modal
+          hide={false}
+          autoFocusCrossIcon={false}
+          className="tw-modal__receiver-address"
+          size="compact"
+          title="To Address"
+          open={receiverAddressModalOpen}
+          setOpen={setReceiverAddressModalOpen}
+        >
+          <Container flex="column" gap="md" p="md">
+            <Container flex="column" gap="xs">
+              <Input
+                variant="outline"
+                placeholder="Enter receiver address"
+                value={tempReceiverAddress}
+                onChange={(e) => setTempReceiverAddress(e.target.value)}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              />
+              {tempReceiverAddress &&
+                !isAddress(tempReceiverAddress) &&
+                tempReceiverAddress.length > 0 && (
+                  <Container
+                    style={{
+                      padding: spacing.sm,
+                      borderRadius: radius.md,
+                      backgroundColor: `${theme.colors.danger}15`,
+                    }}
+                    flex="row"
+                    gap="xs"
+                    center="y"
+                  >
+                    <Text size="sm" color="danger">
+                      This isn't a valid wallet address. Please ensure that the
+                      address provided is accurate.
+                    </Text>
+                  </Container>
+                )}
+              {tempReceiverAddress &&
+                isAddress(tempReceiverAddress) &&
+                tempReceiverAddress.toLowerCase() ===
+                  props.activeWalletInfo?.activeAccount.address.toLowerCase() && (
+                  <Container
+                    style={{
+                      padding: spacing.sm,
+                      borderRadius: radius.md,
+                      backgroundColor: `${theme.colors.danger}15`,
+                    }}
+                    flex="row"
+                    gap="xs"
+                    center="y"
+                  >
+                    <Text size="sm" color="danger">
+                      This is the connected wallet address. Please provide a
+                      different address.
+                    </Text>
+                  </Container>
+                )}
+            </Container>
+
+            <Button
+              variant="primary"
+              fullWidth
+              disabled={
+                !tempReceiverAddress ||
+                !isAddress(tempReceiverAddress) ||
+                tempReceiverAddress.toLowerCase() ===
+                  props.activeWalletInfo?.activeAccount.address.toLowerCase()
+              }
+              onClick={() => {
+                if (
+                  tempReceiverAddress &&
+                  isAddress(tempReceiverAddress) &&
+                  tempReceiverAddress.toLowerCase() !==
+                    props.activeWalletInfo?.activeAccount.address.toLowerCase()
+                ) {
+                  setReceiverAddress(tempReceiverAddress);
+                  setReceiverAddressMode("custom");
+                  setReceiverAddressModalOpen(false);
+                }
+              }}
+            >
+              SAVE
+            </Button>
+          </Container>
+        </Modal>
+      )}
 
       {/* error message */}
       {preparedResultQuery.error ||
@@ -527,6 +673,7 @@ function useSwapQuote(params: {
   sellTokenWithPrices: TokenWithPrices | undefined;
   activeWalletInfo: ActiveWalletInfo | undefined;
   client: ThirdwebClient;
+  receiverAddress: string;
 }) {
   const {
     amountSelection,
@@ -534,6 +681,7 @@ function useSwapQuote(params: {
     sellTokenWithPrices,
     activeWalletInfo,
     client,
+    receiverAddress,
   } = params;
 
   return useQuery({
@@ -543,6 +691,7 @@ function useSwapQuote(params: {
       buyTokenWithPrices,
       sellTokenWithPrices,
       activeWalletInfo?.activeAccount.address,
+      receiverAddress,
     ],
     retry: false,
     enabled:
@@ -606,6 +755,11 @@ function useSwapQuote(params: {
       }
 
       if (amountSelection.type === "buy") {
+        const receiver =
+          receiverAddress && isAddress(receiverAddress)
+            ? getAddress(receiverAddress)
+            : activeWalletInfo.activeAccount.address;
+
         const buyRequestOptions: BuyPrepare.Options = {
           amount: toUnits(amountSelection.amount, buyTokenWithPrices.decimals),
           // origin = sell
@@ -615,7 +769,7 @@ function useSwapQuote(params: {
           destinationChainId: buyTokenWithPrices.chainId,
           destinationTokenAddress: buyTokenWithPrices.address,
           client: client,
-          receiver: activeWalletInfo.activeAccount.address,
+          receiver: receiver,
           sender: activeWalletInfo.activeAccount.address,
         };
 
@@ -632,6 +786,11 @@ function useSwapQuote(params: {
           request: buyRequest,
         };
       } else if (amountSelection.type === "sell") {
+        const receiver =
+          receiverAddress && isAddress(receiverAddress)
+            ? getAddress(receiverAddress)
+            : activeWalletInfo.activeAccount.address;
+
         const sellRequestOptions: SellPrepare.Options = {
           amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
           // origin = sell
@@ -641,7 +800,7 @@ function useSwapQuote(params: {
           destinationChainId: buyTokenWithPrices.chainId,
           destinationTokenAddress: buyTokenWithPrices.address,
           client: client,
-          receiver: activeWalletInfo.activeAccount.address,
+          receiver: receiver,
           sender: activeWalletInfo.activeAccount.address,
         };
 
@@ -694,6 +853,14 @@ function TokenSection(props: {
   };
   onWalletClick: () => void;
   onMaxClick: (() => void) | undefined;
+  receiverAddressMode?: "wallet" | "custom";
+  receiverAddress?: string;
+  showReceiverDropdown?: boolean;
+  receiverDropdownRef?: React.RefObject<HTMLDivElement | null>;
+  onReceiverModeChange?: (mode: "wallet" | "custom") => void;
+  onReceiverAddressChange?: (address: string) => void;
+  onShowReceiverDropdownChange?: (show: boolean) => void;
+  onOpenReceiverModal?: () => void;
 }) {
   const theme = useCustomTheme();
 
@@ -717,7 +884,7 @@ function TokenSection(props: {
         borderWidth: 1,
         borderStyle: "solid",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }}
       borderColor="borderColor"
     >
@@ -736,6 +903,7 @@ function TokenSection(props: {
         style={{
           position: "relative",
           zIndex: 1,
+          overflow: "visible",
         }}
       >
         {/* row1 : label */}
@@ -747,6 +915,7 @@ function TokenSection(props: {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            overflow: "visible",
           }}
         >
           <Container flex="row" center="y" gap="3xs" color="secondaryText">
@@ -760,13 +929,108 @@ function TokenSection(props: {
               {props.type === "buy" ? "BUY" : "SELL"}
             </Text>
           </Container>
-          {props.activeWalletInfo && (
+          {props.activeWalletInfo &&
+          props.type === "buy" &&
+          props.receiverAddressMode ? (
+            <div
+              ref={props.receiverDropdownRef}
+              style={{
+                position: "relative",
+              }}
+            >
+              <Button
+                variant="ghost-solid"
+                onClick={() =>
+                  props.onShowReceiverDropdownChange?.(
+                    !props.showReceiverDropdown,
+                  )
+                }
+                style={{
+                  padding: `${spacing.xxs} 2px`,
+                  fontSize: fontSize.xs,
+                  fontWeight: 400,
+                }}
+              >
+                {props.receiverAddressMode === "wallet"
+                  ? shortenAddress(props.activeWalletInfo.activeAccount.address)
+                  : props.receiverAddress && isAddress(props.receiverAddress)
+                    ? shortenAddress(props.receiverAddress)
+                    : "Select wallet"}
+                <span style={{ marginLeft: spacing.xxs }} />
+                <span
+                  style={{
+                    transform: props.showReceiverDropdown
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 200ms ease",
+                    display: "inline-flex",
+                  }}
+                >
+                  <ArrowUpDownIcon size={iconSize.xs} />
+                </span>
+              </Button>
+
+              {props.showReceiverDropdown && (
+                <Container
+                  bg="modalBg"
+                  style={{
+                    borderRadius: radius.md,
+                    border: `1px solid ${theme.colors.borderColor}`,
+                    padding: spacing.xs,
+                    position: "absolute",
+                    right: 0,
+                    top: "100%",
+                    marginTop: spacing.xs,
+                    zIndex: 1000,
+                    minWidth: "200px",
+                    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
+                    overflow: "visible",
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onReceiverModeChange?.("wallet");
+                      props.onReceiverAddressChange?.("");
+                      props.onShowReceiverDropdownChange?.(false);
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                    }}
+                  >
+                    Use connected wallet
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onShowReceiverDropdownChange?.(false);
+                      props.onOpenReceiverModal?.();
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                      borderTop: `1px solid ${theme.colors.borderColor}`,
+                      marginTop: spacing.xs,
+                      paddingTop: spacing.sm,
+                    }}
+                  >
+                    Paste wallet address
+                  </Button>
+                </Container>
+              )}
+            </div>
+          ) : props.activeWalletInfo ? (
             <ActiveWalletDetails
               activeWalletInfo={props.activeWalletInfo}
               client={props.client}
               onClick={props.onWalletClick}
             />
-          )}
+          ) : null}
         </Container>
 
         <Container
