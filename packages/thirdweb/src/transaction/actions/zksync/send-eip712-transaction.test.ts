@@ -5,9 +5,13 @@ import {
   TEST_ACCOUNT_B,
 } from "../../../../test/src/test-wallets.js";
 import { zkSyncSepolia } from "../../../chains/chain-definitions/zksync-sepolia.js";
+import { defineChain } from "../../../chains/utils.js";
 import { deployPublishedContract } from "../../../extensions/prebuilts/deploy-published.js";
 import { prepareTransaction } from "../../prepare-transaction.js";
-import { sendEip712Transaction } from "./send-eip712-transaction.js";
+import {
+  getZkGasFees,
+  sendEip712Transaction,
+} from "./send-eip712-transaction.js";
 
 describe("sendEip712Transaction", () => {
   // re-enable for testing, but disable for CI since it requires testnet funds
@@ -51,5 +55,35 @@ describe("sendEip712Transaction", () => {
     });
     expect(address).toBeDefined();
     expect(address.length).toBe(42);
+  });
+
+  it("should fallback to standard EVM methods when zks_estimateFee is not available", async () => {
+    // Chain 278701 is a zkSync chain that doesn't support zks_estimateFee
+    const zkSyncChainWithoutZksSupport = defineChain(278701);
+
+    // Use a transaction with pre-defined gas to skip estimation (which requires balance)
+    // This tests that the fallback path is taken for fee estimation
+    const transaction = prepareTransaction({
+      chain: zkSyncChainWithoutZksSupport,
+      client: TEST_CLIENT,
+      gas: 21000n, // pre-define gas to skip eth_estimateGas
+      to: TEST_ACCOUNT_B.address,
+      value: 0n,
+    });
+
+    const gasFees = await getZkGasFees({
+      transaction,
+      from: TEST_ACCOUNT_A.address as `0x${string}`,
+    });
+
+    // Verify fallback worked - should have valid gas values
+    expect(gasFees.gas).toBeDefined();
+    expect(gasFees.gas).toBeGreaterThan(0n);
+    expect(gasFees.maxFeePerGas).toBeDefined();
+    expect(gasFees.maxFeePerGas).toBeGreaterThan(0n);
+    expect(gasFees.maxPriorityFeePerGas).toBeDefined();
+    expect(gasFees.maxPriorityFeePerGas).toBeGreaterThan(0n);
+    // Fallback should use 100k for gasPerPubdata
+    expect(gasFees.gasPerPubdata).toBe(100000n);
   });
 });
