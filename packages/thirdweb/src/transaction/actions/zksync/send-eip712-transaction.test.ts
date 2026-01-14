@@ -73,7 +73,7 @@ describe("sendEip712Transaction", () => {
 
     const gasFees = await getZkGasFees({
       transaction,
-      from: TEST_ACCOUNT_A.address,
+      from: TEST_ACCOUNT_A.address as `0x${string}`,
     });
 
     // Verify fallback worked - should have valid gas values
