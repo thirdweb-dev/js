@@ -1,13 +1,14 @@
 import type { ConnectionOptions } from "@thirdweb-dev/wagmi-adapter";
 import { ConnectButton } from "thirdweb/react";
+import { stringify } from "thirdweb/utils";
 import { createWallet } from "thirdweb/wallets";
 import {
   useAccount,
-  useCallsStatus,
   useConnect,
   useDisconnect,
   useSendCalls,
   useSendTransaction,
+  useWaitForCallsStatus,
 } from "wagmi";
 import { chain, client, thirdwebChainForWallet, wallet } from "./wagmi.js";
 
@@ -28,7 +29,7 @@ function App() {
     data: callStatus,
     isLoading: isLoadingCallStatus,
     error: callStatusError,
-  } = useCallsStatus({
+  } = useWaitForCallsStatus({
     id: data?.id || "",
     query: {
       enabled: !!data?.id,
@@ -42,7 +43,7 @@ function App() {
         <div>
           status: {account.status}
           <br />
-          addresses: {JSON.stringify(account.addresses)}
+          addresses: {stringify(account.addresses)}
           <br />
           chainId: {account.chainId}
         </div>
@@ -122,6 +123,12 @@ function App() {
                 calls: [
                   {
                     to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                    data: "0x1234",
+                    value: 0n,
+                  },
+                  {
+                    to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                    data: "0x1234",
                     value: 0n,
                   },
                 ],
@@ -145,7 +152,7 @@ function App() {
           </div>
           <div>
             {callStatus
-              ? `Success: ${JSON.stringify(callStatus, null, 2)}`
+              ? `Success: ${stringify(callStatus, null, 2)}`
               : callStatusError
                 ? callStatusError?.message
                 : ""}

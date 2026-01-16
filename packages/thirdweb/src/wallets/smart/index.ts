@@ -389,6 +389,12 @@ async function createSmartAccount(
       );
       return inAppWalletGetCallsStatus(options);
     },
+    getCallsStatusRaw: async (options) => {
+      const { inAppWalletGetCallsStatusRaw } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      return inAppWalletGetCallsStatusRaw(options);
+    },
     getCapabilities: async (options) => {
       return {
         [options.chainId ?? 1]: {
@@ -566,6 +572,12 @@ function createZkSyncAccount(args: {
         "../in-app/core/eip5792/in-app-wallet-calls.js"
       );
       return inAppWalletGetCallsStatus(options);
+    },
+    getCallsStatusRaw: async (options) => {
+      const { inAppWalletGetCallsStatusRaw } = await import(
+        "../in-app/core/eip5792/in-app-wallet-calls.js"
+      );
+      return inAppWalletGetCallsStatusRaw(options);
     },
     getCapabilities: async (options) => {
       return {

@@ -19,6 +19,7 @@ import type {
   SendCallsResult,
 } from "../eip5792/send-calls.js";
 import type {
+  GetCallsStatusRawResponse,
   GetCallsStatusResponse,
   WalletSendCallsId,
 } from "../eip5792/types.js";
@@ -325,6 +326,14 @@ export type Account = {
     chain: Chain;
     client: ThirdwebClient;
   }) => Promise<GetCallsStatusResponse>;
+  /**
+   * EIP-5792: Get the raw (unprocessed) status of the given call bundle
+   */
+  getCallsStatusRaw?: (options: {
+    id: WalletSendCallsId;
+    chain: Chain;
+    client: ThirdwebClient;
+  }) => Promise<GetCallsStatusRawResponse>;
   /**
    * EIP-5792: Get the capabilities of the wallet
    */

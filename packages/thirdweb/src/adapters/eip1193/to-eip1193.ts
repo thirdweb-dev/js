@@ -194,14 +194,15 @@ export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
           if (!account) {
             throw new Error("Account not connected");
           }
-          if (!account.getCallsStatus) {
+          if (!account.getCallsStatusRaw) {
             throw new Error("Wallet does not support EIP-5792");
           }
-          return account.getCallsStatus({
+          const result = await account.getCallsStatusRaw({
             id: request.params[0],
             chain: chain,
             client: client,
           });
+          return result;
         }
         default:
           return rpcClient(request);

@@ -287,6 +287,12 @@ export class EnclaveWallet implements IWebWallet {
         );
         return inAppWalletGetCallsStatus(options);
       },
+      getCallsStatusRaw: async (options) => {
+        const { inAppWalletGetCallsStatusRaw } = await import(
+          "../eip5792/in-app-wallet-calls.js"
+        );
+        return inAppWalletGetCallsStatusRaw(options);
+      },
       getCapabilities: async (options) => {
         return {
           [options.chainId ?? 1]: {

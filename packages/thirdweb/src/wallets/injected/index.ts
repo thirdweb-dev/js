@@ -373,6 +373,22 @@ function createAccount({
         throw error;
       }
     },
+    async getCallsStatusRaw(options) {
+      try {
+        const rawResponse = (await provider.request({
+          method: "wallet_getCallsStatus",
+          params: [options.id],
+        })) as GetCallsStatusRawResponse;
+        return rawResponse;
+      } catch (error) {
+        if (/unsupport|not support/i.test((error as Error).message)) {
+          throw new Error(
+            `${id} does not support wallet_getCallsStatus, reach out to them directly to request EIP-5792 support.`,
+          );
+        }
+        throw error;
+      }
+    },
     async getCapabilities(options) {
       const chainIdFilter = options.chainId;
       try {
