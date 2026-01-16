@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.117.2
+
+### Patch Changes
+
+- [#8639](https://github.com/thirdweb-dev/js/pull/8639) [`d38deec`](https://github.com/thirdweb-dev/js/commit/d38deecaa1b1990a9af2fad79e2e620e61d4c0e3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getCallStatus via EIP1193 provider
+
 ## 5.117.1
 
 ### Patch Changes
