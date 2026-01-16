@@ -2,6 +2,7 @@ import type { WalletId } from "./wallet-types.js";
 
 // Constants for most common wallets
 export const COINBASE = "com.coinbase.wallet";
+export const BASE_ACCOUNT = "org.base.account";
 export const METAMASK = "io.metamask";
 export const RAINBOW = "me.rainbow";
 export const ZERION = "io.zerion.wallet";

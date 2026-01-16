@@ -7,10 +7,14 @@ import type {
   WCSupportedWalletIds,
 } from "./__generated__/wallet-ids.js";
 import type {
+  BaseAccountSDKWalletConnectionOptions,
+  BaseAccountWalletCreationOptions,
+} from "./base-account/base-account-web.js";
+import type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
 } from "./coinbase/coinbase-web.js";
-import type { COINBASE } from "./constants.js";
+import type { BASE_ACCOUNT, COINBASE } from "./constants.js";
 import type {
   EcosystemWalletAutoConnectOptions,
   EcosystemWalletConnectionOptions,
@@ -36,6 +40,7 @@ export type WalletId =
   | "embedded" // deprecated
   | "smart"
   | "adapter"
+  | typeof BASE_ACCOUNT
   | EcosystemWalletId
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
@@ -88,19 +93,22 @@ export type WalletConnectionOption<T extends WalletId> =
       : // inApp wallet
         T extends "inApp" | "embedded"
         ? InAppWalletConnectionOptions
-        : // coinbase wallet (inhected + coinbaseWallet)
-          T extends typeof COINBASE
-          ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-          : // injected + wc both supported
-            T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-            ? InjectedConnectOptions | WCConnectOptions
-            : // injected only
-              T extends InjectedSupportedWalletIds
-              ? InjectedConnectOptions
-              : T extends EcosystemWalletId
-                ? EcosystemWalletConnectionOptions
-                : // wc only
-                  WCConnectOptions;
+        : // base account wallet
+          T extends typeof BASE_ACCOUNT
+          ? BaseAccountSDKWalletConnectionOptions
+          : // coinbase wallet (inhected + coinbaseWallet)
+            T extends typeof COINBASE
+            ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+            : // injected + wc both supported
+              T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+              ? InjectedConnectOptions | WCConnectOptions
+              : // injected only
+                T extends InjectedSupportedWalletIds
+                ? InjectedConnectOptions
+                : T extends EcosystemWalletId
+                  ? EcosystemWalletConnectionOptions
+                  : // wc only
+                    WCConnectOptions;
 
 /**
  * Generic type for getting the type of object that the `wallet.autoConnect` method takes as the first argument.
@@ -116,19 +124,22 @@ export type WalletAutoConnectionOption<T extends WalletId> =
       ? SmartWalletConnectionOptions
       : T extends "inApp" | "embedded"
         ? InAppWalletAutoConnectOptions
-        : // coinbase wallet (inhected + coinbaseWallet)
-          T extends typeof COINBASE
-          ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-          : // injected + wc both supported
-            T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-            ? InjectedConnectOptions | WCAutoConnectOptions
-            : // injected only
-              T extends InjectedSupportedWalletIds
-              ? InjectedConnectOptions
-              : T extends EcosystemWalletId
-                ? EcosystemWalletAutoConnectOptions
-                : // wc only
-                  WCAutoConnectOptions;
+        : // base account wallet
+          T extends typeof BASE_ACCOUNT
+          ? BaseAccountSDKWalletConnectionOptions
+          : // coinbase wallet (inhected + coinbaseWallet)
+            T extends typeof COINBASE
+            ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+            : // injected + wc both supported
+              T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+              ? InjectedConnectOptions | WCAutoConnectOptions
+              : // injected only
+                T extends InjectedSupportedWalletIds
+                ? InjectedConnectOptions
+                : T extends EcosystemWalletId
+                  ? EcosystemWalletAutoConnectOptions
+                  : // wc only
+                    WCAutoConnectOptions;
 /**
  * Generic type for getting the type of object that the `createWallet` function takes as the second argument. ( the first argument being the wallet id )
  * @example
@@ -140,15 +151,17 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
   ? SmartWalletOptions
   : T extends "inApp" | "embedded"
     ? InAppWalletCreationOptions
-    : T extends typeof COINBASE
-      ? CoinbaseWalletCreationOptions
-      : T extends "adapter"
-        ? AdapterWalletOptions
-        : T extends DeepLinkSupportedWalletIds
-          ? DeepLinkSupportedWalletCreationOptions
-          : T extends EcosystemWalletId
-            ? EcosystemWalletCreationOptions | undefined
-            : undefined;
+    : T extends typeof BASE_ACCOUNT
+      ? BaseAccountWalletCreationOptions
+      : T extends typeof COINBASE
+        ? CoinbaseWalletCreationOptions
+        : T extends "adapter"
+          ? AdapterWalletOptions
+          : T extends DeepLinkSupportedWalletIds
+            ? DeepLinkSupportedWalletCreationOptions
+            : T extends EcosystemWalletId
+              ? EcosystemWalletCreationOptions | undefined
+              : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.
