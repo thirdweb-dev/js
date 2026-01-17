@@ -42,6 +42,8 @@ npm install thirdweb
 Visit the [developer portal](https://portal.thirdweb.com) for full documentation.
 
 ### 🚀 Quick Start
+> Tip: Make sure you are using Node.js v18+ and have `pnpm` installed for a smoother local development experience.
+
 
 #### For React Applications
 
