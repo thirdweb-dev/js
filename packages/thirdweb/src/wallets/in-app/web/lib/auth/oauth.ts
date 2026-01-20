@@ -32,10 +32,12 @@ export async function loginWithOauthRedirect(options: {
   ecosystem?: Ecosystem;
   redirectUrl?: string;
   mode?: "redirect" | "popup" | "window";
+  authFlow?: "connect" | "link";
 }): Promise<void> {
   const loginUrl = getLoginUrl({
     ...options,
     mode: options.mode || "redirect",
+    authFlow: options.authFlow,
   });
   if (options.mode === "redirect") {
     window.location.href = loginUrl;

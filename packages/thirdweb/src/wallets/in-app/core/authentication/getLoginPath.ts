@@ -21,12 +21,14 @@ export const getLoginUrl = ({
   ecosystem,
   mode = "popup",
   redirectUrl,
+  authFlow,
 }: {
   authOption: AuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   mode?: "popup" | "redirect" | "window";
   redirectUrl?: string;
+  authFlow?: "connect" | "link";
 }) => {
   if (mode === "popup" && redirectUrl) {
     throw new Error("Redirect URL is not supported for popup mode");
@@ -49,6 +51,9 @@ export const getLoginUrl = ({
     const formattedRedirectUrl = new URL(redirectUrl || window.location.href);
     formattedRedirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
     formattedRedirectUrl.searchParams.set("authProvider", authOption);
+    if (authFlow) {
+      formattedRedirectUrl.searchParams.set("authFlow", authFlow);
+    }
     baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
   }
 

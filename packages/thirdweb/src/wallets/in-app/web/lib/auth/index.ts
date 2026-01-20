@@ -192,6 +192,51 @@ export async function authenticateWithRedirect(
 }
 
 /**
+ * Links a new profile to the current user using OAuth redirect flow.
+ *
+ * This function initiates a redirect-based OAuth flow for linking a social account.
+ * After the user completes authentication with the provider, they will be redirected
+ * back to your app. The `autoConnect` function will automatically detect the linking
+ * flow and complete the profile linking.
+ *
+ * @param args - The authentication arguments including strategy, client, and optional redirectUrl.
+ * @returns A promise that resolves when the redirect is initiated.
+ * @example
+ * ```ts
+ * import { linkProfileWithRedirect } from "thirdweb/wallets/in-app";
+ *
+ * await linkProfileWithRedirect({
+ *   client,
+ *   strategy: "google",
+ *   mode: "redirect",
+ *   redirectUrl: "https://example.org/callback",
+ * });
+ * // Browser will redirect to Google for authentication
+ * // After auth, user is redirected back and autoConnect handles the linking
+ * ```
+ * @wallet
+ */
+export async function linkProfileWithRedirect(
+  args: Omit<SocialAuthArgsType, "mode"> & {
+    client: ThirdwebClient;
+    ecosystem?: Ecosystem;
+    mode?: "redirect" | "window";
+  },
+) {
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  if (!connector.linkProfileWithRedirect) {
+    throw new Error(
+      "linkProfileWithRedirect is not supported on this platform",
+    );
+  }
+  return connector.linkProfileWithRedirect(
+    args.strategy as SocialAuthOption,
+    args.mode,
+    args.redirectUrl,
+  );
+}
+
+/**
  * Connects a new profile (and new authentication method) to the current user.
  *
  * Requires a connected in-app or ecosystem account.

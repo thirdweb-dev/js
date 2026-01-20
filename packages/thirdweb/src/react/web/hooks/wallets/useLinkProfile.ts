@@ -94,7 +94,7 @@ export function useLinkProfile() {
     onSuccess() {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["profiles"] });
-      }, 500);
+      }, 1000);
     },
   });
 }

@@ -49,6 +49,14 @@ export function LinkAccount() {
     });
   };
 
+  const linkGithub = async () => {
+    linkProfile({
+      client: THIRDWEB_CLIENT,
+      strategy: "github",
+      mode: "redirect",
+    });
+  };
+
   return (
     <div className="flex flex-col gap-4 p-6">
       {account ? (
@@ -82,6 +90,14 @@ export function LinkAccount() {
                 variant="default"
               >
                 Link Passkey
+              </Button>
+              <Button
+                className="rounded-full p-6"
+                disabled={isPending}
+                onClick={linkGithub}
+                variant="default"
+              >
+                Link Github
               </Button>
             </>
           )}
