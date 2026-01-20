@@ -82,6 +82,7 @@ export {
   getUserEmail,
   getUserPhoneNumber,
   linkProfile,
+  linkProfileWithRedirect,
   preAuthenticate,
   unlinkProfile,
 } from "../../wallets/in-app/web/lib/auth/index.js";

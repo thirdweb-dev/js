@@ -3,7 +3,10 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import { inMemoryStorage } from "../../../../utils/storage/inMemoryStorage.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
-import type { SocialAuthOption } from "../../../../wallets/types.js";
+import {
+  type SocialAuthOption,
+  socialAuthOptions,
+} from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import { getUserStatus } from "../../core/actions/get-enclave-user-status.js";
 import { authEndpoint } from "../../core/authentication/authEndpoint.js";
@@ -464,7 +467,39 @@ export class InAppWebConnector implements InAppConnector {
     });
   }
 
+  async linkProfileWithRedirect(
+    strategy: SocialAuthOption,
+    mode?: "redirect" | "window",
+    redirectUrl?: string,
+  ): Promise<void> {
+    return loginWithOauthRedirect({
+      authOption: strategy,
+      client: this.client,
+      ecosystem: this.ecosystem,
+      mode,
+      redirectUrl,
+      authFlow: "link",
+    });
+  }
+
   async linkProfile(args: AuthArgsType) {
+    // Check if this is social auth with redirect mode
+    if (
+      "strategy" in args &&
+      socialAuthOptions.includes(args.strategy as SocialAuthOption) &&
+      "mode" in args &&
+      args.mode !== "popup" &&
+      args.mode !== undefined
+    ) {
+      await this.linkProfileWithRedirect(
+        args.strategy as SocialAuthOption,
+        args.mode as "redirect" | "window",
+        "redirectUrl" in args ? (args.redirectUrl as string) : undefined,
+      );
+      // Will redirect, return empty (code won't reach here)
+      return [];
+    }
+
     const { storedToken } = await this.authenticate(args);
     return await linkAccount({
       client: args.client,

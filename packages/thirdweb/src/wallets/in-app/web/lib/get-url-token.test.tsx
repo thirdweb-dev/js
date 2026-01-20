@@ -49,6 +49,7 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
 
     expect(result).toEqual({
       authCookie: null,
+      authFlow: null,
       authProvider: null,
       authResult: { token: "abc" },
       walletId: "123",
@@ -62,6 +63,7 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
 
     expect(result).toEqual({
       authCookie: "myCookie",
+      authFlow: null,
       authProvider: null,
       authResult: undefined,
       walletId: "123",
@@ -79,6 +81,7 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
 
     expect(result).toEqual({
       authCookie: "myCookie",
+      authFlow: null,
       authProvider: "provider1",
       authResult: { token: "xyz" },
       walletId: "123",

@@ -11,6 +11,7 @@ export function getUrlToken():
       authResult?: AuthStoredTokenWithCookieReturnType;
       authProvider?: AuthOption;
       authCookie?: string;
+      authFlow?: "connect" | "link";
     }
   | undefined {
   if (typeof document === "undefined") {
@@ -24,6 +25,7 @@ export function getUrlToken():
   const walletId = params.get("walletId") as WalletId | undefined;
   const authProvider = params.get("authProvider") as AuthOption | undefined;
   const authCookie = params.get("authCookie") as string | undefined;
+  const authFlow = params.get("authFlow") as "connect" | "link" | undefined;
 
   if ((authCookie || authResultString) && walletId) {
     const authResult = (() => {
@@ -35,12 +37,13 @@ export function getUrlToken():
     params.delete("walletId");
     params.delete("authProvider");
     params.delete("authCookie");
+    params.delete("authFlow");
     window.history.pushState(
       {},
       "",
       `${window.location.pathname}?${params.toString()}`,
     );
-    return { authCookie, authProvider, authResult, walletId };
+    return { authCookie, authFlow, authProvider, authResult, walletId };
   }
   return undefined;
 }
