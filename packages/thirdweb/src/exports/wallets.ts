@@ -12,6 +12,11 @@ export type {
   WCSupportedWalletIds,
 } from "../wallets/__generated__/wallet-ids.js";
 export type {
+  BaseAccountSDKWalletConnectionOptions,
+  BaseAccountWalletCreationOptions,
+} from "../wallets/base-account/base-account-web.js";
+export { isBaseAccountSDKWallet } from "../wallets/base-account/base-account-web.js";
+export type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
 } from "../wallets/coinbase/coinbase-web.js";

@@ -7,13 +7,13 @@ export const wallet = {
   homepage: "https://shapeshift.com",
   image_id: "957c34b2-7210-475a-0734-689dfcabc400",
   app: {
-    browser: "https://app.shapeshift.com",
+    browser: "https://app.shapeshift.com/#",
     ios: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
     android:
       "https://play.google.com/store/apps/details?id=com.shapeshift.droid_shapeshift&hl=en_US&gl=US&pli=1",
     mac: "https://apps.apple.com/us/app/shapeshift-crypto-platform/id996569075",
-    windows: null,
-    linux: null,
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://shapeshift.app.link/",
   },
   desktop: {
-    native: null,
-    universal: "https://app.shapeshift.com",
+    native: "",
+    universal: "https://app.shapeshift.com/#",
   },
 } as const;

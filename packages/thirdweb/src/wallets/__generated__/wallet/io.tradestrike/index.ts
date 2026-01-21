@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "strikex://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

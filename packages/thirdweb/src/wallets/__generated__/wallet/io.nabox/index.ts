@@ -5,12 +5,11 @@ export const wallet = {
   id: "io.nabox",
   name: "Nabox",
   homepage: "https://nabox.io/",
-  image_id: "3b75e9f7-2ca8-4a33-ed2b-4e8a0c048d00",
+  image_id: "d7d52161-f9bb-455a-038e-9eca68536200",
   app: {
-    browser:
-      "https://chrome.google.com/webstore/detail/nabox-wallet/nknhiehlklippafakaeklbeglecifhad?hl=en",
-    ios: "https://testflight.apple.com/join/Ux18h5Nv",
-    android: "https://play.google.com/store/apps/details?id=com.wallet.nabox",
+    browser: null,
+    ios: "https://apps.apple.com/us/app/nabox-wallet/id6443821021",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -22,12 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
-    universal: "https://nabox.io/app/*",
+    native: "nabox://",
+    universal: "https://nabox.io/app",
   },
   desktop: {
     native: null,
-    universal:
-      "https://chrome.google.com/webstore/detail/nabox-wallet/nknhiehlklippafakaeklbeglecifhad?hl=en",
+    universal: null,
   },
 } as const;

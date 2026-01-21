@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "io.internetmoney",
-  name: "Internet Money Wallet",
+  name: "Internet Money",
   homepage: "https://internetmoney.io",
   image_id: "204b2240-5ce4-4996-6ec4-f06a22726900",
   app: {

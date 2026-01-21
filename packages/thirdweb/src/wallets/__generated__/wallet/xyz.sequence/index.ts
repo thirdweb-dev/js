@@ -5,7 +5,7 @@ export const wallet = {
   id: "xyz.sequence",
   name: "Sequence Wallet",
   homepage: "https://sequence.xyz/",
-  image_id: "b2d5c39c-a485-4efa-5736-a782204e4a00",
+  image_id: "221e7ee6-3445-4b4f-fd07-6e089de81f00",
   app: {
     browser: "https://sequence.app",
     ios: null,
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
+    native: "",
     universal: "https://sequence.app",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://sequence.app",
   },
 } as const;

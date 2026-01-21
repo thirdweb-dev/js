@@ -11,6 +11,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "dependencies": {
+    "@base-org/account": "2.5.0",
     "@coinbase/wallet-sdk": "4.3.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",

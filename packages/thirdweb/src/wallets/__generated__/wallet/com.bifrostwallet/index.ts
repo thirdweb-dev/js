@@ -7,18 +7,18 @@ export const wallet = {
   homepage: "https://bifrostwallet.com",
   image_id: "c1ab3987-7e3c-43fa-0b27-c746f6135a00",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/bifrost-wallet/id1577198351",
     android:
       "https://play.google.com/store/apps/details?id=com.bifrostwallet.app",
-    mac: null,
-    windows: null,
-    linux: null,
-    chrome: null,
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    mac: "",
+    windows: "",
+    linux: "",
+    chrome: "",
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "com.bifrostwallet",
   mobile: {
@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://app.bifrostwallet.com/",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

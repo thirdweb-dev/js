@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: "tech.levain",
   mobile: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://app.levain.tech/",
   },
 } as const;

@@ -5,7 +5,7 @@ export const wallet = {
   id: "app.keplr",
   name: "Keplr",
   homepage: "https://keplr.app",
-  image_id: "527324b0-3849-462b-9a1a-72b53bdfea00",
+  image_id: "750e0f10-0700-4ca5-7c0d-b4a55da72f00",
   app: {
     browser: "https://wallet.keplr.app",
     ios: "https://apps.apple.com/us/app/keplr-wallet/id1567851089",
@@ -24,10 +24,10 @@ export const wallet = {
   rdns: "app.keplr",
   mobile: {
     native: "keplrwallet://wcV2",
-    universal: null,
+    universal: "https://deeplink.keplr.app/",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://wallet.keplr.app",
   },
 } as const;

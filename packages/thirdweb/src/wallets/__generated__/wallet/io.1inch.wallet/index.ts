@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.1inch.wallet",
   name: "1inch Wallet",
   homepage: "http://wallet.1inch.io",
-  image_id: "6c9f7cd6-c3d7-4b54-6f9d-663fe4b56000",
+  image_id: "7c94a262-6d79-464c-bce3-a06f6beca600",
   app: {
     browser: null,
     ios: "https://apps.apple.com/us/app/1inch-defi-wallet/id1546049391",
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "oneinch://",
-    universal: "https://wallet.1inch.io/",
+    native: "oneinch://open/nobodywilleveruseit",
+    universal: "https://wallet.1inch.io/app/nobodywilleveruseit",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://www.oasys-wallet.com/wc/",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

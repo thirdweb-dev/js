@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "io.xenea",
-  name: "Xenea-Pro",
+  name: "XENEA Wallet",
   homepage: "https://xenea.io/",
   image_id: "a7f06d8c-3196-42c9-bcb3-410d260e3d00",
   app: {
@@ -25,7 +25,7 @@ export const wallet = {
     universal: "https://xenea.app",
   },
   desktop: {
-    native: "",
-    universal: "",
+    native: null,
+    universal: null,
   },
 } as const;

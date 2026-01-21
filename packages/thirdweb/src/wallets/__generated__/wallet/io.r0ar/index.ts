@@ -3,14 +3,14 @@
 
 export const wallet = {
   id: "io.r0ar",
-  name: "r0ar platform",
-  homepage: "https://r0ar.io",
-  image_id: "c29756b6-3a78-4af2-e2d1-ab743fe30e00",
+  name: "R0AR Mobile Wallet",
+  homepage: "https://www.r0ar.io/",
+  image_id: "a8239b76-9877-4809-c29e-d1392b6f4e00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/br/app/r0ar-wallet",
+    ios: "https://apps.apple.com/us/app/r0ar-wallet/id6745417026",
     android:
-      "https://play.google.com/store/apps/details?id=com.roar_wallet&pcampaignid=web_share",
+      "https://play.google.com/store/apps/details?id=com.roar_wallet&pli=1",
     mac: null,
     windows: null,
     linux: null,
@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "Roarwallet://",
+    native: "roarwallet://",
     universal: "",
   },
   desktop: {

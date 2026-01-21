@@ -4,15 +4,15 @@
 export const wallet = {
   id: "com.okex.wallet",
   name: "OKX Wallet",
-  homepage: "https://www.okx.com/web3",
-  image_id: "b011bd5a-a887-44e2-12b0-39efbd9e5600",
+  homepage: "https://www.okx.com/download",
+  image_id: "c55df831-3c52-49fc-d1d1-97a926dc0c00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/okx-buy-bitcoin-eth-crypto/id1327268470",
-    android: "https://play.google.com/store/apps/details?id=com.okinc.okex.gp",
-    mac: "https://www.okx.com/download",
-    windows: "https://www.okx.com/download",
-    linux: "https://www.okx.com/download",
+    ios: "https://apps.apple.com/us/app/okx-wallet-portal-to-web3/id6743309484",
+    android: "https://play.google.com/store/apps/details?id=com.okx.wallet",
+    mac: null,
+    windows: null,
+    linux: null,
     chrome:
       "https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge",
     firefox: null,
@@ -22,12 +22,11 @@ export const wallet = {
   },
   rdns: "com.okex.wallet",
   mobile: {
-    native: "okex://main",
-    universal:
-      "https://www.okx.com/download?appendQuery=true&deeplink=okx://web3/wallet/walletConnect",
+    native: "okxwallet://main",
+    universal: "https://web3.okx.com/download",
   },
   desktop: {
-    native: "",
-    universal: "",
+    native: null,
+    universal: null,
   },
 } as const;
