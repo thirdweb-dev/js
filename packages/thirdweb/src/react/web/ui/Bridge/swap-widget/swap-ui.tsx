@@ -9,19 +9,19 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../constants/addresses.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import {
-	getAddress,
-	isAddress,
-	shortenAddress,
+  getAddress,
+  isAddress,
+  shortenAddress,
 } from "../../../../../utils/address.js";
 import { toTokens, toUnits } from "../../../../../utils/units.js";
 import { getDefaultWalletsForBridgeComponents } from "../../../../../wallets/defaultWallets.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
-	fontSize,
-	iconSize,
-	radius,
-	spacing,
-	type Theme,
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+  type Theme,
 } from "../../../../core/design-system/index.js";
 import type { BridgePrepareRequest } from "../../../../core/hooks/useBridgePrepare.js";
 import { ConnectButton } from "../../ConnectWallet/ConnectButton.js";
@@ -31,8 +31,8 @@ import { ArrowUpDownIcon } from "../../ConnectWallet/icons/ArrowUpDownIcon.js";
 import connectLocaleEn from "../../ConnectWallet/locale/en.js";
 import { PoweredByThirdweb } from "../../ConnectWallet/PoweredByTW.js";
 import {
-	formatCurrencyAmount,
-	formatTokenAmount,
+  formatCurrencyAmount,
+  formatTokenAmount,
 } from "../../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
@@ -50,1160 +50,1160 @@ import { useTokenBalance } from "../common/token-balance.js";
 import { useTokenPrice } from "./hooks.js";
 import { SelectToken } from "./select-token-ui.js";
 import type {
-	ActiveWalletInfo,
-	SwapPreparedQuote,
-	SwapWidgetConnectOptions,
-	TokenSelection,
+  ActiveWalletInfo,
+  SwapPreparedQuote,
+  SwapWidgetConnectOptions,
+  TokenSelection,
 } from "./types.js";
 import { useBridgeChain } from "./use-bridge-chains.js";
 
 type SwapUIProps = {
-	activeWalletInfo: ActiveWalletInfo | undefined;
-	client: ThirdwebClient;
-	theme: Theme | "light" | "dark";
-	connectOptions: SwapWidgetConnectOptions | undefined;
-	currency: SupportedFiatCurrency;
-	showThirdwebBranding: boolean;
-	onSwap: (data: {
-		result: SwapPreparedQuote;
-		request: BridgePrepareRequest;
-		buyToken: TokenWithPrices;
-		sellTokenBalance: bigint;
-		sellToken: TokenWithPrices;
-		mode: "buy" | "sell";
-	}) => void;
-	buyToken: TokenSelection | undefined;
-	sellToken: TokenSelection | undefined;
-	setBuyToken: (token: TokenSelection | undefined) => void;
-	setSellToken: (token: TokenSelection | undefined) => void;
-	amountSelection: {
-		type: "buy" | "sell";
-		amount: string;
-	};
-	setAmountSelection: (amountSelection: {
-		type: "buy" | "sell";
-		amount: string;
-	}) => void;
-	onDisconnect: (() => void) | undefined;
-	receiverAddressMode: "wallet" | "custom";
-	setReceiverAddressMode: (mode: "wallet" | "custom") => void;
-	receiverAddress: string;
-	setReceiverAddress: (address: string) => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  client: ThirdwebClient;
+  theme: Theme | "light" | "dark";
+  connectOptions: SwapWidgetConnectOptions | undefined;
+  currency: SupportedFiatCurrency;
+  showThirdwebBranding: boolean;
+  onSwap: (data: {
+    result: SwapPreparedQuote;
+    request: BridgePrepareRequest;
+    buyToken: TokenWithPrices;
+    sellTokenBalance: bigint;
+    sellToken: TokenWithPrices;
+    mode: "buy" | "sell";
+  }) => void;
+  buyToken: TokenSelection | undefined;
+  sellToken: TokenSelection | undefined;
+  setBuyToken: (token: TokenSelection | undefined) => void;
+  setSellToken: (token: TokenSelection | undefined) => void;
+  amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  };
+  setAmountSelection: (amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  }) => void;
+  onDisconnect: (() => void) | undefined;
+  receiverAddressMode: "wallet" | "custom";
+  setReceiverAddressMode: (mode: "wallet" | "custom") => void;
+  receiverAddress: string;
+  setReceiverAddress: (address: string) => void;
 };
 
 /**
  * @internal
  */
 export function SwapUI(props: SwapUIProps) {
-	const theme = useCustomTheme();
-	const [modalState, setModalState] = useState<{
-		screen: "select-buy-token" | "select-sell-token";
-		isOpen: boolean;
-	}>({
-		screen: "select-buy-token",
-		isOpen: false,
-	});
+  const theme = useCustomTheme();
+  const [modalState, setModalState] = useState<{
+    screen: "select-buy-token" | "select-sell-token";
+    isOpen: boolean;
+  }>({
+    screen: "select-buy-token",
+    isOpen: false,
+  });
 
-	const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-	const [showReceiverDropdown, setShowReceiverDropdown] = useState(false);
-	const [receiverAddressModalOpen, setReceiverAddressModalOpen] =
-		useState(false);
-	const [tempReceiverAddress, setTempReceiverAddress] = useState<string>("");
-	const receiverDropdownRef = useRef<HTMLDivElement>(null);
-	const isMobile = useIsMobile();
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [showReceiverDropdown, setShowReceiverDropdown] = useState(false);
+  const [receiverAddressModalOpen, setReceiverAddressModalOpen] =
+    useState(false);
+  const [tempReceiverAddress, setTempReceiverAddress] = useState<string>("");
+  const receiverDropdownRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
-	// Close dropdown when clicking outside
-	useEffect(() => {
-		if (!showReceiverDropdown) return;
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showReceiverDropdown) return;
 
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				receiverDropdownRef.current &&
-				!receiverDropdownRef.current.contains(event.target as Node)
-			) {
-				setShowReceiverDropdown(false);
-			}
-		};
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        receiverDropdownRef.current &&
+        !receiverDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowReceiverDropdown(false);
+      }
+    };
 
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [showReceiverDropdown]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showReceiverDropdown]);
 
-	// Token Prices ----------------------------------------------------------------------------
-	const buyTokenQuery = useTokenPrice({
-		token: props.buyToken,
-		client: props.client,
-	});
-	const sellTokenQuery = useTokenPrice({
-		token: props.sellToken,
-		client: props.client,
-	});
+  // Token Prices ----------------------------------------------------------------------------
+  const buyTokenQuery = useTokenPrice({
+    token: props.buyToken,
+    client: props.client,
+  });
+  const sellTokenQuery = useTokenPrice({
+    token: props.sellToken,
+    client: props.client,
+  });
 
-	const buyTokenWithPrices = buyTokenQuery.data;
-	const sellTokenWithPrices = sellTokenQuery.data;
+  const buyTokenWithPrices = buyTokenQuery.data;
+  const sellTokenWithPrices = sellTokenQuery.data;
 
-	// Swap Quote ----------------------------------------------------------------------------
-	const preparedResultQuery = useSwapQuote({
-		amountSelection: props.amountSelection,
-		buyTokenWithPrices: buyTokenWithPrices,
-		sellTokenWithPrices: sellTokenWithPrices,
-		activeWalletInfo: props.activeWalletInfo,
-		client: props.client,
-		receiverAddress: props.receiverAddress,
-	});
+  // Swap Quote ----------------------------------------------------------------------------
+  const preparedResultQuery = useSwapQuote({
+    amountSelection: props.amountSelection,
+    buyTokenWithPrices: buyTokenWithPrices,
+    sellTokenWithPrices: sellTokenWithPrices,
+    activeWalletInfo: props.activeWalletInfo,
+    client: props.client,
+    receiverAddress: props.receiverAddress,
+  });
 
-	// Amount and Amount.fetching ------------------------------------------------------------
+  // Amount and Amount.fetching ------------------------------------------------------------
 
-	const sellTokenAmount =
-		props.amountSelection.type === "sell"
-			? props.amountSelection.amount
-			: preparedResultQuery.data &&
-					props.amountSelection.type === "buy" &&
-					sellTokenWithPrices
-				? toTokens(
-						preparedResultQuery.data.result.originAmount,
-						sellTokenWithPrices.decimals,
-					)
-				: "";
+  const sellTokenAmount =
+    props.amountSelection.type === "sell"
+      ? props.amountSelection.amount
+      : preparedResultQuery.data &&
+          props.amountSelection.type === "buy" &&
+          sellTokenWithPrices
+        ? toTokens(
+            preparedResultQuery.data.result.originAmount,
+            sellTokenWithPrices.decimals,
+          )
+        : "";
 
-	const buyTokenAmount =
-		props.amountSelection.type === "buy"
-			? props.amountSelection.amount
-			: preparedResultQuery.data &&
-					props.amountSelection.type === "sell" &&
-					buyTokenWithPrices
-				? toTokens(
-						preparedResultQuery.data.result.destinationAmount,
-						buyTokenWithPrices.decimals,
-					)
-				: "";
+  const buyTokenAmount =
+    props.amountSelection.type === "buy"
+      ? props.amountSelection.amount
+      : preparedResultQuery.data &&
+          props.amountSelection.type === "sell" &&
+          buyTokenWithPrices
+        ? toTokens(
+            preparedResultQuery.data.result.destinationAmount,
+            buyTokenWithPrices.decimals,
+          )
+        : "";
 
-	// when buy amount is set, the sell amount is fetched
-	const isBuyAmountFetching =
-		props.amountSelection.type === "sell" && preparedResultQuery.isFetching;
-	const isSellAmountFetching =
-		props.amountSelection.type === "buy" && preparedResultQuery.isFetching;
+  // when buy amount is set, the sell amount is fetched
+  const isBuyAmountFetching =
+    props.amountSelection.type === "sell" && preparedResultQuery.isFetching;
+  const isSellAmountFetching =
+    props.amountSelection.type === "buy" && preparedResultQuery.isFetching;
 
-	// token balances ------------------------------------------------------------
-	const sellTokenBalanceQuery = useTokenBalance({
-		chainId: sellTokenWithPrices?.chainId,
-		tokenAddress: sellTokenWithPrices?.address,
-		client: props.client,
-		walletAddress: props.activeWalletInfo?.activeAccount.address,
-	});
+  // token balances ------------------------------------------------------------
+  const sellTokenBalanceQuery = useTokenBalance({
+    chainId: sellTokenWithPrices?.chainId,
+    tokenAddress: sellTokenWithPrices?.address,
+    client: props.client,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+  });
 
-	const buyTokenBalanceQuery = useTokenBalance({
-		chainId: buyTokenWithPrices?.chainId,
-		tokenAddress: buyTokenWithPrices?.address,
-		client: props.client,
-		walletAddress: props.activeWalletInfo?.activeAccount.address,
-	});
+  const buyTokenBalanceQuery = useTokenBalance({
+    chainId: buyTokenWithPrices?.chainId,
+    tokenAddress: buyTokenWithPrices?.address,
+    client: props.client,
+    walletAddress: props.activeWalletInfo?.activeAccount.address,
+  });
 
-	const notEnoughBalance = !!(
-		sellTokenBalanceQuery.data &&
-		sellTokenWithPrices &&
-		props.amountSelection.amount &&
-		!!sellTokenAmount &&
-		sellTokenBalanceQuery.data.value <
-			Number(toUnits(sellTokenAmount, sellTokenWithPrices.decimals))
-	);
+  const notEnoughBalance = !!(
+    sellTokenBalanceQuery.data &&
+    sellTokenWithPrices &&
+    props.amountSelection.amount &&
+    !!sellTokenAmount &&
+    sellTokenBalanceQuery.data.value <
+      Number(toUnits(sellTokenAmount, sellTokenWithPrices.decimals))
+  );
 
-	// ----------------------------------------------------------------------------
-	const disableContinue =
-		!preparedResultQuery.data ||
-		preparedResultQuery.isFetching ||
-		notEnoughBalance;
+  // ----------------------------------------------------------------------------
+  const disableContinue =
+    !preparedResultQuery.data ||
+    preparedResultQuery.isFetching ||
+    notEnoughBalance;
 
-	return (
-		<Container p="md">
-			<Modal
-				hide={false}
-				autoFocusCrossIcon={false}
-				className="tw-modal__swap-widget"
-				size={isMobile ? "compact" : "wide"}
-				title="Select Token"
-				open={modalState.isOpen}
-				crossContainerStyles={{
-					right: spacing.md,
-					top: spacing["md+"],
-					transform: "none",
-				}}
-				setOpen={(v) => {
-					if (!v) {
-						setModalState((v) => ({
-							...v,
-							isOpen: false,
-						}));
-					}
-				}}
-			>
-				{/* buy token modal */}
-				{modalState.screen === "select-buy-token" && (
-					<SelectToken
-						type="buy"
-						selections={{
-							buyChainId: props.buyToken?.chainId,
-							sellChainId: props.sellToken?.chainId,
-						}}
-						activeWalletInfo={props.activeWalletInfo}
-						onClose={() => {
-							setModalState((v) => ({
-								...v,
-								isOpen: false,
-							}));
-						}}
-						client={props.client}
-						selectedToken={props.buyToken}
-						currency={props.currency}
-						setSelectedToken={(token) => {
-							props.setBuyToken(token);
-							// if buy token is same as sell token, unset sell token
-							if (
-								props.sellToken &&
-								token.tokenAddress.toLowerCase() ===
-									props.sellToken.tokenAddress.toLowerCase() &&
-								token.chainId === props.sellToken.chainId
-							) {
-								props.setSellToken(undefined);
-							}
+  return (
+    <Container p="md">
+      <Modal
+        hide={false}
+        autoFocusCrossIcon={false}
+        className="tw-modal__swap-widget"
+        size={isMobile ? "compact" : "wide"}
+        title="Select Token"
+        open={modalState.isOpen}
+        crossContainerStyles={{
+          right: spacing.md,
+          top: spacing["md+"],
+          transform: "none",
+        }}
+        setOpen={(v) => {
+          if (!v) {
+            setModalState((v) => ({
+              ...v,
+              isOpen: false,
+            }));
+          }
+        }}
+      >
+        {/* buy token modal */}
+        {modalState.screen === "select-buy-token" && (
+          <SelectToken
+            type="buy"
+            selections={{
+              buyChainId: props.buyToken?.chainId,
+              sellChainId: props.sellToken?.chainId,
+            }}
+            activeWalletInfo={props.activeWalletInfo}
+            onClose={() => {
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }));
+            }}
+            client={props.client}
+            selectedToken={props.buyToken}
+            currency={props.currency}
+            setSelectedToken={(token) => {
+              props.setBuyToken(token);
+              // if buy token is same as sell token, unset sell token
+              if (
+                props.sellToken &&
+                token.tokenAddress.toLowerCase() ===
+                  props.sellToken.tokenAddress.toLowerCase() &&
+                token.chainId === props.sellToken.chainId
+              ) {
+                props.setSellToken(undefined);
+              }
 
-							// if sell token is not selected, set it as native token of the buy token's chain if buy token is not a native token itself
-							if (
-								!props.sellToken &&
-								token.tokenAddress.toLowerCase() !==
-									NATIVE_TOKEN_ADDRESS.toLowerCase()
-							) {
-								props.setSellToken({
-									tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
-									chainId: token.chainId,
-								});
-							}
-						}}
-					/>
-				)}
+              // if sell token is not selected, set it as native token of the buy token's chain if buy token is not a native token itself
+              if (
+                !props.sellToken &&
+                token.tokenAddress.toLowerCase() !==
+                  NATIVE_TOKEN_ADDRESS.toLowerCase()
+              ) {
+                props.setSellToken({
+                  tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
+                  chainId: token.chainId,
+                });
+              }
+            }}
+          />
+        )}
 
-				{/* sell token modal */}
-				{modalState.screen === "select-sell-token" && (
-					<SelectToken
-						onClose={() => {
-							setModalState((v) => ({
-								...v,
-								isOpen: false,
-							}));
-						}}
-						client={props.client}
-						selectedToken={props.sellToken}
-						currency={props.currency}
-						setSelectedToken={(token) => {
-							props.setSellToken(token);
-							// if sell token is same as buy token, unset buy token
-							if (
-								props.buyToken &&
-								token.tokenAddress.toLowerCase() ===
-									props.buyToken.tokenAddress.toLowerCase() &&
-								token.chainId === props.buyToken.chainId
-							) {
-								props.setBuyToken(undefined);
-							}
+        {/* sell token modal */}
+        {modalState.screen === "select-sell-token" && (
+          <SelectToken
+            onClose={() => {
+              setModalState((v) => ({
+                ...v,
+                isOpen: false,
+              }));
+            }}
+            client={props.client}
+            selectedToken={props.sellToken}
+            currency={props.currency}
+            setSelectedToken={(token) => {
+              props.setSellToken(token);
+              // if sell token is same as buy token, unset buy token
+              if (
+                props.buyToken &&
+                token.tokenAddress.toLowerCase() ===
+                  props.buyToken.tokenAddress.toLowerCase() &&
+                token.chainId === props.buyToken.chainId
+              ) {
+                props.setBuyToken(undefined);
+              }
 
-							// if buy token is not selected, set it as native token of the sell token's chain if sell token is not a native token itself
-							if (
-								!props.buyToken &&
-								token.tokenAddress.toLowerCase() !==
-									NATIVE_TOKEN_ADDRESS.toLowerCase()
-							) {
-								// set the buy token after a delay to avoid updating the "selections" prop passed to the <SelectToken> component and trigger unnecessay fetch of chains query that will never be used
-								// we have to do this because the modal does not close immediately onClose - it has a fade out animation
-								onModalUnmount(() => {
-									props.setBuyToken({
-										tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
-										chainId: token.chainId,
-									});
-								});
-							}
-						}}
-						activeWalletInfo={props.activeWalletInfo}
-						type="sell"
-						selections={{
-							buyChainId: props.buyToken?.chainId,
-							sellChainId: props.sellToken?.chainId,
-						}}
-					/>
-				)}
-			</Modal>
+              // if buy token is not selected, set it as native token of the sell token's chain if sell token is not a native token itself
+              if (
+                !props.buyToken &&
+                token.tokenAddress.toLowerCase() !==
+                  NATIVE_TOKEN_ADDRESS.toLowerCase()
+              ) {
+                // set the buy token after a delay to avoid updating the "selections" prop passed to the <SelectToken> component and trigger unnecessay fetch of chains query that will never be used
+                // we have to do this because the modal does not close immediately onClose - it has a fade out animation
+                onModalUnmount(() => {
+                  props.setBuyToken({
+                    tokenAddress: getAddress(NATIVE_TOKEN_ADDRESS),
+                    chainId: token.chainId,
+                  });
+                });
+              }
+            }}
+            activeWalletInfo={props.activeWalletInfo}
+            type="sell"
+            selections={{
+              buyChainId: props.buyToken?.chainId,
+              sellChainId: props.sellToken?.chainId,
+            }}
+          />
+        )}
+      </Modal>
 
-			{detailsModalOpen && (
-				<DetailsModal
-					client={props.client}
-					locale={connectLocaleEn}
-					detailsModal={undefined}
-					theme={props.theme}
-					closeModal={() => {
-						setDetailsModalOpen(false);
-					}}
-					onDisconnect={() => {
-						props.onDisconnect?.();
-					}}
-					chains={[]}
-					connectOptions={props.connectOptions}
-				/>
-			)}
+      {detailsModalOpen && (
+        <DetailsModal
+          client={props.client}
+          locale={connectLocaleEn}
+          detailsModal={undefined}
+          theme={props.theme}
+          closeModal={() => {
+            setDetailsModalOpen(false);
+          }}
+          onDisconnect={() => {
+            props.onDisconnect?.();
+          }}
+          chains={[]}
+          connectOptions={props.connectOptions}
+        />
+      )}
 
-			{/* Sell token  */}
-			<TokenSection
-				selection={{
-					buyChainId: props.buyToken?.chainId,
-					sellChainId: props.sellToken?.chainId,
-				}}
-				onMaxClick={() => {
-					if (sellTokenBalanceQuery.data) {
-						props.setAmountSelection({
-							type: "sell",
-							amount: sellTokenBalanceQuery.data.displayValue,
-						});
-					}
-				}}
-				activeWalletInfo={props.activeWalletInfo}
-				isConnected={!!props.activeWalletInfo}
-				balance={{
-					data: sellTokenBalanceQuery.data?.value,
-					isFetching: sellTokenBalanceQuery.isFetching,
-				}}
-				amount={{
-					data: sellTokenAmount,
-					isFetching: isSellAmountFetching,
-				}}
-				type="sell"
-				setAmount={(value) => {
-					props.setAmountSelection({ type: "sell", amount: value });
-				}}
-				selectedToken={
-					props.sellToken
-						? {
-								data: sellTokenQuery.data,
-								isFetching: sellTokenQuery.isFetching,
-								isError: sellTokenQuery.isError,
-							}
-						: undefined
-				}
-				client={props.client}
-				currency={props.currency}
-				onSelectToken={() =>
-					setModalState({
-						screen: "select-sell-token",
-						isOpen: true,
-					})
-				}
-				onWalletClick={() => {
-					setDetailsModalOpen(true);
-				}}
-			/>
+      {/* Sell token  */}
+      <TokenSection
+        selection={{
+          buyChainId: props.buyToken?.chainId,
+          sellChainId: props.sellToken?.chainId,
+        }}
+        onMaxClick={() => {
+          if (sellTokenBalanceQuery.data) {
+            props.setAmountSelection({
+              type: "sell",
+              amount: sellTokenBalanceQuery.data.displayValue,
+            });
+          }
+        }}
+        activeWalletInfo={props.activeWalletInfo}
+        isConnected={!!props.activeWalletInfo}
+        balance={{
+          data: sellTokenBalanceQuery.data?.value,
+          isFetching: sellTokenBalanceQuery.isFetching,
+        }}
+        amount={{
+          data: sellTokenAmount,
+          isFetching: isSellAmountFetching,
+        }}
+        type="sell"
+        setAmount={(value) => {
+          props.setAmountSelection({ type: "sell", amount: value });
+        }}
+        selectedToken={
+          props.sellToken
+            ? {
+                data: sellTokenQuery.data,
+                isFetching: sellTokenQuery.isFetching,
+                isError: sellTokenQuery.isError,
+              }
+            : undefined
+        }
+        client={props.client}
+        currency={props.currency}
+        onSelectToken={() =>
+          setModalState({
+            screen: "select-sell-token",
+            isOpen: true,
+          })
+        }
+        onWalletClick={() => {
+          setDetailsModalOpen(true);
+        }}
+      />
 
-			{/* Switch */}
-			<SwitchButton
-				onClick={() => {
-					// switch tokens
-					const temp = props.sellToken;
-					props.setSellToken(props.buyToken);
-					props.setBuyToken(temp);
-					props.setAmountSelection({
-						type: props.amountSelection.type === "buy" ? "sell" : "buy",
-						amount: props.amountSelection.amount,
-					});
-				}}
-			/>
+      {/* Switch */}
+      <SwitchButton
+        onClick={() => {
+          // switch tokens
+          const temp = props.sellToken;
+          props.setSellToken(props.buyToken);
+          props.setBuyToken(temp);
+          props.setAmountSelection({
+            type: props.amountSelection.type === "buy" ? "sell" : "buy",
+            amount: props.amountSelection.amount,
+          });
+        }}
+      />
 
-			{/* Buy */}
-			<TokenSection
-				selection={{
-					buyChainId: props.buyToken?.chainId,
-					sellChainId: props.sellToken?.chainId,
-				}}
-				onMaxClick={undefined}
-				onWalletClick={() => {
-					setDetailsModalOpen(true);
-				}}
-				activeWalletInfo={props.activeWalletInfo}
-				isConnected={!!props.activeWalletInfo}
-				balance={{
-					data: buyTokenBalanceQuery.data?.value,
-					isFetching: buyTokenBalanceQuery.isFetching,
-				}}
-				amount={{
-					data: buyTokenAmount,
-					isFetching: isBuyAmountFetching,
-				}}
-				type="buy"
-				selectedToken={
-					props.buyToken
-						? {
-								data: buyTokenQuery.data,
-								isFetching: buyTokenQuery.isFetching,
-								isError: buyTokenQuery.isError,
-							}
-						: undefined
-				}
-				setAmount={(value) => {
-					props.setAmountSelection({ type: "buy", amount: value });
-				}}
-				client={props.client}
-				currency={props.currency}
-				onSelectToken={() =>
-					setModalState({
-						screen: "select-buy-token",
-						isOpen: true,
-					})
-				}
-				receiverAddressMode={props.receiverAddressMode}
-				receiverAddress={props.receiverAddress}
-				showReceiverDropdown={showReceiverDropdown}
-				receiverDropdownRef={receiverDropdownRef}
-				onReceiverModeChange={(mode) => {
-					props.setReceiverAddressMode(mode);
-					if (mode === "wallet") {
-						props.setReceiverAddress("");
-					}
-				}}
-				onReceiverAddressChange={props.setReceiverAddress}
-				onShowReceiverDropdownChange={setShowReceiverDropdown}
-				onOpenReceiverModal={() => {
-					setReceiverAddressModalOpen(true);
-					setTempReceiverAddress(props.receiverAddress || "");
-				}}
-			/>
+      {/* Buy */}
+      <TokenSection
+        selection={{
+          buyChainId: props.buyToken?.chainId,
+          sellChainId: props.sellToken?.chainId,
+        }}
+        onMaxClick={undefined}
+        onWalletClick={() => {
+          setDetailsModalOpen(true);
+        }}
+        activeWalletInfo={props.activeWalletInfo}
+        isConnected={!!props.activeWalletInfo}
+        balance={{
+          data: buyTokenBalanceQuery.data?.value,
+          isFetching: buyTokenBalanceQuery.isFetching,
+        }}
+        amount={{
+          data: buyTokenAmount,
+          isFetching: isBuyAmountFetching,
+        }}
+        type="buy"
+        selectedToken={
+          props.buyToken
+            ? {
+                data: buyTokenQuery.data,
+                isFetching: buyTokenQuery.isFetching,
+                isError: buyTokenQuery.isError,
+              }
+            : undefined
+        }
+        setAmount={(value) => {
+          props.setAmountSelection({ type: "buy", amount: value });
+        }}
+        client={props.client}
+        currency={props.currency}
+        onSelectToken={() =>
+          setModalState({
+            screen: "select-buy-token",
+            isOpen: true,
+          })
+        }
+        receiverAddressMode={props.receiverAddressMode}
+        receiverAddress={props.receiverAddress}
+        showReceiverDropdown={showReceiverDropdown}
+        receiverDropdownRef={receiverDropdownRef}
+        onReceiverModeChange={(mode) => {
+          props.setReceiverAddressMode(mode);
+          if (mode === "wallet") {
+            props.setReceiverAddress("");
+          }
+        }}
+        onReceiverAddressChange={props.setReceiverAddress}
+        onShowReceiverDropdownChange={setShowReceiverDropdown}
+        onOpenReceiverModal={() => {
+          setReceiverAddressModalOpen(true);
+          setTempReceiverAddress(props.receiverAddress || "");
+        }}
+      />
 
-			{/* Receiver Address Modal */}
-			{receiverAddressModalOpen && (
-				<Modal
-					hide={false}
-					autoFocusCrossIcon={false}
-					className="tw-modal__receiver-address"
-					size="compact"
-					title="To Address"
-					open={receiverAddressModalOpen}
-					setOpen={setReceiverAddressModalOpen}
-				>
-					<Container flex="column" gap="md" p="md">
-						<Container flex="column" gap="xs">
-							<Input
-								variant="outline"
-								placeholder="Enter receiver address"
-								value={tempReceiverAddress}
-								onChange={(e) => setTempReceiverAddress(e.target.value)}
-								style={{
-									fontSize: fontSize.sm,
-								}}
-							/>
-							{tempReceiverAddress && !isAddress(tempReceiverAddress) && (
-								<Container
-									style={{
-										padding: spacing.sm,
-										borderRadius: radius.md,
-										backgroundColor: `${theme.colors.danger}15`,
-									}}
-									flex="row"
-									gap="xs"
-									center="y"
-								>
-									<Text size="sm" color="danger">
-										This isn't a valid wallet address. Please ensure that the
-										address provided is accurate.
-									</Text>
-								</Container>
-							)}
-							{tempReceiverAddress &&
-								isAddress(tempReceiverAddress) &&
-								props.activeWalletInfo?.activeAccount?.address &&
-								tempReceiverAddress.toLowerCase() ===
-									props.activeWalletInfo.activeAccount.address.toLowerCase() && (
-									<Container
-										style={{
-											padding: spacing.sm,
-											borderRadius: radius.md,
-											backgroundColor: `${theme.colors.danger}15`,
-										}}
-										flex="row"
-										gap="xs"
-										center="y"
-									>
-										<Text size="sm" color="danger">
-											This is the connected wallet address. Please provide a
-											different address.
-										</Text>
-									</Container>
-								)}
-						</Container>
+      {/* Receiver Address Modal */}
+      {receiverAddressModalOpen && (
+        <Modal
+          hide={false}
+          autoFocusCrossIcon={false}
+          className="tw-modal__receiver-address"
+          size="compact"
+          title="To Address"
+          open={receiverAddressModalOpen}
+          setOpen={setReceiverAddressModalOpen}
+        >
+          <Container flex="column" gap="md" p="md">
+            <Container flex="column" gap="xs">
+              <Input
+                variant="outline"
+                placeholder="Enter receiver address"
+                value={tempReceiverAddress}
+                onChange={(e) => setTempReceiverAddress(e.target.value)}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              />
+              {tempReceiverAddress && !isAddress(tempReceiverAddress) && (
+                <Container
+                  style={{
+                    padding: spacing.sm,
+                    borderRadius: radius.md,
+                    backgroundColor: `${theme.colors.danger}15`,
+                  }}
+                  flex="row"
+                  gap="xs"
+                  center="y"
+                >
+                  <Text size="sm" color="danger">
+                    This isn't a valid wallet address. Please ensure that the
+                    address provided is accurate.
+                  </Text>
+                </Container>
+              )}
+              {tempReceiverAddress &&
+                isAddress(tempReceiverAddress) &&
+                props.activeWalletInfo?.activeAccount?.address &&
+                tempReceiverAddress.toLowerCase() ===
+                  props.activeWalletInfo.activeAccount.address.toLowerCase() && (
+                  <Container
+                    style={{
+                      padding: spacing.sm,
+                      borderRadius: radius.md,
+                      backgroundColor: `${theme.colors.danger}15`,
+                    }}
+                    flex="row"
+                    gap="xs"
+                    center="y"
+                  >
+                    <Text size="sm" color="danger">
+                      This is the connected wallet address. Please provide a
+                      different address.
+                    </Text>
+                  </Container>
+                )}
+            </Container>
 
-						<Button
-							variant="primary"
-							fullWidth
-							disabled={
-								!tempReceiverAddress ||
-								!isAddress(tempReceiverAddress) ||
-								tempReceiverAddress.toLowerCase() ===
-									props.activeWalletInfo?.activeAccount.address.toLowerCase()
-							}
-							onClick={() => {
-								if (
-									tempReceiverAddress &&
-									isAddress(tempReceiverAddress) &&
-									tempReceiverAddress.toLowerCase() !==
-										props.activeWalletInfo?.activeAccount.address.toLowerCase()
-								) {
-									props.setReceiverAddress(tempReceiverAddress);
-									props.setReceiverAddressMode("custom");
-									setReceiverAddressModalOpen(false);
-								}
-							}}
-						>
-							SAVE
-						</Button>
-					</Container>
-				</Modal>
-			)}
+            <Button
+              variant="primary"
+              fullWidth
+              disabled={
+                !tempReceiverAddress ||
+                !isAddress(tempReceiverAddress) ||
+                tempReceiverAddress.toLowerCase() ===
+                  props.activeWalletInfo?.activeAccount.address.toLowerCase()
+              }
+              onClick={() => {
+                if (
+                  tempReceiverAddress &&
+                  isAddress(tempReceiverAddress) &&
+                  tempReceiverAddress.toLowerCase() !==
+                    props.activeWalletInfo?.activeAccount.address.toLowerCase()
+                ) {
+                  props.setReceiverAddress(tempReceiverAddress);
+                  props.setReceiverAddressMode("custom");
+                  setReceiverAddressModalOpen(false);
+                }
+              }}
+            >
+              SAVE
+            </Button>
+          </Container>
+        </Modal>
+      )}
 
-			{/* error message */}
-			{preparedResultQuery.error ||
-			buyTokenQuery.isError ||
-			sellTokenQuery.isError ? (
-				<Text
-					size="sm"
-					color="danger"
-					multiline
-					center
-					style={{
-						paddingBlock: spacing.md,
-					}}
-				>
-					{preparedResultQuery.error
-						? preparedResultQuery.error.message || "Failed to get a quote"
-						: buyTokenQuery.isError
-							? "Failed to fetch buy token details"
-							: sellTokenQuery.isError
-								? "Failed to fetch sell token details"
-								: "Failed to get a quote"}
-				</Text>
-			) : (
-				<Spacer y="md" />
-			)}
+      {/* error message */}
+      {preparedResultQuery.error ||
+      buyTokenQuery.isError ||
+      sellTokenQuery.isError ? (
+        <Text
+          size="sm"
+          color="danger"
+          multiline
+          center
+          style={{
+            paddingBlock: spacing.md,
+          }}
+        >
+          {preparedResultQuery.error
+            ? preparedResultQuery.error.message || "Failed to get a quote"
+            : buyTokenQuery.isError
+              ? "Failed to fetch buy token details"
+              : sellTokenQuery.isError
+                ? "Failed to fetch sell token details"
+                : "Failed to get a quote"}
+        </Text>
+      ) : (
+        <Spacer y="md" />
+      )}
 
-			{/* Button */}
-			{!props.activeWalletInfo ? (
-				<ConnectButton
-					client={props.client}
-					connectButton={{
-						label: "Swap",
-						style: {
-							width: "100%",
-							borderRadius: radius.full,
-						},
-					}}
-					theme={props.theme}
-					{...props.connectOptions}
-					wallets={
-						props.connectOptions?.wallets ||
-						getDefaultWalletsForBridgeComponents({
-							appMetadata: props.connectOptions?.appMetadata,
-							chains: props.connectOptions?.chains,
-						})
-					}
-				/>
-			) : (
-				<Button
-					disabled={disableContinue}
-					fullWidth
-					onClick={() => {
-						if (
-							preparedResultQuery.data &&
-							buyTokenWithPrices &&
-							sellTokenWithPrices &&
-							sellTokenBalanceQuery.data &&
-							preparedResultQuery.data.type === "preparedResult"
-						) {
-							props.onSwap({
-								result: preparedResultQuery.data.result,
-								request: preparedResultQuery.data.request,
-								buyToken: buyTokenWithPrices,
-								sellToken: sellTokenWithPrices,
-								sellTokenBalance: sellTokenBalanceQuery.data.value,
-								mode: props.amountSelection.type,
-							});
-						}
-					}}
-					gap="xs"
-					style={{
-						fontSize: fontSize.md,
-						borderRadius: radius.full,
-						opacity: disableContinue ? 0.5 : 1,
-					}}
-					variant="primary"
-				>
-					{preparedResultQuery.isFetching && <Spinner size="sm" />}
-					{preparedResultQuery.isFetching
-						? "Fetching Quote"
-						: notEnoughBalance
-							? "Insufficient Balance"
-							: "Swap"}
-				</Button>
-			)}
+      {/* Button */}
+      {!props.activeWalletInfo ? (
+        <ConnectButton
+          client={props.client}
+          connectButton={{
+            label: "Swap",
+            style: {
+              width: "100%",
+              borderRadius: radius.full,
+            },
+          }}
+          theme={props.theme}
+          {...props.connectOptions}
+          wallets={
+            props.connectOptions?.wallets ||
+            getDefaultWalletsForBridgeComponents({
+              appMetadata: props.connectOptions?.appMetadata,
+              chains: props.connectOptions?.chains,
+            })
+          }
+        />
+      ) : (
+        <Button
+          disabled={disableContinue}
+          fullWidth
+          onClick={() => {
+            if (
+              preparedResultQuery.data &&
+              buyTokenWithPrices &&
+              sellTokenWithPrices &&
+              sellTokenBalanceQuery.data &&
+              preparedResultQuery.data.type === "preparedResult"
+            ) {
+              props.onSwap({
+                result: preparedResultQuery.data.result,
+                request: preparedResultQuery.data.request,
+                buyToken: buyTokenWithPrices,
+                sellToken: sellTokenWithPrices,
+                sellTokenBalance: sellTokenBalanceQuery.data.value,
+                mode: props.amountSelection.type,
+              });
+            }
+          }}
+          gap="xs"
+          style={{
+            fontSize: fontSize.md,
+            borderRadius: radius.full,
+            opacity: disableContinue ? 0.5 : 1,
+          }}
+          variant="primary"
+        >
+          {preparedResultQuery.isFetching && <Spinner size="sm" />}
+          {preparedResultQuery.isFetching
+            ? "Fetching Quote"
+            : notEnoughBalance
+              ? "Insufficient Balance"
+              : "Swap"}
+        </Button>
+      )}
 
-			{props.showThirdwebBranding ? (
-				<div>
-					<Spacer y="md" />
-					<PoweredByThirdweb link="https://thirdweb.com/monetize/bridge" />
-				</div>
-			) : null}
-		</Container>
-	);
+      {props.showThirdwebBranding ? (
+        <div>
+          <Spacer y="md" />
+          <PoweredByThirdweb link="https://thirdweb.com/monetize/bridge" />
+        </div>
+      ) : null}
+    </Container>
+  );
 }
 
 function useSwapQuote(params: {
-	amountSelection: {
-		type: "buy" | "sell";
-		amount: string;
-	};
-	buyTokenWithPrices: TokenWithPrices | undefined;
-	sellTokenWithPrices: TokenWithPrices | undefined;
-	activeWalletInfo: ActiveWalletInfo | undefined;
-	client: ThirdwebClient;
-	receiverAddress: string;
+  amountSelection: {
+    type: "buy" | "sell";
+    amount: string;
+  };
+  buyTokenWithPrices: TokenWithPrices | undefined;
+  sellTokenWithPrices: TokenWithPrices | undefined;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  client: ThirdwebClient;
+  receiverAddress: string;
 }) {
-	const {
-		amountSelection,
-		buyTokenWithPrices,
-		sellTokenWithPrices,
-		activeWalletInfo,
-		client,
-		receiverAddress,
-	} = params;
+  const {
+    amountSelection,
+    buyTokenWithPrices,
+    sellTokenWithPrices,
+    activeWalletInfo,
+    client,
+    receiverAddress,
+  } = params;
 
-	return useQuery({
-		queryKey: [
-			"swap-quote",
-			amountSelection,
-			buyTokenWithPrices,
-			sellTokenWithPrices,
-			activeWalletInfo?.activeAccount.address,
-			receiverAddress,
-		],
-		retry: false,
-		enabled:
-			!!buyTokenWithPrices && !!sellTokenWithPrices && !!amountSelection.amount,
-		queryFn: async (): Promise<
-			| {
-					type: "preparedResult";
-					result: SwapPreparedQuote;
-					request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
-			  }
-			| {
-					type: "quote";
-					result: Buy.quote.Result | Sell.quote.Result;
-			  }
-		> => {
-			if (
-				!buyTokenWithPrices ||
-				!sellTokenWithPrices ||
-				!amountSelection.amount
-			) {
-				throw new Error("Invalid state");
-			}
+  return useQuery({
+    queryKey: [
+      "swap-quote",
+      amountSelection,
+      buyTokenWithPrices,
+      sellTokenWithPrices,
+      activeWalletInfo?.activeAccount.address,
+      receiverAddress,
+    ],
+    retry: false,
+    enabled:
+      !!buyTokenWithPrices && !!sellTokenWithPrices && !!amountSelection.amount,
+    queryFn: async (): Promise<
+      | {
+          type: "preparedResult";
+          result: SwapPreparedQuote;
+          request: Extract<BridgePrepareRequest, { type: "buy" | "sell" }>;
+        }
+      | {
+          type: "quote";
+          result: Buy.quote.Result | Sell.quote.Result;
+        }
+    > => {
+      if (
+        !buyTokenWithPrices ||
+        !sellTokenWithPrices ||
+        !amountSelection.amount
+      ) {
+        throw new Error("Invalid state");
+      }
 
-			if (!activeWalletInfo) {
-				if (amountSelection.type === "buy") {
-					const res = await Buy.quote({
-						amount: toUnits(
-							amountSelection.amount,
-							buyTokenWithPrices.decimals,
-						),
-						// origin = sell
-						originChainId: sellTokenWithPrices.chainId,
-						originTokenAddress: sellTokenWithPrices.address,
-						// destination = buy
-						destinationChainId: buyTokenWithPrices.chainId,
-						destinationTokenAddress: buyTokenWithPrices.address,
-						client: client,
-					});
+      if (!activeWalletInfo) {
+        if (amountSelection.type === "buy") {
+          const res = await Buy.quote({
+            amount: toUnits(
+              amountSelection.amount,
+              buyTokenWithPrices.decimals,
+            ),
+            // origin = sell
+            originChainId: sellTokenWithPrices.chainId,
+            originTokenAddress: sellTokenWithPrices.address,
+            // destination = buy
+            destinationChainId: buyTokenWithPrices.chainId,
+            destinationTokenAddress: buyTokenWithPrices.address,
+            client: client,
+          });
 
-					return {
-						type: "quote",
-						result: res,
-					};
-				}
+          return {
+            type: "quote",
+            result: res,
+          };
+        }
 
-				const res = await Sell.quote({
-					amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
-					// origin = sell
-					originChainId: sellTokenWithPrices.chainId,
-					originTokenAddress: sellTokenWithPrices.address,
-					// destination = buy
-					destinationChainId: buyTokenWithPrices.chainId,
-					destinationTokenAddress: buyTokenWithPrices.address,
-					client: client,
-				});
+        const res = await Sell.quote({
+          amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+        });
 
-				return {
-					type: "quote",
-					result: res,
-				};
-			}
+        return {
+          type: "quote",
+          result: res,
+        };
+      }
 
-			if (amountSelection.type === "buy") {
-				const receiver =
-					receiverAddress && isAddress(receiverAddress)
-						? getAddress(receiverAddress)
-						: activeWalletInfo.activeAccount.address;
+      if (amountSelection.type === "buy") {
+        const receiver =
+          receiverAddress && isAddress(receiverAddress)
+            ? getAddress(receiverAddress)
+            : activeWalletInfo.activeAccount.address;
 
-				const buyRequestOptions: BuyPrepare.Options = {
-					amount: toUnits(amountSelection.amount, buyTokenWithPrices.decimals),
-					// origin = sell
-					originChainId: sellTokenWithPrices.chainId,
-					originTokenAddress: sellTokenWithPrices.address,
-					// destination = buy
-					destinationChainId: buyTokenWithPrices.chainId,
-					destinationTokenAddress: buyTokenWithPrices.address,
-					client: client,
-					receiver: receiver,
-					sender: activeWalletInfo.activeAccount.address,
-				};
+        const buyRequestOptions: BuyPrepare.Options = {
+          amount: toUnits(amountSelection.amount, buyTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+          receiver: receiver,
+          sender: activeWalletInfo.activeAccount.address,
+        };
 
-				const buyRequest: BridgePrepareRequest = {
-					type: "buy",
-					...buyRequestOptions,
-				};
+        const buyRequest: BridgePrepareRequest = {
+          type: "buy",
+          ...buyRequestOptions,
+        };
 
-				const res = await Buy.prepare(buyRequest);
+        const res = await Buy.prepare(buyRequest);
 
-				return {
-					type: "preparedResult",
-					result: { type: "buy", ...res },
-					request: buyRequest,
-				};
-			} else if (amountSelection.type === "sell") {
-				const receiver =
-					receiverAddress && isAddress(receiverAddress)
-						? getAddress(receiverAddress)
-						: activeWalletInfo.activeAccount.address;
+        return {
+          type: "preparedResult",
+          result: { type: "buy", ...res },
+          request: buyRequest,
+        };
+      } else if (amountSelection.type === "sell") {
+        const receiver =
+          receiverAddress && isAddress(receiverAddress)
+            ? getAddress(receiverAddress)
+            : activeWalletInfo.activeAccount.address;
 
-				const sellRequestOptions: SellPrepare.Options = {
-					amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
-					// origin = sell
-					originChainId: sellTokenWithPrices.chainId,
-					originTokenAddress: sellTokenWithPrices.address,
-					// destination = buy
-					destinationChainId: buyTokenWithPrices.chainId,
-					destinationTokenAddress: buyTokenWithPrices.address,
-					client: client,
-					receiver: receiver,
-					sender: activeWalletInfo.activeAccount.address,
-				};
+        const sellRequestOptions: SellPrepare.Options = {
+          amount: toUnits(amountSelection.amount, sellTokenWithPrices.decimals),
+          // origin = sell
+          originChainId: sellTokenWithPrices.chainId,
+          originTokenAddress: sellTokenWithPrices.address,
+          // destination = buy
+          destinationChainId: buyTokenWithPrices.chainId,
+          destinationTokenAddress: buyTokenWithPrices.address,
+          client: client,
+          receiver: receiver,
+          sender: activeWalletInfo.activeAccount.address,
+        };
 
-				const res = await Sell.prepare(sellRequestOptions);
+        const res = await Sell.prepare(sellRequestOptions);
 
-				const sellRequest: BridgePrepareRequest = {
-					type: "sell",
-					...sellRequestOptions,
-				};
+        const sellRequest: BridgePrepareRequest = {
+          type: "sell",
+          ...sellRequestOptions,
+        };
 
-				return {
-					type: "preparedResult",
-					result: { type: "sell", ...res },
-					request: sellRequest,
-				};
-			}
+        return {
+          type: "preparedResult",
+          result: { type: "sell", ...res },
+          request: sellRequest,
+        };
+      }
 
-			throw new Error("Invalid amount selection type");
-		},
-		refetchInterval: 20000,
-	});
+      throw new Error("Invalid amount selection type");
+    },
+    refetchInterval: 20000,
+  });
 }
 
 function TokenSection(props: {
-	type: "buy" | "sell";
-	selection: {
-		buyChainId: number | undefined;
-		sellChainId: number | undefined;
-	};
-	amount: {
-		data: string;
-		isFetching: boolean;
-	};
-	setAmount: (amount: string) => void;
-	activeWalletInfo: ActiveWalletInfo | undefined;
-	selectedToken:
-		| {
-				data: TokenWithPrices | undefined;
-				isFetching: boolean;
-				isError: boolean;
-		  }
-		| undefined;
-	currency: SupportedFiatCurrency;
-	onSelectToken: () => void;
-	client: ThirdwebClient;
-	isConnected: boolean;
-	balance: {
-		data: bigint | undefined;
-		isFetching: boolean;
-	};
-	onWalletClick: () => void;
-	onMaxClick: (() => void) | undefined;
-	receiverAddressMode?: "wallet" | "custom";
-	receiverAddress?: string;
-	showReceiverDropdown?: boolean;
-	receiverDropdownRef?: React.RefObject<HTMLDivElement | null>;
-	onReceiverModeChange?: (mode: "wallet" | "custom") => void;
-	onReceiverAddressChange?: (address: string) => void;
-	onShowReceiverDropdownChange?: (show: boolean) => void;
-	onOpenReceiverModal?: () => void;
+  type: "buy" | "sell";
+  selection: {
+    buyChainId: number | undefined;
+    sellChainId: number | undefined;
+  };
+  amount: {
+    data: string;
+    isFetching: boolean;
+  };
+  setAmount: (amount: string) => void;
+  activeWalletInfo: ActiveWalletInfo | undefined;
+  selectedToken:
+    | {
+        data: TokenWithPrices | undefined;
+        isFetching: boolean;
+        isError: boolean;
+      }
+    | undefined;
+  currency: SupportedFiatCurrency;
+  onSelectToken: () => void;
+  client: ThirdwebClient;
+  isConnected: boolean;
+  balance: {
+    data: bigint | undefined;
+    isFetching: boolean;
+  };
+  onWalletClick: () => void;
+  onMaxClick: (() => void) | undefined;
+  receiverAddressMode?: "wallet" | "custom";
+  receiverAddress?: string;
+  showReceiverDropdown?: boolean;
+  receiverDropdownRef?: React.RefObject<HTMLDivElement | null>;
+  onReceiverModeChange?: (mode: "wallet" | "custom") => void;
+  onReceiverAddressChange?: (address: string) => void;
+  onShowReceiverDropdownChange?: (show: boolean) => void;
+  onOpenReceiverModal?: () => void;
 }) {
-	const theme = useCustomTheme();
+  const theme = useCustomTheme();
 
-	const chainQuery = useBridgeChain({
-		chainId: props.selectedToken?.data?.chainId,
-		client: props.client,
-	});
-	const chain = chainQuery.data;
+  const chainQuery = useBridgeChain({
+    chainId: props.selectedToken?.data?.chainId,
+    client: props.client,
+  });
+  const chain = chainQuery.data;
 
-	const fiatPricePerToken = props.selectedToken?.data?.prices[props.currency];
-	const totalFiatValue = !props.amount.data
-		? undefined
-		: fiatPricePerToken
-			? fiatPricePerToken * Number(props.amount.data)
-			: undefined;
+  const fiatPricePerToken = props.selectedToken?.data?.prices[props.currency];
+  const totalFiatValue = !props.amount.data
+    ? undefined
+    : fiatPricePerToken
+      ? fiatPricePerToken * Number(props.amount.data)
+      : undefined;
 
-	return (
-		<Container
-			style={{
-				borderRadius: radius.xl,
-				borderWidth: 1,
-				borderStyle: "solid",
-				position: "relative",
-				overflow: "visible",
-			}}
-			borderColor="borderColor"
-		>
-			{/* make the background semi-transparent */}
-			<Container
-				bg="tertiaryBg"
-				style={{
-					position: "absolute",
-					inset: 0,
-					opacity: 0.5,
-					zIndex: 0,
-				}}
-			/>
+  return (
+    <Container
+      style={{
+        borderRadius: radius.xl,
+        borderWidth: 1,
+        borderStyle: "solid",
+        position: "relative",
+        overflow: "visible",
+      }}
+      borderColor="borderColor"
+    >
+      {/* make the background semi-transparent */}
+      <Container
+        bg="tertiaryBg"
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0.5,
+          zIndex: 0,
+        }}
+      />
 
-			<Container
-				style={{
-					position: "relative",
-					zIndex: 1,
-					overflow: "visible",
-				}}
-			>
-				{/* row1 : label */}
-				<Container
-					px="md"
-					py="sm"
-					relative
-					style={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-						overflow: "visible",
-					}}
-				>
-					<Container flex="row" center="y" gap="3xs" color="secondaryText">
-						<Text
-							size="xs"
-							color="primaryText"
-							style={{
-								letterSpacing: "0.07em",
-							}}
-						>
-							{props.type === "buy" ? "BUY" : "SELL"}
-						</Text>
-					</Container>
-					{props.activeWalletInfo &&
-					props.type === "buy" &&
-					props.receiverAddressMode ? (
-						<div
-							ref={props.receiverDropdownRef}
-							style={{
-								position: "relative",
-							}}
-						>
-							<Button
-								variant="ghost-solid"
-								onClick={() =>
-									props.onShowReceiverDropdownChange?.(
-										!props.showReceiverDropdown,
-									)
-								}
-								style={{
-									padding: `${spacing.xxs} 2px`,
-									fontSize: fontSize.xs,
-									fontWeight: 400,
-								}}
-							>
-								{props.receiverAddressMode === "wallet"
-									? shortenAddress(props.activeWalletInfo.activeAccount.address)
-									: props.receiverAddress && isAddress(props.receiverAddress)
-										? shortenAddress(props.receiverAddress)
-										: "Select wallet"}
-								<span style={{ marginLeft: spacing.xxs }} />
-								<span
-									style={{
-										transform: props.showReceiverDropdown
-											? "rotate(180deg)"
-											: "rotate(0deg)",
-										transition: "transform 200ms ease",
-										display: "inline-flex",
-									}}
-								>
-									<ArrowUpDownIcon size={iconSize.xs} />
-								</span>
-							</Button>
+      <Container
+        style={{
+          position: "relative",
+          zIndex: 1,
+          overflow: "visible",
+        }}
+      >
+        {/* row1 : label */}
+        <Container
+          px="md"
+          py="sm"
+          relative
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            overflow: "visible",
+          }}
+        >
+          <Container flex="row" center="y" gap="3xs" color="secondaryText">
+            <Text
+              size="xs"
+              color="primaryText"
+              style={{
+                letterSpacing: "0.07em",
+              }}
+            >
+              {props.type === "buy" ? "BUY" : "SELL"}
+            </Text>
+          </Container>
+          {props.activeWalletInfo &&
+          props.type === "buy" &&
+          props.receiverAddressMode ? (
+            <div
+              ref={props.receiverDropdownRef}
+              style={{
+                position: "relative",
+              }}
+            >
+              <Button
+                variant="ghost-solid"
+                onClick={() =>
+                  props.onShowReceiverDropdownChange?.(
+                    !props.showReceiverDropdown,
+                  )
+                }
+                style={{
+                  padding: `${spacing.xxs} 2px`,
+                  fontSize: fontSize.xs,
+                  fontWeight: 400,
+                }}
+              >
+                {props.receiverAddressMode === "wallet"
+                  ? shortenAddress(props.activeWalletInfo.activeAccount.address)
+                  : props.receiverAddress && isAddress(props.receiverAddress)
+                    ? shortenAddress(props.receiverAddress)
+                    : "Select wallet"}
+                <span style={{ marginLeft: spacing.xxs }} />
+                <span
+                  style={{
+                    transform: props.showReceiverDropdown
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 200ms ease",
+                    display: "inline-flex",
+                  }}
+                >
+                  <ArrowUpDownIcon size={iconSize.xs} />
+                </span>
+              </Button>
 
-							{props.showReceiverDropdown && (
-								<Container
-									bg="modalBg"
-									style={{
-										borderRadius: radius.md,
-										border: `1px solid ${theme.colors.borderColor}`,
-										padding: spacing.xs,
-										position: "absolute",
-										right: 0,
-										top: "100%",
-										marginTop: spacing.xs,
-										zIndex: 1000,
-										minWidth: "200px",
-										boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
-										overflow: "visible",
-									}}
-								>
-									<Button
-										variant="ghost"
-										fullWidth
-										onClick={() => {
-											props.onReceiverModeChange?.("wallet");
-											props.onReceiverAddressChange?.("");
-											props.onShowReceiverDropdownChange?.(false);
-										}}
-										style={{
-											justifyContent: "flex-start",
-											padding: spacing.sm,
-											fontSize: fontSize.sm,
-										}}
-									>
-										Use connected wallet
-									</Button>
-									<Button
-										variant="ghost"
-										fullWidth
-										onClick={() => {
-											props.onShowReceiverDropdownChange?.(false);
-											props.onOpenReceiverModal?.();
-										}}
-										style={{
-											justifyContent: "flex-start",
-											padding: spacing.sm,
-											fontSize: fontSize.sm,
-											borderTop: `1px solid ${theme.colors.borderColor}`,
-											marginTop: spacing.xs,
-											paddingTop: spacing.sm,
-										}}
-									>
-										Paste wallet address
-									</Button>
-								</Container>
-							)}
-						</div>
-					) : props.activeWalletInfo ? (
-						<ActiveWalletDetails
-							activeWalletInfo={props.activeWalletInfo}
-							client={props.client}
-							onClick={props.onWalletClick}
-						/>
-					) : null}
-				</Container>
+              {props.showReceiverDropdown && (
+                <Container
+                  bg="modalBg"
+                  style={{
+                    borderRadius: radius.md,
+                    border: `1px solid ${theme.colors.borderColor}`,
+                    padding: spacing.xs,
+                    position: "absolute",
+                    right: 0,
+                    top: "100%",
+                    marginTop: spacing.xs,
+                    zIndex: 1000,
+                    minWidth: "200px",
+                    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
+                    overflow: "visible",
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onReceiverModeChange?.("wallet");
+                      props.onReceiverAddressChange?.("");
+                      props.onShowReceiverDropdownChange?.(false);
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                    }}
+                  >
+                    Use connected wallet
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onShowReceiverDropdownChange?.(false);
+                      props.onOpenReceiverModal?.();
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                      borderTop: `1px solid ${theme.colors.borderColor}`,
+                      marginTop: spacing.xs,
+                      paddingTop: spacing.sm,
+                    }}
+                  >
+                    Paste wallet address
+                  </Button>
+                </Container>
+              )}
+            </div>
+          ) : props.activeWalletInfo ? (
+            <ActiveWalletDetails
+              activeWalletInfo={props.activeWalletInfo}
+              client={props.client}
+              onClick={props.onWalletClick}
+            />
+          ) : null}
+        </Container>
 
-				<Container
-					bg="tertiaryBg"
-					style={{
-						position: "relative",
-						overflow: "hidden",
-						borderRadius: radius.xl,
-						borderTop: `1px solid ${theme.colors.borderColor}`,
-					}}
-				>
-					<SelectedTokenButton
-						selectedToken={props.selectedToken}
-						client={props.client}
-						onSelectToken={props.onSelectToken}
-						chain={chain}
-					/>
+        <Container
+          bg="tertiaryBg"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: radius.xl,
+            borderTop: `1px solid ${theme.colors.borderColor}`,
+          }}
+        >
+          <SelectedTokenButton
+            selectedToken={props.selectedToken}
+            client={props.client}
+            onSelectToken={props.onSelectToken}
+            chain={chain}
+          />
 
-					<Container px="md" py="md">
-						<Container
-							flex="row"
-							gap="xs"
-							center="y"
-							style={{
-								flexWrap: "nowrap",
-							}}
-						>
-							{props.amount.isFetching ? (
-								<div style={{ flexGrow: 1 }}>
-									<Skeleton
-										height="30px"
-										width="140px"
-										style={{
-											borderRadius: radius.lg,
-										}}
-									/>
-								</div>
-							) : (
-								<DecimalInput
-									value={props.amount.data}
-									setValue={props.setAmount}
-									style={{
-										border: "none",
-										boxShadow: "none",
-										fontSize: fontSize.xl,
-										fontWeight: 500,
-										paddingInline: 0,
-										paddingBlock: 0,
-										letterSpacing: "-0.025em",
-										height: "30px",
-									}}
-								/>
-							)}
+          <Container px="md" py="md">
+            <Container
+              flex="row"
+              gap="xs"
+              center="y"
+              style={{
+                flexWrap: "nowrap",
+              }}
+            >
+              {props.amount.isFetching ? (
+                <div style={{ flexGrow: 1 }}>
+                  <Skeleton
+                    height="30px"
+                    width="140px"
+                    style={{
+                      borderRadius: radius.lg,
+                    }}
+                  />
+                </div>
+              ) : (
+                <DecimalInput
+                  value={props.amount.data}
+                  setValue={props.setAmount}
+                  style={{
+                    border: "none",
+                    boxShadow: "none",
+                    fontSize: fontSize.xl,
+                    fontWeight: 500,
+                    paddingInline: 0,
+                    paddingBlock: 0,
+                    letterSpacing: "-0.025em",
+                    height: "30px",
+                  }}
+                />
+              )}
 
-							{props.activeWalletInfo &&
-								props.onMaxClick &&
-								props.selectedToken && (
-									<Button
-										variant="outline"
-										style={{
-											paddingInline: spacing.xs,
-											paddingBlock: spacing.xxs,
-											borderRadius: radius.full,
-											fontSize: fontSize.xs,
-											fontWeight: 400,
-										}}
-										onClick={props.onMaxClick}
-									>
-										Max
-									</Button>
-								)}
-						</Container>
+              {props.activeWalletInfo &&
+                props.onMaxClick &&
+                props.selectedToken && (
+                  <Button
+                    variant="outline"
+                    style={{
+                      paddingInline: spacing.xs,
+                      paddingBlock: spacing.xxs,
+                      borderRadius: radius.full,
+                      fontSize: fontSize.xs,
+                      fontWeight: 400,
+                    }}
+                    onClick={props.onMaxClick}
+                  >
+                    Max
+                  </Button>
+                )}
+            </Container>
 
-						<Spacer y="sm" />
+            <Spacer y="sm" />
 
-						{/* row3 : fiat value and balance */}
-						<div
-							style={{
-								display: "flex",
-								alignItems: "center",
-								gap: "4px",
-								justifyContent: "space-between",
-							}}
-						>
-							<div
-								style={{
-									display: "flex",
-									alignItems: "center",
-									gap: "3px",
-								}}
-							>
-								{props.amount.isFetching ? (
-									<Skeleton height={fontSize.xs} width="50px" />
-								) : (
-									<Text size="xs" color="secondaryText">
-										{formatCurrencyAmount(props.currency, totalFiatValue || 0)}
-									</Text>
-								)}
-							</div>
+            {/* row3 : fiat value and balance */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "3px",
+                }}
+              >
+                {props.amount.isFetching ? (
+                  <Skeleton height={fontSize.xs} width="50px" />
+                ) : (
+                  <Text size="xs" color="secondaryText">
+                    {formatCurrencyAmount(props.currency, totalFiatValue || 0)}
+                  </Text>
+                )}
+              </div>
 
-							{/* Balance */}
-							{props.isConnected && props.selectedToken && (
-								<div>
-									{props.balance.data === undefined ||
-									props.selectedToken.data === undefined ? (
-										<Skeleton height={fontSize.xs} width="100px" />
-									) : (
-										<div
-											style={{
-												display: "flex",
-												alignItems: "center",
-												gap: "3px",
-											}}
-										>
-											<Text size="xs" color="secondaryText">
-												Balance:
-											</Text>
-											<Text size="xs" color="primaryText">
-												{formatTokenAmount(
-													props.balance.data,
-													props.selectedToken.data.decimals,
-													5,
-												)}
-											</Text>
-										</div>
-									)}
-								</div>
-							)}
-						</div>
-					</Container>
-				</Container>
-			</Container>
-		</Container>
-	);
+              {/* Balance */}
+              {props.isConnected && props.selectedToken && (
+                <div>
+                  {props.balance.data === undefined ||
+                  props.selectedToken.data === undefined ? (
+                    <Skeleton height={fontSize.xs} width="100px" />
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "3px",
+                      }}
+                    >
+                      <Text size="xs" color="secondaryText">
+                        Balance:
+                      </Text>
+                      <Text size="xs" color="primaryText">
+                        {formatTokenAmount(
+                          props.balance.data,
+                          props.selectedToken.data.decimals,
+                          5,
+                        )}
+                      </Text>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </Container>
+        </Container>
+      </Container>
+    </Container>
+  );
 }
 
 function SwitchButton(props: { onClick: () => void }) {
-	return (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: "center",
-				marginBlock: `-13px`,
-				zIndex: 2,
-				position: "relative",
-			}}
-		>
-			<SwitchButtonInner
-				variant="ghost-solid"
-				onClick={(e) => {
-					props.onClick();
-					const node = e.currentTarget.querySelector("svg");
-					if (node) {
-						node.style.transform = "rotate(180deg)";
-						node.style.transition = "transform 300ms ease";
-						setTimeout(() => {
-							node.style.transition = "";
-							node.style.transform = "rotate(0deg)";
-						}, 300);
-					}
-				}}
-			>
-				<ArrowUpDownIcon size={iconSize["sm+"]} />
-			</SwitchButtonInner>
-		</div>
-	);
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginBlock: `-13px`,
+        zIndex: 2,
+        position: "relative",
+      }}
+    >
+      <SwitchButtonInner
+        variant="ghost-solid"
+        onClick={(e) => {
+          props.onClick();
+          const node = e.currentTarget.querySelector("svg");
+          if (node) {
+            node.style.transform = "rotate(180deg)";
+            node.style.transition = "transform 300ms ease";
+            setTimeout(() => {
+              node.style.transition = "";
+              node.style.transform = "rotate(0deg)";
+            }, 300);
+          }
+        }}
+      >
+        <ArrowUpDownIcon size={iconSize["sm+"]} />
+      </SwitchButtonInner>
+    </div>
+  );
 }
 
 const SwitchButtonInner = /* @__PURE__ */ styled(Button)(() => {
-	const theme = useCustomTheme();
-	return {
-		"&:hover": {
-			background: theme.colors.secondaryButtonBg,
-		},
-		borderRadius: radius.full,
-		padding: spacing.xs,
-		color: theme.colors.primaryText,
-		background: theme.colors.modalBg,
-		border: `1px solid ${theme.colors.borderColor}`,
-	};
+  const theme = useCustomTheme();
+  return {
+    "&:hover": {
+      background: theme.colors.secondaryButtonBg,
+    },
+    borderRadius: radius.full,
+    padding: spacing.xs,
+    color: theme.colors.primaryText,
+    background: theme.colors.modalBg,
+    border: `1px solid ${theme.colors.borderColor}`,
+  };
 });
