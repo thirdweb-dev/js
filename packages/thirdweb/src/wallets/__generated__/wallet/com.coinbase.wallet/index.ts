@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "com.coinbase.wallet",
-  name: "Coinbase Wallet",
-  homepage: "https://www.coinbase.com/wallet/",
-  image_id: "a5ebc364-8f91-4200-fcc6-be81310a0000",
+  name: "Base (formerly Coinbase Wallet)",
+  homepage: "https://base.app",
+  image_id: "04c88bf0-f115-4686-8c29-90a3d018a400",
   app: {
     browser: null,
     ios: "https://apps.apple.com/app/apple-store/id1278383455",

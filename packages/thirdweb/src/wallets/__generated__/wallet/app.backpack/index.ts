@@ -27,7 +27,7 @@ export const wallet = {
     universal: "https://backpack.app/ul/v1",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

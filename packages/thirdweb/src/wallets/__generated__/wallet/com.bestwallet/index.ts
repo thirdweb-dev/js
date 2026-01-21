@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://best-wallet-prod.web.app/connect",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

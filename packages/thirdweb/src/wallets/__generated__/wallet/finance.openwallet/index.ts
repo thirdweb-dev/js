@@ -7,7 +7,7 @@ export const wallet = {
   homepage: "https://openwallet.finance",
   image_id: "68a3c433-d944-4bf6-5093-4ac415fd5400",
   app: {
-    browser: "https://openwallet.finance/",
+    browser: "",
     ios: "https://apps.apple.com/ee/app/open-wallet-keyless-mastery/id6502636684",
     android:
       "https://play.google.com/store/apps/details?id=com.finverselabs.openwallet&pli=1",
@@ -23,10 +23,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "x-app-open-wallet://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: "https://openwallet.finance/",
+    native: "",
+    universal: "",
   },
 } as const;

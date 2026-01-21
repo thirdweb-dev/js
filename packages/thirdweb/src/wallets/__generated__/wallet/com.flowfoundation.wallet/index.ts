@@ -7,19 +7,19 @@ export const wallet = {
   homepage: "https://wallet.flow.com/",
   image_id: "f67a1db8-5704-4353-ead8-bd85c02a8700",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/ca/app/flow-wallet-nfts-and-crypto/id6478996750",
     android:
       "https://play.google.com/store/apps/details?id=com.flowfoundation.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
       "https://chrome.google.com/webstore/detail/flow-reference/hpclkefagolihohboafpheddmmgdffjm",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "com.flowfoundation.wallet",
   mobile: {
@@ -27,7 +27,7 @@ export const wallet = {
     universal: "https://frw-link.lilico.app",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

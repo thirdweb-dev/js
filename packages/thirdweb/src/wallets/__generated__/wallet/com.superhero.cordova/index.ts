@@ -7,7 +7,7 @@ export const wallet = {
   homepage: "https://wallet.superhero.com/",
   image_id: "7a8f1546-765c-4b96-e73b-0c07457e3400",
   app: {
-    browser: "https://wallet.superhero.com/",
+    browser: "https://wallet.superhero.com",
     ios: "https://apps.apple.com/ru/app/superhero-wallet/id1502786641",
     android:
       "https://play.google.com/store/apps/details?id=com.superhero.cordova",
@@ -24,10 +24,10 @@ export const wallet = {
   rdns: "com.superhero.cordova",
   mobile: {
     native: "superhero://",
-    universal: "https://walelt.superhero.com",
+    universal: "https://wallet.superhero.com",
   },
   desktop: {
     native: "",
-    universal: "https://walelt.superhero.com",
+    universal: "https://wallet.superhero.com",
   },
 } as const;

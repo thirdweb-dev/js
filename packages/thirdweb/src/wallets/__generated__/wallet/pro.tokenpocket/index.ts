@@ -5,7 +5,7 @@ export const wallet = {
   id: "pro.tokenpocket",
   name: "TokenPocket",
   homepage: "https://tokenpocket.pro/",
-  image_id: "d8e930b6-ccde-471e-ecbe-6967b1c0c400",
+  image_id: "7c2cee4e-a5bd-4ebd-277d-f496c69fa000",
   app: {
     browser:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",
@@ -24,10 +24,10 @@ export const wallet = {
   rdns: "pro.tokenpocket",
   mobile: {
     native: "tpoutside://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
+    native: "",
     universal:
       "https://chrome.google.com/webstore/detail/tokenpocket/mfgccjchihfkkindfppnaooecgfneiii",
   },
