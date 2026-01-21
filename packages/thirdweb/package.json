@@ -86,7 +86,7 @@
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-passkey": "3.1.0",
     "react-native-quick-crypto": "0.7.14",
-    "react-native-svg": "15.12.0",
+    "react-native-svg": "15.15.1",
     "rimraf": "6.0.1",
     "sharp": "^0.34.2",
     "size-limit": "11.2.0",
