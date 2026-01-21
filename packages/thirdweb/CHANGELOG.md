@@ -1,5 +1,20 @@
 # thirdweb
 
+## 5.118.0
+
+### Minor Changes
+
+- [#8634](https://github.com/thirdweb-dev/js/pull/8634) [`281759f`](https://github.com/thirdweb-dev/js/commit/281759f06a276d08028825ed171f674984d66e85) Thanks [@montycheese](https://github.com/montycheese)! - Add Base Account SDK integration with `@base-org/account`
+  - Add @base-org/account 2.5.0 dependency
+  - Introduce Base Account SDK wallet connector
+  - Add base-account-web.ts with EIP-1193 provider implementation
+  - Add base-account-wallet.ts with core wallet logic
+  - Add types and helper function exports
+
+### Patch Changes
+
+- [#8643](https://github.com/thirdweb-dev/js/pull/8643) [`2d98fe2`](https://github.com/thirdweb-dev/js/commit/2d98fe2799b0a5c17a41f0bb87c8852e21007e4a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support linking accounts with redirect mode
+
 ## 5.117.2
 
 ### Patch Changes
