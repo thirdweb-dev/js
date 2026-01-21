@@ -363,6 +363,13 @@ function SwapWidgetContent(
     return getInitialTokens(props.prefill, isPersistEnabled).sellToken;
   });
 
+  const [receiverAddressMode, setReceiverAddressMode] = useState<
+    "wallet" | "custom"
+  >(props.receiverAddress ? "custom" : "wallet");
+  const [receiverAddress, setReceiverAddress] = useState<string>(
+    props.receiverAddress ?? "",
+  );
+
   // persist selections to localStorage whenever they change
   useEffect(() => {
     if (isPersistEnabled) {
@@ -394,7 +401,10 @@ function SwapWidgetContent(
         setSellToken={setSellToken}
         amountSelection={amountSelection}
         setAmountSelection={setAmountSelection}
-        receiverAddress={props.receiverAddress}
+        receiverAddressMode={receiverAddressMode}
+        setReceiverAddressMode={setReceiverAddressMode}
+        receiverAddress={receiverAddress}
+        setReceiverAddress={setReceiverAddress}
         onSwap={(data) => {
           setScreen({
             id: "3:execute",
