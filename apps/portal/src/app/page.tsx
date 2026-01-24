@@ -21,7 +21,7 @@ import { ConnectIcon } from "../icons/products/ConnectIcon";
 
 export default function Page() {
   return (
-    <main className="container max-w-5xl grow pb-10" data-noindex>
+    <main className="container max-w-5xl grow pb-24" data-noindex>
       <Hero />
       <div className="space-y-24">
         <ProductsSection />
