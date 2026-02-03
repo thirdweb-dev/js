@@ -1,3 +1,4 @@
+import { Spinner } from "@workspace/ui/components/spinner";
 import type { OpenAPIV3_1 } from "openapi-types";
 import { cache, Suspense } from "react";
 import {
@@ -5,7 +6,6 @@ import {
   ApiEndpoint,
   type ApiEndpointMeta,
 } from "./ApiEndpoint";
-import { Spinner } from "@workspace/ui/components/spinner";
 
 // OpenAPI 3.0 types (simplified for our needs)
 type OpenApiSpec = OpenAPIV3_1.Document;
@@ -457,7 +457,7 @@ function transformOpenApiToApiEndpointMeta(
 function LoadingFallback() {
   return (
     <div className="flex items-center justify-center p-8 border rounded-lg min-h-[300px] bg-card">
-       <Spinner className="size-8 text-muted-foreground" />
+      <Spinner className="size-8 text-muted-foreground" />
     </div>
   );
 }
