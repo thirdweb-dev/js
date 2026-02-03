@@ -46,7 +46,11 @@ export function DocLayout(props: DocLayoutProps) {
             "hidden xl:flex",
           )}
         >
-          <DocSidebar {...props.sideBar} header={props.sidebarHeader} />
+          <DocSidebar
+            {...props.sideBar}
+            header={props.sidebarHeader}
+            className="pt-2"
+          />
         </aside>
       )}
       <div className="sticky top-sticky-top-height z-stickyMobileSidebar border-b bg-card/50 backdrop-blur-xl p-4 xl:hidden -mx-4">
@@ -57,12 +61,7 @@ export function DocLayout(props: DocLayoutProps) {
         data-no-llm={props.noLLM}
         data-noindex={props.noIndex}
       >
-        <div className="grow xl:mt-6">
-          <h5 className="mb-2 text-sm text-muted-foreground">
-            {props.sideBar.name}
-          </h5>
-          {props.children}
-        </div>
+        <div className="grow xl:mt-6">{props.children}</div>
         <div className="mt-16 xl:mt-20">
           <PageFooter
             editPageButton={props.editPageButton}

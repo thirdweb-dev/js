@@ -52,12 +52,27 @@ export function getTDocPage(options: {
       // category pages
       if (docSlug in subgroups) {
         return (
-          <CategoryPage
-            doc={doc}
-            packageSlug={packageSlug}
-            slug={docSlug as keyof typeof subgroups}
-            version={version}
-          />
+          <div>
+            <Breadcrumb
+              crumbs={[
+                {
+                  href: `/references/${packageSlug}/${version}`,
+                  name: sdkTitle,
+                },
+                {
+                  href: `/references/${packageSlug}/${version}/${docSlug}`,
+                  name: docSlug,
+                },
+              ]}
+            />
+
+            <CategoryPage
+              doc={doc}
+              packageSlug={packageSlug}
+              slug={docSlug as keyof typeof subgroups}
+              version={version}
+            />
+          </div>
         );
       }
 
@@ -74,7 +89,7 @@ export function getTDocPage(options: {
             crumbs={[
               {
                 href: `/references/${packageSlug}/${version}`,
-                name: "References",
+                name: sdkTitle,
               },
               {
                 href: `/references/${packageSlug}/${version}/${selectedDoc.name}`,
@@ -209,8 +224,8 @@ async function IndexContent(props: {
 
   return (
     <div>
-      <Heading anchorId="reference" level={1}>
-        {props.sdkTitle} Reference
+      <Heading anchorId="reference" level={1} className="mb-6 mt-2">
+        {props.sdkTitle}
       </Heading>
 
       <div className="flex flex-col gap-3">
