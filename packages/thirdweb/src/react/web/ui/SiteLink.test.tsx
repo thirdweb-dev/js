@@ -62,4 +62,25 @@ describe("SiteLink", () => {
     expect(anchor).toBeTruthy();
     await waitFor(() => expect(anchor?.href).toContain("walletId=inApp"));
   });
+
+  it("preserves hash fragment for hash-routed URLs", async () => {
+    const testUrl = "https://snapshot.org/#/s:wampei.eth";
+    const { container } = render(
+      <SiteLink client={TEST_CLIENT} href={testUrl}>
+        Test Link
+      </SiteLink>,
+      {
+        setConnectedWallet: true,
+      },
+    );
+
+    const anchor = container.querySelector("a");
+    expect(anchor).toBeTruthy();
+    await waitFor(() => {
+      const href = anchor?.href ?? "";
+      // Hash fragment must be preserved in the URL
+      expect(href).toContain("#/s:wampei.eth");
+      expect(href).toContain("walletId=");
+    });
+  });
 });
