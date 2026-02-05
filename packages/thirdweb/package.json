@@ -75,7 +75,7 @@
     "ethers5": "npm:ethers@5",
     "ethers6": "npm:ethers@6",
     "expo-linking": "8.0.8",
-    "expo-web-browser": "15.0.9",
+    "expo-web-browser": "15.0.10",
     "happy-dom": "17.4.4",
     "knip": "5.60.2",
     "msw": "2.7.5",
