@@ -51,11 +51,17 @@ type ReferenceSideBarProps = {
   onLinkClick?: () => void;
   header?: React.ReactNode;
   name: string;
+  className?: string;
 };
 
 export function DocSidebar(props: ReferenceSideBarProps) {
   return (
-    <div className="flex h-full flex-col pb-10 pt-6 text-muted-foreground text-sm">
+    <div
+      className={cn(
+        "flex h-full flex-col pb-10 pt-6 text-muted-foreground text-sm",
+        props.className,
+      )}
+    >
       {/* Side bar Name */}
       {props.header}
       <ul className="styled-scrollbar transform-gpu space-y-1">
