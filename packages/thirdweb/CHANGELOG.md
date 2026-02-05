@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.118.1
+
+### Patch Changes
+
+- [#8664](https://github.com/thirdweb-dev/js/pull/8664) [`b50e304`](https://github.com/thirdweb-dev/js/commit/b50e304e0ccd1ac7eae551c3d49e82312ffc82d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SiteLink not handling hashed URL paths
+
 ## 5.118.0
 
 ### Minor Changes
