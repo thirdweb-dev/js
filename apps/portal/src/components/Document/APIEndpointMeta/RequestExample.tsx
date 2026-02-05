@@ -109,7 +109,7 @@ export function RequestExample(props: {
               }}
               value={selectedFormat}
             >
-              <SelectTrigger className="w-[130px] rounded-full bg-card">
+              <SelectTrigger className="w-[130px] rounded-xl bg-card ">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-background rounded-xl">
@@ -144,7 +144,7 @@ export function RequestExample(props: {
                   }}
                   value={selectedExampleType}
                 >
-                  <SelectTrigger className="w-[130px] rounded-full bg-card">
+                  <SelectTrigger className="md:w-[250px] rounded-xl bg-card text-left">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-background rounded-xl">
@@ -169,7 +169,7 @@ export function RequestExample(props: {
             }}
             value={selectedExample?.label}
           >
-            <SelectTrigger className="w-[130px] rounded-full bg-card">
+            <SelectTrigger className="w-[150px] rounded-xl bg-card">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-background rounded-xl">
