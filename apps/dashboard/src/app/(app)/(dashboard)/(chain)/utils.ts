@@ -285,6 +285,11 @@ const chainMetaRecord = {
       "Lisk is focused on serving builders in high-growth markets like Africa and Southeast Asia. When you build on Lisk, you become part of the strongest Ethereum collective, alongside Coinbase, Sony, World, Kraken and Uniswap -- the OP Superchain.",
     headerImgUrl: liskBanner.src,
   },
+  //Sei Mainnet
+  1329: {
+    about:
+      "Sei is a blockchain designed for fast, cheap financial transactions, combining the network effects of Ethereum with the performance of Solana. Sei has processed more than four billion transactions across more than 80 million wallets and has become the #1 EVM chain by number of active users. The team is backed by top investors such as Multicoin, Jump, Coinbase Ventures, and Circle Ventures – and includes talent from companies like Robinhood, Google, Coinbase, Databricks, Uber, and Goldman Sachs.",
+  },
   //Reactive Mainnet
   1597: {
     about:
