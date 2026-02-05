@@ -4,7 +4,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "dependencies": {
-    "@confluentinc/kafka-javascript": "1.4.0",
+    "@confluentinc/kafka-javascript": "1.8.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "aws4fetch": "1.0.20",
     "zod": "3.25.75"
