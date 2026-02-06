@@ -5,6 +5,7 @@ import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
 import type { PurchaseData } from "../../../../../pay/types.js";
+import type { Address } from "../../../../../utils/address.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
@@ -157,6 +158,10 @@ export type BridgeWidgetProps = {
         amount?: string;
       };
     };
+    /**
+     * The receiver address for the swapped tokens. If not provided, defaults to the connected wallet address.
+     */
+    receiverAddress?: Address;
   };
 
   /**
@@ -415,6 +420,7 @@ export function BridgeWidget(props: BridgeWidgetProps) {
             onCancel={props.swap?.onCancel}
             onDisconnect={props.swap?.onDisconnect}
             persistTokenSelections={props.swap?.persistTokenSelections}
+            receiverAddress={props.swap?.receiverAddress}
             connectOptions={props.connectOptions}
             style={{
               border: "none",
