@@ -68,7 +68,7 @@ export function DocSidebar(props: ReferenceSideBarProps) {
         {props.links.map((link, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
           <li key={i}>
-            <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+            <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
           </li>
         ))}
       </ul>
@@ -76,7 +76,7 @@ export function DocSidebar(props: ReferenceSideBarProps) {
   );
 }
 
-function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
+function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void, isFirst: boolean }) {
   const pathname = usePathname();
 
   if ("separator" in props.link) {
@@ -92,6 +92,7 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
     if (link.isCollapsible === false) {
       return (
         <DocSidebarNonCollapsible
+          isFirst={props.isFirst}
           key={link.name}
           linkGroup={link}
           onLinkClick={props.onLinkClick}
@@ -145,13 +146,14 @@ function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void }) {
 function DocSidebarNonCollapsible(props: {
   linkGroup: LinkGroup;
   onLinkClick?: () => void;
+  isFirst: boolean;
 }) {
   const pathname = usePathname();
   const { href, name, links, icon } = props.linkGroup;
   const isCategoryActive = href ? isSamePage(pathname, href) : false;
 
   return (
-    <div className="my-4">
+    <div className={cn("my-4", props.isFirst && "mt-0")}>
       <div className="mb-2 flex items-center gap-2 rounded-lg text-foreground">
         {icon && <SidebarIcon icon={icon} />}
         {href ? (
@@ -173,7 +175,7 @@ function DocSidebarNonCollapsible(props: {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
             <li key={i}>
-              <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+              <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
             </li>
           );
         })}
@@ -238,7 +240,7 @@ function DocSidebarCategory(props: {
             return (
               // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
               <li key={i}>
-                <SidebarItem link={link} onLinkClick={props.onLinkClick} />
+                <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
               </li>
             );
           })}
