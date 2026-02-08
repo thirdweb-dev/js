@@ -49,7 +49,6 @@ export function DocLayout(props: DocLayoutProps) {
           <DocSidebar
             {...props.sideBar}
             header={props.sidebarHeader}
-            className="pt-1"
           />
         </aside>
       )}
