@@ -158,10 +158,17 @@ export const partnerFormSchema = z
       .instanceof(File, {
         message: "Please select an image file",
       })
+      .refine(
+        (file) => ["image/png", "image/jpeg", "image/webp"].includes(file.type),
+        {
+          message: "Only PNG, JPG or WEBP images are allowed",
+        },
+      )
       .refine((file) => file.size <= 500 * 1024, {
         message: "Logo size must be less than 500KB",
       })
       .optional(),
+    removeLogo: z.boolean().default(false),
     accessControl: z
       .object({
         allowedOperations: z

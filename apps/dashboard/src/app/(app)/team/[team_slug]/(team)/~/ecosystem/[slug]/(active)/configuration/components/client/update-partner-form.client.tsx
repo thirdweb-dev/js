@@ -59,7 +59,11 @@ export function UpdatePartnerForm({
     values: PartnerFormValues,
     finalAccessControl: Partner["accessControl"] | null,
   ) => {
-    let imageUrl: string | undefined;
+    // Determine imageUrl based on three states:
+    // 1. New file uploaded → upload and use new URI
+    // 2. Explicit removal → send null to clear
+    // 3. No change → preserve existing partner imageUrl
+    let imageUrl: string | null | undefined;
     if (values.logo) {
       try {
         const [uri] = await storageUpload.mutateAsync([values.logo]);
@@ -68,6 +72,10 @@ export function UpdatePartnerForm({
         toast.error("Failed to upload logo");
         return;
       }
+    } else if (values.removeLogo) {
+      imageUrl = null;
+    } else {
+      imageUrl = partner.imageUrl;
     }
 
     updatePartner({

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useId } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
@@ -157,24 +157,42 @@ export function PartnerForm({
             control={form.control}
             name="logo"
             render={() => {
-              const existingImageUrl = partner?.imageUrl
-                ? resolveSchemeWithErrorHandler({
-                    client,
-                    uri: partner.imageUrl,
-                  })
-                : undefined;
+              const removeLogo = form.watch("removeLogo");
+              const hasNewFile = !!form.getValues("logo");
+              const existingImageUrl =
+                partner?.imageUrl && !removeLogo
+                  ? resolveSchemeWithErrorHandler({
+                      client,
+                      uri: partner.imageUrl,
+                    })
+                  : undefined;
+              const showExistingLogo = !!existingImageUrl && !hasNewFile;
 
               return (
                 <FormItem>
                   <FormLabel>Partner Logo</FormLabel>
                   <FormControl>
                     <div className="flex items-start gap-4">
-                      {existingImageUrl && !form.getValues("logo") && (
-                        <Img
-                          alt={partner?.name ?? "Partner logo"}
-                          className="size-20 rounded-md border object-contain object-center"
-                          src={existingImageUrl}
-                        />
+                      {showExistingLogo && (
+                        <div className="relative">
+                          <Img
+                            alt={partner?.name ?? "Partner logo"}
+                            className="size-20 rounded-md border object-contain object-center"
+                            src={existingImageUrl}
+                          />
+                          <Button
+                            aria-label="Remove logo"
+                            className="absolute -top-2 -right-2 size-6 rounded-full p-0"
+                            onClick={() => {
+                              form.setValue("removeLogo", true);
+                            }}
+                            size="icon"
+                            type="button"
+                            variant="destructive"
+                          >
+                            <XIcon className="size-3" />
+                          </Button>
+                        </div>
                       )}
                       <ImageUpload
                         accept="image/png, image/jpeg, image/webp"
@@ -184,6 +202,7 @@ export function PartnerForm({
                             form.setValue("logo", files[0], {
                               shouldValidate: true,
                             });
+                            form.setValue("removeLogo", false);
                           }
                         }}
                       />
