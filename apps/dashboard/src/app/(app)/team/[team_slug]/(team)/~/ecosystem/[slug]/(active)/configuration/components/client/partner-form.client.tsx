@@ -1,8 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, Trash2Icon, XIcon } from "lucide-react";
-import { useId } from "react";
+import { PencilIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react";
+import { useId, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { z } from "zod";
@@ -121,6 +121,7 @@ export function PartnerForm({
 
   const accessControlId = useId();
   const serverVerifierId = useId();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <Form {...form}>
@@ -158,7 +159,10 @@ export function PartnerForm({
             name="logo"
             render={() => {
               const removeLogo = form.watch("removeLogo");
-              const hasNewFile = !!form.getValues("logo");
+              const logoFile = form.watch("logo");
+              const newFilePreview = logoFile
+                ? URL.createObjectURL(logoFile)
+                : undefined;
               const existingImageUrl =
                 partner?.imageUrl && !removeLogo
                   ? resolveSchemeWithErrorHandler({
@@ -166,46 +170,74 @@ export function PartnerForm({
                       uri: partner.imageUrl,
                     })
                   : undefined;
-              const showExistingLogo = !!existingImageUrl && !hasNewFile;
+              const displayUrl = newFilePreview || existingImageUrl;
 
               return (
                 <FormItem>
                   <FormLabel>Partner Logo</FormLabel>
                   <FormControl>
-                    <div className="flex items-start gap-4">
-                      {showExistingLogo && (
-                        <div className="relative">
-                          <Img
-                            alt={partner?.name ?? "Partner logo"}
-                            className="size-20 rounded-md border object-contain object-center"
-                            src={existingImageUrl}
-                          />
-                          <Button
-                            aria-label="Remove logo"
-                            className="absolute -top-2 -right-2 size-6 rounded-full p-0"
-                            onClick={() => {
-                              form.setValue("removeLogo", true);
-                            }}
-                            size="icon"
-                            type="button"
-                            variant="destructive"
-                          >
-                            <XIcon className="size-3" />
-                          </Button>
-                        </div>
-                      )}
-                      <ImageUpload
-                        accept="image/png, image/jpeg, image/webp"
-                        className="bg-background"
-                        onUpload={(files) => {
-                          if (files[0]) {
-                            form.setValue("logo", files[0], {
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        accept="image/png,image/jpeg,image/webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            form.setValue("logo", file, {
                               shouldValidate: true,
                             });
                             form.setValue("removeLogo", false);
                           }
+                          e.target.value = "";
                         }}
+                        type="file"
                       />
+                      {displayUrl ? (
+                        <div className="relative inline-block">
+                          <Img
+                            alt={partner?.name ?? "Partner logo"}
+                            className="size-20 rounded-md border object-contain object-center"
+                            src={displayUrl}
+                          />
+                          <Button
+                            aria-label="Remove logo"
+                            className="absolute -top-2 -right-2 size-6 rounded-full bg-background p-0 hover:bg-accent"
+                            onClick={() => {
+                              form.setValue("logo", undefined);
+                              form.setValue("removeLogo", true);
+                            }}
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                          >
+                            <XIcon className="size-3" />
+                          </Button>
+                          <Button
+                            aria-label="Change logo"
+                            className="absolute -bottom-2 -right-2 size-6 rounded-full bg-background p-0 hover:bg-accent"
+                            onClick={() => fileInputRef.current?.click()}
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                          >
+                            <PencilIcon className="size-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <ImageUpload
+                          accept="image/png, image/jpeg, image/webp"
+                          className="bg-background"
+                          onUpload={(files) => {
+                            if (files[0]) {
+                              form.setValue("logo", files[0], {
+                                shouldValidate: true,
+                              });
+                              form.setValue("removeLogo", false);
+                            }
+                          }}
+                        />
+                      )}
                     </div>
                   </FormControl>
                   <FormDescription>
