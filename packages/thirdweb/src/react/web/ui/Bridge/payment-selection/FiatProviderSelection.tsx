@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import type { FiatProvider } from "../../../../../pay/utils/commonTypes.js";
 import { checksumAddress } from "../../../../../utils/address.js";
 import { formatNumber } from "../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../utils/units.js";
@@ -15,13 +16,12 @@ import { formatCurrencyAmount } from "../../ConnectWallet/screens/formatTokenBal
 import { Container } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
-import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Text } from "../../components/text.js";
 
 interface FiatProviderSelectionProps {
   client: ThirdwebClient;
-  onProviderSelected: (provider: "coinbase" | "stripe" | "transak") => void;
+  onProviderSelected: (provider: FiatProvider) => void;
   toChainId: number;
   toTokenAddress: string;
   toAddress: string;
@@ -49,6 +49,12 @@ const PROVIDERS = [
     id: "transak" as const,
     name: "Transak",
   },
+  {
+    description: "Buy crypto with cards & bank transfers",
+    iconUri: "https://avatars.githubusercontent.com/u/35312605?s=200&v=4",
+    id: "moonpay" as const,
+    name: "MoonPay",
+  },
 ];
 
 export function FiatProviderSelection({
@@ -72,25 +78,25 @@ export function FiatProviderSelection({
     country,
   });
 
-  const quotes = useMemo(() => {
-    return quoteQueries.map((q) => q.data).filter((q) => !!q);
+  const quotesByProvider = useMemo(() => {
+    const map = new Map<FiatProvider, (typeof quoteQueries)[number]["data"]>();
+    for (const q of quoteQueries) {
+      if (q.data) {
+        map.set(q.provider, q.data);
+      }
+    }
+    return map;
   }, [quoteQueries]);
 
-  const isPending = quoteQueries.some((q) => q.isLoading);
-
-  if (quoteQueries.every((q) => q.isError)) {
-    return (
-      <Container
-        center="both"
-        flex="column"
-        style={{ minHeight: "200px", flexGrow: 1 }}
-      >
-        <Text color="secondaryText" size="sm">
-          No quotes available
-        </Text>
-      </Container>
-    );
-  }
+  const providersSorted = useMemo(() => {
+    return [...PROVIDERS].sort((a, b) => {
+      const aQuote = quotesByProvider.get(a.id);
+      const bQuote = quotesByProvider.get(b.id);
+      const aAmount = aQuote?.currencyAmount ?? Number.POSITIVE_INFINITY;
+      const bAmount = bQuote?.currencyAmount ?? Number.POSITIVE_INFINITY;
+      return aAmount - bAmount;
+    });
+  }, [quotesByProvider]);
 
   // TODO: add a "remember my choice" checkbox
 
@@ -102,54 +108,52 @@ export function FiatProviderSelection({
         flexGrow: 1,
       }}
     >
-      {!isPending ? (
-        quotes
-          .sort((a, b) => a.currencyAmount - b.currencyAmount)
-          .map((quote) => {
-            const provider = PROVIDERS.find(
-              (p) => p.id === quote.intent.onramp,
-            );
-            if (!provider) {
-              return null;
-            }
+      {providersSorted.map((provider) => {
+        const quote = quotesByProvider.get(provider.id);
+        const query = quoteQueries.find((q) => q.provider === provider.id);
+        const isLoading = query?.isLoading;
+        const isError = query?.isError;
 
-            return (
-              <Button
-                key={provider.id}
-                fullWidth
-                onClick={() => onProviderSelected(provider.id)}
+        return (
+          <Button
+            key={provider.id}
+            fullWidth
+            onClick={() => onProviderSelected(provider.id)}
+            style={{
+              borderRadius: radius.lg,
+              textAlign: "left",
+              padding: `${spacing.md}`,
+            }}
+            variant="secondary"
+          >
+            <Container
+              flex="row"
+              gap="sm"
+              style={{ alignItems: "center", width: "100%" }}
+            >
+              <Img
+                alt={provider.name}
+                client={client}
+                height={iconSize.lg}
+                src={provider.iconUri}
+                width={iconSize.lg}
                 style={{
-                  borderRadius: radius.lg,
-                  textAlign: "left",
-                  padding: `${spacing.md}`,
+                  borderRadius: radius.full,
                 }}
-                variant="secondary"
+              />
+              <Container flex="column" gap="3xs" style={{ flex: 1 }}>
+                <Text color="primaryText" size="md" weight={500}>
+                  {provider.name}
+                </Text>
+              </Container>
+
+              <Container
+                flex="column"
+                gap="3xs"
+                style={{ alignItems: "flex-end" }}
               >
-                <Container
-                  flex="row"
-                  gap="sm"
-                  style={{ alignItems: "center", width: "100%" }}
-                >
-                  <Img
-                    alt={provider.name}
-                    client={client}
-                    height={iconSize.lg}
-                    src={provider.iconUri}
-                    width={iconSize.lg}
-                    style={{
-                      borderRadius: radius.full,
-                    }}
-                  />
-                  <Container flex="column" gap="3xs" style={{ flex: 1 }}>
-                    <Text color="primaryText" size="md" weight={500}>
-                      {provider.name}
-                    </Text>
-                  </Container>
-                  <Container
-                    flex="column"
-                    gap="3xs"
-                    style={{ alignItems: "flex-end" }}
-                  >
+                {quote ? (
+                  <>
                     <Text
                       color="primaryText"
                       size="sm"
@@ -172,37 +176,33 @@ export function FiatProviderSelection({
                       )}{" "}
                       {quote.destinationToken.symbol}
                     </Text>
-                  </Container>
-                </Container>
-              </Button>
-            );
-          })
-      ) : (
-        <Container
-          center="both"
-          flex="column"
-          style={{ flexGrow: 1, paddingBottom: spacing.lg }}
-          px="md"
-        >
-          <Spinner color="secondaryText" size="xl" />
-          <Spacer y="lg" />
-          <Text center color="primaryText" size="lg" weight={600} trackingTight>
-            Searching Providers
-          </Text>
-          <Spacer y="xs" />
-          <Text
-            center
-            color="secondaryText"
-            size="sm"
-            multiline
-            style={{
-              textWrap: "pretty",
-            }}
-          >
-            Searching for the best providers for this payment
-          </Text>
-        </Container>
-      )}
+                  </>
+                ) : (
+                  <>
+                    <Container flex="row" gap="xs" style={{ alignItems: "center" }}>
+                      {isLoading ? (
+                        <Spinner color="secondaryText" size="sm" />
+                      ) : null}
+                      <Text
+                        color="primaryText"
+                        size="sm"
+                        style={{ fontWeight: 500 }}
+                      >
+                        {isError ? "Quote unavailable" : "Get quote"}
+                      </Text>
+                    </Container>
+                    <Text color="secondaryText" size="xs">
+                      {isError
+                        ? "Tap to try anyway"
+                        : "Tap to continue"}
+                    </Text>
+                  </>
+                )}
+              </Container>
+            </Container>
+          </Button>
+        );
+      })}
     </Container>
   );
 }

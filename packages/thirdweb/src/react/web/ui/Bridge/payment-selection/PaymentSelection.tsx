@@ -5,6 +5,7 @@ import type { TokenWithPrices } from "../../../../../bridge/types/Token.js";
 import { defineChain } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { SupportedFiatCurrency } from "../../../../../pay/convert/type.js";
+import type { FiatProvider } from "../../../../../pay/utils/commonTypes.js";
 import type { Address } from "../../../../../utils/address.js";
 import { toUnits } from "../../../../../utils/units.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -184,7 +185,7 @@ export function PaymentSelection({
   };
 
   const handleOnrampProviderSelected = (
-    provider: "coinbase" | "stripe" | "transak",
+    provider: FiatProvider,
   ) => {
     const recipientAddress =
       receiverAddress || payerWallet?.getAccount()?.address;

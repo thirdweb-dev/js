@@ -3,7 +3,10 @@ import { setThirdwebDomains } from "thirdweb/utils";
 
 setThirdwebDomains({
   analytics: process.env.NEXT_PUBLIC_ANALYTICS_URL,
-  bridge: process.env.NEXT_PUBLIC_BRIDGE_URL,
+  // default to local bridge in playground if not explicitly configured
+  bridge:
+    process.env.NEXT_PUBLIC_BRIDGE_URL ??
+    (process.env.NODE_ENV === "development" ? "localhost:4242" : undefined),
   bundler: process.env.NEXT_PUBLIC_BUNDLER_URL,
   inAppWallet: process.env.NEXT_PUBLIC_IN_APP_WALLET_URL,
   insight: process.env.NEXT_PUBLIC_INSIGHT_URL,

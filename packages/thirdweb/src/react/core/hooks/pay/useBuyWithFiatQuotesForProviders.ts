@@ -51,6 +51,7 @@ type OnrampQuoteQueryOptions = Omit<
  * @internal
  */
 type UseBuyWithFiatQuotesForProvidersResult = {
+  provider: "coinbase" | "stripe" | "transak" | "moonpay";
   data: Awaited<ReturnType<typeof prepareOnramp>> | undefined;
   isLoading: boolean;
   error: Error | null;
@@ -60,13 +61,13 @@ type UseBuyWithFiatQuotesForProvidersResult = {
 
 /**
  * @internal
- * Hook to get prepared onramp quotes from Coinbase, Stripe, and Transak providers.
+ * Hook to get prepared onramp quotes from Coinbase, Stripe, Transak, and MoonPay providers.
  */
 export function useBuyWithFiatQuotesForProviders(
   params?: UseBuyWithFiatQuotesForProvidersParams,
   queryOptions?: OnrampQuoteQueryOptions,
 ): UseBuyWithFiatQuotesForProvidersResult {
-  const providers = ["coinbase", "stripe", "transak"] as const;
+  const providers = ["coinbase", "stripe", "transak", "moonpay"] as const;
 
   const queries = useQueries({
     queries: providers.map((provider) => ({
@@ -101,5 +102,12 @@ export function useBuyWithFiatQuotesForProviders(
     })),
   });
 
-  return queries;
+  return providers.map((provider, idx) => ({
+    provider,
+    data: queries[idx]?.data,
+    error: (queries[idx]?.error as Error | null) || null,
+    isError: queries[idx]?.isError || false,
+    isLoading: queries[idx]?.isLoading || false,
+    isSuccess: queries[idx]?.isSuccess || false,
+  }));
 }
