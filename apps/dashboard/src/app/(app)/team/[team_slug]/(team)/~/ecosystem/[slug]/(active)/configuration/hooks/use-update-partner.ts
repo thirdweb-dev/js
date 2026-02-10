@@ -9,6 +9,7 @@ type UpdatePartnerParams = {
   partnerId: string;
   ecosystem: Ecosystem;
   name: string;
+  imageUrl?: string | null;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
   accessControl?: {
@@ -43,6 +44,7 @@ export function useUpdatePartner(
             accessControl: params.accessControl,
             allowlistedBundleIds: params.allowlistedBundleIds,
             allowlistedDomains: params.allowlistedDomains,
+            imageUrl: params.imageUrl,
             name: params.name,
           }),
 

@@ -105,6 +105,7 @@ type PartnerPermission = "PROMPT_USER_V1" | "FULL_CONTROL_V1";
 export type Partner = {
   id: string;
   name: string;
+  imageUrl?: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
   permissions: [PartnerPermission];
