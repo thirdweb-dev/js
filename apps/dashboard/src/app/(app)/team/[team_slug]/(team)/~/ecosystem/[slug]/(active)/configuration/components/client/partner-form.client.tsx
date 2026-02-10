@@ -7,6 +7,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { z } from "zod";
 import type { Partner } from "@/api/team/ecosystems";
+import { Img } from "@/components/blocks/Img";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,11 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { partnerFormSchema } from "../../constants";
 import { AllowedOperationsSection } from "./allowed-operations-section";
 
@@ -149,6 +152,51 @@ export function PartnerForm({
                 </FormDescription>
               </FormItem>
             )}
+          />
+          <FormField
+            control={form.control}
+            name="logo"
+            render={() => {
+              const existingImageUrl = partner?.imageUrl
+                ? resolveSchemeWithErrorHandler({
+                    client,
+                    uri: partner.imageUrl,
+                  })
+                : undefined;
+
+              return (
+                <FormItem>
+                  <FormLabel>Partner Logo</FormLabel>
+                  <FormControl>
+                    <div className="flex items-start gap-4">
+                      {existingImageUrl && !form.getValues("logo") && (
+                        <Img
+                          alt={partner?.name ?? "Partner logo"}
+                          className="size-20 rounded-md border object-contain object-center"
+                          src={existingImageUrl}
+                        />
+                      )}
+                      <ImageUpload
+                        accept="image/png, image/jpeg, image/webp"
+                        className="bg-background"
+                        onUpload={(files) => {
+                          if (files[0]) {
+                            form.setValue("logo", files[0], {
+                              shouldValidate: true,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Optional logo for this partner. Used in OTP emails sent to
+                    users authenticating through this partner.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <FormField
             control={form.control}

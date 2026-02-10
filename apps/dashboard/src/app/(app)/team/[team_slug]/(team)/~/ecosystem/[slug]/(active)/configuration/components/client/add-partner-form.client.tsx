@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
 import type { Ecosystem, Partner } from "@/api/team/ecosystems";
+import { useDashboardStorageUpload } from "@/hooks/useDashboardStorageUpload";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useAddPartner } from "../../hooks/use-add-partner";
 import { PartnerForm, type PartnerFormValues } from "./partner-form.client";
@@ -22,6 +23,8 @@ export function AddPartnerForm({
   const params = useParams();
   const teamSlug = params.team_slug as string;
   const ecosystemSlug = params.slug as string;
+
+  const storageUpload = useDashboardStorageUpload({ client });
 
   const { mutateAsync: addPartner, isPending } = useAddPartner(
     {
@@ -48,10 +51,23 @@ export function AddPartnerForm({
     },
   );
 
-  const handleSubmit = (
+  const isUploading = storageUpload.isPending;
+
+  const handleSubmit = async (
     values: PartnerFormValues,
     finalAccessControl: Partner["accessControl"] | null,
   ) => {
+    let imageUrl: string | undefined;
+    if (values.logo) {
+      try {
+        const [uri] = await storageUpload.mutateAsync([values.logo]);
+        imageUrl = uri;
+      } catch {
+        toast.error("Failed to upload logo");
+        return;
+      }
+    }
+
     addPartner({
       accessControl: finalAccessControl,
       allowlistedBundleIds: values.bundleIds
@@ -61,6 +77,7 @@ export function AddPartnerForm({
         .split(/,| /)
         .filter((d) => d.length > 0),
       ecosystem,
+      imageUrl,
       name: values.name,
     });
   };
@@ -68,7 +85,7 @@ export function AddPartnerForm({
   return (
     <PartnerForm
       client={client}
-      isSubmitting={isPending}
+      isSubmitting={isPending || isUploading}
       onSubmit={handleSubmit}
       submitLabel="Add"
     />

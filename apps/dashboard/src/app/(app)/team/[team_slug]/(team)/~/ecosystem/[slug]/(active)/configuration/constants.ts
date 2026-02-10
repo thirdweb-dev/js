@@ -154,6 +154,14 @@ const allowedOperationsSchema = z.discriminatedUnion("signMethod", [
 
 export const partnerFormSchema = z
   .object({
+    logo: z
+      .instanceof(File, {
+        message: "Please select an image file",
+      })
+      .refine((file) => file.size <= 500 * 1024, {
+        message: "Logo size must be less than 500KB",
+      })
+      .optional(),
     accessControl: z
       .object({
         allowedOperations: z
