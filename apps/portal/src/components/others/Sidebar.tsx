@@ -68,7 +68,11 @@ export function DocSidebar(props: ReferenceSideBarProps) {
         {props.links.map((link, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
           <li key={i}>
-            <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
+            <SidebarItem
+              link={link}
+              onLinkClick={props.onLinkClick}
+              isFirst={i === 0}
+            />
           </li>
         ))}
       </ul>
@@ -76,7 +80,11 @@ export function DocSidebar(props: ReferenceSideBarProps) {
   );
 }
 
-function SidebarItem(props: { link: SidebarLink; onLinkClick?: () => void, isFirst: boolean }) {
+function SidebarItem(props: {
+  link: SidebarLink;
+  onLinkClick?: () => void;
+  isFirst: boolean;
+}) {
   const pathname = usePathname();
 
   if ("separator" in props.link) {
@@ -175,7 +183,11 @@ function DocSidebarNonCollapsible(props: {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
             <li key={i}>
-              <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
+              <SidebarItem
+                link={link}
+                onLinkClick={props.onLinkClick}
+                isFirst={i === 0}
+              />
             </li>
           );
         })}
@@ -240,7 +252,11 @@ function DocSidebarCategory(props: {
             return (
               // biome-ignore lint/suspicious/noArrayIndexKey: TODO - fix this
               <li key={i}>
-                <SidebarItem link={link} onLinkClick={props.onLinkClick} isFirst={i === 0} />
+                <SidebarItem
+                  link={link}
+                  onLinkClick={props.onLinkClick}
+                  isFirst={i === 0}
+                />
               </li>
             );
           })}
