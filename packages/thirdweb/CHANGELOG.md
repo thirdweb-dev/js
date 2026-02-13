@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.118.2
+
+### Patch Changes
+
+- [#8671](https://github.com/thirdweb-dev/js/pull/8671) [`1caf6dd`](https://github.com/thirdweb-dev/js/commit/1caf6dd4609ac72a06999ef0d70f31a371e5108a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - fix walletconnect not working on berachain and unallowlisted chains
+
 ## 5.118.1
 
 ### Patch Changes
