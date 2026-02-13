@@ -110,14 +110,11 @@ export async function connectWC(
   }
 
   let optionalChains: Chain[] | undefined = wcOptions?.optionalChains;
-  let chainToRequest = options.chain;
+  const chainToRequest = options.chain;
 
   // ignore the given options chains - and set the safe supported chains
   if (walletId === "global.safe") {
     optionalChains = chainsToRequestForSafe.map(getCachedChain);
-    if (chainToRequest && !optionalChains.includes(chainToRequest)) {
-      chainToRequest = undefined;
-    }
   }
 
   // For UniversalProvider, we still need chain configuration for session management
@@ -385,17 +382,6 @@ async function initProvider(
   const { UniversalProvider } = await import(
     "@walletconnect/universal-provider"
   );
-
-  let optionalChains: Chain[] | undefined = wcOptions?.optionalChains;
-  let chainToRequest = options.chain;
-
-  // ignore the given options chains - and set the safe supported chains
-  if (walletId === "global.safe") {
-    optionalChains = chainsToRequestForSafe.map(getCachedChain);
-    if (chainToRequest && !optionalChains.includes(chainToRequest)) {
-      chainToRequest = undefined;
-    }
-  }
 
   const provider = await UniversalProvider.init({
     metadata: {
@@ -736,4 +722,5 @@ const chainsToRequestForSafe = [
   1101, // Polygon zkEVM Mainnet
   324, // zkSync Era mainnet
   534352, // Scroll mainnet
+  80094, // Berachain mainnet
 ];
