@@ -1,7 +1,6 @@
 /** biome-ignore-all lint/a11y/useSemanticElements: FIXME */
 "use client";
-import { ArrowDownIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { TokenWithPrices } from "../../../../bridge/types/Token.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
@@ -24,16 +23,15 @@ import {
   spacing,
   type Theme,
 } from "../../../core/design-system/index.js";
-import { useEnsName } from "../../../core/utils/wallet.js";
 import { ConnectButton } from "../ConnectWallet/ConnectButton.js";
 import { DetailsModal } from "../ConnectWallet/Details.js";
-import { WalletDotIcon } from "../ConnectWallet/icons/WalletDotIcon.js";
+import { ArrowUpDownIcon } from "../ConnectWallet/icons/ArrowUpDownIcon.js";
 import connectLocaleEn from "../ConnectWallet/locale/en.js";
 import { PoweredByThirdweb } from "../ConnectWallet/PoweredByTW.js";
 import { formatTokenAmount } from "../ConnectWallet/screens/formatTokenBalance.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
-import { CopyIcon } from "../components/CopyIcon.js";
+import { Input } from "../components/formElements.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
@@ -145,17 +143,54 @@ export type AmountSelection =
 export function FundWallet(props: FundWalletProps) {
   const theme = useCustomTheme();
   const activeWalletInfo = useActiveWalletInfo();
-  const receiver =
+  const defaultReceiver =
     props.receiverAddress ?? activeWalletInfo?.activeAccount?.address;
+  const [receiverAddressMode, setReceiverAddressMode] = useState<
+    "wallet" | "custom"
+  >(props.receiverAddress ? "custom" : "wallet");
+  const [receiverAddressInput, setReceiverAddressInput] = useState<string>(
+    props.receiverAddress || "",
+  );
+  const [showReceiverDropdown, setShowReceiverDropdown] = useState(false);
+  const [receiverAddressModalOpen, setReceiverAddressModalOpen] =
+    useState(false);
+  const [tempReceiverAddress, setTempReceiverAddress] = useState<string>("");
+  const receiverDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showReceiverDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        receiverDropdownRef.current &&
+        !receiverDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowReceiverDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showReceiverDropdown]);
+
+  const receiver =
+    receiverAddressMode === "custom" &&
+    receiverAddressInput &&
+    isAddress(receiverAddressInput)
+      ? getAddress(receiverAddressInput)
+      : defaultReceiver;
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [isTokenSelectionOpen, setIsTokenSelectionOpen] = useState(false);
 
   const isReceiverDifferentFromActiveWallet =
-    props.receiverAddress &&
-    isAddress(props.receiverAddress) &&
+    receiver &&
+    receiver !== activeWalletInfo?.activeAccount?.address &&
     (activeWalletInfo?.activeAccount?.address
-      ? checksumAddress(props.receiverAddress) !==
+      ? checksumAddress(receiver) !==
         checksumAddress(activeWalletInfo?.activeAccount?.address)
       : true);
 
@@ -179,7 +214,7 @@ export function FundWallet(props: FundWalletProps) {
   const isMobile = useIsMobile();
 
   // if no receiver address is set - wallet must be connected because the user's wallet is the receiver
-  const showConnectButton = !props.receiverAddress && !activeWalletInfo;
+  const showConnectButton = !receiver && !activeWalletInfo;
 
   return (
     <WithHeader
@@ -276,13 +311,116 @@ export function FundWallet(props: FundWalletProps) {
           currency={props.currency}
           amountEditable={props.amountEditable}
           tokenEditable={props.tokenEditable}
+          receiverAddressMode={receiverAddressMode}
+          receiverAddress={receiverAddressInput}
+          showReceiverDropdown={showReceiverDropdown}
+          receiverDropdownRef={receiverDropdownRef}
+          onReceiverModeChange={(mode) => {
+            setReceiverAddressMode(mode);
+            if (mode === "wallet") {
+              setReceiverAddressInput("");
+            }
+          }}
+          onReceiverAddressChange={setReceiverAddressInput}
+          onShowReceiverDropdownChange={setShowReceiverDropdown}
+          onOpenReceiverModal={() => {
+            setReceiverAddressModalOpen(true);
+            setTempReceiverAddress(receiverAddressInput);
+          }}
         />
 
-        {receiver && isReceiverDifferentFromActiveWallet && (
-          <>
-            <ArrowSection />
-            <ReceiverWalletSection address={receiver} client={props.client} />
-          </>
+        {/* Receiver Address Modal */}
+        {receiverAddressModalOpen && (
+          <Modal
+            hide={false}
+            autoFocusCrossIcon={false}
+            className="tw-modal__receiver-address"
+            size="compact"
+            title="To Address"
+            open={receiverAddressModalOpen}
+            setOpen={setReceiverAddressModalOpen}
+          >
+            <Container flex="column" gap="md" p="md">
+              <Container flex="column" gap="xs">
+                <Input
+                  variant="outline"
+                  placeholder="Enter receiver address"
+                  value={tempReceiverAddress}
+                  onChange={(e) => setTempReceiverAddress(e.target.value)}
+                  style={{
+                    fontSize: fontSize.sm,
+                  }}
+                />
+                {tempReceiverAddress &&
+                  !isAddress(tempReceiverAddress) &&
+                  tempReceiverAddress.length > 0 && (
+                    <Container
+                      style={{
+                        padding: spacing.sm,
+                        borderRadius: radius.md,
+                        backgroundColor: `${theme.colors.danger}15`,
+                      }}
+                      flex="row"
+                      gap="xs"
+                      center="y"
+                    >
+                      <Text size="sm" color="danger">
+                        This isn't a valid wallet address. Please ensure that
+                        the address provided is accurate.
+                      </Text>
+                    </Container>
+                  )}
+                {tempReceiverAddress &&
+                  isAddress(tempReceiverAddress) &&
+                  activeWalletInfo &&
+                  tempReceiverAddress.toLowerCase() ===
+                    activeWalletInfo.activeAccount.address.toLowerCase() && (
+                    <Container
+                      style={{
+                        padding: spacing.sm,
+                        borderRadius: radius.md,
+                        backgroundColor: `${theme.colors.danger}15`,
+                      }}
+                      flex="row"
+                      gap="xs"
+                      center="y"
+                    >
+                      <Text size="sm" color="danger">
+                        This is the connected wallet address. Please provide a
+                        different address.
+                      </Text>
+                    </Container>
+                  )}
+              </Container>
+
+              <Button
+                variant="primary"
+                fullWidth
+                disabled={
+                  !tempReceiverAddress ||
+                  !isAddress(tempReceiverAddress) ||
+                  (activeWalletInfo &&
+                    tempReceiverAddress.toLowerCase() ===
+                      activeWalletInfo.activeAccount.address.toLowerCase())
+                }
+                onClick={() => {
+                  if (
+                    tempReceiverAddress &&
+                    isAddress(tempReceiverAddress) &&
+                    (!activeWalletInfo ||
+                      tempReceiverAddress.toLowerCase() !==
+                        activeWalletInfo.activeAccount.address.toLowerCase())
+                  ) {
+                    setReceiverAddressInput(tempReceiverAddress);
+                    setReceiverAddressMode("custom");
+                    setReceiverAddressModalOpen(false);
+                  }
+                }}
+              >
+                SAVE
+              </Button>
+            </Container>
+          </Modal>
         )}
       </Container>
 
@@ -429,6 +567,14 @@ function TokenSection(props: {
   presetOptions: [number, number, number];
   amountEditable: boolean;
   tokenEditable: boolean;
+  receiverAddressMode?: "wallet" | "custom";
+  receiverAddress?: string;
+  showReceiverDropdown?: boolean;
+  receiverDropdownRef?: React.RefObject<HTMLDivElement | null>;
+  onReceiverModeChange?: (mode: "wallet" | "custom") => void;
+  onReceiverAddressChange?: (address: string) => void;
+  onShowReceiverDropdownChange?: (show: boolean) => void;
+  onOpenReceiverModal?: () => void;
 }) {
   const theme = useCustomTheme();
   const chainQuery = useBridgeChain({
@@ -465,13 +611,106 @@ function TokenSection(props: {
               {props.title}
             </Text>
           </Container>
-          {props.activeWalletInfo && (
+          {props.activeWalletInfo && props.receiverAddressMode ? (
+            <div
+              ref={props.receiverDropdownRef}
+              style={{
+                position: "relative",
+              }}
+            >
+              <Button
+                variant="ghost-solid"
+                onClick={() =>
+                  props.onShowReceiverDropdownChange?.(
+                    !props.showReceiverDropdown,
+                  )
+                }
+                style={{
+                  padding: `${spacing.xxs} 2px`,
+                  fontSize: fontSize.xs,
+                  fontWeight: 400,
+                }}
+              >
+                {props.receiverAddressMode === "wallet"
+                  ? shortenAddress(props.activeWalletInfo.activeAccount.address)
+                  : props.receiverAddress && isAddress(props.receiverAddress)
+                    ? shortenAddress(props.receiverAddress)
+                    : "Select wallet"}
+                <span style={{ marginLeft: spacing.xxs }} />
+                <span
+                  style={{
+                    transform: props.showReceiverDropdown
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 200ms ease",
+                    display: "inline-flex",
+                  }}
+                >
+                  <ArrowUpDownIcon size={iconSize.xs} />
+                </span>
+              </Button>
+
+              {props.showReceiverDropdown && (
+                <Container
+                  bg="modalBg"
+                  style={{
+                    borderRadius: radius.md,
+                    border: `1px solid ${theme.colors.borderColor}`,
+                    padding: spacing.xs,
+                    position: "absolute",
+                    right: 0,
+                    top: "100%",
+                    marginTop: spacing.xs,
+                    zIndex: 1000,
+                    minWidth: "200px",
+                    boxShadow: `0 4px 12px rgba(0, 0, 0, 0.15)`,
+                    overflow: "visible",
+                  }}
+                >
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onReceiverModeChange?.("wallet");
+                      props.onReceiverAddressChange?.("");
+                      props.onShowReceiverDropdownChange?.(false);
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                    }}
+                  >
+                    Use connected wallet
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={() => {
+                      props.onShowReceiverDropdownChange?.(false);
+                      props.onOpenReceiverModal?.();
+                    }}
+                    style={{
+                      justifyContent: "flex-start",
+                      padding: spacing.sm,
+                      fontSize: fontSize.sm,
+                      borderTop: `1px solid ${theme.colors.borderColor}`,
+                      marginTop: spacing.xs,
+                      paddingTop: spacing.sm,
+                    }}
+                  >
+                    Paste wallet address
+                  </Button>
+                </Container>
+              )}
+            </div>
+          ) : props.activeWalletInfo ? (
             <ActiveWalletDetails
               activeWalletInfo={props.activeWalletInfo}
               client={props.client}
               onClick={props.onWalletClick}
             />
-          )}
+          ) : null}
         </div>
       }
     >
@@ -635,48 +874,6 @@ function TokenSection(props: {
   );
 }
 
-function ReceiverWalletSection(props: {
-  address: string;
-  client: ThirdwebClient;
-}) {
-  const ensNameQuery = useEnsName({
-    address: props.address,
-    client: props.client,
-  });
-
-  return (
-    <SectionContainer
-      header={
-        <Text
-          size="xs"
-          color="primaryText"
-          style={{
-            letterSpacing: "0.07em",
-            textTransform: "uppercase",
-          }}
-        >
-          To
-        </Text>
-      }
-    >
-      <Container
-        px="md"
-        py="md"
-        flex="row"
-        center="y"
-        gap="xs"
-        color="secondaryText"
-      >
-        <WalletDotIcon size={iconSize.xs} color="secondaryText" />
-        <Text size="sm" color="primaryText">
-          {ensNameQuery.data || shortenAddress(props.address)}
-        </Text>
-        <CopyIcon text={props.address} tip="Copy address" iconSize={14} />
-      </Container>
-    </SectionContainer>
-  );
-}
-
 function SectionContainer(props: {
   children: React.ReactNode;
   header: React.ReactNode;
@@ -689,7 +886,7 @@ function SectionContainer(props: {
         borderWidth: 1,
         borderStyle: "solid",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }}
       borderColor="borderColor"
     >
@@ -701,6 +898,8 @@ function SectionContainer(props: {
           inset: 0,
           opacity: 0.5,
           zIndex: 0,
+          borderRadius: radius.xl,
+          overflow: "hidden",
         }}
       />
 
@@ -709,9 +908,10 @@ function SectionContainer(props: {
         style={{
           position: "relative",
           zIndex: 1,
+          overflow: "visible",
         }}
       >
-        <Container px="md" py="sm" relative>
+        <Container px="md" py="sm" relative style={{ overflow: "visible" }}>
           {props.header}
         </Container>
       </Container>
@@ -729,35 +929,5 @@ function SectionContainer(props: {
         {props.children}
       </Container>
     </Container>
-  );
-}
-
-function ArrowSection() {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginBlock: `-13px`,
-        zIndex: 2,
-        position: "relative",
-      }}
-    >
-      <Container
-        p="xs"
-        center="both"
-        flex="row"
-        color="primaryText"
-        bg="modalBg"
-        borderColor="borderColor"
-        style={{
-          borderRadius: radius.full,
-          borderWidth: 1,
-          borderStyle: "solid",
-        }}
-      >
-        <ArrowDownIcon width={iconSize["sm+"]} height={iconSize["sm+"]} />
-      </Container>
-    </div>
   );
 }

@@ -134,9 +134,9 @@ export function SelectBridgeChainUI(
         ))}
 
         {props.isPending &&
-          new Array(20).fill(0).map(() => (
-            // biome-ignore lint/correctness/useJsxKeyInIterable: ok
-            <ChainButtonSkeleton isMobile={props.isMobile} />
+          Array.from({ length: 20 }, (_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: skeleton items are static placeholders
+            <ChainButtonSkeleton key={i} isMobile={props.isMobile} />
           ))}
 
         {filteredChains.length === 0 && !props.isPending && (
