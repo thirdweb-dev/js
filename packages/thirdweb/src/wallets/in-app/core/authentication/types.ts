@@ -124,6 +124,8 @@ export type Profile = {
     email?: string;
     phone?: string;
     address?: Address;
+    name?: string;
+    picture?: string;
   };
 };
 

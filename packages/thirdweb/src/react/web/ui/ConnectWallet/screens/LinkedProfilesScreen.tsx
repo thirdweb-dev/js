@@ -24,6 +24,11 @@ import { MenuButton } from "../MenuButton.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
 function getProfileDisplayName(profile: Profile) {
+  // Prefer name if available (from OAuth providers like Google/Apple)
+  if (profile.details.name) {
+    return profile.details.name;
+  }
+
   switch (true) {
     case profile.type === "email" && profile.details.email !== undefined:
       return profile.details.email;
