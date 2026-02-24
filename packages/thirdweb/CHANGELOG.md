@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.119.0
+
+### Minor Changes
+
+- [#8686](https://github.com/thirdweb-dev/js/pull/8686) [`5352152`](https://github.com/thirdweb-dev/js/commit/53521528353a00691e82405460d4fb869ac986de) Thanks [@Yash094](https://github.com/Yash094)! - Add `requireApproval` option to `useConnectModal` hook to require terms of service and privacy policy acceptance before connecting an in-app wallet
+
 ## 5.118.2
 
 ### Patch Changes
