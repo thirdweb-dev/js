@@ -29,7 +29,7 @@
     "@thirdweb-dev/api": "workspace:*",
     "@thirdweb-dev/service-utils": "workspace:*",
     "@thirdweb-dev/vault-sdk": "workspace:*",
-    "@vercel/functions": "2.2.2",
+    "@vercel/functions": "3.4.3",
     "@vercel/og": "^0.6.8",
     "@workspace/ui": "workspace:*",
     "abitype": "1.0.8",
