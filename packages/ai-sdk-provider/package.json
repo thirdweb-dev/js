@@ -5,7 +5,7 @@
   },
   "devDependencies": {
     "@ai-sdk/provider": "2.0.0",
-    "@ai-sdk/provider-utils": "3.0.7",
+    "@ai-sdk/provider-utils": "4.0.16",
     "@biomejs/biome": "2.0.6",
     "rimraf": "6.0.1"
   },
