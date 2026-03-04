@@ -9,38 +9,39 @@ import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js"
 import { getSocialIcon } from "../../../../core/utils/walletIcon.js";
 import { useProfiles } from "../../../hooks/wallets/useProfiles.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import { Container, Line, ModalHeader } from "../../components/basic.js";
-import { IconButton } from "../../components/buttons.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
+import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { IconButton } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { Blobbie } from "../Blobbie.js";
+import { MenuButton } from "../MenuButton.js";
 import { AddUserIcon } from "../icons/AddUserIcon.js";
 import { EmailIcon } from "../icons/EmailIcon.js";
 import { FingerPrintIcon } from "../icons/FingerPrintIcon.js";
 import { PhoneIcon } from "../icons/PhoneIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
-import { MenuButton } from "../MenuButton.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
-function getProfileDisplayName(profile: Profile) {
-  // Prefer name if available (from OAuth providers like Google/Apple)
-  if (profile.details.name) {
-    return profile.details.name;
+function getProfileDisplayName(profile: Profile): string {
+  // Prefer name if available (from OAuth providers like Google/Apple).
+  // Use .trim() to reject whitespace-only strings that some backends may return.
+  if (profile.details.name?.trim()) {
+    return profile.details.name.trim();
   }
 
   switch (true) {
     case profile.type === "email" && profile.details.email !== undefined:
-      return profile.details.email;
+      return profile.details.email as string;
     case profile.type === "google" && profile.details.email !== undefined:
-      return profile.details.email;
+      return profile.details.email as string;
     case profile.type === "phone" && profile.details.phone !== undefined:
-      return profile.details.phone;
+      return profile.details.phone as string;
     case profile.details.address !== undefined:
       return shortenAddress(profile.details.address, 6);
     case (profile.type as string) === "cognito" &&
       profile.details.email !== undefined:
-      return profile.details.email;
+      return profile.details.email as string;
     case (profile.type as string).toLowerCase() === "custom_auth_endpoint":
       return "Custom Profile";
     default:
@@ -159,6 +160,18 @@ function LinkedProfile({
           }}
           width={iconSize.lg}
         />
+      ) : profile.details.picture ? (
+        // Fallback to OAuth provider picture (e.g. Google/Apple) when no social profile avatar is available
+        <Img
+          client={client}
+          height={iconSize.lg}
+          loading="eager"
+          src={profile.details.picture}
+          style={{
+            borderRadius: "100%",
+          }}
+          width={iconSize.lg}
+        />
       ) : profile.details.address !== undefined ? (
         <Container
           style={{
@@ -195,6 +208,12 @@ function LinkedProfile({
         }}
       >
         <Text color="primaryText">
+          {/*
+           * Name display priority:
+           * 1. socialProfiles name (real-time on-chain/social lookup)
+           * 2. profile.details.name (OAuth provider name, e.g. Google/Apple)
+           * 3. email / phone / shortened address / profile type (via getProfileDisplayName)
+           */}
           {socialProfiles?.find((p) => p.avatar)?.name ||
             getProfileDisplayName(profile)}
         </Text>

@@ -110,6 +110,84 @@ describe("LinkedProfilesScreen", () => {
       expect(screen.getByText("Unknown")).toBeInTheDocument();
     });
 
+    it("should display name from profile.details.name when available", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          {
+            details: { email: "apple@example.com", name: "Jane Doe" },
+            type: "apple",
+          },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("Jane Doe")).toBeInTheDocument();
+      expect(screen.queryByText("apple@example.com")).not.toBeInTheDocument();
+    });
+
+    it("should fall back to email when profile.details.name is an empty string", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          { details: { email: "apple@example.com", name: "" }, type: "google" },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("apple@example.com")).toBeInTheDocument();
+    });
+
+    it("should fall back to email when profile.details.name is whitespace only", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          {
+            details: { email: "google@example.com", name: "   " },
+            type: "google",
+          },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("google@example.com")).toBeInTheDocument();
+    });
+
+    it("should fall back to email when profile.details.name is undefined", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          {
+            details: { email: "google@example.com", name: undefined },
+            type: "google",
+          },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("google@example.com")).toBeInTheDocument();
+    });
+
+    it("should display trimmed name when profile.details.name has leading/trailing spaces", () => {
+      vi.mocked(useProfiles).mockReturnValue({
+        data: [
+          {
+            details: { email: "apple@example.com", name: "  John Doe  " },
+            type: "apple",
+          },
+        ],
+        isLoading: false,
+        // biome-ignore lint/suspicious/noExplicitAny: Mocking data
+      } as any);
+
+      render(<LinkedProfilesScreen {...mockProps} />);
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+    });
+
     it("should not display guest profiles", () => {
       vi.mocked(useProfiles).mockReturnValue({
         data: [{ details: {}, type: "guest" }],

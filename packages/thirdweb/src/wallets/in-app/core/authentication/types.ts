@@ -124,7 +124,9 @@ export type Profile = {
     email?: string;
     phone?: string;
     address?: Address;
+    /** Full display name from OAuth provider (e.g. Google, Apple). Populated on first sign-in. */
     name?: string;
+    /** Profile picture URL from OAuth provider (e.g. Google, Apple). Populated on first sign-in. */
     picture?: string;
   };
 };
