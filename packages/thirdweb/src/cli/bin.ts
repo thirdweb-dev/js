@@ -44,6 +44,14 @@ async function main() {
       break;
     }
 
+    case "create": {
+      console.info(
+        "The 'thirdweb create' command is deprecated. Please use the thirdweb dashboard instead: https://thirdweb.com/dashboard",
+      );
+      process.exit(1);
+      break;
+    }
+
     case "login": {
       // Not implemented yet
       console.info(
