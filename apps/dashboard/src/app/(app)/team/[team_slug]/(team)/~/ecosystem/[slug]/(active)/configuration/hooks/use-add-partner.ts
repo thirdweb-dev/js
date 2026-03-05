@@ -8,6 +8,7 @@ import type { Ecosystem, Partner } from "@/api/team/ecosystems";
 type AddPartnerParams = {
   ecosystem: Ecosystem;
   name: string;
+  imageUrl?: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
   accessControl?: Partner["accessControl"] | null;
@@ -37,6 +38,7 @@ export function useAddPartner(
             accessControl: params.accessControl ?? undefined,
             allowlistedBundleIds: params.allowlistedBundleIds,
             allowlistedDomains: params.allowlistedDomains,
+            imageUrl: params.imageUrl,
             name: params.name,
             // TODO - remove the requirement for permissions in API endpoint
             permissions: ["FULL_CONTROL_V1"],

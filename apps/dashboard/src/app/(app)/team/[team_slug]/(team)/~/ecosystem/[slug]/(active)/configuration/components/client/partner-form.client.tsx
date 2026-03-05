@@ -1,12 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon, Trash2Icon } from "lucide-react";
-import { useId } from "react";
+import { PencilIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react";
+import { useId, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import type { ThirdwebClient } from "thirdweb";
 import type { z } from "zod";
 import type { Partner } from "@/api/team/ecosystems";
+import { Img } from "@/components/blocks/Img";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,11 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { resolveSchemeWithErrorHandler } from "@/utils/resolveSchemeWithErrorHandler";
 import { partnerFormSchema } from "../../constants";
 import { AllowedOperationsSection } from "./allowed-operations-section";
 
@@ -118,6 +121,7 @@ export function PartnerForm({
 
   const accessControlId = useId();
   const serverVerifierId = useId();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <Form {...form}>
@@ -149,6 +153,101 @@ export function PartnerForm({
                 </FormDescription>
               </FormItem>
             )}
+          />
+          <FormField
+            control={form.control}
+            name="logo"
+            render={() => {
+              const removeLogo = form.watch("removeLogo");
+              const logoFile = form.watch("logo");
+              const newFilePreview = logoFile
+                ? URL.createObjectURL(logoFile)
+                : undefined;
+              const existingImageUrl =
+                partner?.imageUrl && !removeLogo
+                  ? resolveSchemeWithErrorHandler({
+                      client,
+                      uri: partner.imageUrl,
+                    })
+                  : undefined;
+              const displayUrl = newFilePreview || existingImageUrl;
+
+              return (
+                <FormItem>
+                  <FormLabel>Partner Logo</FormLabel>
+                  <FormControl>
+                    <div>
+                      <input
+                        ref={fileInputRef}
+                        accept="image/png,image/jpeg,image/webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            form.setValue("logo", file, {
+                              shouldValidate: true,
+                            });
+                            form.setValue("removeLogo", false);
+                          }
+                          e.target.value = "";
+                        }}
+                        type="file"
+                      />
+                      {displayUrl ? (
+                        <div className="relative inline-block">
+                          <Img
+                            alt={partner?.name ?? "Partner logo"}
+                            className="size-20 rounded-md border object-contain object-center"
+                            src={displayUrl}
+                          />
+                          <Button
+                            aria-label="Remove logo"
+                            className="absolute -top-2 -right-2 size-6 rounded-full bg-background p-0 hover:bg-accent"
+                            onClick={() => {
+                              form.setValue("logo", undefined);
+                              form.setValue("removeLogo", true);
+                            }}
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                          >
+                            <XIcon className="size-3" />
+                          </Button>
+                          <Button
+                            aria-label="Change logo"
+                            className="absolute -bottom-2 -right-2 size-6 rounded-full bg-background p-0 hover:bg-accent"
+                            onClick={() => fileInputRef.current?.click()}
+                            size="icon"
+                            type="button"
+                            variant="ghost"
+                          >
+                            <PencilIcon className="size-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <ImageUpload
+                          accept="image/png, image/jpeg, image/webp"
+                          className="bg-background"
+                          onUpload={(files) => {
+                            if (files[0]) {
+                              form.setValue("logo", files[0], {
+                                shouldValidate: true,
+                              });
+                              form.setValue("removeLogo", false);
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormDescription>
+                    Optional logo for this partner. Used in OTP emails sent to
+                    users authenticating through this partner.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
           <FormField
             control={form.control}

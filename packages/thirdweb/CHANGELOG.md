@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.119.0
+
+### Minor Changes
+
+- [#8686](https://github.com/thirdweb-dev/js/pull/8686) [`5352152`](https://github.com/thirdweb-dev/js/commit/53521528353a00691e82405460d4fb869ac986de) Thanks [@Yash094](https://github.com/Yash094)! - Add `requireApproval` option to `useConnectModal` hook to require terms of service and privacy policy acceptance before connecting an in-app wallet
+
+## 5.118.2
+
+### Patch Changes
+
+- [#8671](https://github.com/thirdweb-dev/js/pull/8671) [`1caf6dd`](https://github.com/thirdweb-dev/js/commit/1caf6dd4609ac72a06999ef0d70f31a371e5108a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - fix walletconnect not working on berachain and unallowlisted chains
+
+## 5.118.1
+
+### Patch Changes
+
+- [#8664](https://github.com/thirdweb-dev/js/pull/8664) [`b50e304`](https://github.com/thirdweb-dev/js/commit/b50e304e0ccd1ac7eae551c3d49e82312ffc82d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SiteLink not handling hashed URL paths
+
 ## 5.118.0
 
 ### Minor Changes

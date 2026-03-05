@@ -130,12 +130,12 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
             hasMultipleExamples={true}
           />
         ) : (
-          <div className="rounded-lg border">
+          <div className="rounded-lg border bg-card">
             <RequestExample
               codeExamples={requestExamples.map((example) => ({
                 code: (
                   <CodeBlock
-                    className="rounded-none border-none"
+                    className="rounded-none border-none !bg-card"
                     code={example.code}
                     containerClassName="m-0"
                     lang={example.lang}
@@ -190,16 +190,17 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
         >
           Response
         </Heading>
-        <div className="overflow-hidden rounded-lg border">
+        <div className="overflow-hidden rounded-lg border bg-card">
           <Tabs className="w-full" defaultValue={responseKeys[0]}>
-            <TabsList className="w-full">
+            <TabsList className="w-full pt-1">
               {responseKeys.map((status) => (
                 <TabsTrigger key={status} value={status}>
-                  <div className="flex items-center gap-2 py-1">
+                  <div className="flex items-center gap-1.5 px-0.5">
                     <span
                       className={cn("h-2 w-2 rounded-full", {
                         "bg-green-500": status.startsWith("2"),
                         "bg-red-500": status.startsWith("4"),
+                        "bg-orange-500": status.startsWith("3"),
                         "bg-yellow-500": status.startsWith("5"),
                       })}
                     />
@@ -212,7 +213,7 @@ export function ApiEndpoint(props: { metadata: ApiEndpointMeta }) {
             {responseKeys.map((status) => (
               <TabsContent className="m-0" key={status} value={status}>
                 <CodeBlock
-                  className="rounded-none border-none"
+                  className="rounded-none border-none !bg-card"
                   code={responseExamples[status] as string}
                   containerClassName="m-0"
                   lang="json"
@@ -237,15 +238,16 @@ function ParameterSection(props: {
         summary={
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium">{props.title}</span>
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+            <span className="text-xs text-muted-foreground bg-muted size-6 rounded-full inline-flex justify-center items-center">
               {props.parameters.length}
             </span>
           </div>
         }
         accordionItemClassName="border-0 my-0"
         accordionTriggerClassName="p-4 hover:bg-muted/50 transition-colors"
+        headingClassName="!no-underline"
       >
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 space-y-2">
           {props.parameters
             .sort((a, b) => {
               if (a.required === b.required) {
@@ -266,16 +268,16 @@ function InlineParameterItem({ param }: { param: APIParameter }) {
   return (
     <div className="flex flex-col gap-2 p-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <code className="text-foreground text-sm font-mono bg-background px-2 py-1 rounded border">
+        <code className="text-foreground text-base font-mono font-medium">
           {param.name}
         </code>
         {param.type && (
-          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded">
+          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-lg">
             {param.type}
           </span>
         )}
         {param.required && (
-          <span className="text-xs text-warning-text px-2 py-1 rounded border border-warning-text">
+          <span className="text-xs text-warning-text px-2 py-1 rounded-lg border border-warning-text/30 bg-warning-text/15">
             Required
           </span>
         )}
@@ -289,6 +291,7 @@ function InlineParameterItem({ param }: { param: APIParameter }) {
         <div className="text-sm flex flex-col gap-2">
           <span className="text-muted-foreground">Example: </span>
           <CodeBlock
+            className="!bg-card"
             code={
               typeof param.example === "object"
                 ? JSON.stringify(param.example)

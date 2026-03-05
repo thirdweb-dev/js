@@ -29,16 +29,16 @@ function InlineParameterItem({ param }: { param: APIParameter }) {
   return (
     <div className="flex flex-col gap-2 p-3 rounded-lg">
       <div className="flex items-center gap-2 flex-wrap">
-        <code className="text-foreground text-sm font-mono bg-background px-2 py-1 rounded border">
+        <code className="text-foreground text-base font-mono font-medium">
           {param.name}
         </code>
         {param.type && (
-          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded">
+          <span className="text-xs text-muted-foreground px-2 py-1 bg-muted rounded-lg">
             {param.type}
           </span>
         )}
         {param.required && (
-          <span className="text-xs text-warning-text px-2 py-1 rounded border border-warning-text">
+          <span className="text-xs text-warning-text px-2 py-1 rounded-lg border border-warning-text/30 bg-warning-text/15">
             Required
           </span>
         )}
@@ -49,15 +49,15 @@ function InlineParameterItem({ param }: { param: APIParameter }) {
       )}
 
       {param.example !== undefined && (
-        <div className="text-sm flex flex-col gap-2">
-          <span className="text-muted-foreground">Example: </span>
+        <div className="text-sm flex flex-col gap-2 my-3">
+          <span className="text-muted-foreground">Example </span>
           <CodeClient
             code={
               typeof param.example === "object"
                 ? JSON.stringify(param.example)
                 : String(param.example)
             }
-            className="rounded-none border-none"
+            className="rounded-lg"
             lang="json"
             scrollableContainerClassName="m-0"
             scrollableClassName="max-h-[200px]"
@@ -78,10 +78,11 @@ function ParameterSection(props: {
     <div className="border-b last:border-b-0">
       <Details
         key={props.title}
+        headingClassName="!no-underline"
         summary={
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium">{props.title}</span>
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+            <span className="text-xs text-muted-foreground bg-muted size-6 rounded-full inline-flex justify-center items-center">
               {props.parameters.length}
             </span>
           </div>
@@ -138,7 +139,7 @@ export function DynamicRequestExample(props: DynamicRequestExampleProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="rounded-lg border">
+      <div className="rounded-lg border bg-card">
         <RequestExample
           codeExamples={props.requestExamples.map((example) => ({
             code: (
