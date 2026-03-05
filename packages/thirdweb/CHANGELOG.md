@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.119.1
+
+### Patch Changes
+
+- [#8700](https://github.com/thirdweb-dev/js/pull/8700) [`e13b9a7`](https://github.com/thirdweb-dev/js/commit/e13b9a784aca3a9b5d797fc6e011c6d1a10542e9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Deprecate the `thirdweb create` CLI command
+
+- [#8698](https://github.com/thirdweb-dev/js/pull/8698) [`da4a4a5`](https://github.com/thirdweb-dev/js/commit/da4a4a540a6b141050af8fc8332621826d8dd835) Thanks [@Yash094](https://github.com/Yash094)! - Add `screen` prop to `useWalletDetailsModal` to allow opening the modal directly at a specific screen. Use `screen: "export"` to open directly at the Export Private Key screen.
+
 ## 5.119.0
 
 ### Minor Changes
