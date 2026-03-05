@@ -383,8 +383,11 @@ export function DetailsModal(props: {
   connectOptions: DetailsModalConnectOptions | undefined;
   assetTabs?: AssetTabs[];
   showBalanceInFiat?: SupportedFiatCurrency;
+  initialScreen?: WalletDetailsModalScreen;
 }) {
-  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
+  const [screen, setScreen] = useState<WalletDetailsModalScreen>(
+    props.initialScreen || "main",
+  );
   const { disconnect } = useDisconnect();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -887,7 +890,7 @@ export function DetailsModal(props: {
         supportedTokens={props.supportedTokens}
       />
     );
-  } else if (screen === "private-key") {
+  } else if (screen === "private-key" || screen === "export") {
     content = (
       <PrivateKey
         client={client} // do not use the useCustomTheme hook to get this, it's not valid here
@@ -1724,6 +1727,22 @@ export type UseWalletDetailsModalOptions = {
    * @param screen The name of the screen that was being shown when user closed the modal
    */
   onClose?: (screen: string) => void;
+
+  /**
+   * The initial screen to show when the modal opens.
+   *
+   * @defaultValue "main"
+   *
+   * @example
+   * ```tsx
+   * // Open directly to the Export Private Key screen
+   * detailsModal.open({
+   *   client,
+   *   screen: "export"
+   * });
+   * ```
+   */
+  screen?: WalletDetailsModalScreen;
 };
 
 /**
@@ -1748,6 +1767,14 @@ export type UseWalletDetailsModalOptions = {
  *
  *   return <button onClick={handleClick}> Show Wallet Details </button>
  * }
+ * ```
+ *
+ * ### Open directly to Export Private Key screen
+ * ```tsx
+ * detailsModal.open({
+ *   client,
+ *   screen: "export"
+ * });
  * ```
  *
  * ### Callback for when the modal is closed
@@ -1800,6 +1827,7 @@ export function useWalletDetailsModal() {
               showTestnetFaucet: props.showTestnetFaucet,
             }}
             displayBalanceToken={props.displayBalanceToken}
+            initialScreen={props.screen}
             locale={locale}
             onDisconnect={(info) => {
               props.onDisconnect?.(info);
