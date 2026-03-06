@@ -20,6 +20,7 @@ import {
   createThirdwebClient,
   Engine,
   getContract,
+  NATIVE_TOKEN_ADDRESS,
   readContract,
   type ThirdwebClient,
   toUnits,
@@ -889,11 +890,16 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
 
   const sendMutation = useMutation({
     mutationFn: async (values: SendFormValues) => {
+      const normalizedTokenAddress =
+        values.tokenAddress?.toLowerCase() ===
+        NATIVE_TOKEN_ADDRESS.toLowerCase()
+          ? undefined
+          : values.tokenAddress;
       let decimals = 18;
-      if (values.tokenAddress) {
+      if (normalizedTokenAddress) {
         const decimalsRpc = await readContract({
           contract: getContract({
-            address: values.tokenAddress,
+            address: normalizedTokenAddress,
             chain: selectedChain,
             client,
           }),
@@ -914,7 +920,9 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
         teamId,
         walletAddress,
         secretKey: secretKeyValue,
-        ...(values.tokenAddress ? { tokenAddress: values.tokenAddress } : {}),
+        ...(normalizedTokenAddress
+          ? { tokenAddress: normalizedTokenAddress }
+          : {}),
         ...(vaultAccessTokenValue
           ? { vaultAccessToken: vaultAccessTokenValue }
           : {}),
@@ -956,7 +964,7 @@ function SendProjectWalletModalContent(props: SendProjectWalletModalProps) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((values) => {
-            void sendMutation.mutateAsync(values);
+            sendMutation.mutate(values);
           })}
         >
           <div className="space-y-4 px-4 pb-8 lg:px-6">
