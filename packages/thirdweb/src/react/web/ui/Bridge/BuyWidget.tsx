@@ -223,6 +223,20 @@ export type BuyWidgetProps = {
    * By default the token selection is editable. Set this to false to disable editing the token selection.
    */
   tokenEditable?: boolean;
+
+  /**
+   * Array of onramp provider IDs to hide from the payment provider selection.
+   * @example
+   * ```tsx
+   * <BuyWidget
+   *   client={client}
+   *   chain={ethereum}
+   *   amount="0.1"
+   *   hiddenOnrampProviders={["transak"]}
+   * />
+   * ```
+   */
+  hiddenOnrampProviders?: ("coinbase" | "stripe" | "transak")[];
 };
 
 /**
@@ -395,6 +409,7 @@ export function BuyWidget(props: BuyWidgetProps) {
             ? true
             : props.showThirdwebBranding
         }
+        hiddenOnrampProviders={props.hiddenOnrampProviders}
       />
     </BridgeWidgetContainer>
   );
@@ -558,6 +573,7 @@ function BridgeWidgetContent(
         currency={props.currency}
         supportedTokens={props.supportedTokens}
         country={props.country}
+        hiddenOnrampProviders={props.hiddenOnrampProviders}
         // others
         destinationToken={screen.destinationToken}
         destinationAmount={screen.destinationAmount}

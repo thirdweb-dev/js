@@ -90,6 +90,11 @@ type PaymentSelectionProps = {
   country: string | undefined;
 
   supportedTokens: SupportedTokens | undefined;
+
+  /**
+   * Array of onramp provider IDs to hide from the payment provider selection.
+   */
+  hiddenOnrampProviders?: ("coinbase" | "stripe" | "transak")[];
 };
 
 type Step =
@@ -113,6 +118,7 @@ export function PaymentSelection({
   feePayer,
   currency,
   country,
+  hiddenOnrampProviders,
 }: PaymentSelectionProps) {
   const connectedWallets = useConnectedWallets();
   const activeWallet = useActiveWallet();
@@ -308,6 +314,7 @@ export function PaymentSelection({
             toChainId={destinationToken.chainId}
             toTokenAddress={destinationToken.address}
             currency={currency}
+            hiddenOnrampProviders={hiddenOnrampProviders}
           />
         )}
       </Container>

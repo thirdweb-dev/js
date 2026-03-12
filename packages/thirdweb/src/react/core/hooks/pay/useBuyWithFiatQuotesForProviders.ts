@@ -64,12 +64,16 @@ type UseBuyWithFiatQuotesForProvidersResult = {
  */
 export function useBuyWithFiatQuotesForProviders(
   params?: UseBuyWithFiatQuotesForProvidersParams,
+  providers?: ("coinbase" | "stripe" | "transak")[],
   queryOptions?: OnrampQuoteQueryOptions,
 ): UseBuyWithFiatQuotesForProvidersResult {
-  const providers = ["coinbase", "stripe", "transak"] as const;
+  const providersToQuery =
+    providers && providers.length > 0
+      ? providers
+      : (["coinbase", "stripe", "transak"] as const);
 
   const queries = useQueries({
-    queries: providers.map((provider) => ({
+    queries: providersToQuery.map((provider) => ({
       ...queryOptions,
       enabled: !!params,
       queryFn: async () => {

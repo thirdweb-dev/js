@@ -28,6 +28,7 @@ interface FiatProviderSelectionProps {
   toAmount?: string;
   currency?: SupportedFiatCurrency;
   country: string | undefined;
+  hiddenOnrampProviders?: ("coinbase" | "stripe" | "transak")[];
 }
 
 const PROVIDERS = [
@@ -60,17 +61,26 @@ export function FiatProviderSelection({
   toAmount,
   currency,
   country,
+  hiddenOnrampProviders,
 }: FiatProviderSelectionProps) {
-  // Fetch quotes for all providers
-  const quoteQueries = useBuyWithFiatQuotesForProviders({
-    amount: toAmount || "0",
-    chainId: toChainId,
-    client,
-    currency: currency || "USD",
-    receiver: checksumAddress(toAddress),
-    tokenAddress: checksumAddress(toTokenAddress),
-    country,
-  });
+  const visibleProviders = useMemo(() => {
+    return PROVIDERS.filter(
+      (provider) => !hiddenOnrampProviders?.includes(provider.id),
+    );
+  }, [hiddenOnrampProviders]);
+
+  const quoteQueries = useBuyWithFiatQuotesForProviders(
+    {
+      amount: toAmount || "0",
+      chainId: toChainId,
+      client,
+      currency: currency || "USD",
+      receiver: checksumAddress(toAddress),
+      tokenAddress: checksumAddress(toTokenAddress),
+      country,
+    },
+    visibleProviders.map((p) => p.id),
+  );
 
   const quotes = useMemo(() => {
     return quoteQueries.map((q) => q.data).filter((q) => !!q);
@@ -106,7 +116,7 @@ export function FiatProviderSelection({
         quotes
           .sort((a, b) => a.currencyAmount - b.currencyAmount)
           .map((quote) => {
-            const provider = PROVIDERS.find(
+            const provider = visibleProviders.find(
               (p) => p.id === quote.intent.onramp,
             );
             if (!provider) {

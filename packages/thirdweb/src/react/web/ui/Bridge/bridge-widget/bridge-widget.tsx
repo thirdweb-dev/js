@@ -197,6 +197,17 @@ export type BridgeWidgetProps = {
     presetOptions?: [number, number, number];
     /** Arbitrary data to be included in returned status and webhook events. */
     purchaseData?: PurchaseData;
+    /**
+     * Array of onramp provider IDs to hide from the payment provider selection.
+     * @example
+     * ```tsx
+     * <BridgeWidget
+     *   client={client}
+     *   buy={{ amount: "0.1", chainId: 8453, hiddenOnrampProviders: ["transak"] }}
+     * />
+     * ```
+     */
+    hiddenOnrampProviders?: ("coinbase" | "stripe" | "transak")[];
   };
 
   connectOptions?: {
@@ -444,6 +455,7 @@ export function BridgeWidget(props: BridgeWidgetProps) {
             purchaseData={props.buy?.purchaseData}
             paymentMethods={["card"]}
             connectOptions={props.connectOptions}
+            hiddenOnrampProviders={props.buy?.hiddenOnrampProviders}
             style={{
               border: "none",
             }}
