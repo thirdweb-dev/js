@@ -145,4 +145,46 @@ describe("verifyLoginPayload", () => {
 
     expect(verificationResult.valid).toBe(false);
   });
+
+  test("should work when domain has URL scheme (backward compat)", async () => {
+    const options = {
+      client: TEST_CLIENT,
+      domain: "https://example.com",
+      login: {
+        nonce: {
+          generate() {
+            return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+          validate(uuid: string) {
+            return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+        },
+        payloadExpirationTimeSeconds: 3600,
+        statement: "This is a statement",
+      },
+    };
+
+    const generatePayload = generateLoginPayload(options);
+    const payloadToSign = await generatePayload({
+      address: TEST_ACCOUNT_A.address,
+    });
+
+    // sign the payload
+    const signatureResult = await signLoginPayload({
+      account: TEST_ACCOUNT_A,
+      payload: payloadToSign,
+    });
+
+    // verify the payload
+    const verifyPayload = verifyLoginPayload(options);
+
+    const verificationResult = await verifyPayload(signatureResult);
+
+    expect(verificationResult.valid).toBe(true);
+    if (verificationResult.valid) {
+      expect(verificationResult.payload.address).toBe(TEST_ACCOUNT_A.address);
+      // domain in payload should have scheme stripped
+      expect(verificationResult.payload.domain).toBe("example.com");
+    }
+  });
 });

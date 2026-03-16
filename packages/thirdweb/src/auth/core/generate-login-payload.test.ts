@@ -94,4 +94,29 @@ describe("generateLoginPayload", () => {
       }
     `);
   });
+
+  test("should strip URL scheme from domain", async () => {
+    const options = {
+      client: TEST_CLIENT,
+      domain: "https://example.com",
+      login: {
+        nonce: {
+          generate() {
+            return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+          validate(uuid: string) {
+            return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+        },
+      },
+    };
+
+    const generatePayload = generateLoginPayload(options);
+    const result = await generatePayload({
+      address: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
+      chainId: 1,
+    });
+
+    expect(result.domain).toBe("example.com");
+  });
 });

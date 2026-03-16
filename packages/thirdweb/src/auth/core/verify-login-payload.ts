@@ -2,7 +2,7 @@ import { trackLogin } from "../../analytics/track/siwe.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { verifySignature } from "../verify-signature.js";
 import { DEFAULT_LOGIN_STATEMENT, DEFAULT_LOGIN_VERSION } from "./constants.js";
-import { createLoginMessage } from "./create-login-message.js";
+import { createLoginMessage, stripUrlScheme } from "./create-login-message.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
 /**
@@ -48,7 +48,8 @@ export function verifyLoginPayload(options: AuthOptions) {
     signature,
   }: VerifyLoginPayloadParams): Promise<VerifyLoginPayloadResult> => {
     // check that the intended domain matches the domain of the payload
-    if (payload.domain !== options.domain) {
+    // normalize both sides by stripping URL scheme for backward compatibility
+    if (stripUrlScheme(payload.domain) !== stripUrlScheme(options.domain)) {
       return {
         error: `Expected domain '${options.domain}' does not match domain on payload '${payload.domain}'`,
         valid: false,

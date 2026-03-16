@@ -1,6 +1,15 @@
 import type { LoginPayload } from "./types.js";
 
 /**
+ * Strips the URL scheme (e.g. "https://") from a domain string.
+ * Per EIP-4361, the domain field should be an RFC 3986 authority (host without scheme).
+ * @internal
+ */
+export function stripUrlScheme(domain: string): string {
+  return domain.replace(/^https?:\/\//, "");
+}
+
+/**
  * Create an EIP-4361 & CAIP-122 compliant message to sign based on the login payload
  * @param payload - The login payload containing the necessary information.
  * @returns The generated login message.
@@ -8,7 +17,8 @@ import type { LoginPayload } from "./types.js";
  */
 export function createLoginMessage(payload: LoginPayload): string {
   const typeField = "Ethereum";
-  const header = `${payload.domain} wants you to sign in with your ${typeField} account:`;
+  const domain = stripUrlScheme(payload.domain);
+  const header = `${domain} wants you to sign in with your ${typeField} account:`;
   let prefix = [header, payload.address].join("\n");
   prefix = [prefix, payload.statement].join("\n\n");
   if (payload.statement) {

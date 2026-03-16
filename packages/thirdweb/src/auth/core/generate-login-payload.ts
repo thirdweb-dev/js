@@ -3,6 +3,7 @@ import {
   DEFAULT_LOGIN_STATEMENT,
   DEFAULT_LOGIN_VERSION,
 } from "./constants.js";
+import { stripUrlScheme } from "./create-login-message.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
 /**
@@ -31,7 +32,7 @@ export function generateLoginPayload(options: AuthOptions) {
     return {
       address,
       chain_id: chainId ? chainId.toString() : undefined,
-      domain: options.domain,
+      domain: stripUrlScheme(options.domain),
       expiration_time: new Date(now + expirationTime).toISOString(),
       invalid_before: new Date(now - expirationTime).toISOString(),
       issued_at: new Date(now).toISOString(),
