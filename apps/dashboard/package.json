@@ -87,7 +87,7 @@
     "@storybook/addon-docs": "9.0.15",
     "@storybook/addon-links": "9.0.15",
     "@storybook/addon-onboarding": "9.0.15",
-    "@storybook/nextjs": "9.0.15",
+    "@storybook/nextjs": "10.2.19",
     "@types/color": "4.2.0",
     "@types/node": "22.14.1",
     "@types/papaparse": "^5.3.16",
