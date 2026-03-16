@@ -31,4 +31,16 @@ describe("stripUrlScheme", () => {
   test("should strip trailing slash from bare domain", () => {
     expect(stripUrlScheme("example.com/")).toBe("example.com");
   });
+
+  test("should strip query string", () => {
+    expect(stripUrlScheme("example.com?x=1")).toBe("example.com");
+  });
+
+  test("should strip fragment", () => {
+    expect(stripUrlScheme("example.com#frag")).toBe("example.com");
+  });
+
+  test("should strip query string with scheme", () => {
+    expect(stripUrlScheme("https://example.com?x=1")).toBe("example.com");
+  });
 });

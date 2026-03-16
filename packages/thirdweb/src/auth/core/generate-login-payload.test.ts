@@ -89,7 +89,7 @@ describe("generateLoginPayload", () => {
         "issued_at": "1970-01-01T00:00:00.000Z",
         "resources": undefined,
         "statement": "Please ensure that the domain above matches the URL of the current website.",
-        "uri": "example.com",
+        "uri": "https://example.com",
         "version": "1",
       }
     `);
@@ -118,5 +118,6 @@ describe("generateLoginPayload", () => {
     });
 
     expect(result.domain).toBe("example.com");
+    expect(result.uri).toBe("https://example.com");
   });
 });

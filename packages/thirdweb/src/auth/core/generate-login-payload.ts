@@ -46,7 +46,7 @@ export function generateLoginPayload(options: AuthOptions) {
       )(),
       resources: options.login?.resources,
       statement: options.login?.statement || DEFAULT_LOGIN_STATEMENT,
-      uri: options.login?.uri || options.domain,
+      uri: options.login?.uri || `https://${stripUrlScheme(options.domain)}`,
       version: options.login?.version || DEFAULT_LOGIN_VERSION,
     };
   };

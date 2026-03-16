@@ -4,5 +4,5 @@
  * @internal
  */
 export function stripUrlScheme(domain: string): string {
-  return domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+  return domain.replace(/^https?:\/\//, "").replace(/[/?#].*$/, "");
 }
