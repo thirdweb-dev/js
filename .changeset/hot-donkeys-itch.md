@@ -2,4 +2,5 @@
 "thirdweb": minor
 ---
 
-Stripe URL scheme from SIWE domain across all touchpoints
+Strip URL scheme from SIWE message domain field for EIP-4361 compliance
+

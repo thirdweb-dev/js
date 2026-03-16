@@ -4,6 +4,7 @@ import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
 } from "../../../test/src/test-wallets.js";
+import { createLoginMessage } from "./create-login-message.js";
 import { generateLoginPayload } from "./generate-login-payload.js";
 import { signLoginPayload } from "./sign-login-payload.js";
 import { verifyLoginPayload } from "./verify-login-payload.js";
@@ -186,5 +187,56 @@ describe("verifyLoginPayload", () => {
       // domain in payload should have scheme stripped
       expect(verificationResult.payload.domain).toBe("example.com");
     }
+  });
+
+  test("should verify legacy payloads with scheme in domain", async () => {
+    // Simulate a legacy payload where the old SDK did NOT strip the scheme
+    const legacyPayload = {
+      address: TEST_ACCOUNT_A.address,
+      domain: "https://example.com",
+      expiration_time: new Date(3600000).toISOString(),
+      invalid_before: new Date(-3600000).toISOString(),
+      issued_at: new Date(0).toISOString(),
+      nonce: "20cd4ddb-6857-4d36-8e44-9f6e026b8de9",
+      statement: "This is a statement",
+      uri: "https://example.com",
+      version: "1",
+    };
+
+    // createLoginMessage now uses domain as-is, so the signed message
+    // will contain the scheme — matching what the old SDK would have produced
+    const legacyMessage = createLoginMessage(legacyPayload);
+    expect(legacyMessage).toContain("https://example.com wants you to sign in");
+
+    const signature = await TEST_ACCOUNT_A.signMessage({
+      message: legacyMessage,
+    });
+
+    // Verify with options whose domain also has scheme
+    const verifyPayload = verifyLoginPayload({
+      client: TEST_CLIENT,
+      domain: "https://example.com",
+      login: {
+        nonce: {
+          generate() {
+            return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+          validate(uuid: string) {
+            return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+        },
+        payloadExpirationTimeSeconds: 3600,
+        statement: "This is a statement",
+        uri: "https://example.com",
+        version: "1",
+      },
+    });
+
+    const verificationResult = await verifyPayload({
+      payload: legacyPayload,
+      signature,
+    });
+
+    expect(verificationResult.valid).toBe(true);
   });
 });

@@ -3,7 +3,7 @@ import {
   DEFAULT_LOGIN_STATEMENT,
   DEFAULT_LOGIN_VERSION,
 } from "./constants.js";
-import { stripUrlScheme } from "./create-login-message.js";
+import { stripUrlScheme } from "./strip-url-scheme.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
 /**

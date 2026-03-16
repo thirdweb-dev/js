@@ -2,7 +2,8 @@ import { trackLogin } from "../../analytics/track/siwe.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { verifySignature } from "../verify-signature.js";
 import { DEFAULT_LOGIN_STATEMENT, DEFAULT_LOGIN_VERSION } from "./constants.js";
-import { createLoginMessage, stripUrlScheme } from "./create-login-message.js";
+import { createLoginMessage } from "./create-login-message.js";
+import { stripUrlScheme } from "./strip-url-scheme.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
 /**
@@ -129,18 +130,37 @@ export function verifyLoginPayload(options: AuthOptions) {
       }
     }
 
-    // this is the message the user should have signed (resulting in the singature passd)
-    const computedMessage = createLoginMessage(payload);
+    // Build message with normalized (scheme-stripped) domain for EIP-4361 compliance
+    const normalizedDomain = stripUrlScheme(payload.domain);
+    const normalizedPayload =
+      normalizedDomain !== payload.domain
+        ? { ...payload, domain: normalizedDomain }
+        : payload;
+    const computedMessage = createLoginMessage(normalizedPayload);
 
-    const signatureIsValid = await verifySignature({
+    const verifyOpts = {
       address: payload.address,
       chain: payload.chain_id
         ? getCachedChain(Number.parseInt(payload.chain_id))
         : undefined,
       client: options.client,
-      message: computedMessage,
       signature: signature,
+    };
+
+    let signatureIsValid = await verifySignature({
+      ...verifyOpts,
+      message: computedMessage,
     });
+
+    // If normalized message failed and domain contained a scheme, try the legacy
+    // message for backward compatibility with signatures from older SDK versions
+    if (!signatureIsValid && normalizedDomain !== payload.domain) {
+      const legacyMessage = createLoginMessage(payload);
+      signatureIsValid = await verifySignature({
+        ...verifyOpts,
+        message: legacyMessage,
+      });
+    }
 
     if (!signatureIsValid) {
       return {
