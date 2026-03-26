@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.119.2
+
+### Patch Changes
+
+- [#8724](https://github.com/thirdweb-dev/js/pull/8724) [`32c2ff6`](https://github.com/thirdweb-dev/js/commit/32c2ff62f8a2ca8da82c1e8d9bb73def95ec41db) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [CLI] create-stylus fixes
+
 ## 5.119.1
 
 ### Patch Changes
