@@ -8,12 +8,6 @@ export async function createStylusProject() {
 
   checkPrerequisites(spinner, "cargo", ["--version"], "Rust (cargo)");
   checkPrerequisites(spinner, "rustc", ["--version"], "Rust compiler (rustc)");
-  checkPrerequisites(
-    spinner,
-    "solc",
-    ["--version"],
-    "Solidity compiler (solc)",
-  );
 
   // Step 1: Ensure cargo is installed
   const cargoCheck = spawnSync("cargo", ["--version"]);
