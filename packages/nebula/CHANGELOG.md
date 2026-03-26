@@ -1,5 +1,12 @@
 # @thirdweb-dev/nebula
 
+## 0.2.113
+
+### Patch Changes
+
+- Updated dependencies [[`3a18c6e`](https://github.com/thirdweb-dev/js/commit/3a18c6e6a8c12cecaf684fff2dfc5a73c77c40c9)]:
+  - thirdweb@5.119.3
+
 ## 0.2.112
 
 ### Patch Changes

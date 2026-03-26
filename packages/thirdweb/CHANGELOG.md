@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.119.3
+
+### Patch Changes
+
+- [#8726](https://github.com/thirdweb-dev/js/pull/8726) [`3a18c6e`](https://github.com/thirdweb-dev/js/commit/3a18c6e6a8c12cecaf684fff2dfc5a73c77c40c9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [CLI] fix stylus abi exports
+
 ## 5.119.2
 
 ### Patch Changes
