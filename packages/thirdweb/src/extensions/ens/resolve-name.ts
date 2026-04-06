@@ -31,7 +31,9 @@ export type ResolveNameOptions = {
  * @extension ENS
  * @returns A promise that resolves to the Ethereum address.
  */
-export async function resolveName(options: ResolveNameOptions) {
+export async function resolveName(
+  options: ResolveNameOptions,
+): Promise<string | null> {
   const { client, address, resolverAddress, resolverChain } = options;
 
   return withCache(
@@ -46,7 +48,20 @@ export async function resolveName(options: ResolveNameOptions) {
         contract,
         reverseName: address as `0x${string}`,
         coinType: 60n,
-      }).catch(() => {
+      }).catch((e) => {
+        // Re-throw verification errors so callers can detect data integrity issues
+        if (
+          typeof e === "object" &&
+          e !== null &&
+          "data" in e &&
+          typeof e.data === "string"
+        ) {
+          // ReverseAddressMismatch(string,bytes) = 0xef9c03ce
+          if (e.data.startsWith("0xef9c03ce")) {
+            throw e;
+          }
+        }
+        // Swallow expected "no resolver" / "no name" errors
         return [null] as const;
       });
 
