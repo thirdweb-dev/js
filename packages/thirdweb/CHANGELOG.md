@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.119.4
+
+### Patch Changes
+
+- [#8733](https://github.com/thirdweb-dev/js/pull/8733) [`83198b2`](https://github.com/thirdweb-dev/js/commit/83198b2ea4dd29b1debb7db2dc2eabba57e9c4d7) Thanks [@Dhaiwat10](https://github.com/Dhaiwat10)! - Updates the hardcoded ENS Universal Resolver address from 0xce01f8eee7E479C928F8919abD53E553a36CeF67 (old) to 0xeeeeeeee14d718c2b47d9923deab1335e144eeee (new)
+
+- [#8735](https://github.com/thirdweb-dev/js/pull/8735) [`ad49560`](https://github.com/thirdweb-dev/js/commit/ad4956033107c52ecdf4cd9f5b2bff87867f3bec) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - ENS: add coinType param to reverse resolver
+
 ## 5.119.3
 
 ### Patch Changes
