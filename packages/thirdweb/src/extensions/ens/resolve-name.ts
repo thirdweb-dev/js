@@ -3,8 +3,6 @@ import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import { toHex } from "../../utils/encoding/hex.js";
-import { packetToBytes } from "../../utils/ens/packetToBytes.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import { reverse } from "./__generated__/UniversalResolver/read/reverse.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
@@ -33,7 +31,9 @@ export type ResolveNameOptions = {
  * @extension ENS
  * @returns A promise that resolves to the Ethereum address.
  */
-export async function resolveName(options: ResolveNameOptions) {
+export async function resolveName(
+  options: ResolveNameOptions,
+): Promise<string | null> {
   const { client, address, resolverAddress, resolverChain } = options;
 
   return withCache(
@@ -44,25 +44,28 @@ export async function resolveName(options: ResolveNameOptions) {
         client,
       });
 
-      const reverseName = toHex(
-        packetToBytes(`${address.toLowerCase().substring(2)}.addr.reverse`),
-      );
-
-      const [name, resolvedAddress] = await reverse({
+      const [name] = await reverse({
         contract,
-        reverseName,
+        reverseName: address as `0x${string}`,
+        coinType: 60n,
       }).catch((e) => {
-        if ("data" in e && e.data === "0x7199966d") {
-          return [null, address] as const;
+        // Re-throw verification errors so callers can detect data integrity issues
+        if (
+          typeof e === "object" &&
+          e !== null &&
+          "data" in e &&
+          typeof e.data === "string"
+        ) {
+          // ReverseAddressMismatch(string,bytes) = 0xef9c03ce
+          if (e.data.startsWith("0xef9c03ce")) {
+            throw e;
+          }
         }
-        throw e;
+        // Swallow expected "no resolver" / "no name" errors
+        return [null] as const;
       });
 
-      if (address.toLowerCase() !== resolvedAddress.toLowerCase()) {
-        return null;
-      }
-
-      return name;
+      return name || null;
     },
     {
       cacheKey: `ens:name:${resolverChain?.id || 1}:${address}`,
