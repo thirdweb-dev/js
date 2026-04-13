@@ -41,7 +41,7 @@
     "uqr": "0.1.2",
     "viem": "2.39.0",
     "x402": "0.7.0",
-    "zod": "3.25.75"
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@aws-sdk/client-kms": "3.592.0",

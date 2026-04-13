@@ -8,7 +8,7 @@
 	},
 	"dependencies": {
 		"x402": "0.7.0",
-		"zod": "3.25.75"
+		"zod": "4.3.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.0.6",
