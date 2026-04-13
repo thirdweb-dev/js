@@ -10,7 +10,7 @@
     "@mobile-wallet-protocol/client": "1.0.0"
   },
   "devDependencies": {
-    "rimraf": "6.0.1"
+    "rimraf": "6.1.3"
   },
   "engines": {
     "node": ">=18"
