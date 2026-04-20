@@ -32,7 +32,10 @@ export function ProjectFTUX(props: {
 }) {
   return (
     <div className="flex flex-col gap-14">
-      <IntegrateAPIKeySection project={props.project} />
+      <IntegrateAPIKeySection
+        project={props.project}
+        teamSlug={props.teamSlug}
+      />
       {props.projectWalletSection}
       <GetStartedSection project={props.project} />
       <ProductsSection
@@ -47,7 +50,13 @@ export function ProjectFTUX(props: {
 
 // Integrate API key section ------------------------------------------------------------
 
-function IntegrateAPIKeySection({ project }: { project: Project }) {
+function IntegrateAPIKeySection({
+  project,
+  teamSlug,
+}: {
+  project: Project;
+  teamSlug: string;
+}) {
   const secretKeyMasked = project.secretKeys[0]?.masked;
   const clientId = project.publishableKey;
 
@@ -81,6 +90,7 @@ function IntegrateAPIKeySection({ project }: { project: Project }) {
             <SecretKeySection
               project={project}
               secretKeyMasked={secretKeyMasked}
+              vaultConfigUrl={`/team/${teamSlug}/${project.slug}/wallets/server-wallets/configuration`}
             />
           )}
         </div>

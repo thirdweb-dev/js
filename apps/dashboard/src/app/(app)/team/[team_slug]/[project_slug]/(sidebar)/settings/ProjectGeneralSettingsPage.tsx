@@ -62,6 +62,8 @@ import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { RotateSecretKeyAPIReturnType } from "@/hooks/useApi";
 import {
   deleteProjectClient,
+  MANAGED_VAULT_BLOCKS_ROTATION_CODE,
+  RotateSecretKeyError,
   rotateSecretKeyClient,
   updateProjectClient,
 } from "@/hooks/useApi";
@@ -100,6 +102,7 @@ type ProjectSettingPaths = {
   inAppConfig: string;
   aaConfig: string;
   payConfig: string;
+  vaultConfig: string;
   afterDeleteRedirectTo: string;
 };
 
@@ -224,6 +227,7 @@ export function ProjectGeneralSettingsPageUI(props: {
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
     inAppConfig: `${projectLayout}/wallets/user-wallets/configuration`,
     payConfig: `${projectLayout}/bridge/configuration`,
+    vaultConfig: `${projectLayout}/wallets/server-wallets/configuration`,
   };
 
   const { project } = props;
@@ -343,6 +347,7 @@ export function ProjectGeneralSettingsPageUI(props: {
           <ProjectKeyDetails
             project={project}
             rotateSecretKey={props.rotateSecretKey}
+            vaultConfigUrl={paths.vaultConfig}
           />
           <ProjectIdCard project={project} />
           <AllowedDomainsSetting
@@ -845,9 +850,11 @@ function EnabledServicesSetting(props: {
 function ProjectKeyDetails({
   project,
   rotateSecretKey,
+  vaultConfigUrl,
 }: {
   rotateSecretKey: RotateSecretKey;
   project: Project;
+  vaultConfigUrl: string;
 }) {
   // currently only showing the first secret key
   const { createdAt, updatedAt, lastAccessedAt } = project;
@@ -893,6 +900,7 @@ function ProjectKeyDetails({
                 setSecretKeyMasked(data.data.secretMasked);
               }}
               rotateSecretKey={rotateSecretKey}
+              vaultConfigUrl={vaultConfigUrl}
             />
           </div>
         </div>
@@ -975,6 +983,7 @@ function DeleteProject(props: {
 export function RotateSecretKeyButton(props: {
   rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
+  vaultConfigUrl: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalCloseAllowed, setIsModalCloseAllowed] = useState(true);
@@ -1011,6 +1020,7 @@ export function RotateSecretKeyButton(props: {
           disableModalClose={() => setIsModalCloseAllowed(false)}
           onSuccess={props.onSuccess}
           rotateSecretKey={props.rotateSecretKey}
+          vaultConfigUrl={props.vaultConfigUrl}
         />
       </DialogContent>
     </Dialog>
@@ -1026,6 +1036,7 @@ function RotateSecretKeyModalContent(props: {
   closeModal: () => void;
   disableModalClose: () => void;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
+  vaultConfigUrl: string;
 }) {
   const [screen, setScreen] = useState<RotateSecretKeyScreen>({
     id: "initial",
@@ -1050,6 +1061,7 @@ function RotateSecretKeyModalContent(props: {
           setScreen({ id: "save-newkey", secretKey: data.data.secret });
         }}
         rotateSecretKey={props.rotateSecretKey}
+        vaultConfigUrl={props.vaultConfigUrl}
       />
     );
   }
@@ -1061,13 +1073,29 @@ function RotateSecretKeyInitialScreen(props: {
   rotateSecretKey: RotateSecretKey;
   onSuccess: (data: RotateSecretKeyAPIReturnType) => void;
   closeModal: () => void;
+  vaultConfigUrl: string;
 }) {
+  const router = useDashboardRouter();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const rotateKeyMutation = useMutation({
     mutationFn: props.rotateSecretKey,
     onError: (err) => {
       console.error(err);
-      toast.error("Failed to rotate secret key");
+      if (
+        err instanceof RotateSecretKeyError &&
+        err.code === MANAGED_VAULT_BLOCKS_ROTATION_CODE
+      ) {
+        toast.error("Eject your server-wallet vault first", {
+          description:
+            "This project has a managed vault. Redirecting you to the vault configuration page so you can eject it before rotating the secret key.",
+        });
+        props.closeModal();
+        router.push(props.vaultConfigUrl);
+        return;
+      }
+      toast.error("Failed to rotate secret key", {
+        description: err instanceof Error ? err.message : undefined,
+      });
     },
     onSuccess: (data) => {
       props.onSuccess(data);
