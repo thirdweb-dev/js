@@ -8,6 +8,7 @@ import { RotateSecretKeyButton } from "../../settings/ProjectGeneralSettingsPage
 export function SecretKeySection(props: {
   secretKeyMasked: string;
   project: Project;
+  vaultConfigUrl: string;
 }) {
   const [secretKeyMasked, setSecretKeyMasked] = useState(props.secretKeyMasked);
 
@@ -34,6 +35,7 @@ export function SecretKeySection(props: {
               project: props.project,
             });
           }}
+          vaultConfigUrl={props.vaultConfigUrl}
         />
       </div>
     </div>
