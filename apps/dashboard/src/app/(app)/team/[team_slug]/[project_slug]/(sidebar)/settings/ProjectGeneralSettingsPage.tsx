@@ -102,6 +102,7 @@ type ProjectSettingPaths = {
   inAppConfig: string;
   aaConfig: string;
   payConfig: string;
+  vaultConfig: string;
   afterDeleteRedirectTo: string;
 };
 
@@ -226,6 +227,7 @@ export function ProjectGeneralSettingsPageUI(props: {
     afterDeleteRedirectTo: `/team/${props.teamSlug}`,
     inAppConfig: `${projectLayout}/wallets/user-wallets/configuration`,
     payConfig: `${projectLayout}/bridge/configuration`,
+    vaultConfig: `${projectLayout}/wallets/server-wallets/configuration`,
   };
 
   const { project } = props;
@@ -345,7 +347,7 @@ export function ProjectGeneralSettingsPageUI(props: {
           <ProjectKeyDetails
             project={project}
             rotateSecretKey={props.rotateSecretKey}
-            vaultConfigUrl={`/team/${props.teamSlug}/${project.slug}/wallets/server-wallets/configuration`}
+            vaultConfigUrl={paths.vaultConfig}
           />
           <ProjectIdCard project={project} />
           <AllowedDomainsSetting
@@ -1091,7 +1093,9 @@ function RotateSecretKeyInitialScreen(props: {
         router.push(props.vaultConfigUrl);
         return;
       }
-      toast.error("Failed to rotate secret key");
+      toast.error("Failed to rotate secret key", {
+        description: err instanceof Error ? err.message : undefined,
+      });
     },
     onSuccess: (data) => {
       props.onSuccess(data);
