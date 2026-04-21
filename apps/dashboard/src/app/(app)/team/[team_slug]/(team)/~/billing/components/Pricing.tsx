@@ -69,7 +69,6 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
         validTeamPlan === "starter" ||
         validTeamPlan === "growth_legacy"));
 
-  const highlightStarterPlan = highlightPlan === "starter";
   const highlightScalePlan =
     highlightPlan === "scale" ||
     (!highlightPlan &&
@@ -94,23 +93,7 @@ export const BillingPricing: React.FC<BillingPricingProps> = ({
 
       <div className="h-5" />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {/* Starter */}
-        <PricingCard
-          billingPlan="starter"
-          billingStatus={team.billingStatus}
-          cta={getPlanCta(
-            validTeamPlan,
-            "starter",
-            isCurrentPlanScheduledToCancel,
-          )}
-          current={validTeamPlan === "starter"}
-          getTeam={getTeam}
-          highlighted={highlightStarterPlan}
-          teamId={team.id}
-          teamSlug={team.slug}
-        />
-
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {/* Growth */}
         <PricingCard
           activeTrialEndsAt={

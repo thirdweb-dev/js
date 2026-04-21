@@ -19,25 +19,30 @@ export const TEAM_PLANS: Record<
   }
 > = {
   growth: {
-    description: "Ideal for teams building production-grade apps.",
+    description: "Ideal for small scale teams and startups.",
     features: [
-      "Email Support",
-      "48hr Guaranteed Response",
-      "Custom User Wallet Auth",
+      "Custom In-App Wallet Auth",
+      "Web, Mobile & Gaming SDKs",
+      "Server Wallets",
+      "Contract & Wallet APIs",
+      "Account Abstraction",
+      "Managed Infrastructure (RPC, IPFS, etc.)",
+      "Audited smart contracts",
     ],
     price: 99,
-    subTitle: "Everything in Starter, plus:",
+    subTitle: null,
     title: "Growth",
     trialPeriodDays: 0,
   },
   pro: {
-    description: "For large organizations with custom needs.",
+    description: "For large orgs with custom needs.",
     features: [
       "Dedicated Account Executive",
+      "Slack & Telegram Support",
       "12hr Guaranteed Response",
       "No Rate Limits",
-      ["Custom Infrastructure Add-Ons", "Infrastructure for custom chains."],
-      ["Volume Discounts", "Negotiated volume discounts that fit your scale."],
+      "Custom Infrastructure Add-Ons",
+      "Negotiated Volume Discounts",
     ],
     isStartingPriceOnly: true,
     price: 1499,
@@ -46,20 +51,14 @@ export const TEAM_PLANS: Record<
     trialPeriodDays: 0,
   },
   scale: {
-    description: "For funded startups and mid-size businesses.",
+    description: "Ideal for mid-size businesses.",
     features: [
-      "Slack & Telegram Support",
+      "Email Support",
       "24hr Guaranteed Response",
       "Remove thirdweb branding",
       "Audit Logs",
-      [
-        "Ecosystem Wallet Add-On",
-        "Unlocks the ability to deploy your own ecosystem wallets.",
-      ],
-      [
-        "Dedicated Infrastructure Add-Ons",
-        "Dedicated RPC nodes, indexers, etc.",
-      ],
+      "Ecosystem Wallet Add-On",
+      "Dedicated Infrastructure Add-Ons (RPC, Insight)",
     ],
     price: 499,
     subTitle: "Everything in Growth, plus:",
