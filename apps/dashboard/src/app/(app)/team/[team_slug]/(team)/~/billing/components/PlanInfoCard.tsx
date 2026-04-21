@@ -177,10 +177,7 @@ export function PlanInfoCardUI(props: {
           <div className="flex flex-col items-center py-8 text-center max-sm:gap-4">
             <CircleAlertIcon className="mb-3 text-muted-foreground lg:size-6" />
             <p>Your plan includes a fixed amount of free usage.</p>
-            <p>
-              To unlock additional usage, upgrade your plan to Starter or
-              Growth.
-            </p>
+            <p>To unlock additional usage, upgrade your plan to Growth.</p>
 
             <div className="mt-4">
               <ToolTipLabel
