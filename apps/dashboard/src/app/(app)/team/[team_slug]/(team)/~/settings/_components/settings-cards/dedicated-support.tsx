@@ -124,17 +124,7 @@ export function TeamDedicatedSupportCard(props: {
       }
       saveButton={
         isFeatureEnabled
-          ? {
-              disabled: createMutation.isPending,
-              isPending: createMutation.isPending,
-              label: "Create Support Channel",
-              onClick: () =>
-                createMutation.mutate({
-                  channelType: selectedChannelType,
-                  teamId: props.team.id,
-                }),
-            }
-          : hasDefaultTeamName
+          ? hasDefaultTeamName
             ? {
                 disabled: false,
                 isPending: false,
@@ -143,14 +133,24 @@ export function TeamDedicatedSupportCard(props: {
                   router.push(`/team/${props.team.slug}/~/settings`),
               }
             : {
-                disabled: false,
-                isPending: false,
-                label: "Upgrade Plan",
+                disabled: createMutation.isPending,
+                isPending: createMutation.isPending,
+                label: "Create Support Channel",
                 onClick: () =>
-                  router.push(
-                    `/team/${props.team.slug}/~/billing?showPlans=true&highlight=pro`,
-                  ),
+                  createMutation.mutate({
+                    channelType: selectedChannelType,
+                    teamId: props.team.id,
+                  }),
               }
+          : {
+              disabled: false,
+              isPending: false,
+              label: "Upgrade Plan",
+              onClick: () =>
+                router.push(
+                  `/team/${props.team.slug}/~/billing?showPlans=true&highlight=pro`,
+                ),
+            }
       }
     >
       <div className="md:w-[450px]">
