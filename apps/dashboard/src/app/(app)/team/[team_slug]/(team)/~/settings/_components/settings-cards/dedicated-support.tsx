@@ -31,8 +31,7 @@ export function TeamDedicatedSupportCard(props: {
   const [selectedChannelType, setSelectedChannelType] =
     useState<ChannelType>("slack");
 
-  const isFeatureEnabled =
-    props.team.billingPlan === "scale" || props.team.billingPlan === "pro";
+  const isFeatureEnabled = props.team.billingPlan === "pro";
 
   const createMutation = useMutation({
     mutationFn: async (params: {
@@ -107,8 +106,7 @@ export function TeamDedicatedSupportCard(props: {
       bottomText={
         !isFeatureEnabled ? (
           <>
-            Upgrade to the <b>Scale</b> or <b>Pro</b> plan to unlock this
-            feature.
+            Upgrade to the <b>Pro</b> plan to unlock this feature.
           </>
         ) : hasDefaultTeamName ? (
           "Please update your team name before requesting a dedicated support channel."
@@ -150,7 +148,7 @@ export function TeamDedicatedSupportCard(props: {
                 label: "Upgrade Plan",
                 onClick: () =>
                   router.push(
-                    `/team/${props.team.slug}/~/billing?showPlans=true&highlight=scale`,
+                    `/team/${props.team.slug}/~/billing?showPlans=true&highlight=pro`,
                   ),
               }
       }
