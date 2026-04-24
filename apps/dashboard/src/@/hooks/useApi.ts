@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActiveAccount } from "thirdweb/react";
 import { apiServerProxy } from "@/actions/proxies";
 import type { Project } from "@/api/project/projects";
-import { rotateVaultAccountAndAccessToken } from "../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 import { accountKeys, authorizedWallets } from "../query-keys/cache-keys";
 
 // FIXME: We keep repeating types, API server should provide them
@@ -316,6 +315,20 @@ export type RotateSecretKeyAPIReturnType = {
   };
 };
 
+export const MANAGED_VAULT_BLOCKS_ROTATION_CODE =
+  "MANAGED_VAULT_BLOCKS_ROTATION";
+
+export class RotateSecretKeyError extends Error {
+  code: string | undefined;
+  status: number;
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = "RotateSecretKeyError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
 export async function rotateSecretKeyClient(params: { project: Project }) {
   const res = await apiServerProxy<RotateSecretKeyAPIReturnType>({
     body: JSON.stringify({}),
@@ -327,19 +340,24 @@ export async function rotateSecretKeyClient(params: { project: Project }) {
   });
 
   if (!res.ok) {
-    throw new Error(res.error);
-  }
-
-  // if the project has an encrypted vault admin key, rotate it as well
-  const service = params.project.services.find(
-    (service) => service.name === "engineCloud",
-  );
-  if (service?.encryptedAdminKey) {
-    await rotateVaultAccountAndAccessToken({
-      project: params.project,
-      projectSecretKey: res.data.data.secret,
-      projectSecretHash: res.data.data.secretHash,
-    });
+    // The error body is a JSON-serialized `{ error: { code, message, ... } }`
+    // payload from the api-server. Try to extract the structured code so the
+    // UI can react (e.g. redirect users with a managed vault to the vault
+    // configuration page so they can eject first).
+    let code: string | undefined;
+    let message = res.error;
+    try {
+      const parsed = JSON.parse(res.error) as {
+        error?: { code?: string; message?: string };
+      };
+      code = parsed.error?.code;
+      if (parsed.error?.message) {
+        message = parsed.error.message;
+      }
+    } catch {
+      // not JSON, fall through with raw text
+    }
+    throw new RotateSecretKeyError(message, res.status, code);
   }
 
   return res.data;

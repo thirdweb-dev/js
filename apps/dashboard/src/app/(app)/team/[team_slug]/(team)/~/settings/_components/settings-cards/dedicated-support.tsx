@@ -31,8 +31,7 @@ export function TeamDedicatedSupportCard(props: {
   const [selectedChannelType, setSelectedChannelType] =
     useState<ChannelType>("slack");
 
-  const isFeatureEnabled =
-    props.team.billingPlan === "scale" || props.team.billingPlan === "pro";
+  const isFeatureEnabled = props.team.billingPlan === "pro";
 
   const createMutation = useMutation({
     mutationFn: async (params: {
@@ -107,8 +106,7 @@ export function TeamDedicatedSupportCard(props: {
       bottomText={
         !isFeatureEnabled ? (
           <>
-            Upgrade to the <b>Scale</b> or <b>Pro</b> plan to unlock this
-            feature.
+            Upgrade to the <b>Pro</b> plan to unlock this feature.
           </>
         ) : hasDefaultTeamName ? (
           "Please update your team name before requesting a dedicated support channel."
@@ -126,17 +124,7 @@ export function TeamDedicatedSupportCard(props: {
       }
       saveButton={
         isFeatureEnabled
-          ? {
-              disabled: createMutation.isPending,
-              isPending: createMutation.isPending,
-              label: "Create Support Channel",
-              onClick: () =>
-                createMutation.mutate({
-                  channelType: selectedChannelType,
-                  teamId: props.team.id,
-                }),
-            }
-          : hasDefaultTeamName
+          ? hasDefaultTeamName
             ? {
                 disabled: false,
                 isPending: false,
@@ -145,14 +133,24 @@ export function TeamDedicatedSupportCard(props: {
                   router.push(`/team/${props.team.slug}/~/settings`),
               }
             : {
-                disabled: false,
-                isPending: false,
-                label: "Upgrade Plan",
+                disabled: createMutation.isPending,
+                isPending: createMutation.isPending,
+                label: "Create Support Channel",
                 onClick: () =>
-                  router.push(
-                    `/team/${props.team.slug}/~/billing?showPlans=true&highlight=scale`,
-                  ),
+                  createMutation.mutate({
+                    channelType: selectedChannelType,
+                    teamId: props.team.id,
+                  }),
               }
+          : {
+              disabled: false,
+              isPending: false,
+              label: "Upgrade Plan",
+              onClick: () =>
+                router.push(
+                  `/team/${props.team.slug}/~/billing?showPlans=true&highlight=pro`,
+                ),
+            }
       }
     >
       <div className="md:w-[450px]">
