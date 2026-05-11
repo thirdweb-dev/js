@@ -128,7 +128,7 @@ interface OnrampApiRequestBody {
  *
  * @param options - The options for preparing the onramp.
  * @param options.client - Your thirdweb client.
- * @param options.onramp - The onramp provider to use (e.g., "stripe", "coinbase", "transak").
+ * @param options.onramp - The onramp provider to use (e.g., "stripe", "coinbase", "transak", "rampnow").
  * @param options.chainId - The destination chain ID.
  * @param options.tokenAddress - The destination token address.
  * @param options.receiver - The address that will receive the output token.

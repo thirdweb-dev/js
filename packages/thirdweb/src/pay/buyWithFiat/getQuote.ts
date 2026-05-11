@@ -465,7 +465,7 @@ export async function getBuyWithFiatQuote(
       onRampLink: prepared.link,
       onRampToken: onRampTokenObject,
       processingFees: [],
-      provider: (params.preferredProvider ?? "COINBASE") as FiatProvider,
+      provider: params.preferredProvider ?? "coinbase",
       routingToken: routingTokenObject,
       toAddress: params.toAddress,
       toAmountMin: toAmountMin,

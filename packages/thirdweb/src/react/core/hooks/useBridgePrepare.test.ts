@@ -81,6 +81,23 @@ describe("useBridgePrepare", () => {
     expect(onrampRequest.client).toBe(mockClient);
   });
 
+  it("should accept all supported onramp providers including rampnow", () => {
+    const providers = ["stripe", "coinbase", "transak", "rampnow"] as const;
+    for (const onramp of providers) {
+      const onrampRequest: BridgePrepareRequest = {
+        amount: 1000000n,
+        chainId: 1,
+        client: mockClient,
+        onramp,
+        receiver: "0x1234567890123456789012345678901234567890",
+        tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        type: "onramp",
+      };
+      expect(onrampRequest.type).toBe("onramp");
+      expect(onrampRequest.onramp).toBe(onramp);
+    }
+  });
+
   it("should handle UseBridgePrepareParams with enabled option", () => {
     const params: UseBridgePrepareParams = {
       amount: 1000000n,

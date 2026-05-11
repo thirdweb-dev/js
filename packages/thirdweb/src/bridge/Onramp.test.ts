@@ -115,4 +115,33 @@ describe.runIf(process.env.TW_SECRET_KEY)("Bridge.Onramp.prepare", () => {
     // Steps array should be defined (it may be empty if the provider supports the destination token natively)
     expect(Array.isArray(prepared.steps)).toBe(true);
   });
+
+  // The Rampnow live-API test is gated on a separate env var because the
+  // server-side schema for `onramp: "rampnow"` lands in a separate deploy.
+  // Once `api.thirdweb-dev.com` accepts the new provider, drop the runIf and
+  // mirror the stripe/coinbase/transak assertions above.
+  it.runIf(process.env.TW_BRIDGE_RAMPNOW)(
+    "should prepare a Rampnow onramp successfully",
+    async () => {
+      const prepared = await Onramp.prepare({
+        amount: toWei("0.01"),
+        chainId: 1,
+        client: TEST_CLIENT,
+        onramp: "rampnow",
+        receiver: RECEIVER_ADDRESS,
+        tokenAddress: NATIVE_TOKEN_ADDRESS,
+      });
+
+      expect(prepared).toBeDefined();
+      expect(typeof prepared.destinationAmount).toBe("bigint");
+      expect(prepared.destinationAmount > 0n).toBe(true);
+      expect(prepared.link).toBeDefined();
+      expect(typeof prepared.link).toBe("string");
+      expect(prepared.intent).toBeDefined();
+      expect(prepared.intent.receiver.toLowerCase()).toBe(
+        RECEIVER_ADDRESS.toLowerCase(),
+      );
+      expect(Array.isArray(prepared.steps)).toBe(true);
+    },
+  );
 });
