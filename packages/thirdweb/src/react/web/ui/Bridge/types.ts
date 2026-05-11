@@ -44,5 +44,5 @@ export type PaymentMethod =
       type: "fiat";
       payerWallet?: Wallet;
       currency: SupportedFiatCurrency;
-      onramp: "stripe" | "coinbase" | "transak";
+      onramp: "stripe" | "coinbase" | "transak" | "rampnow";
     };

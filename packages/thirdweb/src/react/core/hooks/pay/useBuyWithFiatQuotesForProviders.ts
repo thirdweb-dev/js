@@ -60,13 +60,13 @@ type UseBuyWithFiatQuotesForProvidersResult = {
 
 /**
  * @internal
- * Hook to get prepared onramp quotes from Coinbase, Stripe, and Transak providers.
+ * Hook to get prepared onramp quotes from Coinbase, Stripe, Transak, and Rampnow providers.
  */
 export function useBuyWithFiatQuotesForProviders(
   params?: UseBuyWithFiatQuotesForProvidersParams,
   queryOptions?: OnrampQuoteQueryOptions,
 ): UseBuyWithFiatQuotesForProvidersResult {
-  const providers = ["coinbase", "stripe", "transak"] as const;
+  const providers = ["coinbase", "stripe", "transak", "rampnow"] as const;
 
   const queries = useQueries({
     queries: providers.map((provider) => ({

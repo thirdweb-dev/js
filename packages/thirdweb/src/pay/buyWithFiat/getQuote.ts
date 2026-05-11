@@ -290,12 +290,14 @@ export async function getBuyWithFiatQuote(
     // map preferred provider (FiatProvider) → onramp string expected by Onramp.prepare
     const mapProviderToOnramp = (
       provider?: FiatProvider,
-    ): "stripe" | "coinbase" | "transak" => {
+    ): "stripe" | "coinbase" | "transak" | "rampnow" => {
       switch (provider) {
         case "stripe":
           return "stripe";
         case "transak":
           return "transak";
+        case "rampnow":
+          return "rampnow";
         default: // default to coinbase when undefined or any other value
           return "coinbase";
       }

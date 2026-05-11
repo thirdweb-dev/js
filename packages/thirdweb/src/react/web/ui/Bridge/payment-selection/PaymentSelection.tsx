@@ -184,7 +184,7 @@ export function PaymentSelection({
   };
 
   const handleOnrampProviderSelected = (
-    provider: "coinbase" | "stripe" | "transak",
+    provider: "coinbase" | "stripe" | "transak" | "rampnow",
   ) => {
     const recipientAddress =
       receiverAddress || payerWallet?.getAccount()?.address;

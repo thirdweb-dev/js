@@ -21,7 +21,9 @@ import { Text } from "../../components/text.js";
 
 interface FiatProviderSelectionProps {
   client: ThirdwebClient;
-  onProviderSelected: (provider: "coinbase" | "stripe" | "transak") => void;
+  onProviderSelected: (
+    provider: "coinbase" | "stripe" | "transak" | "rampnow",
+  ) => void;
   toChainId: number;
   toTokenAddress: string;
   toAddress: string;
@@ -48,6 +50,12 @@ const PROVIDERS = [
     iconUri: "https://i.ibb.co/Xx2r882p/Transak-official-symbol-1.png",
     id: "transak" as const,
     name: "Transak",
+  },
+  {
+    description: "Cards, bank transfers and more",
+    iconUri: "https://app.rampnow.io/favicon.ico",
+    id: "rampnow" as const,
+    name: "Rampnow",
   },
 ];
 
