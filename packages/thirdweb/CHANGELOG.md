@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.120.0
+
+### Minor Changes
+
+- [#8764](https://github.com/thirdweb-dev/js/pull/8764) [`23d74a0`](https://github.com/thirdweb-dev/js/commit/23d74a0a54247930e6889bbf66f88fa673a23f1a) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [SDK] Add RampNow as a new onramp provider
+
 ## 5.119.4
 
 ### Patch Changes
