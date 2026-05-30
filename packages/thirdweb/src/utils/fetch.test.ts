@@ -116,6 +116,20 @@ describe("getClientFetch", () => {
   it("should abort the request after timeout", async () => {
     vi.useFakeTimers();
     const abortSpy = vi.spyOn(AbortController.prototype, "abort");
+    // Model real fetch: reject with an AbortError when the signal aborts. The
+    // transport-retry layer must NOT retry aborts (timeouts), so this should
+    // surface as a single rejection.
+    vi.spyOn(global, "fetch").mockImplementation(
+      (_url, init?: RequestInit) =>
+        new Promise((_resolve, reject) => {
+          const signal = init?.signal;
+          signal?.addEventListener("abort", () => {
+            reject(
+              new DOMException("The operation was aborted.", "AbortError"),
+            );
+          });
+        }),
+    );
     const clientFetch = getClientFetch(mockClient);
 
     const fetchPromise = clientFetch("https://api.thirdweb.com/test", {

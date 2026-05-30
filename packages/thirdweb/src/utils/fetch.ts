@@ -10,8 +10,49 @@ import {
 import { getServiceKey } from "./domains.js";
 import { isJWT } from "./jwt/is-jwt.js";
 import { IS_DEV } from "./process.js";
+import { retry } from "./retry.js";
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
+
+const TRANSPORT_RETRY_ATTEMPTS = 3;
+const TRANSPORT_RETRY_BASE_DELAY_MS = 300;
+
+/**
+ * Returns true if the error is a network failure that occurred before any HTTP
+ * response was received, which `fetch` surfaces as a `TypeError`. Aborts
+ * (timeouts / cancellation) are not considered transport errors.
+ * @internal
+ */
+export function isTransportError(error: unknown): boolean {
+  // Duck-type the abort check so it works on engines where `DOMException`
+  // is not defined (e.g. older React Native runtimes).
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "name" in error &&
+    (error as { name?: unknown }).name === "AbortError"
+  ) {
+    return false;
+  }
+  return error instanceof TypeError;
+}
+
+/**
+ * Retries a `fetch` thunk with jittered exponential backoff, but only when the
+ * request fails before receiving any HTTP response. Received responses are
+ * never retried.
+ * @internal
+ */
+export function fetchWithTransportRetry(
+  doFetch: () => Promise<Response>,
+): Promise<Response> {
+  return retry(doFetch, {
+    backoff: true,
+    delay: TRANSPORT_RETRY_BASE_DELAY_MS,
+    retries: TRANSPORT_RETRY_ATTEMPTS,
+    shouldRetry: isTransportError,
+  });
+}
 
 /**
  * @internal
@@ -107,24 +148,30 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       }
     }
 
-    let controller: AbortController | undefined;
-    let abortTimeout: ReturnType<typeof setTimeout> | undefined;
-    if (requestTimeoutMs) {
-      controller = new AbortController();
-      abortTimeout = setTimeout(() => {
-        controller?.abort("timeout");
-      }, requestTimeoutMs);
-    }
-
-    return fetch(url, {
-      ...restInit,
-      headers,
-      signal: controller?.signal,
-    }).finally(() => {
-      if (abortTimeout) {
-        clearTimeout(abortTimeout);
+    // Each attempt gets its own AbortController/timeout so that a timeout on
+    // one attempt doesn't poison subsequent transport-retry attempts.
+    const doFetch = () => {
+      let controller: AbortController | undefined;
+      let abortTimeout: ReturnType<typeof setTimeout> | undefined;
+      if (requestTimeoutMs) {
+        controller = new AbortController();
+        abortTimeout = setTimeout(() => {
+          controller?.abort("timeout");
+        }, requestTimeoutMs);
       }
-    });
+
+      return fetch(url, {
+        ...restInit,
+        headers,
+        signal: controller?.signal,
+      }).finally(() => {
+        if (abortTimeout) {
+          clearTimeout(abortTimeout);
+        }
+      });
+    };
+
+    return fetchWithTransportRetry(doFetch);
   }
   return fetchWithHeaders;
 }

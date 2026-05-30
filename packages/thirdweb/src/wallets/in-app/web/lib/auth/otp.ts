@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { fetchWithTransportRetry } from "../../../../../utils/fetch.js";
 import { stringify } from "../../../../../utils/json.js";
 import {
   getLoginCallbackUrl,
@@ -44,11 +45,15 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     }
   })();
 
-  const response = await fetch(url, {
-    body: stringify(body),
-    headers,
-    method: "POST",
-  });
+  // Only retried when the request fails before a response is received, so a
+  // verification code is never sent more than once.
+  const response = await fetchWithTransportRetry(() =>
+    fetch(url, {
+      body: stringify(body),
+      headers,
+      method: "POST",
+    }),
+  );
 
   if (!response.ok) {
     const raw = await response.text();
@@ -111,11 +116,15 @@ export const verifyOtp = async (
     }
   })();
 
-  const response = await fetch(url, {
-    body: stringify(body),
-    headers,
-    method: "POST",
-  });
+  // Only retried when the request fails before a response is received, so the
+  // code is never consumed more than once.
+  const response = await fetchWithTransportRetry(() =>
+    fetch(url, {
+      body: stringify(body),
+      headers,
+      method: "POST",
+    }),
+  );
 
   if (!response.ok) {
     throw new Error("Failed to verify verification code");
