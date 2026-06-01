@@ -17,4 +17,14 @@ describe("normalizeChainId", () => {
   it("should try to convert a string to a decimal (base 10) integer", () => {
     expect(normalizeChainId("1")).toBe(1);
   });
+
+  it("should reject invalid chain ids", () => {
+    expect(() => normalizeChainId("1abc")).toThrow("Invalid chain ID");
+    expect(() => normalizeChainId("abc")).toThrow("Invalid chain ID");
+    expect(() => normalizeChainId("0x")).toThrow("Invalid chain ID");
+    expect(() => normalizeChainId(Number.NaN)).toThrow("Invalid chain ID");
+    expect(() =>
+      normalizeChainId(BigInt(Number.MAX_SAFE_INTEGER) + 1n),
+    ).toThrow("Invalid chain ID");
+  });
 });

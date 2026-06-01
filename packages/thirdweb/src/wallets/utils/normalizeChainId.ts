@@ -4,14 +4,28 @@ import { hexToNumber, isHex } from "../../utils/encoding/hex.js";
  * @internal
  */
 export function normalizeChainId(chainId: string | number | bigint): number {
+  let normalizedChainId: number;
+
   if (typeof chainId === "number") {
-    return chainId;
+    normalizedChainId = chainId;
+  } else if (isHex(chainId)) {
+    normalizedChainId = hexToNumber(chainId);
+  } else if (typeof chainId === "bigint") {
+    if (chainId < 0n || chainId > BigInt(Number.MAX_SAFE_INTEGER)) {
+      throw new Error(`Invalid chain ID: ${chainId.toString()}`);
+    }
+    normalizedChainId = Number(chainId);
+  } else {
+    const trimmed = chainId.trim();
+    if (!/^\d+$/u.test(trimmed)) {
+      throw new Error(`Invalid chain ID: ${chainId}`);
+    }
+    normalizedChainId = Number.parseInt(trimmed, 10);
   }
-  if (isHex(chainId)) {
-    return hexToNumber(chainId);
+
+  if (!Number.isSafeInteger(normalizedChainId) || normalizedChainId < 0) {
+    throw new Error(`Invalid chain ID: ${chainId.toString()}`);
   }
-  if (typeof chainId === "bigint") {
-    return Number(chainId);
-  }
-  return Number.parseInt(chainId, 10);
+
+  return normalizedChainId;
 }
