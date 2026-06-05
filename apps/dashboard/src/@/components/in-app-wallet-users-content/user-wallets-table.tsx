@@ -104,6 +104,10 @@ export function UserWalletsTable(
     completed: 0,
     total: 0,
   });
+  const [csvExportProgress, setCsvExportProgress] = useState<{
+    fetchedWallets: number;
+    totalWallets?: number;
+  }>();
 
   const walletsQuery = useEmbeddedWallets({
     authToken: props.authToken,
@@ -113,10 +117,18 @@ export function UserWalletsTable(
     page: activePage,
   });
   const wallets = walletsQuery?.data?.users || [];
-  const { mutateAsync: getAllEmbeddedWallets, isPending: isLoadingAllWallets } =
-    useAllEmbeddedWallets({
-      authToken: props.authToken,
-    });
+  const {
+    mutateAsync: getAllEmbeddedWalletsForBalances,
+    isPending: isLoadingWalletsForBalances,
+  } = useAllEmbeddedWallets({
+    authToken: props.authToken,
+  });
+  const {
+    mutateAsync: getAllEmbeddedWalletsForCsv,
+    isPending: isLoadingWalletsForCsv,
+  } = useAllEmbeddedWallets({
+    authToken: props.authToken,
+  });
 
   const fetchPortfoliosMutation = useFetchAllPortfolios();
 
@@ -125,7 +137,7 @@ export function UserWalletsTable(
 
     try {
       // First get all wallets
-      const allWallets = await getAllEmbeddedWallets({
+      const allWallets = await getAllEmbeddedWalletsForBalances({
         clientId: props.projectClientId,
         ecosystemSlug: props.ecosystemSlug,
         teamId: props.teamId,
@@ -161,7 +173,7 @@ export function UserWalletsTable(
     }
   }, [
     selectedChains,
-    getAllEmbeddedWallets,
+    getAllEmbeddedWalletsForBalances,
     props.projectClientId,
     props.ecosystemSlug,
     props.teamId,
@@ -170,7 +182,32 @@ export function UserWalletsTable(
   ]);
 
   const isFetchingBalances =
-    isLoadingAllWallets || fetchPortfoliosMutation.isPending;
+    isLoadingWalletsForBalances || fetchPortfoliosMutation.isPending;
+
+  const csvExportLabel = useMemo(() => {
+    if (!isLoadingWalletsForCsv) {
+      return "Download as .csv";
+    }
+
+    const fetchedWallets = csvExportProgress?.fetchedWallets ?? 0;
+    const totalWallets = csvExportProgress?.totalWallets;
+
+    if (fetchedWallets === 0) {
+      return "Preparing export...";
+    }
+
+    if (totalWallets && totalWallets > 0) {
+      const cappedFetchedWallets = Math.min(fetchedWallets, totalWallets);
+      const percentage = Math.min(
+        100,
+        Math.round((cappedFetchedWallets / totalWallets) * 100),
+      );
+
+      return `Exporting ${percentage}% (${cappedFetchedWallets.toLocaleString()}/${totalWallets.toLocaleString()})`;
+    }
+
+    return `Exporting ${fetchedWallets.toLocaleString()} users...`;
+  }, [csvExportProgress, isLoadingWalletsForCsv]);
 
   const aggregatedStats = useMemo(() => {
     let fundedWallets = 0;
@@ -414,41 +451,48 @@ export function UserWalletsTable(
   };
 
   const downloadCSV = useCallback(async () => {
-    if (wallets.length === 0 || !getAllEmbeddedWallets) {
+    if (wallets.length === 0) {
       return;
     }
-    const usersWallets = await getAllEmbeddedWallets({
-      clientId: props.projectClientId,
-      ecosystemSlug: props.ecosystemSlug,
-      teamId: props.teamId,
-    });
-    const csv = Papa.unparse(
-      usersWallets.map((row) => {
-        const email = getPrimaryEmail(row.linkedAccounts);
+    setCsvExportProgress({ fetchedWallets: 0 });
 
-        return {
-          address: row.wallets[0]?.address || "Uninitialized",
-          created: row.wallets[0]?.createdAt
-            ? new Date(row.wallets[0].createdAt).toISOString()
-            : "Wallet not created yet",
-          email: email || "N/A",
-          login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
-          auth_identifier: getAuthIdentifier(row.linkedAccounts) || "N/A",
-          user_identifier: row.id || "N/A",
-        };
-      }),
-    );
-    const csvUrl = URL.createObjectURL(
-      new Blob([csv], { type: "text/csv;charset=utf-8;" }),
-    );
-    const tempLink = document.createElement("a");
-    tempLink.href = csvUrl;
-    tempLink.setAttribute("download", "download.csv");
-    tempLink.click();
+    try {
+      const usersWallets = await getAllEmbeddedWalletsForCsv({
+        clientId: props.projectClientId,
+        ecosystemSlug: props.ecosystemSlug,
+        teamId: props.teamId,
+        onProgress: setCsvExportProgress,
+      });
+      const csv = Papa.unparse(
+        usersWallets.map((row) => {
+          const email = getPrimaryEmail(row.linkedAccounts);
+
+          return {
+            address: row.wallets[0]?.address || "Uninitialized",
+            created: row.wallets[0]?.createdAt
+              ? new Date(row.wallets[0].createdAt).toISOString()
+              : "Wallet not created yet",
+            email: email || "N/A",
+            login_methods: row.linkedAccounts.map((acc) => acc.type).join(", "),
+            auth_identifier: getAuthIdentifier(row.linkedAccounts) || "N/A",
+            user_identifier: row.id || "N/A",
+          };
+        }),
+      );
+      const csvUrl = URL.createObjectURL(
+        new Blob([csv], { type: "text/csv;charset=utf-8;" }),
+      );
+      const tempLink = document.createElement("a");
+      tempLink.href = csvUrl;
+      tempLink.setAttribute("download", "download.csv");
+      tempLink.click();
+    } finally {
+      setCsvExportProgress(undefined);
+    }
   }, [
     wallets,
     props.projectClientId,
-    getAllEmbeddedWallets,
+    getAllEmbeddedWalletsForCsv,
     props.teamId,
     props.ecosystemSlug,
   ]);
@@ -481,12 +525,12 @@ export function UserWalletsTable(
           </div>
           <Button
             className="gap-2 bg-background rounded-full"
-            disabled={wallets.length === 0 || isLoadingAllWallets}
+            disabled={wallets.length === 0 || isLoadingWalletsForCsv}
             onClick={downloadCSV}
             variant="outline"
           >
-            {isLoadingAllWallets && <Spinner className="size-4" />}
-            Download as .csv
+            {isLoadingWalletsForCsv && <Spinner className="size-4" />}
+            {csvExportLabel}
           </Button>
         </div>
       </div>

@@ -68,6 +68,7 @@ const fetchAccountList = ({
       return {
         users: response.data.result.wallets.map(transformToWalletUser),
         hasMore: response.data.result.pagination.hasMore ?? false,
+        totalCount: response.data.result.pagination.totalCount,
       };
     } catch (error) {
       console.error("Failed to fetch wallets:", error);
@@ -170,10 +171,15 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
       clientId,
       ecosystemSlug,
       teamId,
+      onProgress,
     }: {
       clientId?: string;
       ecosystemSlug?: string;
       teamId: string;
+      onProgress?: (progress: {
+        fetchedWallets: number;
+        totalWallets?: number;
+      }) => void;
     }) => {
       const responses: WalletUser[] = [];
       let page = 1;
@@ -185,6 +191,7 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
           const res = await queryClient.fetchQuery<{
             users: WalletUser[];
             hasMore: boolean;
+            totalCount?: number;
           }>({
             queryFn: fetchAccountList({
               clientId,
@@ -204,6 +211,10 @@ export function useAllEmbeddedWallets(params: { authToken: string }) {
           });
 
           responses.push(...res.users);
+          onProgress?.({
+            fetchedWallets: responses.length,
+            totalWallets: res.totalCount,
+          });
           consecutiveFailures = 0; // Reset on success
 
           if (!res.hasMore) {
