@@ -45,7 +45,7 @@
     "typedoc-better-json": "0.9.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.6",
+    "@biomejs/biome": "2.4.16",
     "@next/eslint-plugin-next": "15.3.8",
     "@types/flexsearch": "^0.7.42",
     "@types/he": "^1.2.3",

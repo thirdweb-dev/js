@@ -16,7 +16,7 @@
     "jose": "6.0.11"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.0.6",
+    "@biomejs/biome": "2.4.16",
     "@solana-program/system": "^0.8.1",
     "bs58": "^6.0.0",
     "rimraf": "6.0.1",
