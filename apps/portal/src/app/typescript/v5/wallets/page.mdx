@@ -1,69 +1,29 @@
-import { Breadcrumb, createMetadata, ArticleIconCard, Stack } from "@doc";
-import { ComponentIcon } from "lucide-react";
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-export const metadata = createMetadata({
-	image: {
-		title: "Accounts & Wallets",
-		icon: "typescript",
-	},
-	title: "Accounts & Wallets | thirdweb SDK",
-	description: "Learn about accounts and wallets in the thirdweb SDK.",
-});
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-# Accounts & Wallets
+contract GreenbackReward is ERC1155, AccessControl {
+    // دور خاص للمُحققين الذين سيراجعون الصور
+    bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
 
-We distinguish between "accounts" and "wallets" in the thirdweb SDK. We believe this ultimately provides a more predictable and flexible API for developers.
+    // معرف الرمز الخاص بنقاط إعادة التدوير
+    uint256 public constant RECYCLE_TOKEN = 1;
 
-## What is an Account?
+    constructor() ERC1155("https://api.greenback.io/tokens/{id}.json") {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
 
-- An account always has an `address` and a way to `sign` messages, transactions, and typed data.
-- An account is always mapped to exactly one address on the blockchain.
-- An account cannot be "connected" or "disconnected" like a wallet, instead it is often the result of a wallet being connected.
+    // دالة منح المكافأة: تُستخدم فقط من قِبل المُحققين بعد مراجعة الصورة
+    function grantRecycleReward(address user, uint256 quantity) public onlyRole(VERIFIER_ROLE) {
+        // كل وحدة تدوير (صورة) تساوي 10 نقاط
+        uint256 rewardAmount = quantity * 10;
+        _mint(user, RECYCLE_TOKEN, rewardAmount, "");
+    }
 
-See also: [Account (ethereum.org)](https://ethereum.org/en/glossary/#account)
-
-## What is a Wallet?
-
-- A wallet "contains" one or more accounts.
-- A wallet can be "connected" (often prompting the user for approval) or "disconnected".
-- A wallet cannot independently sign messages, transactions, or typed data, instead, it delegates this to the account(s) it "contains".
-
-
-<Stack>
-
-<ArticleIconCard
-	title="Supported Wallets"
-	icon={ComponentIcon}
-	href="/wallets/external-wallets"
-	description="See all 500+ wallets supported by the thirdweb SDKs"
-/>
-
-</Stack>
-
-## Example: Connect a wallet and access an account to send a transaction.
-
-```ts
-import { sendTransaction } from "thirdweb";
-// We use MetaMask wallet as an example, the pattern is the same for all wallets
-import { createWallet } from "thirdweb/wallets";
-
-// initialize the wallet, you can pick any of the 300+ wallet connectors supported
-// wallet ids are typed, let your TS editor autocomplete them for you
-// ex: "io.metamask", "com.coinbase.wallet", "me.rainbow", etc...
-const wallet = createWallet("io.metamask");
-
-// connect the wallet, this returns a promise that resolves to the connected account
-const account = await wallet.connect({
-	// pass the client you created with `createThirdwebClient()`
-	client,
-});
-
-// sign & send a transaction with the account -> returns the transaction hash
-const { transactionHash } = await sendTransaction({
-	// assuming you have called `prepareTransaction()` or `prepareContractCall()` before which returns the prepared transaction to send
-	transaction,
-	// Pass the account to sign the transaction with
-	account,
-});
-```
-
+    // دالة لدعم الواجهات البرمجية
+    function supportsInterface(bytes4 interfaceId) public view override(ERC1155, AccessControl) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
+}
