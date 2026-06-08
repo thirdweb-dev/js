@@ -13,7 +13,7 @@
     "@solana/rpc": "^3.0.0",
     "@solana/transactions": "^3.0.0",
     "abitype": "1.0.8",
-    "jose": "6.0.11"
+    "jose": "6.2.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
