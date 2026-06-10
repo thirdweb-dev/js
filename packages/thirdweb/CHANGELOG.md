@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.120.1
+
+### Patch Changes
+
+- [#8801](https://github.com/thirdweb-dev/js/pull/8801) [`49194e3`](https://github.com/thirdweb-dev/js/commit/49194e3a2a1707c5d1e0a2cc67c328e84ef5e9a0) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Fix Arc Testnet native currency decimals (USDC) from 6 to 18 to match the chain's RPC balance encoding
+
 ## 5.120.0
 
 ### Minor Changes
