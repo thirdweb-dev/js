@@ -125,6 +125,7 @@ export type {
   WalletConnectSession,
 } from "../wallets/wallet-connect/receiver/types.js";
 export type {
+  WalletDisconnectError,
   WalletEmitter,
   WalletEmitterEvents,
 } from "../wallets/wallet-emitter.js";

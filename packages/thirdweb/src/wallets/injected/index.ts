@@ -35,7 +35,7 @@ import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { WalletEmitter } from "../wallet-emitter.js";
+import type { WalletDisconnectError, WalletEmitter } from "../wallet-emitter.js";
 import type { WalletId } from "../wallet-types.js";
 import { injectedProvider } from "./mipdStore.js";
 
@@ -456,7 +456,7 @@ async function onConnect({
     } catch {}
   }
 
-  async function onDisconnect(error?: { code?: number; message?: string }) {
+  async function onDisconnect(error?: WalletDisconnectError): Promise<void> {
     // EIP-1193 error code 1013 means "disconnected, will reconnect" — a transient
     // MetaMask state (e.g. after a chain change or brief RPC hiccup) that resolves
     // automatically. Treating it as a permanent disconnect causes spurious logouts.

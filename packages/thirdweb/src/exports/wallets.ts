@@ -129,6 +129,7 @@ export type {
   WCConnectOptions,
 } from "../wallets/wallet-connect/types.js";
 export type {
+  WalletDisconnectError,
   WalletEmitter,
   WalletEmitterEvents,
 } from "../wallets/wallet-emitter.js";
