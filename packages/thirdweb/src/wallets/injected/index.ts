@@ -35,7 +35,10 @@ import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
 import type { DisconnectFn, SwitchChainFn } from "../types.js";
 import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
-import type { WalletDisconnectError, WalletEmitter } from "../wallet-emitter.js";
+import type {
+  WalletDisconnectError,
+  WalletEmitter,
+} from "../wallet-emitter.js";
 import type { WalletId } from "../wallet-types.js";
 import { injectedProvider } from "./mipdStore.js";
 
