@@ -344,7 +344,7 @@
     "lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
     "size": "size-limit",
     "storybook": "storybook dev -p 6006",
-    "test": "NODE_OPTIONS=--max-old-space-size=8192 vitest run -c ./test/vitest.config.ts --coverage",
+    "test": "NODE_OPTIONS=--max-old-space-size=12288 vitest run -c ./test/vitest.config.ts --coverage",
     "test:cov": "NODE_OPTIONS=--max-old-space-size=8192 vitest dev -c ./test/vitest.config.ts --coverage",
     "test:dev": "NODE_OPTIONS=--max-old-space-size=8192 vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
