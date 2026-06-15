@@ -456,9 +456,16 @@ async function onConnect({
     } catch {}
   }
 
-  async function onDisconnect() {
+  async function onDisconnect(error?: { code?: number; message?: string }) {
+    // EIP-1193 error code 1013 means "disconnected, will reconnect" — a transient
+    // MetaMask state (e.g. after a chain change or brief RPC hiccup) that resolves
+    // automatically. Treating it as a permanent disconnect causes spurious logouts.
+    // See: https://eips.ethereum.org/EIPS/eip-1193#provider-errors
+    if (error?.code === 1013) {
+      return;
+    }
     disconnect();
-    emitter.emit("disconnect", undefined);
+    emitter.emit("disconnect", error ?? undefined);
   }
 
   function onAccountsChanged(accounts: string[]) {
