@@ -85,16 +85,16 @@ export type FacilitatorSupportedResponse = z.infer<
 
 export function networkToChainId(network: string): number {
   if (network.startsWith("eip155:")) {
-    const chainId = parseInt(network.split(":")[1] ?? "0");
-    if (!Number.isNaN(chainId) && chainId > 0) {
+    const chainId = parseChainId(network.split(":")[1] ?? "");
+    if (chainId) {
       return chainId;
     } else {
       throw new Error(`Invalid network: ${network}`);
     }
   }
   // attempt to parse it as just an integer
-  const maybeChainId = parseInt(network);
-  if (!Number.isNaN(maybeChainId) && maybeChainId > 0) {
+  const maybeChainId = parseChainId(network);
+  if (maybeChainId) {
     return maybeChainId;
   }
   const mappedChainId = EvmNetworkToChainId.get(network as Network);
@@ -106,4 +106,18 @@ export function networkToChainId(network: string): number {
     throw new Error("Solana networks not supported yet.");
   }
   return mappedChainId;
+}
+
+function parseChainId(value: string): number | undefined {
+  if (!/^[1-9]\d*$/.test(value)) {
+    return undefined;
+  }
+
+  const chainId = Number(value);
+
+  if (!Number.isSafeInteger(chainId)) {
+    return undefined;
+  }
+
+  return chainId;
 }

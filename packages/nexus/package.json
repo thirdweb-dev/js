@@ -16,7 +16,8 @@
 		"knip": "5.60.2",
 		"rimraf": "6.0.1",
 		"size-limit": "11.2.0",
-		"typescript": "5.8.3"
+		"typescript": "5.8.3",
+		"vitest": "3.2.4"
 	},
 	"engines": {
 		"node": ">=22"
@@ -69,6 +70,7 @@
 		"knip": "knip",
 		"lint": "knip && biome check ./src && tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit",
 		"size": "size-limit",
+		"test": "vitest run",
 		"typecheck": "tsc --project ./tsconfig.build.json --module nodenext --moduleResolution nodenext --noEmit"
 	},
 	"sideEffects": false,
