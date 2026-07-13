@@ -7,7 +7,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v.9.1.0
+      - uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v.10.4.0
         with:
           stale-issue-message: 'This issue has been inactive for 7 days. It is now marked as stale and will be closed in 2 days if no further activity occurs.'
           stale-pr-message: 'This PR has been inactive for 7 days. It is now marked as stale and will be closed in 2 days if no further activity occurs.'
