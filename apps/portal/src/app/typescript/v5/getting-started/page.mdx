@@ -81,7 +81,7 @@ import { inAppWallet } from "thirdweb/wallets"
 // create or access a wallet
  const wallet = inAppWallet();
 const account = await wallet.connect({
-  client: TEST_CLIENT,
+  client,
   strategy: "backend", // we use backend strategy to generate a wallet from a secret key
   walletSecret: "my-test-wallet-secret", // use this secret to access the same wallet across multiple scripts
 });
@@ -102,7 +102,8 @@ import { getWalletBalance } from "thirdweb/wallets";
 
 // Get the balance of the account
 const balance = await getWalletBalance({
-	account,
+	client,
+	address: account.address,
 	chain: sepolia,
 });
 console.log("Balance:", balance.displayValue, balance.symbol);
