@@ -16,6 +16,7 @@ import {
   SquareIcon,
   SquircleDashedIcon,
   StampIcon,
+  TrendingUpIcon,
   UserIcon,
   WalletCardsIcon,
 } from "lucide-react";
@@ -202,6 +203,13 @@ export const tokensFeatureCards: FeatureCardMetadata[] = [
     title: "NFT Components",
     link: "/tokens/nft-components",
     description: "Headless UI components for rendering NFT Media and metadata",
+  },
+  {
+    icon: TrendingUpIcon,
+    title: "Price Tracker",
+    link: "/tokens/price-tracker",
+    description:
+      "Live token prices, market cap, and 24h volume across chains",
   },
 ];
 

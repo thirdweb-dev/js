@@ -173,6 +173,10 @@ const tokens: ShadcnSidebarLink = {
       href: "/tokens/nft-components",
       label: "NFT Components",
     },
+    {
+      href: "/tokens/price-tracker",
+      label: "Price Tracker",
+    },
   ],
 };
 
