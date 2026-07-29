@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
@@ -38,13 +39,17 @@ export default function RotateAdminKeyButton(props: {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
+  const [stayManaged, setStayManaged] = useState(props.isManagedVault);
+  const [secretKeyInput, setSecretKeyInput] = useState("");
   const router = useDashboardRouter();
+
+  const willStayManaged = stayManaged && secretKeyInput.trim().length > 0;
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      // passing no secret key means we're rotating the admin key and deleting any stored keys
       const result = await rotateVaultAccountAndAccessToken({
         project: props.project,
+        projectSecretKey: willStayManaged ? secretKeyInput.trim() : undefined,
       });
 
       return {
@@ -105,12 +110,12 @@ export default function RotateAdminKeyButton(props: {
         variant="outline"
       >
         {isLoading && <Loader2Icon className="size-4 animate-spin" />}
-        {!isLoading && props.isManagedVault ? (
-          <LogOutIcon className="size-4" />
-        ) : (
+        {!isLoading && !props.isManagedVault ? (
           <RefreshCcwIcon className="size-4" />
+        ) : (
+          <LogOutIcon className="size-4" />
         )}
-        {props.isManagedVault ? "Eject From Managed Vault" : "Rotate Admin Key"}
+        Rotate Admin Key
       </Button>
 
       <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
@@ -241,13 +246,66 @@ export default function RotateAdminKeyButton(props: {
                   <p className="text-md text-primary-foreground">
                     Revoke your current keys and generates new ones.
                   </p>
+
+                  {props.isManagedVault && (
+                    <div className="flex flex-col gap-3 rounded-lg border bg-card p-4">
+                      <div className="flex items-start gap-2">
+                        <Checkbox
+                          checked={stayManaged}
+                          id="stay-managed"
+                          onCheckedChange={(checked) => {
+                            setStayManaged(checked === true);
+                            if (checked !== true) {
+                              setSecretKeyInput("");
+                            }
+                          }}
+                        />
+                        <label
+                          className="cursor-pointer text-sm leading-tight"
+                          htmlFor="stay-managed"
+                        >
+                          Keep this vault managed by thirdweb (recommended)
+                        </label>
+                      </div>
+
+                      {stayManaged ? (
+                        <>
+                          <label
+                            className="font-medium text-sm"
+                            htmlFor="rotate-secret-key"
+                          >
+                            Project Secret Key
+                          </label>
+                          <Input
+                            id="rotate-secret-key"
+                            onChange={(e) => setSecretKeyInput(e.target.value)}
+                            placeholder="Your project secret key"
+                            type="password"
+                            value={secretKeyInput}
+                          />
+                          <p className="text-muted-foreground text-xs">
+                            Used to re-encrypt your new admin key and wallet
+                            access token so your existing backend keeps working
+                            without changes. It is never stored.
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-muted-foreground text-xs">
+                          Your vault will be ejected. You will receive the new
+                          admin key to store yourself, and your backend must be
+                          updated to pass a wallet access token directly.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <Alert variant="destructive">
                     <CircleAlertIcon className="size-5" />
                     <AlertTitle>Important</AlertTitle>
                     <AlertDescription>
-                      This action will invalidate your current admin key and all
-                      existing access tokens. You will need to update your
-                      backend to use these new access tokens.
+                      {willStayManaged
+                        ? "This will invalidate your current admin key and all existing access tokens. Your stored credentials will be re-encrypted automatically, so your server wallets keep working."
+                        : "This action will invalidate your current admin key and all existing access tokens. You will need to update your backend to use these new access tokens."}
                     </AlertDescription>
                   </Alert>
                 </div>
