@@ -44,6 +44,7 @@ export default function RotateAdminKeyButton(props: {
   const router = useDashboardRouter();
 
   const willStayManaged = stayManaged && secretKeyInput.trim().length > 0;
+  const missingSecretKey = stayManaged && secretKeyInput.trim().length === 0;
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
@@ -288,6 +289,12 @@ export default function RotateAdminKeyButton(props: {
                             access token so your existing backend keeps working
                             without changes. It is never stored.
                           </p>
+                          {missingSecretKey && (
+                            <p className="text-destructive-text text-xs">
+                              Enter your project secret key to keep this vault
+                              managed, or uncheck the box above to eject.
+                            </p>
+                          )}
                         </>
                       ) : (
                         <p className="text-muted-foreground text-xs">
@@ -319,7 +326,7 @@ export default function RotateAdminKeyButton(props: {
                     Cancel
                   </Button>
                   <Button
-                    disabled={rotateAdminKeyMutation.isPending}
+                    disabled={rotateAdminKeyMutation.isPending || missingSecretKey}
                     onClick={() => rotateAdminKeyMutation.mutate()}
                     variant="destructive"
                   >
