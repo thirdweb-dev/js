@@ -88,15 +88,15 @@
     "react-native-quick-crypto": "0.7.14",
     "react-native-svg": "15.12.0",
     "rimraf": "6.0.1",
-    "sharp": "^0.34.2",
+    "sharp": "^0.35.0",
     "size-limit": "11.2.0",
     "storybook": "9.0.15",
     "tsup": "^8.5.0",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
-    "vite": "7.1.7",
-    "vitest": "3.2.4"
+    "vite": "7.3.5",
+    "vitest": "3.2.6"
   },
   "engines": {
     "node": ">=18"
