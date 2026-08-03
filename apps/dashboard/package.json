@@ -58,7 +58,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "19.2.1",
     "react-dropzone": "^14.3.8",
-    "react-error-boundary": "6.0.0",
+    "react-error-boundary": "6.1.2",
     "react-hook-form": "7.55.0",
     "react-markdown": "10.1.0",
     "react-table": "^7.8.0",
