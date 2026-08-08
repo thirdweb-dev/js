@@ -100,14 +100,30 @@ export function verifyLoginPayload(options: AuthOptions) {
 
     const currentDate = new Date();
 
-    if (currentDate < new Date(payload.invalid_before)) {
+    // Invalid Date comparisons are always false in JS, so unparseable
+    // invalid_before / expiration_time previously skipped time bounds.
+    const notBefore = new Date(payload.invalid_before);
+    if (Number.isNaN(notBefore.getTime())) {
+      return {
+        error: "Payload has invalid Not Before time",
+        valid: false,
+      };
+    }
+    if (currentDate < notBefore) {
       return {
         error: "Payload is not yet valid",
         valid: false,
       };
     }
 
-    if (currentDate > new Date(payload.expiration_time)) {
+    const expiration = new Date(payload.expiration_time);
+    if (Number.isNaN(expiration.getTime())) {
+      return {
+        error: "Payload has invalid Expiration Time",
+        valid: false,
+      };
+    }
+    if (currentDate > expiration) {
       return {
         error: "Payload has expired",
         valid: false,

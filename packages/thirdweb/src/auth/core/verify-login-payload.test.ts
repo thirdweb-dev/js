@@ -146,3 +146,77 @@ describe("verifyLoginPayload", () => {
     expect(verificationResult.valid).toBe(false);
   });
 });
+
+  test("should fail closed on unparseable expiration_time", async () => {
+    const options = {
+      client: TEST_CLIENT,
+      domain: "example.com",
+      login: {
+        nonce: {
+          generate() {
+            return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+          validate(uuid: string) {
+            return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+        },
+        payloadExpirationTimeSeconds: 3600,
+        uri: "https://example.com",
+        version: "1.0",
+      },
+    };
+
+    const generatePayload = generateLoginPayload(options);
+    const payloadToSign = await generatePayload({
+      address: TEST_ACCOUNT_A.address,
+    });
+    payloadToSign.expiration_time = "never";
+
+    const signatureResult = await signLoginPayload({
+      account: TEST_ACCOUNT_A,
+      payload: payloadToSign,
+    });
+
+    const verificationResult = await verifyLoginPayload(options)(signatureResult);
+    expect(verificationResult.valid).toBe(false);
+    if (!verificationResult.valid) {
+      expect(verificationResult.error).toMatch(/invalid Expiration Time/i);
+    }
+  });
+
+  test("should fail closed on unparseable invalid_before", async () => {
+    const options = {
+      client: TEST_CLIENT,
+      domain: "example.com",
+      login: {
+        nonce: {
+          generate() {
+            return "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+          validate(uuid: string) {
+            return uuid === "20cd4ddb-6857-4d36-8e44-9f6e026b8de9";
+          },
+        },
+        payloadExpirationTimeSeconds: 3600,
+        uri: "https://example.com",
+        version: "1.0",
+      },
+    };
+
+    const generatePayload = generateLoginPayload(options);
+    const payloadToSign = await generatePayload({
+      address: TEST_ACCOUNT_A.address,
+    });
+    payloadToSign.invalid_before = "";
+
+    const signatureResult = await signLoginPayload({
+      account: TEST_ACCOUNT_A,
+      payload: payloadToSign,
+    });
+
+    const verificationResult = await verifyLoginPayload(options)(signatureResult);
+    expect(verificationResult.valid).toBe(false);
+    if (!verificationResult.valid) {
+      expect(verificationResult.error).toMatch(/invalid Not Before/i);
+    }
+  });
