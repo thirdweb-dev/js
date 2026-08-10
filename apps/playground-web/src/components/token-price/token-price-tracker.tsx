@@ -11,6 +11,8 @@ import {
   polygon,
 } from "thirdweb/chains";
 import { THIRDWEB_CLIENT } from "@/lib/client";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 import { CodeExample } from "../code/code-example";
 
 const CHAINS = [
@@ -65,18 +67,21 @@ function TokenPriceTrackerPreview() {
       {/* Chain Selector */}
       <div className="flex items-center gap-2 flex-wrap">
         {CHAINS.map((c) => (
-          <button
+          <Button
             key={c.id}
             type="button"
+            variant={selectedChainId === c.id ? "default" : "outline"}
+            size="sm"
+            aria-pressed={selectedChainId === c.id}
             onClick={() => setSelectedChainId(c.id)}
-            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-              selectedChainId === c.id
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-background text-muted-foreground hover:bg-accent"
-            }`}
+            className={cn(
+              "rounded-full px-3 py-1 text-xs font-medium",
+              selectedChainId !== c.id &&
+                "text-muted-foreground",
+            )}
           >
             {c.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -144,7 +149,7 @@ function TokenPriceTrackerPreview() {
               </div>
             </div>
             <span className="w-24 self-center text-right text-sm font-medium tabular-nums">
-              {token.prices?.usd ? formatPrice(token.prices.usd) : "—"}
+              {token.prices?.USD ? formatPrice(token.prices.USD) : "—"}
             </span>
             <span className="hidden w-24 self-center text-right text-xs text-muted-foreground tabular-nums sm:block">
               {token.marketCapUsd ? formatUsd(token.marketCapUsd) : "—"}
@@ -167,8 +172,9 @@ function TokenPriceTrackerPreview() {
   );
 }
 
-export function TokenPriceTracker() {
+export function TokenPriceTracker({ className }: { className?: string }) {
   return (
+    <div className={cn(className)}>
     <CodeExample
       header={{
         title: "Token Price Tracker",
@@ -196,7 +202,7 @@ function App() {
     <div key={token.address}>
       <img src={token.iconUri} alt={token.name} />
       <span>{token.name} ({token.symbol})</span>
-      <span>\${token.prices?.usd?.toFixed(2)}</span>
+      <span>\${token.prices?.USD?.toFixed(2)}</span>
       <span>MCap: {token.marketCapUsd}</span>
       <span>Vol: {token.volume24hUsd}</span>
     </div>
@@ -205,5 +211,6 @@ function App() {
       lang="tsx"
       preview={<TokenPriceTrackerPreview />}
     />
+    </div>
   );
 }

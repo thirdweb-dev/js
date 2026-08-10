@@ -24,7 +24,7 @@ export default function Page() {
         containerClassName="space-y-12"
         icon={TrendingUpIcon}
         description={description}
-        docsLink="https://portal.thirdweb.com/typescript/v5/bridge/get-supported-tokens?utm_source=playground"
+        docsLink="https://portal.thirdweb.com/references/typescript/v5/tokens?utm_source=playground"
         title={title}
       >
         <TokenPriceTracker />
