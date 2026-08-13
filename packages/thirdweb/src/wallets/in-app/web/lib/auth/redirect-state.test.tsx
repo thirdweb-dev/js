@@ -31,11 +31,20 @@ describe.runIf(typeof window !== "undefined")("redirect-state", () => {
     expect(await consumeRedirectState(state)).toBe(false);
   });
 
-  it("clears the stored value even on a mismatch", async () => {
+  it("leaves a pending state intact after a mismatched attempt", async () => {
     const state = await storeRedirectState();
-    // a wrong attempt still consumes the stored value...
+    // a wrong attempt must NOT consume the legitimate pending state
     expect(await consumeRedirectState("wrong")).toBe(false);
-    // ...so the real value can no longer be used either
-    expect(await consumeRedirectState(state)).toBe(false);
+    // ...so the real callback still validates when it returns
+    expect(await consumeRedirectState(state)).toBe(true);
+  });
+
+  it("supports concurrent flows without clobbering each other", async () => {
+    const first = await storeRedirectState();
+    const second = await storeRedirectState();
+    expect(first).not.toBe(second);
+    // both flows validate independently, in any order
+    expect(await consumeRedirectState(second)).toBe(true);
+    expect(await consumeRedirectState(first)).toBe(true);
   });
 });
