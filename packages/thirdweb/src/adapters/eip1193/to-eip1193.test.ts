@@ -190,6 +190,25 @@ describe("toProvider", () => {
     ).resolves.toEqual([]);
   });
 
+  test("removeListener should detach a listener registered via on", () => {
+    const provider = toProvider({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      wallet: mockWallet,
+    });
+
+    const listener = vi.fn();
+    provider.on("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    provider.removeListener("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   test("should use custom connect override when provided", async () => {
     const walletWithoutAccount = {
       ...mockWallet,
