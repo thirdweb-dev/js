@@ -122,6 +122,20 @@ export type AutoConnectProps = {
   onTimeout?: () => void;
 
   /**
+   * Whether to read wallet auth material (such as an auth token or cookie) from the
+   * current page URL when auto-connecting.
+   *
+   * The redirect-based in-app wallet login and the `SiteLink` / `SiteEmbed` components
+   * pass auth material via URL parameters, which `AutoConnect` reads to restore the
+   * session. Set this to `false` to disable reading auth material from the URL entirely
+   * — useful if your app only uses popup, OTP, or passkey login and never hands off a
+   * session between sites.
+   *
+   * @default true
+   */
+  readUrlToken?: boolean;
+
+  /**
    * @hidden
    */
   siweAuth?: {

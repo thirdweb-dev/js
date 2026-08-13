@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import codspeedPlugin from "@codspeed/vitest-plugin";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 
 const plugins = process.env.CI ? [codspeedPlugin()] : [];
 
@@ -33,6 +33,9 @@ export default defineConfig({
     },
     environmentMatchGlobs: [["src/**/*.test.tsx", "happy-dom"]],
     environment: "node",
+    // zkSync is no longer officially supported; its tests hit external RPCs and
+    // flake in CI, so they are excluded from the suite.
+    exclude: [...configDefaults.exclude, "**/*zksync*"],
     include: ["src/**/*.test.{ts,tsx}"],
     setupFiles: [join(__dirname, "./reactSetup.ts")],
     globalSetup: [join(__dirname, "./globalSetup.ts")],

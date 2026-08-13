@@ -10,6 +10,7 @@ import type {
   AuthStoredTokenWithCookieReturnType,
 } from "../in-app/core/authentication/types.js";
 import { isInAppSigner } from "../in-app/core/wallet/is-in-app-signer.js";
+import { consumeRedirectState } from "../in-app/web/lib/auth/redirect-state.js";
 import { getUrlToken } from "../in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import {
@@ -82,7 +83,19 @@ const _autoConnectCore = async ({
     getStoredActiveWalletId(storage),
   ]);
 
-  const urlToken = getUrlToken();
+  const rawUrlToken = props.readUrlToken === false ? undefined : getUrlToken();
+
+  // A token carrying an authResult only ever comes from an SDK-initiated redirect
+  // login, which persists a one-time state value. Require that state to match before
+  // trusting the URL-provided auth material, mirroring the origin check the popup
+  // login flow already performs. If it does not match, ignore the token entirely.
+  let urlToken = rawUrlToken;
+  if (rawUrlToken?.authResult) {
+    const validState = await consumeRedirectState(rawUrlToken.state);
+    if (!validState) {
+      urlToken = undefined;
+    }
+  }
 
   // Handle linking flow: autoconnect with stored credentials, then link the new profile
   if (urlToken?.authFlow === "link" && urlToken.authResult) {
