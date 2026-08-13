@@ -48,7 +48,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("bootstrap", () => {
     expect(cloneFactory).not.toBeNull();
   });
 
-  it("should return saved implementations for zksync chains", async () => {
+  // zkSync is no longer officially supported
+  it.skip("should return saved implementations for zksync chains", async () => {
     let infra = await getOrDeployInfraForPublishedContract({
       account: TEST_ACCOUNT_A,
       chain: defineChain(300),
