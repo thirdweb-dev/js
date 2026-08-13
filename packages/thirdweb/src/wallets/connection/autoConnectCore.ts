@@ -10,6 +10,7 @@ import type {
   AuthStoredTokenWithCookieReturnType,
 } from "../in-app/core/authentication/types.js";
 import { isInAppSigner } from "../in-app/core/wallet/is-in-app-signer.js";
+import { consumeRedirectState } from "../in-app/web/lib/auth/redirect-state.js";
 import { getUrlToken } from "../in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import {
@@ -90,10 +91,6 @@ const _autoConnectCore = async ({
   // login flow already performs. If it does not match, ignore the token entirely.
   let urlToken = rawUrlToken;
   if (rawUrlToken?.authResult) {
-    // Loaded lazily so apps that never use redirect auth don't pull in this module.
-    const { consumeRedirectState } = await import(
-      "../in-app/web/lib/auth/redirect-state.js"
-    );
     const validState = await consumeRedirectState(rawUrlToken.state);
     if (!validState) {
       urlToken = undefined;
