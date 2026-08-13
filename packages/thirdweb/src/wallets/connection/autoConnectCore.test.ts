@@ -175,6 +175,39 @@ describe("useAutoConnectCore", () => {
     expect(storedCookie).not.toBe("should-not-be-saved");
   });
 
+  it("does not read the URL token when readUrlToken is false", async () => {
+    const wallet = createWalletAdapter({
+      adaptedAccount: TEST_ACCOUNT_A,
+      chain: ethereum,
+      client: TEST_CLIENT,
+      onDisconnect: () => {},
+      switchChain: () => {},
+    });
+    // With readUrlToken disabled, getUrlToken is not consulted, so an authCookie
+    // present in the URL is never persisted.
+    vi.mocked(getUrlToken).mockReturnValue({
+      authCookie: "url-cookie-should-be-ignored",
+      walletId: wallet.id,
+    });
+
+    await autoConnectCore({
+      createWalletFn: () => wallet,
+      force: true,
+      manager,
+      props: {
+        client: TEST_CLIENT,
+        readUrlToken: false,
+        wallets: [wallet],
+      },
+      storage: mockStorage,
+    });
+
+    const storedCookie = await mockStorage.getItem(
+      AUTH_TOKEN_LOCAL_STORAGE_NAME(TEST_CLIENT.clientId),
+    );
+    expect(storedCookie).not.toBe("url-cookie-should-be-ignored");
+  });
+
   it("should handle error when manager connection fails", async () => {
     const wallet1 = createWalletAdapter({
       adaptedAccount: TEST_ACCOUNT_A,

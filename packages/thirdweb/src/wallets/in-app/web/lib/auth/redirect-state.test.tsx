@@ -57,4 +57,48 @@ describe.runIf(typeof window !== "undefined")("redirect-state", () => {
     expect(await consumeRedirectState(first)).toBe(true);
     expect(await consumeRedirectState(second)).toBe(true);
   });
+
+  it("rejects an expired state", async () => {
+    window.localStorage.setItem(
+      "thirdweb:auth-redirect-state:stale",
+      String(Date.now() - 1000),
+    );
+    expect(await consumeRedirectState("stale")).toBe(false);
+  });
+
+  it("rejects a state whose stored expiry is malformed", async () => {
+    window.localStorage.setItem(
+      "thirdweb:auth-redirect-state:garbage",
+      "not-a-number",
+    );
+    expect(await consumeRedirectState("garbage")).toBe(false);
+  });
+
+  it("prunes expired states on the next store", async () => {
+    const staleKey = "thirdweb:auth-redirect-state:old";
+    window.localStorage.setItem(staleKey, String(Date.now() - 1000));
+    await storeRedirectState();
+    expect(window.localStorage.getItem(staleKey)).toBeNull();
+  });
+
+  it("no-ops safely when localStorage is unavailable", async () => {
+    const realLocalStorage = window.localStorage;
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get() {
+        throw new Error("localStorage blocked");
+      },
+    });
+    try {
+      // store still returns a state, and consume reports false rather than throwing
+      expect(typeof (await storeRedirectState())).toBe("string");
+      expect(await consumeRedirectState("anything")).toBe(false);
+    } finally {
+      Object.defineProperty(window, "localStorage", {
+        configurable: true,
+        value: realLocalStorage,
+        writable: true,
+      });
+    }
+  });
 });
