@@ -42,13 +42,13 @@ import { privateKeyToAccount } from "thirdweb/wallets";
 
 const privateKey = process.env.THIRDWEB_PRIVATE_KEY;
 const thirdwebClient = createThirdwebClient({
-	secretKey: process.env.THIRDWEB_SECRET_KEY;
+	secretKey: process.env.THIRDWEB_SECRET_KEY,
 });
 
 const auth = createAuth({
 	domain: "localhost:3000",
 	client: thirdwebClient,
-	adminAccount: privateKeyToAccount({client, privateKey})
+	adminAccount: privateKeyToAccount({ client: thirdwebClient, privateKey }),
 });
 
 // 1. generate a login payload for a client on the server side
