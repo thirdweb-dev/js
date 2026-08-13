@@ -326,7 +326,9 @@ export default function RotateAdminKeyButton(props: {
                     Cancel
                   </Button>
                   <Button
-                    disabled={rotateAdminKeyMutation.isPending || missingSecretKey}
+                    disabled={
+                      rotateAdminKeyMutation.isPending || missingSecretKey
+                    }
                     onClick={() => rotateAdminKeyMutation.mutate()}
                     variant="destructive"
                   >
