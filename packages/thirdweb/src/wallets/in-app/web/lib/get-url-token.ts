@@ -12,6 +12,7 @@ export function getUrlToken():
       authProvider?: AuthOption;
       authCookie?: string;
       authFlow?: "connect" | "link";
+      state?: string;
     }
   | undefined {
   if (typeof document === "undefined") {
@@ -47,6 +48,7 @@ export function getUrlToken():
   const authFlow = (params.get("authFlow") ??
     hashParams?.get("authFlow") ??
     undefined) as "connect" | "link" | undefined;
+  const state = params.get("state") ?? hashParams?.get("state") ?? undefined;
 
   if ((authCookie || authResultString) && walletId) {
     const authResult = (() => {
@@ -60,10 +62,12 @@ export function getUrlToken():
     params.delete("authProvider");
     params.delete("authCookie");
     params.delete("authFlow");
+    params.delete("state");
     hashParams?.delete("walletId");
     hashParams?.delete("authProvider");
     hashParams?.delete("authCookie");
     hashParams?.delete("authFlow");
+    hashParams?.delete("state");
 
     const remainingSearch = params.toString();
     const searchString = remainingSearch ? `?${remainingSearch}` : "";
@@ -82,7 +86,7 @@ export function getUrlToken():
       "",
       `${window.location.pathname}${searchString}${hashString}`,
     );
-    return { authCookie, authFlow, authProvider, authResult, walletId };
+    return { authCookie, authFlow, authProvider, authResult, state, walletId };
   }
   return undefined;
 }

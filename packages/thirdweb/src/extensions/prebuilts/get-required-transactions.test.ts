@@ -78,7 +78,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(results.length).toBe(8);
     });
 
-    it("should return default constructor params for zksync chains", async () => {
+    // zkSync is no longer officially supported
+    it.skip("should return default constructor params for zksync chains", async () => {
       const params = await getAllDefaultConstructorParamsForImplementation({
         chain: defineChain(300),
         client: TEST_CLIENT,

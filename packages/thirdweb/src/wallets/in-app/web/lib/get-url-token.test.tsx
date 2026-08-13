@@ -56,6 +56,29 @@ describe.runIf(global.window !== undefined)("getUrlToken", () => {
     });
   });
 
+  it("should parse the state param and strip it from the URL", () => {
+    Object.defineProperty(window, "location", {
+      value: {
+        ...originalLocation,
+        hash: "",
+        pathname: "/",
+        search: "?walletId=123&authResult=%7B%22t%22%3A1%7D&state=abc123",
+      },
+      writable: true,
+    });
+
+    const pushStateSpy = vi.spyOn(window.history, "pushState");
+
+    const result = getUrlToken();
+
+    expect(result?.authResult).toEqual({ t: 1 });
+    expect(result?.state).toBe("abc123");
+
+    // state must be stripped from the URL alongside the other auth params
+    expect(pushStateSpy).toHaveBeenCalledWith({}, "", "/");
+    pushStateSpy.mockRestore();
+  });
+
   it("should handle authCookie and update URL correctly", () => {
     window.location.search = "?walletId=123&authCookie=myCookie";
 
