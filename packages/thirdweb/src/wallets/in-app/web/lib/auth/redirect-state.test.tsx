@@ -47,4 +47,14 @@ describe.runIf(typeof window !== "undefined")("redirect-state", () => {
     expect(await consumeRedirectState(second)).toBe(true);
     expect(await consumeRedirectState(first)).toBe(true);
   });
+
+  it("a forged/unknown consume cannot evict other pending flows", async () => {
+    const first = await storeRedirectState();
+    const second = await storeRedirectState();
+    // an attacker-supplied state only ever touches its own (absent) key
+    expect(await consumeRedirectState("forged-state-value")).toBe(false);
+    // ...so both legitimate flows still validate
+    expect(await consumeRedirectState(first)).toBe(true);
+    expect(await consumeRedirectState(second)).toBe(true);
+  });
 });
