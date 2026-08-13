@@ -1,5 +1,21 @@
 # thirdweb
 
+## 5.121.0
+
+### Minor Changes
+
+- [#8887](https://github.com/thirdweb-dev/js/pull/8887) [`133e57d`](https://github.com/thirdweb-dev/js/commit/133e57d373ffbbe3531c9c12023540dcb8ad372f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Redirect-based in-app wallet logins now include and verify a one-time `state` value before `AutoConnect` consumes auth material returned in the URL, tying the returned token back to a flow the page actually started. Added a `readUrlToken` option to `AutoConnect` / `useAutoConnect` to opt out of reading wallet auth material from the URL entirely.
+
+### Patch Changes
+
+- [#8886](https://github.com/thirdweb-dev/js/pull/8886) [`e4fba08`](https://github.com/thirdweb-dev/js/commit/e4fba08e2546511f3c4d1f03c49893b0b643aa28) Thanks [@blockgroot](https://github.com/blockgroot)! - Fix: `EIP1193.toProvider()`'s `removeListener` is no longer a no-op. Previously, `removeListener` discarded the unsubscribe function returned by `wallet.subscribe()`, so listeners registered via `provider.on(...)` (e.g. `accountsChanged`, `chainChanged`, `disconnect`) could never actually be detached — they kept firing after callers (such as wagmi connectors) believed they had unsubscribed. `removeListener` now tracks and invokes the correct unsubscribe function per `(event, listener)` pair.
+
+- [#8807](https://github.com/thirdweb-dev/js/pull/8807) [`8c521aa`](https://github.com/thirdweb-dev/js/commit/8c521aa06aca02a57200f5941e10d06c8cbaf9fb) Thanks [@Yash094](https://github.com/Yash094)! - Fix: injected wallets (e.g. MetaMask) no longer fire a spurious `"disconnect"` event for transient EIP-1193 error code 1013 ("disconnected, will reconnect"). Previously, MetaMask's temporary disconnect during chain changes or RPC hiccups would trigger the thirdweb `disconnect` subscriber and tear down wallet state, causing unexpected logouts. The `onDisconnect` handler now ignores code-1013 errors and lets MetaMask reconnect automatically.
+
+  Additionally, the `WalletEmitterEvents["disconnect"]` type is updated from `never` to `WalletDisconnectError | undefined`, so `disconnect` subscribers can inspect the underlying EIP-1193 error code and message when they need to distinguish disconnect causes.
+
+- [#8875](https://github.com/thirdweb-dev/js/pull/8875) [`f411769`](https://github.com/thirdweb-dev/js/commit/f411769e2a0c82ad636a41ba650b72222df29006) Thanks [@SashaMIT](https://github.com/SashaMIT)! - Reject SIWE login payloads with an unparseable Not Before or Expiration Time instead of skipping the time-bound checks.
+
 ## 5.120.1
 
 ### Patch Changes
