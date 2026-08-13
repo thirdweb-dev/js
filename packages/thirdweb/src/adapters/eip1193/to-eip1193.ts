@@ -58,10 +58,30 @@ export type ToEip1193ProviderOptions = {
 export function toProvider(options: ToEip1193ProviderOptions): EIP1193Provider {
   const { chain, client, wallet, connectOverride } = options;
   const rpcClient = getRpcClient({ chain, client });
+  // tracks the unsubscribe fn returned by wallet.subscribe for each (event, listener)
+  // pair so removeListener can actually detach it, per the EIP-1193 contract.
+  const unsubscribes = new Map<
+    unknown,
+    // biome-ignore lint/suspicious/noExplicitAny: matches EIP1193Provider's loose typing
+    Map<(params: any) => any, () => void>
+  >();
   return {
-    on: wallet.subscribe,
-    removeListener: () => {
-      // should invoke the return fn from subscribe instead
+    on: (event, listener) => {
+      const unsubscribe = wallet.subscribe(event, listener);
+      let listeners = unsubscribes.get(event);
+      if (!listeners) {
+        listeners = new Map();
+        unsubscribes.set(event, listeners);
+      }
+      listeners.set(listener, unsubscribe);
+    },
+    removeListener: (event, listener) => {
+      const listeners = unsubscribes.get(event);
+      const unsubscribe = listeners?.get(listener);
+      if (unsubscribe) {
+        unsubscribe();
+        listeners?.delete(listener);
+      }
     },
     request: async (request) => {
       switch (request.method) {

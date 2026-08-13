@@ -190,6 +190,49 @@ describe("toProvider", () => {
     ).resolves.toEqual([]);
   });
 
+  test("removeListener should detach a listener registered via on", () => {
+    const provider = toProvider({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      wallet: mockWallet,
+    });
+
+    const listener = vi.fn();
+    provider.on("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    provider.removeListener("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
+  test("removeListener fully detaches a listener registered twice via on", () => {
+    const provider = toProvider({
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      wallet: mockWallet,
+    });
+
+    const listener = vi.fn();
+    // register the same listener reference for the same event twice, then
+    // confirm a single removeListener call fully detaches it (the underlying
+    // wallet emitter dedupes by callback reference via a Set, so this must
+    // not require two removeListener calls).
+    provider.on("accountsChanged", listener);
+    provider.on("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    provider.removeListener("accountsChanged", listener);
+
+    emitter.emit("accountsChanged", [mockAccount.address]);
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   test("should use custom connect override when provided", async () => {
     const walletWithoutAccount = {
       ...mockWallet,
