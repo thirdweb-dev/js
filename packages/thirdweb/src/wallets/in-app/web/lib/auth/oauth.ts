@@ -5,6 +5,7 @@ import { getLoginUrl } from "../../../core/authentication/getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
 import type { Ecosystem } from "../../../core/wallet/types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
+import { storeRedirectState } from "./redirect-state.js";
 
 const closeWindow = ({
   isWindowOpenedByFn,
@@ -34,10 +35,15 @@ export async function loginWithOauthRedirect(options: {
   mode?: "redirect" | "popup" | "window";
   authFlow?: "connect" | "link";
 }): Promise<void> {
+  // Persist a one-time state bound to this browser and echo it on the redirect so
+  // the returned auth token can be tied back to a flow this page actually started.
+  const state =
+    options.mode === "popup" ? undefined : await storeRedirectState();
   const loginUrl = getLoginUrl({
     ...options,
     mode: options.mode || "redirect",
     authFlow: options.authFlow,
+    state,
   });
   if (options.mode === "redirect") {
     window.location.href = loginUrl;

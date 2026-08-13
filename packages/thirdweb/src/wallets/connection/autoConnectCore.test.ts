@@ -6,6 +6,7 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { createWalletAdapter } from "../../adapters/wallet-adapter.js";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../in-app/core/authentication/types.js";
 import { AUTH_TOKEN_LOCAL_STORAGE_NAME } from "../in-app/core/constants/settings.js";
 import { getUrlToken } from "../in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -136,6 +137,42 @@ describe("useAutoConnectCore", () => {
       AUTH_TOKEN_LOCAL_STORAGE_NAME(TEST_CLIENT.clientId),
     );
     expect(storedCookie).toBe(mockAuthCookie);
+  });
+
+  it("should ignore a URL authResult with no matching redirect state", async () => {
+    const wallet = createWalletAdapter({
+      adaptedAccount: TEST_ACCOUNT_A,
+      chain: ethereum,
+      client: TEST_CLIENT,
+      onDisconnect: () => {},
+      switchChain: () => {},
+    });
+    // A crafted URL supplies an authResult (and a cookie) with no state to back it.
+    // Because no redirect state was stored, the token must be rejected wholesale and
+    // the attacker-supplied cookie must NOT be persisted.
+    vi.mocked(getUrlToken).mockReturnValue({
+      authCookie: "should-not-be-saved",
+      authResult: {
+        storedToken: { cookieString: "attacker-token" },
+      } as unknown as AuthStoredTokenWithCookieReturnType,
+      walletId: wallet.id,
+    });
+
+    await autoConnectCore({
+      createWalletFn: () => wallet,
+      force: true,
+      manager,
+      props: {
+        client: TEST_CLIENT,
+        wallets: [wallet],
+      },
+      storage: mockStorage,
+    });
+
+    const storedCookie = await mockStorage.getItem(
+      AUTH_TOKEN_LOCAL_STORAGE_NAME(TEST_CLIENT.clientId),
+    );
+    expect(storedCookie).not.toBe("should-not-be-saved");
   });
 
   it("should handle error when manager connection fails", async () => {
