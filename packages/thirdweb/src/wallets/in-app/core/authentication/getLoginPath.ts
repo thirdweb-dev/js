@@ -22,6 +22,7 @@ export const getLoginUrl = ({
   mode = "popup",
   redirectUrl,
   authFlow,
+  state,
 }: {
   authOption: AuthOption;
   client: ThirdwebClient;
@@ -29,6 +30,11 @@ export const getLoginUrl = ({
   mode?: "popup" | "redirect" | "window";
   redirectUrl?: string;
   authFlow?: "connect" | "link";
+  /**
+   * One-time value tied to the browser session that started this flow. It is
+   * echoed back on the redirect and validated before the returned token is trusted.
+   */
+  state?: string;
 }) => {
   if (mode === "popup" && redirectUrl) {
     throw new Error("Redirect URL is not supported for popup mode");
@@ -53,6 +59,9 @@ export const getLoginUrl = ({
     formattedRedirectUrl.searchParams.set("authProvider", authOption);
     if (authFlow) {
       formattedRedirectUrl.searchParams.set("authFlow", authFlow);
+    }
+    if (state) {
+      formattedRedirectUrl.searchParams.set("state", state);
     }
     baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
   }
