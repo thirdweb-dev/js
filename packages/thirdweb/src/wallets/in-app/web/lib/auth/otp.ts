@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { getClientFetch } from "../../../../../utils/fetch.js";
 import { stringify } from "../../../../../utils/json.js";
 import {
   getLoginCallbackUrl,
@@ -20,16 +21,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    "x-client-id": client.clientId,
   };
-
-  if (ecosystem?.id) {
-    headers["x-ecosystem-id"] = ecosystem.id;
-  }
-
-  if (ecosystem?.partnerId) {
-    headers["x-ecosystem-partner-id"] = ecosystem.partnerId;
-  }
 
   const body = (() => {
     switch (args.strategy) {
@@ -44,7 +36,7 @@ export const sendOtp = async (args: PreAuthArgsType): Promise<void> => {
     }
   })();
 
-  const response = await fetch(url, {
+  const response = await getClientFetch(client, ecosystem)(url, {
     body: stringify(body),
     headers,
     method: "POST",
@@ -85,16 +77,7 @@ export const verifyOtp = async (
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    "x-client-id": client.clientId,
   };
-
-  if (ecosystem?.id) {
-    headers["x-ecosystem-id"] = ecosystem.id;
-  }
-
-  if (ecosystem?.partnerId) {
-    headers["x-ecosystem-partner-id"] = ecosystem.partnerId;
-  }
 
   const body = (() => {
     switch (args.strategy) {
@@ -111,7 +94,7 @@ export const verifyOtp = async (
     }
   })();
 
-  const response = await fetch(url, {
+  const response = await getClientFetch(client, ecosystem)(url, {
     body: stringify(body),
     headers,
     method: "POST",
