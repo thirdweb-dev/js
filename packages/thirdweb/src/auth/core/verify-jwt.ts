@@ -57,19 +57,36 @@ export function verifyJWT(options: AuthOptions) {
       };
     }
 
+    // Invalid Date / missing NumericDate comparisons are always false in JS,
+    // so a non-finite nbf or exp previously skipped the time bounds.
+    const nbf = finiteEpoch(payload.nbf);
+    if (nbf === undefined) {
+      return {
+        error: "Payload has invalid Not Before time",
+        valid: false,
+      };
+    }
+    const exp = finiteEpoch(payload.exp);
+    if (exp === undefined) {
+      return {
+        error: "Payload has invalid Expiration Time",
+        valid: false,
+      };
+    }
+
     // Check that the token is past the invalid before time
     const currentTime = Math.floor(Date.now() / 1000);
-    if (currentTime < payload.nbf) {
+    if (currentTime < nbf) {
       return {
-        error: `This token is invalid before epoch time '${payload.nbf}', current epoch time is '${currentTime}'`,
+        error: `This token is invalid before epoch time '${nbf}', current epoch time is '${currentTime}'`,
         valid: false,
       };
     }
 
     // Check that the token hasn't expired
-    if (currentTime > payload.exp) {
+    if (currentTime > exp) {
       return {
-        error: `This token expired at epoch time '${payload.exp}', current epoch time is '${currentTime}'`,
+        error: `This token expired at epoch time '${exp}', current epoch time is '${currentTime}'`,
         valid: false,
       };
     }
@@ -100,4 +117,11 @@ export function verifyJWT(options: AuthOptions) {
       valid: true,
     };
   };
+}
+
+function finiteEpoch(value: unknown): number | undefined {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return undefined;
+  }
+  return value;
 }
