@@ -517,12 +517,15 @@ export function useStepExecutor(
       }
 
       // Execute onramp first if configured and not already completed
+      let onrampCompleted =
+        preparedQuote.type !== "onramp" || onrampStatus === "completed";
       if (preparedQuote.type === "onramp" && onrampStatus === "pending") {
         await executeOnramp(
           preparedQuote,
           completedStatusResults,
           abortController.signal,
         );
+        onrampCompleted = true;
       }
 
       if (flatTxs.length > 0) {
@@ -637,6 +640,15 @@ export function useStepExecutor(
       }
       // All done - check if we actually completed everything
       if (!abortController.signal.aborted) {
+        // Only report success for an onramp once it has actually completed.
+        if (!onrampCompleted) {
+          throw new ApiError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Onramp did not complete",
+            statusCode: 500,
+          });
+        }
+
         setCurrentTxIndex(undefined);
 
         // Call completion callback with all completed status results
