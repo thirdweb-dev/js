@@ -466,6 +466,7 @@ export function useStepExecutor(
           return { completed: true };
         } else if (status === "FAILED") {
           setOnrampStatus("failed");
+          throw new Error("Payment failed");
         }
 
         return { completed: false };
@@ -526,6 +527,16 @@ export function useStepExecutor(
           abortController.signal,
         );
         onrampCompleted = true;
+      }
+
+      // An onramp must complete before any follow-up transactions run or
+      // success is reported.
+      if (!onrampCompleted) {
+        throw new ApiError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Onramp did not complete",
+          statusCode: 500,
+        });
       }
 
       if (flatTxs.length > 0) {
@@ -640,15 +651,6 @@ export function useStepExecutor(
       }
       // All done - check if we actually completed everything
       if (!abortController.signal.aborted) {
-        // Only report success for an onramp once it has actually completed.
-        if (!onrampCompleted) {
-          throw new ApiError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Onramp did not complete",
-            statusCode: 500,
-          });
-        }
-
         setCurrentTxIndex(undefined);
 
         // Call completion callback with all completed status results
