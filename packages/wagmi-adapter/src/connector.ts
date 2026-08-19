@@ -218,7 +218,10 @@ export function inAppWalletConnector(
     },
     getProvider: async (params) => {
       const lastChainIdStr = await rawStorage?.getItem(activeChainIdKey);
-      const lastChainId = lastChainIdStr ? Number(lastChainIdStr) : undefined;
+      const lastChain = lastChainIdStr
+        ? (JSON.parse(lastChainIdStr) as Chain)
+        : undefined;
+      const lastChainId = lastChain ? lastChain.id : undefined;
       const chain = defineChain(
         params?.chainId || args.smartAccount?.chain?.id || lastChainId || 1,
       );
