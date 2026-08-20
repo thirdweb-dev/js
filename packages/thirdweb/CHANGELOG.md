@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.121.1
+
+### Patch Changes
+
+- [#8906](https://github.com/thirdweb-dev/js/pull/8906) [`fcc0417`](https://github.com/thirdweb-dev/js/commit/fcc04176f1f54d04d4a6705e7f6d1437cfd007ab) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Fixed Universal Bridge onramp checkout incorrectly reporting success when the onramp did not complete. A failed onramp now surfaces the error instead of a false success, and retrying a failed onramp prepares a fresh payment session rather than replaying the expired one (post-onramp transaction failures still retry in place, so completed onramps are never charged twice).
+
 ## 5.121.0
 
 ### Minor Changes
