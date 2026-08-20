@@ -15,10 +15,10 @@ export const wallet = {
     linux: "",
     chrome:
       "https://chromewebstore.google.com/detail/qie-wallet-and-web3-domai/oljchdcgmibnjbbopolafbjncfhdacjb?authuser=1&hl=en",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "me.qiewallet",
   mobile: {

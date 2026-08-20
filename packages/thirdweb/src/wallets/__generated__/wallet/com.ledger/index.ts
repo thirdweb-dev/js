@@ -3,8 +3,8 @@
 
 export const wallet = {
   id: "com.ledger",
-  name: "Ledger Live",
-  homepage: "https://www.ledger.com/ledger-live",
+  name: "Ledger Wallet",
+  homepage: "https://www.ledger.com/ledger-wallet",
   image_id: "c20e1cec-05e8-4ac6-a086-7ce355092400",
   app: {
     browser: "",

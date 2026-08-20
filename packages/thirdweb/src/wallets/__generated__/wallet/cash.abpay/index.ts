@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: "",
   mobile: {
-    native: "abwallet://walletconnect",
+    native: "abpay://walletconnect",
     universal: "",
   },
   desktop: {

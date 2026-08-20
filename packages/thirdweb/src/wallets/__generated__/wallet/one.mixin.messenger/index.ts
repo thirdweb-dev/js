@@ -3,7 +3,7 @@
 
 export const wallet = {
   id: "one.mixin.messenger",
-  name: "Mixin Messenger",
+  name: "Mixin",
   homepage: "https://messenger.mixin.one",
   image_id: "c5516ab5-57c3-45ec-09e2-b149c9709600",
   app: {
@@ -11,14 +11,14 @@ export const wallet = {
     ios: "https://apps.apple.com/app/mixin/id1322324266",
     android:
       "https://play.google.com/store/apps/details?id=one.mixin.messenger",
-    mac: null,
+    mac: "",
     windows: "https://apps.microsoft.com/detail/9nq6hf99b8nj?hl=en-US&gl=US",
-    linux: null,
-    chrome: null,
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    linux: "",
+    chrome: "",
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "one.mixin.messenger",
   mobile: {
