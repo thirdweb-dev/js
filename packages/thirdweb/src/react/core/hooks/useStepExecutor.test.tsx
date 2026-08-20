@@ -21,17 +21,29 @@ vi.mock("../../../bridge/index.js", () => ({
 
 // Minimal onramp quote with no follow-up transactions, so the executor's
 // behaviour depends solely on the onramp outcome.
-const ONRAMP_QUOTE = {
+const ONRAMP_QUOTE: Extract<BridgePrepareResult, { type: "onramp" }> = {
   currency: "USD",
   currencyAmount: 30,
   destinationAmount: 30000000n,
-  destinationToken: {},
+  destinationToken: {
+    address: "0x0000000000000000000000000000000000000000",
+    chainId: 8453,
+    decimals: 6,
+    name: "USD Coin",
+    prices: {},
+    symbol: "USDC",
+  },
   id: "onramp-session-id",
-  intent: {},
+  intent: {
+    chainId: 8453,
+    onramp: "transak",
+    receiver: "0x0000000000000000000000000000000000000001",
+    tokenAddress: "0x0000000000000000000000000000000000000000",
+  },
   link: "https://onramp.example.com/session",
   steps: [],
   type: "onramp",
-} as unknown as BridgePrepareResult;
+};
 
 function createWindowAdapter(): WindowAdapter {
   return { open: vi.fn(async () => {}) };
@@ -63,10 +75,12 @@ describe("useStepExecutor onramp guards", () => {
   it("does not report success when a prior onramp attempt failed", async () => {
     onrampStatusMock.mockResolvedValue({ status: "FAILED", transactions: [] });
     const windowAdapter = createWindowAdapter();
+    const onComplete = vi.fn();
 
     const { result } = renderHook(() =>
       useStepExecutor({
         client: TEST_CLIENT,
+        onComplete,
         preparedQuote: ONRAMP_QUOTE,
         windowAdapter,
       }),
@@ -86,6 +100,8 @@ describe("useStepExecutor onramp guards", () => {
       expect(result.current.error?.message).toBe("Onramp did not complete"),
     );
     expect(result.current.error?.statusCode).toBe(500);
+    // Success must never be reported for an incomplete onramp.
+    expect(onComplete).not.toHaveBeenCalled();
   });
 
   it("marks the onramp complete before reporting success", async () => {
