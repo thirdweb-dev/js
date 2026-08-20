@@ -720,6 +720,13 @@ function CheckoutWidgetContent(
             completedStatuses,
           });
         }}
+        onQuoteUpdate={(quote) => {
+          // A failed onramp is retried with a fresh session; keep the success
+          // payload pointed at the session that actually completes.
+          setScreen((prev) =>
+            prev.id === "5:execute" ? { ...prev, preparedQuote: quote } : prev,
+          );
+        }}
         request={screen.request}
         wallet={screen.paymentMethod.payerWallet}
         windowAdapter={webWindowAdapter}

@@ -1,5 +1,6 @@
 "use client";
 import { CheckIcon, ClockIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { useCallback, useState } from "react";
 import type { RouteStep } from "../../../../bridge/types/Route.js";
 import type { Chain } from "../../../../chains/types.js";
 import { defineChain } from "../../../../chains/utils.js";
@@ -12,9 +13,11 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import type {
-  BridgePrepareRequest,
-  BridgePrepareResult,
+import {
+  type BridgePrepareRequest,
+  type BridgePrepareResult,
+  type UseBridgePrepareParams,
+  useBridgePrepare,
 } from "../../../core/hooks/useBridgePrepare.js";
 import {
   type CompletedStatusResult,
@@ -70,9 +73,93 @@ type StepRunnerProps = {
    * Prepared quote to use
    */
   preparedQuote: BridgePrepareResult;
+
+  /**
+   * Called when the executing quote is replaced by a freshly prepared one
+   * (e.g. after retrying a failed onramp, which mints a new session). Lets the
+   * parent keep any state it derives from the quote — such as the success
+   * payload — in sync with the session that actually completed.
+   */
+  onQuoteUpdate?: (preparedQuote: BridgePrepareResult) => void;
 };
 
 export function StepRunner({
+  preparedQuote,
+  request,
+  onQuoteUpdate,
+  ...rest
+}: StepRunnerProps) {
+  const theme = useCustomTheme();
+
+  // The quote currently being executed. A failed onramp replaces this with a
+  // freshly prepared session (see requestFreshOnramp) rather than replaying the
+  // dead one.
+  const [activeQuote, setActiveQuote] =
+    useState<BridgePrepareResult>(preparedQuote);
+  // Bumped whenever the active quote is replaced, to remount the executor with
+  // a clean slate: a fresh onramp session and reset status.
+  const [runKey, setRunKey] = useState(0);
+  const [isRepreparing, setIsRepreparing] = useState(false);
+
+  // Disabled query used only to imperatively mint a fresh quote on retry.
+  // refetch() bypasses the cache, so it always returns a new onramp session.
+  const reprepare = useBridgePrepare({
+    ...(request as UseBridgePrepareParams),
+    enabled: false,
+  });
+
+  const requestFreshOnramp = useCallback(async () => {
+    setIsRepreparing(true);
+    const { data } = await reprepare.refetch();
+    setIsRepreparing(false);
+    if (data) {
+      setActiveQuote(data);
+      setRunKey((key) => key + 1);
+      onQuoteUpdate?.(data);
+    }
+  }, [reprepare, onQuoteUpdate]);
+
+  if (isRepreparing) {
+    return (
+      <Container
+        center="both"
+        flex="column"
+        fullHeight
+        px="md"
+        pb="md"
+        pt="md+"
+      >
+        <Spinner color="secondaryText" size="lg" />
+        <Spacer y="lg" />
+        <Text center color="secondaryText" size="sm">
+          Preparing a new payment session
+        </Text>
+      </Container>
+    );
+  }
+
+  return (
+    <StepExecution
+      key={runKey}
+      {...rest}
+      onRequestFreshOnramp={requestFreshOnramp}
+      preparedQuote={activeQuote}
+      request={request}
+      theme={theme}
+    />
+  );
+}
+
+type StepExecutionProps = Omit<
+  StepRunnerProps,
+  "preparedQuote" | "onQuoteUpdate"
+> & {
+  preparedQuote: BridgePrepareResult;
+  onRequestFreshOnramp: () => void;
+  theme: ReturnType<typeof useCustomTheme>;
+};
+
+function StepExecution({
   title,
   request,
   wallet,
@@ -83,9 +170,9 @@ export function StepRunner({
   onBack,
   autoStart,
   preparedQuote,
-}: StepRunnerProps) {
-  const theme = useCustomTheme();
-
+  onRequestFreshOnramp,
+  theme,
+}: StepExecutionProps) {
   // Use the real step executor hook
   const {
     currentStep,
@@ -116,7 +203,15 @@ export function StepRunner({
   };
 
   const handleRetry = () => {
-    retry();
+    // A failed onramp (funds never moved) needs a fresh session, not a replay
+    // of the dead/expired one. Any other failure — including one after the
+    // onramp already completed — must retry in place: re-onramping there would
+    // charge the buyer a second time.
+    if (request.type === "onramp" && onrampStatus === "failed") {
+      onRequestFreshOnramp();
+    } else {
+      retry();
+    }
   };
 
   const getStepStatus = (
