@@ -1,212 +1,230 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { createMetadata, ArticleIconCard } from "@doc";
-import { ExternalLinkIcon } from "lucide-react";
-
-export const metadata = createMetadata({
-	image: { title: "Get Started with thirdweb Solidity SDK", icon: "solidity" },
-	title: "Get Started with thirdweb Solidity SDK",
-	description:
-		"To get started with the Solidity SDK, run the following command to create a new project:",
-});
-
-# Getting Started
-
-Deploy and manage tokens on any EVM compatible blockchain, thirdweb offers:
-
-- Prebuilt audited contracts deployable via dashboard or programmatically.
-- Base implementations to customize and build your own contracts.
-
-<Tabs defaultValue="pre-built">
-
-<TabsList>
-	<TabsTrigger value="pre-built">Pre-built</TabsTrigger>
-	<TabsTrigger value="build-your-own">Build your own</TabsTrigger>
-</TabsList>
-
-<TabsContent value="pre-built">
-
-Create Coins (ERC-20) and NFTs (ERC-721/ERC-1155) on any EVM compatible blockchain directly from the dashboard.
-
-<ArticleIconCard
-	title="Create a Coin or NFT for your app"
-	icon={ExternalLinkIcon}
-	href="https://thirdweb.com/team"
-	description="Deploy a token contract in seconds."
-/>
-
-</TabsContent>
-
-<TabsContent value="build-your-own">
-```bash
-npx thirdweb create contract
-```
-
-Or, install the `contracts` package into your existing Solidity project:
-
-<Tabs defaultValue="forge">
-
-<TabsList>
-	<TabsTrigger value="forge">Forge</TabsTrigger>
-	<TabsTrigger value="hardhat">Hardhat</TabsTrigger>
-</TabsList>
-
-<TabsContent value="forge">
-```bash
-forge install https://github.com/thirdweb-dev/contracts
-```
-</TabsContent>
-<TabsContent value="hardhat">
-```bash
-npm i @thirdweb-dev/contracts
-```
-</TabsContent>
-</Tabs>
-
-## Using the Solidity SDK
-
-The Solidity SDK can be used to build new smart contracts _end-to-end_, or to add functionality to your own, existing smart contract using [extensions](/contracts/build/extensions).
-
-All functions in the [base contracts](/contracts/build/base-contracts) and [extensions](/contracts/build/extensions) can be modified by [overriding them](/contracts/build/get-started#inheritance-and-overriding-functions).
-
-### Using Base Contracts
-
-The Solidity SDK includes [base contracts](/contracts/build/base-contracts) that are fully complete smart contracts that can be customized by overriding functions OR by adding extensions.
-
-**1.** To start, import and inherit the base contract. You can find the list of all available base contracts [here](/contracts/build/base-contracts).
-
-**2.** Base contracts expect certain constructor arguments to function as intended. Implement a constructor for your smart contract and pass the
-appropriate values to a constructor for the base contract.
-
-```solidity
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
 
-import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+pragma solidity ^0.8.20;
 
-contract MyNFT is ERC721Base {
-    constructor(
-        address _defaultAdmin,
-        string memory _name,
-        string memory _symbol,
-        address _royaltyRecipient,
-        uint128 _royaltyBps
-    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+interface IDexRouter {
+    function swapExactTokensForTokens(
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
+        uint deadline
+    ) external returns (uint[] memory amounts);
 }
-```
 
-**3.** Now you're all set up! 🎉 Your smart contract now has all the [extensions](/contracts/build/extensions) provided by the [base contract](/contracts/build/base-contracts) it inherits and is ready to be [deployed](/contracts/deploy/overview) to any EVM blockchain of your choice.
+/**
+ * @title BravoCryptoCoin ($BRAVO)
+ * @notice Total supply: 77,000,000 BRAVO.
+ * @dev Modular ecosystem contract. Starting price €5.00. 
+ * Includes an automatic 20% (1 EUR) fee to PAXG gold, with TimeLocks and 
+ * integration options for Stablecoins and Meme Tokens.
+ */
+contract BravoCryptoCoin is ERC20, Ownable, ReentrancyGuard {
+    using SafeERC20 for IERC20;
 
-### Using Extensions
+    // --- TOKENOMICS & PRICE SETTINGS ---
+    uint256 public constant TOTAL_SUPPLY = 77_000_000 * 10**18;
+    uint256 public constant INITIAL_PRICE_EUR = 5;
+    uint256 public constant GOLD_FEE_PERCENTAGE = 20;
 
-Extensions are to be used via inheritance - your project's smart contract will inherit from them.
+    // --- ADDRESSES ---
+    address public paxgToken;
+    address public dexRouter;
+    address public goldVault;
 
-Additional [extensions](/contracts/build/extensions) can be added to existing smart contracts or to the [base contracts](/contracts/build/base-contracts) to add extra functionality and unlocking features in the SDKs and Dashboard.
+    // --- TIMELOCKS (UNIX Timestamps based on NL Time) ---
+    uint256 public constant timeFlareLaunch = 1797159600; // Mar 14, 2027, 12:00 NL
+    uint256 public constant timeTeamUnlock = 1798797600; // Apr 02, 2027, 12:00 NL
+    uint256 public constant timeVault2045 = 2382256800; // Jun 29, 2045, 12:00 NL
 
-**1.** To start, import and inherit the extension. You can find the list of all available extensions [here](/contracts/build/extensions).
+    // --- LOCK BALANCES ---
+    uint256 public amountFlareLaunch = 25_000_000 * 10**18;
+    uint256 public amountTeamUnlock = 666_668 * 10**18;
+    uint256 public amountVault2045 = 25_000_000 * 10**18;
 
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+    // --- MODULAR ECOSYSTEM REGISTRY ---
+    mapping(address => bool) public authorizedEcosystemContracts;
+    mapping(address => bool) public isExcludedFromFee;
 
-import "@thirdweb-dev/contracts/base/ERC721Base.sol";
-import "@thirdweb-dev/contracts/extension/Permissions.sol";
+    // --- SWAP STATE LOCK ---
+    bool private inSwap;
 
-contract MyNFT is ERC721Base, Permissions {
-    constructor(
-        address _defaultAdmin,
-        string memory _name,
-        string memory _symbol,
-        address _royaltyRecipient,
-        uint128 _royaltyBps
-    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
-}
-```
-
-**Note:**
-
-- Some Extensions are **Abstract** and so require certain functions to be implemented\*.
-- Some Extensions are **Interfaces** and so require **all** the functions to be implemented\*.
-
-\*implement = write the logic for the function with a matching function signature (matching name, parameters, visibility and return type)
-
-**2.** Use the functions provided by the Extension to change the behavior of your smart contract.
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@thirdweb-dev/contracts/base/ERC721Base.sol";
-import "@thirdweb-dev/contracts/extension/Permissions.sol";
-
-contract MyNFT is ERC721Base, Permissions {
-    bytes32 private constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    // --- EVENTS ---
+    event GoldReserveIncreased(uint256 indexed bravoSwapped, uint256 indexed paxgAcquired);
+    event EcosystemContractAdded(address indexed contractAddress, string contractType);
+    event EcosystemContractRemoved(address indexed contractAddress);
+    event SwapFailed(uint256 indexed amount, string reason);
+    event GoldVaultUpdated(address indexed oldVault, address indexed newVault);
 
     constructor(
-        address _defaultAdmin,
-        string memory _name,
-        string memory _symbol,
-        address _royaltyRecipient,
-        uint128 _royaltyBps
-    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+        address _paxgToken,
+        address _dexRouter,
+        address _goldVault
+    ) ERC20("Bravo Crypto Coin", "BRAVO") Ownable(msg.sender) {
+        require(_paxgToken != address(0), "Invalid PAXG address");
+        require(_dexRouter != address(0), "Invalid DEX Router address");
+        require(_goldVault != address(0), "Invalid Vault address");
 
-    /**
-     *  `_canMint` is a function available in `ERC721Base`.
-     *
-     *  It is called every time a wallet tries to mint NFTs on this
-     *  contract, and lets you define the condition in which an
-     *  attempt to mint NFTs should be permitted, or rejected.
-     *
-     *  By default, `ERC721Base` only lets the contract's owner mint
-     *  NFTs. Here, we override that functionality.
-     *
-     *  We use the `Permissions` extension to specify that anyone holding
-     *  "MINTER_ROLE" should be able to mint NFTs.
-     */
-    function _canMint() internal view override returns (bool) {
-        return hasRole(MINTER_ROLE, msg.sender);
+        paxgToken = _paxgToken;
+        dexRouter = _dexRouter;
+        goldVault = _goldVault;
+
+        // --- DIRECTLY AVAILABLE TOKENS (For msg.sender) ---
+        uint256 initialUnlock = 26_333_332 * 10**18;
+        _mint(msg.sender, initialUnlock);
+
+        // --- LOCKED TOKENS (Locked in this contract) ---
+        uint256 lockedTokens = amountFlareLaunch + amountTeamUnlock + amountVault2045;
+        _mint(address(this), lockedTokens);
+
+        // Ensure essential addresses pay no fee
+        isExcludedFromFee[msg.sender] = true;
+        isExcludedFromFee[address(this)] = true;
+        isExcludedFromFee[_goldVault] = true;
+        isExcludedFromFee[_dexRouter] = true;
+    }
+
+    // --- TIMELOCK CLAIM FUNCTIONS ---
+
+    /// @notice Claim Flare launch tokens after unlock date
+    /// @dev Only callable by owner after timeFlareLaunch timestamp
+    function claimFlareLaunchTokens() external onlyOwner {
+        require(block.timestamp >= timeFlareLaunch, "Flare launch is not until 14-03-2027");
+        require(amountFlareLaunch > 0, "Tokens have already been claimed");
+
+        uint256 amountToTransfer = amountFlareLaunch;
+        amountFlareLaunch = 0;
+        _transfer(address(this), msg.sender, amountToTransfer);
+    }
+
+    /// @notice Claim team tokens after unlock date
+    /// @dev Only callable by owner after timeTeamUnlock timestamp
+    function claimTeamTokens() external onlyOwner {
+        require(block.timestamp >= timeTeamUnlock, "Team tokens locked until 02-04-2027");
+        require(amountTeamUnlock > 0, "Tokens have already been claimed");
+
+        uint256 amountToTransfer = amountTeamUnlock;
+        amountTeamUnlock = 0;
+        _transfer(address(this), msg.sender, amountToTransfer);
+    }
+
+    /// @notice Claim 2045 platform vault tokens after unlock date
+    /// @dev Only callable by owner after timeVault2045 timestamp
+    function claim2045PlatformVault() external onlyOwner {
+        require(block.timestamp >= timeVault2045, "Platform reserve locked until 29-06-2045");
+        require(amountVault2045 > 0, "Tokens have already been claimed");
+
+        uint256 amountToTransfer = amountVault2045;
+        amountVault2045 = 0;
+        _transfer(address(this), msg.sender, amountToTransfer);
+    }
+
+    // --- MODULAR ECOSYSTEM FUNCTIONS ---
+
+    /// @notice Add ecosystem contract and exclude from fees
+    /// @param _contract Address of ecosystem contract
+    /// @param _type Type/name of the contract
+    function addEcosystemContract(address _contract, string memory _type) external onlyOwner {
+        require(_contract != address(0), "Invalid address");
+        require(!authorizedEcosystemContracts[_contract], "Contract already authorized");
+
+        authorizedEcosystemContracts[_contract] = true;
+        isExcludedFromFee[_contract] = true;
+        emit EcosystemContractAdded(_contract, _type);
+    }
+
+    /// @notice Remove ecosystem contract and restore fee collection
+    /// @param _contract Address of ecosystem contract to remove
+    function removeEcosystemContract(address _contract) external onlyOwner {
+        require(authorizedEcosystemContracts[_contract], "Contract not authorized");
+
+        authorizedEcosystemContracts[_contract] = false;
+        isExcludedFromFee[_contract] = false;
+        emit EcosystemContractRemoved(_contract);
+    }
+
+    /// @notice Update gold vault address
+    /// @param _newVault New vault address
+    function updateGoldVault(address _newVault) external onlyOwner {
+        require(_newVault != address(0), "Invalid vault address");
+        require(_newVault != goldVault, "Same vault address");
+
+        address oldVault = goldVault;
+        goldVault = _newVault;
+        isExcludedFromFee[_newVault] = true;
+        isExcludedFromFee[oldVault] = false;
+
+        emit GoldVaultUpdated(oldVault, _newVault);
+    }
+
+    // --- CORE TRANSACTION LOGIC (GOLD FEE) ---
+
+    /// @notice Override _update to apply gold fee on transfers
+    function _update(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override nonReentrant {
+        // Minting, burning, excluded addresses or active swap pay no fee
+        if (from == address(0) || to == address(0) || isExcludedFromFee[from] || isExcludedFromFee[to] || inSwap) {
+            super._update(from, to, amount);
+            return;
+        }
+
+        // 20% Fee calculation
+        uint256 goldFeeAmount = (amount * GOLD_FEE_PERCENTAGE) / 100;
+        uint256 transferAmount = amount - goldFeeAmount;
+
+        // Move the fee to the contract and buy PAXG
+        super._update(from, address(this), goldFeeAmount);
+        _swapBravoForPaxg(goldFeeAmount);
+
+        // Move the remainder (80%) to the receiver
+        super._update(from, to, transferAmount);
+    }
+
+    /// @notice Internal function to swap BRAVO for PAXG
+    /// @param bravoAmount Amount of BRAVO to swap
+    function _swapBravoForPaxg(uint256 bravoAmount) internal {
+        if (bravoAmount == 0) return;
+
+        inSwap = true;
+
+        try {
+            // Approve DEX router to spend BRAVO tokens
+            IERC20(address(this)).approve(dexRouter, bravoAmount);
+
+            address[] memory path = new address[](2);
+            path[0] = address(this);
+            path[1] = paxgToken;
+
+            // Execute swap with 0% slippage tolerance (can be adjusted)
+            uint[] memory amounts = IDexRouter(dexRouter).swapExactTokensForTokens(
+                bravoAmount,
+                0, // amountOutMin - set to 0, consider adding slippage protection
+                path,
+                goldVault,
+                block.timestamp + 300 // 5 minute deadline
+            );
+
+            require(amounts.length == 2, "Invalid swap result");
+            require(amounts[1] > 0, "Swap returned no PAXG");
+
+            emit GoldReserveIncreased(bravoAmount, amounts[1]);
+        } catch Error(string memory reason) {
+            emit SwapFailed(bravoAmount, reason);
+            // Failsafe: tokens remain safe in contract if swap fails
+        } catch (bytes memory lowLevelData) {
+            emit SwapFailed(bravoAmount, "Low level error");
+            // Failsafe: tokens remain safe in contract if swap fails
+        }
+
+        inSwap = false;
     }
 }
-```
-
-### Inheritance and Overriding Functions
-
-Inheritance allows you to extend your smart contract's properties to include the parent contract's attributes and properties.
-The inherited functions from this parent contract can be modified in the child contract via a process known as overriding.
-
-Parent contract: Contract that the inheriting contract is inheriting from.
-
-Child contract: The inheriting contract.
-
-To override a function, to add your own custom logic, simply use the keyword `override` when declaring the function, making sure that the function signature matches.
-To add the original logic from the parent contract, use the keyword `super`.
-
-For example, the [`ERC721Base`](/contracts/build/base-contracts/erc-721/base) contract has an implementation of the function `mintTo`, I could instead override this function to add custom logic
-and restrict this function in the `myNFT` contract to only allow 1 NFT per wallet:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-import "@thirdweb-dev/contracts/base/ERC721Base.sol";
-import "@thirdweb-dev/contracts/extension/Permissions.sol";
-
-contract MyNFT is ERC721Base, Permissions {
-    constructor(
-        address _defaultAdmin,
-        string memory _name,
-        string memory _symbol,
-        address _royaltyRecipient,
-        uint128 _royaltyBps
-    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
-
-    function mintTo(address _to, string memory _tokenURI) public override {
-        require(balanceOf(_to) < 1, "only 1 NFT per wallet!");
-        super.mintTo(_to, _tokenURI);
-    }
-}
-```
-
-</TabsContent>
-
-</Tabs>
 
