@@ -466,6 +466,7 @@ export function useStepExecutor(
           return { completed: true };
         } else if (status === "FAILED") {
           setOnrampStatus("failed");
+          throw new Error("Payment failed");
         }
 
         return { completed: false };
@@ -517,12 +518,25 @@ export function useStepExecutor(
       }
 
       // Execute onramp first if configured and not already completed
+      let onrampCompleted =
+        preparedQuote.type !== "onramp" || onrampStatus === "completed";
       if (preparedQuote.type === "onramp" && onrampStatus === "pending") {
         await executeOnramp(
           preparedQuote,
           completedStatusResults,
           abortController.signal,
         );
+        onrampCompleted = true;
+      }
+
+      // An onramp must complete before any follow-up transactions run or
+      // success is reported.
+      if (!onrampCompleted) {
+        throw new ApiError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Onramp did not complete",
+          statusCode: 500,
+        });
       }
 
       if (flatTxs.length > 0) {

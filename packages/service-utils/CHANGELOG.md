@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.10.11
+
+### Patch Changes
+
+- [#8912](https://github.com/thirdweb-dev/js/pull/8912) [`7bf5f29`](https://github.com/thirdweb-dev/js/commit/7bf5f295b14746a5c253e147c55b733dbd3d86fe) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Scope service-key authorization cache entries by teamId, and ignore cache entries that lack a timestamp
+
 ## 0.10.10
 
 ### Patch Changes
