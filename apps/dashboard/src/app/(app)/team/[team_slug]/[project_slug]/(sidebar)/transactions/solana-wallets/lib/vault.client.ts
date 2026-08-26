@@ -1,24 +1,10 @@
 "use server";
 
 import {
-  createVaultClient,
-  createSolanaAccount as vaultCreateSolanaAccount,
-  listSolanaAccounts as vaultListSolanaAccounts,
-} from "@thirdweb-dev/vault-sdk";
-import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
+  createVaultServerWallet,
+  listVaultServerWallets,
+} from "@/actions/vault";
 import type { SolanaWallet } from "../wallet-table/types";
-
-interface VaultSolanaAccountListItem {
-  id: string;
-  pubkey: string;
-  createdAt: string;
-  updatedAt: string;
-  metadata: {
-    projectId?: string;
-    type?: string;
-    label?: string;
-  } | null;
-}
 
 interface SolanaAccountResponse {
   pubkey: string;
@@ -26,91 +12,42 @@ interface SolanaAccountResponse {
   updatedAt: string;
 }
 
-export async function listSolanaAccounts(params: {
-  managementAccessToken: string;
-  page?: number;
-  limit?: number;
-  projectId?: string;
-}): Promise<{
-  data: {
-    items: SolanaWallet[];
-    totalRecords: number;
-  };
+export type SolanaWalletList = {
+  data: { items: SolanaWallet[]; totalRecords: number };
   error: Error | null;
   success: boolean;
-}> {
-  const { managementAccessToken, page = 1, limit = 100, projectId } = params;
+};
 
-  if (!managementAccessToken || !NEXT_PUBLIC_THIRDWEB_VAULT_URL) {
-    return {
-      data: {
-        items: [],
-        totalRecords: 0,
-      },
-      error: new Error("Missing managementAccessToken or vault URL"),
-      success: false,
-    };
-  }
+export async function listSolanaAccounts(params: {
+  teamId: string;
+  projectId: string;
+  page?: number;
+  limit?: number;
+}): Promise<SolanaWalletList> {
+  const { teamId, projectId, page = 1, limit = 100 } = params;
 
   try {
-    const vaultClient = await createVaultClient({
-      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
+    const result = await listVaultServerWallets({
+      chainType: "solana",
+      page,
+      pageSize: limit,
+      project: { projectId, teamId },
     });
-
-    const response = await vaultListSolanaAccounts({
-      client: vaultClient,
-      request: {
-        auth: {
-          accessToken: managementAccessToken,
-        },
-        options: {
-          page: page - 1, // Vault SDK uses 0-based pagination
-          pageSize: limit,
-        },
-      },
-    });
-
-    if (!response.success || !response.data) {
-      return {
-        data: {
-          items: [],
-          totalRecords: 0,
-        },
-        error: response.error
-          ? new Error(JSON.stringify(response.error))
-          : new Error("Failed to fetch Solana accounts"),
-        success: false,
-      };
-    }
-
-    const items = (response.data.items || []) as VaultSolanaAccountListItem[];
-
-    // Filter by projectId and type, transform to SolanaWallet type
-    const wallets: SolanaWallet[] = items
-      .filter((item) => {
-        // Filter by projectId
-        if (projectId && item.metadata?.projectId !== projectId) {
-          return false;
-        }
-        // Only include server-wallet type
-        return !item.metadata?.type || item.metadata.type === "server-wallet";
-      })
-      .map((item) => ({
-        id: item.id,
-        publicKey: item.pubkey,
-        metadata: {
-          type: "server-wallet",
-          projectId: item.metadata?.projectId || projectId || "",
-          label: item.metadata?.label,
-        },
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-      }));
 
     return {
       data: {
-        items: wallets,
-        totalRecords: wallets.length, // Use filtered count since we're filtering by projectId
+        items: result.wallets.map<SolanaWallet>((wallet) => ({
+          createdAt: wallet.createdAt,
+          id: wallet.address,
+          metadata: {
+            label: wallet.label ?? undefined,
+            projectId,
+            type: "server-wallet",
+          },
+          publicKey: wallet.address,
+          updatedAt: wallet.updatedAt,
+        })),
+        totalRecords: result.totalRecords,
       },
       error: null,
       success: true,
@@ -129,62 +66,28 @@ export async function listSolanaAccounts(params: {
 }
 
 export async function createSolanaAccount(params: {
-  managementAccessToken: string;
-  label: string;
-  projectId: string;
   teamId: string;
+  projectId: string;
+  label: string;
 }): Promise<{
   data: SolanaAccountResponse | null;
   error: Error | null;
   success: boolean;
 }> {
-  const { managementAccessToken, label, projectId, teamId } = params;
-
-  if (!managementAccessToken || !NEXT_PUBLIC_THIRDWEB_VAULT_URL) {
-    return {
-      data: null,
-      error: new Error("Missing managementAccessToken or vault URL"),
-      success: false,
-    };
-  }
+  const { teamId, projectId, label } = params;
 
   try {
-    const vaultClient = await createVaultClient({
-      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
+    const { wallet } = await createVaultServerWallet({
+      chainType: "solana",
+      label,
+      project: { projectId, teamId },
     });
-
-    const response = await vaultCreateSolanaAccount({
-      client: vaultClient,
-      request: {
-        auth: {
-          accessToken: managementAccessToken,
-        },
-        options: {
-          metadata: {
-            label,
-            projectId,
-            teamId,
-            type: "server-wallet",
-          },
-        },
-      },
-    });
-
-    if (!response.success || !response.data) {
-      return {
-        data: null,
-        error: response.error
-          ? new Error(JSON.stringify(response.error))
-          : new Error("Failed to create Solana account"),
-        success: false,
-      };
-    }
 
     return {
       data: {
-        pubkey: response.data.pubkey,
-        createdAt: response.data.createdAt,
-        updatedAt: response.data.updatedAt,
+        createdAt: wallet.createdAt,
+        pubkey: wallet.address,
+        updatedAt: wallet.updatedAt,
       },
       error: null,
       success: true,

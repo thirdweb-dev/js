@@ -39,7 +39,6 @@ export function CreateSolanaWallet(props: {
       }
 
       const result = await createSolanaAccount({
-        managementAccessToken: managementAccessToken,
         label: label.trim(),
         projectId: props.project.id,
         teamId: props.project.teamId,
