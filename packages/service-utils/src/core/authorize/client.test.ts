@@ -86,6 +86,59 @@ describe("authorizeClient", () => {
     expect(result.status).toBe(401);
   });
 
+  it("should authorize an unlisted origin when the bundle id matches (union)", () => {
+    // a webview presents both an origin the owner never listed and a valid
+    // bundle id; the allowlists are a union so this must be authorized
+    const authOptions: ClientAuthorizationPayload = {
+      bundleId: "com.foo.bar",
+      incomingServiceApiKey: null,
+      origin: "unauthorized.com",
+      secretKeyHash: null,
+    };
+
+    const responseWithBundle = {
+      ...validTeamAndProjectResponse,
+      project: {
+        ...validProjectResponse,
+        bundleIds: ["com.foo.bar"],
+        domains: ["example.com"],
+      },
+    };
+
+    const result = authorizeClient(
+      authOptions,
+      responseWithBundle,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
+    ) as any;
+    expect(result.authorized).toBe(true);
+  });
+
+  it("should not authorize when both origin and bundle id mismatch", () => {
+    const authOptions: ClientAuthorizationPayload = {
+      bundleId: "com.evil.app",
+      incomingServiceApiKey: null,
+      origin: "unauthorized.com",
+      secretKeyHash: null,
+    };
+
+    const responseWithBundle = {
+      ...validTeamAndProjectResponse,
+      project: {
+        ...validProjectResponse,
+        bundleIds: ["com.foo.bar"],
+        domains: ["example.com"],
+      },
+    };
+
+    const result = authorizeClient(
+      authOptions,
+      responseWithBundle,
+      // biome-ignore lint/suspicious/noExplicitAny: test only
+    ) as any;
+    expect(result.authorized).toBe(false);
+    expect(result.errorCode).toBe("ORIGIN_UNAUTHORIZED");
+  });
+
   it("should not authorize client with unauthorized origin", () => {
     const authOptionsWithUnauthorizedOrigin: ClientAuthorizationPayload = {
       bundleId: null,

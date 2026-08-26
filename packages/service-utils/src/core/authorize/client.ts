@@ -48,17 +48,32 @@ export function authorizeClient(
     return authResult;
   }
 
-  // validate domains
-  if (origin) {
-    if (
-      authorizeDomain({
-        domains: project.domains,
-        origin,
-      })
-    ) {
-      return authResult;
-    }
+  // The allowlists are a union: a request is authorized when its origin
+  // matches the domain allowlist OR its bundle id matches the bundle
+  // allowlist. A webview or in-app browser can legitimately present both an
+  // unlisted origin and a valid bundle id, so a failed origin check must not
+  // preempt the bundle check.
+  if (
+    origin &&
+    authorizeDomain({
+      domains: project.domains,
+      origin,
+    })
+  ) {
+    return authResult;
+  }
 
+  if (
+    bundleId &&
+    authorizeBundleId({
+      bundleId,
+      bundleIds: project.bundleIds,
+    })
+  ) {
+    return authResult;
+  }
+
+  if (origin) {
     return {
       authorized: false,
       errorCode: "ORIGIN_UNAUTHORIZED",
@@ -67,17 +82,7 @@ export function authorizeClient(
     };
   }
 
-  // validate bundleId
   if (bundleId) {
-    if (
-      authorizeBundleId({
-        bundleId,
-        bundleIds: project.bundleIds,
-      })
-    ) {
-      return authResult;
-    }
-
     return {
       authorized: false,
       errorCode: "BUNDLE_UNAUTHORIZED",
