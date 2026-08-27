@@ -1,25 +1,13 @@
 import "server-only";
 
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
+import { listVaultServerWallets } from "@/actions/vault";
 import type { Project } from "@/api/project/projects";
-import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getProjectWalletLabel } from "@/lib/project-wallet";
 
 export type ProjectWalletSummary = {
   id: string;
   address: string;
   label?: string;
-};
-
-type VaultWalletListItem = {
-  id: string;
-  address: string;
-  metadata?: {
-    label?: string;
-    projectId?: string;
-    teamId?: string;
-    type?: string;
-  };
 };
 
 export async function getProjectWallet(
@@ -35,52 +23,20 @@ export async function getProjectWallet(
     engineCloudService as { projectWalletAddress?: string } | undefined
   )?.projectWalletAddress;
 
-  if (
-    !managementAccessToken ||
-    !NEXT_PUBLIC_THIRDWEB_VAULT_URL ||
-    !projectWalletAddress
-  ) {
+  if (!managementAccessToken || !projectWalletAddress) {
     return undefined;
   }
 
   try {
-    const vaultClient = await createVaultClient({
-      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
+    const { wallets } = await listVaultServerWallets({
+      chainType: "evm",
+      pageSize: 100,
+      project: { projectId: project.id, teamId: project.teamId },
     });
 
-    const response = await listEoas({
-      client: vaultClient,
-      request: {
-        auth: {
-          accessToken: managementAccessToken,
-        },
-        options: {
-          page: 0,
-          // @ts-expect-error - SDK expects snake_case for pagination arguments
-          page_size: 100,
-        },
-      },
-    });
-
-    if (!response.success || !response.data) {
-      return undefined;
-    }
-
-    const items = response.data.items as VaultWalletListItem[] | undefined;
-
-    if (!items?.length) {
-      return undefined;
-    }
-
-    const defaultLabel = getProjectWalletLabel(project.name);
-
-    const serverWallets = items.filter(
-      (item) => item.metadata?.projectId === project.id,
-    );
-
-    const defaultWallet = serverWallets.find(
-      (item) =>
-        item.address.toLowerCase() === projectWalletAddress.toLowerCase(),
+    const defaultWallet = wallets.find(
+      (wallet) =>
+        wallet.address.toLowerCase() === projectWalletAddress.toLowerCase(),
     );
 
     if (!defaultWallet) {
@@ -88,9 +44,9 @@ export async function getProjectWallet(
     }
 
     return {
-      id: defaultWallet.id,
       address: defaultWallet.address,
-      label: defaultWallet.metadata?.label ?? defaultLabel,
+      id: defaultWallet.address,
+      label: defaultWallet.label ?? getProjectWalletLabel(project.name),
     };
   } catch (error) {
     console.error("Failed to load project wallet", error);

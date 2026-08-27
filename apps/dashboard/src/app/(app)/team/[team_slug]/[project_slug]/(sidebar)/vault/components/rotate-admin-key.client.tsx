@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { rotateVaultServiceAccount } from "@/actions/vault";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -27,10 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import {
-  maskSecret,
-  rotateVaultAccountAndAccessToken,
-} from "../../transactions/lib/vault.client";
+import { maskSecret } from "../../transactions/lib/vault.client";
 
 export default function RotateAdminKeyButton(props: {
   project: Project;
@@ -48,28 +46,35 @@ export default function RotateAdminKeyButton(props: {
 
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
-      const result = await rotateVaultAccountAndAccessToken({
-        project: props.project,
+      return rotateVaultServiceAccount({
+        project: {
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+        },
         projectSecretKey: willStayManaged ? secretKeyInput.trim() : undefined,
       });
-
-      return {
-        adminKey: result.adminKey,
-        success: true,
-        userAccessToken: result.walletToken,
-      };
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
 
+  // Only an ejected vault returns the new keys; a managed vault keeps them.
+  const rotatedKeys =
+    rotateAdminKeyMutation.data?.adminKey &&
+    rotateAdminKeyMutation.data.walletAccessToken
+      ? {
+          adminKey: rotateAdminKeyMutation.data.adminKey,
+          walletAccessToken: rotateAdminKeyMutation.data.walletAccessToken,
+        }
+      : undefined;
+
   const handleDownloadKeys = () => {
-    if (!rotateAdminKeyMutation.data) {
+    if (!rotatedKeys) {
       return;
     }
 
-    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${rotateAdminKeyMutation.data.adminKey}\n\nVault Access Token:\n${rotateAdminKeyMutation.data.userAccessToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${rotatedKeys.adminKey}\n\nVault Access Token:\n${rotatedKeys.walletAccessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -88,7 +93,7 @@ export default function RotateAdminKeyButton(props: {
   };
 
   const handleCloseModal = () => {
-    if (!keysConfirmed) {
+    if (rotatedKeys && !keysConfirmed) {
       return;
     }
 
@@ -122,7 +127,7 @@ export default function RotateAdminKeyButton(props: {
       <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
         <DialogContent
           className="overflow-hidden p-0"
-          dialogCloseClassName={cn(!keysConfirmed && "hidden")}
+          dialogCloseClassName={cn(rotatedKeys && !keysConfirmed && "hidden")}
         >
           {rotateAdminKeyMutation.isPending ? (
             <>
@@ -136,7 +141,7 @@ export default function RotateAdminKeyButton(props: {
                 </p>
               </div>
             </>
-          ) : rotateAdminKeyMutation.data ? (
+          ) : rotatedKeys ? (
             <div>
               <DialogHeader className="p-6">
                 <DialogTitle>New Vault Keys</DialogTitle>
@@ -152,10 +157,8 @@ export default function RotateAdminKeyButton(props: {
                       <CopyTextButton
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
-                        textToCopy={rotateAdminKeyMutation.data.adminKey}
-                        textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.adminKey,
-                        )}
+                        textToCopy={rotatedKeys.adminKey}
+                        textToShow={maskSecret(rotatedKeys.adminKey)}
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -172,14 +175,8 @@ export default function RotateAdminKeyButton(props: {
                       <CopyTextButton
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
-                        textToCopy={
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken
-                        }
-                        textToShow={maskSecret(
-                          rotateAdminKeyMutation.data.userAccessToken
-                            .accessToken,
-                        )}
+                        textToCopy={rotatedKeys.walletAccessToken}
+                        textToShow={maskSecret(rotatedKeys.walletAccessToken)}
                         tooltip="Copy Vault Access Token"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -229,6 +226,36 @@ export default function RotateAdminKeyButton(props: {
                   onClick={handleCloseModal}
                   variant="primary"
                 >
+                  Close
+                </Button>
+              </div>
+            </div>
+          ) : rotateAdminKeyMutation.data ? (
+            <div>
+              <DialogHeader className="p-6">
+                <DialogTitle>Admin Key Rotated</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6 p-6 pt-0">
+                <div>
+                  <h3 className="mb-2 font-medium text-sm">
+                    New Vault Admin Key
+                  </h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex w-full items-center rounded-lg border bg-background px-3 py-3 font-mono text-xs">
+                      {rotateAdminKeyMutation.data.maskedAdminKey}
+                    </div>
+                    <p className="text-muted-foreground text-xs">
+                      Your admin key and wallet access token were re-encrypted
+                      with your project secret key. Your backend keeps working
+                      without changes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button onClick={handleCloseModal} variant="primary">
                   Close
                 </Button>
               </div>

@@ -1,16 +1,19 @@
-import { createVaultClient, listEoas } from "@thirdweb-dev/vault-sdk";
 import { redirect } from "next/navigation";
 import { getAuthToken } from "@/api/auth-token";
 import { getProject } from "@/api/project/projects";
-import { NEXT_PUBLIC_THIRDWEB_VAULT_URL } from "@/constants/public-envs";
 import { getClientThirdwebClient } from "@/constants/thirdweb-client.client";
 import { getProjectWallet } from "@/lib/server/project-wallet";
 import { loginRedirect } from "@/utils/redirects";
 import { ProjectWalletSection } from "../../components/project-wallet/project-wallet";
 import { TransactionsAnalyticsPageContent } from "../../transactions/analytics/analytics-page";
-import type { Wallet } from "../../transactions/server-wallets/wallet-table/types";
-import { listSolanaAccounts } from "../../transactions/solana-wallets/lib/vault.client";
-import type { SolanaWallet } from "../../transactions/solana-wallets/wallet-table/types";
+import {
+  listEvmServerWallets,
+  type ServerWalletList,
+} from "../../transactions/lib/server-wallets";
+import {
+  listSolanaAccounts,
+  type SolanaWalletList,
+} from "../../transactions/solana-wallets/lib/vault.client";
 
 export const dynamic = "force-dynamic";
 
@@ -35,19 +38,10 @@ export default async function Page(props: {
     );
   }
 
-  const [vaultClient, project] = await Promise.all([
-    createVaultClient({
-      baseUrl: NEXT_PUBLIC_THIRDWEB_VAULT_URL,
-    }).catch(() => undefined),
-    getProject(params.team_slug, params.project_slug),
-  ]);
+  const project = await getProject(params.team_slug, params.project_slug);
 
   if (!project) {
     redirect(`/team/${params.team_slug}`);
-  }
-
-  if (!vaultClient) {
-    return <div>Error: Failed to connect to Vault</div>;
   }
 
   const projectEngineCloudService = project.services.find(
@@ -62,44 +56,35 @@ export default async function Page(props: {
   const currentPage = Number.parseInt(searchParams.page ?? "1");
   const solanaCurrentPage = Number.parseInt(searchParams.solana_page ?? "1");
 
-  const eoas = managementAccessToken
-    ? await listEoas({
-        client: vaultClient,
-        request: {
-          auth: {
-            accessToken: managementAccessToken,
-          },
-          options: {
-            page: currentPage - 1,
-            // @ts-expect-error - TODO: fix this
-            page_size: pageSize,
-          },
-        },
-      })
-    : { data: { items: [], totalRecords: 0 }, error: null, success: true };
-
-  const wallets = (eoas.data?.items as Wallet[] | undefined) ?? [];
-
-  let solanaAccounts: {
-    data: { items: SolanaWallet[]; totalRecords: number };
-    error: Error | null;
-    success: boolean;
+  const emptyEvmList: ServerWalletList = {
+    data: { items: [], totalRecords: 0 },
+    error: null,
+    success: true,
+  };
+  const emptySolanaList: SolanaWalletList = {
+    data: { items: [], totalRecords: 0 },
+    error: null,
+    success: true,
   };
 
-  if (managementAccessToken) {
-    solanaAccounts = await listSolanaAccounts({
-      managementAccessToken,
-      page: solanaCurrentPage,
-      limit: pageSize,
-      projectId: project.id,
-    });
-  } else {
-    solanaAccounts = {
-      data: { items: [], totalRecords: 0 },
-      error: null,
-      success: true,
-    };
-  }
+  const [eoas, solanaAccounts] = managementAccessToken
+    ? await Promise.all([
+        listEvmServerWallets({
+          limit: pageSize,
+          page: currentPage,
+          projectId: project.id,
+          teamId: project.teamId,
+        }),
+        listSolanaAccounts({
+          limit: pageSize,
+          page: solanaCurrentPage,
+          projectId: project.id,
+          teamId: project.teamId,
+        }),
+      ])
+    : [emptyEvmList, emptySolanaList];
+
+  const wallets = eoas.data.items;
 
   const testTxWithWallet =
     typeof searchParams.testTxWithWallet === "string"
