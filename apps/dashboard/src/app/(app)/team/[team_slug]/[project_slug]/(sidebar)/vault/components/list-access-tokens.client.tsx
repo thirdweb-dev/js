@@ -20,9 +20,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { toDateTimeLocal } from "@/utils/date-utils";
 
-export default function ListAccessTokens(props: { project: Project }) {
+export default function ListAccessTokens(props: {
+  project: Project;
+  className?: string;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [typedUnlockKey, setTypedUnlockKey] = useState("");
   const [unlockKey, setUnlockKey] = useState("");
@@ -99,7 +103,12 @@ export default function ListAccessTokens(props: { project: Project }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card">
+    <div
+      className={cn(
+        "flex flex-col gap-6 overflow-hidden rounded-lg border border-border bg-card",
+        props.className,
+      )}
+    >
       <div className="flex flex-col px-6 pt-6">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col">
@@ -252,6 +261,7 @@ export default function ListAccessTokens(props: { project: Project }) {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       setUnlockKey(typedUnlockKey);
+                      handleCloseModal();
                     }
                   }}
                   placeholder={
