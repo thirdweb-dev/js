@@ -28,7 +28,6 @@
     "@tanstack/react-table": "^8.21.3",
     "@thirdweb-dev/api": "workspace:*",
     "@thirdweb-dev/service-utils": "workspace:*",
-    "@thirdweb-dev/vault-sdk": "workspace:*",
     "@vercel/functions": "2.2.2",
     "@vercel/og": "^0.6.8",
     "@workspace/ui": "workspace:*",

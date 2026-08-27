@@ -10,7 +10,6 @@
   "ignoreDependencies": [
     "@thirdweb-dev/api",
     "@thirdweb-dev/service-utils",
-    "@thirdweb-dev/vault-sdk",
     "thirdweb",
     "@types/color",
     "fast-xml-parser",

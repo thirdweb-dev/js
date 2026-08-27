@@ -1,9 +1,6 @@
 export const NEXT_PUBLIC_DASHBOARD_CLIENT_ID =
   process.env.NEXT_PUBLIC_DASHBOARD_CLIENT_ID || "";
 
-export const NEXT_PUBLIC_THIRDWEB_VAULT_URL =
-  process.env.NEXT_PUBLIC_THIRDWEB_VAULT_URL || "";
-
 export const NEXT_PUBLIC_ENGINE_CLOUD_URL =
   process.env.NEXT_PUBLIC_ENGINE_CLOUD_URL || "";
 
