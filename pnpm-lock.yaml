@@ -147,9 +147,6 @@ importers:
       '@thirdweb-dev/service-utils':
         specifier: workspace:*
         version: link:../../packages/service-utils
-      '@thirdweb-dev/vault-sdk':
-        specifier: workspace:*
-        version: link:../../packages/vault-sdk
       '@vercel/functions':
         specifier: 2.2.2
         version: 2.2.2(@aws-sdk/credential-provider-web-identity@3.840.0)
