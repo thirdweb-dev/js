@@ -33,6 +33,7 @@ import { maskSecret } from "../../transactions/lib/vault.client";
 export default function RotateAdminKeyButton(props: {
   project: Project;
   isManagedVault: boolean;
+  className?: string;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
@@ -110,7 +111,10 @@ export default function RotateAdminKeyButton(props: {
   return (
     <>
       <Button
-        className="h-auto gap-2 rounded-lg bg-background px-4 py-3"
+        className={cn(
+          "h-auto gap-2 rounded-lg bg-background px-4 py-3",
+          props.className,
+        )}
         disabled={isLoading}
         onClick={() => setModalOpen(true)}
         variant="outline"
