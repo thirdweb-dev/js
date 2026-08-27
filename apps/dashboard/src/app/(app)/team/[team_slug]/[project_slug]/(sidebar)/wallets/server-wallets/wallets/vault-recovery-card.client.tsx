@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createVaultServiceAccount } from "@/actions/vault";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -27,11 +28,7 @@ import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/Spinner";
-import {
-  createVaultAccountAndAccessToken,
-  initVaultClient,
-  maskSecret,
-} from "../../../transactions/lib/vault.client";
+import { maskSecret } from "../../../transactions/lib/vault.client";
 
 interface VaultRecoveryCardProps {
   errorMessage: string;
@@ -66,15 +63,12 @@ export function VaultRecoveryCard({
 
   const regenerateMutation = useMutation({
     mutationFn: async () => {
-      await initVaultClient();
-
-      const result = await createVaultAccountAndAccessToken({
-        project,
+      return createVaultServiceAccount({
+        mode: willCreateEjectedVault ? "ejected" : "managed",
+        project: { projectId: project.id, teamId: project.teamId },
         // Only pass secret key if creating managed vault (not ejected)
         projectSecretKey: willCreateEjectedVault ? undefined : secretKeyInput,
       });
-
-      return result;
     },
     onSuccess: () => {
       // For managed vaults (with secret key), reload immediately
@@ -86,12 +80,22 @@ export function VaultRecoveryCard({
     },
   });
 
+  // Only an ejected vault returns its keys; a managed vault keeps them.
+  const createdKeys =
+    regenerateMutation.data?.adminKey &&
+    regenerateMutation.data.walletAccessToken
+      ? {
+          adminKey: regenerateMutation.data.adminKey,
+          walletAccessToken: regenerateMutation.data.walletAccessToken,
+        }
+      : undefined;
+
   const handleDownloadKeys = () => {
-    if (!regenerateMutation.data) {
+    if (!createdKeys) {
       return;
     }
 
-    const fileContent = `Project:\n${project.name} (${project.publishableKey})\n\nVault Admin Key:\n${regenerateMutation.data.adminKey}\n\nVault Access Token:\n${regenerateMutation.data.walletToken.accessToken}\n`;
+    const fileContent = `Project:\n${project.name} (${project.publishableKey})\n\nVault Admin Key:\n${createdKeys.adminKey}\n\nVault Access Token:\n${createdKeys.walletAccessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -170,7 +174,7 @@ export function VaultRecoveryCard({
           </AlertDialogTrigger>
           <AlertDialogContent>
             {/* Show key download UI for ejected vaults after success */}
-            {willCreateEjectedVault && regenerateMutation.data ? (
+            {createdKeys ? (
               <>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Save your Vault Admin Key</AlertDialogTitle>
@@ -185,10 +189,8 @@ export function VaultRecoveryCard({
                         <CopyTextButton
                           className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                           copyIconPosition="right"
-                          textToCopy={regenerateMutation.data.adminKey}
-                          textToShow={maskSecret(
-                            regenerateMutation.data.adminKey,
-                          )}
+                          textToCopy={createdKeys.adminKey}
+                          textToShow={maskSecret(createdKeys.adminKey)}
                           tooltip="Copy Admin Key"
                         />
                         <p className="text-muted-foreground text-xs">

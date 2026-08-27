@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { createVaultServiceAccount } from "@/actions/vault";
 import { reportOnboardingCompleted } from "@/analytics/report";
 import type { Project } from "@/api/project/projects";
 import type { CreateProjectPrefillOptions } from "@/components/project/create-project-modal";
@@ -33,7 +34,6 @@ import { createProjectClient } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { projectDomainsSchema, projectNameSchema } from "@/schema/validations";
 import { toArrFromList } from "@/utils/string";
-import { createVaultAccountAndAccessToken } from "../../../../../team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
   (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
@@ -55,8 +55,12 @@ export function CreateProjectFormOnboarding(props: {
           <CreateProjectForm
             createProject={async (params) => {
               const res = await createProjectClient(props.teamId, params);
-              const vaultTokens = await createVaultAccountAndAccessToken({
-                project: res.project,
+              await createVaultServiceAccount({
+                mode: "managed",
+                project: {
+                  projectId: res.project.id,
+                  teamId: res.project.teamId,
+                },
                 projectSecretKey: res.secret,
               }).catch((error) => {
                 console.error(
@@ -65,15 +69,6 @@ export function CreateProjectFormOnboarding(props: {
                 );
                 throw error;
               });
-
-              const managementAccessToken =
-                vaultTokens.managementToken?.accessToken;
-
-              if (!managementAccessToken) {
-                throw new Error(
-                  "Missing management access token for project wallet",
-                );
-              }
 
               return {
                 project: res.project,

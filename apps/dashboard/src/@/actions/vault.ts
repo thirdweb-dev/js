@@ -45,6 +45,11 @@ type RotateVaultServiceAccountResult = {
   walletAccessToken?: string;
 };
 
+type CreateVaultServiceAccountResult = RotateVaultServiceAccountResult & {
+  /** The project's default server wallet, null when none was created. */
+  projectWalletAddress: string | null;
+};
+
 /**
  * Credentials the caller supplies to unlock a vault. A managed vault takes the
  * project secret key, an ejected one takes the vault admin key.
@@ -148,6 +153,38 @@ export async function setVaultProjectWallet(params: {
 
   if (!res.ok) {
     throw new Error(errorMessage(res.error, "Failed to update project wallet"));
+  }
+
+  return res.data.data;
+}
+
+/**
+ * Creates the project's vault service account and its access tokens.
+ *
+ * A managed vault seals its admin key and wallet token with the project secret
+ * key and returns neither. An ejected vault returns both, once.
+ */
+export async function createVaultServiceAccount(params: {
+  project: ProjectRef;
+  mode: "managed" | "ejected";
+  projectSecretKey?: string;
+  skipWalletCreation?: boolean;
+}): Promise<CreateVaultServiceAccountResult> {
+  const res = await apiServerProxy<{
+    data: CreateVaultServiceAccountResult;
+  }>({
+    body: JSON.stringify({
+      mode: params.mode,
+      projectSecretKey: params.projectSecretKey,
+      skipWalletCreation: params.skipWalletCreation,
+    }),
+    headers: { "Content-Type": "application/json" },
+    method: "POST",
+    pathname: vaultPath(params.project, "/service-account"),
+  });
+
+  if (!res.ok) {
+    throw new Error(errorMessage(res.error, "Failed to create vault"));
   }
 
   return res.data.data;
