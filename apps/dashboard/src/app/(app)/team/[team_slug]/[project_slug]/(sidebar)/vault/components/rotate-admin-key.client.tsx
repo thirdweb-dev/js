@@ -38,6 +38,8 @@ export default function RotateAdminKeyButton(props: {
   const [modalOpen, setModalOpen] = useState(false);
   const [keysConfirmed, setKeysConfirmed] = useState(false);
   const [keysDownloaded, setKeysDownloaded] = useState(false);
+  const [adminKeyCopied, setAdminKeyCopied] = useState(false);
+  const [accessTokenCopied, setAccessTokenCopied] = useState(false);
   const [stayManaged, setStayManaged] = useState(props.isManagedVault);
   const [secretKeyInput, setSecretKeyInput] = useState("");
   const router = useDashboardRouter();
@@ -85,6 +87,12 @@ export default function RotateAdminKeyButton(props: {
   // Closing discards the only copy of the new credentials: while the request is
   // in flight the response has nowhere to land, and once it lands the user has
   // not stored it yet. Both states must hold the dialog open.
+  // The confirm checkbox is the only way out of this dialog, and closing it
+  // discards the response. Require the keys to actually leave the screen
+  // first: a download, or a copy of both values.
+  const keysCaptured =
+    keysDownloaded || (adminKeyCopied && accessTokenCopied);
+
   const closeBlocked =
     rotateAdminKeyMutation.isPending || (!!ejectedKeys && !keysConfirmed);
 
@@ -218,6 +226,7 @@ export default function RotateAdminKeyButton(props: {
                       <CopyTextButton
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
+                        onClick={() => setAdminKeyCopied(true)}
                         textToCopy={ejectedKeys.adminKey}
                         textToShow={maskSecret(ejectedKeys.adminKey)}
                         tooltip="Copy Admin Key"
@@ -236,6 +245,7 @@ export default function RotateAdminKeyButton(props: {
                       <CopyTextButton
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
+                        onClick={() => setAccessTokenCopied(true)}
                         textToCopy={ejectedKeys.walletAccessToken}
                         textToShow={maskSecret(ejectedKeys.walletAccessToken)}
                         tooltip="Copy Vault Access Token"
@@ -274,10 +284,16 @@ export default function RotateAdminKeyButton(props: {
                   <CheckboxWithLabel className="text-foreground">
                     <Checkbox
                       checked={keysConfirmed}
+                      disabled={!keysCaptured}
                       onCheckedChange={(v) => setKeysConfirmed(!!v)}
                     />
                     I confirm that I've securely stored these keys
                   </CheckboxWithLabel>
+                  {!keysCaptured && (
+                    <p className="mt-2 text-muted-foreground text-xs">
+                      Download the keys, or copy both values, to continue.
+                    </p>
+                  )}
                 </Alert>
               </div>
 
