@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { createVaultServiceAccount } from "@/actions/vault";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,6 @@ import { createProjectClient } from "@/hooks/useApi";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { projectDomainsSchema, projectNameSchema } from "@/schema/validations";
 import { toArrFromList } from "@/utils/string";
-import { createVaultAccountAndAccessToken } from "../../../../app/(app)/team/[team_slug]/[project_slug]/(sidebar)/transactions/lib/vault.client";
 
 const ALL_PROJECT_SERVICES = SERVICES.filter(
   (srv) => srv.name !== "relayer" && srv.name !== "chainsaw",
@@ -64,8 +64,12 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
     <CreateProjectDialogUI
       createProject={async (params) => {
         const res = await createProjectClient(props.teamId, params);
-        const vaultTokens = await createVaultAccountAndAccessToken({
-          project: res.project,
+        await createVaultServiceAccount({
+          mode: "managed",
+          project: {
+            projectId: res.project.id,
+            teamId: res.project.teamId,
+          },
           projectSecretKey: res.secret,
         }).catch((error) => {
           console.error(
@@ -74,12 +78,6 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
           );
           throw error;
         });
-
-        const managementAccessToken = vaultTokens.managementToken?.accessToken;
-
-        if (!managementAccessToken) {
-          throw new Error("Missing management access token for project wallet");
-        }
 
         return {
           project: res.project,

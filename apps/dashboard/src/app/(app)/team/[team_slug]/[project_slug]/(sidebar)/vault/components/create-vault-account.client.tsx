@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createVaultServiceAccount } from "@/actions/vault";
 import type { Project } from "@/api/project/projects";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -25,10 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/Spinner";
 import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
-import {
-  createVaultAccountAndAccessToken,
-  maskSecret,
-} from "../../transactions/lib/vault.client";
+import { maskSecret } from "../../transactions/lib/vault.client";
 
 export function CreateVaultAccountButton(props: { project: Project }) {
   const [secretKeyModalOpen, setSecretKeyModalOpen] = useState(false);
@@ -45,12 +43,14 @@ export function CreateVaultAccountButton(props: { project: Project }) {
       setModalOpen(true);
       setSecretKeyModalOpen(false);
 
-      const result = await createVaultAccountAndAccessToken({
-        project: props.project,
+      return createVaultServiceAccount({
+        mode: projectSecretKey ? "managed" : "ejected",
+        project: {
+          projectId: props.project.id,
+          teamId: props.project.teamId,
+        },
         projectSecretKey,
       });
-
-      return result;
     },
     onError: (error) => {
       setErrorMessage(error.message);
@@ -90,12 +90,23 @@ export function CreateVaultAccountButton(props: { project: Project }) {
     setManageSelfChecked(false);
   };
 
+  // Only an ejected vault returns its keys; a managed vault keeps them.
+  const createdKeys =
+    initialiseProjectWithVaultMutation.data?.adminKey &&
+    initialiseProjectWithVaultMutation.data.walletAccessToken
+      ? {
+          adminKey: initialiseProjectWithVaultMutation.data.adminKey,
+          walletAccessToken:
+            initialiseProjectWithVaultMutation.data.walletAccessToken,
+        }
+      : undefined;
+
   const handleDownloadKeys = () => {
-    if (!initialiseProjectWithVaultMutation.data) {
+    if (!createdKeys) {
       return;
     }
 
-    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${initialiseProjectWithVaultMutation.data.adminKey}\n\nVault Access Token:\n${initialiseProjectWithVaultMutation.data.walletToken.accessToken}\n`;
+    const fileContent = `Project:\n${props.project.name} (${props.project.publishableKey})\n\nVault Admin Key:\n${createdKeys.adminKey}\n\nVault Access Token:\n${createdKeys.walletAccessToken}\n`;
     const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -114,7 +125,7 @@ export function CreateVaultAccountButton(props: { project: Project }) {
   };
 
   const handleCloseModal = () => {
-    if (!keysConfirmed) {
+    if (createdKeys && !keysConfirmed) {
       return;
     }
 
@@ -234,7 +245,7 @@ export function CreateVaultAccountButton(props: { project: Project }) {
       <Dialog modal={true} onOpenChange={handleCloseModal} open={modalOpen}>
         <DialogContent
           className="overflow-hidden p-0"
-          dialogCloseClassName={cn(!keysConfirmed && "hidden")}
+          dialogCloseClassName={cn(createdKeys && !keysConfirmed && "hidden")}
         >
           {initialiseProjectWithVaultMutation.isPending ? (
             <>
@@ -248,7 +259,7 @@ export function CreateVaultAccountButton(props: { project: Project }) {
                 </p>
               </div>
             </>
-          ) : initialiseProjectWithVaultMutation.data ? (
+          ) : createdKeys ? (
             <div>
               <DialogHeader className="p-6">
                 <DialogTitle>Save your Vault Admin Key</DialogTitle>
@@ -265,12 +276,8 @@ export function CreateVaultAccountButton(props: { project: Project }) {
                       <CopyTextButton
                         className="!h-auto w-full justify-between bg-background px-3 py-3 font-mono text-xs"
                         copyIconPosition="right"
-                        textToCopy={
-                          initialiseProjectWithVaultMutation.data.adminKey
-                        }
-                        textToShow={maskSecret(
-                          initialiseProjectWithVaultMutation.data.adminKey,
-                        )}
+                        textToCopy={createdKeys.adminKey}
+                        textToShow={maskSecret(createdKeys.adminKey)}
                         tooltip="Copy Admin Key"
                       />
                       <p className="text-muted-foreground text-xs">
@@ -319,6 +326,34 @@ export function CreateVaultAccountButton(props: { project: Project }) {
                   onClick={handleCloseModal}
                   variant={"primary"}
                 >
+                  Close
+                </Button>
+              </div>
+            </div>
+          ) : initialiseProjectWithVaultMutation.data ? (
+            <div>
+              <DialogHeader className="p-6">
+                <DialogTitle>Vault Created</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6 p-6 pt-0">
+                <div>
+                  <h3 className="mb-2 font-medium text-sm">Vault Admin Key</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex w-full items-center rounded-lg border bg-background px-3 py-3 font-mono text-xs">
+                      {initialiseProjectWithVaultMutation.data.maskedAdminKey}
+                    </div>
+                    <p className="text-muted-foreground text-xs">
+                      Your admin key and wallet access token were encrypted with
+                      your project secret key. Use your project secret key to
+                      access your vault.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 border-t bg-card px-6 py-4">
+                <Button onClick={handleCloseModal} variant="primary">
                   Close
                 </Button>
               </div>
