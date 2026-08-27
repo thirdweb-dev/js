@@ -190,14 +190,26 @@ export async function createVaultServiceAccount(params: {
   return res.data.data;
 }
 
+/**
+ * Rotates the project's vault admin key.
+ *
+ * `mode` is the state to leave the vault in. `managed` re-seals the new
+ * credentials with the project secret key and returns only the mask; `ejected`
+ * returns the admin key and wallet token once and keeps no copy. Omitting it
+ * keeps the vault as it is.
+ */
 export async function rotateVaultServiceAccount(params: {
   project: ProjectRef;
+  mode?: "managed" | "ejected";
   projectSecretKey?: string;
 }): Promise<RotateVaultServiceAccountResult> {
   const res = await apiServerProxy<{
     data: RotateVaultServiceAccountResult;
   }>({
-    body: JSON.stringify({ projectSecretKey: params.projectSecretKey }),
+    body: JSON.stringify({
+      mode: params.mode,
+      projectSecretKey: params.projectSecretKey,
+    }),
     headers: { "Content-Type": "application/json" },
     method: "POST",
     pathname: vaultPath(params.project, "/service-account/rotate"),

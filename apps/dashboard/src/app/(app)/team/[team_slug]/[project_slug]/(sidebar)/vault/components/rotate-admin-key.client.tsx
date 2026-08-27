@@ -48,6 +48,7 @@ export default function RotateAdminKeyButton(props: {
   const rotateAdminKeyMutation = useMutation({
     mutationFn: async () => {
       return rotateVaultServiceAccount({
+        mode: willStayManaged ? "managed" : "ejected",
         project: {
           projectId: props.project.id,
           teamId: props.project.teamId,
