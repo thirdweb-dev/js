@@ -33,7 +33,7 @@ export async function fetchWithAuthToken(options: FetchWithKeyOptions) {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${authToken}`,
-        "x-team-id": options.project.teamId,
+        "x-thirdweb-team-id": options.project.teamId,
         "x-client-id": options.project.publishableKey,
         "Content-Type": "application/json",
       },
