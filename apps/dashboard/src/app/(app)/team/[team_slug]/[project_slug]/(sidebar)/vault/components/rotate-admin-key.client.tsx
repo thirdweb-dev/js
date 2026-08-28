@@ -90,8 +90,7 @@ export default function RotateAdminKeyButton(props: {
   // The confirm checkbox is the only way out of this dialog, and closing it
   // discards the response. Require the keys to actually leave the screen
   // first: a download, or a copy of both values.
-  const keysCaptured =
-    keysDownloaded || (adminKeyCopied && accessTokenCopied);
+  const keysCaptured = keysDownloaded || (adminKeyCopied && accessTokenCopied);
 
   const closeBlocked =
     rotateAdminKeyMutation.isPending || (!!ejectedKeys && !keysConfirmed);
