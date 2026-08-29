@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 
 const secretKey = process.env.THIRDWEB_AI_SECRET_KEY as string;
 const apiUrl = process.env.THIRDWEB_AI_URL || "https://api.thirdweb.com/ai";
+const clientId = process.env.THIRDWEB_AI_CLIENT_ID as string;
 
 const WINDOW_MS = 60_000;
 const MAX_PER_WINDOW = 10;
@@ -37,7 +38,11 @@ export const getChatResponse = async (
 ) => {
   try {
     if (!(await withinRateLimit())) {
-      return null;
+      return {
+        conversationId: sessionId,
+        data: "You're sending messages too quickly. Please wait a moment and try again.",
+        requestId: undefined,
+      };
     }
 
     const response = await fetch(`${apiUrl}/chat`, {
@@ -48,6 +53,7 @@ export const getChatResponse = async (
       }),
       headers: {
         "Content-Type": "application/json",
+        "x-client-id": clientId,
         "x-secret-key": secretKey,
       },
       method: "POST",
@@ -94,6 +100,7 @@ export const sendFeedback = async (
       }),
       headers: {
         "Content-Type": "application/json",
+        "x-client-id": clientId,
         "x-secret-key": secretKey,
       },
       method: "POST",
