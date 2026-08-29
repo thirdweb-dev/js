@@ -37,6 +37,7 @@ interface Message {
   content: string;
   isLoading?: boolean;
   feedback?: 1 | -1;
+  requestId?: string;
 }
 
 const predefinedPrompts = [
@@ -140,7 +141,12 @@ export function Chat() {
         setMessages((prevMessages) =>
           prevMessages.map((msg) =>
             msg.id === loadingMessageId
-              ? { ...msg, content: response?.data ?? "", isLoading: false }
+              ? {
+                  ...msg,
+                  content: response?.data ?? "",
+                  isLoading: false,
+                  requestId: response?.requestId,
+                }
               : msg,
           ),
         );
@@ -262,21 +268,23 @@ function RenderAIResponse(props: {
   conversationId: string | undefined;
   message: Message;
 }) {
+  const requestId = props.message.requestId;
+
   const thumbsUpFeedbackMutation = useMutation({
     mutationFn: () => {
-      if (!props.conversationId) {
+      if (!props.conversationId || !requestId) {
         throw new Error("No conversation ID");
       }
-      return sendFeedback(props.conversationId, 1);
+      return sendFeedback(props.conversationId, requestId, 1);
     },
   });
 
   const thumbsDownFeedbackMutation = useMutation({
     mutationFn: () => {
-      if (!props.conversationId) {
+      if (!props.conversationId || !requestId) {
         throw new Error("No conversation ID");
       }
-      return sendFeedback(props.conversationId, -1);
+      return sendFeedback(props.conversationId, requestId, -1);
     },
   });
 
@@ -290,7 +298,7 @@ function RenderAIResponse(props: {
           isMessagePending={false}
         />
 
-        {props.conversationId && (
+        {props.conversationId && requestId && (
           <div className="mt-4 flex gap-2">
             <Button
               aria-label="Thumbs up"
