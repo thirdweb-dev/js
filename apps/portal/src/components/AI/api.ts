@@ -1,23 +1,54 @@
 "use server";
 
-const serviceKey = process.env.SIWA_SERVICE_KEY as string;
-const apiUrl = process.env.SIWA_URL;
+import { headers } from "next/headers";
+
+const secretKey = process.env.THIRDWEB_AI_SECRET_KEY as string;
+const apiUrl = process.env.THIRDWEB_AI_URL || "https://api.thirdweb.com/ai";
+
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 10;
+const hits = new Map<string, number[]>();
+
+async function withinRateLimit() {
+  const key = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (!key) {
+    return true;
+  }
+
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(key, recent);
+
+  if (hits.size > 10_000) {
+    for (const [k, v] of hits) {
+      if (v.every((t) => now - t >= WINDOW_MS)) {
+        hits.delete(k);
+      }
+    }
+  }
+
+  return recent.length <= MAX_PER_WINDOW;
+}
 
 export const getChatResponse = async (
   userMessage: string,
   sessionId: string | undefined,
 ) => {
   try {
-    const payload = {
-      conversationId: sessionId,
-      message: userMessage,
-      source: "portal",
-    };
-    const response = await fetch(`${apiUrl}/v1/chat`, {
-      body: JSON.stringify(payload),
+    if (!(await withinRateLimit())) {
+      return null;
+    }
+
+    const response = await fetch(`${apiUrl}/chat`, {
+      body: JSON.stringify({
+        context: { session_id: sessionId },
+        messages: [{ content: userMessage, role: "user" }],
+        stream: false,
+      }),
       headers: {
         "Content-Type": "application/json",
-        "x-service-api-key": serviceKey,
+        "x-secret-key": secretKey,
       },
       method: "POST",
     });
@@ -30,10 +61,16 @@ export const getChatResponse = async (
     }
 
     const data = (await response.json()) as {
-      data: string;
-      conversationId: string;
+      message: string;
+      session_id: string;
+      request_id: string;
     };
-    return data;
+
+    return {
+      conversationId: data.session_id,
+      data: data.message,
+      requestId: data.request_id,
+    };
   } catch (error) {
     console.error(
       "Chat API error:",
@@ -45,14 +82,19 @@ export const getChatResponse = async (
 
 export const sendFeedback = async (
   conversationId: string,
+  requestId: string,
   feedbackRating: 1 | -1,
 ) => {
   try {
-    const response = await fetch(`${apiUrl}/v1/chat/feedback`, {
-      body: JSON.stringify({ conversationId, feedbackRating }),
+    const response = await fetch(`${apiUrl}/feedback`, {
+      body: JSON.stringify({
+        feedback_rating: feedbackRating,
+        request_id: requestId,
+        session_id: conversationId,
+      }),
       headers: {
         "Content-Type": "application/json",
-        "x-service-api-key": serviceKey,
+        "x-secret-key": secretKey,
       },
       method: "POST",
     });
