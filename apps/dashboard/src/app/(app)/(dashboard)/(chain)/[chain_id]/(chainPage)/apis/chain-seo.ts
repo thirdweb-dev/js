@@ -30,20 +30,24 @@ type ChainSeo = {
 
 export const fetchChainSeo = unstable_cache(
   async (chainId: number) => {
-    const url = new URL(
-      `https://seo-pages-generator-5814.zeet-nftlabs.zeet.app/chain/${chainId}`,
-    );
-    const res = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const url = new URL(`https://seo-pages.thirdweb.xyz/chain/${chainId}`);
 
-    if (!res.ok) {
+    // SEO copy is decorative -- never let a fetch failure take down the page.
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        return undefined;
+      }
+
+      return (await res.json()) as ChainSeo;
+    } catch {
       return undefined;
     }
-
-    return res.json() as Promise<ChainSeo>;
   },
   ["chain-seo"],
   { revalidate: 60 * 60 * 24 }, // 24 hours
