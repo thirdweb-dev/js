@@ -22,7 +22,7 @@ export const wallet = {
   rdns: "",
   mobile: {
     native: "rn-web3wallet-internal://",
-    universal: "https://appkit-lab.reown.com/rn_walletkit_internal",
+    universal: "https://lab.reown.com/rn_walletkit_internal",
   },
   desktop: {
     native: "",

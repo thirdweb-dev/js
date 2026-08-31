@@ -3,11 +3,12 @@
 
 export const wallet = {
   id: "app.status",
-  name: "Status",
-  homepage: "https://status.app/",
-  image_id: "1e5fb93a-3a0a-40b9-8a86-b14a775aae00",
+  name: "Status Legacy",
+  homepage:
+    "https://status.app/blog/migrate-from-status-legacy-to-unified-status-mobile-app",
+  image_id: "2fc9a263-56c0-4e00-2fd8-dadb9d9ad400",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/status-gateway-to-ethereum/id1178893006",
     android: "https://play.google.com/store/apps/details?id=im.status.ethereum",
     mac: "https://status.app/help/getting-started",
@@ -15,10 +16,10 @@ export const wallet = {
     linux: "https://status.app/help/getting-started",
     chrome:
       "https://chromewebstore.google.com/detail/kahehnbpamjplefhpkhafinaodkkenpg",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "app.status",
   mobile: {
@@ -27,6 +28,6 @@ export const wallet = {
   },
   desktop: {
     native: "status-app://",
-    universal: null,
+    universal: "",
   },
 } as const;

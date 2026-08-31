@@ -7,19 +7,19 @@ export const wallet = {
   homepage: "https://trustwallet.com/",
   image_id: "3386dde1-8b24-48c8-4b81-16979e342000",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/app/apple-store/id1288339409",
     android:
       "https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
       "https://chrome.google.com/webstore/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "com.trustwallet.app",
   mobile: {
@@ -27,7 +27,7 @@ export const wallet = {
     universal: "https://link.trustwallet.com",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

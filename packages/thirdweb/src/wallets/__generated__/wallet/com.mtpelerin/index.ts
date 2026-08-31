@@ -4,16 +4,16 @@
 export const wallet = {
   id: "com.mtpelerin",
   name: "Bridge Wallet",
-  homepage: "https://mtpelerin.com",
-  image_id: "20c3072e-c92e-4902-d4b9-cb2b6ab29100",
+  homepage: "https://www.mtpelerin.com/bridge-wallet",
+  image_id: "79802120-4861-440d-db7d-be42b2dec400",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/bridge-wallet/id1481859680",
+    browser: "",
+    ios: "https://apps.apple.com/app/bridge-wallet-bitcoin-crypto/id1481859680",
     android:
-      "https://play.google.com/store/apps/details?id=com.mtpelerin.bridge&gl=US",
-    mac: null,
-    windows: null,
-    linux: null,
+      "https://play.google.com/store/apps/details?id=com.mtpelerin.bridge",
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -22,11 +22,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
+    native: "",
     universal: "https://bridge.mtpelerin.com/wc",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

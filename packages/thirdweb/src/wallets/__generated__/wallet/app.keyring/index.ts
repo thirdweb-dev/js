@@ -5,14 +5,14 @@ export const wallet = {
   id: "app.keyring",
   name: "KEYRING PRO",
   homepage: "https://keyring.app/",
-  image_id: "dda0f0fb-34e8-4a57-dcea-b008e7d1ff00",
+  image_id: "c89ceec5-31dc-4a17-c132-b0b9f272ae00",
   app: {
     browser: "https://keyring.app/",
     ios: "https://apps.apple.com/us/app/keyring-pro-wallet-management/id1546824976",
     android: "https://play.google.com/store/apps/details?id=co.bacoor.keyring",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -25,7 +25,7 @@ export const wallet = {
     universal: "https://keyring.app/",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://keyring.app/",
   },
 } as const;

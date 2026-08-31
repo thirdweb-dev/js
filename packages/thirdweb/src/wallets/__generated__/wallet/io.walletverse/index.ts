@@ -7,12 +7,12 @@ export const wallet = {
   homepage: "https://walletverse.io/",
   image_id: "ca91138e-0546-4cfe-071d-2181241dc600",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/wallet-verse-defi-buy-crypto/id6462672660",
     android: "https://play.google.com/store/apps/details?id=com.walletverse",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "walletverse://",
-    universal: "https://walletverse.io",
+    universal: "https://wvv.to",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;
