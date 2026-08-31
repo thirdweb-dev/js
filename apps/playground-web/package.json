@@ -48,7 +48,7 @@
     "tailwind-merge": "^2.6.0",
     "thirdweb": "workspace:*",
     "use-debounce": "^10.0.5",
-    "use-stick-to-bottom": "^1.1.1",
+    "use-stick-to-bottom": "^1.1.6",
     "zod": "3.25.75"
   },
   "devDependencies": {
