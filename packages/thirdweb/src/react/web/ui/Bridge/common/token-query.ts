@@ -27,7 +27,10 @@ export function useTokenQuery(params: {
         tokenAddress,
         params.chainId,
       ).catch((err) => {
-        err.message.includes("not supported") ? undefined : Promise.reject(err);
+        if (err instanceof Error && err.message.includes("not supported")) {
+          return undefined;
+        }
+        throw err;
       });
 
       if (!token) {
