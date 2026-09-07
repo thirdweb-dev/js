@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.121.2
+
+### Patch Changes
+
+- [#8938](https://github.com/thirdweb-dev/js/pull/8938) [`a3488dd`](https://github.com/thirdweb-dev/js/commit/a3488dd200f562ae08545764243d736fcbeb509c) Thanks [@devtechedge](https://github.com/devtechedge)! - Fix CheckoutWidget treating token lookup failures as unsupported tokens
+
 ## 5.121.1
 
 ### Patch Changes
