@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.121.3
+
+### Patch Changes
+
+- [#8941](https://github.com/thirdweb-dev/js/pull/8941) [`a088faf`](https://github.com/thirdweb-dev/js/commit/a088faf4b63776a570192f12dd6e7fd026a8e9d4) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Accept x402 v2 payment requirements that specify `amount`, and enforce `maxValue: 0n` as a cap.
+
 ## 5.121.2
 
 ### Patch Changes
