@@ -78,7 +78,7 @@ type UseFetchWithPaymentConfig = UseFetchWithPaymentOptions & {
  *
  * @param client - The thirdweb client used to access RPC infrastructure
  * @param options - Optional configuration for payment handling
- * @param options.maxValue - The maximum allowed payment amount in base units
+ * @param options.maxValue - The maximum allowed payment amount in base units. `0n` only allows zero-amount payments
  * @param options.paymentRequirementsSelector - Custom function to select payment requirements from available options
  * @param options.parseAs - How to parse the response: "json" (default), "text", or "raw"
  * @param options.uiEnabled - Whether to show the UI for connection, funding or payment retries (defaults to true). Set to false to handle errors yourself
@@ -196,6 +196,7 @@ export function useFetchWithPayment(
   const showErrorModal = showModal
     ? (data: {
         errorData: Parameters<typeof PaymentErrorModal>[0]["errorData"];
+        requestUrl?: string;
         onRetry: () => void;
         onCancel: () => void;
       }) => {
@@ -203,6 +204,7 @@ export function useFetchWithPayment(
           <PaymentErrorModal
             client={client}
             errorData={data.errorData}
+            requestUrl={data.requestUrl}
             onCancel={() => {
               setRootEl(null);
               data.onCancel();

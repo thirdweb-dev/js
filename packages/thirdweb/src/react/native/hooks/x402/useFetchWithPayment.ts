@@ -27,7 +27,7 @@ export type { UseFetchWithPaymentOptions };
  *
  * @param client - The thirdweb client used to access RPC infrastructure
  * @param options - Optional configuration for payment handling
- * @param options.maxValue - The maximum allowed payment amount in base units
+ * @param options.maxValue - The maximum allowed payment amount in base units. `0n` only allows zero-amount payments
  * @param options.paymentRequirementsSelector - Custom function to select payment requirements from available options
  * @param options.parseAs - How to parse the response: "json" (default), "text", or "raw"
  * @param options.storage - Storage for caching permit signatures (for "upto" scheme). Provide your own AsyncStorage implementation for React Native.

@@ -1,5 +1,5 @@
 import { hexToBigInt } from "viem";
-import type { ExactEvmPayloadAuthorization } from "x402/types";
+import type { ExactEvmPayload, ExactEvmPayloadAuthorization } from "x402/types";
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { getContract } from "../contract/contract.js";
@@ -18,6 +18,7 @@ import {
 } from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
+  isAtomicAmount,
   networkToCaip2ChainId,
   type RequestedPaymentPayload,
   type RequestedPaymentRequirements,
@@ -26,11 +27,44 @@ import {
 import type { ERC20TokenAmount } from "./types.js";
 
 /**
+ * x402 v2 payload fields echoed back to the server.
+ */
+type PaymentPayloadV2Context = {
+  /** The selected payment requirement exactly as sent by the server */
+  accepted: Record<string, unknown>;
+  /** The resource being paid for */
+  resource?: Record<string, unknown>;
+};
+
+/**
+ * Builds the payload fields shared by every payment payload for the given requirements.
+ * v2 payloads additionally carry `accepted` and `resource`.
+ */
+function paymentPayloadEnvelope(
+  x402Version: number,
+  paymentRequirements: RequestedPaymentRequirements,
+  v2Context: PaymentPayloadV2Context | undefined,
+): Omit<RequestedPaymentPayload, "payload"> {
+  return {
+    x402Version,
+    scheme: paymentRequirements.scheme,
+    network: paymentRequirements.network,
+    ...(x402Version === 2 && v2Context
+      ? {
+          accepted: v2Context.accepted,
+          ...(v2Context.resource ? { resource: v2Context.resource } : {}),
+        }
+      : {}),
+  };
+}
+
+/**
  * Prepares an unsigned payment header with the given sender address and payment requirements.
  *
  * @param from - The sender's address from which the payment will be made
  * @param x402Version - The version of the X402 protocol to use
  * @param paymentRequirements - The payment requirements containing scheme and network information
+ * @param v2Context - The x402 v2 fields to include in the payload
  * @returns An unsigned payment payload containing authorization details
  */
 function preparePaymentHeader(
@@ -38,6 +72,7 @@ function preparePaymentHeader(
   x402Version: number,
   paymentRequirements: RequestedPaymentRequirements,
   nonce: Hex,
+  v2Context: PaymentPayloadV2Context | undefined,
 ): UnsignedPaymentPayload {
   const validAfter = BigInt(
     Math.floor(Date.now() / 1000) - 86400, // 24h before in case weird block timestamp behavior
@@ -47,9 +82,7 @@ function preparePaymentHeader(
   ).toString();
 
   return {
-    x402Version,
-    scheme: paymentRequirements.scheme,
-    network: paymentRequirements.network,
+    ...paymentPayloadEnvelope(x402Version, paymentRequirements, v2Context),
     payload: {
       signature: undefined,
       authorization: {
@@ -71,6 +104,7 @@ function preparePaymentHeader(
  * @param paymentRequirements - The payment requirements containing scheme and network information
  * @param unsignedPaymentHeader - The unsigned payment payload to be signed
  * @param storage - Optional storage for caching permit signatures (for "upto" scheme)
+ * @param v2Context - The x402 v2 fields to include in the payload
  * @returns A promise that resolves to the signed payment payload
  */
 async function signPaymentHeader(
@@ -79,6 +113,8 @@ async function signPaymentHeader(
   paymentRequirements: RequestedPaymentRequirements,
   x402Version: number,
   storage?: AsyncStorage,
+  v2Context?: PaymentPayloadV2Context,
+  maxValue?: bigint,
 ): Promise<RequestedPaymentPayload> {
   const from = getAddress(account.address);
   const caip2ChainId = networkToCaip2ChainId(paymentRequirements.network);
@@ -114,8 +150,23 @@ async function signPaymentHeader(
       // Try to reuse cached signature for "upto" scheme
       if (shouldCache && storage) {
         const cached = await getPermitSignatureFromCache(storage, cacheParams);
+        const cachedPayload = cached?.payload?.payload as
+          | ExactEvmPayload
+          | undefined;
+        const cachedAuthorization = cachedPayload?.authorization;
+        const cachedValue = cachedAuthorization?.value;
+        const amount = BigInt(paymentRequirements.maxAmountRequired);
 
-        if (cached) {
+        if (
+          cached &&
+          cachedPayload &&
+          isSameAddress(cachedAuthorization?.from, from) &&
+          isSameAddress(cachedAuthorization?.to, spender) &&
+          isAtomicAmount(cached.deadline) &&
+          isAtomicAmount(cachedValue) &&
+          BigInt(cachedValue) >= amount &&
+          (maxValue === undefined || BigInt(cachedValue) <= maxValue)
+        ) {
           // Validate deadline hasn't passed
           const now = BigInt(Math.floor(Date.now() / 1000));
           if (BigInt(cached.deadline) > now) {
@@ -130,19 +181,30 @@ async function signPaymentHeader(
               spender,
             });
 
-            // Determine threshold - use minAmountRequired if present, else maxAmountRequired
+            // Determine threshold - use minAmountRequired if it is within (0, amount], else the amount
             const extra = paymentRequirements.extra as
               | (ERC20TokenAmount["asset"]["eip712"] & {
                   minAmountRequired?: string;
                 })
               | undefined;
-            const threshold = extra?.minAmountRequired
+            const minAmount = isAtomicAmount(extra?.minAmountRequired)
               ? BigInt(extra.minAmountRequired)
-              : BigInt(paymentRequirements.maxAmountRequired);
+              : undefined;
+            const threshold =
+              minAmount !== undefined && minAmount > 0n && minAmount <= amount
+                ? minAmount
+                : amount;
 
-            // If allowance >= threshold, reuse signature
+            // If allowance >= threshold, reuse the signature in the current envelope
             if (currentAllowance >= threshold) {
-              return cached.payload;
+              return {
+                ...paymentPayloadEnvelope(
+                  x402Version,
+                  paymentRequirements,
+                  v2Context,
+                ),
+                payload: cachedPayload,
+              };
             }
           }
         }
@@ -162,6 +224,7 @@ async function signPaymentHeader(
         x402Version,
         paymentRequirements,
         toHex(nonce, { size: 32 }), // permit nonce
+        v2Context,
       );
       const { signature } = await signERC2612Permit(
         account,
@@ -198,6 +261,7 @@ async function signPaymentHeader(
         x402Version,
         paymentRequirements,
         nonce, // random nonce
+        v2Context,
       );
       const { signature } = await signERC3009Authorization(
         account,
@@ -226,6 +290,8 @@ async function signPaymentHeader(
  * @param x402Version - The version of the X402 protocol to use
  * @param paymentRequirements - The payment requirements containing scheme and network information
  * @param storage - Optional storage for caching permit signatures (for "upto" scheme)
+ * @param v2Context - The x402 v2 fields to include in the payload
+ * @param maxValue - The maximum allowed payment amount
  * @returns A promise that resolves to the encoded payment header string
  */
 export async function createPaymentHeader(
@@ -234,6 +300,8 @@ export async function createPaymentHeader(
   paymentRequirements: RequestedPaymentRequirements,
   x402Version: number,
   storage?: AsyncStorage,
+  v2Context?: PaymentPayloadV2Context,
+  maxValue?: bigint,
 ): Promise<string> {
   const payment = await signPaymentHeader(
     client,
@@ -241,8 +309,16 @@ export async function createPaymentHeader(
     paymentRequirements,
     x402Version,
     storage,
+    v2Context,
+    maxValue,
   );
   return encodePayment(payment);
+}
+
+function isSameAddress(value: unknown, address: string): boolean {
+  return (
+    typeof value === "string" && value.toLowerCase() === address.toLowerCase()
+  );
 }
 
 /**

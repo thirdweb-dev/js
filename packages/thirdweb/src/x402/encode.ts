@@ -1,4 +1,6 @@
 import type { ExactEvmPayload } from "x402/types";
+import { cachedTextDecoder } from "../utils/text-decoder.js";
+import { cachedTextEncoder } from "../utils/text-encoder.js";
 import type {
   RequestedPaymentPayload,
   RequestedPaymentRequirements,
@@ -27,7 +29,7 @@ export function encodePayment(payment: RequestedPaymentPayload): string {
       ) as ExactEvmPayload["authorization"],
     },
   };
-  return safeBase64Encode(JSON.stringify(safe));
+  return base64EncodeUtf8(JSON.stringify(safe));
 }
 
 /**
@@ -37,7 +39,7 @@ export function encodePayment(payment: RequestedPaymentPayload): string {
  * @returns The decoded and validated PaymentPayload object
  */
 export function decodePayment(payment: string): RequestedPaymentPayload {
-  const decoded = safeBase64Decode(payment);
+  const decoded = base64DecodeUtf8(payment);
   const parsed = JSON.parse(decoded);
 
   const obj: RequestedPaymentPayload = {
@@ -90,6 +92,48 @@ export function safeBase64Decode(data: string): string {
     typeof globalThis.atob === "function"
   ) {
     return globalThis.atob(data);
+  }
+  return Buffer.from(data, "base64").toString("utf-8");
+}
+
+/**
+ * Encodes a string as UTF-8 and then to base64
+ *
+ * @param data - The string to encode
+ * @returns The base64 encoded UTF-8 bytes
+ */
+function base64EncodeUtf8(data: string): string {
+  if (
+    typeof globalThis !== "undefined" &&
+    typeof globalThis.btoa === "function"
+  ) {
+    const bytes = cachedTextEncoder().encode(data);
+    let binary = "";
+    for (const byte of bytes) {
+      binary += String.fromCharCode(byte);
+    }
+    return globalThis.btoa(binary);
+  }
+  return Buffer.from(data, "utf-8").toString("base64");
+}
+
+/**
+ * Decodes a base64 string and interprets the bytes as UTF-8
+ *
+ * @param data - The base64 encoded string
+ * @returns The decoded string
+ */
+export function base64DecodeUtf8(data: string): string {
+  if (
+    typeof globalThis !== "undefined" &&
+    typeof globalThis.atob === "function"
+  ) {
+    const binary = globalThis.atob(data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return cachedTextDecoder().decode(bytes);
   }
   return Buffer.from(data, "base64").toString("utf-8");
 }

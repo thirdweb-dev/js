@@ -44,7 +44,9 @@ export async function GET(request: Request) {
   const result = await settlePayment({
     resourceUrl: "https://api.example.com/premium-content",
     method: "GET",
-    paymentData: request.headers.get("x-payment"),
+    paymentData:
+      request.headers.get("PAYMENT-SIGNATURE") ||
+      request.headers.get("X-PAYMENT"),
     network: arbitrumSepolia,
     price: "$0.01",
     facilitator: thirdwebX402Facilitator,
