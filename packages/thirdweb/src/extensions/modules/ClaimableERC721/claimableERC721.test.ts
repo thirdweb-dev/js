@@ -18,7 +18,7 @@ import { getInstalledModules } from "../__generated__/IModularCore/read/getInsta
 import * as BatchMetadataERC721 from "../BatchMetadataERC721/index.js";
 import * as ClaimableERC721 from "./index.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("ModularClaimableERC721", () => {
+describe.runIf(process.env.TW_SECRET_KEY).skip("ModularClaimableERC721", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployModularContract({

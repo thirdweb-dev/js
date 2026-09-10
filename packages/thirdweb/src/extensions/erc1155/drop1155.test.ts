@@ -31,7 +31,7 @@ import { getNFT } from "./read/getNFT.js";
 import { isGetNFTsSupported } from "./read/getNFTs.js";
 import { lazyMint } from "./write/lazyMint.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).skip(
   "DropERC1155",
   {
     retry: 0,

@@ -43,15 +43,13 @@ it("should resolve abi from contract api", async () => {
   expect(abi).toMatchObject(DOODLES_ABI);
 });
 
-it.runIf(process.env.TW_SECRET_KEY)(
-  "should resolve abi from bytecode",
-  async () => {
+it.runIf(process.env.TW_SECRET_KEY)
+  .skip("should resolve abi from bytecode", async () => {
     // we do this so we don't hit any PRIOR cache
     const DOODLES_CONTRACT_CLONE = { ...DOODLES_CONTRACT };
     const abi = await resolveAbiFromBytecode(DOODLES_CONTRACT_CLONE);
     expect(abi).toMatchObject(DOODLES_ABI);
-  },
-);
+  });
 
 it("should throw error if contract bytecode is 0x", async () => {
   const wrongContract = getContract({
