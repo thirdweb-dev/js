@@ -1,5 +1,14 @@
 # thirdweb
 
+## 5.121.4
+
+### Patch Changes
+
+- [#8944](https://github.com/thirdweb-dev/js/pull/8944) [`d114bc6`](https://github.com/thirdweb-dev/js/commit/d114bc68ebe98ddba651afeb8064277532e886f9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Update toml dependency
+
+- Updated dependencies [[`d6d1797`](https://github.com/thirdweb-dev/js/commit/d6d1797ea8c1d492afb1b7068f38f6744595caf5)]:
+  - @thirdweb-dev/insight@1.1.2
+
 ## 5.121.3
 
 ### Patch Changes

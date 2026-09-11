@@ -1,5 +1,11 @@
 # @thirdweb-dev/api
 
+## 0.2.0
+
+### Minor Changes
+
+- [#8950](https://github.com/thirdweb-dev/js/pull/8950) [`d34f7ab`](https://github.com/thirdweb-dev/js/commit/d34f7ab4bc0a59217fe128efa701ff09d2e68d5b) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Update to latest API
+
 ## 0.1.2
 
 ### Patch Changes
