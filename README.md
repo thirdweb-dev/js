@@ -144,22 +144,6 @@ TypeScript SDK for Insight, thirdweb's multichain indexer service.
 npm install @thirdweb-dev/insight
 ```
 
-#### [`@thirdweb-dev/vault-sdk`](./packages/vault-sdk/README.md)
-
-SDK for interacting with Vault, thirdweb's secure key management service.
-
-```bash
-npm install @thirdweb-dev/vault-sdk
-```
-
-#### [`@thirdweb-dev/nebula`](./packages/nebula/README.md)
-
-TypeScript SDK for Nebula, thirdweb's AI agent service.
-
-```bash
-npm install @thirdweb-dev/nebula
-```
-
 ## Contributing
 
 We welcome contributions from all developers regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) to learn how the repo works, how to test your changes, and how to submit a pull request.
