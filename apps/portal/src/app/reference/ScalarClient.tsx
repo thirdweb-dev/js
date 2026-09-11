@@ -37,6 +37,7 @@ export function ScalarApiReference(props: { spec: OpenAPIV3.Document }) {
         hideDarkModeToggle: true,
         hideDownloadButton: false,
         hideTestRequestButton: false,
+        agent: { disabled: true },
       }}
     />
   );
