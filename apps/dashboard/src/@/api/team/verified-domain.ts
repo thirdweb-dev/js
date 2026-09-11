@@ -27,7 +27,7 @@ export async function checkDomainVerification(
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/verified-domain`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamIdOrSlug)}/verified-domain`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ export async function createDomainVerification(
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamIdOrSlug}/verified-domain`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamIdOrSlug)}/verified-domain`,
     {
       body: JSON.stringify({ domain }),
       headers: {

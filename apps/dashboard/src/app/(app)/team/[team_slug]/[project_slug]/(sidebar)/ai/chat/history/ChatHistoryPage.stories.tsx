@@ -56,7 +56,7 @@ function createRandomSessions(length: number) {
   for (let i = 0; i < length; i++) {
     sessions.push({
       created_at: new Date().toISOString(),
-      id: Math.random().toString(),
+      id: crypto.randomUUID(),
       title: randomLorem(Math.floor(5 + Math.random() * 15)),
       updated_at: subDays(
         new Date(),

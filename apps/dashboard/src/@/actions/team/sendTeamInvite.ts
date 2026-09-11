@@ -41,7 +41,7 @@ async function sendInvite(
   token: string,
 ) {
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/invites`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamId)}/invites`,
     {
       body: JSON.stringify({
         inviteEmail: invite.email,

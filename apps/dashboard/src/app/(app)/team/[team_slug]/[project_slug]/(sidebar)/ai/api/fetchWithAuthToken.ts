@@ -1,5 +1,4 @@
-"use server";
-
+import "server-only";
 import { getAuthToken } from "@/api/auth-token";
 import type { Project } from "@/api/project/projects";
 

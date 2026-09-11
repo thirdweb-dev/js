@@ -15,7 +15,7 @@ export async function createDedicatedSupportChannel(
 
   const res = await fetch(
     new URL(
-      `/v1/teams/${teamIdOrSlug}/dedicated-support-channel`,
+      `/v1/teams/${encodeURIComponent(teamIdOrSlug)}/dedicated-support-channel`,
       NEXT_PUBLIC_THIRDWEB_API_HOST,
     ),
     {

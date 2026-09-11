@@ -269,7 +269,7 @@ export function LaunchTokenStatus(props: {
   }
 
   const contractLink = contractAddress
-    ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${formValues.chain}/${contractAddress}`
+    ? `/team/${props.teamSlug}/${props.projectSlug}/contract/${encodeURIComponent(formValues.chain)}/${encodeURIComponent(contractAddress)}`
     : null;
 
   return (

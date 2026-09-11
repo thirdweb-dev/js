@@ -15,7 +15,7 @@ export async function updateTeam(params: {
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${params.teamId}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(params.teamId)}`,
     {
       body: JSON.stringify(params.value),
       headers: {
