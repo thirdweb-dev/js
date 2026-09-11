@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { type FC, useContext } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render, renderHook, screen, waitFor } from "~test/react-render.js";

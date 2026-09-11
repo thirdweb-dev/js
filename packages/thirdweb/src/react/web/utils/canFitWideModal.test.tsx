@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
 import { wideModalScreenThreshold } from "../ui/ConnectWallet/constants.js";
 import { canFitWideModal } from "./canFitWideModal.js";

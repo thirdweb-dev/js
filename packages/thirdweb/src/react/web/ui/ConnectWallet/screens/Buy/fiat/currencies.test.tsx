@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
 import { CADIcon } from "../../../icons/currencies/CADIcon.js";
 import { EURIcon } from "../../../icons/currencies/EURIcon.js";

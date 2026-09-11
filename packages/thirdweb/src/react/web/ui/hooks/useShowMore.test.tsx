@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "~test/react-render.js";
 import { useShowMore } from "./useShowMore.js";
@@ -16,10 +17,15 @@ describe("useShowMore", () => {
     const observerCallback = vi.fn();
 
     const observer = new IntersectionObserver(observerCallback);
-    vi.spyOn(window, "IntersectionObserver").mockImplementation((callback) => {
-      observerCallback.mockImplementation(callback);
-      return observer;
-    });
+    vi.spyOn(window, "IntersectionObserver").mockImplementation(
+      class {
+        constructor(callback: IntersectionObserverCallback) {
+          observerCallback.mockImplementation(callback);
+          // biome-ignore lint/correctness/noConstructorReturn: test mock
+          return observer;
+        }
+      } as unknown as typeof IntersectionObserver,
+    );
 
     act(() => {
       result.current.lastItemRef(lastItem);
@@ -38,10 +44,15 @@ describe("useShowMore", () => {
     const observerCallback = vi.fn();
 
     const observer = new IntersectionObserver(observerCallback);
-    vi.spyOn(window, "IntersectionObserver").mockImplementation((callback) => {
-      observerCallback.mockImplementation(callback);
-      return observer;
-    });
+    vi.spyOn(window, "IntersectionObserver").mockImplementation(
+      class {
+        constructor(callback: IntersectionObserverCallback) {
+          observerCallback.mockImplementation(callback);
+          // biome-ignore lint/correctness/noConstructorReturn: test mock
+          return observer;
+        }
+      } as unknown as typeof IntersectionObserver,
+    );
 
     act(() => {
       result.current.lastItemRef(lastItem);
@@ -60,10 +71,15 @@ describe("useShowMore", () => {
     const observerCallback = vi.fn();
 
     const observer = new IntersectionObserver(observerCallback);
-    vi.spyOn(window, "IntersectionObserver").mockImplementation((callback) => {
-      observerCallback.mockImplementation(callback);
-      return observer;
-    });
+    vi.spyOn(window, "IntersectionObserver").mockImplementation(
+      class {
+        constructor(callback: IntersectionObserverCallback) {
+          observerCallback.mockImplementation(callback);
+          // biome-ignore lint/correctness/noConstructorReturn: test mock
+          return observer;
+        }
+      } as unknown as typeof IntersectionObserver,
+    );
 
     act(() => {
       result.current.lastItemRef(lastItem);

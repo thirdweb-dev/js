@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { describe, it } from "vitest";
 import { render } from "../../../../../test/src/react-render.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";

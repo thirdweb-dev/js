@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
 import { render, screen, waitFor } from "~test/react-render.js";
 import { ethereum } from "../../../../../chains/chain-definitions/ethereum.js";

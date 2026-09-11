@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { userEvent } from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";

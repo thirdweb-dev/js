@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { optimism } from "thirdweb/chains";

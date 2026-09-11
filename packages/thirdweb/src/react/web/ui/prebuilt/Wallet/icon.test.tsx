@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 /** biome-ignore-all lint/nursery/useUniqueElementIds: "id" is not a html attribute here - TODO: stop using 'id' as a prop on JSX elements */
 import { describe, expect, it } from "vitest";
 import { render, waitFor } from "~test/react-render.js";

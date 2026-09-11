@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { FC } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
