@@ -31,6 +31,7 @@ export const RELAYER_SUPPORTED_CHAINS = [
   42793, // Etherlink mainnet
   143, // Monad mainnet
   252, // Fraxtal mainnet
+  33139, // ApeChain mainnet
   // TESTNETS
   11155111, // sepolia testnet
   10200, // gnosis chiado testnet
