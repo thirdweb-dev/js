@@ -7,9 +7,24 @@ import type {
 } from "./client/index.js";
 import { client as _heyApiClient } from "./client.gen.js";
 import type {
+	BridgeCreatePaymentData,
+	BridgeCreatePaymentErrors,
+	BridgeCreatePaymentResponses,
+	BridgeGetPaymentHistoryData,
+	BridgeGetPaymentHistoryErrors,
+	BridgeGetPaymentHistoryResponses,
+	BridgePaymentsPurchaseData,
+	BridgePaymentsPurchaseErrors,
+	BridgePaymentsPurchaseResponses,
+	BridgeQuoteData,
+	BridgeQuoteErrors,
+	BridgeQuoteResponses,
 	BridgeSwapData,
 	BridgeSwapErrors,
 	BridgeSwapResponses,
+	BroadcastSolanaTransactionData,
+	BroadcastSolanaTransactionErrors,
+	BroadcastSolanaTransactionResponses,
 	ChatData,
 	ChatResponses,
 	CompleteAuthenticationData,
@@ -18,9 +33,6 @@ import type {
 	ConvertFiatToCryptoData,
 	ConvertFiatToCryptoErrors,
 	ConvertFiatToCryptoResponses,
-	CreatePaymentData,
-	CreatePaymentErrors,
-	CreatePaymentResponses,
 	CreateServerWalletData,
 	CreateServerWalletErrors,
 	CreateServerWalletResponses,
@@ -36,6 +48,9 @@ import type {
 	DeployContractData,
 	DeployContractErrors,
 	DeployContractResponses,
+	DeploySolanaTokenData,
+	DeploySolanaTokenErrors,
+	DeploySolanaTokenResponses,
 	FetchWithPaymentData,
 	FetchWithPaymentErrors,
 	FetchWithPaymentResponses,
@@ -60,15 +75,15 @@ import type {
 	GetMyWalletData,
 	GetMyWalletErrors,
 	GetMyWalletResponses,
-	GetPaymentHistoryData,
-	GetPaymentHistoryErrors,
-	GetPaymentHistoryResponses,
 	GetSolanaTransactionData,
 	GetSolanaTransactionErrors,
 	GetSolanaTransactionResponses,
 	GetSolanaWalletBalanceData,
 	GetSolanaWalletBalanceErrors,
 	GetSolanaWalletBalanceResponses,
+	GetSwapQuoteData,
+	GetSwapQuoteErrors,
+	GetSwapQuoteResponses,
 	GetTokenOwnersData,
 	GetTokenOwnersErrors,
 	GetTokenOwnersResponses,
@@ -87,15 +102,15 @@ import type {
 	GetWalletTransactionsData,
 	GetWalletTransactionsErrors,
 	GetWalletTransactionsResponses,
+	GetX402AcceptsData,
+	GetX402AcceptsErrors,
+	GetX402AcceptsResponses,
 	InitiateAuthenticationData,
 	InitiateAuthenticationErrors,
 	InitiateAuthenticationResponses,
 	LinkAuthenticationData,
 	LinkAuthenticationErrors,
 	LinkAuthenticationResponses,
-	ListContractsData,
-	ListContractsErrors,
-	ListContractsResponses,
 	ListPayableServicesData,
 	ListPayableServicesErrors,
 	ListPayableServicesResponses,
@@ -114,13 +129,8 @@ import type {
 	ListUserWalletsData,
 	ListUserWalletsErrors,
 	ListUserWalletsResponses,
-	LlmsTxtData,
-	LlmsTxtResponses,
-	McpServerData,
-	McpServerResponses,
-	PaymentsPurchaseData,
-	PaymentsPurchaseErrors,
-	PaymentsPurchaseResponses,
+	PostV1WalletsCreateSessionKeyData,
+	PostV1WalletsCreateSessionKeyResponses,
 	ReadContractData,
 	ReadContractErrors,
 	ReadContractResponses,
@@ -145,6 +155,9 @@ import type {
 	SignSolanaMessageData,
 	SignSolanaMessageErrors,
 	SignSolanaMessageResponses,
+	SignSolanaTransactionData,
+	SignSolanaTransactionErrors,
+	SignSolanaTransactionResponses,
 	SignTypedDataData,
 	SignTypedDataErrors,
 	SignTypedDataResponses,
@@ -153,6 +166,9 @@ import type {
 	SupportedX402PaymentsData,
 	SupportedX402PaymentsErrors,
 	SupportedX402PaymentsResponses,
+	SwapSolanaTokensData,
+	SwapSolanaTokensErrors,
+	SwapSolanaTokensResponses,
 	UnlinkAuthenticationData,
 	UnlinkAuthenticationErrors,
 	UnlinkAuthenticationResponses,
@@ -479,6 +495,35 @@ export const getMyWallet = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Create Session Key
+ * Create a session key for a smart account using EIP-7702.
+ */
+export const postV1WalletsCreateSessionKey = <
+	ThrowOnError extends boolean = false,
+>(
+	options?: Options<PostV1WalletsCreateSessionKeyData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		PostV1WalletsCreateSessionKeyResponses,
+		unknown,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/wallets/create-session-key",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
  * List User Wallets
  * Get all user wallet details with filtering and pagination for your project.
  *
@@ -612,7 +657,7 @@ export const getWalletBalance = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Transactions
+ * Get Wallet Transactions
  * Retrieves transactions for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive transaction data including both incoming and outgoing transactions, with block information, gas details, transaction status, and function calls. Results can be filtered, paginated, and sorted to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -637,7 +682,7 @@ export const getWalletTransactions = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Tokens
+ * Get Wallet Tokens
  * Retrieves token balances for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive token data including ERC-20 tokens with their balances, metadata, and price information. Results can be filtered by chain, sorted by balance or USD value, and customized to include/exclude spam tokens, native tokens, and tokens without price data. Supports pagination and metadata resolution options.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -662,7 +707,7 @@ export const getWalletTokens = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get NFTs
+ * Get Wallet NFTs
  * Retrieves NFTs for a specific wallet address across one or more blockchain networks. This endpoint provides comprehensive NFT data including metadata, attributes, and collection information. Results can be filtered by chain and paginated to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -792,66 +837,6 @@ export const sendTokens = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * List Contracts
- * Retrieves a list of all smart contracts imported by the authenticated client on the thirdweb dashboard. This endpoint provides access to contracts that have been added to your dashboard for management and interaction. Results include contract metadata, deployment information, and import timestamps.
- *
- * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
- *
- * **Note**: For detailed contract metadata including compilation information, ABI, and source code, use the dedicated metadata endpoint: `GET /v1/contracts/{chainId}/{address}/metadata`.
- */
-export const listContracts = <ThrowOnError extends boolean = false>(
-	options?: Options<ListContractsData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).get<
-		ListContractsResponses,
-		ListContractsErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/contracts",
-		...options,
-	});
-};
-
-/**
- * Deploy Contract
- * Deploy a new smart contract to a blockchain network using raw bytecode. This endpoint allows you to deploy contracts by providing the contract bytecode, ABI, constructor parameters, and optional salt for deterministic deployment.
- *
- * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
- */
-export const deployContract = <ThrowOnError extends boolean = false>(
-	options?: Options<DeployContractData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).post<
-		DeployContractResponses,
-		DeployContractErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/contracts",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
-	});
-};
-
-/**
  * Read Contract
  * Executes multiple read-only contract method calls in a single batch request. This endpoint allows efficient batch reading from multiple contracts on the same chain, significantly reducing the number of HTTP requests needed. Each call specifies the contract address, method signature, and optional parameters. Results are returned in the same order as the input calls, with individual success/failure status for each operation.
  *
@@ -914,7 +899,7 @@ export const writeContract = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Transactions
+ * Get Contract Transactions
  * Retrieves transactions for a specific smart contract address on a specific blockchain network. This endpoint provides comprehensive transaction data including block information, gas details, transaction status, and function calls. Results can be filtered, paginated, and sorted to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -939,7 +924,7 @@ export const getContractTransactions = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Events
+ * Get Contract Events
  * Retrieves events emitted by a specific smart contract address on a specific blockchain network. This endpoint provides comprehensive event data including block information, transaction details, event topics, and optional ABI decoding. Results can be filtered, paginated, and sorted to meet specific requirements.
  *
  * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
@@ -964,7 +949,40 @@ export const getContractEvents = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Metadata
+ * Deploy Contract
+ * Deploy a new smart contract to a blockchain network using raw bytecode. This endpoint allows you to deploy contracts by providing the contract bytecode, ABI, constructor parameters, and optional salt for deterministic deployment.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
+ */
+export const deployContract = <ThrowOnError extends boolean = false>(
+	options?: Options<DeployContractData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		DeployContractResponses,
+		DeployContractErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/contracts",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Contract Metadata
  * Retrieves detailed metadata for a specific smart contract from the thirdweb contract metadata service. This includes compilation information, ABI, documentation, and other contract-related metadata. Note: Source code is excluded from the response to keep it lightweight and suitable for programmatic access.
  *
  * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
@@ -991,7 +1009,7 @@ export const getContractMetadata = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Get Signatures
+ * Get Contract Signatures
  * Retrieves human-readable ABI signatures for a specific smart contract. This endpoint fetches the contract metadata from the thirdweb service, extracts the ABI, and converts it into an array of human-readable function and event signatures that can be used directly with contract interaction methods.
  *
  * **Authentication**: This endpoint requires backend authentication using the `x-secret-key` header. The secret key should never be exposed publicly.
@@ -1101,96 +1119,7 @@ export const sendTransactions = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Create Payment
- * Create a payment to be executed. Users can complete the payment via hosted UI (link is returned), a transaction execution referencing the product ID, or embedded widgets with the product ID.
- *
- * **Authentication**: This endpoint requires project authentication.
- */
-export const createPayment = <ThrowOnError extends boolean = false>(
-	options?: Options<CreatePaymentData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).post<
-		CreatePaymentResponses,
-		CreatePaymentErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/payments",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
-	});
-};
-
-/**
- * Get Payment History
- * Get payment history for a specific payment link
- */
-export const getPaymentHistory = <ThrowOnError extends boolean = false>(
-	options: Options<GetPaymentHistoryData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		GetPaymentHistoryResponses,
-		GetPaymentHistoryErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/payments/{id}",
-		...options,
-	});
-};
-
-/**
- * Complete Payment
- * Completes a payment using its default token and amount. If the user does not have sufficient funds in the product's default payment token a 402 status will be returned containing a link and raw quote for purchase fulfillment.
- *
- * **Authentication**: This endpoint requires project authentication.
- */
-export const paymentsPurchase = <ThrowOnError extends boolean = false>(
-	options: Options<PaymentsPurchaseData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).post<
-		PaymentsPurchaseResponses,
-		PaymentsPurchaseErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				scheme: "bearer",
-				type: "http",
-			},
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/payments/{id}",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options.headers,
-		},
-	});
-};
-
-/**
- * x402 - Verify payment
+ * Verify payment
  * Verify an x402 payment payload against the provided payment requirements. Compatible with any standard x402 middleware.
  */
 export const verifyX402Payment = <ThrowOnError extends boolean = false>(
@@ -1217,7 +1146,7 @@ export const verifyX402Payment = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * x402 - Settle payment
+ * Settle payment
  * Settle an x402 payment. Compatible with any standard x402 middleware.
  */
 export const settleX402Payment = <ThrowOnError extends boolean = false>(
@@ -1244,7 +1173,7 @@ export const settleX402Payment = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * x402 - Supported payment methods
+ * Supported payment methods
  * List supported x402 payment methods, optionally filtered by token address and chainId. Compatible with any standard x402 middleware.
  */
 export const supportedX402Payments = <ThrowOnError extends boolean = false>(
@@ -1257,7 +1186,7 @@ export const supportedX402Payments = <ThrowOnError extends boolean = false>(
 	>({
 		security: [
 			{
-				name: "x-secret-key",
+				name: "x-client-id",
 				type: "apiKey",
 			},
 		],
@@ -1267,7 +1196,7 @@ export const supportedX402Payments = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * x402 - Fetch with payment
+ * Fetch with payment
  * Fetch any given url. If the url returns HTTP 402 payment required, this endpoint handles payment with the authenticated wallet.
  *
  * Optionally pass a 'from' query parameter with the authenticated wallet address (server or user wallet) to complete the payment.
@@ -1312,7 +1241,7 @@ export const fetchWithPayment = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * x402 - Discover resources
+ * Discover resources
  * Discover payable x402 compatible services and HTTP endpoints that can be paid for using the fetchWithPayment tool. Use this tool to browse services, APIs and endpoints to find what you need for your tasks. Each item has a resource url that you can call with the fetchWithPayment tool.Price is in the base units of the asset. For example, if the price is 1000000 and the asset is USDC (which is the default and has 6 decimals), the price is 1 USDC.Examples: if network is eip155:8453, asset is 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, max amount required is 10000, resource is https://api.example.com/paid-api, then you should interpret that as "the api.example.com/paid-api service costs 0.01 USDC per call".
  */
 export const listPayableServices = <ThrowOnError extends boolean = false>(
@@ -1331,6 +1260,33 @@ export const listPayableServices = <ThrowOnError extends boolean = false>(
 		],
 		url: "/v1/payments/x402/discovery/resources",
 		...options,
+	});
+};
+
+/**
+ * Get payment accepts
+ * Transform payment configuration into x402 payment requirements. This endpoint converts high-level payment parameters (like USD amounts or ERC20 token specifications) into the standardized x402 payment requirements format used by x402-compatible middleware.
+ */
+export const getX402Accepts = <ThrowOnError extends boolean = false>(
+	options?: Options<GetX402AcceptsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		GetX402AcceptsResponses,
+		GetX402AcceptsErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/payments/x402/accepts",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
 	});
 };
 
@@ -1507,6 +1463,33 @@ export const convertFiatToCrypto = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get a Swap or Bridge Quote
+ * Get a live quote for swapping or bridging tokens without executing anything. Specify the exact input amount (exact='input') or the exact output amount (exact='output') and the other side is returned, along with the route steps. The quote is indicative and subject to change; use `/v1/bridge/swap` to execute.
+ *
+ * Maps to `/v1/bridge/swap` as: originChainId/originTokenAddress = tokenIn, destinationChainId/destinationTokenAddress = tokenOut.
+ *
+ * **Authentication**: Pass `x-client-id` header for frontend usage from allowlisted origins or `x-secret-key` for backend usage.
+ */
+export const bridgeQuote = <ThrowOnError extends boolean = false>(
+	options: Options<BridgeQuoteData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		BridgeQuoteResponses,
+		BridgeQuoteErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/quote",
+		...options,
+	});
+};
+
+/**
  * Swap or Bridge Tokens
  * Swap one token for another using the optimal route available. You can specify a tokenIn amount (if exact='input') or tokenOut amount (if exact='output'), but not both. The corresponding output or input amount will be returned as the quote.
  *
@@ -1535,6 +1518,95 @@ export const bridgeSwap = <ThrowOnError extends boolean = false>(
 		headers: {
 			"Content-Type": "application/json",
 			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Create Payment
+ * Create a payment to be executed. Users can complete the payment via hosted UI (link is returned), a transaction execution referencing the product ID, or embedded widgets with the product ID.
+ *
+ * **Authentication**: This endpoint requires project authentication.
+ */
+export const bridgeCreatePayment = <ThrowOnError extends boolean = false>(
+	options?: Options<BridgeCreatePaymentData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		BridgeCreatePaymentResponses,
+		BridgeCreatePaymentErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/payments",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Get Payment History
+ * Get payment history for a specific payment link
+ */
+export const bridgeGetPaymentHistory = <ThrowOnError extends boolean = false>(
+	options: Options<BridgeGetPaymentHistoryData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		BridgeGetPaymentHistoryResponses,
+		BridgeGetPaymentHistoryErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/payments/{id}",
+		...options,
+	});
+};
+
+/**
+ * Complete Payment
+ * Completes a payment using its default token and amount. If the user does not have sufficient funds in the product's default payment token a 402 status will be returned containing a link and raw quote for purchase fulfillment.
+ *
+ * **Authentication**: This endpoint requires project authentication.
+ */
+export const bridgePaymentsPurchase = <ThrowOnError extends boolean = false>(
+	options: Options<BridgePaymentsPurchaseData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		BridgePaymentsPurchaseResponses,
+		BridgePaymentsPurchaseErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+			{
+				name: "x-client-id",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/bridge/payments/{id}",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options.headers,
 		},
 	});
 };
@@ -1648,6 +1720,68 @@ export const signSolanaMessage = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Sign Solana Transaction
+ * Sign a Solana transaction using a server wallet without broadcasting it. Provide either a serialized transaction or the instructions to assemble one, along with execution options.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. Optionally, include x-vault-access-token if your wallet is managed via Vault.
+ */
+export const signSolanaTransaction = <ThrowOnError extends boolean = false>(
+	options?: Options<SignSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SignSolanaTransactionResponses,
+		SignSolanaTransactionErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/sign-transaction",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
+ * Broadcast Signed Solana Transaction
+ * Broadcast a signed Solana transaction to the network and wait for confirmation. This endpoint accepts a base64 encoded signed transaction (such as the output from /v1/solana/sign-transaction), submits it to the Solana blockchain, and polls until the transaction is confirmed (up to 30 seconds).
+ *
+ * The endpoint waits for the transaction to reach 'confirmed' or 'finalized' status before returning. If the transaction fails on-chain, detailed error information is returned including instruction index, error type, and the transaction signature for debugging.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header.
+ */
+export const broadcastSolanaTransaction = <
+	ThrowOnError extends boolean = false,
+>(
+	options?: Options<BroadcastSolanaTransactionData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		BroadcastSolanaTransactionResponses,
+		BroadcastSolanaTransactionErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/broadcast-transaction",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
  * Send Solana Tokens
  * Transfer native SOL or SPL tokens on Solana. Automatically handles token account creation for SPL tokens if needed.
  *
@@ -1706,6 +1840,66 @@ export const sendSolanaTransaction = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Get Solana Swap Quote
+ * Get a quote for swapping tokens on Solana. This endpoint returns the expected output amount and swap details without executing the transaction.
+ *
+ * **Important**: Swaps are only available on Solana mainnet.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header.
+ */
+export const getSwapQuote = <ThrowOnError extends boolean = false>(
+	options: Options<GetSwapQuoteData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<
+		GetSwapQuoteResponses,
+		GetSwapQuoteErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/swap",
+		...options,
+	});
+};
+
+/**
+ * Swap Solana Tokens
+ * Execute a token swap on Solana. This endpoint handles the full swap flow: fetching the optimal swap route, signing the transaction with your server wallet, executing the swap, and polling until confirmation.
+ *
+ * The swap uses aggregated liquidity across Solana DEXs to provide optimal routing. The endpoint waits for the transaction to reach 'confirmed' or 'finalized' status before returning (up to 30 seconds).
+ *
+ * **Important**: Swaps are only available on Solana mainnet.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header.
+ */
+export const swapSolanaTokens = <ThrowOnError extends boolean = false>(
+	options?: Options<SwapSolanaTokensData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		SwapSolanaTokensResponses,
+		SwapSolanaTokensErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/swap",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
  * Get Solana Transaction
  * Retrieve the status and details of a queued Solana transaction using the identifier returned when the transaction was submitted.
  *
@@ -1731,10 +1925,45 @@ export const getSolanaTransaction = <ThrowOnError extends boolean = false>(
 };
 
 /**
+ * Deploy Solana Token
+ * Deploy a new SPL token or Token-2022 token on Solana. Creates a new mint account with the specified parameters and optionally mints initial supply.
+ *
+ * **Token Programs**:
+ * - `spl-token`: Standard SPL Token program - widely supported, recommended for most use cases
+ * - `token-2022`: Token Extensions program - supports advanced features like transfer fees, interest-bearing tokens, etc.
+ *
+ * **Authentication**: This endpoint requires backend authentication using the x-secret-key header. The secret key should never be exposed publicly.
+ */
+export const deploySolanaToken = <ThrowOnError extends boolean = false>(
+	options?: Options<DeploySolanaTokenData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).post<
+		DeploySolanaTokenResponses,
+		DeploySolanaTokenErrors,
+		ThrowOnError
+	>({
+		security: [
+			{
+				name: "x-secret-key",
+				type: "apiKey",
+			},
+		],
+		url: "/v1/solana/deploy",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	});
+};
+
+/**
  * Chat
  * Thirdweb AI chat completion API (BETA).
  *
- * Send natural language queries to interact with any EVM chain, read data, prepare transactions, swap tokens, deploy contracts, payments and more.
+ * Send natural language queries to read on-chain data across any EVM chain - contracts, tokens, NFTs, balances, transactions, events and blocks - and to search the thirdweb documentation.
+ *
+ * Read-only: the API answers questions and does not build, sign or send transactions.
  *
  * Compatible with standard OpenAI API chat completion format, can be used raw or with any popular AI library.
  *
@@ -1760,61 +1989,5 @@ export const chat = <ThrowOnError extends boolean = false>(
 			"Content-Type": "application/json",
 			...options?.headers,
 		},
-	});
-};
-
-/**
- * MCP Server
- * Model Context Protocol (MCP) server endpoint that exposes all thirdweb API endpoints as MCP tools. This allows LLMs and AI assistants to interact with the thirdweb API through the standardized MCP protocol.
- *
- * Add this MCP server to any MCP client:
- *
- * ```json
- * {
- * "mcpServers": {
- * "thirdweb-api": {
- * "url": "https://api.thirdweb.com/mcp?secretKey=YOUR_SECRET_KEY_HERE"
- * }
- * }
- * }
- * ```
- */
-export const mcpServer = <ThrowOnError extends boolean = false>(
-	options?: Options<McpServerData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).post<
-		McpServerResponses,
-		unknown,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-secret-key",
-				type: "apiKey",
-			},
-		],
-		url: "/mcp",
-		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
-	});
-};
-
-/**
- * llms.txt
- * The full openAPI reference for the thirdweb API in LLMs.txt format. Useful for AI assistants to understand the API and its capabilities. No authentication is required. Copy paste the contents of [https://api.thirdweb.com/llms.txt](https://api.thirdweb.com/llms.txt) into your source code to make your AI assistant understand the API and its capabilities.
- */
-export const llmsTxt = <ThrowOnError extends boolean = false>(
-	options?: Options<LlmsTxtData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).get<
-		LlmsTxtResponses,
-		unknown,
-		ThrowOnError
-	>({
-		url: "/llms.txt",
-		...options,
 	});
 };
