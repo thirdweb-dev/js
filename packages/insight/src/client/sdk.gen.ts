@@ -67,9 +67,6 @@ import type {
 	GetV1NftsTransfersTransactionByTransactionHashData,
 	GetV1NftsTransfersTransactionByTransactionHashErrors,
 	GetV1NftsTransfersTransactionByTransactionHashResponses,
-	GetV1ResolveByInputData,
-	GetV1ResolveByInputErrors,
-	GetV1ResolveByInputResponses,
 	GetV1TokensData,
 	GetV1TokensErc20ByOwnerAddressData,
 	GetV1TokensErc20ByOwnerAddressErrors,
@@ -155,7 +152,6 @@ export type Options<
 /**
  * Get webhooks
  * Get a list of webhooks or a single webhook by ID
- * @deprecated
  */
 export const getV1Webhooks = <ThrowOnError extends boolean = false>(
 	options?: Options<GetV1WebhooksData, ThrowOnError>,
@@ -178,8 +174,7 @@ export const getV1Webhooks = <ThrowOnError extends boolean = false>(
 
 /**
  * Create webhook
- * Deprecated - Insight webhooks will remain active for a while, but new ones cannot be created. A general thirdweb webhook solution will be available instead. Create a new webhook. In order to receive decoded data, specify a partial ABI in the filters.
- * @deprecated
+ * Create a new webhook. In order to receive decoded data, specify a partial ABI in the filters.
  */
 export const postV1Webhooks = <ThrowOnError extends boolean = false>(
 	options?: Options<PostV1WebhooksData, ThrowOnError>,
@@ -207,7 +202,6 @@ export const postV1Webhooks = <ThrowOnError extends boolean = false>(
 /**
  * Delete webhook
  * Delete a webhook. This action cannot be undone.
- * @deprecated
  */
 export const deleteV1WebhooksByWebhookId = <
 	ThrowOnError extends boolean = false,
@@ -233,7 +227,6 @@ export const deleteV1WebhooksByWebhookId = <
 /**
  * Update webhook
  * Update a webhook.
- * @deprecated
  */
 export const patchV1WebhooksByWebhookId = <
 	ThrowOnError extends boolean = false,
@@ -263,7 +256,6 @@ export const patchV1WebhooksByWebhookId = <
 /**
  * Test webhook
  * Test your webhook URL. This will send a test event to the webhook URL signed with an example secret 'test123'. NB! The payload does not necessarily match your webhook filters. You can however use it to test signature verification and payload format handling.
- * @deprecated
  */
 export const postV1WebhooksTest = <ThrowOnError extends boolean = false>(
 	options?: Options<PostV1WebhooksTestData, ThrowOnError>,
@@ -411,7 +403,8 @@ export const getV1TransactionsByContractAddress = <
 
 /**
  * Get contract transactions with specific signature
- * Get specific contract transactions
+ * Get specific contract transactions. [BEING DEPRECATED IN FAVOR OF /transactions]
+ * @deprecated
  */
 export const getV1TransactionsByContractAddressBySignature = <
 	ThrowOnError extends boolean = false,
@@ -463,6 +456,7 @@ export const getV1TokensOwners = <ThrowOnError extends boolean = false>(
 /**
  * Get token transfers by transaction
  * Get token transfers by transaction
+ * @deprecated
  */
 export const getV1TokensTransfersTransactionByTransactionHash = <
 	ThrowOnError extends boolean = false,
@@ -707,29 +701,6 @@ export const getV1TokensLookup = <ThrowOnError extends boolean = false>(
 };
 
 /**
- * Resolve
- * Resolve
- */
-export const getV1ResolveByInput = <ThrowOnError extends boolean = false>(
-	options: Options<GetV1ResolveByInputData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<
-		GetV1ResolveByInputResponses,
-		GetV1ResolveByInputErrors,
-		ThrowOnError
-	>({
-		security: [
-			{
-				name: "x-client-id",
-				type: "apiKey",
-			},
-		],
-		url: "/v1/resolve/{input}",
-		...options,
-	});
-};
-
-/**
  * Get blocks
  * Get blocks
  */
@@ -780,6 +751,7 @@ export const getV1ContractsAbiByContractAddress = <
 /**
  * Get contract metadata​
  * Get contract metadata​
+ * @deprecated
  */
 export const getV1ContractsMetadataByContractAddress = <
 	ThrowOnError extends boolean = false,
@@ -805,6 +777,7 @@ export const getV1ContractsMetadataByContractAddress = <
 /**
  * Decode logs and transactions​
  * Decode logs and transactions​
+ * @deprecated
  */
 export const postV1DecodeByContractAddress = <
 	ThrowOnError extends boolean = false,
@@ -980,6 +953,7 @@ export const getV1NftsTransfers = <ThrowOnError extends boolean = false>(
 /**
  * Get NFT transfers by transaction
  * Get NFT transfers by transaction
+ * @deprecated
  */
 export const getV1NftsTransfersTransactionByTransactionHash = <
 	ThrowOnError extends boolean = false,
