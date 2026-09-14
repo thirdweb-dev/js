@@ -7,13 +7,13 @@ export const wallet = {
   homepage: "https://login.blockchain.com/auth/signup",
   image_id: "0884948c-c6ce-421e-b4bd-3d2adb261500",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/blockchain-bitcoin-wallet/id493253309",
     android:
       "https://play.google.com/store/apps/details?id=piuk.blockchain.android",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,

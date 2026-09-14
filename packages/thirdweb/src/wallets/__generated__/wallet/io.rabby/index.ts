@@ -9,25 +9,26 @@ export const wallet = {
   app: {
     browser:
       "https://chrome.google.com/webstore/detail/rabby/acmacodkjbdgmoleebolmdjonilkdbch",
-    ios: null,
-    android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    ios: "https://apps.apple.com/us/app/rabby-wallet-crypto-evm/id6474381673",
+    android:
+      "https://play.google.com/store/apps/details?id=com.debank.rabbymobile",
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
       "https://chrome.google.com/webstore/detail/rabby-wallet/acmacodkjbdgmoleebolmdjonilkdbch",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "io.rabby",
   mobile: {
-    native: null,
-    universal: null,
+    native: "rabby://",
+    universal: "",
   },
   desktop: {
-    native: null,
+    native: "",
     universal:
       "https://chrome.google.com/webstore/detail/rabby/acmacodkjbdgmoleebolmdjonilkdbch",
   },

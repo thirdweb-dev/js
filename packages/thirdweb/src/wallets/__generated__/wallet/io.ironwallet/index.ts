@@ -5,7 +5,7 @@ export const wallet = {
   id: "io.ironwallet",
   name: "IronWallet",
   homepage: "https://ironwallet.io/",
-  image_id: "b836d372-457c-4d10-5a1d-6e4b0a369b00",
+  image_id: "90d3675f-7b7f-4211-cc07-b12eedbb0300",
   app: {
     browser: "",
     ios: "https://apps.apple.com/gb/app/ironwallet-sell-buy-crypto/id6451146325",

@@ -3,30 +3,31 @@
 
 export const wallet = {
   id: "xyz.talisman",
-  name: "Talisman Wallet",
+  name: "Talisman",
   homepage: "https://talisman.xyz",
-  image_id: "ba290222-c3f3-4194-23bf-28ba7587af00",
+  image_id: "7b8af324-1b14-44eb-d0b5-ca98550a6900",
   app: {
-    browser: null,
-    ios: null,
-    android: null,
-    mac: null,
-    windows: null,
-    linux: null,
+    browser: "",
+    ios: "https://apps.apple.com/us/app/talisman-wallet/id6761427240",
+    android: "https://play.google.com/store/apps/details?id=xyz.talisman.app",
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
-      "https://chromewebstore.google.com/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld",
-    firefox: null,
+      "https://chromewebstore.google.com/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld?hl=en",
+    firefox:
+      "https://addons.mozilla.org/en-US/firefox/addon/talisman-wallet-extension/",
     safari: null,
     edge: null,
     opera: null,
   },
   rdns: "xyz.talisman",
   mobile: {
-    native: null,
-    universal: null,
+    native: "talisman://",
+    universal: "https://talisman.xyz/wc",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -4,12 +4,12 @@
 export const wallet = {
   id: "io.hero.wallet",
   name: "Hero Wallet",
-  homepage: "https://wallet.hero.io",
-  image_id: "974f0728-7c62-4772-b66b-6b83ced7f200",
+  homepage: "https://app.herowallet.com/",
+  image_id: "86a2e74b-7e97-4162-2c26-71bd9ccab000",
   app: {
-    browser: "https://wallet.hero.io/signin",
-    ios: "",
-    android: "",
+    browser: "https://app.herowallet.com/signin/wc?uri=",
+    ios: "https://apps.apple.com/us/app/hero-wallet-hero-io/id6757118686",
+    android: "https://play.google.com/store/apps/details?id=io.hero.wallet",
     mac: "",
     windows: "",
     linux: "",
@@ -22,11 +22,11 @@ export const wallet = {
   },
   rdns: "io.hero.wallet",
   mobile: {
-    native: "",
-    universal: "",
+    native: "herowallet://wc",
+    universal: "https://wallet.hero.io/signin/wc",
   },
   desktop: {
     native: "",
-    universal: "https://wallet.hero.io/signin",
+    universal: "https://app.herowallet.com/signin/wc?uri=",
   },
 } as const;
