@@ -54,6 +54,12 @@ export interface QROverlay {
 }
 
 /**
+ * Marks overlays created by this module so stale ones can be cleaned up.
+ * @internal
+ */
+const QR_OVERLAY_ATTRIBUTE = "data-tw-qr-overlay";
+
+/**
  * Creates a QR code overlay for the given WalletConnect URI
  */
 export function createQROverlay(
@@ -69,14 +75,26 @@ export function createQROverlay(
     onCancel,
   } = options;
 
+  // Remove overlays left behind by earlier connect attempts. Each call only
+  // tracks the overlay it created, so an abandoned attempt - or a pairing that
+  // expired and re-emitted its URI - would otherwise stack another one on top.
+  for (const stale of document.querySelectorAll(`[${QR_OVERLAY_ATTRIBUTE}]`)) {
+    stale.remove();
+  }
+
   // Create overlay backdrop
   const overlay = document.createElement("div");
+  overlay.setAttribute(QR_OVERLAY_ATTRIBUTE, "");
+  // pointer-events is set explicitly because the overlay is appended to
+  // document.body, and modal libraries commonly disable pointer events there
+  // while a dialog is open. Inheriting that would render the overlay unclickable.
   overlay.style.cssText = `
     position: fixed;
     inset: 0;
     background-color: ${theme === "dark" ? "rgba(0, 0, 0, 0.8)" : "rgba(0, 0, 0, 0.5)"};
     backdrop-filter: blur(10px);
     z-index: 9999;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: center;
