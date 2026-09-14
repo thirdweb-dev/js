@@ -78,9 +78,9 @@ export function createQROverlay(
   // Remove overlays left behind by earlier connect attempts. Each call only
   // tracks the overlay it created, so an abandoned attempt - or a pairing that
   // expired and re-emitted its URI - would otherwise stack another one on top.
-  for (const stale of document.querySelectorAll(`[${QR_OVERLAY_ATTRIBUTE}]`)) {
+  document.querySelectorAll(`[${QR_OVERLAY_ATTRIBUTE}]`).forEach((stale) => {
     stale.remove();
-  }
+  });
 
   // Create overlay backdrop
   const overlay = document.createElement("div");
