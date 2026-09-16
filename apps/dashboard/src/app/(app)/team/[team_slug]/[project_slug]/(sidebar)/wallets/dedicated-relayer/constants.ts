@@ -32,6 +32,7 @@ export const RELAYER_SUPPORTED_CHAINS = [
   143, // Monad mainnet
   252, // Fraxtal mainnet
   33139, // ApeChain mainnet
+  5042, // Arc Mainnet (Circle USDC Native)
   // TESTNETS
   11155111, // sepolia testnet
   10200, // gnosis chiado testnet
