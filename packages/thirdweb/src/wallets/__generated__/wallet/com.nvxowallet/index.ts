@@ -5,10 +5,10 @@ export const wallet = {
   id: "com.nvxowallet",
   name: "NVXO Wallet",
   homepage: "https://www.nvxowallet.com",
-  image_id: "c5fa455c-3836-49c4-cb66-262a163d1b00",
+  image_id: "dc903335-fc95-4c51-9b99-9e7671c1ac00",
   app: {
     browser: "https://www.nvxowallet.com",
-    ios: "",
+    ios: "https://apps.apple.com/us/app/nvxo-wallet-crypto-btc/id6741467282",
     android:
       "https://play.google.com/store/apps/details?id=com.nvwallet.wallet",
     mac: "",

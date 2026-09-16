@@ -22,7 +22,7 @@ export const wallet = {
   rdns: "",
   mobile: {
     native: "",
-    universal: "https://connect.trezor.io/9/deeplink/wc",
+    universal: "https://connect.trezor.io/9/deeplink/",
   },
   desktop: {
     native: "trezorsuite://walletconnect",

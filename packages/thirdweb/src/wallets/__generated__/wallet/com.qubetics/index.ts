@@ -7,13 +7,13 @@ export const wallet = {
   homepage: "https://www.qubetics.com/",
   image_id: "f6afe67c-41e9-44fc-075a-3e7eda291000",
   app: {
-    browser: null,
-    ios: null,
+    browser: "",
+    ios: "https://apps.apple.com/in/app/qubetics-wallet/id6746333540",
     android:
       "https://play.google.com/store/apps/details?id=com.qubetics.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -23,10 +23,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "qubetics://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -13,16 +13,16 @@ export const wallet = {
     ios: "https://apps.apple.com/us/app/core-crypto-wallet-nfts/id6443685999",
     android:
       "https://play.google.com/store/apps/details?id=com.avaxwallet&hl=en_US&gl=US",
-    mac: null,
+    mac: "",
     windows:
       "https://core.app/?utm_source=referral&utm_medium=website&utm_campaign=walletconnect",
-    linux: null,
+    linux: "",
     chrome:
       "https://chrome.google.com/webstore/detail/core-crypto-wallet-nft-ex/agoakfejjabomempkjlepdflaleeobhb",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "app.core.extension",
   mobile: {

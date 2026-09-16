@@ -23,7 +23,7 @@ export const wallet = {
   rdns: "",
   mobile: {
     native: "rewardywallet://",
-    universal: "",
+    universal: "https://www.rewardywallet.com/wc",
   },
   desktop: {
     native: "",

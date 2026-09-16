@@ -7,13 +7,13 @@ export const wallet = {
   homepage: "https://gemwallet.com",
   image_id: "28f1b431-9d2a-4083-1bf8-5958939a2300",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/app/apple-store/id6448712670?mt=8",
     android:
       "https://play.google.com/store/apps/details?id=com.gemwallet.android",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
