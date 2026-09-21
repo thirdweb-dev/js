@@ -76,7 +76,6 @@ const CreateProjectDialog = (props: CreateProjectDialogProps) => {
             "Failed to create vault account and access token",
             error,
           );
-          throw error;
         });
 
         return {
