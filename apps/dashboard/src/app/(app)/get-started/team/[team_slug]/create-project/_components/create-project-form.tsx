@@ -67,7 +67,6 @@ export function CreateProjectFormOnboarding(props: {
                   "Failed to create vault account and access token",
                   error,
                 );
-                throw error;
               });
 
               return {
