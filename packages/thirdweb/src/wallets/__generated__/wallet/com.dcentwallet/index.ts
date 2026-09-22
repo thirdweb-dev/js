@@ -3,17 +3,17 @@
 
 export const wallet = {
   id: "com.dcentwallet",
-  name: "D'CENT Wallet",
+  name: "DCENT",
   homepage: "https://dcentwallet.com",
-  image_id: "e7e60788-6806-47d4-7b4a-a410e7aa3300",
+  image_id: "47227489-9a0b-4e97-3a69-c7e721087c00",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/app/dcent-hardware-wallet/id1447206611",
     android:
       "https://play.google.com/store/apps/details?id=com.kr.iotrust.dcent.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://link.dcentwallet.com",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

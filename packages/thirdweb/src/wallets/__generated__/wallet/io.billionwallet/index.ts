@@ -3,9 +3,9 @@
 
 export const wallet = {
   id: "io.billionwallet",
-  name: "Billion Wallet",
+  name: "Billion",
   homepage: "https://billionwallet.io/",
-  image_id: "b530c52a-1b19-4184-18f9-f0d292b88a00",
+  image_id: "8fd9b0c5-87a6-4dd5-19d5-9cb133fbd100",
   app: {
     browser: "",
     ios: "https://apps.apple.com/app/billion-crypto-wallet/id6746122902",

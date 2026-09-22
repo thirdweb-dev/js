@@ -3,16 +3,16 @@
 
 export const wallet = {
   id: "us.binance",
-  name: "Binance.US",
-  homepage: "https://binance.us",
-  image_id: "48aa1a7d-c5fe-4ad6-c2f2-e5684b296900",
+  name: "Binance.US Wallet",
+  homepage: "https://www.binance.us/",
+  image_id: "e2215c27-96db-4c4c-ce79-33c962498000",
   app: {
-    browser: null,
-    ios: "https://itunes.apple.com/app/id1492670702",
+    browser: "",
+    ios: "https://apps.apple.com/us/app/binance-us-buy-btc-crypto/id1492670702",
     android: "https://play.google.com/store/apps/details?id=com.binance.us",
     mac: "",
-    windows: null,
-    linux: null,
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "bncus://binance.us",
-    universal: "https://binance.us/universal_JHHGDSKDJ",
+    native: "bncus://binance.us/cedefi",
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

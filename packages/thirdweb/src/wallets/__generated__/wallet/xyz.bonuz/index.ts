@@ -3,16 +3,16 @@
 
 export const wallet = {
   id: "xyz.bonuz",
-  name: "Bonuz Social Smart Wallet",
+  name: "bonuz Social Wallet",
   homepage: "https://bonuz.xyz",
-  image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
+  image_id: "383f4fef-7cda-4f46-f058-6e629ef7e400",
   app: {
-    browser: null,
+    browser: "https://bonuz.id/",
     ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",
     android: "https://play.google.com/store/apps/details?id=market.bonuz.app",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "bonuzapp://",
-    universal: null,
+    universal: "https://bonuz.id/",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "https://bonuz.id/",
   },
 } as const;

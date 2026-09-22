@@ -7,12 +7,12 @@ export const wallet = {
   homepage: "https://cakewallet.com/",
   image_id: "b05af25b-fa4d-4f91-a4cb-2f8f7d544000",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=iphone",
     android:
       "https://play.google.com/store/apps/details?id=com.cakewallet.cake_wallet",
     mac: "https://apps.apple.com/us/app/cake-wallet/id1334702542?platform=mac",
-    windows: null,
+    windows: "",
     linux: "https://github.com/cake-tech/cake_wallet/releases/tag/v4.10.0",
     chrome: null,
     firefox: null,
@@ -23,10 +23,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "cakewallet://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

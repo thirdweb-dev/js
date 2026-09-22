@@ -11,15 +11,15 @@ export const wallet = {
     ios: "https://apps.apple.com/us/app/mpcvault/id1622756458",
     android:
       "https://play.google.com/store/apps/details?id=com.mpcvault.mobileapp.android",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
       "https://chromewebstore.google.com/detail/mpcvault/jgfmfplofjigjfokigdiaiibhonfnedj",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "com.mpcvault.broswerplugin",
   mobile: {

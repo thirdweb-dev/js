@@ -22,7 +22,7 @@ export const wallet = {
   },
   rdns: "",
   mobile: {
-    native: "",
+    native: "onlybulls://",
     universal: "https://onlybulls.com",
   },
   desktop: {

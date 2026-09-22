@@ -3,17 +3,19 @@
 
 export const wallet = {
   id: "xyz.timelesswallet",
-  name: "Timeless Wallet",
+  name: "Timeless X",
   homepage: "https://timelesswallet.xyz",
-  image_id: "32e89601-0490-42fc-0cc4-8627d62a2000",
+  image_id: "92f1ead4-0bc4-4932-10d3-761c509b4d00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/app/timeless-wallet/id1592807339",
-    android: null,
+    ios: "https://apps.apple.com/us/app/timeless-x/id6470180600",
+    android:
+      "https://play.google.com/store/apps/details?id=xyz.timelesswallet.aa",
     mac: null,
     windows: null,
     linux: null,
-    chrome: null,
+    chrome:
+      "https://chrome.google.com/webstore/detail/ifcpkdgcgcepjdkfcogehpnhpipejgho",
     firefox: null,
     safari: null,
     edge: null,
@@ -21,8 +23,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "timeless-wallet://",
-    universal: "https://timelesswallet.xyz",
+    native: "timeless-x://connect",
+    universal: "https://timelesswallet.xyz/x",
   },
   desktop: {
     native: null,

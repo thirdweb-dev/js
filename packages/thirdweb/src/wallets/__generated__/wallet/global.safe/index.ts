@@ -8,11 +8,12 @@ export const wallet = {
   image_id: "a578bd45-b418-4111-2c56-8ddcd1417c00",
   app: {
     browser: "https://app.safe.global/",
-    ios: "https://apps.apple.com/app/id1515759131",
-    android: "https://play.google.com/store/apps/details?id=io.gnosis.safe",
-    mac: null,
-    windows: null,
-    linux: null,
+    ios: "https://apps.apple.com/app/id6748754793",
+    android:
+      "https://play.google.com/store/apps/details?id=global.safe.mobileapp",
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -25,7 +26,7 @@ export const wallet = {
     universal: "https://app.safe.global/",
   },
   desktop: {
-    native: null,
+    native: "",
     universal: "https://app.safe.global/",
   },
 } as const;

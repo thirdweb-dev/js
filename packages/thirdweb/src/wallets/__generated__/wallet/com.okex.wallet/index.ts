@@ -7,18 +7,18 @@ export const wallet = {
   homepage: "https://www.okx.com/download",
   image_id: "c55df831-3c52-49fc-d1d1-97a926dc0c00",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/okx-wallet-portal-to-web3/id6743309484",
     android: "https://play.google.com/store/apps/details?id=com.okx.wallet",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome:
       "https://chrome.google.com/webstore/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge",
-    firefox: null,
-    safari: null,
-    edge: null,
-    opera: null,
+    firefox: "",
+    safari: "",
+    edge: "",
+    opera: "",
   },
   rdns: "com.okex.wallet",
   mobile: {
@@ -26,7 +26,7 @@ export const wallet = {
     universal: "https://web3.okx.com/download",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;
