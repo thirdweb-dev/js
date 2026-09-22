@@ -71,12 +71,5 @@ export function isMobile(): boolean {
     return true;
   }
 
-  const isMobileViewport =
-    typeof window !== "undefined" && window.innerWidth < 640;
-
-  if (isMobileViewport) {
-    return true;
-  }
-
   return false;
 }
