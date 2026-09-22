@@ -44,3 +44,30 @@ export async function getTeamInvites(
 
   return json.result;
 }
+
+export async function getTeamInvite(teamId: string, inviteId: string) {
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    return undefined;
+  }
+
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/invites/${inviteId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    return undefined;
+  }
+
+  const json = (await res.json()) as {
+    result: TeamInvite;
+  };
+
+  return json.result;
+}

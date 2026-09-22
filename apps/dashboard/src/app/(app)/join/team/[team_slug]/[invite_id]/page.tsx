@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getValidAccount } from "@/api/account/get-account";
 import { getTeamBySlug, service_getTeamBySlug } from "@/api/team/get-team";
+import { getTeamInvite } from "@/api/team/team-invites";
 import { JoinTeamPage } from "./JoinTeamPage";
 
 export default async function Page(props: {
@@ -16,9 +17,12 @@ export default async function Page(props: {
     service_getTeamBySlug(team_slug),
   ]);
 
-  // if the user is already a member of the team, redirect to the team
+  // a member can still hold a pending invite, e.g. for a different role
   if (userTeam) {
-    redirect(`/team/${team_slug}`);
+    const invite = await getTeamInvite(userTeam.id, invite_id);
+    if (invite?.status !== "pending") {
+      redirect(`/team/${team_slug}`);
+    }
   }
 
   if (!inviteTeam) {
