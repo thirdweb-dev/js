@@ -2357,7 +2357,7 @@ const ALL_MINIMAL_WALLET_INFOS = [
   {
     id: "io.rabby",
     name: "Rabby",
-    hasMobileSupport: false,
+    hasMobileSupport: true,
   },
   {
     id: "com.brave.wallet",
