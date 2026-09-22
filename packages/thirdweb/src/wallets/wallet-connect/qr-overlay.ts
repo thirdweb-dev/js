@@ -53,11 +53,8 @@ export interface QROverlay {
   show: () => void;
 }
 
-/**
- * Marks overlays created by this module so stale ones can be cleaned up.
- * @internal
- */
-const QR_OVERLAY_ATTRIBUTE = "data-tw-qr-overlay";
+// Only one overlay is shown at a time; creating a new one replaces the previous one.
+let removeActiveOverlay: (() => void) | undefined;
 
 /**
  * Creates a QR code overlay for the given WalletConnect URI
@@ -75,19 +72,11 @@ export function createQROverlay(
     onCancel,
   } = options;
 
-  // Remove overlays left behind by earlier connect attempts. Each call only
-  // tracks the overlay it created, so an abandoned attempt - or a pairing that
-  // expired and re-emitted its URI - would otherwise stack another one on top.
-  document.querySelectorAll(`[${QR_OVERLAY_ATTRIBUTE}]`).forEach((stale) => {
-    stale.remove();
-  });
+  removeActiveOverlay?.();
 
   // Create overlay backdrop
+  // pointer-events is explicit so the overlay stays interactive when the host page disables it on body
   const overlay = document.createElement("div");
-  overlay.setAttribute(QR_OVERLAY_ATTRIBUTE, "");
-  // pointer-events is set explicitly because the overlay is appended to
-  // document.body, and modal libraries commonly disable pointer events there
-  // while a dialog is open. Inheriting that would render the overlay unclickable.
   overlay.style.cssText = `
     position: fixed;
     inset: 0;
@@ -270,9 +259,23 @@ export function createQROverlay(
   // Append to container
   container.appendChild(overlay);
 
+  function removeNow() {
+    document.removeEventListener("keydown", handleEscapeKey);
+    overlay.removeEventListener("click", handleOverlayClick);
+    overlay.remove();
+    style.remove();
+    if (removeActiveOverlay === removeNow) {
+      removeActiveOverlay = undefined;
+    }
+  }
+  removeActiveOverlay = removeNow;
+
   function destroyOverlay(userInitiated = false) {
     document.removeEventListener("keydown", handleEscapeKey);
     overlay.removeEventListener("click", handleOverlayClick);
+    if (removeActiveOverlay === removeNow) {
+      removeActiveOverlay = undefined;
+    }
 
     // Call onCancel callback only if user initiated the close action
     if (userInitiated && onCancel) {

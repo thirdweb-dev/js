@@ -1,13 +1,9 @@
 // @vitest-environment happy-dom
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createQROverlay } from "./qr-overlay.js";
 
 const URI = "wc:1234@2?relay-protocol=irn&symKey=abcd";
 
-/**
- * The overlay is identified by its own styling rather than by any attribute it
- * sets, so these tests describe observable behaviour rather than implementation.
- */
 function overlayElements(): HTMLElement[] {
   return Array.from(document.body.children).filter(
     (el): el is HTMLElement =>
@@ -15,29 +11,50 @@ function overlayElements(): HTMLElement[] {
   );
 }
 
+function pressEscape() {
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+}
+
 describe("createQROverlay", () => {
   beforeEach(() => {
     document.body.innerHTML = "";
+    document.body.style.pointerEvents = "";
   });
 
-  it("keeps the overlay clickable when the host page disables pointer events on body", () => {
-    // Modal libraries commonly do this while a dialog is open.
+  it("stays interactive when pointer events are disabled on body", () => {
     document.body.style.pointerEvents = "none";
 
     const overlay = createQROverlay(URI);
 
-    const [root] = overlayElements();
-    expect(root).toBeDefined();
-    // Without an explicit value the overlay inherits `none` from body and
-    // becomes unclickable despite being visible.
-    expect(root?.style.pointerEvents).toBe("auto");
-
+    expect(overlayElements()[0]?.style.pointerEvents).toBe("auto");
     overlay.destroy();
   });
 
-  it("replaces an overlay left behind by a previous attempt instead of stacking", () => {
+  it("replaces the previous overlay instead of stacking", () => {
     createQROverlay(URI);
+    const overlay = createQROverlay(URI);
+
+    expect(overlayElements()).toHaveLength(1);
+    overlay.destroy();
+  });
+
+  it("detaches the replaced overlay's listeners", () => {
+    const firstCancel = vi.fn();
+    const secondCancel = vi.fn();
+    createQROverlay(URI, { onCancel: firstCancel });
+    createQROverlay(URI, { onCancel: secondCancel });
+
+    pressEscape();
+
+    expect(firstCancel).not.toHaveBeenCalled();
+    expect(secondCancel).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not remove a newer overlay when an older one is destroyed", () => {
+    const first = createQROverlay(URI);
     createQROverlay(URI);
+
+    first.destroy();
 
     expect(overlayElements()).toHaveLength(1);
   });
