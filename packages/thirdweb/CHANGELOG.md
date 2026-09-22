@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.121.6
+
+### Patch Changes
+
+- [#8995](https://github.com/thirdweb-dev/js/pull/8995) [`cb98fa8`](https://github.com/thirdweb-dev/js/commit/cb98fa892bc411ac900c092efb4ea3ca799bb9df) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Show the WalletConnect QR inside the connect modal instead of a separate window
+
+- [#8966](https://github.com/thirdweb-dev/js/pull/8966) [`6214925`](https://github.com/thirdweb-dev/js/commit/62149255e7033d45d20f36129bc84831ef17fb03) Thanks [@realpaaao](https://github.com/realpaaao)! - Add Vultisig and refresh the wallet registry
+
 ## 5.121.5
 
 ### Patch Changes
