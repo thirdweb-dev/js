@@ -45,11 +45,14 @@ export async function getTeamInvites(
   return json.result;
 }
 
-export async function getTeamInvite(teamId: string, inviteId: string) {
+export async function getTeamInvite(
+  teamId: string,
+  inviteId: string,
+): Promise<TeamInvite | undefined> {
   const authToken = await getAuthToken();
 
   if (!authToken) {
-    return undefined;
+    throw new Error("Unauthorized");
   }
 
   const res = await fetch(
@@ -61,8 +64,13 @@ export async function getTeamInvite(teamId: string, inviteId: string) {
     },
   );
 
-  if (!res.ok) {
+  if (res.status === 404) {
     return undefined;
+  }
+
+  if (!res.ok) {
+    const errorMessage = await res.text();
+    throw new Error(errorMessage);
   }
 
   const json = (await res.json()) as {
