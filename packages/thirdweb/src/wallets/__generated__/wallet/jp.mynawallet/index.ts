@@ -2,13 +2,13 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "jp.co.mynawallet",
+  id: "jp.mynawallet",
   name: "MynaWallet",
-  homepage: "https://www.mynawallet.co.jp/services",
+  homepage: "https://www.mynawallet.jp",
   image_id: "ac33496d-cdf4-46f4-9467-3db93b30bb00",
   app: {
     browser: "",
-    ios: "https://apps.apple.com/us/app/%E3%83%9E%E3%82%A4%E3%83%8A%E3%82%A6%E3%82%A9%E3%83%AC%E3%83%83%E3%83%88/id6751813717",
+    ios: "https://apps.apple.com/jp/app/%E3%83%9E%E3%82%A4%E3%83%8A%E3%82%A6%E3%82%A9%E3%83%AC%E3%83%83%E3%83%88/id6751813717",
     android:
       "https://play.google.com/store/apps/details?id=jp.co.mynawallet.MynaWallet",
     mac: "",
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "mynawallet://wc?uri=wc:abc123",
-    universal: "",
+    native: "mynawallet://",
+    universal: "https://prd-api.mynawallet.jp/deeplink",
   },
   desktop: {
     native: "",

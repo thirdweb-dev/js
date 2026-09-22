@@ -7,10 +7,10 @@ export const wallet = {
   homepage: "https://scopuly.com",
   image_id: "89dee466-1de6-44e2-f00d-9e9d5eecec00",
   app: {
-    browser: "",
+    browser: "https://app.scopuly.com/wc",
     ios: "https://apps.apple.com/us/app/id1383402218?platform=iphone",
     android: "https://play.google.com/store/apps/details?id=com.sdex.app",
-    mac: "",
+    mac: "https://apps.apple.com/us/app/id1383402218?platform=mac",
     windows: "",
     linux: "",
     chrome: null,
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "scopuly://wc",
+    native: "scopuly://",
     universal: "https://app.scopuly.com/wc",
   },
   desktop: {
-    native: "",
-    universal: "",
+    native: "scopuly://",
+    universal: "https://app.scopuly.com/wc",
   },
 } as const;

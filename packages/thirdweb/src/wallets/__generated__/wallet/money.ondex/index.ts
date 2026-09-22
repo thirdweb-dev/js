@@ -2,15 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "",
-  name: "Kotai Wallet",
-  homepage: "kotaiwallet://",
-  image_id: "11d87117-f551-451c-42e7-7d0ccc2e8f00",
+  id: "money.ondex",
+  name: "Ondex",
+  homepage: "https://ondex.money",
+  image_id: "d5272175-ec0c-4e22-ac77-ffc6dfb9c000",
   app: {
     browser: "",
-    ios: "https://apps.apple.com/br/app/kotai-wallet/id6757885160",
-    android:
-      "https://play.google.com/store/apps/details?id=com.kotaiwallet.app.android",
+    ios: "https://apps.apple.com/app/id6762642985",
+    android: "https://play.google.com/store/apps/details?id=com.ondex.wallet",
     mac: "",
     windows: "",
     linux: "",
@@ -22,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "kotaiwallet://",
-    universal: "",
+    native: "ondex://wc",
+    universal: "https://ondex.money/wc",
   },
   desktop: {
     native: "",

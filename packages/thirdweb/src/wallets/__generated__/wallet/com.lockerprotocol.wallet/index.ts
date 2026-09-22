@@ -15,10 +15,10 @@ export const wallet = {
     linux: "",
     chrome:
       "https://chromewebstore.google.com/detail/locker-protocol-wallet/pdkhlfhhjkdepnppbdpliepjaocghibh",
-    firefox: null,
-    safari: null,
+    firefox: "",
+    safari: "",
     edge: "https://microsoftedge.microsoft.com/addons/detail/locker-protocol-wallet/ghepgjfjdmjcgkfpeccjlgjeccdgpigm",
-    opera: null,
+    opera: "",
   },
   rdns: "com.lockerprotocol.wallet",
   mobile: {

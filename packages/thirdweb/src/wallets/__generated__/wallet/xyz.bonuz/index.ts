@@ -5,7 +5,7 @@ export const wallet = {
   id: "xyz.bonuz",
   name: "bonuz Social Wallet",
   homepage: "https://bonuz.xyz",
-  image_id: "dccb9fbb-50c4-4fda-05ff-2fc2b44b8300",
+  image_id: "383f4fef-7cda-4f46-f058-6e629ef7e400",
   app: {
     browser: "https://bonuz.id/",
     ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",

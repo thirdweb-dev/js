@@ -2,18 +2,18 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "co.swopme",
+  id: "app.swopme",
   name: "SWOP",
-  homepage: "https://swopme.co/",
+  homepage: "https://www.swopme.app",
   image_id: "6e773b07-efcc-40eb-b3a2-300efc5df800",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/swop-connecting-the-world/id1593201322",
     android:
       "https://play.google.com/store/apps/details?id=com.travisheron.swopapp&pli=1",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -22,11 +22,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "swopapp://",
-    universal: "https://swopme.app",
+    native: "swopmobileexpo://",
+    universal: "https://www.swopme.app",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

@@ -21,9 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "",
-    universal:
-      "https://play.google.com/store/apps/details?id=com.wallabr.wallet",
+    native: "com.wallabr.wallet://",
+    universal: "https://88wallet.app/wc",
   },
   desktop: {
     native: "",

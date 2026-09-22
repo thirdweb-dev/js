@@ -2,27 +2,28 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.vkinha",
-  name: "VKX WALLET",
-  homepage: "https://vkinha.com",
-  image_id: "934348df-b211-4b09-ec11-ca8d29aa3f00",
+  id: "org.splits.teams.connect",
+  name: "Splits",
+  homepage: "https://splits.org",
+  image_id: "c9a2cd72-1241-4a15-8c86-5af95805d400",
   app: {
     browser: "",
     ios: "",
-    android: "https://play.google.com/store/apps/details?id=com.vkinha.wallet",
+    android: "",
     mac: "",
     windows: "",
     linux: "",
-    chrome: null,
+    chrome:
+      "https://chromewebstore.google.com/detail/splits/ghfacfafnbcgkielpaeifdpoggfeakif?utm_source=walletconnect&utm_medium=web",
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "org.splits.teams.connect",
   mobile: {
-    native: "vkxwallet://wc",
-    universal: "https://vkinha.com/wallet",
+    native: "",
+    universal: "",
   },
   desktop: {
     native: "",

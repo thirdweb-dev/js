@@ -4,13 +4,12 @@
 export const wallet = {
   id: "io.mywallet",
   name: "My Wallet",
-  homepage: "https://mywallet.io/",
-  image_id: "9ed77600-b2cf-48b7-4d88-9e8521cb2100",
+  homepage: "https://mywallet.io/?utm_source=wc",
+  image_id: "3db0c04f-9792-4628-044e-865878119200",
   app: {
     browser: "",
-    ios: "https://apps.apple.com/ae/app/mytonwallet-anyway-ton-wallet/id6464677844",
-    android:
-      "https://play.google.com/store/apps/details?id=org.mytonwallet.app",
+    ios: "https://get.mywallet.io/ios-store?utm_source=wc",
+    android: "https://get.mywallet.io/android-store?utm_source=wc",
     mac: "https://get.mytonwallet.io/",
     windows: "https://get.mytonwallet.io/",
     linux: "https://get.mytonwallet.io/",

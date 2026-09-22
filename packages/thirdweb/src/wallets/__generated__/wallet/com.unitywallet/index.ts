@@ -7,12 +7,12 @@ export const wallet = {
   homepage: "https://unitywallet.com",
   image_id: "09b4aad3-c007-40e7-ec8f-6a62585e6900",
   app: {
-    browser: null,
+    browser: "",
     ios: "https://apps.apple.com/us/app/savl-wallet-bitcoin-solana/id1369912925",
     android: "https://play.google.com/store/apps/details?id=com.savl",
-    mac: null,
-    windows: null,
-    linux: null,
+    mac: "",
+    windows: "",
+    linux: "",
     chrome: null,
     firefox: null,
     safari: null,
@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: "savl://",
-    universal: null,
+    universal: "",
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "",
+    universal: "",
   },
 } as const;

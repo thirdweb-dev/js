@@ -7,10 +7,10 @@ export const wallet = {
   homepage: "https://keyring.app/",
   image_id: "c89ceec5-31dc-4a17-c132-b0b9f272ae00",
   app: {
-    browser: "https://keyring.app/",
+    browser: "",
     ios: "https://apps.apple.com/us/app/keyring-pro-wallet-management/id1546824976",
     android: "https://play.google.com/store/apps/details?id=co.bacoor.keyring",
-    mac: "",
+    mac: "https://apps.apple.com/us/app/ethereum-wallet-keyring-pro/id1546824976",
     windows: "",
     linux: "",
     chrome: null,
@@ -25,7 +25,7 @@ export const wallet = {
     universal: "https://keyring.app/",
   },
   desktop: {
-    native: "",
-    universal: "https://keyring.app/",
+    native: "keyring://",
+    universal: "",
   },
 } as const;

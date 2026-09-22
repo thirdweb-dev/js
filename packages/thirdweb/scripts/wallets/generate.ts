@@ -7,6 +7,13 @@ const EXCLUDED_WALLETS = [
 	"co.lobstr", // Not EVM compatible
 ];
 
+// When several listings share an rdns, the first one wins; pin the listing to use where that order is unstable
+const PREFERRED_LISTINGS: Record<string, string> = {
+	// OKX Wallet app (okxwallet://), not the OKX exchange app (okex://)
+	"com.okex.wallet":
+		"5d9f1395b3a8e848684848dc4147cbd05c8d54bb737eac78fe103901fe6b01a1",
+};
+
 const walletConnectWallets = await fetch(
 	"https://explorer-api.walletconnect.com/w3m/v1/getAllListings?projectId=145769e410f16970a79ff77b2d89a1e0",
 ).then(async (res) => {
@@ -15,6 +22,10 @@ const walletConnectWallets = await fetch(
 	// Remove duplicated wallets by wallet RDNS
 	const filteredWallets: Wallet[] = [];
 	for (const _w of Object.values(wallets.listings)) {
+		const preferred = _w.rdns ? PREFERRED_LISTINGS[_w.rdns] : undefined;
+		if (preferred && _w.id !== preferred) {
+			continue;
+		}
 		if (_w.rdns && filteredWallets.find((w) => w.rdns === _w.rdns)) {
 			continue;
 		}
@@ -121,7 +132,8 @@ const allWalletsWithIds = allWalletsArray
 
 		return { ...wallet, id: id };
 	})
-	.filter((w) => !EXCLUDED_WALLETS.includes(w.id));
+	// a homepage without a hostname yields an empty id
+	.filter((w) => w.id && !EXCLUDED_WALLETS.includes(w.id));
 
 // filter duplicate ids, we'll keep the first ones
 
