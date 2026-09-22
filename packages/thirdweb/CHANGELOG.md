@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.121.5
+
+### Patch Changes
+
+- [#8991](https://github.com/thirdweb-dev/js/pull/8991) [`f7148d2`](https://github.com/thirdweb-dev/js/commit/f7148d29f02f049741cc61a3e7b99a6f58cfdeba) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Show the WalletConnect QR code on desktop browsers with narrow viewports
+
+- [#8969](https://github.com/thirdweb-dev/js/pull/8969) [`5bb1647`](https://github.com/thirdweb-dev/js/commit/5bb1647931e71c5f25f8d7efa924c9a1327c6e13) Thanks [@bassem-abdelazim-trilitech](https://github.com/bassem-abdelazim-trilitech)! - Fix Rabby mobile connections and keep the WalletConnect QR overlay interactive and unstacked
+
 ## 5.121.4
 
 ### Patch Changes
