@@ -20,7 +20,7 @@ export async function getChains() {
 
 export async function getChain(chainIdOrSlug: string): Promise<ChainMetadata> {
   const res = await fetch(
-    `https://api.thirdweb.com/v1/chains/${chainIdOrSlug}`,
+    `https://api.thirdweb.com/v1/chains/${encodeURIComponent(chainIdOrSlug)}`,
     // revalidate every 15 minutes
     { next: { revalidate: 15 * 60 } },
   );

@@ -317,6 +317,7 @@ export type PatchV1WebhooksByWebhookIdResponse =
 
 export type PostV1WebhooksTestData = {
 	body?: {
+		webhook_id?: string;
 		webhook_url: string;
 		type?: "event" | "transaction";
 	};
@@ -379,23 +380,23 @@ export type GetV1EventsData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -403,23 +404,23 @@ export type GetV1EventsData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -559,7 +560,7 @@ export type GetV1EventsResponses = {
 				non_indexed_params: {
 					[key: string]: unknown;
 				};
-			};
+			} | null;
 		}>;
 		aggregations?: unknown;
 		meta: {
@@ -600,23 +601,23 @@ export type GetV1EventsByContractAddressData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -624,23 +625,23 @@ export type GetV1EventsByContractAddressData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -776,7 +777,7 @@ export type GetV1EventsByContractAddressResponses = {
 				non_indexed_params: {
 					[key: string]: unknown;
 				};
-			};
+			} | null;
 		}>;
 		aggregations?: unknown;
 		meta: {
@@ -818,23 +819,23 @@ export type GetV1EventsByContractAddressBySignatureData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -842,23 +843,23 @@ export type GetV1EventsByContractAddressBySignatureData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -990,7 +991,7 @@ export type GetV1EventsByContractAddressBySignatureResponses = {
 				non_indexed_params: {
 					[key: string]: unknown;
 				};
-			};
+			} | null;
 		}>;
 		aggregations?: unknown;
 		meta: {
@@ -1026,23 +1027,23 @@ export type GetV1TransactionsData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -1050,23 +1051,23 @@ export type GetV1TransactionsData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -1298,23 +1299,23 @@ export type GetV1TransactionsByContractAddressData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -1322,23 +1323,23 @@ export type GetV1TransactionsByContractAddressData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -1559,23 +1560,23 @@ export type GetV1TransactionsByContractAddressBySignatureData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -1583,23 +1584,23 @@ export type GetV1TransactionsByContractAddressBySignatureData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -1925,7 +1926,7 @@ export type GetV1TokensTransfersTransactionByTransactionHashErrors = {
 	 * Internal server error
 	 */
 	500: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -1943,34 +1944,13 @@ export type GetV1TokensTransfersTransactionByTransactionHashErrors = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -1978,40 +1958,29 @@ export type GetV1TokensTransfersTransactionByTransactionHashErrors = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2023,7 +1992,7 @@ export type GetV1TokensTransfersTransactionByTransactionHashResponses = {
 	 * Success
 	 */
 	200: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -2041,34 +2010,13 @@ export type GetV1TokensTransfersTransactionByTransactionHashResponses = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -2076,40 +2024,29 @@ export type GetV1TokensTransfersTransactionByTransactionHashResponses = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2152,6 +2089,22 @@ export type GetV1TokensTransfersByContractAddressData = {
 		 * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
 		 */
 		include_owners?: "true" | "false";
+		/**
+		 * Filter by block number greater than or equal to
+		 */
+		block_number_from?: number | string;
+		/**
+		 * Filter by block number less than or equal to
+		 */
+		block_number_to?: number | string;
+		/**
+		 * Filter by block timestamp greater than or equal to
+		 */
+		block_timestamp_from?: number;
+		/**
+		 * Filter by block timestamp less than or equal to
+		 */
+		block_timestamp_to?: number;
 	};
 	url: "/v1/tokens/transfers/{contract_address}";
 };
@@ -2165,7 +2118,7 @@ export type GetV1TokensTransfersByContractAddressErrors = {
 	 * Internal server error
 	 */
 	500: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -2183,34 +2136,13 @@ export type GetV1TokensTransfersByContractAddressErrors = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -2218,40 +2150,29 @@ export type GetV1TokensTransfersByContractAddressErrors = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2263,7 +2184,7 @@ export type GetV1TokensTransfersByContractAddressResponses = {
 	 * Success
 	 */
 	200: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -2281,34 +2202,13 @@ export type GetV1TokensTransfersByContractAddressResponses = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -2316,40 +2216,29 @@ export type GetV1TokensTransfersByContractAddressResponses = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2436,7 +2325,7 @@ export type GetV1TokensTransfersErrors = {
 	 * Internal server error
 	 */
 	500: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -2454,34 +2343,13 @@ export type GetV1TokensTransfersErrors = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -2489,40 +2357,29 @@ export type GetV1TokensTransfersErrors = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2534,7 +2391,7 @@ export type GetV1TokensTransfersResponses = {
 	 * Success
 	 */
 	200: {
-		data: Array<{
+		data?: Array<{
 			block_number: string;
 			block_hash?: string;
 			block_timestamp: string;
@@ -2552,34 +2409,13 @@ export type GetV1TokensTransfersResponses = {
 				symbol?: string;
 				decimals?: number;
 				price_data?: {
-					/**
-					 * The price of the token in USD
-					 */
-					price_usd?: number;
-					/**
-					 * The value of the token balance in USD
-					 */
-					usd_value?: number;
-					/**
-					 * The volume of the token in USD
-					 */
-					volume_24h_usd?: number;
-					/**
-					 * The market cap of the token in USD
-					 */
-					market_cap_usd?: number;
-					/**
-					 * The circulating supply of the token
-					 */
-					circulating_supply?: number;
-					/**
-					 * The total supply of the token
-					 */
-					total_supply?: number;
-					/**
-					 * The percentage change of the token in the last 24 hours
-					 */
-					percent_change_24h?: number;
+					price_usd?: number | null;
+					usd_value?: number | null;
+					volume_24h_usd?: number | null;
+					market_cap_usd?: number | null;
+					circulating_supply?: number | null;
+					total_supply?: number | null;
+					percent_change_24h?: number | null;
 					/**
 					 * The timestamp of the latest price update
 					 */
@@ -2587,40 +2423,29 @@ export type GetV1TokensTransfersResponses = {
 				};
 			};
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
 				price_timestamp?: string;
 			};
 		}>;
+		aggregations?: unknown;
+		meta: {
+			chain_id: number;
+			address?: string;
+			signature?: string;
+			page?: number;
+			limit?: number;
+			total_items?: number;
+			total_pages?: number;
+		};
 	};
 };
 
@@ -2800,34 +2625,13 @@ export type GetV1TokensResponses = {
 			symbol?: string;
 			decimals?: number;
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
@@ -2907,31 +2711,33 @@ export type GetV1TokensErc721ByOwnerAddressResponses = {
 			token_address: string;
 			token_id: string;
 			balance: string;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			owner_addresses?: Array<string>;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -3028,31 +2834,33 @@ export type GetV1TokensErc1155ByOwnerAddressResponses = {
 			token_address: string;
 			token_id: string;
 			balance: string;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			owner_addresses?: Array<string>;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -3301,34 +3109,13 @@ export type GetV1TokensLookupResponses = {
 			symbol?: string;
 			decimals?: number;
 			price_data?: {
-				/**
-				 * The price of the token in USD
-				 */
-				price_usd?: number;
-				/**
-				 * The value of the token balance in USD
-				 */
-				usd_value?: number;
-				/**
-				 * The volume of the token in USD
-				 */
-				volume_24h_usd?: number;
-				/**
-				 * The market cap of the token in USD
-				 */
-				market_cap_usd?: number;
-				/**
-				 * The circulating supply of the token
-				 */
-				circulating_supply?: number;
-				/**
-				 * The total supply of the token
-				 */
-				total_supply?: number;
-				/**
-				 * The percentage change of the token in the last 24 hours
-				 */
-				percent_change_24h?: number;
+				price_usd?: number | null;
+				usd_value?: number | null;
+				volume_24h_usd?: number | null;
+				market_cap_usd?: number | null;
+				circulating_supply?: number | null;
+				total_supply?: number | null;
+				percent_change_24h?: number | null;
 				/**
 				 * The timestamp of the latest price update
 				 */
@@ -3340,152 +3127,6 @@ export type GetV1TokensLookupResponses = {
 
 export type GetV1TokensLookupResponse =
 	GetV1TokensLookupResponses[keyof GetV1TokensLookupResponses];
-
-export type GetV1ResolveByInputData = {
-	body?: never;
-	path: {
-		/**
-		 * hash
-		 * Can be a block number, transaction or block hash, address, event signature or function selector
-		 */
-		input: string;
-	};
-	query?: {
-		/**
-		 * Use chain_id instead
-		 * @deprecated
-		 */
-		chain?: Array<number>;
-		/**
-		 * The chain ID(s) to request the data for. You can specify multiple chain IDs, up to a maximum of 55.
-		 * Use repeated query parameters, e.g., `?chain_id=20&chain_id=56`.
-		 * Optional, because a single chain can as well be specified as a subdomain
-		 */
-		chain_id?: Array<number>;
-	};
-	url: "/v1/resolve/{input}";
-};
-
-export type GetV1ResolveByInputErrors = {
-	/**
-	 * Bad request
-	 */
-	400: {
-		error: string;
-	};
-	/**
-	 * Internal server error
-	 */
-	500: {
-		error: string;
-	};
-};
-
-export type GetV1ResolveByInputError =
-	GetV1ResolveByInputErrors[keyof GetV1ResolveByInputErrors];
-
-export type GetV1ResolveByInputResponses = {
-	/**
-	 * Successful response
-	 */
-	200: {
-		data?: {
-			blocks?: Array<{
-				chain_id: number;
-				block_number: number;
-				block_hash: string;
-				parent_hash: string;
-				block_timestamp: number;
-				nonce: string;
-				sha3_uncles: string;
-				mix_hash: string;
-				miner: string;
-				state_root: string;
-				transactions_root: string;
-				receipts_root: string;
-				logs_bloom: string;
-				size: number;
-				extra_data: string;
-				difficulty: string;
-				total_difficulty: string;
-				transaction_count: number;
-				gas_limit: number;
-				gas_used: number;
-				withdrawals_root: string;
-				base_fee_per_gas: number;
-			}>;
-			transactions?: Array<{
-				chain_id: string;
-				block_number: number;
-				block_hash: string;
-				block_timestamp: number;
-				hash: string;
-				nonce: number;
-				transaction_index: number;
-				from_address: string;
-				to_address: string;
-				value: string;
-				gas_price: string;
-				gas: number;
-				function_selector: string;
-				data: string;
-				max_fee_per_gas: string;
-				max_priority_fee_per_gas: string;
-				transaction_type: number;
-				r: string;
-				s: string;
-				v: string;
-				access_list_json?: string;
-				authorization_list_json?: string;
-				contract_address?: string;
-				gas_used?: number;
-				cumulative_gas_used?: number;
-				effective_gas_price?: string;
-				blob_gas_used?: number;
-				blob_gas_price?: string;
-				logs_bloom?: string;
-				status?: number;
-			}>;
-			events?: Array<{
-				chain_id: string;
-				block_number: number;
-				block_hash: string;
-				block_timestamp: number;
-				transaction_hash: string;
-				transaction_index: number;
-				log_index: number;
-				address: string;
-				data: string;
-				topics: Array<string>;
-			}>;
-			/**
-			 * address (hex or ENS)
-			 */
-			address?: string;
-			type:
-				| "block"
-				| "transaction"
-				| "event_signature"
-				| "function_signature"
-				| "address"
-				| "contract"
-				| "unknown";
-		};
-		aggregations?: unknown;
-		meta: {
-			chain_ids: Array<number>;
-			address?: string;
-			signature?: string;
-			page: number;
-			limit_per_chain: number;
-			total_items: number;
-			total_pages: number;
-		};
-	};
-};
-
-export type GetV1ResolveByInputResponse =
-	GetV1ResolveByInputResponses[keyof GetV1ResolveByInputResponses];
 
 export type GetV1BlocksData = {
 	body?: never;
@@ -3505,43 +3146,43 @@ export type GetV1BlocksData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -3597,7 +3238,7 @@ export type GetV1BlocksResponses = {
 	 */
 	200: {
 		data?: Array<{
-			chain_id: number;
+			chain_id: string;
 			block_number: number;
 			block_hash: string;
 			parent_hash: string;
@@ -3617,8 +3258,8 @@ export type GetV1BlocksResponses = {
 			transaction_count: number;
 			gas_limit: number;
 			gas_used: number;
-			withdrawals_root: string;
-			base_fee_per_gas: number;
+			withdrawals_root?: string;
+			base_fee_per_gas?: number;
 		}>;
 		aggregations?: unknown;
 		meta: {
@@ -3895,31 +3536,33 @@ export type GetV1NftsBalanceByOwnerAddressResponses = {
 			token_address: string;
 			token_id: string;
 			balance: string;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			owner_addresses?: Array<string>;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -4091,32 +3734,35 @@ export type GetV1NftsResponses = {
 			contract_address: string;
 			token_id: string;
 			token_type: string;
+			last_updated_block_number?: string;
 			balance: string;
 			owner_addresses?: Array<string>;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -4405,31 +4051,33 @@ export type GetV1NftsTransfersResponses = {
 			token_type: "erc721" | "erc1155";
 			amount: string;
 			nft_metadata?: {
-				name?: string;
-				description?: string;
-				image_url?: string;
-				video_url?: string;
-				animation_url?: string;
-				background_color?: string;
-				external_url?: string;
-				status?: string;
-				metadata_url?: string;
+				name?: string | null;
+				description?: string | null;
+				image_url?: string | null;
+				video_url?: string | null;
+				animation_url?: string | null;
+				background_color?: string | null;
+				external_url?: string | null;
+				status?: string | null;
+				metadata_url?: string | null;
 				owner_addresses?: Array<string>;
 				extra_metadata?: {
 					[key: string]: unknown;
 				} & {
 					attributes?:
 						| Array<{
-								trait_type: string;
-								value: string | number;
-								display_type?: string;
+								[key: string]: unknown;
 						  }>
 						| {
 								[key: string]: unknown;
 						  };
-					properties?: {
-						[key: string]: unknown;
-					};
+					properties?:
+						| Array<{
+								[key: string]: unknown;
+						  }>
+						| {
+								[key: string]: unknown;
+						  };
 				};
 				collection?: {
 					name?: string;
@@ -4576,31 +4224,33 @@ export type GetV1NftsTransfersTransactionByTransactionHashResponses = {
 			token_type: "erc721" | "erc1155";
 			amount: string;
 			nft_metadata?: {
-				name?: string;
-				description?: string;
-				image_url?: string;
-				video_url?: string;
-				animation_url?: string;
-				background_color?: string;
-				external_url?: string;
-				status?: string;
-				metadata_url?: string;
+				name?: string | null;
+				description?: string | null;
+				image_url?: string | null;
+				video_url?: string | null;
+				animation_url?: string | null;
+				background_color?: string | null;
+				external_url?: string | null;
+				status?: string | null;
+				metadata_url?: string | null;
 				owner_addresses?: Array<string>;
 				extra_metadata?: {
 					[key: string]: unknown;
 				} & {
 					attributes?:
 						| Array<{
-								trait_type: string;
-								value: string | number;
-								display_type?: string;
+								[key: string]: unknown;
 						  }>
 						| {
 								[key: string]: unknown;
 						  };
-					properties?: {
-						[key: string]: unknown;
-					};
+					properties?:
+						| Array<{
+								[key: string]: unknown;
+						  }>
+						| {
+								[key: string]: unknown;
+						  };
 				};
 				collection?: {
 					name?: string;
@@ -4706,6 +4356,22 @@ export type GetV1NftsTransfersByContractAddressData = {
 		 * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
 		 */
 		include_owners?: "true" | "false";
+		/**
+		 * Filter by block number greater than or equal to
+		 */
+		block_number_from?: number | string;
+		/**
+		 * Filter by block number less than or equal to
+		 */
+		block_number_to?: number | string;
+		/**
+		 * Filter by block timestamp greater than or equal to
+		 */
+		block_timestamp_from?: number;
+		/**
+		 * Filter by block timestamp less than or equal to
+		 */
+		block_timestamp_to?: number;
 	};
 	url: "/v1/nfts/transfers/{contract_address}";
 };
@@ -4746,31 +4412,33 @@ export type GetV1NftsTransfersByContractAddressResponses = {
 			token_type: "erc721" | "erc1155";
 			amount: string;
 			nft_metadata?: {
-				name?: string;
-				description?: string;
-				image_url?: string;
-				video_url?: string;
-				animation_url?: string;
-				background_color?: string;
-				external_url?: string;
-				status?: string;
-				metadata_url?: string;
+				name?: string | null;
+				description?: string | null;
+				image_url?: string | null;
+				video_url?: string | null;
+				animation_url?: string | null;
+				background_color?: string | null;
+				external_url?: string | null;
+				status?: string | null;
+				metadata_url?: string | null;
 				owner_addresses?: Array<string>;
 				extra_metadata?: {
 					[key: string]: unknown;
 				} & {
 					attributes?:
 						| Array<{
-								trait_type: string;
-								value: string | number;
-								display_type?: string;
+								[key: string]: unknown;
 						  }>
 						| {
 								[key: string]: unknown;
 						  };
-					properties?: {
-						[key: string]: unknown;
-					};
+					properties?:
+						| Array<{
+								[key: string]: unknown;
+						  }>
+						| {
+								[key: string]: unknown;
+						  };
 				};
 				collection?: {
 					name?: string;
@@ -4909,32 +4577,35 @@ export type GetV1NftsByContractAddressResponses = {
 			contract_address: string;
 			token_id: string;
 			token_type: string;
+			last_updated_block_number?: string;
 			balance: string;
 			owner_addresses?: Array<string>;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -4998,13 +4669,37 @@ export type GetV1NftsTransfersByContractAddressByTokenIdData = {
 		 */
 		metadata?: "true" | "false";
 		/**
-		 * Whether to include sale details for NFT transfers
-		 */
-		sales?: "true" | "false";
-		/**
 		 * Whether to include owner addresses in the NFT metadata (only if metadata is requested)
 		 */
 		include_owners?: "true" | "false";
+		/**
+		 * Filter by block number greater than or equal to
+		 */
+		block_number_from?: number | string;
+		/**
+		 * Filter by block number less than or equal to
+		 */
+		block_number_to?: number | string;
+		/**
+		 * Filter by block timestamp greater than or equal to
+		 */
+		block_timestamp_from?: number;
+		/**
+		 * Filter by block timestamp less than or equal to
+		 */
+		block_timestamp_to?: number;
+		/**
+		 * address (hex or ENS)
+		 */
+		owner_address?: string;
+		/**
+		 * Sort order (asc or desc)
+		 */
+		sort_order?: "asc" | "desc";
+		/**
+		 * Whether to include sale details for NFT transfers
+		 */
+		sales?: "true" | "false";
 		/**
 		 * Whether to resolve metadata IPFS or Arweave links
 		 */
@@ -5049,31 +4744,33 @@ export type GetV1NftsTransfersByContractAddressByTokenIdResponses = {
 			token_type: "erc721" | "erc1155";
 			amount: string;
 			nft_metadata?: {
-				name?: string;
-				description?: string;
-				image_url?: string;
-				video_url?: string;
-				animation_url?: string;
-				background_color?: string;
-				external_url?: string;
-				status?: string;
-				metadata_url?: string;
+				name?: string | null;
+				description?: string | null;
+				image_url?: string | null;
+				video_url?: string | null;
+				animation_url?: string | null;
+				background_color?: string | null;
+				external_url?: string | null;
+				status?: string | null;
+				metadata_url?: string | null;
 				owner_addresses?: Array<string>;
 				extra_metadata?: {
 					[key: string]: unknown;
 				} & {
 					attributes?:
 						| Array<{
-								trait_type: string;
-								value: string | number;
-								display_type?: string;
+								[key: string]: unknown;
 						  }>
 						| {
 								[key: string]: unknown;
 						  };
-					properties?: {
-						[key: string]: unknown;
-					};
+					properties?:
+						| Array<{
+								[key: string]: unknown;
+						  }>
+						| {
+								[key: string]: unknown;
+						  };
 				};
 				collection?: {
 					name?: string;
@@ -5205,32 +4902,35 @@ export type GetV1NftsByContractAddressByTokenIdResponses = {
 			contract_address: string;
 			token_id: string;
 			token_type: string;
+			last_updated_block_number?: string;
 			balance: string;
 			owner_addresses?: Array<string>;
-			name?: string;
-			description?: string;
-			image_url?: string;
-			video_url?: string;
-			animation_url?: string;
-			background_color?: string;
-			external_url?: string;
-			status?: string;
-			metadata_url?: string;
+			name?: string | null;
+			description?: string | null;
+			image_url?: string | null;
+			video_url?: string | null;
+			animation_url?: string | null;
+			background_color?: string | null;
+			external_url?: string | null;
+			status?: string | null;
+			metadata_url?: string | null;
 			extra_metadata?: {
 				[key: string]: unknown;
 			} & {
 				attributes?:
 					| Array<{
-							trait_type: string;
-							value: string | number;
-							display_type?: string;
+							[key: string]: unknown;
 					  }>
 					| {
 							[key: string]: unknown;
 					  };
-				properties?: {
-					[key: string]: unknown;
-				};
+				properties?:
+					| Array<{
+							[key: string]: unknown;
+					  }>
+					| {
+							[key: string]: unknown;
+					  };
 			};
 			collection?: {
 				name?: string;
@@ -5398,23 +5098,23 @@ export type GetV1WalletsByWalletAddressTransactionsData = {
 		/**
 		 * Filter by block number
 		 */
-		filter_block_number?: number | null;
+		filter_block_number?: number;
 		/**
 		 * Filter by block number greater than or equal to
 		 */
-		filter_block_number_gte?: number | null;
+		filter_block_number_gte?: number;
 		/**
 		 * Filter by block number greater than
 		 */
-		filter_block_number_gt?: number | null;
+		filter_block_number_gt?: number;
 		/**
 		 * Filter by block number less than or equal to
 		 */
-		filter_block_number_lte?: number | null;
+		filter_block_number_lte?: number;
 		/**
 		 * Filter by block number less than
 		 */
-		filter_block_number_lt?: number | null;
+		filter_block_number_lt?: number;
 		/**
 		 * Filter by block hash
 		 */
@@ -5422,23 +5122,23 @@ export type GetV1WalletsByWalletAddressTransactionsData = {
 		/**
 		 * Filter by block timestamp
 		 */
-		filter_block_timestamp?: number | null;
+		filter_block_timestamp?: number;
 		/**
 		 * Filter by block timestamp greater than or equal to
 		 */
-		filter_block_timestamp_gte?: number | null;
+		filter_block_timestamp_gte?: number;
 		/**
 		 * Filter by block timestamp greater than
 		 */
-		filter_block_timestamp_gt?: number | null;
+		filter_block_timestamp_gt?: number;
 		/**
 		 * Filter by block timestamp less than or equal to
 		 */
-		filter_block_timestamp_lte?: number | null;
+		filter_block_timestamp_lte?: number;
 		/**
 		 * Filter by block timestamp less than
 		 */
-		filter_block_timestamp_lt?: number | null;
+		filter_block_timestamp_lt?: number;
 		/**
 		 * Field to sort results by
 		 */
@@ -5711,5 +5411,5 @@ export type PostServiceWebhooksFiltersValidateResponse =
 	PostServiceWebhooksFiltersValidateResponses[keyof PostServiceWebhooksFiltersValidateResponses];
 
 export type ClientOptions = {
-	baseUrl: "https://{chainId}.insight.thirdweb.com/" | (string & {});
+	baseUrl: "https://insight.thirdweb.com/" | (string & {});
 };

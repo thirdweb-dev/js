@@ -63,7 +63,6 @@ import { updateDefaultProjectWallet } from "../lib/vault.client";
 import { CreateServerWallet } from "../server-wallets/components/create-server-wallet.client";
 import type { Wallet as EVMWallet } from "../server-wallets/wallet-table/types";
 import { CreateSolanaWallet } from "../solana-wallets/components/create-solana-wallet.client";
-import { UpgradeSolanaPermissions } from "../solana-wallets/components/upgrade-solana-permissions.client";
 import type { SolanaWallet } from "../solana-wallets/wallet-table/types";
 
 type WalletChain = "evm" | "solana";
@@ -238,7 +237,21 @@ export function ServerWalletsTable(props: ServerWalletsTableProps) {
         {/* Table Content */}
         {activeChain === "solana" && solanaPermissionError ? (
           <div className="p-6">
-            <UpgradeSolanaPermissions project={project} />
+            <div className="rounded-lg border border-border bg-background p-6">
+              <h3 className="font-medium text-base">
+                Solana access not enabled
+              </h3>
+              <p className="mt-1.5 text-muted-foreground text-sm">
+                This project's vault access tokens were issued before Solana
+                support existed. Rotate the admin key to reissue them with
+                Solana permissions.
+              </p>
+              <Button asChild className="mt-4" size="sm" variant="outline">
+                <Link href={`/team/${teamSlug}/${project.slug}/vault`}>
+                  Go to Vault
+                </Link>
+              </Button>
+            </div>
           </div>
         ) : (
           <>

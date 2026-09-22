@@ -36,16 +36,9 @@ export function CreateServerWallet(props: {
       ?.managementAccessToken ?? undefined;
 
   const createEoaMutation = useMutation({
-    mutationFn: async ({
-      managementAccessToken,
-      label,
-    }: {
-      managementAccessToken: string;
-      label: string;
-    }) => {
+    mutationFn: async ({ label }: { label: string }) => {
       const wallet = await createProjectServerWallet({
         label,
-        managementAccessToken,
         project: props.project,
         setAsProjectWallet: props.setAsProjectWallet,
       });
@@ -64,10 +57,7 @@ export function CreateServerWallet(props: {
     if (!managementAccessToken) {
       router.push(`/team/${props.teamSlug}/${props.project.slug}/vault`);
     } else {
-      await createEoaMutation.mutateAsync({
-        label,
-        managementAccessToken: managementAccessToken,
-      });
+      await createEoaMutation.mutateAsync({ label });
     }
   };
 

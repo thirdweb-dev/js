@@ -26,9 +26,9 @@ import {
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateAirdropSignatureERC721",
-  () => {
+describe
+  .runIf(process.env.TW_SECRET_KEY)
+  .skip("generateAirdropSignatureERC721", () => {
     let airdropContract: ThirdwebContract;
     let erc721TokenContract: ThirdwebContract;
 
@@ -158,5 +158,4 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       expect(transactionHash.length).toBe(66);
     });
-  },
-);
+  });

@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "../../../../../../test/src/react-render.js";
 import { useSocialProfiles } from "../../../../core/social/useSocialProfiles.js";

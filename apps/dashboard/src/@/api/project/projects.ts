@@ -13,7 +13,7 @@ export async function getProjects(teamSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/projects`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamSlug)}/projects`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ export async function getProject(teamSlug: string, projectSlug: string) {
   }
 
   const teamsRes = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/projects/${projectSlug}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamSlug)}/projects/${encodeURIComponent(projectSlug)}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

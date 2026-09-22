@@ -53,6 +53,9 @@ export interface QROverlay {
   show: () => void;
 }
 
+// Only one overlay is shown at a time; creating a new one replaces the previous one.
+let removeActiveOverlay: (() => void) | undefined;
+
 /**
  * Creates a QR code overlay for the given WalletConnect URI
  */
@@ -69,7 +72,10 @@ export function createQROverlay(
     onCancel,
   } = options;
 
+  removeActiveOverlay?.();
+
   // Create overlay backdrop
+  // pointer-events is explicit so the overlay stays interactive when the host page disables it on body
   const overlay = document.createElement("div");
   overlay.style.cssText = `
     position: fixed;
@@ -77,6 +83,7 @@ export function createQROverlay(
     background-color: ${theme === "dark" ? "rgba(0, 0, 0, 0.8)" : "rgba(0, 0, 0, 0.5)"};
     backdrop-filter: blur(10px);
     z-index: 9999;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -252,9 +259,23 @@ export function createQROverlay(
   // Append to container
   container.appendChild(overlay);
 
+  function removeNow() {
+    document.removeEventListener("keydown", handleEscapeKey);
+    overlay.removeEventListener("click", handleOverlayClick);
+    overlay.remove();
+    style.remove();
+    if (removeActiveOverlay === removeNow) {
+      removeActiveOverlay = undefined;
+    }
+  }
+  removeActiveOverlay = removeNow;
+
   function destroyOverlay(userInitiated = false) {
     document.removeEventListener("keydown", handleEscapeKey);
     overlay.removeEventListener("click", handleOverlayClick);
+    if (removeActiveOverlay === removeNow) {
+      removeActiveOverlay = undefined;
+    }
 
     // Call onCancel callback only if user initiated the close action
     if (userInitiated && onCancel) {

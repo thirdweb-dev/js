@@ -48,7 +48,7 @@ export async function getAuditLogs(teamSlug: string, cursor?: string) {
     throw new Error("No auth token found");
   }
   const url = new URL(
-    `/v1/teams/${teamSlug}/audit-log`,
+    `/v1/teams/${encodeURIComponent(teamSlug)}/audit-log`,
     NEXT_PUBLIC_THIRDWEB_API_HOST,
   );
   if (cursor) {

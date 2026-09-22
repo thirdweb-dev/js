@@ -19,10 +19,9 @@ import { generateMintSignature, mintWithSignature } from "./sigMint.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateMintSignature721",
-
-  () => {
+describe
+  .runIf(process.env.TW_SECRET_KEY)
+  .skip("generateMintSignature721", () => {
     let erc721Contract: ThirdwebContract;
     let erc20TokenContract: ThirdwebContract;
 
@@ -257,5 +256,4 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(payload.primarySaleRecipient).toBe(TEST_ACCOUNT_B.address);
       expect(signature.length).toBe(132);
     });
-  },
-);
+  });

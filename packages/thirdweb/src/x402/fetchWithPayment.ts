@@ -4,7 +4,7 @@ import { getAddress } from "../utils/address.js";
 import type { AsyncStorage } from "../utils/storage/AsyncStorage.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
-import { safeBase64Decode } from "./encode.js";
+import { base64DecodeUtf8 } from "./encode.js";
 import {
   getPaymentRequestHeader,
   getPaymentResponseHeader,
@@ -13,8 +13,9 @@ import { clearPermitSignatureFromCache } from "./permitSignatureStorage.js";
 import {
   extractEvmChainId,
   networkToCaip2ChainId,
+  normalizePaymentRequirements,
+  parsePaymentRequired,
   type RequestedPaymentRequirements,
-  RequestedPaymentRequirementsSchema,
 } from "./schemas.js";
 import { createPaymentHeader } from "./sign.js";
 import { x402Version as defaultX402Version } from "./types.js";
@@ -33,7 +34,7 @@ import { x402Version as defaultX402Version } from "./types.js";
  * @param fetch - The fetch function to wrap (typically globalThis.fetch)
  * @param client - The thirdweb client used to access RPC infrastructure
  * @param wallet - The wallet used to sign payment messages
- * @param maxValue - The maximum allowed payment amount in base units
+ * @param maxValue - The maximum allowed payment amount in base units. `0n` only allows zero-amount payments
  * @returns A wrapped fetch function that handles 402 responses automatically
  *
  * @example
@@ -64,6 +65,10 @@ export function wrapFetchWithPayment(
   wallet: Wallet,
   options?: {
     maxValue?: bigint;
+    /**
+     * Selects the payment requirement to pay. Return one of the provided requirements;
+     * the returned requirement is validated again before payment.
+     */
     paymentRequirementsSelector?: (
       paymentRequirements: RequestedPaymentRequirements[],
     ) => RequestedPaymentRequirements | undefined;
@@ -81,49 +86,25 @@ export function wrapFetchWithPayment(
       return response;
     }
 
-    let x402Version: number;
-    let parsedPaymentRequirements: RequestedPaymentRequirements[];
-    let error: string | undefined;
+    const initParams = init || {};
+
+    if ((initParams as { __is402Retry?: boolean }).__is402Retry) {
+      throw new Error("Payment already attempted");
+    }
 
     // Check payment-required header first before falling back to JSON body
     const paymentRequiredHeader = response.headers.get("payment-required");
-    if (paymentRequiredHeader) {
-      const decoded = safeBase64Decode(paymentRequiredHeader);
-      const parsed = JSON.parse(decoded) as {
-        x402Version: number;
-        accepts: unknown[];
-        error?: string;
-      };
-      if (!Array.isArray(parsed.accepts)) {
-        throw new Error(
-          `402 response has no usable x402 payment requirements. ${parsed.error ?? ""}`,
-        );
-      }
+    const paymentRequired: unknown = paymentRequiredHeader
+      ? JSON.parse(base64DecodeUtf8(paymentRequiredHeader))
+      : await response.json();
 
-      x402Version = parsed.x402Version ?? defaultX402Version;
-      parsedPaymentRequirements = parsed.accepts.map((x) =>
-        RequestedPaymentRequirementsSchema.parse(x),
-      );
-      error = parsed.error;
-    } else {
-      const body = (await response.json()) as {
-        x402Version: number;
-        accepts: unknown[];
-        error?: string;
-      };
-
-      if (!Array.isArray(body.accepts)) {
-        throw new Error(
-          `402 response has no usable x402 payment requirements. ${body.error ?? ""}`,
-        );
-      }
-
-      x402Version = body.x402Version ?? defaultX402Version;
-      parsedPaymentRequirements = body.accepts.map((x) =>
-        RequestedPaymentRequirementsSchema.parse(x),
-      );
-      error = body.error;
-    }
+    const parsed = parsePaymentRequired(paymentRequired, getRequestUrl(input));
+    const x402Version = parsed.x402Version ?? defaultX402Version;
+    const error = parsed.error;
+    const normalizedPaymentRequirements = parsed.accepts;
+    const parsedPaymentRequirements = normalizedPaymentRequirements.map(
+      (x) => x.requirements,
+    );
 
     const account = wallet.getAccount();
     let chain = wallet.getChain();
@@ -133,7 +114,7 @@ export function wrapFetchWithPayment(
         "Wallet not connected. Please connect your wallet to continue.",
       );
     }
-    const selectedPaymentRequirements = options?.paymentRequirementsSelector
+    const selected = options?.paymentRequirementsSelector
       ? options.paymentRequirementsSelector(parsedPaymentRequirements)
       : defaultPaymentRequirementsSelector(
           parsedPaymentRequirements,
@@ -141,14 +122,22 @@ export function wrapFetchWithPayment(
           error,
         );
 
-    if (!selectedPaymentRequirements) {
+    if (!selected) {
       throw new Error(
         `No suitable payment requirements found for chain ${chain.id}. ${error}`,
       );
     }
 
+    const { requirements: selectedPaymentRequirements } =
+      normalizePaymentRequirements(selected, {
+        resourceUrl: parsed.resourceUrl,
+      });
+    const acceptedRequirement =
+      normalizedPaymentRequirements.find((x) => x.requirements === selected)
+        ?.raw ?? selected;
+
     if (
-      options?.maxValue &&
+      options?.maxValue !== undefined &&
       BigInt(selectedPaymentRequirements.maxAmountRequired) > options.maxValue
     ) {
       throw new Error(
@@ -176,22 +165,26 @@ export function wrapFetchWithPayment(
       }
     }
 
+    const storage = options?.storage ?? webLocalStorage;
     const paymentHeader = await createPaymentHeader(
       client,
       account,
       selectedPaymentRequirements,
       x402Version,
-      options?.storage ?? webLocalStorage,
+      storage,
+      {
+        accepted: acceptedRequirement,
+        resource: parsed.resource ?? {
+          url: selectedPaymentRequirements.resource,
+          description: selectedPaymentRequirements.description,
+          mimeType: selectedPaymentRequirements.mimeType,
+        },
+      },
+      options?.maxValue,
     );
 
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
-
-    const initParams = init || {};
-
-    if ((initParams as { __is402Retry?: boolean }).__is402Retry) {
-      throw new Error("Payment already attempted");
-    }
 
     const newInit = {
       ...initParams,
@@ -206,8 +199,8 @@ export function wrapFetchWithPayment(
     const secondResponse = await fetch(input, newInit);
 
     // If payment was rejected (still 402), clear cached signature
-    if (secondResponse.status === 402 && options?.storage) {
-      await clearPermitSignatureFromCache(options.storage, {
+    if (secondResponse.status === 402) {
+      await clearPermitSignatureFromCache(storage, {
         chainId: paymentChainId,
         asset: selectedPaymentRequirements.asset,
         owner: getAddress(account.address),
@@ -217,6 +210,31 @@ export function wrapFetchWithPayment(
 
     return secondResponse;
   };
+}
+
+/**
+ * Resolves the absolute URL of a fetch input, if it can be determined.
+ * @internal
+ */
+export function getRequestUrl(input: RequestInfo | URL): string | undefined {
+  const url =
+    typeof input === "string"
+      ? input
+      : input instanceof URL
+        ? input.href
+        : (input as Partial<Request> | undefined)?.url;
+  if (typeof url !== "string") {
+    return undefined;
+  }
+  try {
+    const base =
+      typeof globalThis.location !== "undefined"
+        ? globalThis.location.href
+        : undefined;
+    return new URL(url, base).toString();
+  } catch {
+    return undefined;
+  }
 }
 
 function defaultPaymentRequirementsSelector(

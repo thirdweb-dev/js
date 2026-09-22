@@ -1,3 +1,4 @@
+// @vitest-environment happy-dom
 /** biome-ignore-all lint/nursery/useUniqueElementIds: FIXME: do not use "id" as a prop on JSX elements */
 import { describe, expect, it } from "vitest";
 import { render, waitFor } from "~test/react-render.js";

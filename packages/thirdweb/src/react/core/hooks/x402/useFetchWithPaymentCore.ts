@@ -4,7 +4,10 @@ import { useMutation } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { wrapFetchWithPayment } from "../../../../x402/fetchWithPayment.js";
+import {
+  getRequestUrl,
+  wrapFetchWithPayment,
+} from "../../../../x402/fetchWithPayment.js";
 import type { RequestedPaymentRequirements } from "../../../../x402/schemas.js";
 import type { PaymentRequiredResult } from "../../../../x402/types.js";
 import { useActiveWallet } from "../wallets/useActiveWallet.js";
@@ -24,6 +27,7 @@ export type UseFetchWithPaymentOptions = {
 
 type ShowErrorModalCallback = (data: {
   errorData: PaymentRequiredResult["responseBody"];
+  requestUrl?: string;
   onRetry: () => void;
   onCancel: () => void;
 }) => void;
@@ -107,6 +111,7 @@ export function useFetchWithPaymentCore(
               return new Promise<unknown>((resolve, reject) => {
                 showErrorModal({
                   errorData: errorBody,
+                  requestUrl: getRequestUrl(input),
                   onRetry: async () => {
                     // Retry the entire fetch+error handling logic recursively
                     // Pass currentWallet to avoid re-showing connect modal with stale wallet state

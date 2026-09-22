@@ -47,7 +47,8 @@ export type InitiateAuthenticationData = {
 					| "github"
 					| "twitch"
 					| "steam"
-					| "tiktok";
+					| "tiktok"
+					| "epic";
 				/**
 				 * Custom redirect URL after OAuth completion
 				 */
@@ -419,9 +420,9 @@ export type LinkAuthenticationResponses = {
 					type: "apple";
 			  }
 			| {
-					avatar?: string;
+					avatar?: string | null;
 					id: string;
-					name?: string;
+					name?: string | null;
 					type: "github";
 					username: string;
 			  }
@@ -452,6 +453,22 @@ export type LinkAuthenticationResponses = {
 					avatarUrl: string;
 					unionId?: string;
 					type: "tiktok";
+			  }
+			| {
+					id: string;
+					type: "epic";
+					displayName?: string;
+					email?: string;
+					emailVerified?: boolean;
+					metadata: {
+						accountId: string;
+						preferredUsername?: string;
+						country?: string;
+						region?: string;
+						language?: string;
+						sub?: string;
+						name?: string;
+					};
 			  }
 			| {
 					avatar?: string;
@@ -586,6 +603,7 @@ export type UnlinkAuthenticationData = {
 			| "twitch"
 			| "x"
 			| "tiktok"
+			| "epic"
 			| "backend"
 			| "wallet"
 			| "custom_auth_endpoint"
@@ -672,9 +690,9 @@ export type UnlinkAuthenticationResponses = {
 					type: "apple";
 			  }
 			| {
-					avatar?: string;
+					avatar?: string | null;
 					id: string;
-					name?: string;
+					name?: string | null;
 					type: "github";
 					username: string;
 			  }
@@ -705,6 +723,22 @@ export type UnlinkAuthenticationResponses = {
 					avatarUrl: string;
 					unionId?: string;
 					type: "tiktok";
+			  }
+			| {
+					id: string;
+					type: "epic";
+					displayName?: string;
+					email?: string;
+					emailVerified?: boolean;
+					metadata: {
+						accountId: string;
+						preferredUsername?: string;
+						country?: string;
+						region?: string;
+						language?: string;
+						sub?: string;
+						name?: string;
+					};
 			  }
 			| {
 					avatar?: string;
@@ -831,7 +865,8 @@ export type SocialAuthenticationData = {
 			| "github"
 			| "twitch"
 			| "steam"
-			| "tiktok";
+			| "tiktok"
+			| "epic";
 		/**
 		 * URL to redirect the user to after OAuth completion
 		 */
@@ -840,6 +875,14 @@ export type SocialAuthenticationData = {
 		 * Client ID (alternative to x-client-id header for standard OAuth flows)
 		 */
 		clientId?: string;
+		/**
+		 * Ecosystem wallet ID (e.g. `ecosystem.myapp`). Required for ecosystem wallet OAuth so the minted auth token carries the ecosystem.
+		 */
+		ecosystemId?: string;
+		/**
+		 * Ecosystem partner ID associated with the ecosystem wallet OAuth login.
+		 */
+		ecosystemPartnerId?: string;
 	};
 	url: "/v1/auth/social";
 };
@@ -925,9 +968,9 @@ export type GetMyWalletResponses = {
 						type: "apple";
 				  }
 				| {
-						avatar?: string;
+						avatar?: string | null;
 						id: string;
-						name?: string;
+						name?: string | null;
 						type: "github";
 						username: string;
 				  }
@@ -958,6 +1001,22 @@ export type GetMyWalletResponses = {
 						avatarUrl: string;
 						unionId?: string;
 						type: "tiktok";
+				  }
+				| {
+						id: string;
+						type: "epic";
+						displayName?: string;
+						email?: string;
+						emailVerified?: boolean;
+						metadata: {
+							accountId: string;
+							preferredUsername?: string;
+							country?: string;
+							region?: string;
+							language?: string;
+							sub?: string;
+							name?: string;
+						};
 				  }
 				| {
 						avatar?: string;
@@ -1073,6 +1132,147 @@ export type GetMyWalletResponses = {
 export type GetMyWalletResponse =
 	GetMyWalletResponses[keyof GetMyWalletResponses];
 
+export type PostV1WalletsCreateSessionKeyData = {
+	body?: {
+		/**
+		 * The chain ID where the session key will be active.
+		 */
+		chainId: number;
+		/**
+		 * The address of the session key to create.
+		 */
+		sessionKeyAddress: string;
+		/**
+		 * The duration in seconds for which the session key is valid.
+		 */
+		durationInSeconds: number;
+		/**
+		 * If true, grants full admin permissions to the session key. Use with caution.
+		 */
+		grantFullPermissions?: boolean;
+		/**
+		 * List of allowed contract calls.
+		 */
+		callPolicies?: Array<{
+			/**
+			 * The target contract address for the call.
+			 */
+			target: string;
+			/**
+			 * The 4-byte function selector to allow.
+			 */
+			selector: string;
+			/**
+			 * The maximum native token value (in wei) allowed per call.
+			 */
+			maxValuePerUse?: string;
+			/**
+			 * The total native token value limit for this call policy.
+			 */
+			valueLimit?: {
+				/**
+				 * The type of limit to apply. Options: 'Unlimited', 'Lifetime', 'Allowance'
+				 */
+				limitType: "Unlimited" | "Lifetime" | "Allowance";
+				/**
+				 * The maximum limit value. Ignored if limitType is Unlimited.
+				 */
+				limit: string;
+				/**
+				 * The time period in seconds for Allowance limit type. Ignored if limitType is not Allowance.
+				 */
+				period: string;
+			};
+			/**
+			 * List of constraints on function parameters.
+			 */
+			constraints?: Array<{
+				/**
+				 * The condition to check. Options: 'Unconstrained', 'Equal', 'Greater', 'Less', 'GreaterOrEqual', 'LessOrEqual', 'NotEqual'
+				 */
+				condition:
+					| "Unconstrained"
+					| "Equal"
+					| "Greater"
+					| "Less"
+					| "GreaterOrEqual"
+					| "LessOrEqual"
+					| "NotEqual";
+				/**
+				 * The index of the parameter in the function call to check against.
+				 */
+				index: string;
+				/**
+				 * The reference value to compare the parameter against (32 bytes hex).
+				 */
+				refValue: string;
+				/**
+				 * Optional usage limit for this constraint.
+				 */
+				limit?: {
+					/**
+					 * The type of limit to apply. Options: 'Unlimited', 'Lifetime', 'Allowance'
+					 */
+					limitType: "Unlimited" | "Lifetime" | "Allowance";
+					/**
+					 * The maximum limit value. Ignored if limitType is Unlimited.
+					 */
+					limit: string;
+					/**
+					 * The time period in seconds for Allowance limit type. Ignored if limitType is not Allowance.
+					 */
+					period: string;
+				};
+			}>;
+		}>;
+		/**
+		 * List of allowed native token transfers.
+		 */
+		transferPolicies?: Array<{
+			/**
+			 * The recipient address for the transfer.
+			 */
+			target: string;
+			/**
+			 * The maximum native token value (in wei) allowed per transfer.
+			 */
+			maxValuePerUse?: string;
+			/**
+			 * The total native token value limit for this transfer policy.
+			 */
+			valueLimit?: {
+				/**
+				 * The type of limit to apply. Options: 'Unlimited', 'Lifetime', 'Allowance'
+				 */
+				limitType: "Unlimited" | "Lifetime" | "Allowance";
+				/**
+				 * The maximum limit value. Ignored if limitType is Unlimited.
+				 */
+				limit: string;
+				/**
+				 * The time period in seconds for Allowance limit type. Ignored if limitType is not Allowance.
+				 */
+				period: string;
+			};
+		}>;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/wallets/create-session-key";
+};
+
+export type PostV1WalletsCreateSessionKeyResponses = {
+	/**
+	 * Transaction queued
+	 */
+	200: {
+		transactionId: string;
+	};
+};
+
+export type PostV1WalletsCreateSessionKeyResponse =
+	PostV1WalletsCreateSessionKeyResponses[keyof PostV1WalletsCreateSessionKeyResponses];
+
 export type ListUserWalletsData = {
 	body?: never;
 	path?: never;
@@ -1120,15 +1320,15 @@ export type ListUserWalletsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 			/**
 			 * Array of user wallets
@@ -1180,9 +1380,9 @@ export type ListUserWalletsResponses = {
 							type: "apple";
 					  }
 					| {
-							avatar?: string;
+							avatar?: string | null;
 							id: string;
-							name?: string;
+							name?: string | null;
 							type: "github";
 							username: string;
 					  }
@@ -1213,6 +1413,22 @@ export type ListUserWalletsResponses = {
 							avatarUrl: string;
 							unionId?: string;
 							type: "tiktok";
+					  }
+					| {
+							id: string;
+							type: "epic";
+							displayName?: string;
+							email?: string;
+							emailVerified?: boolean;
+							metadata: {
+								accountId: string;
+								preferredUsername?: string;
+								country?: string;
+								region?: string;
+								language?: string;
+								sub?: string;
+								name?: string;
+							};
 					  }
 					| {
 							avatar?: string;
@@ -1424,9 +1640,9 @@ export type CreateUserWalletResponses = {
 						type: "apple";
 				  }
 				| {
-						avatar?: string;
+						avatar?: string | null;
 						id: string;
-						name?: string;
+						name?: string | null;
 						type: "github";
 						username: string;
 				  }
@@ -1457,6 +1673,22 @@ export type CreateUserWalletResponses = {
 						avatarUrl: string;
 						unionId?: string;
 						type: "tiktok";
+				  }
+				| {
+						id: string;
+						type: "epic";
+						displayName?: string;
+						email?: string;
+						emailVerified?: boolean;
+						metadata: {
+							accountId: string;
+							preferredUsername?: string;
+							country?: string;
+							region?: string;
+							language?: string;
+							sub?: string;
+							name?: string;
+						};
 				  }
 				| {
 						avatar?: string;
@@ -1610,15 +1842,15 @@ export type ListServerWalletsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 			/**
 			 * Array of server wallets
@@ -1670,9 +1902,9 @@ export type ListServerWalletsResponses = {
 							type: "apple";
 					  }
 					| {
-							avatar?: string;
+							avatar?: string | null;
 							id: string;
-							name?: string;
+							name?: string | null;
 							type: "github";
 							username: string;
 					  }
@@ -1703,6 +1935,22 @@ export type ListServerWalletsResponses = {
 							avatarUrl: string;
 							unionId?: string;
 							type: "tiktok";
+					  }
+					| {
+							id: string;
+							type: "epic";
+							displayName?: string;
+							email?: string;
+							emailVerified?: boolean;
+							metadata: {
+								accountId: string;
+								preferredUsername?: string;
+								country?: string;
+								region?: string;
+								language?: string;
+								sub?: string;
+								name?: string;
+							};
 					  }
 					| {
 							avatar?: string;
@@ -1901,9 +2149,9 @@ export type CreateServerWalletResponses = {
 						type: "apple";
 				  }
 				| {
-						avatar?: string;
+						avatar?: string | null;
 						id: string;
-						name?: string;
+						name?: string | null;
 						type: "github";
 						username: string;
 				  }
@@ -1934,6 +2182,22 @@ export type CreateServerWalletResponses = {
 						avatarUrl: string;
 						unionId?: string;
 						type: "tiktok";
+				  }
+				| {
+						id: string;
+						type: "epic";
+						displayName?: string;
+						email?: string;
+						emailVerified?: boolean;
+						metadata: {
+							accountId: string;
+							preferredUsername?: string;
+							country?: string;
+							region?: string;
+							language?: string;
+							sub?: string;
+							name?: string;
+						};
 				  }
 				| {
 						avatar?: string;
@@ -2142,19 +2406,19 @@ export type GetWalletTransactionsData = {
 		/**
 		 * Filter by block timestamp (Unix timestamp) greater than or equal to this value
 		 */
-		filterBlockTimestampGte?: number;
+		filterBlockTimestampGte?: number | null;
 		/**
 		 * Filter by block timestamp (Unix timestamp) less than or equal to this value
 		 */
-		filterBlockTimestampLte?: number;
+		filterBlockTimestampLte?: number | null;
 		/**
 		 * Filter by block number greater than or equal to this value
 		 */
-		filterBlockNumberGte?: number;
+		filterBlockNumberGte?: number | null;
 		/**
 		 * Filter by block number less than or equal to this value
 		 */
-		filterBlockNumberLte?: number;
+		filterBlockNumberLte?: number | null;
 		/**
 		 * Filter by transaction value (in wei) greater than this value
 		 */
@@ -2166,11 +2430,11 @@ export type GetWalletTransactionsData = {
 		/**
 		 * Current page number
 		 */
-		page?: number;
+		page?: number | null;
 		/**
 		 * Number of items per page
 		 */
-		limit?: number;
+		limit?: number | null;
 		/**
 		 * Sort order: 'asc' for ascending, 'desc' for descending
 		 */
@@ -2212,15 +2476,15 @@ export type GetWalletTransactionsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 			/**
 			 * Array of wallet transactions.
@@ -2431,15 +2695,15 @@ export type GetWalletTokensResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 			/**
 			 * Array of wallet tokens.
@@ -2667,15 +2931,15 @@ export type GetWalletNftsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 		};
 	};
@@ -2911,190 +3175,6 @@ export type SendTokensResponses = {
 
 export type SendTokensResponse = SendTokensResponses[keyof SendTokensResponses];
 
-export type ListContractsData = {
-	body?: never;
-	path?: never;
-	query?: {
-		/**
-		 * The number of contracts to return (default: 20, max: 100).
-		 */
-		limit?: number;
-		/**
-		 * The page number for pagination (default: 1).
-		 */
-		page?: number;
-	};
-	url: "/v1/contracts";
-};
-
-export type ListContractsErrors = {
-	/**
-	 * Invalid request parameters
-	 */
-	400: unknown;
-	/**
-	 * Authentication required. The request must include a valid `x-secret-key` header for backend authentication.
-	 */
-	401: unknown;
-	/**
-	 * Rate limit exceeded
-	 */
-	429: unknown;
-	/**
-	 * Internal server error
-	 */
-	500: unknown;
-};
-
-export type ListContractsResponses = {
-	/**
-	 * Successfully retrieved list of contracts
-	 */
-	200: {
-		result: {
-			/**
-			 * Array of contracts imported by the client.
-			 */
-			contracts: Array<{
-				/**
-				 * The contract address.
-				 */
-				address: string;
-				/**
-				 * The chain ID where the contract is deployed.
-				 */
-				chainId: string;
-				/**
-				 * The date when the contract was deployed.
-				 */
-				deployedAt?: string;
-				/**
-				 * The contract ID.
-				 */
-				id?: string;
-				/**
-				 * The date when the contract was imported to the dashboard.
-				 */
-				importedAt: string;
-				/**
-				 * The contract name, if available.
-				 */
-				name?: string;
-				/**
-				 * The contract symbol, if available.
-				 */
-				symbol?: string;
-				/**
-				 * The contract type (e.g., ERC20, ERC721, etc.).
-				 */
-				type?: string;
-			}>;
-			pagination: {
-				/**
-				 * Whether there are more items available
-				 */
-				hasMore?: boolean;
-				/**
-				 * Number of items per page
-				 */
-				limit?: number;
-				/**
-				 * Current page number
-				 */
-				page?: number;
-				/**
-				 * Total number of items available
-				 */
-				totalCount?: number;
-			};
-		};
-	};
-};
-
-export type ListContractsResponse =
-	ListContractsResponses[keyof ListContractsResponses];
-
-export type DeployContractData = {
-	/**
-	 * Contract deployment specification for raw bytecode deployment.
-	 */
-	body?: {
-		/**
-		 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
-		 */
-		chainId: number;
-		/**
-		 * The wallet address or ENS name that will deploy the contract. If omitted, the project wallet will be used if available.
-		 */
-		from?: string;
-		/**
-		 * The contract bytecode as a hex string.
-		 */
-		bytecode: string;
-		/**
-		 * The contract ABI array.
-		 */
-		abi: Array<unknown>;
-		/**
-		 * Object containing constructor parameters for the contract deployment (e.g., { param1: 'value1', param2: 123 }).
-		 */
-		constructorParams?: {
-			[key: string]: unknown;
-		};
-		/**
-		 * Optional salt value for deterministic contract deployment.
-		 */
-		salt?: string;
-	};
-	path?: never;
-	query?: never;
-	url: "/v1/contracts";
-};
-
-export type DeployContractErrors = {
-	/**
-	 * Invalid request parameters
-	 */
-	400: unknown;
-	/**
-	 * Authentication required. The request must include a valid `x-secret-key` header for backend authentication.
-	 */
-	401: unknown;
-	/**
-	 * Rate limit exceeded
-	 */
-	429: unknown;
-	/**
-	 * Internal server error
-	 */
-	500: unknown;
-};
-
-export type DeployContractResponses = {
-	/**
-	 * Contract deployed successfully
-	 */
-	200: {
-		result: {
-			/**
-			 * The deployed contract address.
-			 */
-			address: string;
-			/**
-			 * The chain ID where the contract was deployed.
-			 */
-			chainId: number;
-			/**
-			 * The unique identifier for the transaction that deployed the contract. Will not be returned if the contract was already deployed at the predicted address.
-			 */
-			transactionId?: string;
-		};
-	};
-};
-
-export type DeployContractResponse =
-	DeployContractResponses[keyof DeployContractResponses];
-
 export type ReadContractData = {
 	body?: {
 		/**
@@ -3106,7 +3186,7 @@ export type ReadContractData = {
 			 */
 			contractAddress: string;
 			/**
-			 * The contract function signature to call (e.g., 'function approve(address spender, uint256 amount)' or `function balanceOf(address)`). Must start with 'function' followed by the function name and parameters as defined in the contract ABI.
+			 * The contract function signature to call (e.g., 'function approve(address spender, uint256 amount)' or `function balanceOf(address)`). Must start with 'function' followed by the function name and parameters as defined in the contract ABI. For functions returning arrays of structs, use positional types only in the return declaration (e.g., `returns ((uint256, address, bool)[])` instead of `returns ((uint256 id, address owner, bool active)[] items)`).
 			 */
 			method: string;
 			/**
@@ -3182,7 +3262,7 @@ export type WriteContractData = {
 			 */
 			contractAddress: string;
 			/**
-			 * The contract function signature to call (e.g., 'function approve(address spender, uint256 amount)' or `function balanceOf(address)`). Must start with 'function' followed by the function name and parameters as defined in the contract ABI.
+			 * The contract function signature to call (e.g., 'function approve(address spender, uint256 amount)' or `function balanceOf(address)`). Must start with 'function' followed by the function name and parameters as defined in the contract ABI. For functions returning arrays of structs, use positional types only in the return declaration (e.g., `returns ((uint256, address, bool)[])` instead of `returns ((uint256 id, address owner, bool active)[] items)`).
 			 */
 			method: string;
 			/**
@@ -3202,6 +3282,10 @@ export type WriteContractData = {
 		 * The wallet address or ENS name that will send the transaction. If omitted, the project wallet will be used if available.
 		 */
 		from?: string;
+		/**
+		 * An optional unique key to prevent duplicate transactions. If a request with the same idempotency key has already been submitted, the existing transaction will be returned instead of creating a new one.
+		 */
+		idempotencyKey?: string;
 	};
 	path?: never;
 	query?: never;
@@ -3442,19 +3526,19 @@ export type GetContractTransactionsData = {
 		/**
 		 * Filter by block timestamp (Unix timestamp) greater than or equal to this value
 		 */
-		filterBlockTimestampGte?: number;
+		filterBlockTimestampGte?: number | null;
 		/**
 		 * Filter by block timestamp (Unix timestamp) less than or equal to this value
 		 */
-		filterBlockTimestampLte?: number;
+		filterBlockTimestampLte?: number | null;
 		/**
 		 * Filter by block number greater than or equal to this value
 		 */
-		filterBlockNumberGte?: number;
+		filterBlockNumberGte?: number | null;
 		/**
 		 * Filter by block number less than or equal to this value
 		 */
-		filterBlockNumberLte?: number;
+		filterBlockNumberLte?: number | null;
 		/**
 		 * Filter by transaction value (in wei) greater than this value
 		 */
@@ -3466,11 +3550,11 @@ export type GetContractTransactionsData = {
 		/**
 		 * Current page number
 		 */
-		page?: number;
+		page?: number | null;
 		/**
 		 * Number of items per page
 		 */
-		limit?: number;
+		limit?: number | null;
 		/**
 		 * Sort order: 'asc' for ascending, 'desc' for descending
 		 */
@@ -3624,15 +3708,15 @@ export type GetContractTransactionsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 		};
 	};
@@ -3677,27 +3761,27 @@ export type GetContractEventsData = {
 		/**
 		 * Filter by block timestamp (Unix timestamp) greater than or equal to this value
 		 */
-		filterBlockTimestampGte?: number;
+		filterBlockTimestampGte?: number | null;
 		/**
 		 * Filter by block timestamp (Unix timestamp) less than or equal to this value
 		 */
-		filterBlockTimestampLte?: number;
+		filterBlockTimestampLte?: number | null;
 		/**
 		 * Filter by block number greater than or equal to this value
 		 */
-		filterBlockNumberGte?: number;
+		filterBlockNumberGte?: number | null;
 		/**
 		 * Filter by block number less than or equal to this value
 		 */
-		filterBlockNumberLte?: number;
+		filterBlockNumberLte?: number | null;
 		/**
 		 * Current page number
 		 */
-		page?: number;
+		page?: number | null;
 		/**
 		 * Number of items per page
 		 */
-		limit?: number;
+		limit?: number | null;
 		/**
 		 * Sort order: 'asc' for ascending, 'desc' for descending
 		 */
@@ -3803,15 +3887,15 @@ export type GetContractEventsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 		};
 	};
@@ -3819,6 +3903,87 @@ export type GetContractEventsResponses = {
 
 export type GetContractEventsResponse =
 	GetContractEventsResponses[keyof GetContractEventsResponses];
+
+export type DeployContractData = {
+	/**
+	 * Contract deployment specification for raw bytecode deployment.
+	 */
+	body?: {
+		/**
+		 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+		 */
+		chainId: number;
+		/**
+		 * The wallet address or ENS name that will deploy the contract. If omitted, the project wallet will be used if available.
+		 */
+		from?: string;
+		/**
+		 * The contract bytecode as a hex string.
+		 */
+		bytecode: string;
+		/**
+		 * The contract ABI array.
+		 */
+		abi: Array<unknown>;
+		/**
+		 * Object containing constructor parameters for the contract deployment (e.g., { param1: 'value1', param2: 123 }).
+		 */
+		constructorParams?: {
+			[key: string]: unknown;
+		};
+		/**
+		 * Optional salt value for deterministic contract deployment.
+		 */
+		salt?: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/contracts";
+};
+
+export type DeployContractErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. The request must include a valid `x-secret-key` header for backend authentication.
+	 */
+	401: unknown;
+	/**
+	 * Rate limit exceeded
+	 */
+	429: unknown;
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type DeployContractResponses = {
+	/**
+	 * Contract deployed successfully
+	 */
+	200: {
+		result: {
+			/**
+			 * The deployed contract address.
+			 */
+			address: string;
+			/**
+			 * The chain ID where the contract was deployed.
+			 */
+			chainId: number;
+			/**
+			 * The unique identifier for the transaction that deployed the contract. Will not be returned if the contract was already deployed at the predicted address.
+			 */
+			transactionId?: string;
+		};
+	};
+};
+
+export type DeployContractResponse =
+	DeployContractResponses[keyof DeployContractResponses];
 
 export type GetContractMetadataData = {
 	body?: never;
@@ -4055,7 +4220,7 @@ export type GetTransactionByIdResponses = {
 			/**
 			 * ISO timestamp when transaction was cancelled, if applicable
 			 */
-			cancelledAt: string;
+			cancelledAt: string | null;
 			/**
 			 * Blockchain network identifier as string
 			 */
@@ -4067,11 +4232,11 @@ export type GetTransactionByIdResponses = {
 			/**
 			 * ISO timestamp when transaction was confirmed on-chain
 			 */
-			confirmedAt: string;
+			confirmedAt: string | null;
 			/**
 			 * Block number where transaction was confirmed
 			 */
-			confirmedAtBlockNumber: string;
+			confirmedAtBlockNumber: string | null;
 			/**
 			 * ISO timestamp when transaction was created
 			 */
@@ -4083,7 +4248,7 @@ export type GetTransactionByIdResponses = {
 			/**
 			 * Error message if transaction failed
 			 */
-			errorMessage: string;
+			errorMessage: string | null;
 			/**
 			 * Parameters used for transaction execution
 			 */
@@ -4095,7 +4260,7 @@ export type GetTransactionByIdResponses = {
 			/**
 			 * Sender wallet address
 			 */
-			from: string;
+			from: string | null;
 			/**
 			 * Unique transaction identifier
 			 */
@@ -4103,7 +4268,7 @@ export type GetTransactionByIdResponses = {
 			/**
 			 * On-chain transaction hash once confirmed
 			 */
-			transactionHash: string;
+			transactionHash: string | null;
 			/**
 			 * Original transaction parameters and data
 			 */
@@ -4168,15 +4333,15 @@ export type ListTransactionsResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 			transactions: Array<{
 				/**
@@ -4186,7 +4351,7 @@ export type ListTransactionsResponses = {
 				/**
 				 * ISO timestamp when transaction was cancelled, if applicable
 				 */
-				cancelledAt: string;
+				cancelledAt: string | null;
 				/**
 				 * Blockchain network identifier as string
 				 */
@@ -4198,11 +4363,11 @@ export type ListTransactionsResponses = {
 				/**
 				 * ISO timestamp when transaction was confirmed on-chain
 				 */
-				confirmedAt: string;
+				confirmedAt: string | null;
 				/**
 				 * Block number where transaction was confirmed
 				 */
-				confirmedAtBlockNumber: string;
+				confirmedAtBlockNumber: string | null;
 				/**
 				 * ISO timestamp when transaction was created
 				 */
@@ -4214,7 +4379,7 @@ export type ListTransactionsResponses = {
 				/**
 				 * Error message if transaction failed
 				 */
-				errorMessage: string;
+				errorMessage: string | null;
 				/**
 				 * Parameters used for transaction execution
 				 */
@@ -4226,7 +4391,7 @@ export type ListTransactionsResponses = {
 				/**
 				 * Sender wallet address
 				 */
-				from: string;
+				from: string | null;
 				/**
 				 * Unique transaction identifier
 				 */
@@ -4234,7 +4399,7 @@ export type ListTransactionsResponses = {
 				/**
 				 * On-chain transaction hash once confirmed
 				 */
-				transactionHash: string;
+				transactionHash: string | null;
 				/**
 				 * Original transaction parameters and data
 				 */
@@ -4495,426 +4660,18 @@ export type SendTransactionsResponses = {
 export type SendTransactionsResponse =
 	SendTransactionsResponses[keyof SendTransactionsResponses];
 
-export type CreatePaymentData = {
-	/**
-	 * Create Product Request
-	 * Request to create a product to be purchased. Users can purchase the product via hosted UI (link is returned), a transaction execution referencing the product ID, or embedded widgets with the product ID.
-	 */
-	body?: {
-		/**
-		 * The name of the product
-		 */
-		name: string;
-		/**
-		 * The description of the product
-		 */
-		description: string;
-		/**
-		 * The URL of the product image
-		 */
-		imageUrl?: string;
-		/**
-		 * The token to purchase
-		 */
-		token: {
-			/**
-			 * The token address to purchase (use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE for native token)
-			 */
-			address: string;
-			/**
-			 * The blockchain network where the token is located
-			 */
-			chainId: number;
-			/**
-			 * The amount of the token to purchase in wei.
-			 */
-			amount: string;
-		};
-		/**
-		 * The wallet address or ENS name that will receive the payment for the product
-		 */
-		recipient: string;
-		/**
-		 * App specific purchase data for this payment
-		 */
-		purchaseData?: unknown;
-	};
-	path?: never;
-	query?: never;
-	url: "/v1/payments";
-};
-
-export type CreatePaymentErrors = {
-	/**
-	 * Invalid request parameters.
-	 */
-	400: unknown;
-	/**
-	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` + `Authorization: Bearer <jwt>` headers.
-	 */
-	401: unknown;
-	/**
-	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
-	 */
-	500: unknown;
-};
-
-export type CreatePaymentResponses = {
-	/**
-	 * Create Payment Response
-	 * Successful payment creation response containing the payment ID and link to purchase the product
-	 */
-	200: {
-		result: {
-			/**
-			 * The payment ID
-			 */
-			id: string;
-			/**
-			 * The link to purchase the product
-			 */
-			link: string;
-		};
-	};
-};
-
-export type CreatePaymentResponse =
-	CreatePaymentResponses[keyof CreatePaymentResponses];
-
-export type GetPaymentHistoryData = {
-	body?: never;
-	path: {
-		id: string;
-	};
-	query?: never;
-	url: "/v1/payments/{id}";
-};
-
-export type GetPaymentHistoryErrors = {
-	/**
-	 * Bad request
-	 */
-	400: {
-		error: string;
-	};
-	/**
-	 * Payment link not found
-	 */
-	404: {
-		error: string;
-	};
-};
-
-export type GetPaymentHistoryError =
-	GetPaymentHistoryErrors[keyof GetPaymentHistoryErrors];
-
-export type GetPaymentHistoryResponses = {
-	/**
-	 * Payment history retrieved successfully
-	 */
-	200: {
-		/**
-		 * List of payments for the client
-		 */
-		data: Array<{
-			id: string;
-			blockNumber?: string;
-			transactionId?: string;
-			onrampId?: string;
-			clientId: string;
-			/**
-			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-			 */
-			sender?: string;
-			/**
-			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-			 */
-			receiver: string;
-			/**
-			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-			 */
-			developerFeeRecipient?: string;
-			developerFeeBps?: number;
-			transactions: Array<{
-				chainId: number;
-				transactionHash: string;
-			}>;
-			status: "PENDING" | "COMPLETED" | "FAILED" | "NOT_FOUND";
-			type: "buy" | "sell" | "transfer" | "onramp";
-			originAmount?: string;
-			destinationAmount: string;
-			paymentLinkId?: string;
-			purchaseData?: unknown;
-			originToken?: {
-				chainId: number;
-				/**
-				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-				 */
-				address: string;
-				symbol: string;
-				name: string;
-				decimals: number;
-				iconUri?: string;
-			};
-			destinationToken: {
-				chainId: number;
-				/**
-				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-				 */
-				address: string;
-				symbol: string;
-				name: string;
-				decimals: number;
-				iconUri?: string;
-			};
-			createdAt: string;
-		}>;
-		meta: {
-			/**
-			 * Total number of payments
-			 */
-			totalCount: number;
-		};
-	};
-};
-
-export type GetPaymentHistoryResponse =
-	GetPaymentHistoryResponses[keyof GetPaymentHistoryResponses];
-
-export type PaymentsPurchaseData = {
-	/**
-	 * Purchase Product Request
-	 * Request to purchase a product. The system will automatically use your wallet balance to purchase the specified product.
-	 */
-	body?: {
-		/**
-		 * The wallet address or ENS name that will purchase the product. If omitted, the project wallet will be used if available.
-		 */
-		from?: string;
-	};
-	path: {
-		id: string;
-	};
-	query?: never;
-	url: "/v1/payments/{id}";
-};
-
-export type PaymentsPurchaseErrors = {
-	/**
-	 * Invalid request parameters.
-	 */
-	400: unknown;
-	/**
-	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` + `Authorization: Bearer <jwt>` headers.
-	 */
-	401: unknown;
-	/**
-	 * Payment Required Response
-	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
-	 */
-	402: {
-		result: {
-			/**
-			 * Message to display to the user
-			 */
-			message: string;
-			/**
-			 * Link to purchase the product
-			 */
-			link: string;
-			/**
-			 * Payment ID
-			 */
-			id?: string;
-			/**
-			 * Bridge quote for completing the payment
-			 */
-			quote?: {
-				/**
-				 * Block number when quote was generated
-				 */
-				blockNumber?: string;
-				/**
-				 * Destination amount in wei
-				 */
-				destinationAmount: string;
-				/**
-				 * Estimated execution time in milliseconds
-				 */
-				estimatedExecutionTimeMs?: number;
-				/**
-				 * Quote intent details
-				 */
-				intent: {
-					/**
-					 * The amount in wei
-					 */
-					amount: string;
-					/**
-					 * Destination chain ID
-					 */
-					destinationChainId: number;
-					/**
-					 * Destination token address
-					 */
-					destinationTokenAddress: string;
-					/**
-					 * Origin chain ID
-					 */
-					originChainId: number;
-					/**
-					 * Origin token address
-					 */
-					originTokenAddress: string;
-					/**
-					 * Receiver address
-					 */
-					receiver: string;
-					/**
-					 * Sender address
-					 */
-					sender: string;
-				};
-				/**
-				 * Origin amount in wei
-				 */
-				originAmount: string;
-				/**
-				 * Array of steps to complete the bridge operation
-				 */
-				steps: Array<{
-					/**
-					 * Origin token information
-					 */
-					originToken: {
-						/**
-						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
-						 */
-						chainId: number;
-						/**
-						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-						 */
-						address: string;
-						decimals: number;
-						symbol: string;
-						iconUri?: string;
-						/**
-						 * Token price in different FIAT currencies.
-						 */
-						prices: {
-							[key: string]: number;
-						};
-					};
-					/**
-					 * Destination token information
-					 */
-					destinationToken: {
-						/**
-						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
-						 */
-						chainId: number;
-						/**
-						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
-						 */
-						address: string;
-						decimals: number;
-						symbol: string;
-						iconUri?: string;
-						/**
-						 * Token price in different FIAT currencies.
-						 */
-						prices: {
-							[key: string]: number;
-						};
-					};
-					/**
-					 * Array of transactions for this step
-					 */
-					transactions: Array<{
-						/**
-						 * Blockchain network identifier
-						 */
-						chainId: number;
-						/**
-						 * Transaction recipient address
-						 */
-						to: string;
-						/**
-						 * Transaction data payload
-						 */
-						data: string;
-						/**
-						 * Type of action this transaction performs
-						 */
-						action: "approval" | "transfer" | "buy" | "sell" | "fee";
-						/**
-						 * Transaction sender address
-						 */
-						from?: string;
-						/**
-						 * Spender address for approval transactions
-						 */
-						spender?: string;
-						/**
-						 * Transaction value in wei
-						 */
-						value?: string;
-					}>;
-					/**
-					 * Origin amount in wei
-					 */
-					originAmount: string;
-					/**
-					 * Destination amount in wei
-					 */
-					destinationAmount: string;
-					/**
-					 * Estimated execution time in milliseconds
-					 */
-					estimatedExecutionTimeMs?: number;
-				}>;
-				/**
-				 * Quote timestamp
-				 */
-				timestamp: number;
-			};
-		};
-	};
-	/**
-	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
-	 */
-	500: unknown;
-};
-
-export type PaymentsPurchaseError =
-	PaymentsPurchaseErrors[keyof PaymentsPurchaseErrors];
-
-export type PaymentsPurchaseResponses = {
-	/**
-	 * Product purchased successfully. Returns the transaction used for the purchase.
-	 */
-	200: {
-		result: {
-			/**
-			 * Transaction ID that was executed for your product purchase
-			 */
-			transactionId: string;
-		};
-	};
-};
-
-export type PaymentsPurchaseResponse =
-	PaymentsPurchaseResponses[keyof PaymentsPurchaseResponses];
-
 export type VerifyX402PaymentData = {
 	/**
 	 * Request body for x402 facilitator 'verify'
 	 */
 	body?: {
 		paymentPayload: {
-			x402Version: number;
-			scheme: "exact";
-			network: string;
+			x402Version?: 1 | 2;
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
 			payload:
 				| {
 						signature: string;
@@ -4932,8 +4689,11 @@ export type VerifyX402PaymentData = {
 				  };
 		};
 		paymentRequirements: {
-			scheme: "exact";
-			network: string;
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
 			maxAmountRequired: string;
 			resource: string;
 			description: string;
@@ -5013,7 +4773,16 @@ export type VerifyX402PaymentResponses = {
 			| "unexpected_settle_error"
 			| "unexpected_verify_error";
 		payer?: string;
+		fundWalletLink?: string;
 		errorMessage?: string;
+		/**
+		 * Payer's token balance in base units
+		 */
+		balance?: string;
+		/**
+		 * Current ERC20 allowance from payer to spender (only for 'upto' scheme)
+		 */
+		allowance?: string;
 	};
 };
 
@@ -5025,29 +4794,70 @@ export type SettleX402PaymentData = {
 	 * Request body for x402 facilitator 'settle'
 	 */
 	body?: {
-		paymentPayload: {
-			x402Version: number;
-			scheme: "exact";
-			network: string;
-			payload:
-				| {
+		/**
+		 * Exact x402 payment payload to settle
+		 */
+		paymentPayload:
+			| {
+					x402Version?: 1 | 2;
+					scheme?: "exact" | "upto";
+					/**
+					 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+					 */
+					network: string | number;
+					payload: {
+						/**
+						 * The signature of the payment
+						 */
 						signature: string;
 						authorization: {
+							/**
+							 * The from address of the payment
+							 */
 							from: string;
+							/**
+							 * The to address of the payment
+							 */
 							to: string;
+							/**
+							 * The value of the payment
+							 */
 							value: string;
+							/**
+							 * The valid after timestamp of the payment
+							 */
 							validAfter: string;
+							/**
+							 * The valid before timestamp of the payment
+							 */
 							validBefore: string;
+							/**
+							 * The nonce of the payment
+							 */
 							nonce: string;
 						};
-				  }
-				| {
+					};
+			  }
+			| {
+					x402Version?: 1 | 2;
+					scheme?: "exact" | "upto";
+					/**
+					 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+					 */
+					network: string | number;
+					payload: {
+						/**
+						 * Base64-encoded Solana transaction
+						 */
 						transaction: string;
-				  };
-		};
+					};
+			  };
 		paymentRequirements: {
-			scheme: "exact";
-			network: string;
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
 			maxAmountRequired: string;
 			resource: string;
 			description: string;
@@ -5061,6 +4871,7 @@ export type SettleX402PaymentData = {
 			extra?: {
 				[key: string]: unknown;
 			};
+			x402Version?: 1 | 2;
 		};
 		/**
 		 * The event to wait for to determina a transaction confirmation. 'simulated' will only simulate the transaction (fastest), 'submitted' will wait till the transaction is submitted, and 'confirmed' will wait for the transaction to be fully confirmed on chain (slowest). Defaults to 'confirmed'.
@@ -5146,6 +4957,7 @@ export type SettleX402PaymentResponses = {
 			| "polygon-amoy"
 			| "peaq";
 		errorMessage?: string;
+		fundWalletLink?: string;
 	};
 };
 
@@ -5161,9 +4973,9 @@ export type SupportedX402PaymentsData = {
 		 */
 		tokenAddress?: string;
 		/**
-		 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+		 * Chain ID in CAIP-2 format (e.g., 'eip155:1' for Ethereum, 'solana:mainnet' for Solana). Also accepts legacy numeric IDs for EVM chains.
 		 */
-		chainId?: number;
+		chainId?: string | number;
 	};
 	url: "/v1/payments/x402/supported";
 };
@@ -5185,9 +4997,12 @@ export type SupportedX402PaymentsResponses = {
 	 */
 	200: {
 		kinds: Array<{
-			x402Version: 1;
-			scheme: "exact";
-			network: string;
+			x402Version?: 1 | 2;
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
 			extra?: {
 				defaultAsset?: {
 					/**
@@ -5257,10 +5072,9 @@ export type FetchWithPaymentData = {
 		 */
 		asset?: string;
 		/**
-		 * Chain ID
-		 * The chain ID to use for the payment. If not provided, the chain ID from the url's payment requirements will be used.
+		 * Chain ID to use for the payment. Supports CAIP-2 strings (e.g., 'eip155:1', 'solana:mainnet') or legacy numeric EVM IDs.
 		 */
-		chainId?: number;
+		chainId?: string | number;
 	};
 	url: "/v1/payments/x402/fetch";
 };
@@ -5466,8 +5280,8 @@ export type ListPayableServicesData = {
 	body?: never;
 	path?: never;
 	query?: {
-		limit?: number;
-		offset?: number;
+		limit?: number | null;
+		offset?: number | null;
 		query?: string;
 		sortBy?:
 			| "createdAt"
@@ -5502,8 +5316,11 @@ export type ListPayableServicesResponses = {
 			type: "http";
 			x402Version: number;
 			accepts: Array<{
-				scheme: "exact";
-				network: string;
+				scheme?: "exact" | "upto";
+				/**
+				 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+				 */
+				network: string | number;
 				maxAmountRequired: string;
 				resource: string;
 				description: string;
@@ -5533,6 +5350,232 @@ export type ListPayableServicesResponses = {
 
 export type ListPayableServicesResponse =
 	ListPayableServicesResponses[keyof ListPayableServicesResponses];
+
+export type GetX402AcceptsData = {
+	body?: {
+		/**
+		 * The URL of the resource being protected by the payment
+		 */
+		resourceUrl: string;
+		/**
+		 * The HTTP method used to access the resource
+		 */
+		method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+		/**
+		 * The blockchain network where the payment should be processed
+		 */
+		network: string | number;
+		/**
+		 * The price for accessing the resource - either a USD amount (e.g., '$0.10') or a specific token amount
+		 */
+		price:
+			| (string | number)
+			| {
+					amount: string;
+					asset: {
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals?: number;
+						eip712?: {
+							name: string;
+							version: string;
+							primaryType: "TransferWithAuthorization" | "Permit";
+						};
+					};
+			  }
+			| {
+					amount: string;
+					asset: {
+						/**
+						 * A valid Solana address (base58 string).
+						 */
+						address: string;
+						/**
+						 * Number of decimals for the SPL token
+						 */
+						decimals: number;
+						/**
+						 * Optional token program. Defaults to the SPL Token program if omitted.
+						 */
+						tokenProgram?:
+							| "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+							| "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb";
+					};
+			  };
+		/**
+		 * Optional minimum price for 'upto' scheme. When specified, verify will accept payments where allowance >= minPrice. Must use same format as price.
+		 */
+		minPrice?:
+			| (string | number)
+			| {
+					amount: string;
+					asset: {
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals?: number;
+						eip712?: {
+							name: string;
+							version: string;
+							primaryType: "TransferWithAuthorization" | "Permit";
+						};
+					};
+			  }
+			| {
+					amount: string;
+					asset: {
+						/**
+						 * A valid Solana address (base58 string).
+						 */
+						address: string;
+						/**
+						 * Number of decimals for the SPL token
+						 */
+						decimals: number;
+						/**
+						 * Optional token program. Defaults to the SPL Token program if omitted.
+						 */
+						tokenProgram?:
+							| "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+							| "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb";
+					};
+			  };
+		scheme?: "exact" | "upto";
+		/**
+		 * Optional configuration for the payment middleware route
+		 */
+		routeConfig?: {
+			description?: string;
+			mimeType?: string;
+			maxTimeoutSeconds?: number;
+			inputSchema?: {
+				queryParams?: {
+					[key: string]: string;
+				};
+				bodyType?:
+					| "json"
+					| "form-data"
+					| "multipart-form-data"
+					| "text"
+					| "binary";
+				bodyFields?: {
+					[key: string]: unknown;
+				};
+				headerFields?: {
+					[key: string]: unknown;
+				};
+			};
+			outputSchema?: {
+				[key: string]: unknown;
+			};
+			discoverable?: boolean;
+			customPaywallHtml?: string;
+			resource?: string;
+		};
+		/**
+		 * Your server wallet address, defaults to the project server wallet address
+		 */
+		serverWalletAddress?: string;
+		/**
+		 * Optional recipient address to receive the payment if different from your facilitator server wallet address
+		 */
+		recipientAddress?: string;
+		/**
+		 * Optional extra data to be passed to in the payment requirements.
+		 */
+		extraMetadata?: {
+			[key: string]: unknown;
+		};
+		/**
+		 * x402 protocol version. Version 2 returns requirements in PAYMENT-REQUIRED header instead of response body.
+		 */
+		x402Version?: 1 | 2;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/payments/x402/accepts";
+};
+
+export type GetX402AcceptsErrors = {
+	/**
+	 * Invalid request parameters
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header.
+	 */
+	401: unknown;
+	/**
+	 * Payment required – returns x402 payment requirements
+	 */
+	402: {
+		x402Version: number;
+		error?: string;
+		accepts: Array<{
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
+			maxAmountRequired: string;
+			resource: string;
+			description: string;
+			mimeType: string;
+			outputSchema?: {
+				[key: string]: unknown;
+			};
+			payTo: string;
+			maxTimeoutSeconds: number;
+			asset: string;
+			extra?: {
+				[key: string]: unknown;
+			};
+		}>;
+	};
+	/**
+	 * Internal server error
+	 */
+	500: unknown;
+};
+
+export type GetX402AcceptsError =
+	GetX402AcceptsErrors[keyof GetX402AcceptsErrors];
+
+export type GetX402AcceptsResponses = {
+	/**
+	 * Returns x402 payment requirements
+	 */
+	200: {
+		x402Version: number;
+		error?: string;
+		accepts: Array<{
+			scheme?: "exact" | "upto";
+			/**
+			 * CAIP-2 blockchain identifier (e.g., 'eip155:1' for Ethereum, 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp' for Solana mainnet). Also accepts numeric EVM chain IDs (e.g., 1, 137) or aliases ('solana:mainnet', 'solana:devnet') for backward compatibility.
+			 */
+			network: string | number;
+			maxAmountRequired: string;
+			resource: string;
+			description: string;
+			mimeType: string;
+			outputSchema?: {
+				[key: string]: unknown;
+			};
+			payTo: string;
+			maxTimeoutSeconds: number;
+			asset: string;
+			extra?: {
+				[key: string]: unknown;
+			};
+		}>;
+	};
+};
+
+export type GetX402AcceptsResponse =
+	GetX402AcceptsResponses[keyof GetX402AcceptsResponses];
 
 export type ListTokensData = {
 	body?: never;
@@ -5594,15 +5637,15 @@ export type ListTokensResponses = {
 			/**
 			 * Number of items per page
 			 */
-			limit?: number;
+			limit?: number | null;
 			/**
 			 * Current page number
 			 */
-			page?: number;
+			page?: number | null;
 			/**
 			 * Total number of items available
 			 */
-			totalCount?: number;
+			totalCount?: number | null;
 		};
 		tokens: Array<{
 			/**
@@ -5755,7 +5798,7 @@ export type GetTokenOwnersData = {
 		/**
 		 * Optional token ID for NFT owners. If provided, returns owners of the specific NFT token.
 		 */
-		tokenId?: string;
+		tokenId?: string | null;
 		/**
 		 * Number of owners to return per page (1-100).
 		 */
@@ -5818,15 +5861,15 @@ export type GetTokenOwnersResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 		};
 	};
@@ -6051,15 +6094,15 @@ export type GetBridgeSupportedRoutesResponses = {
 				/**
 				 * Number of items per page
 				 */
-				limit?: number;
+				limit?: number | null;
 				/**
 				 * Current page number
 				 */
-				page?: number;
+				page?: number | null;
 				/**
 				 * Total number of items available
 				 */
-				totalCount?: number;
+				totalCount?: number | null;
 			};
 		};
 	};
@@ -6153,6 +6196,215 @@ export type ConvertFiatToCryptoResponses = {
 export type ConvertFiatToCryptoResponse =
 	ConvertFiatToCryptoResponses[keyof ConvertFiatToCryptoResponses];
 
+export type BridgeQuoteData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Whether `amount` is the exact input amount (sell) or the exact output amount (buy).
+		 */
+		exact?: "input" | "output";
+		/**
+		 * Chain ID of the input token.
+		 */
+		originChainId: number;
+		/**
+		 * Input token address (use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE for the native token).
+		 */
+		originTokenAddress: string;
+		/**
+		 * Chain ID of the output token.
+		 */
+		destinationChainId: number;
+		/**
+		 * Output token address (use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE for the native token).
+		 */
+		destinationTokenAddress: string;
+		/**
+		 * Amount in wei. The input amount when exact='input', the output amount when exact='output'.
+		 */
+		amount: string;
+	};
+	url: "/v1/bridge/quote";
+};
+
+export type BridgeQuoteErrors = {
+	/**
+	 * Invalid request parameters.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include `x-secret-key` header for backend usage or `x-client-id` for frontend usage.
+	 */
+	401: unknown;
+	/**
+	 * No route available for the requested token pair.
+	 */
+	404: unknown;
+	/**
+	 * Internal server error.
+	 */
+	500: unknown;
+};
+
+export type BridgeQuoteResponses = {
+	/**
+	 * Quote for the requested swap or bridge.
+	 */
+	200: {
+		result: {
+			/**
+			 * Total input amount in wei
+			 */
+			originAmount: string;
+			/**
+			 * Total output amount in wei
+			 */
+			destinationAmount: string;
+			/**
+			 * Block number the quote was computed at
+			 */
+			blockNumber?: string;
+			/**
+			 * Unix timestamp in milliseconds when the quote was computed
+			 */
+			timestamp: number;
+			/**
+			 * Estimated end-to-end execution time in milliseconds
+			 */
+			estimatedExecutionTimeMs?: number;
+			steps: Array<{
+				originToken: {
+					/**
+					 * Chain identifier for the token
+					 */
+					chainId: number;
+					/**
+					 * Token contract address
+					 */
+					address: string;
+					/**
+					 * Token symbol
+					 */
+					symbol: string;
+					/**
+					 * Token name
+					 */
+					name: string;
+					/**
+					 * Number of decimals the token uses
+					 */
+					decimals: number;
+					/**
+					 * Optional icon URL for the token
+					 */
+					iconUri?: string;
+					/**
+					 * 24h market capitalization in USD when available
+					 */
+					marketCapUsd?: number;
+					/**
+					 * 24h trading volume in USD when available
+					 */
+					volume24hUsd?: number;
+					/**
+					 * Token price quotes keyed by fiat currency code
+					 */
+					prices?: {
+						[key: string]: number;
+					};
+					/**
+					 * Token price in USD when available
+					 */
+					priceUsd?: number;
+				};
+				destinationToken: {
+					/**
+					 * Chain identifier for the token
+					 */
+					chainId: number;
+					/**
+					 * Token contract address
+					 */
+					address: string;
+					/**
+					 * Token symbol
+					 */
+					symbol: string;
+					/**
+					 * Token name
+					 */
+					name: string;
+					/**
+					 * Number of decimals the token uses
+					 */
+					decimals: number;
+					/**
+					 * Optional icon URL for the token
+					 */
+					iconUri?: string;
+					/**
+					 * 24h market capitalization in USD when available
+					 */
+					marketCapUsd?: number;
+					/**
+					 * 24h trading volume in USD when available
+					 */
+					volume24hUsd?: number;
+					/**
+					 * Token price quotes keyed by fiat currency code
+					 */
+					prices?: {
+						[key: string]: number;
+					};
+					/**
+					 * Token price in USD when available
+					 */
+					priceUsd?: number;
+				};
+				/**
+				 * Input amount for this step in wei
+				 */
+				originAmount: string;
+				/**
+				 * Output amount for this step in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time for this step in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+			}>;
+			/**
+			 * The intent this quote was computed for
+			 */
+			intent: {
+				/**
+				 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+				 */
+				originChainId: number;
+				/**
+				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+				 */
+				originTokenAddress: string;
+				/**
+				 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+				 */
+				destinationChainId: number;
+				/**
+				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+				 */
+				destinationTokenAddress: string;
+				amount: string;
+				maxSteps?: number;
+			};
+		};
+	};
+};
+
+export type BridgeQuoteResponse =
+	BridgeQuoteResponses[keyof BridgeQuoteResponses];
+
 export type BridgeSwapData = {
 	/**
 	 * Swap Token Request
@@ -6204,9 +6456,13 @@ export type BridgeSwapData = {
 		 */
 		from?: string;
 		/**
+		 * The wallet address that will receive the swapped tokens. Defaults to the sender address if not specified.
+		 */
+		receiver?: string;
+		/**
 		 * The slippage tolerance in basis points. Will be automatically calculated by default.
 		 */
-		slippageToleranceBps?: number;
+		slippageToleranceBps?: number | null;
 	};
 	path?: never;
 	query?: never;
@@ -6419,6 +6675,417 @@ export type BridgeSwapResponses = {
 
 export type BridgeSwapResponse = BridgeSwapResponses[keyof BridgeSwapResponses];
 
+export type BridgeCreatePaymentData = {
+	/**
+	 * Create Product Request
+	 * Request to create a product to be purchased. Users can purchase the product via hosted UI (link is returned), a transaction execution referencing the product ID, or embedded widgets with the product ID.
+	 */
+	body?: {
+		/**
+		 * The name of the product
+		 */
+		name: string;
+		/**
+		 * The description of the product
+		 */
+		description: string;
+		/**
+		 * The URL of the product image
+		 */
+		imageUrl?: string;
+		/**
+		 * The token to purchase
+		 */
+		token: {
+			/**
+			 * The token address to purchase (use 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE for native token)
+			 */
+			address: string;
+			/**
+			 * The blockchain network where the token is located
+			 */
+			chainId: number;
+			/**
+			 * The amount of the token to purchase in wei.
+			 */
+			amount: string;
+		};
+		/**
+		 * The wallet address or ENS name that will receive the payment for the product
+		 */
+		recipient: string;
+		/**
+		 * App specific purchase data for this payment
+		 */
+		purchaseData?: unknown;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/bridge/payments";
+};
+
+export type BridgeCreatePaymentErrors = {
+	/**
+	 * Invalid request parameters.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` + `Authorization: Bearer <jwt>` headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
+	 */
+	500: unknown;
+};
+
+export type BridgeCreatePaymentResponses = {
+	/**
+	 * Create Payment Response
+	 * Successful payment creation response containing the payment ID and link to purchase the product
+	 */
+	200: {
+		result: {
+			/**
+			 * The payment ID
+			 */
+			id: string;
+			/**
+			 * The link to purchase the product
+			 */
+			link: string;
+		};
+	};
+};
+
+export type BridgeCreatePaymentResponse =
+	BridgeCreatePaymentResponses[keyof BridgeCreatePaymentResponses];
+
+export type BridgeGetPaymentHistoryData = {
+	body?: never;
+	path: {
+		id: string;
+	};
+	query?: never;
+	url: "/v1/bridge/payments/{id}";
+};
+
+export type BridgeGetPaymentHistoryErrors = {
+	/**
+	 * Bad request
+	 */
+	400: {
+		error: string;
+	};
+	/**
+	 * Payment link not found
+	 */
+	404: {
+		error: string;
+	};
+};
+
+export type BridgeGetPaymentHistoryError =
+	BridgeGetPaymentHistoryErrors[keyof BridgeGetPaymentHistoryErrors];
+
+export type BridgeGetPaymentHistoryResponses = {
+	/**
+	 * Payment history retrieved successfully
+	 */
+	200: {
+		/**
+		 * List of payments for the client
+		 */
+		data: Array<{
+			id: string;
+			blockNumber?: string;
+			transactionId?: string;
+			onrampId?: string;
+			clientId: string;
+			/**
+			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+			 */
+			sender?: string;
+			/**
+			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+			 */
+			receiver: string;
+			/**
+			 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+			 */
+			developerFeeRecipient?: string;
+			developerFeeBps?: number;
+			transactions: Array<{
+				chainId: number;
+				transactionHash: string;
+			}>;
+			status: "PENDING" | "COMPLETED" | "FAILED" | "NOT_FOUND";
+			type: "buy" | "sell" | "transfer" | "onramp";
+			originAmount?: string;
+			destinationAmount: string;
+			paymentLinkId?: string;
+			purchaseData?: unknown;
+			originToken?: {
+				chainId: number;
+				/**
+				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+				 */
+				address: string;
+				symbol: string;
+				name: string;
+				decimals: number;
+				iconUri?: string;
+			};
+			destinationToken: {
+				chainId: number;
+				/**
+				 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+				 */
+				address: string;
+				symbol: string;
+				name: string;
+				decimals: number;
+				iconUri?: string;
+			};
+			createdAt: string;
+		}>;
+		meta: {
+			/**
+			 * Total number of payments
+			 */
+			totalCount: number;
+		};
+	};
+};
+
+export type BridgeGetPaymentHistoryResponse =
+	BridgeGetPaymentHistoryResponses[keyof BridgeGetPaymentHistoryResponses];
+
+export type BridgePaymentsPurchaseData = {
+	/**
+	 * Purchase Product Request
+	 * Request to purchase a product. The system will automatically use your wallet balance to purchase the specified product.
+	 */
+	body?: {
+		/**
+		 * The wallet address or ENS name that will purchase the product. If omitted, the project wallet will be used if available.
+		 */
+		from?: string;
+	};
+	path: {
+		id: string;
+	};
+	query?: never;
+	url: "/v1/bridge/payments/{id}";
+};
+
+export type BridgePaymentsPurchaseErrors = {
+	/**
+	 * Invalid request parameters.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. For backend usage, include `x-secret-key` header. For frontend usage, include `x-client-id` + `Authorization: Bearer <jwt>` headers.
+	 */
+	401: unknown;
+	/**
+	 * Payment Required Response
+	 * Payment required response when user has insufficient funds. Contains a quote for completing the purchase.
+	 */
+	402: {
+		result: {
+			/**
+			 * Message to display to the user
+			 */
+			message: string;
+			/**
+			 * Link to purchase the product
+			 */
+			link: string;
+			/**
+			 * Payment ID
+			 */
+			id?: string;
+			/**
+			 * Bridge quote for completing the payment
+			 */
+			quote?: {
+				/**
+				 * Block number when quote was generated
+				 */
+				blockNumber?: string;
+				/**
+				 * Destination amount in wei
+				 */
+				destinationAmount: string;
+				/**
+				 * Estimated execution time in milliseconds
+				 */
+				estimatedExecutionTimeMs?: number;
+				/**
+				 * Quote intent details
+				 */
+				intent: {
+					/**
+					 * The amount in wei
+					 */
+					amount: string;
+					/**
+					 * Destination chain ID
+					 */
+					destinationChainId: number;
+					/**
+					 * Destination token address
+					 */
+					destinationTokenAddress: string;
+					/**
+					 * Origin chain ID
+					 */
+					originChainId: number;
+					/**
+					 * Origin token address
+					 */
+					originTokenAddress: string;
+					/**
+					 * Receiver address
+					 */
+					receiver: string;
+					/**
+					 * Sender address
+					 */
+					sender: string;
+				};
+				/**
+				 * Origin amount in wei
+				 */
+				originAmount: string;
+				/**
+				 * Array of steps to complete the bridge operation
+				 */
+				steps: Array<{
+					/**
+					 * Origin token information
+					 */
+					originToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Destination token information
+					 */
+					destinationToken: {
+						/**
+						 * The blockchain network identifier. Common values include: 1 (Ethereum), 8453 (Base), 137 (Polygon), 56 (BSC), 43114 (Avalanche), 42161 (Arbitrum), 10 (Optimism).
+						 */
+						chainId: number;
+						/**
+						 * A valid Ethereum address (0x-prefixed hex string) or ENS name (e.g., vitalik.eth).
+						 */
+						address: string;
+						decimals: number;
+						symbol: string;
+						iconUri?: string;
+						/**
+						 * Token price in different FIAT currencies.
+						 */
+						prices: {
+							[key: string]: number;
+						};
+					};
+					/**
+					 * Array of transactions for this step
+					 */
+					transactions: Array<{
+						/**
+						 * Blockchain network identifier
+						 */
+						chainId: number;
+						/**
+						 * Transaction recipient address
+						 */
+						to: string;
+						/**
+						 * Transaction data payload
+						 */
+						data: string;
+						/**
+						 * Type of action this transaction performs
+						 */
+						action: "approval" | "transfer" | "buy" | "sell" | "fee";
+						/**
+						 * Transaction sender address
+						 */
+						from?: string;
+						/**
+						 * Spender address for approval transactions
+						 */
+						spender?: string;
+						/**
+						 * Transaction value in wei
+						 */
+						value?: string;
+					}>;
+					/**
+					 * Origin amount in wei
+					 */
+					originAmount: string;
+					/**
+					 * Destination amount in wei
+					 */
+					destinationAmount: string;
+					/**
+					 * Estimated execution time in milliseconds
+					 */
+					estimatedExecutionTimeMs?: number;
+				}>;
+				/**
+				 * Quote timestamp
+				 */
+				timestamp: number;
+			};
+		};
+	};
+	/**
+	 * Internal server error. This may occur due to network connectivity issues, wallet creation failures, or transaction execution failures.
+	 */
+	500: unknown;
+};
+
+export type BridgePaymentsPurchaseError =
+	BridgePaymentsPurchaseErrors[keyof BridgePaymentsPurchaseErrors];
+
+export type BridgePaymentsPurchaseResponses = {
+	/**
+	 * Product purchased successfully. Returns the transaction used for the purchase.
+	 */
+	200: {
+		result: {
+			/**
+			 * Transaction ID that was executed for your product purchase
+			 */
+			transactionId: string;
+		};
+	};
+};
+
+export type BridgePaymentsPurchaseResponse =
+	BridgePaymentsPurchaseResponses[keyof BridgePaymentsPurchaseResponses];
+
 export type ListSolanaWalletsData = {
 	body?: never;
 	path?: never;
@@ -6463,7 +7130,7 @@ export type ListSolanaWalletsResponses = {
 				/**
 				 * Optional label associated with the wallet.
 				 */
-				label?: string;
+				label?: string | null;
 				/**
 				 * ISO 8601 timestamp indicating when the wallet was created.
 				 */
@@ -6539,7 +7206,7 @@ export type CreateSolanaWalletResponses = {
 			/**
 			 * Optional label associated with the wallet.
 			 */
-			label?: string;
+			label?: string | null;
 			/**
 			 * ISO 8601 timestamp indicating when the wallet was created.
 			 */
@@ -6565,7 +7232,7 @@ export type CreateSolanaWalletResponses = {
 			/**
 			 * Optional label associated with the wallet.
 			 */
-			label?: string;
+			label?: string | null;
 			/**
 			 * ISO 8601 timestamp indicating when the wallet was created.
 			 */
@@ -6593,7 +7260,7 @@ export type GetSolanaWalletBalanceData = {
 		/**
 		 * Solana network to query. Choose either solana:mainnet or solana:devnet.
 		 */
-		chainId: "solana:mainnet" | "solana:devnet";
+		chainId: string | number;
 		/**
 		 * SPL token mint address. Omit to retrieve native SOL balance.
 		 */
@@ -6629,7 +7296,7 @@ export type GetSolanaWalletBalanceResponses = {
 			/**
 			 * Requested Solana network.
 			 */
-			chainId: "solana:mainnet" | "solana:devnet";
+			chainId: string | number;
 			/**
 			 * Number of decimals used by the token.
 			 */
@@ -6696,6 +7363,176 @@ export type SignSolanaMessageResponses = {
 export type SignSolanaMessageResponse =
 	SignSolanaMessageResponses[keyof SignSolanaMessageResponses];
 
+export type SignSolanaTransactionData = {
+	/**
+	 * Request payload for signing a Solana transaction. Provide a serialized transaction or a set of instructions to be assembled server-side.
+	 */
+	body?: {
+		/**
+		 * The Solana wallet address that will sign the transaction.
+		 */
+		from: string;
+		/**
+		 * Solana network the transaction targets. Use solana:mainnet or solana:devnet.
+		 */
+		chainId: string | number;
+		/**
+		 * Base64 encoded Solana transaction to sign.
+		 */
+		transaction?: string;
+		/**
+		 * Instructions that will be assembled into a transaction before signing.
+		 */
+		instructions?: Array<{
+			/**
+			 * Program address to invoke for this instruction.
+			 */
+			programId: string;
+			/**
+			 * Ordered list of accounts consumed by the instruction.
+			 */
+			accounts: Array<{
+				/**
+				 * Public key for the account.
+				 */
+				address: string;
+				/**
+				 * Whether this account must sign the transaction.
+				 */
+				isSigner: boolean;
+				/**
+				 * Whether this account can be modified by the instruction.
+				 */
+				isWritable: boolean;
+			}>;
+			/**
+			 * Instruction data encoded using the provided encoding.
+			 */
+			data: string;
+			/**
+			 * Encoding used for the instruction data payload.
+			 */
+			encoding?: "hex" | "base64";
+		}>;
+		/**
+		 * Priority fee configuration applied via the compute budget program.
+		 */
+		priorityFee?:
+			| {
+					type: "auto";
+			  }
+			| {
+					type: "manual";
+					/**
+					 * Explicit micro-lamports per compute unit for priority fees.
+					 */
+					microLamportsPerUnit: number | null;
+			  }
+			| {
+					type: "percentile";
+					/**
+					 * Percentile to pull from recent priority fee estimates (0-100).
+					 */
+					percentile: number | null;
+			  }
+			| null;
+		/**
+		 * Override the compute unit limit for the transaction via the compute budget program.
+		 */
+		computeUnitLimit?: number | null;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/sign-transaction";
+};
+
+export type SignSolanaTransactionErrors = {
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while signing the transaction.
+	 */
+	500: unknown;
+};
+
+export type SignSolanaTransactionResponses = {
+	/**
+	 * Transaction signed successfully. Returns the signature and the fully signed transaction payload.
+	 */
+	200: {
+		result: {
+			/**
+			 * Base58 encoded signature for the provided transaction.
+			 */
+			signature: string;
+			/**
+			 * Base64 encoded signed transaction that can be broadcast to the Solana network.
+			 */
+			signedTransaction: string;
+		};
+	};
+};
+
+export type SignSolanaTransactionResponse =
+	SignSolanaTransactionResponses[keyof SignSolanaTransactionResponses];
+
+export type BroadcastSolanaTransactionData = {
+	/**
+	 * Request payload for broadcasting a signed Solana transaction. Use the signedTransaction output from /v1/solana/sign-transaction.
+	 */
+	body?: {
+		/**
+		 * Solana network the signed transaction targets. Use solana:mainnet or solana:devnet.
+		 */
+		chainId: string | number;
+		/**
+		 * Base64 encoded signed transaction to broadcast to the Solana network.
+		 */
+		signedTransaction: string;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/broadcast-transaction";
+};
+
+export type BroadcastSolanaTransactionErrors = {
+	/**
+	 * Transaction failed on-chain. Response includes detailed error information with the transaction signature, error type, and instruction index (if applicable). Common errors include InsufficientFunds, InstructionError (program execution failure), InvalidAccountData, etc.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while broadcasting or polling the transaction.
+	 */
+	500: unknown;
+	/**
+	 * Transaction was not confirmed within the 30 second timeout period. The transaction may still be pending or dropped.
+	 */
+	504: unknown;
+};
+
+export type BroadcastSolanaTransactionResponses = {
+	/**
+	 * Transaction broadcast and confirmed successfully. Returns the transaction signature (equivalent to EVM transaction hash).
+	 */
+	200: {
+		result: {
+			/**
+			 * Transaction signature returned by the Solana network.
+			 */
+			signature: string;
+		};
+	};
+};
+
+export type BroadcastSolanaTransactionResponse =
+	BroadcastSolanaTransactionResponses[keyof BroadcastSolanaTransactionResponses];
+
 export type SendSolanaTokensData = {
 	/**
 	 * Request payload for transferring SOL or SPL tokens on Solana.
@@ -6714,9 +7551,9 @@ export type SendSolanaTokensData = {
 		 */
 		amount: string;
 		/**
-		 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+		 * Solana network identifier in CAIP-2 format. Use "solana:mainnet" or "solana:devnet" for convenience, or full CAIP-2 format.
 		 */
-		chainId: "solana:mainnet" | "solana:devnet";
+		chainId: string | number;
 		/**
 		 * Optional SPL token mint address. When omitted a native SOL transfer is performed.
 		 */
@@ -6776,13 +7613,13 @@ export type SendSolanaTransactionData = {
 		 */
 		from: string;
 		/**
-		 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+		 * Solana network identifier in CAIP-2 format. Use "solana:mainnet" or "solana:devnet" for convenience, or full CAIP-2 format.
 		 */
-		chainId: "solana:mainnet" | "solana:devnet";
+		chainId: string | number;
 		/**
 		 * Set of instructions executed sequentially in a single transaction.
 		 */
-		transactions: Array<{
+		instructions: Array<{
 			/**
 			 * Program address to invoke for this instruction.
 			 */
@@ -6813,6 +7650,31 @@ export type SendSolanaTransactionData = {
 			 */
 			encoding?: "hex" | "base64";
 		}>;
+		/**
+		 * Priority fee configuration applied via the compute budget program.
+		 */
+		priorityFee?:
+			| {
+					type: "auto";
+			  }
+			| {
+					type: "manual";
+					/**
+					 * Explicit micro-lamports per compute unit for priority fees.
+					 */
+					microLamportsPerUnit: number | null;
+			  }
+			| {
+					type: "percentile";
+					/**
+					 * Percentile to pull from recent priority fee estimates (0-100).
+					 */
+					percentile: number | null;
+			  };
+		/**
+		 * Override the compute unit limit via the compute budget program.
+		 */
+		computeUnitLimit?: number | null;
 	};
 	path?: never;
 	query?: never;
@@ -6858,6 +7720,183 @@ export type SendSolanaTransactionResponses = {
 export type SendSolanaTransactionResponse =
 	SendSolanaTransactionResponses[keyof SendSolanaTransactionResponses];
 
+export type GetSwapQuoteData = {
+	body?: never;
+	path?: never;
+	query: {
+		/**
+		 * Solana wallet address that will execute the swap.
+		 */
+		address: string;
+		/**
+		 * Input token mint address (the token being sold).
+		 */
+		tokenIn: string;
+		/**
+		 * Output token mint address (the token being purchased).
+		 */
+		tokenOut: string;
+		/**
+		 * Amount of input token to swap, expressed in the smallest unit (e.g., lamports for SOL).
+		 */
+		amount: string;
+		chainId: string | number;
+	};
+	url: "/v1/solana/swap";
+};
+
+export type GetSwapQuoteErrors = {
+	/**
+	 * Invalid request parameters or quote API error. Check the error message for details.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while fetching the quote.
+	 */
+	500: unknown;
+};
+
+export type GetSwapQuoteResponses = {
+	/**
+	 * Response containing the swap quote details.
+	 */
+	200: {
+		result: {
+			/**
+			 * Input token mint address.
+			 */
+			inputMint: string;
+			/**
+			 * Output token mint address.
+			 */
+			outputMint: string;
+			/**
+			 * Amount of input token to swap.
+			 */
+			inputAmount: string;
+			/**
+			 * Expected amount of output token to receive.
+			 */
+			outputAmount: string;
+			/**
+			 * USD value of the input amount.
+			 */
+			inputUsdValue?: number;
+			/**
+			 * USD value of the output amount.
+			 */
+			outputUsdValue?: number;
+			/**
+			 * Slippage tolerance in basis points (1 bps = 0.01%).
+			 */
+			slippageBps: number;
+			/**
+			 * Quote request ID for executing the swap.
+			 */
+			requestId: string;
+		};
+	};
+};
+
+export type GetSwapQuoteResponse =
+	GetSwapQuoteResponses[keyof GetSwapQuoteResponses];
+
+export type SwapSolanaTokensData = {
+	/**
+	 * Request payload for executing a token swap on Solana. The endpoint handles swap routing, transaction signing, execution, and confirmation polling.
+	 */
+	body?: {
+		/**
+		 * Solana wallet address that will execute the swap.
+		 */
+		address: string;
+		/**
+		 * Input token mint address (the token being sold).
+		 */
+		tokenIn: string;
+		/**
+		 * Output token mint address (the token being purchased).
+		 */
+		tokenOut: string;
+		/**
+		 * Amount of input token to swap, expressed in the smallest unit (e.g., lamports for SOL).
+		 */
+		amount: string;
+		chainId: string | number;
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/swap";
+};
+
+export type SwapSolanaTokensErrors = {
+	/**
+	 * Invalid request parameters, swap API error, or transaction failed on-chain. Check the error message for details.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred during swap execution or confirmation.
+	 */
+	500: unknown;
+	/**
+	 * Transaction was not confirmed within the 30 second timeout period. The swap may still be pending or dropped.
+	 */
+	504: unknown;
+};
+
+export type SwapSolanaTokensResponses = {
+	/**
+	 * Response containing the confirmed swap transaction signature and swap details.
+	 */
+	200: {
+		result: {
+			/**
+			 * Transaction signature for the confirmed swap on the Solana network.
+			 */
+			signature: string;
+			/**
+			 * Input token mint address.
+			 */
+			inputMint: string;
+			/**
+			 * Output token mint address.
+			 */
+			outputMint: string;
+			/**
+			 * Amount of input token swapped.
+			 */
+			inputAmount: string;
+			/**
+			 * Amount of output token received.
+			 */
+			outputAmount: string;
+			/**
+			 * USD value of the input amount.
+			 */
+			inputUsdValue?: number;
+			/**
+			 * USD value of the output amount.
+			 */
+			outputUsdValue?: number;
+			/**
+			 * Request ID for this swap.
+			 */
+			requestId: string;
+		};
+	};
+};
+
+export type SwapSolanaTokensResponse =
+	SwapSolanaTokensResponses[keyof SwapSolanaTokensResponses];
+
 export type GetSolanaTransactionData = {
 	body?: never;
 	path: {
@@ -6899,9 +7938,9 @@ export type GetSolanaTransactionResponses = {
 			 */
 			id: string;
 			/**
-			 * Solana network identifier. Use solana:devnet for testing and solana:mainnet for production.
+			 * Solana network identifier in CAIP-2 format. Use "solana:mainnet" or "solana:devnet" for convenience, or full CAIP-2 format.
 			 */
-			chainId: "solana:mainnet" | "solana:devnet";
+			chainId: string | number;
 			/**
 			 * Signer address used on submission.
 			 */
@@ -6909,7 +7948,7 @@ export type GetSolanaTransactionResponses = {
 			/**
 			 * Signature recorded on-chain once available.
 			 */
-			signature?: string;
+			signature?: string | null;
 			/**
 			 * Current status of the transaction in the processing pipeline.
 			 */
@@ -6917,15 +7956,15 @@ export type GetSolanaTransactionResponses = {
 			/**
 			 * Timestamp when the transaction reached the reported status.
 			 */
-			confirmedAt?: string;
+			confirmedAt?: string | null;
 			/**
 			 * Slot where the transaction was confirmed, if available.
 			 */
-			confirmedAtSlot?: string;
+			confirmedAtSlot?: string | null;
 			/**
 			 * Unix timestamp of the processed block.
 			 */
-			blockTime?: number;
+			blockTime?: number | null;
 			/**
 			 * ISO 8601 timestamp when the transaction was queued.
 			 */
@@ -6933,7 +7972,7 @@ export type GetSolanaTransactionResponses = {
 			/**
 			 * Error message if the transaction failed.
 			 */
-			errorMessage?: string;
+			errorMessage?: string | null;
 			/**
 			 * Resolved execution parameters used for the transaction.
 			 */
@@ -6951,13 +7990,96 @@ export type GetSolanaTransactionResponses = {
 			 */
 			clientId: string;
 			enrichedData?: unknown;
-			cancelledAt?: string;
+			cancelledAt?: string | null;
 		};
 	};
 };
 
 export type GetSolanaTransactionResponse =
 	GetSolanaTransactionResponses[keyof GetSolanaTransactionResponses];
+
+export type DeploySolanaTokenData = {
+	/**
+	 * Request payload for deploying a new SPL token or Token-2022 token on Solana.
+	 */
+	body?: {
+		/**
+		 * Solana wallet address that will pay for the deployment and serve as the mint authority.
+		 */
+		from: string;
+		/**
+		 * Solana network for deployment. Use solana:mainnet or solana:devnet.
+		 */
+		chainId: string | number;
+		/**
+		 * Token name (max 32 characters). Stored in on-chain metadata.
+		 */
+		name: string;
+		/**
+		 * Token symbol (max 10 characters). Stored in on-chain metadata.
+		 */
+		symbol: string;
+		/**
+		 * Number of decimal places for the token. Standard is 9 for SOL-like tokens, 6 for USDC-like.
+		 */
+		decimals?: number;
+		/**
+		 * Initial token supply to mint, expressed in the smallest unit (base units). For example, for a token with 9 decimals, '1000000000' would be 1 token.
+		 */
+		initialSupply?: string;
+		/**
+		 * Address authorized to mint new tokens. Defaults to the 'from' address if not specified.
+		 */
+		mintAuthority?: string;
+		/**
+		 * Address authorized to freeze token accounts. Omit to disable freeze functionality.
+		 */
+		freezeAuthority?: string;
+		/**
+		 * Token program to use for deployment. Use 'spl-token' for standard SPL tokens or 'token-2022' for Token Extensions program.
+		 */
+		tokenProgram?: "spl-token" | "token-2022";
+	};
+	path?: never;
+	query?: never;
+	url: "/v1/solana/deploy";
+};
+
+export type DeploySolanaTokenErrors = {
+	/**
+	 * Invalid request parameters.
+	 */
+	400: unknown;
+	/**
+	 * Authentication required. Include x-secret-key or Authorization headers.
+	 */
+	401: unknown;
+	/**
+	 * Internal server error occurred while processing the deployment.
+	 */
+	500: unknown;
+};
+
+export type DeploySolanaTokenResponses = {
+	/**
+	 * Response containing the transaction ID and deployed token mint address.
+	 */
+	200: {
+		result: {
+			/**
+			 * Idempotency key assigned to the queued deployment transaction.
+			 */
+			transactionId: string;
+			/**
+			 * The address of the newly deployed token mint.
+			 */
+			mintAddress: string;
+		};
+	};
+};
+
+export type DeploySolanaTokenResponse =
+	DeploySolanaTokenResponses[keyof DeploySolanaTokenResponses];
 
 export type ChatData = {
 	/**
@@ -6975,8 +8097,8 @@ export type ChatData = {
 				| Array<
 						| {
 								type: "image";
-								image_url?: string;
-								b64?: string;
+								image_url?: string | null;
+								b64?: string | null;
 						  }
 						| {
 								type: "text";
@@ -6994,21 +8116,21 @@ export type ChatData = {
 		 */
 		context?: {
 			/**
-			 * Optional wallet address that will execute transactions
+			 * Optional wallet address to answer questions about
 			 */
-			from?: string;
+			from?: string | null;
 			/**
 			 * Optional chain IDs for context
 			 */
-			chain_ids?: Array<number>;
+			chain_ids?: Array<number | null> | null;
+			/**
+			 * Optional network filter for context
+			 */
+			networks?: "all" | "mainnet" | "testnet";
 			/**
 			 * Optional session ID for conversation continuity. If not provided, a new session will be created
 			 */
-			session_id?: string;
-			/**
-			 * Whether to automatically execute transactions. If not provided, the default is false
-			 */
-			auto_execute_transactions?: boolean;
+			session_id?: string | null;
 		};
 		/**
 		 * Enable server streaming of the AI response
@@ -7038,7 +8160,7 @@ export type ChatResponses = {
 					type: "sign_transaction";
 					data: {
 						chain_id: number;
-						function?: string;
+						function?: string | null;
 						to: string;
 						value: string;
 						data: string;
@@ -7052,12 +8174,12 @@ export type ChatResponses = {
 					data: {
 						transaction: {
 							chain_id: number;
-							function?: string;
+							function?: string | null;
 							to: string;
 							value: string;
 							data: string;
 						};
-						action: string;
+						action: string | null;
 						intent: {
 							origin_chain_id: number;
 							origin_token_address: string;
@@ -7074,7 +8196,7 @@ export type ChatResponses = {
 							amount: string;
 							symbol: string;
 							decimals: number;
-							price: number;
+							price: number | null;
 						};
 						to_token: {
 							address: string;
@@ -7082,7 +8204,7 @@ export type ChatResponses = {
 							amount: string;
 							symbol: string;
 							decimals: number;
-							price: number;
+							price: number | null;
 						};
 					};
 			  }
@@ -7102,41 +8224,6 @@ export type ChatResponses = {
 };
 
 export type ChatResponse = ChatResponses[keyof ChatResponses];
-
-export type McpServerData = {
-	body?: unknown;
-	path?: never;
-	query?: {
-		/**
-		 * Comma-separated list of tools to request. Maps to the operationId of the OpenAPI endpoint. Example: ?tools=getWalletBalance,fetchWithPayment. If not provided, all tools will be returned.
-		 */
-		tools?: string;
-	};
-	url: "/mcp";
-};
-
-export type McpServerResponses = {
-	/**
-	 * MCP response
-	 */
-	200: unknown;
-};
-
-export type LlmsTxtData = {
-	body?: never;
-	path?: never;
-	query?: never;
-	url: "/llms.txt";
-};
-
-export type LlmsTxtResponses = {
-	/**
-	 * LLMs.txt
-	 */
-	200: string;
-};
-
-export type LlmsTxtResponse = LlmsTxtResponses[keyof LlmsTxtResponses];
 
 export type ClientOptions = {
 	baseUrl: "https://api.thirdweb.com" | (string & {});

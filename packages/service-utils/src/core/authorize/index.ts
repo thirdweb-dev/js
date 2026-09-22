@@ -49,8 +49,11 @@ export async function authorize(
 
   // Use a separate cache key per auth method.
   const cacheKey = authData.incomingServiceApiKey
-    ? // incoming service key + clientId case
-      `key-v2:service-key:${authData.incomingServiceApiKeyHash}:${authData.clientId ?? "client_default"}`
+    ? // incoming service key + teamId + clientId case
+      // do not cache service-key requests that carry no tenant selector
+      authData.teamId || authData.clientId
+      ? `key-v2:service-key:${authData.incomingServiceApiKeyHash}:${authData.teamId ?? "team_default"}:${authData.clientId ?? "client_default"}`
+      : null
     : authData.secretKeyHash
       ? // secret key case
         `key-v2:secret-key:${authData.secretKeyHash}`
@@ -80,8 +83,6 @@ export async function authorize(
           if (diff < cacheTtlMs) {
             teamAndProjectResponse = parsed.teamAndProjectResponse;
           }
-        } else {
-          teamAndProjectResponse = parsed;
         }
       }
     } catch {

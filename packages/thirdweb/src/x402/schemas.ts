@@ -23,7 +23,12 @@ const RequestedPaymentPayloadSchema = PaymentPayloadSchema.extend({
 
 export type RequestedPaymentPayload = z.infer<
   typeof RequestedPaymentPayloadSchema
->;
+> & {
+  /** x402 v2: the payment requirement accepted by the client, as sent by the server */
+  accepted?: Record<string, unknown>;
+  /** x402 v2: the resource being paid for */
+  resource?: Record<string, unknown>;
+};
 export type UnsignedPaymentPayload = Omit<
   RequestedPaymentPayload,
   "payload"
@@ -31,15 +36,203 @@ export type UnsignedPaymentPayload = Omit<
   payload: Omit<ExactEvmPayload, "signature"> & { signature: undefined };
 };
 
-export const RequestedPaymentRequirementsSchema =
-  PaymentRequirementsSchema.extend({
-    network: FacilitatorNetworkSchema,
-    scheme: PaymentSchemeSchema,
-  });
+const RequestedPaymentRequirementsSchema = PaymentRequirementsSchema.extend({
+  network: FacilitatorNetworkSchema,
+  scheme: PaymentSchemeSchema,
+});
 
 export type RequestedPaymentRequirements = z.infer<
   typeof RequestedPaymentRequirementsSchema
 >;
+
+const MAX_UINT256 = 2n ** 256n - 1n;
+const ATOMIC_AMOUNT_REGEX = /^\d{1,78}$/;
+
+/**
+ * Returns true if the value is a base-10 integer string that fits in a uint256.
+ * @internal
+ */
+export function isAtomicAmount(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    ATOMIC_AMOUNT_REGEX.test(value) &&
+    BigInt(value) <= MAX_UINT256
+  );
+}
+
+/**
+ * Reads an amount field and returns it in canonical form (no leading zeros).
+ */
+function readAtomicAmount(
+  requirement: Record<string, unknown>,
+  field: "amount" | "maxAmountRequired",
+): string | undefined {
+  const value = requirement[field];
+  if (value === undefined) {
+    return undefined;
+  }
+  if (!isAtomicAmount(value)) {
+    throw new Error(
+      `Invalid payment requirements: ${field} must be an integer string in base units`,
+    );
+  }
+  return BigInt(value).toString();
+}
+
+/**
+ * Payment requirements normalised from a server 402 response.
+ * @internal
+ */
+type NormalizedPaymentRequirements = {
+  /** The normalised requirement */
+  requirements: RequestedPaymentRequirements;
+  /** The requirement exactly as sent by the server */
+  raw: Record<string, unknown>;
+};
+
+/**
+ * Extracts the top-level resource object of a 402 payment required response, if any.
+ */
+function getPaymentRequiredResource(
+  paymentRequired: unknown,
+): Record<string, unknown> | undefined {
+  if (!isRecord(paymentRequired)) {
+    return undefined;
+  }
+  const resource = paymentRequired.resource;
+  if (isRecord(resource) && typeof resource.url === "string") {
+    return resource;
+  }
+  return undefined;
+}
+
+/**
+ * Normalises a payment requirement from a 402 response (x402 v1, v2, or v2 envelopes with v1 requirements).
+ *
+ * @param requirement - The raw payment requirement
+ * @param context - Fallback values for fields that v2 moves out of the requirement
+ * @returns The normalised requirement and the raw requirement
+ * @throws If the amount is missing, malformed, or ambiguous, or the requirement is otherwise invalid
+ * @internal
+ */
+export function normalizePaymentRequirements(
+  requirement: unknown,
+  context: { resourceUrl?: string } = {},
+): NormalizedPaymentRequirements {
+  if (!isRecord(requirement)) {
+    throw new Error("Invalid payment requirements: expected an object");
+  }
+
+  const amount = readAtomicAmount(requirement, "amount");
+  const maxAmountRequired = readAtomicAmount(requirement, "maxAmountRequired");
+  if (
+    amount !== undefined &&
+    maxAmountRequired !== undefined &&
+    amount !== maxAmountRequired
+  ) {
+    throw new Error(
+      `Invalid payment requirements: amount (${amount}) and maxAmountRequired (${maxAmountRequired}) do not match`,
+    );
+  }
+  const normalizedAmount = amount ?? maxAmountRequired;
+  if (normalizedAmount === undefined) {
+    throw new Error(
+      "Invalid payment requirements: missing amount or maxAmountRequired",
+    );
+  }
+
+  const requirements = RequestedPaymentRequirementsSchema.parse({
+    ...requirement,
+    maxAmountRequired: normalizedAmount,
+    resource:
+      typeof requirement.resource === "string"
+        ? requirement.resource
+        : context.resourceUrl,
+    description:
+      typeof requirement.description === "string"
+        ? requirement.description
+        : "",
+    mimeType:
+      typeof requirement.mimeType === "string" ? requirement.mimeType : "",
+  });
+
+  return { requirements, raw: requirement };
+}
+
+/**
+ * Parses a decoded 402 payment required object (PAYMENT-REQUIRED header or JSON body).
+ * Every entry of `accepts` is normalised with {@link normalizePaymentRequirements}.
+ *
+ * @param paymentRequired - The decoded payment required object
+ * @param requestUrl - The URL of the request, used when the response carries no resource URL
+ * @returns The x402 version, error, top-level resource, resolved resource URL and normalised requirements
+ * @throws If the object has no accepts array or any requirement is invalid
+ * @internal
+ */
+export function parsePaymentRequired(
+  paymentRequired: unknown,
+  requestUrl?: string,
+): {
+  x402Version: number | undefined;
+  error: string | undefined;
+  resource: Record<string, unknown> | undefined;
+  resourceUrl: string | undefined;
+  accepts: NormalizedPaymentRequirements[];
+} {
+  const data = isRecord(paymentRequired) ? paymentRequired : {};
+  const error = typeof data.error === "string" ? data.error : undefined;
+  if (!Array.isArray(data.accepts)) {
+    throw new Error(
+      `402 response has no usable x402 payment requirements. ${error ?? ""}`,
+    );
+  }
+  const resource = getPaymentRequiredResource(data);
+  const resourceUrl =
+    typeof resource?.url === "string" ? resource.url : requestUrl;
+  return {
+    x402Version:
+      typeof data.x402Version === "number" ? data.x402Version : undefined,
+    error,
+    resource,
+    resourceUrl,
+    accepts: data.accepts.map((requirement) =>
+      normalizePaymentRequirements(requirement, { resourceUrl }),
+    ),
+  };
+}
+
+/**
+ * Parses the payment requirements of a 402 response for display only, skipping invalid entries.
+ *
+ * @param paymentRequired - The decoded payment required object
+ * @param requestUrl - The URL of the request, used when the response carries no resource URL
+ * @returns The normalised requirements that passed validation
+ * @internal
+ */
+export function parsePaymentRequirementsForDisplay(
+  paymentRequired: unknown,
+  requestUrl?: string,
+): RequestedPaymentRequirements[] {
+  if (!isRecord(paymentRequired) || !Array.isArray(paymentRequired.accepts)) {
+    return [];
+  }
+  const resource = getPaymentRequiredResource(paymentRequired);
+  const resourceUrl =
+    typeof resource?.url === "string" ? resource.url : requestUrl;
+  return paymentRequired.accepts.flatMap((requirement) => {
+    try {
+      return [
+        normalizePaymentRequirements(requirement, { resourceUrl }).requirements,
+      ];
+    } catch {
+      return [];
+    }
+  });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
 const FacilitatorSettleResponseSchema = SettleResponseSchema.extend({
   network: FacilitatorNetworkSchema,

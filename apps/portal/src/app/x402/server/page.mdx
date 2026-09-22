@@ -267,7 +267,7 @@ Protect individual API endpoints with x402 payments:
       const result = await settlePayment({
         resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
         method: req.method,
-        paymentData: req.headers["x-payment"],
+        paymentData: req.headers["payment-signature"] ?? req.headers["x-payment"],
         payTo: "0x1234567890123456789012345678901234567890",
         network: arbitrumSepolia,
         price: "$0.05",
@@ -320,7 +320,7 @@ Protect individual API endpoints with x402 payments:
       const result = await settlePayment({
         resourceUrl: new URL(c.req.url).toString(),
         method: c.req.method,
-        paymentData: c.req.header("x-payment"),
+        paymentData: c.req.header("payment-signature") ?? c.req.header("x-payment"),
         payTo: "0x1234567890123456789012345678901234567890",
         network: arbitrumSepolia,
         price: "$0.05",
@@ -445,7 +445,7 @@ Protect multiple endpoints with a shared middleware:
       const result = await settlePayment({
         resourceUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
         method: req.method,
-        paymentData: req.headers["x-payment"],
+        paymentData: req.headers["payment-signature"] ?? req.headers["x-payment"],
         payTo: "0x1234567890123456789012345678901234567890",
         network: arbitrumSepolia,
         price: "$0.05",
@@ -500,7 +500,7 @@ Protect multiple endpoints with a shared middleware:
       const result = await settlePayment({
         resourceUrl: new URL(c.req.url).toString(),
         method: c.req.method,
-        paymentData: c.req.header("x-payment"),
+        paymentData: c.req.header("payment-signature") ?? c.req.header("x-payment"),
         payTo: "0x1234567890123456789012345678901234567890",
         network: arbitrumSepolia,
         price: "$0.05",

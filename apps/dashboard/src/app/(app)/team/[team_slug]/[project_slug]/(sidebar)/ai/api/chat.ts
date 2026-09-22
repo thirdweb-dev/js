@@ -18,25 +18,22 @@ export async function promptNebula(params: {
   project: Project;
 }) {
   const body: Record<string, string | boolean | object> = {
+    context: {
+      chain_ids: params.context?.chainIds || [],
+      from: params.context?.walletAddress,
+      networks: params.context?.networks,
+      session_id: params.sessionId,
+    },
     messages: [params.message],
-    session_id: params.sessionId,
     stream: true,
   };
-
-  if (params.context) {
-    body.context = {
-      chain_ids: params.context.chainIds || [],
-      networks: params.context.networks,
-      wallet_address: params.context.walletAddress,
-    };
-  }
 
   try {
     const events = await stream(`${NEXT_PUBLIC_THIRDWEB_AI_HOST}/chat`, {
       body: JSON.stringify(body),
       headers: {
         Authorization: `Bearer ${params.authToken}`,
-        "x-team-id": params.project.teamId,
+        "x-thirdweb-team-id": params.project.teamId,
         "x-client-id": params.project.publishableKey,
         "Content-Type": "application/json",
       },

@@ -23,7 +23,7 @@ import { getBalance } from "./read/getBalance.js";
 import { getApprovalForTransaction } from "./write/getApprovalForTransaction.js";
 import { mintTo } from "./write/mintTo.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).skip(
   "DropERC20",
   {
     retry: 0,

@@ -1,5 +1,34 @@
 # thirdweb
 
+## 5.121.5
+
+### Patch Changes
+
+- [#8991](https://github.com/thirdweb-dev/js/pull/8991) [`f7148d2`](https://github.com/thirdweb-dev/js/commit/f7148d29f02f049741cc61a3e7b99a6f58cfdeba) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Show the WalletConnect QR code on desktop browsers with narrow viewports
+
+- [#8969](https://github.com/thirdweb-dev/js/pull/8969) [`5bb1647`](https://github.com/thirdweb-dev/js/commit/5bb1647931e71c5f25f8d7efa924c9a1327c6e13) Thanks [@bassem-abdelazim-trilitech](https://github.com/bassem-abdelazim-trilitech)! - Fix Rabby mobile connections and keep the WalletConnect QR overlay interactive and unstacked
+
+## 5.121.4
+
+### Patch Changes
+
+- [#8944](https://github.com/thirdweb-dev/js/pull/8944) [`d114bc6`](https://github.com/thirdweb-dev/js/commit/d114bc68ebe98ddba651afeb8064277532e886f9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Update toml dependency
+
+- Updated dependencies [[`d6d1797`](https://github.com/thirdweb-dev/js/commit/d6d1797ea8c1d492afb1b7068f38f6744595caf5)]:
+  - @thirdweb-dev/insight@1.1.2
+
+## 5.121.3
+
+### Patch Changes
+
+- [#8941](https://github.com/thirdweb-dev/js/pull/8941) [`a088faf`](https://github.com/thirdweb-dev/js/commit/a088faf4b63776a570192f12dd6e7fd026a8e9d4) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Accept x402 v2 payment requirements that specify `amount`, and enforce `maxValue: 0n` as a cap.
+
+## 5.121.2
+
+### Patch Changes
+
+- [#8938](https://github.com/thirdweb-dev/js/pull/8938) [`a3488dd`](https://github.com/thirdweb-dev/js/commit/a3488dd200f562ae08545764243d736fcbeb509c) Thanks [@devtechedge](https://github.com/devtechedge)! - Fix CheckoutWidget treating token lookup failures as unsupported tokens
+
 ## 5.121.1
 
 ### Patch Changes

@@ -313,7 +313,7 @@ async function transformNFTModel(
           supply: supply,
           tokenAddress: contract?.address ?? "",
           tokenId: BigInt(token_id),
-          tokenUri: replaceIPFSGateway(metadata_url) ?? "",
+          tokenUri: replaceIPFSGateway(metadata_url ?? undefined) ?? "",
           type: "ERC1155",
         });
       } else {
@@ -322,7 +322,7 @@ async function transformNFTModel(
           owner: owners?.[0],
           tokenAddress: contract?.address ?? "",
           tokenId: BigInt(token_id),
-          tokenUri: replaceIPFSGateway(metadata_url) ?? "",
+          tokenUri: replaceIPFSGateway(metadata_url ?? undefined) ?? "",
           type: "ERC721",
         });
       }

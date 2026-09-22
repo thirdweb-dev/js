@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   extractEvmChainId,
   networkToCaip2ChainId,
+  parsePaymentRequirementsForDisplay,
   type RequestedPaymentRequirements,
 } from "../../../../x402/schemas.js";
 import type { PaymentRequiredResult } from "../../../../x402/types.js";
@@ -25,6 +26,7 @@ import { Text } from "../components/text.js";
 type PaymentErrorModalProps = {
   client: ThirdwebClient;
   errorData: PaymentRequiredResult["responseBody"];
+  requestUrl?: string;
   onRetry: () => void;
   onCancel: () => void;
   theme: Theme | "light" | "dark";
@@ -54,6 +56,7 @@ export function PaymentErrorModal(props: PaymentErrorModalProps) {
   const {
     client,
     errorData,
+    requestUrl,
     onRetry,
     onCancel,
     theme,
@@ -66,12 +69,14 @@ export function PaymentErrorModal(props: PaymentErrorModalProps) {
 
   // Extract chain and token info from errorData for BuyWidget
   const getBuyWidgetConfig = () => {
-    if (!errorData.accepts || errorData.accepts.length === 0) {
+    // Get payment requirements from errorData
+    const parsedPaymentRequirements = parsePaymentRequirementsForDisplay(
+      errorData,
+      requestUrl,
+    );
+    if (parsedPaymentRequirements.length === 0) {
       return null;
     }
-
-    // Get payment requirements from errorData
-    const parsedPaymentRequirements = errorData.accepts;
 
     // Get the current chain from wallet
     const currentChain = wallet?.getChain();

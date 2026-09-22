@@ -353,7 +353,7 @@ const typescriptRedirects = {
   "/typescript/extensions": "/typescript/v4/extensions",
   "/typescript/getting-started": "/typescript/v4/getting-started",
   // extensions path*
-  "/typescript/sdk:path*": extensionsTable,
+  "/typescript/sdk:path([^/]*)": extensionsTable,
   "/typescript/sdk.contractdeployer": "/typescript/v4/deploy",
   "/typescript/sdk.contractverifier":
     "/typescript/v4/utilities#contract-verification",

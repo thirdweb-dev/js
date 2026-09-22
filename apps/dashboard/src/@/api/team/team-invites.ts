@@ -44,3 +44,38 @@ export async function getTeamInvites(
 
   return json.result;
 }
+
+export async function getTeamInvite(
+  teamId: string,
+  inviteId: string,
+): Promise<TeamInvite | undefined> {
+  const authToken = await getAuthToken();
+
+  if (!authToken) {
+    throw new Error("Unauthorized");
+  }
+
+  const res = await fetch(
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamId}/invites/${inviteId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+
+  if (res.status === 404) {
+    return undefined;
+  }
+
+  if (!res.ok) {
+    const errorMessage = await res.text();
+    throw new Error(errorMessage);
+  }
+
+  const json = (await res.json()) as {
+    result: TeamInvite;
+  };
+
+  return json.result;
+}

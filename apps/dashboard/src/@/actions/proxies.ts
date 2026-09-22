@@ -10,7 +10,7 @@ import { ANALYTICS_SERVICE_URL } from "@/constants/server-envs";
 type ProxyActionParams = {
   pathname: string;
   searchParams?: Record<string, string | undefined>;
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: string;
   headers?: Record<string, string>;
   parseAsText?: boolean;

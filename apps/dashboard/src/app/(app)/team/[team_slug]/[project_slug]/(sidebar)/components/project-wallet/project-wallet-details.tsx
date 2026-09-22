@@ -82,7 +82,7 @@ import { getSDKTheme } from "@/utils/sdk-component-theme";
 import { updateDefaultProjectWallet } from "../../transactions/lib/vault.client";
 
 type GetProjectServerWallets = (params: {
-  managementAccessToken: string;
+  teamId: string;
   projectId: string;
 }) => Promise<ProjectWalletSummary[]>;
 
@@ -208,8 +208,8 @@ export function ProjectWalletDetailsSection(props: ProjectWalletControlsProps) {
       }
 
       return props.getProjectServerWallets({
-        managementAccessToken,
         projectId: project.id,
+        teamId: project.teamId,
       });
     },
     queryKey: ["project", project.id, "server-wallets", managementAccessToken],

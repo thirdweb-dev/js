@@ -94,11 +94,13 @@ const client = createThirdwebClient({
 const thirdwebFacilitator = facilitator({
   client,
   serverWalletAddress: "0xYourServerWalletAddress",
-  waitUtil: "${props.options.waitUntil}",
+  waitUntil: "${props.options.waitUntil}",
 });
 
 export async function POST(request: Request) {
-  const paymentData = request.headers.get("x-payment");
+  const paymentData =
+    request.headers.get("PAYMENT-SIGNATURE") ||
+    request.headers.get("X-PAYMENT");
 
   // verify and process the payment
   const result = await settlePayment({

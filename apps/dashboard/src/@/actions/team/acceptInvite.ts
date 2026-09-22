@@ -17,7 +17,7 @@ export async function acceptInvite(options: {
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}/invites/${options.inviteId}/accept`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(options.teamId)}/invites/${encodeURIComponent(options.inviteId)}/accept`,
     {
       body: JSON.stringify({}),
       headers: {

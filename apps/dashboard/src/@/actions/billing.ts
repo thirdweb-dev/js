@@ -18,7 +18,7 @@ export async function reSubscribePlan(options: {
 
   const res = await fetch(
     new URL(
-      `/v1/teams/${options.teamId}/checkout/resubscribe-plan`,
+      `/v1/teams/${encodeURIComponent(options.teamId)}/checkout/resubscribe-plan`,
       NEXT_PUBLIC_THIRDWEB_API_HOST,
     ),
     {
@@ -59,7 +59,7 @@ export async function getChainInfraCheckoutURL(options: {
 
   const res = await fetch(
     new URL(
-      `/v1/teams/${options.teamSlug}/checkout/create-link`,
+      `/v1/teams/${encodeURIComponent(options.teamSlug)}/checkout/create-link`,
       NEXT_PUBLIC_THIRDWEB_API_HOST,
     ),
     {

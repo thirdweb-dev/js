@@ -1,5 +1,11 @@
 # @thirdweb-dev/insight
 
+## 1.1.2
+
+### Patch Changes
+
+- [#8949](https://github.com/thirdweb-dev/js/pull/8949) [`d6d1797`](https://github.com/thirdweb-dev/js/commit/d6d1797ea8c1d492afb1b7068f38f6744595caf5) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Update to latest API
+
 ## 1.1.1
 
 ### Patch Changes

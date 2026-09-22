@@ -115,7 +115,6 @@ The SDK uses modular exports from `src/exports/` including:
 - **thirdweb** - Main SDK (TypeScript, React, React Native)
 - **engine** - thirdweb Engine API client
 - **insight** - Analytics and data APIs
-- **nebula** - Account abstraction client
 - **service-utils** - Shared utilities across services
 
 ## Development Practices

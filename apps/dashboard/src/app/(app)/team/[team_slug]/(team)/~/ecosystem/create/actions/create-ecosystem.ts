@@ -32,7 +32,7 @@ export async function createEcosystem(options: {
   });
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${teamSlug}/checkout/create-link`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(teamSlug)}/checkout/create-link`,
     {
       body: JSON.stringify({
         baseUrl: BASE_URL,

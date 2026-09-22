@@ -13,7 +13,7 @@ export async function deleteTeam(options: { teamId: string }) {
   }
 
   const res = await fetch(
-    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${options.teamId}`,
+    `${NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/teams/${encodeURIComponent(options.teamId)}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

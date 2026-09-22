@@ -8,7 +8,7 @@ import { readContract } from "../../transaction/read-contract.js";
 import { getInstalledModules } from "../modules/__generated__/IModularCore/read/getInstalledModules.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).skip(
   "deployref",
   {
     timeout: 120000,

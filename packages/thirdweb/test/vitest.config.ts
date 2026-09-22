@@ -10,10 +10,10 @@ export default defineConfig({
   test: {
     alias: {
       "~test": join(__dirname, "./src"),
+      src: join(__dirname, "../src"),
     },
     benchmark: {},
     coverage: {
-      all: false,
       provider: "v8",
       reporter: process.env.CI ? ["lcov"] : ["text", "json", "html"],
       exclude: [
@@ -29,9 +29,7 @@ export default defineConfig({
         // exports do not count
         "src/exports/**",
       ],
-      include: ["src/**"],
     },
-    environmentMatchGlobs: [["src/**/*.test.tsx", "happy-dom"]],
     environment: "node",
     // zkSync is no longer officially supported; its tests hit external RPCs and
     // flake in CI, so they are excluded from the suite.
@@ -43,7 +41,6 @@ export default defineConfig({
     retry: 3,
     maxConcurrency: 1,
     maxWorkers: 4,
-    minWorkers: 2,
     bail: 1,
     // clear any mocks between any tests
     clearMocks: true,

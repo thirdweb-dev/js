@@ -68,7 +68,7 @@ const fetchAccountList = ({
       return {
         users: response.data.result.wallets.map(transformToWalletUser),
         hasMore: response.data.result.pagination.hasMore ?? false,
-        totalCount: response.data.result.pagination.totalCount,
+        totalCount: response.data.result.pagination.totalCount ?? undefined,
       };
     } catch (error) {
       console.error("Failed to fetch wallets:", error);
