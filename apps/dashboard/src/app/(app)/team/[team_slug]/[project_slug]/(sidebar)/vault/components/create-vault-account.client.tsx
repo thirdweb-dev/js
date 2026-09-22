@@ -55,6 +55,7 @@ export function CreateVaultAccountButton(props: { project: Project }) {
     onError: (error) => {
       setErrorMessage(error.message);
       setModalOpen(false);
+      setSecretKeyModalOpen(true);
     },
   });
 
