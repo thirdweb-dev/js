@@ -9,6 +9,7 @@ import type {
   InjectedSupportedWalletIds,
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
+import { BASE_ACCOUNT, COINBASE } from "../../../../../wallets/constants.js";
 import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
@@ -274,8 +275,8 @@ export function AnyWalletConnectUI(props: {
     );
   }
 
-  // any other known wallet
-  if (props.wallet.id) {
+  // wallets with their own SDK
+  if (props.wallet.id === COINBASE || props.wallet.id === BASE_ACCOUNT) {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <CoinbaseSDKWalletConnectUI
@@ -292,6 +293,27 @@ export function AnyWalletConnectUI(props: {
           walletInfo={walletInfo.data}
         />
       </Suspense>
+    );
+  }
+
+  // any other known wallet connects over WalletConnect, which renders its QR in the modal
+  if (props.wallet.id) {
+    return (
+      <WalletConnectConnection
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        done={props.done}
+        locale={locale}
+        onBack={props.onBack}
+        onGetStarted={() => {
+          setScreen("get-started");
+        }}
+        size={props.size}
+        wallet={props.wallet as Wallet<WCSupportedWalletIds>}
+        walletConnect={props.walletConnect}
+        walletInfo={walletInfo.data}
+      />
     );
   }
 
