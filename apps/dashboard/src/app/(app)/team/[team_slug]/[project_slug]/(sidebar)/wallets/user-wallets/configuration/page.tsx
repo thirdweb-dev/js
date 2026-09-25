@@ -7,6 +7,7 @@ import { getValidTeamPlan } from "@/utils/getValidTeamPlan";
 import { loginRedirect } from "@/utils/redirects";
 import { getSMSCountryTiers } from "./api/sms";
 import { InAppWalletSettingsPage } from "./components";
+import { RevokeSessionsCard } from "./components/revoke-sessions-card";
 
 export default async function Page(props: {
   params: Promise<{ team_slug: string; project_slug: string }>;
@@ -50,6 +51,14 @@ export default async function Page(props: {
         teamPlan={getValidTeamPlan(team)}
         teamSlug={team_slug}
       />
+      {project.services.some(
+        (service) => service.name === "embeddedWallets",
+      ) && (
+        <RevokeSessionsCard
+          clientId={project.publishableKey}
+          teamId={team.id}
+        />
+      )}
     </div>
   );
 }
