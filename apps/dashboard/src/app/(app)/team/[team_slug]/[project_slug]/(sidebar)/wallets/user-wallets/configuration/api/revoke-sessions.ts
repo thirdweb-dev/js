@@ -38,26 +38,31 @@ export async function revokeUserWalletSessions(params: {
     ? "http"
     : "https";
 
-  const res = await fetch(
-    `${protocol}://${THIRDWEB_INAPP_WALLET_DOMAIN}/api/v1/users/revoke-sessions`,
-    {
-      body: JSON.stringify({
-        clientId: params.clientId,
-        secretKey,
-        ...(target.type === "allUsers"
-          ? { allUsers: true }
-          : { [target.type]: target.value.trim() }),
-      }),
-      cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "x-client-id": params.clientId,
-        "x-thirdweb-team-id": params.teamId,
+  let res: Response;
+  try {
+    res = await fetch(
+      `${protocol}://${THIRDWEB_INAPP_WALLET_DOMAIN}/api/v1/users/revoke-sessions`,
+      {
+        body: JSON.stringify({
+          clientId: params.clientId,
+          secretKey,
+          ...(target.type === "allUsers"
+            ? { allUsers: true }
+            : { [target.type]: target.value.trim() }),
+        }),
+        cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "x-client-id": params.clientId,
+          "x-thirdweb-team-id": params.teamId,
+        },
+        method: "POST",
       },
-      method: "POST",
-    },
-  );
+    );
+  } catch {
+    return { error: "Failed to reach the wallet service", success: false };
+  }
 
   const json = (await res.json().catch(() => null)) as {
     message?: string;
