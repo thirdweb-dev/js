@@ -21,6 +21,16 @@ import {
 
 type IdentifierType = "email" | "phone" | "walletAddress" | "userId";
 
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(value),
+  );
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+}
+
 const identifierOptions: {
   value: IdentifierType;
   label: string;
@@ -56,7 +66,7 @@ export function RevokeSessionsCard(props: {
           : { type: identifierType, value: identifier };
       const result = await revokeUserWalletSessions({
         clientId: props.clientId,
-        secretKey,
+        secretKeyHash: await sha256Hex(secretKey.trim()),
         target,
         teamId: props.teamId,
       });
