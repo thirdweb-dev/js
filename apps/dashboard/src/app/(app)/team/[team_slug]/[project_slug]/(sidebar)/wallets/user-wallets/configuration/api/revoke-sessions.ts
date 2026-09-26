@@ -26,7 +26,11 @@ function inAppWalletHost() {
   if (process.env.NEXT_PUBLIC_IN_APP_WALLET_URL) {
     return THIRDWEB_INAPP_WALLET_DOMAIN;
   }
-  return THIRDWEB_API_HOST === "https://api.thirdweb.com"
+  let apiHost = "";
+  try {
+    apiHost = new URL(THIRDWEB_API_HOST).host;
+  } catch {}
+  return apiHost === "api.thirdweb.com"
     ? "embedded-wallet.thirdweb.com"
     : THIRDWEB_INAPP_WALLET_DOMAIN;
 }
