@@ -106,7 +106,7 @@ export default function DeployInfrastructurePage() {
                     Share your chain details via{" "}
                     <a
                       className="underline underline-offset-4"
-                      href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
+                      href="/chainlist/request"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
