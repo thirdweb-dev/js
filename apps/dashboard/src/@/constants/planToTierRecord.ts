@@ -10,3 +10,7 @@ export const planToTierRecordForGating: Record<Team["billingPlan"], number> = {
   scale: 6,
   starter: 1,
 };
+
+export function getUpgradePlan(plan: Team["billingPlan"]): Team["billingPlan"] {
+  return plan === "starter" ? "growth" : plan;
+}

@@ -52,7 +52,7 @@ export function StorageErrorPlanUpsell(props: {
     reportUpsellShown({
       campaign: props.trackingCampaign,
       content: "storage-limit",
-      sku: "plan:starter",
+      sku: "plan:growth",
     });
   }, [props.trackingCampaign]);
 
@@ -80,12 +80,12 @@ export function StorageErrorPlanUpsell(props: {
           <div className="flex gap-2 mt-2.5">
             <Button asChild className="gap-2" size="sm">
               <Link
-                href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=starter`}
+                href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=growth`}
                 onClick={() => {
                   reportUpsellClicked({
                     campaign: props.trackingCampaign,
                     content: "storage-limit",
-                    sku: "plan:starter",
+                    sku: "plan:growth",
                   });
                 }}
                 target="_blank"

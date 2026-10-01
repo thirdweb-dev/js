@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getUpgradePlan } from "@/constants/planToTierRecord";
 import { cn } from "@/lib/utils";
 
 interface UpsellWrapperProps {
@@ -88,6 +89,7 @@ export function UpsellContent(props: {
     status: "available" | "soon";
   }[];
 }) {
+  const upgradePlan = getUpgradePlan(props.requiredPlan);
   return (
     <Card className="w-full max-w-xl border shadow-2xl">
       <CardHeader className="space-y-4 text-center">
@@ -97,7 +99,7 @@ export function UpsellContent(props: {
 
         <div className="space-y-4">
           <TeamPlanBadge
-            plan={props.requiredPlan}
+            plan={upgradePlan}
             postfix=" Feature"
             teamSlug={props.teamSlug}
             isLegacyPlan={props.isLegacyPlan}
@@ -140,11 +142,10 @@ export function UpsellContent(props: {
         <div className="flex flex-col gap-3 pt-4 sm:flex-row">
           <Button asChild className="flex-1 py-3 font-semibold" size="lg">
             <Link
-              href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${props.requiredPlan}`}
+              href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${upgradePlan}`}
             >
               <CrownIcon className="mr-2 h-4 w-4" />
-              Upgrade to{" "}
-              <span className="ml-1 capitalize">{props.requiredPlan}</span>
+              Upgrade to <span className="ml-1 capitalize">{upgradePlan}</span>
             </Link>
           </Button>
           <Button asChild className="md:flex-1" size="lg" variant="outline">
