@@ -7,7 +7,7 @@ export function AddYourChainButton(props: { className?: string }) {
     <Button asChild className={props.className} variant="default">
       <Link
         className="flex items-center gap-2"
-        href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
+        href="/chainlist/request"
         rel="noopener noreferrer"
         target="_blank"
       >
