@@ -4,7 +4,7 @@ import "server-only";
 import { getAuthToken } from "@/api/auth-token";
 import { NEXT_PUBLIC_THIRDWEB_API_HOST } from "@/constants/public-envs";
 
-export type ChainIntegrationRequest = {
+type ChainIntegrationRequest = {
   companyName: string;
   telegram: string;
   email: string;
