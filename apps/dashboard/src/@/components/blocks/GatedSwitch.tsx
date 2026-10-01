@@ -4,7 +4,10 @@ import type { Team } from "@/api/team/get-team";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { planToTierRecordForGating } from "@/constants/planToTierRecord";
+import {
+  getUpgradePlan,
+  planToTierRecordForGating,
+} from "@/constants/planToTierRecord";
 import { cn } from "@/lib/utils";
 import { getTeamPlanBadgeLabel, TeamPlanBadge } from "./TeamPlanBadge";
 
@@ -25,6 +28,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
   const isUpgradeRequired =
     planToTierRecordForGating[props.currentPlan] <
     planToTierRecordForGating[props.requiredPlan];
+  const upgradePlan = getUpgradePlan(props.requiredPlan);
 
   return (
     <ToolTipLabel
@@ -34,7 +38,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
           <div className="w-full min-w-[280px]">
             <h3 className="font-medium text-base">
               <span className="capitalize">
-                {getTeamPlanBadgeLabel(props.requiredPlan, false)}+
+                {getTeamPlanBadgeLabel(upgradePlan, false)}+
               </span>{" "}
               plan required
             </h3>
@@ -45,12 +49,11 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
             <div className="flex w-full flex-col gap-2">
               <Button asChild className="justify-start gap-2" size="sm">
                 <Link
-                  href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${props.requiredPlan}`}
+                  href={`/team/${props.teamSlug}/~/billing?showPlans=true&highlight=${upgradePlan}`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  Upgrade to {getTeamPlanBadgeLabel(props.requiredPlan, false)}{" "}
-                  plan
+                  Upgrade to {getTeamPlanBadgeLabel(upgradePlan, false)} plan
                   <ExternalLinkIcon className="size-4" />
                 </Link>
               </Button>
@@ -62,7 +65,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = (
       <div className="inline-flex items-center gap-2">
         {isUpgradeRequired && (
           <TeamPlanBadge
-            plan={props.requiredPlan}
+            plan={upgradePlan}
             isLegacyPlan={props.isLegacyPlan}
             postfix="+"
             teamSlug={props.teamSlug}
