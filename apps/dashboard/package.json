@@ -81,7 +81,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.0.6",
     "@chromatic-com/storybook": "4.0.1",
-    "@next/bundle-analyzer": "15.5.25",
+    "@next/bundle-analyzer": "16.3.8",
     "@next/eslint-plugin-next": "15.5.25",
     "@storybook/addon-docs": "9.1.20",
     "@storybook/addon-links": "9.1.20",
