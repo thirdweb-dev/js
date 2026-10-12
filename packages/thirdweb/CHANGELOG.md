@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.122.0
+
+### Minor Changes
+
+- [#9012](https://github.com/thirdweb-dev/js/pull/9012) [`db7615e`](https://github.com/thirdweb-dev/js/commit/db7615ea3bcc1af1b41a5457a4eabe4f32df827f) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Add optional `webhookOptions` to server wallet `enqueueTransaction` and `enqueueBatchTransaction`
+
 ## 5.121.6
 
 ### Patch Changes
