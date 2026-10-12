@@ -3,6 +3,7 @@ import {
   type SendTransactionData,
   type SignMessageData,
   type SpecificExecutionOptions,
+  type WebhookOptions,
   sendTransaction,
   signMessage,
   signTypedData,
@@ -57,9 +58,11 @@ export type ServerWallet = Account & {
   enqueueTransaction: (args: {
     transaction: PreparedTransaction;
     simulate?: boolean;
+    webhookOptions?: Array<WebhookOptions>;
   }) => Promise<{ transactionId: string }>;
   enqueueBatchTransaction: (args: {
     transactions: PreparedTransaction[];
+    webhookOptions?: Array<WebhookOptions>;
   }) => Promise<{ transactionId: string }>;
 };
 
@@ -242,7 +245,10 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     }
   };
 
-  const enqueueTx = async (transaction: SendTransactionOption[]) => {
+  const enqueueTx = async (
+    transaction: SendTransactionOption[],
+    webhookOptions?: Array<WebhookOptions>,
+  ) => {
     if (transaction.length === 0) {
       throw new Error("No transactions to enqueue");
     }
@@ -267,6 +273,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
         gasLimit: t.gas ? Number(t.gas) : undefined,
         value: t.value?.toString(),
       })),
+      ...(webhookOptions ? { webhookOptions } : {}),
     };
 
     const result = await sendTransaction({
@@ -302,6 +309,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     address: getAddress(),
     enqueueBatchTransaction: async (args: {
       transactions: PreparedTransaction[];
+      webhookOptions?: Array<WebhookOptions>;
     }) => {
       const serializedTransactions: SendTransactionOption[] = [];
       for (const transaction of args.transactions) {
@@ -317,7 +325,10 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           value: value ?? undefined,
         });
       }
-      const transactionIds = await enqueueTx(serializedTransactions);
+      const transactionIds = await enqueueTx(
+        serializedTransactions,
+        args.webhookOptions,
+      );
       const transactionId = transactionIds[0];
       if (!transactionId) {
         throw new Error("No transactionId returned from engine");
@@ -327,6 +338,7 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
     enqueueTransaction: async (args: {
       transaction: PreparedTransaction;
       simulate?: boolean;
+      webhookOptions?: Array<WebhookOptions>;
     }) => {
       let serializedTransaction: SendTransactionOption;
       if (args.simulate) {
@@ -351,7 +363,10 @@ export function serverWallet(options: ServerWalletOptions): ServerWallet {
           value: value ?? undefined,
         };
       }
-      const transactionIds = await enqueueTx([serializedTransaction]);
+      const transactionIds = await enqueueTx(
+        [serializedTransaction],
+        args.webhookOptions,
+      );
       const transactionId = transactionIds[0];
       if (!transactionId) {
         throw new Error("No transactionId returned from engine");
