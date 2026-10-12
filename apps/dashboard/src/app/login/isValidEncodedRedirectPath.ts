@@ -5,7 +5,7 @@ export function isValidEncodedRedirectPath(encodedPath: string): boolean {
       return false;
     }
     const url = new URL(decodedPath, "https://thirdweb.com");
-    return url.hostname === "thirdweb.com";
+    return url.hostname === "thirdweb.com" && !url.pathname.startsWith("//");
   } catch {
     // If decoding fails, return false
     return false;
