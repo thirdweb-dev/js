@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalEnv": ["CI", "TW_SECRET_KEY"],
+  "globalEnv": ["CI", "TW_SECRET_KEY", "TW_CLIENT_ID"],
   "tasks": {
     "bench": {
       "cache": false,
