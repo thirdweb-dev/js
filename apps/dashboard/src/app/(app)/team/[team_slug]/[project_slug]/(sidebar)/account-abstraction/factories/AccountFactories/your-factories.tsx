@@ -31,7 +31,10 @@ export function YourFactoriesSection(props: {
         </div>
 
         <Button asChild size="sm" variant="default">
-          <Link className="gap-2 text-sm" href="/explore/smart-wallet">
+          <Link
+            className="gap-2 text-sm"
+            href="/thirdweb.eth/AccountFactory_0_7"
+          >
             <PlusIcon className="size-3" />
             Deploy Account Factory
           </Link>
