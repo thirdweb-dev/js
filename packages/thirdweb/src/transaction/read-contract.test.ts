@@ -27,7 +27,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       });
     } catch (e) {
       expect((e as Error).message).eq(
-        "execution reverted: revert: ERC721Metadata: URI query for nonexistent token",
+        "execution reverted: ERC721Metadata: URI query for nonexistent token",
       );
     }
   });
