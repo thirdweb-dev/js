@@ -26,6 +26,8 @@ export default async function globalSetup() {
       forkBlockNumber: FORK_BLOCK_NUMBER,
       noMining: true,
       startTimeout: 60000,
+      // biome-ignore lint/suspicious/noExplicitAny: Let me do it
+      hardfork: "prague" as any,
     },
   });
 
@@ -42,6 +44,8 @@ export default async function globalSetup() {
       // ey, i'm mining here!
       noMining: false,
       startTimeout: 60000,
+      // biome-ignore lint/suspicious/noExplicitAny: Let me do it
+      hardfork: "prague" as any,
     },
   });
 
