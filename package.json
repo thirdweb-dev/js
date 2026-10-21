@@ -132,7 +132,7 @@
       "source-map-js@^1.0.0": "1.2.2",
       "sharp@^0.35.0": "0.35.5",
       "image-size@^2.0.0": "2.0.3",
-      "@ai-sdk/provider-utils@^3.0.0": "3.0.28",
+      "@ai-sdk/provider-utils@^3.0.0": "3.0.42",
       "ai@^5.0.0": "5.0.279"
     }
   },
