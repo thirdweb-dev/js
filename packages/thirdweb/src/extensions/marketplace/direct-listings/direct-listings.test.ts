@@ -7,6 +7,7 @@ import {
   TEST_ACCOUNT_B,
   TEST_ACCOUNT_C,
 } from "../../../../test/src/test-wallets.js";
+import { mineBlock } from "../../../../test/src/utils.js";
 import {
   getContract,
   type ThirdwebContract,
@@ -169,6 +170,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
     expect(listingEvent.args.listingCreator).toBe(TEST_ACCOUNT_B.address);
     expect(listingEvent.args.assetContract).toBe(erc721Contract.address);
 
+    // the listing starts 1s after the latest block, so advance time to make it valid
+    await mineBlock(chain, 1);
+
     const [
       listingsAfter,
       validListings,
@@ -306,6 +310,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("Marketplace Direct Listings", () => {
         tokenId: 0n,
       }),
     });
+
+    // the listing starts 1s after the latest block, so advance time to make it valid
+    await mineBlock(chain, 1);
 
     const [
       listings1155After,
