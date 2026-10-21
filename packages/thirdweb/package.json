@@ -91,12 +91,12 @@
     "rimraf": "6.0.1",
     "sharp": "^0.35.4",
     "size-limit": "11.2.0",
-    "storybook": "9.1.20",
+    "storybook": "9.1.21",
     "tsup": "^8.5.0",
     "typedoc": "0.27.9",
     "typedoc-better-json": "0.9.4",
     "typescript": "5.8.3",
-    "vite": "7.3.6",
+    "vite": "7.3.7",
     "vitest": "4.1.11"
   },
   "engines": {
