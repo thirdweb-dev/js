@@ -5,6 +5,7 @@ import { ANVIL_PKEY_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { sendTransaction } from "../exports/thirdweb.js";
+import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import { toUnits } from "../utils/units.js";
 import { privateKeyToAccount } from "./private-key.js";
@@ -95,12 +96,12 @@ test("send transaction", async () => {
     value: toUnits("1", 18),
   });
 
-  expect(
-    await sendTransaction({
-      account,
-      transaction: tx,
-    }),
-  ).toBeDefined();
+  const result = await sendTransaction({
+    account,
+    transaction: tx,
+  });
+  expect(result).toBeDefined();
+  await waitForReceipt(result);
 
   const endingBalance = await getWalletBalance({
     address: account.address,

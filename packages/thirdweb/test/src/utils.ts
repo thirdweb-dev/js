@@ -4,14 +4,19 @@ import { wait } from "../../src/utils/promise/wait.js";
 import { FORKED_ETHEREUM_CHAIN } from "./chains.js";
 import { TEST_CLIENT } from "./test-clients.js";
 
-export async function mineBlock(chain = FORKED_ETHEREUM_CHAIN) {
+export async function mineBlock(
+  chain = FORKED_ETHEREUM_CHAIN,
+  intervalSeconds?: number,
+) {
   const rpcClient = getRpcClient({
     chain,
     client: TEST_CLIENT,
   });
   const res = await rpcClient({
     method: "anvil_mine" as any,
-    params: ["0x1"],
+    params: intervalSeconds
+      ? ["0x1", `0x${intervalSeconds.toString(16)}`]
+      : ["0x1"],
   });
   await wait(500); // wait for block to be fully mined
   return res;
