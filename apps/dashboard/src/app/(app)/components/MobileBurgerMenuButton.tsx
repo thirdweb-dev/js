@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import { useLayoutEffect, useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { submitProductFeedback } from "@/actions/product-feedback";
 import { reportProductFeedback } from "@/analytics/report";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/NavLink";
@@ -43,6 +44,7 @@ export function MobileBurgerMenuButton(
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showFeedbackSection, setShowFeedbackSection] = useState(false);
   const [modalFeedback, setModalFeedback] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { setTheme, theme } = useTheme();
   const ensQuery = useEns({
     addressOrEnsName:
@@ -51,7 +53,7 @@ export function MobileBurgerMenuButton(
   });
   // const [isCMDSearchModalOpen, setIsCMDSearchModalOpen] = useState(false);
 
-  const handleModalSubmit = (e?: React.FormEvent) => {
+  const handleModalSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
     // Report feedback to PostHog
@@ -59,6 +61,18 @@ export function MobileBurgerMenuButton(
       feedback: modalFeedback,
       source: "mobile",
     });
+
+    setIsSubmitting(true);
+    const result = await submitProductFeedback({
+      feedback: modalFeedback,
+      source: "mobile",
+    });
+    setIsSubmitting(false);
+
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
 
     // Show success notification
     toast.success("Feedback submitted successfully!", {
@@ -281,8 +295,10 @@ export function MobileBurgerMenuButton(
                           </button>
                           <button
                             type="submit"
-                            disabled={!modalFeedback.trim()}
-                            aria-disabled={!modalFeedback.trim()}
+                            disabled={!modalFeedback.trim() || isSubmitting}
+                            aria-disabled={
+                              !modalFeedback.trim() || isSubmitting
+                            }
                             className="flex-1 bg-primary text-primary-foreground px-3 py-2 rounded-full font-sans text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
                           >
                             Submit

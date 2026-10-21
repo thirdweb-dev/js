@@ -5,6 +5,7 @@ import type React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { ThirdwebClient } from "thirdweb";
+import { submitProductFeedback } from "@/actions/product-feedback";
 import { reportProductFeedback } from "@/analytics/report";
 import { NotificationsButton } from "@/components/notifications/notification-button";
 import { NavLink } from "@/components/ui/NavLink";
@@ -39,8 +40,9 @@ export function SecondaryNav(props: {
 export function SecondaryNavLinks() {
   const [showFeedbackDropdown, setShowFeedbackDropdown] = useState(false);
   const [modalFeedback, setModalFeedback] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleModalSubmit = (e?: React.FormEvent) => {
+  const handleModalSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
     // Report feedback to PostHog
@@ -48,6 +50,18 @@ export function SecondaryNavLinks() {
       feedback: modalFeedback,
       source: "desktop",
     });
+
+    setIsSubmitting(true);
+    const result = await submitProductFeedback({
+      feedback: modalFeedback,
+      source: "desktop",
+    });
+    setIsSubmitting(false);
+
+    if (!result.ok) {
+      toast.error(result.error);
+      return;
+    }
 
     // Show success notification
     toast.success("Feedback submitted successfully!", {
@@ -135,8 +149,8 @@ export function SecondaryNavLinks() {
                   </button>
                   <button
                     type="submit"
-                    disabled={!modalFeedback.trim()}
-                    aria-disabled={!modalFeedback.trim()}
+                    disabled={!modalFeedback.trim() || isSubmitting}
+                    aria-disabled={!modalFeedback.trim() || isSubmitting}
                     className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full font-sans text-sm hover:bg-primary/90 transition-colors disabled:opacity-50"
                   >
                     Submit
