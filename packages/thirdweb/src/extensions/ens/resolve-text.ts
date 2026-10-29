@@ -55,6 +55,17 @@ export async function resolveText(options: ResolveTextOptions) {
         contract,
         data,
         name: toHex(packetToBytes(name)),
+      }).catch((e) => {
+        if (
+          typeof e === "object" &&
+          e !== null &&
+          "data" in e &&
+          typeof e.data === "string" &&
+          e.data.startsWith("0x77209fe8")
+        ) {
+          return ["0x"] as const;
+        }
+        throw e;
       });
 
       if (result[0] === "0x") {
