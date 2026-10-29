@@ -1,4 +1,4 @@
-import type { Abi } from "abitype";
+import { type Abi, parseAbi } from "abitype";
 import { decodeErrorResult, type Hex, stringify } from "viem";
 import { isInsufficientFundsError } from "../analytics/track/helpers.js";
 import { trackInsufficientFundsError } from "../analytics/track/transaction.js";
@@ -6,6 +6,15 @@ import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
 import type { ThirdwebContract } from "../contract/contract.js";
 import { isHex } from "../utils/encoding/hex.js";
 import { IS_DEV } from "../utils/process.js";
+
+const COMMON_ERRORS_ABI = parseAbi([
+  "error TransferFromFailed()",
+  "error TransferFailed()",
+  "error ApproveFailed()",
+  "error ETHTransferFailed()",
+  "error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed)",
+  "error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 needed)",
+]);
 
 /**
  * @internal
@@ -53,11 +62,15 @@ export async function extractErrorResult<abi extends Abi>(args: {
         if (contract && !abi) {
           abi = await resolveContractAbi(contract).catch(() => undefined);
         }
-        const parsedError = decodeErrorResult({
-          abi,
-          data: errorObj.data,
-        });
-        return `${parsedError.errorName}${parsedError.args ? ` - ${parsedError.args}` : ""}`;
+        try {
+          const parsedError = decodeErrorResult({
+            abi: [...(abi ?? []), ...COMMON_ERRORS_ABI] as Abi,
+            data: errorObj.data,
+          });
+          return `${parsedError.errorName}${parsedError.args ? ` - ${parsedError.args}` : ""}`;
+        } catch {
+          return `Execution Reverted: ${errorObj.data}`;
+        }
       }
     }
   }

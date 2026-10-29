@@ -19,6 +19,7 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Text } from "../../components/text.js";
+import { useTokenBalance } from "../common/token-balance.js";
 import type { ModeInfo, PaymentMethod } from "../types.js";
 
 import { PaymentOverview } from "./PaymentOverview.js";
@@ -83,6 +84,21 @@ export function PaymentDetails({
       onError(error as Error);
     }
   };
+
+  const walletPaymentMethod =
+    paymentMethod.type === "wallet" ? paymentMethod : undefined;
+  const originBalanceQuery = useTokenBalance({
+    chainId: walletPaymentMethod?.originToken.chainId,
+    client,
+    tokenAddress: walletPaymentMethod?.originToken.address,
+    walletAddress: walletPaymentMethod?.payerWallet.getAccount()?.address,
+  });
+  const originBalance =
+    originBalanceQuery.data?.value ?? walletPaymentMethod?.balance;
+  const hasInsufficientBalance =
+    preparedQuote.type !== "onramp" &&
+    originBalance !== undefined &&
+    originBalance < preparedQuote.originAmount;
 
   const chainsQuery = useChainsQuery(
     preparedQuote.steps.flatMap((s) => [
@@ -410,12 +426,18 @@ export function PaymentDetails({
         {/* Action Buttons */}
         <Container flex="column" gap="sm">
           <Button
+            disabled={hasInsufficientBalance}
             fullWidth
             onClick={handleConfirm}
             variant="primary"
-            style={{ borderRadius: radius.full }}
+            style={{
+              borderRadius: radius.full,
+              opacity: hasInsufficientBalance ? 0.5 : 1,
+            }}
           >
-            {confirmButtonLabel || "Confirm Payment"}
+            {hasInsufficientBalance
+              ? "Insufficient Balance"
+              : confirmButtonLabel || "Confirm Payment"}
           </Button>
         </Container>
       </Container>
