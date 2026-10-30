@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.122.1
+
+### Patch Changes
+
+- [#9040](https://github.com/thirdweb-dev/js/pull/9040) [`bd8a578`](https://github.com/thirdweb-dev/js/commit/bd8a578030e6ee9d6d3a285a67707b99cdd31299) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Bridge widgets check the payer's balance against the quoted amount before confirming, and common token errors are decoded without a contract ABI
+
+- [#9042](https://github.com/thirdweb-dev/js/pull/9042) [`963366a`](https://github.com/thirdweb-dev/js/commit/963366aeb7c5fc03a110990912bd940ba3e7d9f9) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - resolveText and resolveAvatar return null for names without a resolver
+
 ## 5.122.0
 
 ### Minor Changes
