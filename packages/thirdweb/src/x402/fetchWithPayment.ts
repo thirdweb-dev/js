@@ -80,23 +80,33 @@ export function wrapFetchWithPayment(
   },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
-    const providedHeaders = init?.headers;
-    const initialHeaders = new Headers(
-      providedHeaders !== undefined
-        ? providedHeaders
-        : typeof input === "string"
-          ? undefined
-          : input.headers,
-    );
+    let initialHeaders: Headers | undefined;
+    let normalizedHeaders: Headers | undefined;
+    let headersRead = false;
+    function readHeaders(): Headers | undefined {
+      if (!headersRead) {
+        const providedHeaders = init?.headers;
+        initialHeaders = new Headers(
+          providedHeaders !== undefined
+            ? providedHeaders
+            : typeof input === "string"
+              ? undefined
+              : input.headers,
+        );
+        normalizedHeaders =
+          providedHeaders === undefined ? undefined : initialHeaders;
+        headersRead = true;
+      }
+      return normalizedHeaders;
+    }
     let initialInit = init;
     if (init) {
-      // Copy descriptors so an init.headers accessor is not read again.
+      // Normalize on fetch's first headers read to preserve native getter order.
       const descriptors = Object.getOwnPropertyDescriptors(init);
       descriptors.headers = {
         configurable: true,
         enumerable: true,
-        value: providedHeaders === undefined ? undefined : initialHeaders,
-        writable: true,
+        get: readHeaders,
       };
       // Keep other accessors bound to the caller's original init object.
       initialInit = new Proxy(
@@ -104,19 +114,19 @@ export function wrapFetchWithPayment(
         {
           get: (_target, property) =>
             property === "headers"
-              ? providedHeaders === undefined
-                ? undefined
-                : initialHeaders
+              ? readHeaders()
               : Reflect.get(init, property, init),
         },
       );
     }
+    if (!init) readHeaders();
     const response = await fetch(input, initialInit);
 
     if (response.status !== 402) {
       return response;
     }
 
+    readHeaders();
     const initParams = initialInit || {};
 
     if ((initParams as { __is402Retry?: boolean }).__is402Retry) {

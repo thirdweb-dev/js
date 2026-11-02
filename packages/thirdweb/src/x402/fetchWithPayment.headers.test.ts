@@ -116,6 +116,51 @@ function merchant(version: 1 | 2, afterInitial?: () => void): Headers[] {
 }
 
 describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
+  it.each([false, true])(
+    "preserves native RequestInit getter order when paid: %s",
+    async (paid) => {
+      const events: string[] = [];
+      let ready = false;
+      const received = paid ? merchant(version) : undefined;
+      if (!paid)
+        server.use(http.get(URL, () => HttpResponse.json({ success: true })));
+      const init = Object.freeze({
+        get method(): string {
+          events.push("method");
+          ready = true;
+          return "GET";
+        },
+        get headers(): HeadersInit {
+          events.push("headers");
+          if (!ready) throw new Error("headers read before method");
+          return {
+            get Authorization(): string {
+              events.push("Authorization");
+              return "Bearer after-method";
+            },
+          };
+        },
+      });
+      const response = await wrapFetchWithPayment(
+        fetchWithNativeRequest,
+        client,
+        wallet,
+        { storage },
+      )(URL, init);
+      expect(response.status).toBe(200);
+      expect(events.slice(0, 3)).toEqual([
+        "method",
+        "headers",
+        "Authorization",
+      ]);
+      expect(events.filter((event) => event === "Authorization")).toHaveLength(
+        1,
+      );
+      if (received)
+        expect(received[1]?.get("Authorization")).toBe("Bearer after-method");
+    },
+  );
+
   it("preserves inherited RequestInit accessor receivers", async () => {
     const methods = new WeakMap<object, string>();
     class Options {
