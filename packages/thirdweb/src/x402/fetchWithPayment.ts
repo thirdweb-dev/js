@@ -31,6 +31,10 @@ import { x402Version as defaultX402Version } from "./types.js";
  * 4. Create a payment header using the provided wallet client
  * 5. Retry the request with the payment header
  *
+ * A Request-owned body is cloned before dispatch for one payment retry.
+ * Request.clone() can buffer its unread branch; use bounded bodies. Bodies
+ * supplied through init.body must remain replayable for a retry.
+ *
  * @param fetch - The fetch function to wrap (typically globalThis.fetch)
  * @param client - The thirdweb client used to access RPC infrastructure
  * @param wallet - The wallet used to sign payment messages
@@ -79,7 +83,11 @@ export function wrapFetchWithPayment(
     storage?: AsyncStorage;
   },
 ) {
-  return async (input: RequestInfo, init?: RequestInit) => {
+  const fetchWithPayment = async (
+    input: RequestInfo,
+    init?: RequestInit,
+    retryRequest?: Request,
+  ): Promise<Response> => {
     const response = await fetch(input, init);
 
     if (response.status !== 402) {
@@ -196,7 +204,19 @@ export function wrapFetchWithPayment(
       __is402Retry: true,
     };
 
-    const secondResponse = await fetch(input, newInit);
+    if (retryRequest) {
+      retryRequest.headers.set(paymentRequestHeaderName, paymentHeader);
+      retryRequest.headers.set(
+        "Access-Control-Expose-Headers",
+        paymentResponseHeaderName,
+      );
+    }
+    const retryMetadata: RequestInit & { __is402Retry: boolean } = {
+      __is402Retry: true,
+    };
+    const secondResponse = retryRequest
+      ? await fetch(retryRequest, retryMetadata)
+      : await fetch(input, newInit);
 
     // If payment was rejected (still 402), clear cached signature
     if (secondResponse.status === 402) {
@@ -209,6 +229,24 @@ export function wrapFetchWithPayment(
     }
 
     return secondResponse;
+  };
+
+  return async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
+    const retryRequest =
+      typeof input !== "string" &&
+      input.body !== null &&
+      input.body !== undefined &&
+      (init?.body === undefined || init.body === null)
+        ? new Request(input.clone(), init)
+        : undefined;
+    try {
+      return await fetchWithPayment(input, init, retryRequest);
+    } finally {
+      if (retryRequest?.body && !retryRequest.bodyUsed) {
+        // Tee cancellation may wait for the first upload; do not await it here.
+        void retryRequest.body.cancel().catch(() => {});
+      }
+    }
   };
 }
 
