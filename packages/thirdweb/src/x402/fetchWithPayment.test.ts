@@ -133,9 +133,9 @@ describe("wrapFetchWithPayment", () => {
     x402Version: number,
   ) {
     const init = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    const headers = init.headers as Record<string, string>;
-    const header = headers[getPaymentRequestHeader(x402Version)];
-    expect(header).toBeDefined();
+    const headers = new Headers(init.headers);
+    const header = headers.get(getPaymentRequestHeader(x402Version));
+    expect(header).not.toBeNull();
     return JSON.parse(
       Buffer.from(header as string, "base64").toString("utf-8"),
     );
@@ -195,9 +195,11 @@ describe("wrapFetchWithPayment", () => {
 
     // Verify the second call includes the payment header for the version
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty(
-      getPaymentRequestHeader(mock402ResponseData.x402Version),
-    );
+    expect(
+      new Headers(secondCallInit.headers).has(
+        getPaymentRequestHeader(mock402ResponseData.x402Version),
+      ),
+    ).toBe(true);
   });
 
   it("should parse payment requirements from JSON body when payment-required header is absent", async () => {
@@ -218,9 +220,11 @@ describe("wrapFetchWithPayment", () => {
 
     // Verify the second call includes the payment header for the version
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty(
-      getPaymentRequestHeader(mock402ResponseData.x402Version),
-    );
+    expect(
+      new Headers(secondCallInit.headers).has(
+        getPaymentRequestHeader(mock402ResponseData.x402Version),
+      ),
+    ).toBe(true);
   });
 
   it("should prefer payment-required header over JSON body when both are present", async () => {
@@ -318,9 +322,11 @@ describe("wrapFetchWithPayment", () => {
 
     // Verify the retry request was made with the v1 payment header
     const secondCallInit = mockFetch.mock.calls[1]?.[1] as RequestInit;
-    expect(secondCallInit.headers).toHaveProperty(
-      getPaymentRequestHeader(parsed.x402Version),
-    );
+    expect(
+      new Headers(secondCallInit.headers).has(
+        getPaymentRequestHeader(parsed.x402Version),
+      ),
+    ).toBe(true);
   });
 
   it("does not sign when a payment was already attempted for the request", async () => {
@@ -374,8 +380,8 @@ describe("wrapFetchWithPayment", () => {
       expect(typedData.message.to).toBe(getAddress(PAY_TO));
 
       const init = mockFetch.mock.calls[1]?.[1] as RequestInit;
-      expect(init.headers).toHaveProperty("PAYMENT-SIGNATURE");
-      expect(init.headers).not.toHaveProperty("X-PAYMENT");
+      expect(new Headers(init.headers).has("PAYMENT-SIGNATURE")).toBe(true);
+      expect(new Headers(init.headers).has("X-PAYMENT")).toBe(false);
 
       const payment = sentPayment(mockFetch, 2);
       expect(payment.x402Version).toBe(2);
@@ -520,8 +526,8 @@ describe("wrapFetchWithPayment", () => {
 
       expect(response.status).toBe(200);
       const init = mockFetch.mock.calls[1]?.[1] as RequestInit;
-      expect(init.headers).toHaveProperty("X-PAYMENT");
-      expect(init.headers).not.toHaveProperty("PAYMENT-SIGNATURE");
+      expect(new Headers(init.headers).has("X-PAYMENT")).toBe(true);
+      expect(new Headers(init.headers).has("PAYMENT-SIGNATURE")).toBe(false);
 
       const payment = sentPayment(mockFetch, 1);
       expect(Object.keys(payment).sort()).toEqual(
@@ -549,7 +555,7 @@ describe("wrapFetchWithPayment", () => {
       await wrappedFetch("https://api.example.com/resource");
 
       const init = mockFetch.mock.calls[1]?.[1] as RequestInit;
-      expect(init.headers).toHaveProperty("PAYMENT-SIGNATURE");
+      expect(new Headers(init.headers).has("PAYMENT-SIGNATURE")).toBe(true);
       const payment = sentPayment(mockFetch, 2);
       expect(payment.x402Version).toBe(2);
       expect(payment.accepted).toEqual(canonicalV2Requirement);

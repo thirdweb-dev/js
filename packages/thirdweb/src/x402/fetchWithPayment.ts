@@ -80,13 +80,54 @@ export function wrapFetchWithPayment(
   },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
-    const response = await fetch(input, init);
+    let initialHeaders: Headers | undefined;
+    let normalizedHeaders: Headers | undefined;
+    let headersRead = false;
+    function readHeaders(): Headers | undefined {
+      if (!headersRead) {
+        const providedHeaders = init?.headers;
+        initialHeaders = new Headers(
+          providedHeaders !== undefined
+            ? providedHeaders
+            : typeof input === "string"
+              ? undefined
+              : input.headers,
+        );
+        normalizedHeaders =
+          providedHeaders === undefined ? undefined : initialHeaders;
+        headersRead = true;
+      }
+      return normalizedHeaders;
+    }
+    let initialInit = init;
+    if (init) {
+      // Normalize on fetch's first headers read to preserve native getter order.
+      const descriptors = Object.getOwnPropertyDescriptors(init);
+      descriptors.headers = {
+        configurable: true,
+        enumerable: true,
+        get: readHeaders,
+      };
+      // Keep other accessors bound to the caller's original init object.
+      initialInit = new Proxy(
+        Object.create(Object.getPrototypeOf(init), descriptors) as RequestInit,
+        {
+          get: (_target, property) =>
+            property === "headers"
+              ? readHeaders()
+              : Reflect.get(init, property, init),
+        },
+      );
+    }
+    if (!init) readHeaders();
+    const response = await fetch(input, initialInit);
 
     if (response.status !== 402) {
       return response;
     }
 
-    const initParams = init || {};
+    readHeaders();
+    const initParams = initialInit || {};
 
     if ((initParams as { __is402Retry?: boolean }).__is402Retry) {
       throw new Error("Payment already attempted");
@@ -186,13 +227,13 @@ export function wrapFetchWithPayment(
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
 
+    const headers = new Headers(initialHeaders);
+    headers.set(paymentRequestHeaderName, paymentHeader);
+    headers.set("Access-Control-Expose-Headers", paymentResponseHeaderName);
+
     const newInit = {
       ...initParams,
-      headers: {
-        ...(initParams.headers || {}),
-        [paymentRequestHeaderName]: paymentHeader,
-        "Access-Control-Expose-Headers": paymentResponseHeaderName,
-      },
+      headers,
       __is402Retry: true,
     };
 
