@@ -20,6 +20,8 @@ import {
 import { createPaymentHeader } from "./sign.js";
 import { x402Version as defaultX402Version } from "./types.js";
 
+type RequestInitWithDispatcher = RequestInit & { dispatcher?: object };
+
 /**
  * Enables the payment of APIs using the x402 payment protocol.
  *
@@ -30,6 +32,11 @@ import { x402Version as defaultX402Version } from "./types.js";
  * 3. Verify the payment amount is within the allowed maximum
  * 4. Create a payment header using the provided wallet client
  * 5. Retry the request with the payment header
+ *
+ * A Request-owned body is cloned before dispatch for one payment retry.
+ * Request.clone() can buffer its unread branch; use bounded bodies. Bodies
+ * supplied through init.body must remain replayable for a retry.
+ * Pass Node dispatchers through init so they are reapplied to the retry Request.
  *
  * @param fetch - The fetch function to wrap (typically globalThis.fetch)
  * @param client - The thirdweb client used to access RPC infrastructure
@@ -79,7 +86,11 @@ export function wrapFetchWithPayment(
     storage?: AsyncStorage;
   },
 ) {
-  return async (input: RequestInfo, init?: RequestInit) => {
+  const fetchWithPayment = async (
+    input: RequestInfo,
+    init?: RequestInit,
+    retryRequest?: Request,
+  ): Promise<Response> => {
     const response = await fetch(input, init);
 
     if (response.status !== 402) {
@@ -186,17 +197,62 @@ export function wrapFetchWithPayment(
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
 
-    const newInit = {
-      ...initParams,
-      headers: {
-        ...(initParams.headers || {}),
-        [paymentRequestHeaderName]: paymentHeader,
-        "Access-Control-Expose-Headers": paymentResponseHeaderName,
-      },
-      __is402Retry: true,
-    };
-
-    const secondResponse = await fetch(input, newInit);
+    let dispatcher: object | undefined;
+    let dispatcherRead = false;
+    // Reuse the constructor's read so dispatcher accessors run only once per dispatch.
+    const paymentInit =
+      retryRequest && init
+        ? new Proxy(init, {
+            get: (target, property) => {
+              if (property === "dispatcher") {
+                dispatcher = (target as RequestInitWithDispatcher).dispatcher;
+                dispatcherRead = true;
+                return dispatcher;
+              }
+              return Reflect.get(target, property, target);
+            },
+          })
+        : init;
+    const paymentRequest = retryRequest
+      ? new Request(retryRequest, paymentInit)
+      : undefined;
+    let secondResponse: Response;
+    try {
+      if (paymentRequest) {
+        paymentRequest.headers.set(paymentRequestHeaderName, paymentHeader);
+        paymentRequest.headers.set(
+          "Access-Control-Expose-Headers",
+          paymentResponseHeaderName,
+        );
+        // Standard Request implementations do not read fetch-only dispatcher options.
+        if (!dispatcherRead)
+          dispatcher = (init as RequestInitWithDispatcher | undefined)
+            ?.dispatcher;
+      }
+      const retryMetadata: RequestInitWithDispatcher & {
+        __is402Retry: boolean;
+      } = {
+        __is402Retry: true,
+        referrer: paymentRequest?.referrer,
+        referrerPolicy: paymentRequest?.referrerPolicy,
+        ...(dispatcher !== undefined ? { dispatcher } : {}),
+      };
+      secondResponse = paymentRequest
+        ? await fetch(paymentRequest, retryMetadata)
+        : await fetch(input, {
+            ...initParams,
+            headers: {
+              ...(initParams.headers || {}),
+              [paymentRequestHeaderName]: paymentHeader,
+              "Access-Control-Expose-Headers": paymentResponseHeaderName,
+            },
+            __is402Retry: true,
+          } as RequestInit);
+    } finally {
+      if (paymentRequest?.body && !paymentRequest.bodyUsed) {
+        void paymentRequest.body.cancel().catch(() => {});
+      }
+    }
 
     // If payment was rejected (still 402), clear cached signature
     if (secondResponse.status === 402) {
@@ -209,6 +265,25 @@ export function wrapFetchWithPayment(
     }
 
     return secondResponse;
+  };
+
+  return async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
+    const retryRequest =
+      typeof input !== "string" &&
+      input.body !== null &&
+      input.body !== undefined &&
+      !input.bodyUsed &&
+      !input.body.locked
+        ? input.clone()
+        : undefined;
+    try {
+      return await fetchWithPayment(input, init, retryRequest);
+    } finally {
+      if (retryRequest?.body && !retryRequest.bodyUsed) {
+        // Tee cancellation may wait for the first upload; do not await it here.
+        void retryRequest.body.cancel().catch(() => {});
+      }
+    }
   };
 }
 
