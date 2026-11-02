@@ -194,16 +194,6 @@ export function wrapFetchWithPayment(
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
 
-    const newInit = {
-      ...initParams,
-      headers: {
-        ...(initParams.headers || {}),
-        [paymentRequestHeaderName]: paymentHeader,
-        "Access-Control-Expose-Headers": paymentResponseHeaderName,
-      },
-      __is402Retry: true,
-    };
-
     const paymentRequest = retryRequest
       ? new Request(retryRequest, init)
       : undefined;
@@ -221,7 +211,15 @@ export function wrapFetchWithPayment(
     try {
       secondResponse = paymentRequest
         ? await fetch(paymentRequest, retryMetadata)
-        : await fetch(input, newInit);
+        : await fetch(input, {
+            ...initParams,
+            headers: {
+              ...(initParams.headers || {}),
+              [paymentRequestHeaderName]: paymentHeader,
+              "Access-Control-Expose-Headers": paymentResponseHeaderName,
+            },
+            __is402Retry: true,
+          } as RequestInit);
     } finally {
       if (paymentRequest?.body && !paymentRequest.bodyUsed) {
         void paymentRequest.body.cancel().catch(() => {});

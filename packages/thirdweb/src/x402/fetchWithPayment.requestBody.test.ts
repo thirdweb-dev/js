@@ -115,6 +115,46 @@ function transport(observed: Request[] = []): typeof fetch {
 }
 
 describe.each([1, 2] as const)("x402 v%i Request body retries", (version) => {
+  it.each(["body", "headers"] as const)(
+    "keeps paid %s accessor reads within the native two-dispatch count",
+    async (field) => {
+      const received = merchant(version);
+      let reads = 0;
+      const read = (): void => {
+        if (++reads > 2) throw new Error("retry options read an extra time");
+      };
+      const init: RequestInit =
+        field === "body"
+          ? {
+              get body(): string {
+                read();
+                return BODY;
+              },
+            }
+          : {
+              body: BODY,
+              headers: {
+                get Authorization(): string {
+                  read();
+                  return "Bearer fixture-user";
+                },
+              },
+            };
+      const input = new NativeRequest(URL, {
+        method: "POST",
+        body: "original",
+      });
+      const response = await wrapFetchWithPayment(transport(), client, wallet, {
+        storage,
+      })(input, init);
+      expect(response.status).toBe(200);
+      expect(reads).toBeGreaterThanOrEqual(1);
+      expect(reads).toBeLessThanOrEqual(2);
+      expect(received).toEqual([BODY, BODY]);
+      await input.body?.cancel();
+    },
+  );
+
   it("does not pre-read an init.body override accessor", async () => {
     const received = merchant(version, true);
     let reads = 0;
