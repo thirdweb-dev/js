@@ -204,9 +204,12 @@ export function wrapFetchWithPayment(
       __is402Retry: true,
     };
 
-    if (retryRequest) {
-      retryRequest.headers.set(paymentRequestHeaderName, paymentHeader);
-      retryRequest.headers.set(
+    const paymentRequest = retryRequest
+      ? new Request(retryRequest, init)
+      : undefined;
+    if (paymentRequest) {
+      paymentRequest.headers.set(paymentRequestHeaderName, paymentHeader);
+      paymentRequest.headers.set(
         "Access-Control-Expose-Headers",
         paymentResponseHeaderName,
       );
@@ -214,9 +217,16 @@ export function wrapFetchWithPayment(
     const retryMetadata: RequestInit & { __is402Retry: boolean } = {
       __is402Retry: true,
     };
-    const secondResponse = retryRequest
-      ? await fetch(retryRequest, retryMetadata)
-      : await fetch(input, newInit);
+    let secondResponse: Response;
+    try {
+      secondResponse = paymentRequest
+        ? await fetch(paymentRequest, retryMetadata)
+        : await fetch(input, newInit);
+    } finally {
+      if (paymentRequest?.body && !paymentRequest.bodyUsed) {
+        void paymentRequest.body.cancel().catch(() => {});
+      }
+    }
 
     // If payment was rejected (still 402), clear cached signature
     if (secondResponse.status === 402) {
@@ -232,24 +242,20 @@ export function wrapFetchWithPayment(
   };
 
   return async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
-    let retrySource: Request | undefined;
-    let retryRequest: Request | undefined;
+    const retryRequest =
+      typeof input !== "string" &&
+      input.body !== null &&
+      input.body !== undefined &&
+      !input.bodyUsed &&
+      !input.body.locked
+        ? input.clone()
+        : undefined;
     try {
-      if (
-        typeof input !== "string" &&
-        input.body !== null &&
-        input.body !== undefined &&
-        (init?.body === undefined || init.body === null)
-      ) {
-        retrySource = input.clone();
-        retryRequest = new Request(retrySource, init);
-      }
       return await fetchWithPayment(input, init, retryRequest);
     } finally {
-      const unusedRequest = retryRequest ?? retrySource;
-      if (unusedRequest?.body && !unusedRequest.bodyUsed) {
+      if (retryRequest?.body && !retryRequest.bodyUsed) {
         // Tee cancellation may wait for the first upload; do not await it here.
-        void unusedRequest.body.cancel().catch(() => {});
+        void retryRequest.body.cancel().catch(() => {});
       }
     }
   };

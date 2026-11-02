@@ -19,6 +19,7 @@ import { wrapFetchWithPayment } from "./fetchWithPayment.js";
 const URL = "https://x402-body.example/resource";
 const BODY = '{"message":"bounded request body"}';
 const NativeRequest = Request;
+const NativeHeaders = Headers;
 const server = setupServer();
 const client = createThirdwebClient({ clientId: "fixture-client" });
 const account = privateKeyToAccount({
@@ -35,12 +36,20 @@ const storage = {
   removeItem: async () => {},
 };
 
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+  // Keep native conversion counts when this test runs with header normalization.
+  vi.stubGlobal("Request", NativeRequest);
+  vi.stubGlobal("Headers", NativeHeaders);
+});
 afterEach(() => {
   server.resetHandlers();
   vi.restoreAllMocks();
 });
-afterAll(() => server.close());
+afterAll(() => {
+  vi.unstubAllGlobals();
+  server.close();
+});
 
 function merchant(version: 1 | 2, non402 = false): string[] {
   const received: string[] = [];
@@ -106,6 +115,45 @@ function transport(observed: Request[] = []): typeof fetch {
 }
 
 describe.each([1, 2] as const)("x402 v%i Request body retries", (version) => {
+  it("does not pre-read an init.body override accessor", async () => {
+    const received = merchant(version, true);
+    let reads = 0;
+    const input = new NativeRequest(URL, { method: "POST", body: "original" });
+    const init = {
+      get body(): string {
+        reads++;
+        if (reads > 1) throw new Error("body read twice");
+        return BODY;
+      },
+    };
+    const response = await wrapFetchWithPayment(transport(), client, wallet, {
+      storage,
+    })(input, init);
+    expect(response.status).toBe(200);
+    expect(reads).toBe(1);
+    expect(received).toEqual([BODY]);
+    expect(input.bodyUsed).toBe(false);
+    await input.body?.cancel();
+  });
+
+  it("keeps non-402 header accessors as a single native conversion", async () => {
+    const received = merchant(version, true);
+    let reads = 0;
+    const headers = {
+      get Authorization(): string {
+        reads++;
+        if (reads > 1) throw new Error("header read twice");
+        return "Bearer fixture-user";
+      },
+    };
+    const response = await wrapFetchWithPayment(transport(), client, wallet, {
+      storage,
+    })(new NativeRequest(URL, { method: "POST", body: BODY }), { headers });
+    expect(response.status).toBe(200);
+    expect(reads).toBe(1);
+    expect(received).toEqual([BODY]);
+  });
+
   it("replays a fresh JSON Request after the first fetch consumes it", async () => {
     const received = merchant(version);
     const input = new NativeRequest(URL, {
