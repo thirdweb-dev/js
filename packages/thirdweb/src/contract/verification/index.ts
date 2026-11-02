@@ -209,7 +209,7 @@ type CheckVerificationStatusOptions = {
 export async function checkVerificationStatus(
   options: CheckVerificationStatusOptions,
 ): Promise<unknown> {
-  const endpoint = `${options.explorerApiUrl}?module=contract&action=checkverifystatus&guid=${options.guid}&apikey=${options.explorerApiKey}"`;
+  const endpoint = `${options.explorerApiUrl}?module=contract&action=checkverifystatus&guid=${options.guid}&apikey=${options.explorerApiKey}`;
   return new Promise((resolve, reject) => {
     const intervalId = setInterval(async () => {
       try {
