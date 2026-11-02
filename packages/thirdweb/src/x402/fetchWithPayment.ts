@@ -80,6 +80,13 @@ export function wrapFetchWithPayment(
   },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
+    const initialHeaders = new Headers(
+      init?.headers !== undefined
+        ? init.headers
+        : typeof input === "string"
+          ? undefined
+          : input.headers,
+    );
     const response = await fetch(input, init);
 
     if (response.status !== 402) {
@@ -186,13 +193,13 @@ export function wrapFetchWithPayment(
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
 
+    const headers = new Headers(initialHeaders);
+    headers.set(paymentRequestHeaderName, paymentHeader);
+    headers.set("Access-Control-Expose-Headers", paymentResponseHeaderName);
+
     const newInit = {
       ...initParams,
-      headers: {
-        ...(initParams.headers || {}),
-        [paymentRequestHeaderName]: paymentHeader,
-        "Access-Control-Expose-Headers": paymentResponseHeaderName,
-      },
+      headers,
       __is402Retry: true,
     };
 
