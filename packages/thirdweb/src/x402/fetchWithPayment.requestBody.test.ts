@@ -236,3 +236,34 @@ it("propagates an initial fetch rejection without consuming the caller body", as
   expect(input.bodyUsed).toBe(false);
   expect(await input.text()).toBe(BODY);
 });
+
+it("releases the intermediate clone when Request options are invalid", async () => {
+  const cancel = vi.fn();
+  const body = new ReadableStream<Uint8Array>({ cancel });
+  const requestInit: RequestInit & { duplex: "half" } = {
+    method: "POST",
+    body,
+    duplex: "half",
+  };
+  const input = new NativeRequest(URL, requestInit);
+  await expect(
+    wrapFetchWithPayment(transport(), client, wallet, { storage })(input, {
+      method: "GET",
+    }),
+  ).rejects.toThrow();
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      input.body?.cancel(),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(
+          () => reject(new Error("cancel did not finish")),
+          500,
+        );
+      }),
+    ]);
+  } finally {
+    clearTimeout(timeout);
+  }
+  expect(cancel).toHaveBeenCalledOnce();
+});

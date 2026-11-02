@@ -232,19 +232,24 @@ export function wrapFetchWithPayment(
   };
 
   return async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
-    const retryRequest =
-      typeof input !== "string" &&
-      input.body !== null &&
-      input.body !== undefined &&
-      (init?.body === undefined || init.body === null)
-        ? new Request(input.clone(), init)
-        : undefined;
+    let retrySource: Request | undefined;
+    let retryRequest: Request | undefined;
     try {
+      if (
+        typeof input !== "string" &&
+        input.body !== null &&
+        input.body !== undefined &&
+        (init?.body === undefined || init.body === null)
+      ) {
+        retrySource = input.clone();
+        retryRequest = new Request(retrySource, init);
+      }
       return await fetchWithPayment(input, init, retryRequest);
     } finally {
-      if (retryRequest?.body && !retryRequest.bodyUsed) {
+      const unusedRequest = retryRequest ?? retrySource;
+      if (unusedRequest?.body && !unusedRequest.bodyUsed) {
         // Tee cancellation may wait for the first upload; do not await it here.
-        void retryRequest.body.cancel().catch(() => {});
+        void unusedRequest.body.cancel().catch(() => {});
       }
     }
   };
