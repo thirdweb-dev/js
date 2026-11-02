@@ -1,7 +1,15 @@
 import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 import { generatePrivateKey } from "viem/accounts";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 import { getCachedChain } from "../chains/utils.js";
 import { createThirdwebClient } from "../client/client.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
@@ -16,6 +24,7 @@ const APP_HEADERS = {
 };
 const server = setupServer();
 const NativeRequest = Request;
+const NativeHeaders = Headers;
 const client = createThirdwebClient({ clientId: "fixture-client" });
 const account = privateKeyToAccount({
   client,
@@ -34,9 +43,16 @@ const storage = {
 const fetchWithNativeRequest: typeof fetch = (input, init) =>
   fetch(new NativeRequest(input, init));
 
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+  // MSW's raw-header recorder re-reads accessors; keep native conversion semantics.
+  vi.stubGlobal("Headers", NativeHeaders);
+});
 afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterAll(() => {
+  vi.unstubAllGlobals();
+  server.close();
+});
 
 function snapshotHeaders(headers: Headers): Record<string, string> {
   const snapshot: Record<string, string> = {};
@@ -100,6 +116,99 @@ function merchant(version: 1 | 2, afterInitial?: () => void): Headers[] {
 }
 
 describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
+  it("preserves inherited RequestInit accessor receivers", async () => {
+    const methods = new WeakMap<object, string>();
+    class Options {
+      headers = APP_HEADERS;
+      constructor() {
+        methods.set(this, "POST");
+      }
+      get method(): string {
+        const method = methods.get(this);
+        if (!method) throw new Error("RequestInit getter receiver changed");
+        return method;
+      }
+    }
+    let received: string | undefined;
+    server.use(
+      http.post(URL, ({ request }) => {
+        received = request.method;
+        return HttpResponse.json({ success: true });
+      }),
+    );
+    const response = await wrapFetchWithPayment(
+      fetchWithNativeRequest,
+      client,
+      wallet,
+      { storage },
+    )(URL, Object.freeze(new Options()));
+    expect(response.status).toBe(200);
+    expect(received).toBe("POST");
+  });
+
+  it("reads accessor-backed header values once for both dispatches", async () => {
+    const received = merchant(version);
+    let reads = 0;
+    const headers = {
+      get Authorization(): string {
+        reads++;
+        if (reads > 1) throw new Error("header read twice");
+        return "Bearer fixture-user";
+      },
+    };
+    const response = await wrapFetchWithPayment(
+      fetchWithNativeRequest,
+      client,
+      wallet,
+      { storage },
+    )(URL, { headers });
+    expect(response.status).toBe(200);
+    expect(reads).toBe(1);
+    expect(received.map((entry) => entry.get("Authorization"))).toEqual([
+      "Bearer fixture-user",
+      "Bearer fixture-user",
+    ]);
+  });
+
+  it.each([false, true])(
+    "reads an init.headers accessor once when paid: %s",
+    async (paid) => {
+      let reads = 0;
+      let received: string | null = null;
+      const paidRequests = paid ? merchant(version) : undefined;
+      if (!paid)
+        server.use(
+          http.get(URL, ({ request }) => {
+            received = request.headers.get("Authorization");
+            return HttpResponse.json({ success: true });
+          }),
+        );
+      const init = Object.freeze({
+        get headers(): HeadersInit {
+          reads++;
+          if (reads > 1) throw new Error("init.headers read twice");
+          return APP_HEADERS;
+        },
+      });
+      const response = await wrapFetchWithPayment(
+        fetchWithNativeRequest,
+        client,
+        wallet,
+        { storage },
+      )(URL, init);
+      expect(response.status).toBe(200);
+      expect(reads).toBe(1);
+      if (paidRequests) {
+        expect(paidRequests).toHaveLength(2);
+        expect(paidRequests[1]?.get("Authorization")).toBe(
+          APP_HEADERS.Authorization,
+        );
+      } else {
+        expect(received).toBe(APP_HEADERS.Authorization);
+      }
+    },
+  );
+
   it.each(["object", "Headers", "tuples", "Request"] as const)(
     "preserves effective %s headers",
     async (form) => {
@@ -110,7 +219,8 @@ describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
           : form === "tuples"
             ? Object.entries(APP_HEADERS)
             : APP_HEADERS;
-      const input = form === "Request" ? new Request(URL, { headers }) : URL;
+      const input =
+        form === "Request" ? new NativeRequest(URL, { headers }) : URL;
       const init = form === "Request" ? undefined : { headers };
       const before = snapshotHeaders(new Headers(headers));
       const response = await wrapFetchWithPayment(
@@ -131,7 +241,7 @@ describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
       }
       expect(received[1]?.has(getPaymentRequestHeader(version))).toBe(true);
       expect(snapshotHeaders(new Headers(headers))).toEqual(before);
-      if (input instanceof Request) {
+      if (input instanceof NativeRequest) {
         expect(snapshotHeaders(input.headers)).toEqual(before);
       }
     },
@@ -150,7 +260,7 @@ describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
             : replacement;
       await wrapFetchWithPayment(fetchWithNativeRequest, client, wallet, {
         storage,
-      })(new Request(URL, { headers: APP_HEADERS }), { headers });
+      })(new NativeRequest(URL, { headers: APP_HEADERS }), { headers });
       for (const requestHeaders of received) {
         expect(requestHeaders.get("Authorization")).toBeNull();
         expect(requestHeaders.get("X-Tenant")).toBeNull();
@@ -168,7 +278,7 @@ describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
     const received = merchant(version);
     await wrapFetchWithPayment(fetchWithNativeRequest, client, wallet, {
       storage,
-    })(new Request(URL, { headers: APP_HEADERS }), { headers });
+    })(new NativeRequest(URL, { headers: APP_HEADERS }), { headers });
     expect(received).toHaveLength(2);
     expect(received[1]?.get("Authorization")).toBeNull();
     expect(received[1]?.get("X-Tenant")).toBeNull();
@@ -178,7 +288,9 @@ describe.each([1, 2] as const)("x402 v%i retry headers", (version) => {
     const received = merchant(version);
     await wrapFetchWithPayment(fetchWithNativeRequest, client, wallet, {
       storage,
-    })(new Request(URL, { headers: APP_HEADERS }), { headers: undefined });
+    })(new NativeRequest(URL, { headers: APP_HEADERS }), {
+      headers: undefined,
+    });
     expect(received[1]?.get("Authorization")).toBe(APP_HEADERS.Authorization);
   });
 

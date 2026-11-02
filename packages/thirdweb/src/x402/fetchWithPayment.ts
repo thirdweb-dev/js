@@ -80,20 +80,44 @@ export function wrapFetchWithPayment(
   },
 ) {
   return async (input: RequestInfo, init?: RequestInit) => {
+    const providedHeaders = init?.headers;
     const initialHeaders = new Headers(
-      init?.headers !== undefined
-        ? init.headers
+      providedHeaders !== undefined
+        ? providedHeaders
         : typeof input === "string"
           ? undefined
           : input.headers,
     );
-    const response = await fetch(input, init);
+    let initialInit = init;
+    if (init) {
+      // Copy descriptors so an init.headers accessor is not read again.
+      const descriptors = Object.getOwnPropertyDescriptors(init);
+      descriptors.headers = {
+        configurable: true,
+        enumerable: true,
+        value: providedHeaders === undefined ? undefined : initialHeaders,
+        writable: true,
+      };
+      // Keep other accessors bound to the caller's original init object.
+      initialInit = new Proxy(
+        Object.create(Object.getPrototypeOf(init), descriptors) as RequestInit,
+        {
+          get: (_target, property) =>
+            property === "headers"
+              ? providedHeaders === undefined
+                ? undefined
+                : initialHeaders
+              : Reflect.get(init, property, init),
+        },
+      );
+    }
+    const response = await fetch(input, initialInit);
 
     if (response.status !== 402) {
       return response;
     }
 
-    const initParams = init || {};
+    const initParams = initialInit || {};
 
     if ((initParams as { __is402Retry?: boolean }).__is402Retry) {
       throw new Error("Payment already attempted");
