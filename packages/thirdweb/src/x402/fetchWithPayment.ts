@@ -20,6 +20,8 @@ import {
 import { createPaymentHeader } from "./sign.js";
 import { x402Version as defaultX402Version } from "./types.js";
 
+type RequestInitWithDispatcher = RequestInit & { dispatcher?: object };
+
 /**
  * Enables the payment of APIs using the x402 payment protocol.
  *
@@ -195,24 +197,46 @@ export function wrapFetchWithPayment(
     const paymentRequestHeaderName = getPaymentRequestHeader(x402Version);
     const paymentResponseHeaderName = getPaymentResponseHeader(x402Version);
 
+    let dispatcher: object | undefined;
+    let dispatcherRead = false;
+    // Reuse the constructor's read so dispatcher accessors run only once per dispatch.
+    const paymentInit =
+      retryRequest && init
+        ? new Proxy(init, {
+            get: (target, property) => {
+              if (property === "dispatcher") {
+                dispatcher = (target as RequestInitWithDispatcher).dispatcher;
+                dispatcherRead = true;
+                return dispatcher;
+              }
+              return Reflect.get(target, property, target);
+            },
+          })
+        : init;
     const paymentRequest = retryRequest
-      ? new Request(retryRequest, init)
+      ? new Request(retryRequest, paymentInit)
       : undefined;
-    if (paymentRequest) {
-      paymentRequest.headers.set(paymentRequestHeaderName, paymentHeader);
-      paymentRequest.headers.set(
-        "Access-Control-Expose-Headers",
-        paymentResponseHeaderName,
-      );
-    }
-    // Request retains init.dispatcher; referrer fields need explicit preservation on Node 24.
-    const retryMetadata: RequestInit & { __is402Retry: boolean } = {
-      __is402Retry: true,
-      referrer: paymentRequest?.referrer,
-      referrerPolicy: paymentRequest?.referrerPolicy,
-    };
     let secondResponse: Response;
     try {
+      if (paymentRequest) {
+        paymentRequest.headers.set(paymentRequestHeaderName, paymentHeader);
+        paymentRequest.headers.set(
+          "Access-Control-Expose-Headers",
+          paymentResponseHeaderName,
+        );
+        // Standard Request implementations do not read fetch-only dispatcher options.
+        if (!dispatcherRead)
+          dispatcher = (init as RequestInitWithDispatcher | undefined)
+            ?.dispatcher;
+      }
+      const retryMetadata: RequestInitWithDispatcher & {
+        __is402Retry: boolean;
+      } = {
+        __is402Retry: true,
+        referrer: paymentRequest?.referrer,
+        referrerPolicy: paymentRequest?.referrerPolicy,
+        ...(dispatcher !== undefined ? { dispatcher } : {}),
+      };
       secondResponse = paymentRequest
         ? await fetch(paymentRequest, retryMetadata)
         : await fetch(input, {

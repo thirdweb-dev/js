@@ -1,5 +1,5 @@
 import { generatePrivateKey } from "viem/accounts";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { getCachedChain } from "../chains/utils.js";
 import { createThirdwebClient } from "../client/client.js";
 import type { Wallet } from "../wallets/interfaces/wallet.js";
@@ -11,6 +11,7 @@ const BODY = "bounded upload";
 const REFERRER = "https://client.example/context";
 const nativeFetch = fetch;
 const NativeRequest = Request;
+afterEach(() => vi.unstubAllGlobals());
 const client = createThirdwebClient({ clientId: "fixture-client" });
 const account = privateKeyToAccount({
   client,
@@ -38,6 +39,29 @@ type Handler = {
   onComplete: (trailers: Buffer[]) => void;
   onError: (error: Error) => void;
 };
+
+/** Models a standards-only Request, which ignores the fetch-only dispatcher. */
+function standardRequest(created: Request[] = []): typeof Request {
+  return new Proxy(NativeRequest, {
+    construct: (_target, args) => {
+      const requestInit = args[1] as RequestInit | undefined;
+      const standardInit =
+        requestInit &&
+        new Proxy(
+          {},
+          {
+            get: (_options, property) =>
+              property === "dispatcher"
+                ? undefined
+                : Reflect.get(requestInit, property, requestInit),
+          },
+        );
+      const request = new NativeRequest(args[0] as RequestInfo, standardInit);
+      created.push(request);
+      return request;
+    },
+  });
+}
 
 /** Uses Node's native dispatcher API to record uploads and wire headers without sockets. */
 function merchant(version: 1 | 2): {
@@ -150,9 +174,14 @@ function merchant(version: 1 | 2): {
 }
 
 describe.each([1, 2] as const)("x402 v%i native Node dispatcher", (version) => {
-  it.each(["value", "getter"] as const)(
-    "retains the dispatcher and referrer with %s options on the paid retry",
-    async (source) => {
+  it.each([
+    { source: "value", standard: false },
+    { source: "getter", standard: false },
+    { source: "value", standard: true },
+    { source: "getter", standard: true },
+  ] as const)(
+    "retains the dispatcher and referrer: $source, standard Request $standard",
+    async ({ source, standard }) => {
       const { dispatcher, received, referrers } = merchant(version);
       const options: RequestInit & { dispatcher: typeof dispatcher } = {
         dispatcher,
@@ -171,9 +200,12 @@ describe.each([1, 2] as const)("x402 v%i native Node dispatcher", (version) => {
         method: "POST",
         body: BODY,
       });
+      if (standard) {
+        vi.stubGlobal("Request", standardRequest());
+      }
       const response = await wrapFetchWithPayment(nativeFetch, client, wallet, {
         storage,
-      })(input, source === "getter" ? init : options);
+      })(input, Object.freeze(source === "getter" ? init : options));
       await response.text();
       expect(response.status).toBe(200);
       expect(received).toEqual([BODY, BODY]);
@@ -185,4 +217,28 @@ describe.each([1, 2] as const)("x402 v%i native Node dispatcher", (version) => {
       expect(reads).toBe(source === "getter" ? 2 : 0);
     },
   );
+
+  it("releases the paid body if a fetch-only dispatcher getter rejects", async () => {
+    const { dispatcher, received } = merchant(version);
+    const created: Request[] = [];
+    vi.stubGlobal("Request", standardRequest(created));
+    const reason = new Error("dispatcher unavailable on retry");
+    let reads = 0;
+    const init: RequestInit & { dispatcher: typeof dispatcher } = {
+      get dispatcher() {
+        if (++reads > 1) throw reason;
+        return dispatcher;
+      },
+    };
+    await expect(
+      wrapFetchWithPayment(nativeFetch, client, wallet, { storage })(
+        new NativeRequest(URL, { method: "POST", body: BODY }),
+        init,
+      ),
+    ).rejects.toBe(reason);
+    expect(reads).toBe(2);
+    expect(received).toEqual([BODY]);
+    expect(created).toHaveLength(1);
+    expect(created[0]?.bodyUsed).toBe(true);
+  });
 });
