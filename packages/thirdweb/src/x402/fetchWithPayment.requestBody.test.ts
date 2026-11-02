@@ -233,6 +233,10 @@ describe.each([1, 2] as const)("x402 v%i Request body retries", (version) => {
       referrerPolicy: "origin",
       signal: controller.signal,
     });
+    const nativeCopy = new NativeRequest(input.clone());
+    const referrer = nativeCopy.referrer;
+    const referrerPolicy = nativeCopy.referrerPolicy;
+    void nativeCopy.body?.cancel().catch(() => {});
     await wrapFetchWithPayment(transport(observed), client, wallet, {
       storage,
     })(input);
@@ -242,11 +246,51 @@ describe.each([1, 2] as const)("x402 v%i Request body retries", (version) => {
       expect(request.cache).toBe("no-store");
       expect(request.credentials).toBe("include");
       expect(request.redirect).toBe("manual");
-      expect(request.referrer).toBe("https://client.example/context");
-      expect(request.referrerPolicy).toBe("origin");
+      expect(request.referrer).toBe(referrer);
+      expect(request.referrerPolicy).toBe(referrerPolicy);
     }
     controller.abort();
     expect(observed.every((request) => request.signal.aborted)).toBe(true);
+  });
+
+  it("does not dispatch the paid retry when canceled during payment signing", async () => {
+    const received = merchant(version);
+    const controller = new AbortController();
+    const reason = new Error("caller canceled during payment signing");
+    let resume = (): void => {};
+    let started = (): void => {};
+    const paused = new Promise<void>((resolve) => {
+      resume = resolve;
+    });
+    const signing = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    const sign = account.signTypedData.bind(account);
+    vi.spyOn(account, "signTypedData").mockImplementationOnce(
+      async (options) => {
+        started();
+        await paused;
+        return sign(options);
+      },
+    );
+    const pending = wrapFetchWithPayment(transport(), client, wallet, {
+      storage,
+    })(
+      new NativeRequest(URL, {
+        method: "POST",
+        body: BODY,
+        signal: controller.signal,
+      }),
+    );
+    const rejected = expect(pending).rejects.toBe(reason);
+    try {
+      await signing;
+      controller.abort(reason);
+    } finally {
+      resume();
+    }
+    await rejected;
+    expect(received).toEqual([BODY]);
   });
 
   it("keeps non-402 responses as a single dispatch without signing", async () => {

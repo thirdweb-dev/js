@@ -34,6 +34,7 @@ import { x402Version as defaultX402Version } from "./types.js";
  * A Request-owned body is cloned before dispatch for one payment retry.
  * Request.clone() can buffer its unread branch; use bounded bodies. Bodies
  * supplied through init.body must remain replayable for a retry.
+ * Pass Node dispatchers through init so they are reapplied to the retry Request.
  *
  * @param fetch - The fetch function to wrap (typically globalThis.fetch)
  * @param client - The thirdweb client used to access RPC infrastructure
@@ -204,8 +205,11 @@ export function wrapFetchWithPayment(
         paymentResponseHeaderName,
       );
     }
+    // Request retains init.dispatcher; referrer fields need explicit preservation on Node 24.
     const retryMetadata: RequestInit & { __is402Retry: boolean } = {
       __is402Retry: true,
+      referrer: paymentRequest?.referrer,
+      referrerPolicy: paymentRequest?.referrerPolicy,
     };
     let secondResponse: Response;
     try {
