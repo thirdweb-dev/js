@@ -25,9 +25,9 @@ export class LruMap<value = unknown> extends Map<string, value> {
   override set(key: string, value: value) {
     super.set(key, value);
     if (this.maxSize && this.size > this.maxSize) {
-      const firstKey = this.keys().next().value;
-      if (firstKey) {
-        this.delete(firstKey);
+      const firstKey = this.keys().next();
+      if (!firstKey.done) {
+        this.delete(firstKey.value);
       }
     }
     return this;
