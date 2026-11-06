@@ -36,7 +36,7 @@ export interface TokenIconProps
   loadingComponent?: JSX.Element;
   /**
    * This component will be shown if the request for fetching the avatar is done
-   * but could not retreive any result.
+   * but could not retrieve any result.
    * You can pass a dummy avatar/image to this prop.
    *
    * If not passed, the component will return `null`
