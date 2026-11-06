@@ -42,7 +42,7 @@ export interface AccountNameProps
    */
   loadingComponent?: React.ComponentType;
   /**
-   * This component will be shown if the request for fetching the name is done but could not retreive any result.
+   * This component will be shown if the request for fetching the name is done but could not retrieve any result.
    * You can pass the wallet address as the fallback option if that's the case.
    *
    * If not passed, the component will return `null`
