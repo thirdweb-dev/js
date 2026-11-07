@@ -135,7 +135,7 @@ export type BuyWidgetProps = {
   amount?: string;
 
   /**
-   * The title to display in the widget. If `title` is explicity set to an empty string, the title will not be displayed.
+   * The title to display in the widget. If `title` is explicitly set to an empty string, the title will not be displayed.
    */
   title?: string;
 

@@ -250,7 +250,7 @@ async function getGasFees(args: {
     maxFeePerGas = bundlerGasPrice.maxFeePerGas;
     maxPriorityFeePerGas = bundlerGasPrice.maxPriorityFeePerGas;
   } else {
-    // Check for explicity values
+    // Check for explicitly values
     const [resolvedMaxFeePerGas, resolvedMaxPriorityFeePerGas] =
       await Promise.all([
         resolvePromisedValue(maxFeePerGas),
