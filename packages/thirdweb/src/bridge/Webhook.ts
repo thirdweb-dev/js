@@ -105,7 +105,8 @@ export async function parse(
   payload: string,
 
   /**
-   * The webhook headers received from thirdweb.
+   * The webhook headers received from thirdweb. The timestamp must contain
+   * decimal Unix seconds and the HMAC signature must be lowercase hex.
    */
   headers: Record<string, string>,
 
@@ -153,7 +154,10 @@ export async function parse(
 
   // Verify timestamp
   const now = Math.floor(Date.now() / 1000);
-  const timestamp = Number.parseInt(receivedTimestamp, 10);
+  const timestamp = Number(receivedTimestamp);
+  if (/[^0-9]/.test(receivedTimestamp) || !Number.isSafeInteger(timestamp)) {
+    throw new Error("Invalid webhook timestamp");
+  }
   const diff = Math.abs(now - timestamp);
 
   if (diff > tolerance) {
@@ -162,29 +166,35 @@ export async function parse(
     );
   }
 
-  // Generate signature using the same method as the sender
+  if (receivedSignature.length !== 64 || /[^0-9a-f]/.test(receivedSignature)) {
+    throw new Error("Invalid webhook signature");
+  }
+
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
     { hash: "SHA-256", name: "HMAC" },
     false,
-    ["sign"],
+    ["verify"],
   );
 
-  const signature = await crypto.subtle.sign(
+  const signature = new Uint8Array(32);
+  for (let i = 0; i < signature.length; i++) {
+    signature[i] = Number.parseInt(
+      receivedSignature.slice(i * 2, i * 2 + 2),
+      16,
+    );
+  }
+
+  const validSignature = await crypto.subtle.verify(
     "HMAC",
     key,
+    signature,
     encoder.encode(`${receivedTimestamp}.${payload}`),
   );
 
-  // Convert the signature to hex string
-  const computedSignature = Array.from(new Uint8Array(signature))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  // Compare signatures
-  if (computedSignature !== receivedSignature) {
+  if (!validSignature) {
     throw new Error("Invalid webhook signature");
   }
 

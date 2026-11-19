@@ -90,6 +90,54 @@ describe("parseIncomingWebhook", () => {
     expect(result).toEqual(validWebhook);
   });
 
+  it.each([
+    "NaN",
+    "abc",
+    "Infinity",
+    `${testTimestamp}trailing`,
+    `${testTimestamp}\n`,
+    `${testTimestamp}.5`,
+    `+${testTimestamp}`,
+    ` ${testTimestamp}`,
+    "9007199254740992",
+  ])(
+    "rejects malformed timestamp %s even with a valid HMAC",
+    async (timestamp) => {
+      const payload = JSON.stringify(validPayload);
+      const signature = await generateSignature(timestamp, payload);
+
+      await expect(
+        parse(
+          payload,
+          {
+            "x-payload-signature": signature,
+            "x-timestamp": timestamp,
+          },
+          secret,
+        ),
+      ).rejects.toThrow("Invalid webhook timestamp");
+    },
+  );
+
+  it.each([
+    "0".repeat(64),
+    "ff".repeat(32),
+    "g0".repeat(32),
+    "0".repeat(63),
+    "0".repeat(65),
+  ])("rejects invalid or malformed signature %s", async (signature) => {
+    await expect(
+      parse(
+        JSON.stringify(validPayload),
+        {
+          "x-payload-signature": signature,
+          "x-timestamp": testTimestamp,
+        },
+        secret,
+      ),
+    ).rejects.toThrow("Invalid webhook signature");
+  });
+
   it("should accept alternative header names", async () => {
     const signature = await generateSignature(
       testTimestamp,
