@@ -128,7 +128,8 @@
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "typecheck": "tsc --noEmit",
-    "test:unit": "vitest run"
+    "test:unit": "turbo run test --filter=thirdweb-dashboard",
+    "test": "vitest run"
   },
   "version": "3.0.0"
 }

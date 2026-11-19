@@ -53,13 +53,17 @@ function request(value: string | undefined = address): NextRequest {
 describe("ensure-login", () => {
   beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
   afterAll(() => server.close());
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    vi.restoreAllMocks();
+  });
   beforeEach(() => {
     values.clear();
     vi.clearAllMocks();
   });
 
   it("returns only login status and keeps the bearer token server-side", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
     values.set(COOKIE_PREFIX_TOKEN + address, token);
     server.use(
       http.get("https://api.example.test/v1/account/me", ({ request }) => {
@@ -69,6 +73,10 @@ describe("ensure-login", () => {
     );
 
     const response = await GET(request());
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "https://api.example.test/v1/account/me",
+      expect.objectContaining({ cache: "no-store" }),
+    );
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ isLoggedIn: true });
     expect(response.headers.get("cache-control")).toBe("no-store");

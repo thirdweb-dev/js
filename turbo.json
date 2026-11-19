@@ -107,6 +107,10 @@
     "wallet-ui#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "thirdweb-dashboard#test": {
+      "dependsOn": ["^build"],
+      "outputs": []
     }
   }
 }
