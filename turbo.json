@@ -2,6 +2,10 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": ["CI", "TW_SECRET_KEY", "TW_CLIENT_ID"],
   "tasks": {
+    "thirdweb-dashboard#test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "bench": {
       "cache": false,
       "dependsOn": []

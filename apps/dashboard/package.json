@@ -108,7 +108,8 @@
     "postcss": "8.5.23",
     "storybook": "9.1.21",
     "tailwindcss": "3.4.17",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vitest": "4.1.11"
   },
   "name": "thirdweb-dashboard",
   "private": true,
@@ -125,7 +126,9 @@
     "preinstall": "npx only-allow pnpm",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "turbo run test --filter=thirdweb-dashboard",
+    "test": "vitest run"
   },
   "version": "3.0.0"
 }
