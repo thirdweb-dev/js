@@ -6,8 +6,53 @@ import type { GaslessOptions } from "./gasless/types.js";
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 
+// ─── DACS-Standard Guardrail (§9.5.7 & §14.4) ─────────────────────────────
+
+export interface DacsMandateMeta {
+  /** Signed DACS mandate identifier or URI. */
+  dacsMandate?: string;
+  /** Active DACS session identifier. */
+  dacsSessionId?: string;
+  /** Hard authorized spend ceiling in atomic units (wei). */
+  dacsMaxAmount?: bigint | string | number;
+}
+
+export function assertDacsSpendMandate(
+  requestedAmount: bigint | string | number,
+  meta?: DacsMandateMeta,
+): void {
+  if (!meta || (!meta.dacsMandate && !meta.dacsSessionId)) {
+    return;
+  }
+
+  if (meta.dacsMaxAmount !== undefined) {
+    let ceiling: bigint;
+    let requested: bigint;
+    try {
+      ceiling = BigInt(meta.dacsMaxAmount);
+      requested = BigInt(requestedAmount);
+    } catch {
+      throw new Error(
+        `[DACS-Standard §9.5.7] Invalid numeric amount or dacsMaxAmount ceiling.`,
+      );
+    }
+
+    if (ceiling < 0n) {
+      throw new Error(
+        `[DACS-Standard §9.5.7] Invalid negative dacsMaxAmount ceiling: "${meta.dacsMaxAmount}".`,
+      );
+    }
+
+    if (requested > ceiling) {
+      throw new Error(
+        `[DACS-Standard §9.5.7] sendTransaction execution aborted: requested value (${requested}) exceeds authorized mandate ceiling (${ceiling}).`,
+      );
+    }
+  }
+}
+
 /** Send transaction options */
-export interface SendTransactionOptions {
+export interface SendTransactionOptions extends DacsMandateMeta {
   /**
    * The account to send the transaction with
    */
@@ -76,7 +121,7 @@ export interface SendTransactionOptions {
  *   nft: {
  *     name: "NFT Name",
  *     description: "NFT Description",
- *     image: "https://example.com/image.png",
+ *     image: "[https://example.com/image.png](https://example.com/image.png)",
  *   },
  * });
  *
@@ -148,7 +193,7 @@ export interface SendTransactionOptions {
  *  transaction,
  *  gasless: {
  *    provider: "engine",
- *    relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+ *    relayerUrl: "[https://thirdweb.engine-](https://thirdweb.engine-)***[.thirdweb.com/relayer/](https://.thirdweb.com/relayer/)***",
  *    relayerForwarderAddress: "0x...",
  *  }
  * });
@@ -171,6 +216,18 @@ export async function sendTransaction(
   options: SendTransactionOptions,
 ): Promise<WaitForReceiptOptions> {
   let { account, transaction, gasless } = options;
+  const dacsMeta: DacsMandateMeta | undefined =
+    options.dacsMandate || options.dacsSessionId
+      ? {
+          dacsMandate: options.dacsMandate,
+          dacsSessionId: options.dacsSessionId,
+          dacsMaxAmount: options.dacsMaxAmount,
+        }
+      : undefined;
+
+  if (typeof transaction.value === "bigint") {
+    assertDacsSpendMandate(transaction.value, dacsMeta);
+  }
 
   const decorator = getTransactionDecorator();
   if (decorator) {
@@ -186,6 +243,10 @@ export async function sendTransaction(
 
   // if zksync transaction params are set, send with eip712
   if (transaction.eip712) {
+    assertDacsSpendMandate(
+      typeof transaction.value === "bigint" ? transaction.value : 0n,
+      dacsMeta,
+    );
     const { sendEip712Transaction } = await import(
       "./zksync/send-eip712-transaction.js"
     );
@@ -199,6 +260,10 @@ export async function sendTransaction(
     from: account,
     transaction: transaction,
   });
+
+  // DACS-Standard (§9.5.7 & §14.4) pre-flight spend mandate ceiling check
+  assertDacsSpendMandate(serializableTransaction.value ?? 0n, dacsMeta);
+
   // branch for gasless transactions
   if (gasless) {
     // lazy load the gasless tx function because it's only needed for gasless transactions
