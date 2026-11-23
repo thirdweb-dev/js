@@ -76,7 +76,8 @@ export function PayPageWidget({
 
           if (!redirectUri) return;
           const url = new URL(redirectUri);
-          return window.open(url.toString());
+          if (url.protocol !== "http:" && url.protocol !== "https:") return;
+          return window.open(url.toString(), "_blank", "noopener,noreferrer");
         }}
         onError={(error) => {
           reportPaymentLinkBuyFailed({
