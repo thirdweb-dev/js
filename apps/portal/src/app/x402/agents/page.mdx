@@ -22,6 +22,8 @@ The MCP server comes with all the tools by default, but you can filter the tools
 
 In this example, we create a ReAct agent using LangChain and filter the MCP tools to `fetchWithPayment` and `listPayableServices` as the only 2 tools we give our agent. You can view the full list of available tools [here](/ai/mcp#available-tools).
 
+Your project secret key goes in the `x-secret-key` header. Only if your client cannot send custom headers, pass it as a `secretKey` query parameter instead; a key in a URL can end up in logs and config files.
+
 <Tabs defaultValue="typescript">
 
 <TabsList>
@@ -42,7 +44,10 @@ const model = new ChatOpenAI({
 
 const mcpServers = {
   thirdweb: {
-    url: `https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,listPayableServices`
+    url: "https://api.thirdweb.com/mcp?tools=fetchWithPayment,listPayableServices",
+    headers: {
+      "x-secret-key": "<your-project-secret-key>",
+    },
   }
 };
 
@@ -68,7 +73,11 @@ from langgraph.prebuilt import create_react_agent
 client = MultiServerMCPClient(
     {
         "thirdweb": {
-            "url": "https://api.thirdweb.com/mcp?secretKey=<your-project-secret-key>&tools=fetchWithPayment,listPayableServices",
+            "transport": "http",
+            "url": "https://api.thirdweb.com/mcp?tools=fetchWithPayment,listPayableServices",
+            "headers": {
+                "x-secret-key": "<your-project-secret-key>",
+            },
         }
     }
 )

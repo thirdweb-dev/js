@@ -10,6 +10,7 @@ import {
 } from "@/constants/server-envs";
 import { getConfiguredThirdwebClient } from "@/constants/thirdweb.server";
 import { PayPageWidget } from "../components/client/PayPageWidget.client";
+import { onlyUrl } from "../url-validation";
 import { PayIdPageHeader } from "./header";
 
 const title = "thirdweb Pay";
@@ -29,10 +30,16 @@ export default async function PayPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ redirectUri?: string; theme?: "light" | "dark" }>;
+  searchParams: Promise<{
+    redirectUri?: string | string[];
+    theme?: "light" | "dark";
+  }>;
 }) {
   const { id } = await params;
-  const { redirectUri, theme } = await searchParams;
+  const { redirectUri: rawRedirectUri, theme } = await searchParams;
+  // only http(s) URLs with a hostname; anything else (javascript:, data:, relative, repeated param) is dropped
+  const redirectUri =
+    typeof rawRedirectUri === "string" ? onlyUrl(rawRedirectUri) : undefined;
 
   const paymentLink = await getPaymentLink({
     paymentId: id,

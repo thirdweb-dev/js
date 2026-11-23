@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { defineChain, isAddress } from "thirdweb";
 import { PayLandingHeader } from "./landing/header";
 import { StyledBuyWidget } from "./landing/styled-buy-widget";
+import { onlyUrl } from "./url-validation";
 
 const title = "thirdweb Payments";
 const description = "Fast, secure, and simple payments.";
@@ -24,30 +25,6 @@ type SearchParams = {
 const onlyAddress = (v: string) => (isAddress(v) ? v : undefined);
 const onlyNumber = (v: string) =>
   Number.isNaN(Number(v)) ? undefined : Number(v);
-
-/**
- * Validates and normalizes a URL string.
- * Only allows http: and https: protocols with a valid hostname.
- * @returns normalized URL string on success, undefined on failure
- */
-const onlyUrl = (v: string): string | undefined => {
-  try {
-    const url = new URL(v);
-    // Only allow http or https protocols
-    if (url.protocol !== "http:" && url.protocol !== "https:") {
-      return undefined;
-    }
-    // Ensure hostname is non-empty
-    if (!url.hostname) {
-      return undefined;
-    }
-    // Return normalized URL
-    return url.toString();
-  } catch {
-    // Invalid URL format
-    return undefined;
-  }
-};
 
 export default async function PayPage(props: {
   searchParams: Promise<SearchParams>;
